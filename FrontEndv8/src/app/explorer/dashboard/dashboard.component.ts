@@ -139,5 +139,4 @@ export class DashboardComponent implements OnInit {
 
     return [year, month, day].join('-');
   }
-
 }
