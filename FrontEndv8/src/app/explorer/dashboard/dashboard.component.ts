@@ -35,7 +35,6 @@ export class DashboardComponent implements OnInit {
   showGridLines: boolean = true;
   showAreaChart: boolean = false;
   gradient: boolean = false;
-  logarithmic: boolean = false;
 
   colorScheme = {
     domain: ['#5AA454', '#E44D25', '#CFC0BB', '#7aa3e5', '#a8385d', '#aae3f5']
@@ -52,36 +51,37 @@ export class DashboardComponent implements OnInit {
       (data) => this.chartType = data.chartType
     );
 
+    this.refresh();
+  }
+
+  refresh() {
+    let values = "";
+    let multiChart = true;
+
     if (this.chartType=="nhs111") {
+      values = '[D]Fever NOS,[D]Cough';
       this.chartTitle = 'NEL LONDON AMBULANCE SERVICE NHS TRUST - NHS111 ENCOUNTER TREND BY CALL REASON';
       this.showLineCharts = true;
       this.showBarCharts = false;
     }
     else if (this.chartType=="consultations") {
+      values = 'All consultations,Suspected coronavirus infection';
       this.chartTitle = 'NEL/NWL GP CONSULTATIONS';
       this.showLineCharts = true;
       this.showBarCharts = false;
-      this.logarithmic = true;
+    }
+    else if (this.chartType=="consultations_bar") {
+      values = 'covid_age_groups';
+      multiChart = false;
+      this.showLineCharts = false;
+      this.showBarCharts = true;
     }
 
-    this.refresh();
-  }
-
-  refresh() {
-    if (this.chartType=="nhs111") {
-      this.explorerService.getDashboard('[D]Fever NOS,[D]Cough', this.formatDate(this.dateFrom), this.formatDate(this.dateTo))
+    if (multiChart) {
+      this.explorerService.getDashboard(values, this.formatDate(this.dateFrom), this.formatDate(this.dateTo))
         .subscribe(result => {
-          console.log(result);
-
           this.chartResults = result.results;
-        });
-    }
-    else if (this.chartType=="consultations") {
-      this.explorerService.getDashboard('All consultations,Suspected coronavirus infection', this.formatDate(this.dateFrom), this.formatDate(this.dateTo))
-        .subscribe(result => {
-          console.log(result);
 
-          this.chartResults = result.results;
           // apply log10 to values in series
           this.chartResults = this.chartResults.map(
             e => {
@@ -90,7 +90,7 @@ export class DashboardComponent implements OnInit {
                 series: e.series.map(
                   v => {
                     return {
-                      name: v.name,
+                      name: new Date(v.name),
                       value: Math.log10(v.value)
                     }
                   }
@@ -99,23 +99,25 @@ export class DashboardComponent implements OnInit {
             }
           )
         });
-    }
-    else if (this.chartType=="consultations_bar") {
-      this.explorerService.getDashboardSingle('covid_age_groups', this.formatDate(this.dateFrom), this.formatDate(this.dateTo), 1)
+
+    } else {
+      this.explorerService.getDashboardSingle(values, this.formatDate(this.dateFrom), this.formatDate(this.dateTo), 1)
         .subscribe(result => {
           console.log(result);
 
           this.chartResultsSingle = result.series;
         });
     }
+
   }
 
-  // apply pow10 to yAxis tick values and tootip value
-  getMathPower(val: number){
-    if (this.logarithmic)
-      return Math.round(Math.pow(10,val));
-    else
-      return val;
+  // apply pow10 to yAxis tick values and tooltip value
+  getMathPower(val: number) {
+    return Math.round((Math.pow(10, val) + Number.EPSILON) * 100) / 100
+  }
+
+  getYMathPower(val: number) {
+    return Math.round(Math.pow(10, val));
   }
 
   dateTickFormatting(val: any): String {
