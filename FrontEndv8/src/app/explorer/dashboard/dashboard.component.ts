@@ -33,11 +33,11 @@ export class DashboardComponent implements OnInit {
   yAxisLabel: string = 'Count';
   timeline: boolean = true;
   showGridLines: boolean = true;
-  showAreaChart: boolean = false;
-  gradient: boolean = false;
+  showAreaChart: boolean = true;
+  gradient: boolean = true;
 
   colorScheme = {
-    domain: ['#5AA454', '#E44D25', '#CFC0BB', '#7aa3e5', '#a8385d', '#aae3f5']
+    domain: ['#5AA454', '#E44D25', '#7aa3e5', '#a8385d', '#aae3f5','#CFC0BB']
   };
 
   constructor(
@@ -60,7 +60,7 @@ export class DashboardComponent implements OnInit {
 
     if (this.chartType=="nhs111") {
       values = '[D]Fever NOS,[D]Cough';
-      this.chartTitle = 'NEL LONDON AMBULANCE SERVICE NHS TRUST - NHS111 ENCOUNTER TREND BY CALL REASON';
+      this.chartTitle = 'NEL LONDON AMBULANCE SERVICE NHS TRUST - NHS111 CALL TREND - COUGH AND FEVER';
       this.showLineCharts = true;
       this.showBarCharts = false;
     }
@@ -70,11 +70,44 @@ export class DashboardComponent implements OnInit {
       this.showLineCharts = true;
       this.showBarCharts = false;
     }
-    else if (this.chartType=="consultations_bar") {
-      values = 'covid_age_groups';
+    else if (this.chartType=="hospital") {
+      values = 'Hospital inpatient admission,Hospital day case discharge,A&E discharge/end visit,A&E transfer,A&E attendance,Hospital discharge';
+      this.chartTitle = 'Barts NHS Trust - Daily Trend of Admissions and Discharges';
+      this.showLineCharts = true;
+      this.showBarCharts = false;
+      this.showAreaChart = false;
+    }
+    else if (this.chartType=="covid") {
+      values = 'Suspected coronavirus infection,Confirmed Covid 19,Tested for coronavirus infection';
+      this.chartTitle = 'NEL/NWL Day trend of Confirmed, Suspected and Tested for Covid 19';
+      this.showLineCharts = true;
+      this.showBarCharts = false;
+      this.showAreaChart = false;
+    }
+    else if (this.chartType=="covid_deceased") {
+      values = 'covid_death';
+      this.chartTitle = 'NEL/NWL Age breakdown of deceased patients with Confirmed or Suspected Covid 19';
       multiChart = false;
+      this.gradient = false;
       this.showLineCharts = false;
       this.showBarCharts = true;
+      this.xAxisLabel = 'Age Decile Band';
+    }
+    else if (this.chartType=="covid_deceased_daily") {
+      values = 'covid_death_daily';
+      this.chartTitle = 'NEL/NWL Daily trend of deceased patients with Confirmed or Suspected Covid 19';
+      this.showLineCharts = true;
+      this.showBarCharts = false;
+      this.showAreaChart = true;
+    }
+    else if (this.chartType=="covid_deceased_ccg") {
+      values = 'covid_death_ccg';
+      this.chartTitle = 'NEL/NWL CCG breakdown of deceased patients with Confirmed or Suspected Covid 19';
+      multiChart = false;
+      this.gradient = false;
+      this.showLineCharts = false;
+      this.showBarCharts = true;
+      this.xAxisLabel = 'CCG';
     }
 
     if (multiChart) {
