@@ -35,6 +35,9 @@ export class DashboardComponent implements OnInit {
   showGridLines: boolean = true;
   showAreaChart: boolean = true;
   gradient: boolean = true;
+  showRefLines: boolean = false;
+
+  refLines = [ { value: 1, name: 'Minimum' }, { value: 2, name: 'Average' }, { value: 3, name: 'Maximum' } ];
 
   colorScheme = {
     domain: ['#5AA454', '#E44D25', '#7aa3e5', '#a8385d', '#aae3f5','#CFC0BB']
@@ -64,11 +67,18 @@ export class DashboardComponent implements OnInit {
       this.showLineCharts = true;
       this.showBarCharts = false;
     }
-    else if (this.chartType=="consultations") {
-      values = 'All consultations,Suspected coronavirus infection';
+    else if (this.chartType=="consultations_covid") {
+      values = 'All consultations,Suspected coronavirus consultation';
       this.chartTitle = 'NEL/NWL GP CONSULTATIONS';
       this.showLineCharts = true;
       this.showBarCharts = false;
+    }
+    else if (this.chartType=="consultations_types") {
+      values = 'Home visit,Surgery face to face consultation,Telephone consultation,Video consultation,Email or Text message consultation';
+      this.chartTitle = 'NEL/NWL GP CONSULTATIONS';
+      this.showLineCharts = true;
+      this.showBarCharts = false;
+      this.showAreaChart = false;
     }
     else if (this.chartType=="hospital") {
       values = 'Hospital inpatient admission,Hospital day case discharge,A&E discharge/end visit,A&E transfer,A&E attendance,Hospital discharge';

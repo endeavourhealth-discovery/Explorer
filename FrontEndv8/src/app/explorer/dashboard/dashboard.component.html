@@ -52,6 +52,8 @@
           [gradient]="gradient"
           [xAxisTickFormatting]="dateTickFormatting"
           [yAxisTickFormatting]="getYMathPower"
+          [showRefLines]="showRefLines"
+          [referenceLines]="refLines"
           (select)="onSelect($event)"
         >
           <ng-template #tooltipTemplate let-model="model">
