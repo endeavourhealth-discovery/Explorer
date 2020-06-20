@@ -84,8 +84,8 @@ export class DashboardComponent implements OnInit {
       this.showBarCharts = false;
       this.showAreaChart = false;
     }
-    else if (this.chartType=="covid_deceased") {
-      values = 'covid_death';
+    else if (this.chartType=="covid_deceased_age") {
+      values = 'covid_death_age';
       this.chartTitle = 'NEL/NWL Age breakdown of deceased patients with Confirmed or Suspected Covid 19';
       multiChart = false;
       this.gradient = false;
