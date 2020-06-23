@@ -3,6 +3,9 @@ import {ExplorerService} from '../explorer.service';
 import {LoggerService} from 'dds-angular8';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import {ActivatedRoute} from "@angular/router";
+import {FormControl} from '@angular/forms';
+import {MatOption} from "@angular/material/core";
+import {strictEqual} from "assert";
 
 @Component({
   selector: 'app-dashboard',
@@ -18,6 +21,10 @@ export class DashboardComponent implements OnInit {
   chartType: string;
   showLineCharts: boolean = false;
   showBarCharts: boolean = false;
+  results = new FormControl();
+  resultList: string[] = [''];
+  selected: string = '';
+  showResult: boolean = false;
 
   // options
   legend: boolean = true;
@@ -60,39 +67,50 @@ export class DashboardComponent implements OnInit {
   refresh() {
     let values = "";
     let multiChart = true;
+    console.log("Values: " + this.selected);
 
     if (this.chartType=="nhs111") {
-      values = '[D]Fever NOS,[D]Cough';
+      values = this.selected;
       this.chartTitle = 'NEL LONDON AMBULANCE SERVICE NHS TRUST - NHS111 CALL TREND - COUGH AND FEVER';
       this.showLineCharts = true;
       this.showBarCharts = false;
+      this.resultList = ['[D]Fever NOS', '[D]Cough'];
+      this.showResult = true;
     }
     else if (this.chartType=="consultations_covid") {
-      values = 'All consultations,Suspected coronavirus consultation';
+      values = this.selected;
       this.chartTitle = 'NEL/NWL GP CONSULTATIONS';
       this.showLineCharts = true;
       this.showBarCharts = false;
+      this.resultList = ['All consultations','Suspected coronavirus consultation'];
+      this.showResult = true;
     }
     else if (this.chartType=="consultations_types") {
-      values = 'Home visit,Surgery face to face consultation,Telephone consultation,Video consultation,Email or Text message consultation';
+      values = this.selected;
       this.chartTitle = 'NEL/NWL GP CONSULTATIONS';
       this.showLineCharts = true;
       this.showBarCharts = false;
       this.showAreaChart = false;
+      this.resultList = ['Home visit','Surgery face to face consultation','Telephone consultation','Video consultation','Email or Text message consultation'];
+      this.showResult = true;
     }
     else if (this.chartType=="hospital") {
-      values = 'Hospital inpatient admission,Hospital day case discharge,A&E discharge/end visit,A&E transfer,A&E attendance,Hospital discharge';
+      values = this.selected;
       this.chartTitle = 'Barts NHS Trust - Daily Trend of Admissions and Discharges';
       this.showLineCharts = true;
       this.showBarCharts = false;
       this.showAreaChart = false;
+      this.resultList = ['Hospital inpatient admission','Hospital day case discharge','A&E discharge/end visit','A&E transfer','A&E attendance','Hospital discharge'];
+      this.showResult = true;
     }
     else if (this.chartType=="covid") {
-      values = 'Suspected coronavirus infection,Confirmed Covid 19,Tested for coronavirus infection';
+      values = this.selected;
       this.chartTitle = 'NEL/NWL Day trend of Confirmed, Suspected and Tested for Covid 19';
       this.showLineCharts = true;
       this.showBarCharts = false;
       this.showAreaChart = false;
+      this.resultList = ['Suspected coronavirus infection','Confirmed Covid 19','Tested for coronavirus infection'];
+      this.showResult = true;
     }
     else if (this.chartType=="covid_deceased_age") {
       values = 'covid_death_age';

@@ -10,7 +10,7 @@ import {
   MatSortModule,
   MatTableModule
 } from '@angular/material';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
 import {FlexModule} from '@angular/flex-layout';
 import {MatSelectModule} from '@angular/material/select';
@@ -34,36 +34,37 @@ import {DashboardComponent} from "./dashboard/dashboard.component";
   declarations: [
     DashboardComponent
   ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    MatCardModule,
-    MatTableModule,
-    MatSortModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatIconModule,
-    FormsModule,
-    MatPaginatorModule,
-    MatProgressSpinnerModule,
-    RouterModule,
-    FlexModule,
-    MatSelectModule,
-    MatSnackBarModule,
-    MatCheckboxModule,
-    MatMenuModule,
-    MatDialogModule,
-    CoreModule,
-    MatButtonModule,
-    MatTreeModule,
-    MatProgressBarModule,
-    MatGridListModule,
-    MatNativeDateModule,
-    MatDatepickerModule,
-    BarChartModule,
-    LineChartModule,
-    AreaChartModule
-  ],
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        MatCardModule,
+        MatTableModule,
+        MatSortModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatIconModule,
+        FormsModule,
+        MatPaginatorModule,
+        MatProgressSpinnerModule,
+        RouterModule,
+        FlexModule,
+        MatSelectModule,
+        MatSnackBarModule,
+        MatCheckboxModule,
+        MatMenuModule,
+        MatDialogModule,
+        CoreModule,
+        MatButtonModule,
+        MatTreeModule,
+        MatProgressBarModule,
+        MatGridListModule,
+        MatNativeDateModule,
+        MatDatepickerModule,
+        BarChartModule,
+        LineChartModule,
+        AreaChartModule,
+        ReactiveFormsModule
+    ],
   entryComponents: [
   ],
   providers: [ Globals ]

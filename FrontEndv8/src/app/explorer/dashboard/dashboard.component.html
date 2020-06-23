@@ -24,6 +24,12 @@
               <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
             </mat-datepicker-toggle>
             <mat-datepicker #picker2></mat-datepicker>
+          </mat-form-field >
+          <mat-form-field *ngIf="showResult" style="margin-left: 10px" class="example-full-width" appearance="outline">
+            <mat-label>Results</mat-label>
+            <mat-select [formControl]="results" multiple [(value)]="selected">
+              <mat-option *ngFor="let result of resultList" [value]="result">{{result}}</mat-option>
+            </mat-select>
           </mat-form-field>
 
           <button style="margin-left: 10px" mat-raised-button (click)="refresh()">Refresh chart</button>
