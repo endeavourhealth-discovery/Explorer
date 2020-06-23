@@ -43,6 +43,7 @@ export class DashboardComponent implements OnInit {
   showAreaChart: boolean = true;
   gradient: boolean = true;
   showRefLines: boolean = false;
+  logarithmic: boolean = true;
 
   refLines = [ { value: 1, name: 'Minimum' }, { value: 2, name: 'Average' }, { value: 3, name: 'Maximum' } ];
 
@@ -70,7 +71,12 @@ export class DashboardComponent implements OnInit {
     console.log("Values: " + this.selected);
 
     if (this.chartType=="nhs111") {
-      values = this.selected;
+      if (this.selected == ""){
+        values = '[D]Fever NOS,[D]Cough'
+      }
+      else {
+        values = this.selected;
+      }
       this.chartTitle = 'NEL LONDON AMBULANCE SERVICE NHS TRUST - NHS111 CALL TREND - COUGH AND FEVER';
       this.showLineCharts = true;
       this.showBarCharts = false;
@@ -78,7 +84,12 @@ export class DashboardComponent implements OnInit {
       this.showResult = true;
     }
     else if (this.chartType=="consultations_covid") {
-      values = this.selected;
+      if (this.selected == ""){
+        values = 'All consultations,Suspected coronavirus consultation';
+      }
+      else {
+        values = this.selected;
+      }
       this.chartTitle = 'NEL/NWL GP CONSULTATIONS';
       this.showLineCharts = true;
       this.showBarCharts = false;
@@ -86,7 +97,12 @@ export class DashboardComponent implements OnInit {
       this.showResult = true;
     }
     else if (this.chartType=="consultations_types") {
-      values = this.selected;
+      if (this.selected == ""){
+        values = 'Home visit,Surgery face to face consultation,Telephone consultation,Video consultation,Email or Text message consultation';
+      }
+      else {
+        values = this.selected;
+      }
       this.chartTitle = 'NEL/NWL GP CONSULTATIONS';
       this.showLineCharts = true;
       this.showBarCharts = false;
@@ -95,7 +111,12 @@ export class DashboardComponent implements OnInit {
       this.showResult = true;
     }
     else if (this.chartType=="hospital") {
-      values = this.selected;
+      if (this.selected == ""){
+        values = 'Hospital inpatient admission,Hospital day case discharge,A&E discharge/end visit,A&E transfer,A&E attendance,Hospital discharge';
+      }
+      else {
+        values = this.selected;
+      }
       this.chartTitle = 'Barts NHS Trust - Daily Trend of Admissions and Discharges';
       this.showLineCharts = true;
       this.showBarCharts = false;
@@ -104,7 +125,12 @@ export class DashboardComponent implements OnInit {
       this.showResult = true;
     }
     else if (this.chartType=="covid") {
-      values = this.selected;
+      if (this.selected == ""){
+        values = 'Suspected coronavirus infection,Confirmed Covid 19,Tested for coronavirus infection';
+      }
+      else {
+        values = this.selected;
+      }
       this.chartTitle = 'NEL/NWL Day trend of Confirmed, Suspected and Tested for Covid 19';
       this.showLineCharts = true;
       this.showBarCharts = false;
@@ -174,11 +200,21 @@ export class DashboardComponent implements OnInit {
 
   // apply pow10 to yAxis tick values and tooltip value
   getMathPower(val: number) {
-    return Math.round((Math.pow(10, val) + Number.EPSILON) * 100) / 100
+    if (this.logarithmic == true) {
+      return Math.round((Math.pow(10, val) + Number.EPSILON) * 100) / 100;
+    }
+    else {
+      return val;
+    }
   }
 
   getYMathPower(val: number) {
-    return Math.round(Math.pow(10, val));
+    if (this.logarithmic == true) {
+      return Math.round(Math.pow(10, val));
+    }
+    else {
+      return val;
+    }
   }
 
   dateTickFormatting(val: any): String {
