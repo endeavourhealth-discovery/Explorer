@@ -61,6 +61,44 @@ public class DashboardEndpoint {
         }
     }
 
+    @GET
+    @Path("/patients")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getPatients(@Context SecurityContext sc,
+                                @QueryParam("page") Integer page,
+                                @QueryParam("size") Integer size,
+                                @QueryParam("name") String name) throws Exception {
+        LOG.debug("getPatients");
+
+        try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
+            PatientResult result = viewerDAL.getPatientResult(page, size, name);
+
+            return Response
+                    .ok()
+                    .entity(result)
+                    .build();
+        }
+    }
+
+    @GET
+    @Path("/patientsummary")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getPatientSummary(@Context SecurityContext sc,
+                                      @QueryParam("patientId") Integer patientId) throws Exception {
+        LOG.debug("getPatientSummary");
+
+        try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
+            PatientSummary result = viewerDAL.getPatientSummary(patientId);
+
+            return Response
+                    .ok()
+                    .entity(result)
+                    .build();
+        }
+    }
+
 
 
 }

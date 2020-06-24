@@ -28,11 +28,12 @@ import {MatNativeDateModule} from "@angular/material/core";
 import {BarChartModule, LineChartModule, AreaChartModule} from "@swimlane/ngx-charts";
 import {Globals} from "./globals";
 import {DashboardComponent} from "./dashboard/dashboard.component";
-
+import {PatientComponent} from "./patient/patient.component";
 
 @NgModule({
   declarations: [
-    DashboardComponent
+    DashboardComponent,
+    PatientComponent
   ],
     imports: [
         BrowserModule,
@@ -66,6 +67,7 @@ import {DashboardComponent} from "./dashboard/dashboard.component";
         ReactiveFormsModule
     ],
   entryComponents: [
+    PatientComponent
   ],
   providers: [ Globals ]
 })

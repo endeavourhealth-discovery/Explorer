@@ -6,6 +6,9 @@ import {ActivatedRoute} from "@angular/router";
 import {FormControl} from '@angular/forms';
 import {MatOption} from "@angular/material/core";
 import {strictEqual} from "assert";
+import {MatDialog} from "@angular/material/dialog";
+import {PatientComponent} from "../patient/patient.component";
+
 
 @Component({
   selector: 'app-dashboard',
@@ -51,10 +54,12 @@ export class DashboardComponent implements OnInit {
     domain: ['#5AA454', '#E44D25', '#7aa3e5', '#a8385d', '#aae3f5','#CFC0BB']
   };
 
+
   constructor(
     private route: ActivatedRoute,
     private explorerService: ExplorerService,
-    private log: LoggerService
+    private log: LoggerService,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit() {
@@ -63,7 +68,9 @@ export class DashboardComponent implements OnInit {
     );
 
     this.refresh();
+
   }
+
 
   refresh() {
     let values = "";
@@ -232,6 +239,16 @@ export class DashboardComponent implements OnInit {
 
   onSelect(data): void {
     console.log('Item clicked', JSON.parse(JSON.stringify(data)));
+
+      const dialogRef = this.dialog.open(PatientComponent, {
+        height: '850px',
+        width: '1600px',
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+
+      });
+
   }
 
   formatDate(date) {
