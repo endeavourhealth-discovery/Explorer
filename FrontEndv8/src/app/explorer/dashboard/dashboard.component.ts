@@ -178,7 +178,7 @@ export class DashboardComponent implements OnInit {
                   v => {
                     return {
                       name: new Date(v.name),
-                      value: Math.log10(v.value)
+                      value: this.applyLogarithm(v.value)
                     }
                   }
                 )
@@ -214,6 +214,15 @@ export class DashboardComponent implements OnInit {
     }
     else {
       return val;
+    }
+  }
+
+  applyLogarithm(value: number) {
+    if (this.logarithmic == true) {
+      return Math.log10(value)
+    }
+    else  {
+      return value
     }
   }
 
