@@ -217,10 +217,11 @@ export class DashboardComponent implements OnInit {
 
   getYMathPower(val: number) {
     if (this.logarithmic == true) {
-      return Math.round(Math.pow(10, val));
+      val = Math.round(Math.pow(10, val))
+      return val.toLocaleString()
     }
     else {
-      return val;
+      return val.toLocaleString()
     }
   }
 
@@ -234,7 +235,9 @@ export class DashboardComponent implements OnInit {
   }
 
   dateTickFormatting(val: any): String {
+
     return new Date(val).toLocaleDateString();
+
   }
 
   onSelect(data): void {
