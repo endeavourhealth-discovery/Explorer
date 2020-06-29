@@ -51,9 +51,8 @@ export class DashboardComponent implements OnInit {
   refLines = [ { value: 1, name: 'Minimum' }, { value: 2, name: 'Average' }, { value: 3, name: 'Maximum' } ];
 
   colorScheme = {
-    domain: ['#5AA454', '#E44D25', '#7aa3e5', '#a8385d', '#aae3f5','#CFC0BB']
+    domain: ['#5aa454', '#e44d25', '#cfc0bb', '#7aa3e5', '#a8385d', '#aae3f5']
   };
-
 
   constructor(
     private route: ActivatedRoute,
@@ -71,15 +70,15 @@ export class DashboardComponent implements OnInit {
 
   }
 
-
   refresh() {
     let values = "";
     let multiChart = true;
     console.log("Values: " + this.selected);
 
     if (this.chartType=="nhs111") {
+      this.resultList = ['[D]Fever NOS', '[D]Cough'];
       if (this.selected == ""){
-        values = '[D]Fever NOS,[D]Cough'
+        values = this.resultList.toString();
       }
       else {
         values = this.selected;
@@ -87,12 +86,12 @@ export class DashboardComponent implements OnInit {
       this.chartTitle = 'NEL LONDON AMBULANCE SERVICE NHS TRUST - NHS111 CALL TREND - COUGH AND FEVER';
       this.showLineCharts = true;
       this.showBarCharts = false;
-      this.resultList = ['[D]Fever NOS', '[D]Cough'];
       this.showResult = true;
     }
     else if (this.chartType=="consultations_covid") {
+      this.resultList = ['All consultations','Suspected coronavirus consultation'];
       if (this.selected == ""){
-        values = 'All consultations,Suspected coronavirus consultation';
+        values = this.resultList.toString();
       }
       else {
         values = this.selected;
@@ -100,12 +99,12 @@ export class DashboardComponent implements OnInit {
       this.chartTitle = 'NEL/NWL GP CONSULTATIONS';
       this.showLineCharts = true;
       this.showBarCharts = false;
-      this.resultList = ['All consultations','Suspected coronavirus consultation'];
       this.showResult = true;
     }
     else if (this.chartType=="consultations_types") {
+      this.resultList = ['Home visit','Surgery face to face consultation','Telephone consultation','Video consultation','Email or Text message consultation'];
       if (this.selected == ""){
-        values = 'Home visit,Surgery face to face consultation,Telephone consultation,Video consultation,Email or Text message consultation';
+        values = this.resultList.toString();
       }
       else {
         values = this.selected;
@@ -114,12 +113,12 @@ export class DashboardComponent implements OnInit {
       this.showLineCharts = true;
       this.showBarCharts = false;
       this.showAreaChart = false;
-      this.resultList = ['Home visit','Surgery face to face consultation','Telephone consultation','Video consultation','Email or Text message consultation'];
       this.showResult = true;
     }
     else if (this.chartType=="hospital") {
+      this.resultList = ['Hospital inpatient admission','Hospital day case discharge','A&E discharge/end visit','A&E transfer','A&E attendance','Hospital discharge'];
       if (this.selected == ""){
-        values = 'Hospital inpatient admission,Hospital day case discharge,A&E discharge/end visit,A&E transfer,A&E attendance,Hospital discharge';
+        values = this.resultList.toString();
       }
       else {
         values = this.selected;
@@ -128,12 +127,12 @@ export class DashboardComponent implements OnInit {
       this.showLineCharts = true;
       this.showBarCharts = false;
       this.showAreaChart = false;
-      this.resultList = ['Hospital inpatient admission','Hospital day case discharge','A&E discharge/end visit','A&E transfer','A&E attendance','Hospital discharge'];
       this.showResult = true;
     }
     else if (this.chartType=="covid") {
+      this.resultList = ['Suspected coronavirus infection','Confirmed Covid 19','Tested for coronavirus infection'];
       if (this.selected == ""){
-        values = 'Suspected coronavirus infection,Confirmed Covid 19,Tested for coronavirus infection';
+        values = this.resultList.toString();
       }
       else {
         values = this.selected;
@@ -142,7 +141,6 @@ export class DashboardComponent implements OnInit {
       this.showLineCharts = true;
       this.showBarCharts = false;
       this.showAreaChart = false;
-      this.resultList = ['Suspected coronavirus infection','Confirmed Covid 19','Tested for coronavirus infection'];
       this.showResult = true;
     }
     else if (this.chartType=="covid_deceased_age") {
