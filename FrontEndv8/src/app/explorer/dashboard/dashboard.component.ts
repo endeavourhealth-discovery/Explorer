@@ -28,6 +28,7 @@ export class DashboardComponent implements OnInit {
   resultList: string[] = [''];
   selected: string = '';
   showResult: boolean = false;
+  months: string[] = [''];
 
   // options
   legend: boolean = true;
@@ -235,9 +236,14 @@ export class DashboardComponent implements OnInit {
   }
 
   dateTickFormatting(val: any): String {
+    this.months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    var month = (val.toLocaleString()).substring(3,5);
+    var monthName = this.months[(Number(month)-1)];
+    var day = (val.toLocaleString()).substring(0,2);
+    var year = (val.toLocaleString()).substring(6,10);
+    val = (day + " " + monthName + " " + year);
 
-    return new Date(val).toLocaleDateString();
-
+    return val.toLocaleString();
   }
 
   onSelect(data): void {
@@ -267,4 +273,5 @@ export class DashboardComponent implements OnInit {
 
     return [year, month, day].join('-');
   }
+
 }
