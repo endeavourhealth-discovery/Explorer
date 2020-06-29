@@ -204,23 +204,13 @@ export class DashboardComponent implements OnInit {
 
   }
 
-  // apply pow10 to yAxis tick values and tooltip value
-  getMathPower(val: number) {
+  formatYAxis(val: number) {
     if (this.logarithmic == true) {
-      return Math.round((Math.pow(10, val) + Number.EPSILON) * 100) / 100;
-    }
-    else {
-      return val;
-    }
-  }
-
-  getYMathPower(val: number) {
-    if (this.logarithmic == true) {
-      val = Math.round(Math.pow(10, val))
+      val = Math.round((Math.pow(10, val) + Number.EPSILON) * 100) / 100;
       return val.toLocaleString()
     }
     else {
-      return val.toLocaleString()
+      return Number(val).toLocaleString()
     }
   }
 
@@ -233,7 +223,7 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  dateTickFormatting(val: any): String {
+  formatXAxis(val: any): String {
     this.months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     var month = (val.toLocaleString()).substring(3,5);
     var monthName = this.months[(Number(month)-1)];
