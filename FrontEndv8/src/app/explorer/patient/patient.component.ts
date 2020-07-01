@@ -5,8 +5,9 @@ import {LoggerService} from 'dds-angular8';
 import {MatTableDataSource} from "@angular/material/table";
 import {PageEvent} from "@angular/material/paginator";
 
+
 export interface DialogData {
-  patientId: string;
+  dashboardId: string;
 }
 
 @Component({
@@ -21,7 +22,8 @@ export class PatientComponent {
   page: number = 0;
   size: number = 10;
   name: string = '';
-
+  nhsNumber: string = '';
+  dob: string = '';
 
   displayedColumns: string[] = ['name/address', 'dob/nhsNumber', 'age/gender', 'usual_gp/organisation', 'registration'];
 
@@ -44,7 +46,7 @@ export class PatientComponent {
 
   loadEvents() {
     this.events = null;
-    this.explorerService.getPatients(this.page, this.size, this.name)
+    this.explorerService.getPatients(this.page, this.size, this.name, this.nhsNumber, this.formatDate(this.dob))
       .subscribe(
         (result) => this.displayEvents(result),
         (error) => this.log.error(error)
@@ -71,6 +73,22 @@ export class PatientComponent {
 
   onCancelClick(): void {
     this.dialogRef.close();
+  }
+
+  formatDate(date) {
+    if (date=="") return "";
+
+    var d = new Date(date),
+      month = '' + (d.getMonth() + 1),
+      day = '' + d.getDate(),
+      year = d.getFullYear();
+
+    if (month.length < 2)
+      month = '0' + month;
+    if (day.length < 2)
+      day = '0' + day;
+
+    return [year, month, day].join('-');
   }
 
 }

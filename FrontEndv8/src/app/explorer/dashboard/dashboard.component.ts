@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnInit, Output, ViewChild} from '@angular/core';
 import {ExplorerService} from '../explorer.service';
 import {LoggerService} from 'dds-angular8';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
@@ -8,6 +8,7 @@ import {MatOption} from "@angular/material/core";
 import {strictEqual} from "assert";
 import {MatDialog} from "@angular/material/dialog";
 import {PatientComponent} from "../patient/patient.component";
+import {Globals} from '../globals'
 
 
 @Component({
@@ -16,6 +17,14 @@ import {PatientComponent} from "../patient/patient.component";
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
+
+  //patient find
+  globals: Globals;
+  patientId: number = 0;
+  name: string = "";
+  dob: string = "";
+  nhsNumber: string = "";
+
   view: any[] = [1400, 600];
   chartResults: any[];
   chartResultsSingle: any[];
@@ -49,7 +58,7 @@ export class DashboardComponent implements OnInit {
   showRefLines: boolean = false;
   logarithmic: boolean = true;
 
-  refLines = [ { value: 1, name: 'Minimum' }, { value: 2, name: 'Average' }, { value: 3, name: 'Maximum' } ];
+  refLines = [{value: 1, name: 'Minimum'}, {value: 2, name: 'Average'}, {value: 3, name: 'Maximum'}];
 
   colorScheme = {
     domain: ['#5aa454', '#e44d25', '#cfc0bb', '#7aa3e5', '#a8385d', '#aae3f5']
@@ -59,16 +68,18 @@ export class DashboardComponent implements OnInit {
     private route: ActivatedRoute,
     private explorerService: ExplorerService,
     private log: LoggerService,
-    private dialog: MatDialog
-  ) { }
+    private dialog: MatDialog,
+    globals: Globals) {
+    this.globals = globals;
+  }
+
 
   ngOnInit() {
+    this.patientId = this.globals.patientId;
     this.route.data.subscribe(
       (data) => this.chartType = data.chartType
     );
-
     this.refresh();
-
   }
 
   refresh() {
@@ -76,38 +87,33 @@ export class DashboardComponent implements OnInit {
     let multiChart = true;
     console.log("Values: " + this.selected);
 
-    if (this.chartType=="nhs111") {
+    if (this.chartType == "nhs111") {
       this.resultList = ['[D]Fever NOS', '[D]Cough'];
-      if (this.selected == ""){
+      if (this.selected == "") {
         values = this.resultList.toString();
-      }
-      else {
+      } else {
         values = this.selected;
       }
       this.chartTitle = 'NEL LONDON AMBULANCE SERVICE NHS TRUST - NHS111 CALL TREND - COUGH AND FEVER';
       this.showLineCharts = true;
       this.showBarCharts = false;
       this.showResult = true;
-    }
-    else if (this.chartType=="consultations_covid") {
-      this.resultList = ['All consultations','Suspected coronavirus consultation'];
-      if (this.selected == ""){
+    } else if (this.chartType == "consultations_covid") {
+      this.resultList = ['All consultations', 'Suspected coronavirus consultation'];
+      if (this.selected == "") {
         values = this.resultList.toString();
-      }
-      else {
+      } else {
         values = this.selected;
       }
       this.chartTitle = 'NEL/NWL GP CONSULTATIONS';
       this.showLineCharts = true;
       this.showBarCharts = false;
       this.showResult = true;
-    }
-    else if (this.chartType=="consultations_types") {
-      this.resultList = ['Home visit','Surgery face to face consultation','Telephone consultation','Video consultation','Email or Text message consultation'];
-      if (this.selected == ""){
+    } else if (this.chartType == "consultations_types") {
+      this.resultList = ['Home visit', 'Surgery face to face consultation', 'Telephone consultation', 'Video consultation', 'Email or Text message consultation'];
+      if (this.selected == "") {
         values = this.resultList.toString();
-      }
-      else {
+      } else {
         values = this.selected;
       }
       this.chartTitle = 'NEL/NWL GP CONSULTATIONS';
@@ -115,13 +121,11 @@ export class DashboardComponent implements OnInit {
       this.showBarCharts = false;
       this.showAreaChart = false;
       this.showResult = true;
-    }
-    else if (this.chartType=="hospital") {
-      this.resultList = ['Hospital inpatient admission','Hospital day case discharge','A&E discharge/end visit','A&E transfer','A&E attendance','Hospital discharge'];
-      if (this.selected == ""){
+    } else if (this.chartType == "hospital") {
+      this.resultList = ['Hospital inpatient admission', 'Hospital day case discharge', 'A&E discharge/end visit', 'A&E transfer', 'A&E attendance', 'Hospital discharge'];
+      if (this.selected == "") {
         values = this.resultList.toString();
-      }
-      else {
+      } else {
         values = this.selected;
       }
       this.chartTitle = 'Barts NHS Trust - Daily Trend of Admissions and Discharges';
@@ -129,13 +133,11 @@ export class DashboardComponent implements OnInit {
       this.showBarCharts = false;
       this.showAreaChart = false;
       this.showResult = true;
-    }
-    else if (this.chartType=="covid") {
-      this.resultList = ['Suspected coronavirus infection','Confirmed Covid 19','Tested for coronavirus infection'];
-      if (this.selected == ""){
+    } else if (this.chartType == "covid") {
+      this.resultList = ['Suspected coronavirus infection', 'Confirmed Covid 19', 'Tested for coronavirus infection'];
+      if (this.selected == "") {
         values = this.resultList.toString();
-      }
-      else {
+      } else {
         values = this.selected;
       }
       this.chartTitle = 'NEL/NWL Day trend of Confirmed, Suspected and Tested for Covid 19';
@@ -143,8 +145,7 @@ export class DashboardComponent implements OnInit {
       this.showBarCharts = false;
       this.showAreaChart = false;
       this.showResult = true;
-    }
-    else if (this.chartType=="covid_deceased_age") {
+    } else if (this.chartType == "covid_deceased_age") {
       values = 'covid_death_age';
       this.chartTitle = 'NEL/NWL Age breakdown of deceased patients with Confirmed or Suspected Covid 19';
       multiChart = false;
@@ -152,15 +153,13 @@ export class DashboardComponent implements OnInit {
       this.showLineCharts = false;
       this.showBarCharts = true;
       this.xAxisLabel = 'Age Decile Band';
-    }
-    else if (this.chartType=="covid_deceased_daily") {
+    } else if (this.chartType == "covid_deceased_daily") {
       values = 'covid_death_daily';
       this.chartTitle = 'NEL/NWL Daily trend of deceased patients with Confirmed or Suspected Covid 19';
       this.showLineCharts = true;
       this.showBarCharts = false;
       this.showAreaChart = true;
-    }
-    else if (this.chartType=="covid_deceased_ccg") {
+    } else if (this.chartType == "covid_deceased_ccg") {
       values = 'covid_death_ccg';
       this.chartTitle = 'NEL/NWL CCG breakdown of deceased patients with Confirmed or Suspected Covid 19';
       multiChart = false;
@@ -201,25 +200,22 @@ export class DashboardComponent implements OnInit {
           this.chartResultsSingle = result.series;
         });
     }
-
   }
 
   formatTooltipYAxis(val: number) {
     if (this.logarithmic == true) {
       val = Math.round((Math.pow(10, val) + Number.EPSILON) * 100) / 100;
       return val.toLocaleString()
-    }
-    else {
+    } else {
       return Number(val).toLocaleString()
     }
   }
 
   formatYAxis(val: number) {
-    if (val<5) {
+    if (val < 5) {
       val = Math.round(Math.pow(10, val));
       return val.toLocaleString()
-    }
-    else {
+    } else {
       return Number(val).toLocaleString()
     }
   }
@@ -227,18 +223,17 @@ export class DashboardComponent implements OnInit {
   applyLogarithm(value: number) {
     if (this.logarithmic == true) {
       return Math.log10(value)
-    }
-    else  {
+    } else {
       return value
     }
   }
 
   formatXAxis(val: any): String {
     this.months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    var month = (val.toLocaleString()).substring(3,5);
-    var monthName = this.months[(Number(month)-1)];
-    var day = (val.toLocaleString()).substring(0,2);
-    var year = (val.toLocaleString()).substring(6,10);
+    var month = (val.toLocaleString()).substring(3, 5);
+    var monthName = this.months[(Number(month) - 1)];
+    var day = (val.toLocaleString()).substring(0, 2);
+    var year = (val.toLocaleString()).substring(6, 10);
     val = (day + " " + monthName + " " + year);
 
     return val.toLocaleString();
@@ -247,14 +242,19 @@ export class DashboardComponent implements OnInit {
   onSelect(data): void {
     console.log('Item clicked', JSON.parse(JSON.stringify(data)));
 
-      const dialogRef = this.dialog.open(PatientComponent, {
-        height: '850px',
-        width: '1600px',
-      });
+    const dialogRef = this.dialog.open(PatientComponent, {
+      height: '850px',
+      width: '1600px',
+      data: {patientId: this.patientId}
+    });
 
-      dialogRef.afterClosed().subscribe(result => {
-
-      });
+    dialogRef.afterClosed().subscribe(result => {
+      let patientId = 0;
+      if (result)
+        patientId = result;
+      patientId = 22629; // example for fred john smith
+      window.location.href = "https://devgateway.discoverydataservice.net/record-viewer/#/summary?patient_id="+patientId;
+    });
 
   }
 
