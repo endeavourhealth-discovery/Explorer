@@ -20,7 +20,6 @@ export class DashboardComponent implements OnInit {
 
   //patient find
   globals: Globals;
-  patientId: number = 0;
   name: string = "";
 
   view: any[] = [1400, 600];
@@ -74,7 +73,6 @@ export class DashboardComponent implements OnInit {
 
 
   ngOnInit() {
-    this.patientId = this.globals.patientId;
     this.route.data.subscribe(
       (data) => this.chartType = data.chartType
     );
@@ -182,7 +180,8 @@ export class DashboardComponent implements OnInit {
                   v => {
                     return {
                       name: new Date(v.name),
-                      value: this.applyLogarithm(v.value)
+                      value: this.applyLogarithm(v.value),
+                      id: v.id
                     }
                   }
                 )
@@ -239,8 +238,6 @@ export class DashboardComponent implements OnInit {
   }
 
   onSelect(data): void {
-    console.log('Item clicked', JSON.parse(JSON.stringify(data)));
-
     const dialogRef = this.dialog.open(PatientComponent, {
       height: '850px',
       width: '1600px',
@@ -249,10 +246,10 @@ export class DashboardComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       let patientId = 0;
-      if (result)
+      if (result) {
         patientId = result;
-      patientId = 22629; // example for fred john smith
-      window.location.href = "https://devgateway.discoverydataservice.net/record-viewer/#/summary?patient_id="+patientId;
+        window.location.href = "https://devgateway.discoverydataservice.net/record-viewer/#/summary?patient_id="+patientId;
+      }
     });
 
   }

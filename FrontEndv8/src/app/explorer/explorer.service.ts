@@ -36,7 +36,7 @@ export class ExplorerService {
     let params = new HttpParams();
     params = params.append('page', page.toString());
     params = params.append('size', size.toString());
-    params = params.append('name', dashboardId);
+    params = params.append('dashboardId', dashboardId);
 
     return this.http.get('api/events/patients', {params});
   }
