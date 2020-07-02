@@ -21,9 +21,7 @@ export class PatientComponent {
   dataSource: MatTableDataSource<any>;
   page: number = 0;
   size: number = 10;
-  name: string = '';
-  nhsNumber: string = '';
-  dob: string = '';
+  dashboardId: string = "";
 
   displayedColumns: string[] = ['name/address', 'dob/nhsNumber', 'age/gender', 'usual_gp/organisation', 'registration'];
 
@@ -41,12 +39,13 @@ export class PatientComponent {
       {id: "0", name: "no results"},{id: "0", name: "no results"}
     ];
     this.dataSource = new MatTableDataSource(this.events);
-
+    this.dashboardId = data.dashboardId;
+    this.loadEvents();
   }
 
   loadEvents() {
     this.events = null;
-    this.explorerService.getPatients(this.page, this.size, this.name, this.nhsNumber, this.formatDate(this.dob))
+    this.explorerService.getPatients(this.page, this.size, this.dashboardId)
       .subscribe(
         (result) => this.displayEvents(result),
         (error) => this.log.error(error)

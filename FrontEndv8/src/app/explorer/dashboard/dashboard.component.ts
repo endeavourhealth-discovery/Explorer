@@ -22,8 +22,6 @@ export class DashboardComponent implements OnInit {
   globals: Globals;
   patientId: number = 0;
   name: string = "";
-  dob: string = "";
-  nhsNumber: string = "";
 
   view: any[] = [1400, 600];
   chartResults: any[];
@@ -38,6 +36,7 @@ export class DashboardComponent implements OnInit {
   selected: string = '';
   showResult: boolean = false;
   months: string[] = [''];
+  dashboardId: string = "";
 
   // options
   legend: boolean = true;
@@ -173,7 +172,7 @@ export class DashboardComponent implements OnInit {
       this.explorerService.getDashboard(values, this.formatDate(this.dateFrom), this.formatDate(this.dateTo))
         .subscribe(result => {
           this.chartResults = result.results;
-
+          console.log(this.chartResults);
           // apply log10 to values in series
           this.chartResults = this.chartResults.map(
             e => {
@@ -245,7 +244,7 @@ export class DashboardComponent implements OnInit {
     const dialogRef = this.dialog.open(PatientComponent, {
       height: '850px',
       width: '1600px',
-      data: {patientId: this.patientId}
+      data: {dashboardId: data.id}
     });
 
     dialogRef.afterClosed().subscribe(result => {

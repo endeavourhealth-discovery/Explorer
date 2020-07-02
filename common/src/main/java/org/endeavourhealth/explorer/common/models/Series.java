@@ -21,6 +21,8 @@ public class Series {
     private String name;
     @JsonProperty("value")
     private String value;
+    @JsonProperty("id")
+    private String id;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -42,6 +44,16 @@ public class Series {
     @JsonProperty("value")
     public void setValue(String value) {
         this.value = value;
+    }
+
+    @JsonProperty("id")
+    public String getId() {
+        return id;
+    }
+
+    @JsonProperty("id")
+    public void setId(String id) {
+        this.id = id;
     }
 
     @JsonAnyGetter
