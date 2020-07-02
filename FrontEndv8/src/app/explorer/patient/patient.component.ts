@@ -22,6 +22,7 @@ export class PatientComponent {
   page: number = 0;
   size: number = 10;
   dashboardId: string = "";
+  name: string = "";
 
   displayedColumns: string[] = ['name/address', 'dob/nhsNumber', 'age/gender', 'usual_gp/organisation', 'registration'];
 
@@ -45,7 +46,7 @@ export class PatientComponent {
 
   loadEvents() {
     this.events = null;
-    this.explorerService.getPatients(this.page, this.size, this.dashboardId)
+    this.explorerService.getPatients(this.page, this.size, this.dashboardId, this.name)
       .subscribe(
         (result) => this.displayEvents(result),
         (error) => this.log.error(error)

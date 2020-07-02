@@ -68,11 +68,12 @@ public class DashboardEndpoint {
     public Response getPatients(@Context SecurityContext sc,
                                 @QueryParam("page") Integer page,
                                 @QueryParam("size") Integer size,
-                                @QueryParam("dashboardId") String dashboardId) throws Exception {
+                                @QueryParam("dashboardId") String dashboardId,
+                                @QueryParam("name") String name) throws Exception {
         LOG.debug("getPatients");
 
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
-            PatientResult result = viewerDAL.getPatientResult(page, size, dashboardId);
+            PatientResult result = viewerDAL.getPatientResult(page, size, dashboardId, name);
 
             return Response
                     .ok()

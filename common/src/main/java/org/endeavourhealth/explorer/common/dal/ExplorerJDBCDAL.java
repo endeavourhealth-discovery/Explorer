@@ -100,53 +100,152 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         return series;
     }
 
-    public PatientResult getPatientResult(Integer page, Integer size, String dashboardId) throws Exception {
+    public PatientResult getPatientResult(Integer page, Integer size, String dashboardId, String name) throws Exception {
         PatientResult result = new PatientResult();
 
         String sql = "";
 
-        sql = "SELECT p.id,coalesce(p.date_of_birth,'') as date_of_birth,coalesce(c.name,'') as gender,FLOOR(DATEDIFF(now(), p.date_of_birth) / 365.25) as age, " +
-                "coalesce(p.nhs_number,'') as nhs_number,CONCAT(UPPER(coalesce(p.last_name,'')),', ',coalesce(p.first_names,''),' (',coalesce(p.title,''),')') as name, " +
-                "CONCAT(coalesce(a.address_line_1,''),', ',coalesce(a.address_line_2,''),', ',coalesce(a.address_line_3,''),', ',coalesce(a.city,''),', ',coalesce(a.postcode,'')) as address, " +
-                "pr.name as usual_gp,o.name as orgname, con.name as reg_type, p.date_of_death, coalesce(e.date_registered,'') as startdate, '' as mobile " +
-                "FROM patient p " +
-                "join patient_address a on a.id = p.current_address_id " +
-                "join concept c on c.dbid = p.gender_concept_id " +
-                "join episode_of_care e on e.patient_id = p.id " +
-                "join practitioner pr on pr.id = e.usual_gp_practitioner_id " +
-                "join organization o on o.id = p.organization_id " +
-                "join concept con on con.dbid = e.registration_type_concept_id " +
-                "join dashboards.dashboard_patients dp on dp.patient_id = p.id " +
-                "where dp.dashboard_id = ? order by p.last_name, p.first_names LIMIT ?,?";
 
-        try (PreparedStatement statement = conn.prepareStatement(sql)) {
-            statement.setString(1, dashboardId);
-            statement.setInt(2, page * 10);
-            statement.setInt(3, size);
-            try (ResultSet resultSet = statement.executeQuery()) {
-                result.setResults(getPatientSummaryList(resultSet));
+        String[] names = name.split(" ", 2);
+
+        if (!dashboardId.equals("") && name.equals("")) { // No name
+            sql = "SELECT p.id,coalesce(p.date_of_birth,'') as date_of_birth,coalesce(c.name,'') as gender,FLOOR(DATEDIFF(now(), p.date_of_birth) / 365.25) as age, " +
+                    "coalesce(p.nhs_number,'') as nhs_number,CONCAT(UPPER(coalesce(p.last_name,'')),', ',coalesce(p.first_names,''),' (',coalesce(p.title,''),')') as name, " +
+                    "CONCAT(coalesce(a.address_line_1,''),', ',coalesce(a.address_line_2,''),', ',coalesce(a.address_line_3,''),', ',coalesce(a.city,''),', ',coalesce(a.postcode,'')) as address, " +
+                    "pr.name as usual_gp,o.name as orgname, con.name as reg_type, p.date_of_death, coalesce(e.date_registered,'') as startdate, '' as mobile " +
+                    "FROM patient p " +
+                    "join patient_address a on a.id = p.current_address_id " +
+                    "join concept c on c.dbid = p.gender_concept_id " +
+                    "join episode_of_care e on e.patient_id = p.id " +
+                    "join practitioner pr on pr.id = e.usual_gp_practitioner_id " +
+                    "join organization o on o.id = p.organization_id " +
+                    "join concept con on con.dbid = e.registration_type_concept_id " +
+                    "join dashboards.dashboard_patients dp on dp.patient_id = p.id " +
+                    "where dp.dashboard_id = ? order by p.last_name, p.first_names LIMIT ?,?";
+
+            try (PreparedStatement statement = conn.prepareStatement(sql)) {
+                statement.setString(1, dashboardId);
+                statement.setInt(2, page * 10);
+                statement.setInt(3, size);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    result.setResults(getPatientSummaryList(resultSet));
+                }
+            }
+
+            sql = "SELECT count(1) " +
+                    "FROM patient p \n" +
+                    "join patient_address a on a.id = p.current_address_id " +
+                    "join concept c on c.dbid = p.gender_concept_id " +
+                    "join episode_of_care e on e.patient_id = p.id " +
+                    "join practitioner pr on pr.id = e.usual_gp_practitioner_id " +
+                    "join organization o on o.id = p.organization_id " +
+                    "join concept con on con.dbid = e.registration_type_concept_id " +
+                    "join dashboards.dashboard_patients dp on dp.patient_id = p.id " +
+                    "where dp.dashboard_id = ?";
+
+            try (PreparedStatement statement = conn.prepareStatement(sql)) {
+                statement.setString(1, dashboardId);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    resultSet.next();
+                    result.setLength(resultSet.getInt(1));
+                }
+            }
+        }
+        else if (!dashboardId.equals("") && names.length == 1) { // Last name
+            sql = "SELECT p.id,coalesce(p.date_of_birth,'') as date_of_birth,coalesce(c.name,'') as gender,FLOOR(DATEDIFF(now(), p.date_of_birth) / 365.25) as age, " +
+                    "coalesce(p.nhs_number,'') as nhs_number,CONCAT(UPPER(coalesce(p.last_name,'')),', ',coalesce(p.first_names,''),' (',coalesce(p.title,''),')') as name, " +
+                    "CONCAT(coalesce(a.address_line_1,''),', ',coalesce(a.address_line_2,''),', ',coalesce(a.address_line_3,''),', ',coalesce(a.city,''),', ',coalesce(a.postcode,'')) as address, " +
+                    "pr.name as usual_gp,o.name as orgname, con.name as reg_type, p.date_of_death, coalesce(e.date_registered,'') as startdate, '' as mobile " +
+                    "FROM patient p " +
+                    "join patient_address a on a.id = p.current_address_id " +
+                    "join concept c on c.dbid = p.gender_concept_id " +
+                    "join episode_of_care e on e.patient_id = p.id " +
+                    "join practitioner pr on pr.id = e.usual_gp_practitioner_id " +
+                    "join organization o on o.id = p.organization_id " +
+                    "join concept con on con.dbid = e.registration_type_concept_id " +
+                    "join dashboards.dashboard_patients dp on dp.patient_id = p.id " +
+                    "where dp.dashboard_id = ? and p.last_name like ? order by p.last_name, p.first_names LIMIT ?,?";
+
+            try (PreparedStatement statement = conn.prepareStatement(sql)) {
+                statement.setString(1, dashboardId);
+                statement.setString(2, names[0]+"%");
+                statement.setInt(3, page * 10);
+                statement.setInt(4, size);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    result.setResults(getPatientSummaryList(resultSet));
+                }
+            }
+
+            sql = "SELECT count(1) " +
+                    "FROM patient p \n" +
+                    "join patient_address a on a.id = p.current_address_id " +
+                    "join concept c on c.dbid = p.gender_concept_id " +
+                    "join episode_of_care e on e.patient_id = p.id " +
+                    "join practitioner pr on pr.id = e.usual_gp_practitioner_id " +
+                    "join organization o on o.id = p.organization_id " +
+                    "join concept con on con.dbid = e.registration_type_concept_id " +
+                    "join dashboards.dashboard_patients dp on dp.patient_id = p.id " +
+                    "where dp.dashboard_id = ? and p.last_name like ?";
+
+            try (PreparedStatement statement = conn.prepareStatement(sql)) {
+                statement.setString(1, dashboardId);
+                statement.setString(2, names[0]+"%");
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    resultSet.next();
+                    result.setLength(resultSet.getInt(1));
+                }
             }
         }
 
-        sql = "SELECT count(1) " +
-                "FROM patient p \n" +
-                "join patient_address a on a.id = p.current_address_id " +
-                "join concept c on c.dbid = p.gender_concept_id " +
-                "join episode_of_care e on e.patient_id = p.id " +
-                "join practitioner pr on pr.id = e.usual_gp_practitioner_id " +
-                "join organization o on o.id = p.organization_id " +
-                "join concept con on con.dbid = e.registration_type_concept_id " +
-                "join dashboards.dashboard_patients dp on dp.patient_id = p.id " +
-                "where dp.dashboard_id = ?";
+        else if (!dashboardId.equals("") && names.length>1) { // Full name
+            sql = "SELECT p.id,coalesce(p.date_of_birth,'') as date_of_birth,coalesce(c.name,'') as gender,FLOOR(DATEDIFF(now(), p.date_of_birth) / 365.25) as age, " +
+                    "coalesce(p.nhs_number,'') as nhs_number,CONCAT(UPPER(coalesce(p.last_name,'')),', ',coalesce(p.first_names,''),' (',coalesce(p.title,''),')') as name, " +
+                    "CONCAT(coalesce(a.address_line_1,''),', ',coalesce(a.address_line_2,''),', ',coalesce(a.address_line_3,''),', ',coalesce(a.city,''),', ',coalesce(a.postcode,'')) as address, " +
+                    "pr.name as usual_gp,o.name as orgname, con.name as reg_type, p.date_of_death, coalesce(e.date_registered,'') as startdate, '' as mobile " +
+                    "FROM patient p " +
+                    "join patient_address a on a.id = p.current_address_id " +
+                    "join concept c on c.dbid = p.gender_concept_id " +
+                    "join episode_of_care e on e.patient_id = p.id " +
+                    "join practitioner pr on pr.id = e.usual_gp_practitioner_id " +
+                    "join organization o on o.id = p.organization_id " +
+                    "join concept con on con.dbid = e.registration_type_concept_id " +
+                    "join dashboards.dashboard_patients dp on dp.patient_id = p.id " +
+                    "where dp.dashboard_id = ? and (p.first_names like ? and p.last_name like ?) order by p.last_name, p.first_names LIMIT ?,?";
 
-        try (PreparedStatement statement = conn.prepareStatement(sql)) {
-            statement.setString(1, dashboardId);
-            try (ResultSet resultSet = statement.executeQuery()) {
-                resultSet.next();
-                result.setLength(resultSet.getInt(1));
+            try (PreparedStatement statement = conn.prepareStatement(sql)) {
+                statement.setString(1, dashboardId);
+                statement.setString(2, names[0]+"%");
+                statement.setString(3, names[1]+"%");
+                statement.setInt(4, page * 10);
+                statement.setInt(5, size);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    result.setResults(getPatientSummaryList(resultSet));
+                }
+            }
+
+            sql = "SELECT count(1) " +
+                    "FROM patient p \n" +
+                    "join patient_address a on a.id = p.current_address_id " +
+                    "join concept c on c.dbid = p.gender_concept_id " +
+                    "join episode_of_care e on e.patient_id = p.id " +
+                    "join practitioner pr on pr.id = e.usual_gp_practitioner_id " +
+                    "join organization o on o.id = p.organization_id " +
+                    "join concept con on con.dbid = e.registration_type_concept_id " +
+                    "join dashboards.dashboard_patients dp on dp.patient_id = p.id " +
+                    "where dp.dashboard_id = ? and (p.first_names like ? and p.last_name like ?)";
+
+            try (PreparedStatement statement = conn.prepareStatement(sql)) {
+                statement.setString(1, dashboardId);
+                statement.setString(2, names[0]+"%");
+                statement.setString(3, names[1]+"%");
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    resultSet.next();
+                    result.setLength(resultSet.getInt(1));
+                }
             }
         }
-        return result;
+
+            return result;
     }
 
     private List<PatientSummary> getPatientSummaryList(ResultSet resultSet) throws SQLException {
