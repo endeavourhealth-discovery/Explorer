@@ -18,11 +18,11 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         String sqlCount = "";
 
         sql = "SELECT dashboard_id, name, updated "+
-                "FROM dashboard_library " +
+                "FROM dashboards.dashboard_library " +
                 "order by name LIMIT ?,?";
 
         sqlCount = "SELECT count(1) " +
-                "FROM dashboard_library";
+                "FROM dashboards.dashboard_library";
 
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
             statement.setInt(1, page*12);

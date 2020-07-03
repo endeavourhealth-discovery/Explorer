@@ -73,9 +73,12 @@ export class DashboardComponent implements OnInit {
 
 
   ngOnInit() {
-    this.route.data.subscribe(
-      (data) => this.chartType = data.chartType
-    );
+
+    this.route.queryParams
+      .subscribe(params => {
+        console.log(params['chartType']);
+        this.chartType = params['chartType'];
+      });
     this.refresh();
   }
 
@@ -84,7 +87,7 @@ export class DashboardComponent implements OnInit {
     let multiChart = true;
     console.log("Values: " + this.selected);
 
-    if (this.chartType == "nhs111") {
+    if (this.chartType == "NHS111 Dashboard") {
       this.resultList = ['[D]Fever NOS', '[D]Cough'];
       if (this.selected == "") {
         values = this.resultList.toString();
@@ -95,7 +98,7 @@ export class DashboardComponent implements OnInit {
       this.showLineCharts = true;
       this.showBarCharts = false;
       this.showResult = true;
-    } else if (this.chartType == "consultations_covid") {
+    } else if (this.chartType == "Covid Consultations Dashboard") {
       this.resultList = ['All consultations', 'Suspected coronavirus consultation'];
       if (this.selected == "") {
         values = this.resultList.toString();
@@ -106,7 +109,7 @@ export class DashboardComponent implements OnInit {
       this.showLineCharts = true;
       this.showBarCharts = false;
       this.showResult = true;
-    } else if (this.chartType == "consultations_types") {
+    } else if (this.chartType == "Consultation Types Dashboard") {
       this.resultList = ['Home visit', 'Surgery face to face consultation', 'Telephone consultation', 'Video consultation', 'Email or Text message consultation'];
       if (this.selected == "") {
         values = this.resultList.toString();
@@ -118,7 +121,7 @@ export class DashboardComponent implements OnInit {
       this.showBarCharts = false;
       this.showAreaChart = false;
       this.showResult = true;
-    } else if (this.chartType == "hospital") {
+    } else if (this.chartType == "Hospital Encounter Dashboard") {
       this.resultList = ['Hospital inpatient admission', 'Hospital day case discharge', 'A&E discharge/end visit', 'A&E transfer', 'A&E attendance', 'Hospital discharge'];
       if (this.selected == "") {
         values = this.resultList.toString();
@@ -130,7 +133,7 @@ export class DashboardComponent implements OnInit {
       this.showBarCharts = false;
       this.showAreaChart = false;
       this.showResult = true;
-    } else if (this.chartType == "covid") {
+    } else if (this.chartType == "Covid Trend Dashboard") {
       this.resultList = ['Suspected coronavirus infection', 'Confirmed Covid 19', 'Tested for coronavirus infection'];
       if (this.selected == "") {
         values = this.resultList.toString();
@@ -142,7 +145,7 @@ export class DashboardComponent implements OnInit {
       this.showBarCharts = false;
       this.showAreaChart = false;
       this.showResult = true;
-    } else if (this.chartType == "covid_deceased_age") {
+    } else if (this.chartType == "Covid Age Deceased Dashboard") {
       values = 'covid_death_age';
       this.chartTitle = 'NEL/NWL Age breakdown of deceased patients with Confirmed or Suspected Covid 19';
       multiChart = false;
@@ -150,13 +153,13 @@ export class DashboardComponent implements OnInit {
       this.showLineCharts = false;
       this.showBarCharts = true;
       this.xAxisLabel = 'Age Decile Band';
-    } else if (this.chartType == "covid_deceased_daily") {
+    } else if (this.chartType == "Covid Daily Deceased Dashboard") {
       values = 'covid_death_daily';
       this.chartTitle = 'NEL/NWL Daily trend of deceased patients with Confirmed or Suspected Covid 19';
       this.showLineCharts = true;
       this.showBarCharts = false;
       this.showAreaChart = true;
-    } else if (this.chartType == "covid_deceased_ccg") {
+    } else if (this.chartType == "Covid CCG Deceased Dashboard") {
       values = 'covid_death_ccg';
       this.chartTitle = 'NEL/NWL CCG breakdown of deceased patients with Confirmed or Suspected Covid 19';
       multiChart = false;

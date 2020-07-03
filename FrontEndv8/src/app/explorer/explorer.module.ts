@@ -29,11 +29,13 @@ import {BarChartModule, LineChartModule, AreaChartModule} from "@swimlane/ngx-ch
 import {Globals} from "./globals";
 import {DashboardComponent} from "./dashboard/dashboard.component";
 import {PatientComponent} from "./patient/patient.component";
+import {DashboardLibraryComponent} from "./dashboardlibrary/dashboardlibrary.component";
 
 @NgModule({
   declarations: [
     DashboardComponent,
-    PatientComponent
+    PatientComponent,
+    DashboardLibraryComponent
   ],
     imports: [
         BrowserModule,
