@@ -17,6 +17,25 @@ public class DashboardEndpoint {
     private static final Logger LOG = LoggerFactory.getLogger(DashboardEndpoint.class);
 
     @GET
+    @Path("/dashboardlibrary")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getDashboardLibrary(@Context SecurityContext sc,
+                                        @QueryParam("page") Integer page,
+                                        @QueryParam("size") Integer size) throws Exception {
+        LOG.debug("getDashboardLibrary");
+
+        try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
+            DashboardLibraryResult result = viewerDAL.getDashboardLibrary(page, size);
+
+            return Response
+                    .ok()
+                    .entity(result)
+                    .build();
+        }
+    }
+
+    @GET
     @Path("/dashboard")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)

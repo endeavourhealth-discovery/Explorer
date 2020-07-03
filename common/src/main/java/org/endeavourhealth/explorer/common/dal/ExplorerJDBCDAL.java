@@ -11,6 +11,55 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
     private static final Logger LOG = LoggerFactory.getLogger(ExplorerJDBCDAL.class);
 
+    public DashboardLibraryResult getDashboardLibrary(Integer page, Integer size) throws Exception {
+        DashboardLibraryResult result = new DashboardLibraryResult();
+
+        String sql = "";
+        String sqlCount = "";
+
+        sql = "SELECT dashboard_id, name, updated "+
+                "FROM dashboard_library " +
+                "order by name LIMIT ?,?";
+
+        sqlCount = "SELECT count(1) " +
+                "FROM dashboard_library";
+
+        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            statement.setInt(1, page*12);
+            statement.setInt(2, size);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                result.setResults(getDashboardList(resultSet));
+            }
+        }
+
+        try (PreparedStatement statement = conn.prepareStatement(sqlCount)) {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                resultSet.next();
+                result.setLength(resultSet.getInt(1));
+            }
+        }
+
+        return result;
+    }
+
+    private List<Dashboard> getDashboardList(ResultSet resultSet) throws SQLException {
+        List<Dashboard> result = new ArrayList<>();
+        while (resultSet.next()) {
+            result.add(getDashboard(resultSet));
+        }
+
+        return result;
+    }
+
+    public static Dashboard getDashboard(ResultSet resultSet) throws SQLException {
+        Dashboard dashboard = new Dashboard();
+        dashboard
+                .setDashboardId(resultSet.getInt("dashboard_id"))
+                .setName(resultSet.getString("name"))
+                .setUpdated(resultSet.getDate("updated"));
+        return dashboard;
+    }
+
     public ChartResult getDashboard(String chartName, String dateFrom, String dateTo) throws Exception {
 
         List<String> charts = Arrays.asList(chartName.split("\\s*,\\s*"));
