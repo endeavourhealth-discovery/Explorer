@@ -88,12 +88,12 @@ public class DashboardEndpoint {
                                 @QueryParam("page") Integer page,
                                 @QueryParam("size") Integer size,
                                 @QueryParam("name") String name,
-                                @QueryParam("legendName") String legendName,
-                                @QueryParam("seriesName") String seriesName) throws Exception {
+                                @QueryParam("seriesGroup") String seriesGroup,
+                                @QueryParam("seriesValue") String seriesValue) throws Exception {
         LOG.debug("getPatients");
 
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
-            PatientResult result = viewerDAL.getPatientResult(page, size, name, legendName, seriesName);
+            PatientResult result = viewerDAL.getPatientResult(page, size, name, seriesGroup, seriesValue);
 
             return Response
                     .ok()
