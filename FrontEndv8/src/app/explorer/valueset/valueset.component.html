@@ -1,0 +1,29 @@
+<mat-card>
+  <mat-card-header class="header2">
+    <div mat-card-avatar>
+      <i class="fad fa-search"></i>
+    </div>
+    <mat-card-title>Value Set</mat-card-title>
+    <mat-card-subtitle>A list of codes, concepts and terms in this value set</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+
+    <div class="flex" fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="16px grid" fxLayoutAlign="start">
+
+      <div>
+      </div>
+      <mat-paginator [length]="events?.length"
+                     [pageSize]="size"
+                     [pageIndex]="page"
+                     [showFirstLastButtons]="true"
+                     (page)="onPage($event)"
+                     fxFlex="100"
+                     fxFill>
+      </mat-paginator>
+    </div>
+    <div mat-dialog-actions>
+      <button mat-raised-button (click)="onCancelClick()">Cancel</button>
+    </div>
+  </mat-card-content>
+
+</mat-card>
