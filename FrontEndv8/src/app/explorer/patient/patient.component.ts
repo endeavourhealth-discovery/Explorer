@@ -7,7 +7,7 @@ import {PageEvent} from "@angular/material/paginator";
 
 
 export interface DialogData {
-  legendName: string;
+  chartName: string;
   seriesName: string;
 }
 
@@ -23,7 +23,7 @@ export class PatientComponent {
   page: number = 0;
   size: number = 10;
   name: string = "";
-  legendName: string = "";
+  chartName: string = "";
   seriesName: string = "";
 
   displayedColumns: string[] = ['name/address', 'dob/nhsNumber', 'age/gender', 'usual_gp/organisation', 'registration'];
@@ -42,14 +42,30 @@ export class PatientComponent {
       {id: "0", name: "no results"},{id: "0", name: "no results"}
     ];
     this.dataSource = new MatTableDataSource(this.events);
-    this.legendName = data.legendName;
+    this.chartName = data.chartName;
     this.seriesName = data.seriesName;
+
+    if ((this.seriesName.toString()).indexOf("GMT") > -1) {
+      var d = new Date(this.seriesName),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+      if (month.length < 2)
+        month = '0' + month;
+      if (day.length < 2)
+        day = '0' + day;
+
+      this.seriesName = [year, month, day].join('-');
+      console.log("seriesName: " + this.seriesName);
+    }
+
     this.loadEvents();
   }
 
   loadEvents() {
     this.events = null;
-    this.explorerService.getPatients(this.page, this.size, this.name, this.legendName, this.seriesName)
+    this.explorerService.getPatients(this.page, this.size, this.name, this.chartName, this.seriesName)
       .subscribe(
         (result) => this.displayEvents(result),
         (error) => this.log.error(error)

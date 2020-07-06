@@ -35,7 +35,7 @@ export class DashboardComponent implements OnInit {
   selected: string = '';
   showResult: boolean = false;
   months: string[] = [''];
-  seriesName: string = "";
+  chartName: string = "";
 
   // options
   legend: boolean = true;
@@ -148,7 +148,7 @@ export class DashboardComponent implements OnInit {
       values = 'covid_death_age';
       this.chartTitle = 'NEL/NWL Age breakdown of deceased patients with Confirmed or Suspected Covid 19';
       multiChart = false;
-      this.seriesName = values;
+      this.chartName = values;
       this.gradient = false;
       this.showLineCharts = false;
       this.showBarCharts = true;
@@ -163,7 +163,7 @@ export class DashboardComponent implements OnInit {
       values = 'covid_death_ccg';
       this.chartTitle = 'NEL/NWL CCG breakdown of deceased patients with Confirmed or Suspected Covid 19';
       multiChart = false;
-      this.seriesName = values;
+      this.chartName = values;
       this.gradient = false;
       this.showLineCharts = false;
       this.showBarCharts = true;
@@ -239,19 +239,19 @@ export class DashboardComponent implements OnInit {
   }
 
   onSelectLine(data): void {
-    this.patientDialog(data.name, data.series);
+    this.patientDialog(data.series, data.name);
   }
 
   onSelectBar(data): void {
-    this.patientDialog(data.name, this.seriesName);
+    this.patientDialog(this.chartName, data.name);
   }
 
-  patientDialog(legendName: any, seriesName: any) {
+  patientDialog(chartName: any, seriesName: any) {
     const dialogRef = this.dialog.open(PatientComponent, {
       height: '850px',
       width: '1600px',
 
-      data: {legendName: legendName, seriesName: seriesName}
+      data: {chartName: chartName, seriesName: seriesName}
     });
 
     dialogRef.afterClosed().subscribe(result => {
