@@ -32,6 +32,7 @@ import {PatientComponent} from "./patient/patient.component";
 import {DashboardLibraryComponent} from "./dashboardlibrary/dashboardlibrary.component";
 import {QueryLibraryComponent} from "./querylibrary/querylibrary.component";
 import {ValueSetLibraryComponent} from "./valuesetlibrary/valuesetlibrary.component";
+import {ValueSetComponent} from "./valueset/valueset.component";
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import {ValueSetLibraryComponent} from "./valuesetlibrary/valuesetlibrary.compon
     PatientComponent,
     DashboardLibraryComponent,
     QueryLibraryComponent,
-    ValueSetLibraryComponent
+    ValueSetLibraryComponent,
+    ValueSetComponent
   ],
     imports: [
         BrowserModule,
@@ -73,7 +75,8 @@ import {ValueSetLibraryComponent} from "./valuesetlibrary/valuesetlibrary.compon
         ReactiveFormsModule
     ],
   entryComponents: [
-    PatientComponent
+    PatientComponent,
+    ValueSetComponent
   ],
   providers: [ Globals ]
 })

@@ -4,6 +4,8 @@ import {ExplorerService} from '../explorer.service';
 import {LoggerService} from 'dds-angular8';
 import {PageEvent} from '@angular/material/paginator';
 import {ActivatedRoute} from "@angular/router";
+import {MatDialog} from "@angular/material/dialog";
+import {ValueSetComponent} from "../valueset/valueset.component";
 
 @Component({
   selector: 'app-valuesetlibrary',
@@ -23,7 +25,8 @@ export class ValueSetLibraryComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private explorerService: ExplorerService,
-    private log: LoggerService
+    private log: LoggerService,
+    private dialog: MatDialog
     ) { }
 
   ngOnInit() {
@@ -50,6 +53,14 @@ export class ValueSetLibraryComponent implements OnInit {
     this.page = event.pageIndex;
     this.size = event.pageSize;
     this.loadEvents();
+  }
+
+  valuesDialog() {
+    const dialogRef = this.dialog.open(ValueSetComponent, {
+      height: '850px',
+      width: '1600px',
+    });
+
   }
 
 }
