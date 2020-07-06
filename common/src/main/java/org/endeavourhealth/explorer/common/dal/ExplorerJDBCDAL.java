@@ -148,7 +148,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         return series;
     }
 
-    public PatientResult getPatientResult(Integer page, Integer size, String name, String seriesGroup, String seriesValue) throws Exception {
+    public PatientResult getPatientResult(Integer page, Integer size, String name, String chartName, String seriesName) throws Exception {
         PatientResult result = new PatientResult();
 
         String sql = "";
@@ -174,8 +174,8 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                     "order by p.last_name, p.first_names LIMIT ?,?";
 
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
-                statement.setString(1, seriesGroup);
-                statement.setString(2, seriesValue);
+                statement.setString(1, chartName);
+                statement.setString(2, seriesName);
                 statement.setInt(3, page * 10);
                 statement.setInt(4, size);
                 try (ResultSet resultSet = statement.executeQuery()) {
@@ -198,8 +198,8 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
 
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
-                statement.setString(1, seriesGroup);
-                statement.setString(2, seriesValue);
+                statement.setString(1, chartName);
+                statement.setString(2, seriesName);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     resultSet.next();
                     result.setLength(resultSet.getInt(1));
@@ -225,8 +225,8 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                     "and p.last_name like ? order by p.last_name, p.first_names LIMIT ?,?";
 
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
-                statement.setString(1, seriesGroup);
-                statement.setString(2, seriesValue);
+                statement.setString(1, chartName);
+                statement.setString(2, seriesName);
                 statement.setString(3, names[0]+"%");
                 statement.setInt(4, page * 10);
                 statement.setInt(5, size);
@@ -250,8 +250,8 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                     "and p.last_name like ?";
 
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
-                statement.setString(1, seriesGroup);
-                statement.setString(2, seriesValue);
+                statement.setString(1, chartName);
+                statement.setString(2, seriesName);
                 statement.setString(3, names[0]+"%");
                 try (ResultSet resultSet = statement.executeQuery()) {
                     resultSet.next();
@@ -278,8 +278,8 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                     "and (p.first_names like ? and p.last_name like ?) order by p.last_name, p.first_names LIMIT ?,?";
 
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
-                statement.setString(1, seriesGroup);
-                statement.setString(2, seriesValue);
+                statement.setString(1, chartName);
+                statement.setString(2, seriesName);
                 statement.setString(3, names[0]+"%");
                 statement.setString(4, names[1]+"%");
                 statement.setInt(5, page * 10);
@@ -304,8 +304,8 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                     "and (p.first_names like ? and p.last_name like ?)";
 
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
-                statement.setString(1, seriesGroup);
-                statement.setString(2, seriesValue);
+                statement.setString(1, chartName);
+                statement.setString(2, seriesName);
                 statement.setString(3, names[0]+"%");
                 statement.setString(4, names[1]+"%");
                 try (ResultSet resultSet = statement.executeQuery()) {
