@@ -31,13 +31,15 @@ import {DashboardComponent} from "./dashboard/dashboard.component";
 import {PatientComponent} from "./patient/patient.component";
 import {DashboardLibraryComponent} from "./dashboardlibrary/dashboardlibrary.component";
 import {QueryLibraryComponent} from "./querylibrary/querylibrary.component";
+import {ValueSetLibraryComponent} from "./valuesetlibrary/valuesetlibrary.component";
 
 @NgModule({
   declarations: [
     DashboardComponent,
     PatientComponent,
     DashboardLibraryComponent,
-    QueryLibraryComponent
+    QueryLibraryComponent,
+    ValueSetLibraryComponent
   ],
     imports: [
         BrowserModule,
