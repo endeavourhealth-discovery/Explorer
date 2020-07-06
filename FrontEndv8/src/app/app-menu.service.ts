@@ -3,6 +3,7 @@ import {Routes} from '@angular/router';
 import {AbstractMenuProvider, MenuOption} from 'dds-angular8';
 import {DashboardComponent} from "./explorer/dashboard/dashboard.component";
 import {DashboardLibraryComponent} from "./explorer/dashboardlibrary/dashboardlibrary.component";
+import {QueryLibraryComponent} from "./explorer/querylibrary/querylibrary.component";
 
 @Injectable()
 export class AppMenuService implements  AbstractMenuProvider {
@@ -10,7 +11,8 @@ export class AppMenuService implements  AbstractMenuProvider {
     return [
       {path: '', redirectTo: '/dashboardlibrary', pathMatch: 'full'},
       {path: 'dashboard', component: DashboardComponent, data: {role: 'explorer', chartType: 'name'}},
-      {path: 'dashboardlibrary', component: DashboardLibraryComponent, data: {role: 'explorer'}}
+      {path: 'dashboardlibrary', component: DashboardLibraryComponent, data: {role: 'explorer'}},
+      {path: 'querylibrary', component: QueryLibraryComponent, data: {role: 'explorer'}}
     ];
   }
 
@@ -24,7 +26,8 @@ export class AppMenuService implements  AbstractMenuProvider {
 
   getMenuOptions(): MenuOption[] {
     return [
-      {icon: 'fas fa-analytics', caption: 'Dashboard Library', state: 'dashboardlibrary'}
+      {icon: 'fas fa-analytics', caption: 'Dashboard Library', state: 'dashboardlibrary'},
+      {icon: 'fas fa-analytics', caption: 'Query Library', state: 'querylibrary'}
     ];
   }
 }

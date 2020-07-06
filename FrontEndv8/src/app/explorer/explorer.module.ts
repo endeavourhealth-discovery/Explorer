@@ -30,12 +30,14 @@ import {Globals} from "./globals";
 import {DashboardComponent} from "./dashboard/dashboard.component";
 import {PatientComponent} from "./patient/patient.component";
 import {DashboardLibraryComponent} from "./dashboardlibrary/dashboardlibrary.component";
+import {QueryLibraryComponent} from "./querylibrary/querylibrary.component";
 
 @NgModule({
   declarations: [
     DashboardComponent,
     PatientComponent,
-    DashboardLibraryComponent
+    DashboardLibraryComponent,
+    QueryLibraryComponent
   ],
     imports: [
         BrowserModule,
