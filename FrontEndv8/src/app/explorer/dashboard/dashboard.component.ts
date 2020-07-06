@@ -35,7 +35,7 @@ export class DashboardComponent implements OnInit {
   selected: string = '';
   showResult: boolean = false;
   months: string[] = [''];
-  dashboardId: string = "";
+  seriesName: string = "";
 
   // options
   legend: boolean = true;
@@ -85,7 +85,6 @@ export class DashboardComponent implements OnInit {
   refresh() {
     let values = "";
     let multiChart = true;
-    console.log("Values: " + this.selected);
 
     if (this.chartType == "NHS111 Dashboard") {
       this.resultList = ['[D]Fever NOS', '[D]Cough'];
@@ -149,6 +148,7 @@ export class DashboardComponent implements OnInit {
       values = 'covid_death_age';
       this.chartTitle = 'NEL/NWL Age breakdown of deceased patients with Confirmed or Suspected Covid 19';
       multiChart = false;
+      this.seriesName = values;
       this.gradient = false;
       this.showLineCharts = false;
       this.showBarCharts = true;
@@ -163,6 +163,7 @@ export class DashboardComponent implements OnInit {
       values = 'covid_death_ccg';
       this.chartTitle = 'NEL/NWL CCG breakdown of deceased patients with Confirmed or Suspected Covid 19';
       multiChart = false;
+      this.seriesName = values;
       this.gradient = false;
       this.showLineCharts = false;
       this.showBarCharts = true;
@@ -173,7 +174,7 @@ export class DashboardComponent implements OnInit {
       this.explorerService.getDashboard(values, this.formatDate(this.dateFrom), this.formatDate(this.dateTo))
         .subscribe(result => {
           this.chartResults = result.results;
-          console.log(this.chartResults);
+
           // apply log10 to values in series
           this.chartResults = this.chartResults.map(
             e => {
@@ -183,8 +184,7 @@ export class DashboardComponent implements OnInit {
                   v => {
                     return {
                       name: new Date(v.name),
-                      value: this.applyLogarithm(v.value),
-                      id: v.id
+                      value: this.applyLogarithm(v.value)
                     }
                   }
                 )
@@ -196,8 +196,6 @@ export class DashboardComponent implements OnInit {
     } else {
       this.explorerService.getDashboardSingle(values, this.formatDate(this.dateFrom), this.formatDate(this.dateTo), 1)
         .subscribe(result => {
-          console.log(result);
-
           this.chartResultsSingle = result.series;
         });
     }
@@ -240,11 +238,20 @@ export class DashboardComponent implements OnInit {
     return val.toLocaleString();
   }
 
-  onSelect(data): void {
+  onSelectLine(data): void {
+    this.patientDialog(data.name, data.series);
+  }
+
+  onSelectBar(data): void {
+    this.patientDialog(data.name, this.seriesName);
+  }
+
+  patientDialog(legendName: any, seriesName: any) {
     const dialogRef = this.dialog.open(PatientComponent, {
       height: '850px',
       width: '1600px',
-      data: {dashboardId: data.id}
+
+      data: {legendName: legendName, seriesName: seriesName}
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -254,7 +261,6 @@ export class DashboardComponent implements OnInit {
         window.location.href = "https://devgateway.discoverydataservice.net/record-viewer/#/summary?patient_id="+patientId;
       }
     });
-
   }
 
   formatDate(date) {

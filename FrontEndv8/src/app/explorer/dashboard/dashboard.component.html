@@ -59,7 +59,7 @@
           [yAxisTickFormatting]="formatYAxis"
           [showRefLines]="showRefLines"
           [referenceLines]="refLines"
-          (select)="onSelect($event)"
+          (select)="onSelectLine($event)"
         >
           <ng-template #tooltipTemplate let-model="model">
             <span class="tooltip-label">{{formatXAxis(model.name)}} •  {{model.series}} • {{formatTooltipYAxis(model.value)}}</span>
@@ -91,7 +91,7 @@
           [gradient]="gradient"
           [xAxisTickFormatting]="formatXAxis"
           [yAxisTickFormatting]="formatYAxis"
-          (select)="onSelect($event)"
+          (select)="onSelectLine($event)"
         >
           <ng-template #tooltipTemplate let-model="model">
             <span class="tooltip-label">{{formatXAxis(model.name)}} •  {{model.series}} • {{formatTooltipYAxis(model.value)}}</span>
@@ -122,7 +122,7 @@
         [results]="chartResultsSingle"
         [legendPosition]="legendPosition"
         [gradient]="gradient"
-        (select)="onSelect($event)"
+        (select)="onSelectBar($event)"
       >
       </ngx-charts-bar-vertical>
     </div>

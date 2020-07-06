@@ -31,13 +31,14 @@ export class ExplorerService {
     return this.http.get('api/events/dashboardsingle', {params});
   }
 
-  getPatients(page?: number, size?: number, dashboardId?: string, name?: string): Observable<any> {
+  getPatients(page?: number, size?: number, name?: string, legendName?: string, seriesName?: string): Observable<any> {
     console.log("page: "+page+", size: "+size);
     let params = new HttpParams();
     params = params.append('page', page.toString());
     params = params.append('size', size.toString());
-    params = params.append('dashboardId', dashboardId);
     params = params.append('name', name);
+    params = params.append('legendName', legendName);
+    params = params.append('seriesName', seriesName);
 
     return this.http.get('api/events/patients', {params});
   }
