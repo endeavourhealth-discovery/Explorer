@@ -45,19 +45,8 @@ export class PatientComponent {
     this.chartName = data.chartName;
     this.seriesName = data.seriesName;
 
-    if ((this.seriesName.toString()).indexOf("GMT") > -1) {
-      var d = new Date(this.seriesName),
-        month = '' + (d.getMonth() + 1),
-        day = '' + d.getDate(),
-        year = d.getFullYear();
-
-      if (month.length < 2)
-        month = '0' + month;
-      if (day.length < 2)
-        day = '0' + day;
-
-      this.seriesName = [year, month, day].join('-');
-      console.log("seriesName: " + this.seriesName);
+    if (this.seriesName.toString().indexOf("GMT") > -1) { // date type of series
+      this.seriesName = this.formatDate(this.seriesName);
     }
 
     this.loadEvents();
@@ -94,5 +83,18 @@ export class PatientComponent {
     this.dialogRef.close();
   }
 
+  formatDate(date) {
+    var d = new Date(date),
+      month = '' + (d.getMonth() + 1),
+      day = '' + d.getDate(),
+      year = d.getFullYear();
+
+    if (month.length < 2)
+      month = '0' + month;
+    if (day.length < 2)
+      day = '0' + day;
+
+    return [year, month, day].join('-');
+  }
 
 }

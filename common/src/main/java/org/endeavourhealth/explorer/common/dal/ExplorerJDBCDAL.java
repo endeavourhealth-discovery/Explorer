@@ -53,6 +53,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
     public static Dashboard getDashboard(ResultSet resultSet) throws SQLException {
         Dashboard dashboard = new Dashboard();
+        
         dashboard
                 .setDashboardId(resultSet.getInt("dashboard_id"))
                 .setName(resultSet.getString("name"))
@@ -171,7 +172,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                     "(SELECT patient_id FROM dashboards.dashboard_patients " +
                     "where name = ? " +
                     "and series_name = ?) "+
-                    "order by p.last_name, p.first_names LIMIT ?,?";
+                    "LIMIT ?,?";
 
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
                 statement.setString(1, chartName);
@@ -222,7 +223,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                     "(SELECT patient_id FROM dashboards.dashboard_patients " +
                     "where name = ? " +
                     "and series_name = ?) "+
-                    "and p.last_name like ? order by p.last_name, p.first_names LIMIT ?,?";
+                    "and p.last_name like ? LIMIT ?,?";
 
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
                 statement.setString(1, chartName);
@@ -275,7 +276,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                     "(SELECT patient_id FROM dashboards.dashboard_patients " +
                     "where name = ? " +
                     "and series_name = ?) "+
-                    "and (p.first_names like ? and p.last_name like ?) order by p.last_name, p.first_names LIMIT ?,?";
+                    "and (p.first_names like ? and p.last_name like ?) LIMIT ?,?";
 
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
                 statement.setString(1, chartName);
