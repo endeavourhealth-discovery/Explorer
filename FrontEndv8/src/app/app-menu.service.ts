@@ -13,8 +13,8 @@ export class AppMenuService implements  AbstractMenuProvider {
       {path: '', redirectTo: '/dashboardlibrary', pathMatch: 'full'},
       {path: 'dashboard', component: DashboardComponent, data: {role: 'explorer', chartType: 'name'}},
       {path: 'dashboardlibrary', component: DashboardLibraryComponent, data: {role: 'explorer'}},
-      {path: 'querylibrary', component: DashboardLibraryComponent, data: {role: 'explorer'}},
-      {path: 'valuesetlibrary', component: DashboardLibraryComponent, data: {role: 'explorer'}}
+      {path: 'querylibrary', component: QueryLibraryComponent, data: {role: 'explorer'}},
+      {path: 'valuesetlibrary', component: ValueSetLibraryComponent, data: {role: 'explorer'}}
     ];
   }
 
