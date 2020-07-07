@@ -21,7 +21,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         sql = "SELECT type, original_code, original_term, snomed_id, updated " +
                 "FROM dashboards.value_set_codes " +
                 "WHERE value_set_id = ? " +
-                "order by type LIMIT ?,?";
+                "order by type, original_term LIMIT ?,?";
 
         sqlCount = "SELECT count(1) " +
                 "FROM dashboards.value_set_codes " +
@@ -61,9 +61,9 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
         valueset
                 .setType(resultSet.getString("type"))
-                .setCode(resultSet.getString("code"))
-                .setTerm(resultSet.getString("term"))
-                .setSnomed(resultSet.getString("snomed"))
+                .setCode(resultSet.getString("original_code"))
+                .setTerm(resultSet.getString("original_term"))
+                .setSnomed(resultSet.getString("snomed_id"))
                 .setUpdated(resultSet.getDate("updated"));
         return valueset;
     }
