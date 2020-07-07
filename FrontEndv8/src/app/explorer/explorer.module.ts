@@ -33,6 +33,7 @@ import {DashboardLibraryComponent} from "./dashboardlibrary/dashboardlibrary.com
 import {QueryLibraryComponent} from "./querylibrary/querylibrary.component";
 import {ValueSetLibraryComponent} from "./valuesetlibrary/valuesetlibrary.component";
 import {ValueSetComponent} from "./valueset/valueset.component";
+import {TutorialsComponent} from "./tutorials/tutorials.component";
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import {ValueSetComponent} from "./valueset/valueset.component";
     DashboardLibraryComponent,
     QueryLibraryComponent,
     ValueSetLibraryComponent,
-    ValueSetComponent
+    ValueSetComponent,
+    TutorialsComponent
   ],
     imports: [
         BrowserModule,
