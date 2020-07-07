@@ -11,12 +11,13 @@ export class ExplorerService {
 
   constructor(private http: HttpClient) { }
 
-  getDashboard(charts: string, dateFrom: string, dateTo: string): Observable<any> {
+  getDashboard(charts: string, dateFrom: string, dateTo: string, accumulative: string): Observable<any> {
     let params = new HttpParams();
 
     params = params.append('chartName', charts);
     params = params.append('dateFrom', dateFrom);
     params = params.append('dateTo', dateTo);
+    params = params.append('accumulative', accumulative);
     return this.http.get('api/events/dashboard', {params});
   }
 

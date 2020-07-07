@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ValuesetComponent } from './valueset.component';
+import { ValueSetComponent } from './valueset.component';
 
-describe('PatientComponent', () => {
-  let component: ValuesetComponent;
-  let fixture: ComponentFixture<ValuesetComponent>;
+describe('ValueSetComponent', () => {
+  let component: ValueSetComponent;
+  let fixture: ComponentFixture<ValueSetComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ValuesetComponent ]
+      declarations: [ ValueSetComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ValuesetComponent);
+    fixture = TestBed.createComponent(ValueSetComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

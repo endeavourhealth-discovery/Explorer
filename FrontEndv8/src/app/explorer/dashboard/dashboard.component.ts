@@ -10,7 +10,6 @@ import {MatDialog} from "@angular/material/dialog";
 import {PatientComponent} from "../patient/patient.component";
 import {Globals} from '../globals'
 
-
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -54,7 +53,8 @@ export class DashboardComponent implements OnInit {
   showAreaChart: boolean = true;
   gradient: boolean = true;
   showRefLines: boolean = false;
-  logarithmic: boolean = true;
+  logarithmic: boolean = false;
+  accumulative: boolean = false;
 
   refLines = [{value: 1, name: 'Minimum'}, {value: 2, name: 'Average'}, {value: 3, name: 'Maximum'}];
 
@@ -171,7 +171,12 @@ export class DashboardComponent implements OnInit {
     }
 
     if (multiChart) {
-      this.explorerService.getDashboard(values, this.formatDate(this.dateFrom), this.formatDate(this.dateTo))
+      let accumulative = "0";
+      if (this.accumulative) {
+        accumulative = "1";
+      }
+
+      this.explorerService.getDashboard(values, this.formatDate(this.dateFrom), this.formatDate(this.dateTo), accumulative)
         .subscribe(result => {
           this.chartResults = result.results;
 
