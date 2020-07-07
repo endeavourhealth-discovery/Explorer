@@ -19,7 +19,7 @@ export class ValueSetComponent {
   events: any[] = [];
   dataSource: MatTableDataSource<any>;
   page: number = 0;
-  size: number = 10;
+  size: number = 13;
   id: string = "";
 
   displayedColumns: string[] = ['type', 'code', 'term', 'snomed', 'updated'];
