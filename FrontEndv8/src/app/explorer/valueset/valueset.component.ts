@@ -5,6 +5,9 @@ import {LoggerService} from 'dds-angular8';
 import {MatTableDataSource} from "@angular/material/table";
 import {PageEvent} from "@angular/material/paginator";
 
+export interface DialogData {
+  id: string;
+}
 
 @Component({
   selector: 'app-valueset',
@@ -17,22 +20,23 @@ export class ValueSetComponent {
   dataSource: MatTableDataSource<any>;
   page: number = 0;
   size: number = 10;
-  name: string = "";
-  chartName: string = "";
-  seriesName: string = "";
+  id: string = "";
 
+  displayedColumns: string[] = ['type', 'code', 'term', 'snomed', 'updated'];
 
   constructor(
     public dialogRef: MatDialogRef<ValueSetComponent>,
     private explorerService: ExplorerService,
-    private log: LoggerService) {
-
+    private log: LoggerService,
+    @Inject(MAT_DIALOG_DATA) public data: DialogData) {
+    this.id = data.id;
+    console.log("ID: " + this.id);
     this.loadEvents();
   }
 
   loadEvents() {
     this.events = null;
-    this.explorerService.getPatients(this.page, this.size, this.name, this.chartName, this.seriesName)
+    this.explorerService.getValueSet(this.page, this.size, this.id)
       .subscribe(
         (result) => this.displayEvents(result),
         (error) => this.log.error(error)

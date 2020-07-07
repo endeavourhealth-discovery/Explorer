@@ -52,4 +52,23 @@ export class ExplorerService {
     return this.http.get('api/events/dashboardlibrary', {params});
   }
 
+  getValueSetLibrary(page?: number, size?: number): Observable<any> {
+    console.log("page: "+page+", size: "+size);
+    let params = new HttpParams();
+    params = params.append('page', page.toString());
+    params = params.append('size', size.toString());
+
+    return this.http.get('api/events/valuesetlibrary', {params});
+  }
+
+  getValueSet(page?: number, size?: number, id?: string): Observable<any> {
+    console.log("page: "+page+", size: "+size);
+    let params = new HttpParams();
+    params = params.append('page', page.toString());
+    params = params.append('size', size.toString());
+    params = params.append('id', id);
+
+    return this.http.get('api/events/valueset', {params});
+  }
+
 }

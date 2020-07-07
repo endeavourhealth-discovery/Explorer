@@ -102,5 +102,44 @@ public class DashboardEndpoint {
         }
     }
 
+    @GET
+    @Path("/valuesetlibrary")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getValueSetLibrary(@Context SecurityContext sc,
+                                        @QueryParam("page") Integer page,
+                                        @QueryParam("size") Integer size) throws Exception {
+        LOG.debug("getValueSetLibrary");
+
+        try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
+            ValueSetLibraryResult result = viewerDAL.getValueSetLibrary(page, size);
+
+            return Response
+                    .ok()
+                    .entity(result)
+                    .build();
+        }
+    }
+
+    @GET
+    @Path("/valueset")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getValueSet(@Context SecurityContext sc,
+                                       @QueryParam("page") Integer page,
+                                       @QueryParam("size") Integer size,
+                                       @QueryParam("id") String id) throws Exception {
+        LOG.debug("getValueSet");
+
+        try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
+            ValueSetResult result = viewerDAL.getValueSet(page, size, id);
+
+            return Response
+                    .ok()
+                    .entity(result)
+                    .build();
+        }
+    }
+
 
 }

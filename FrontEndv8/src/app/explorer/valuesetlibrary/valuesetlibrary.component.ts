@@ -7,6 +7,7 @@ import {ActivatedRoute} from "@angular/router";
 import {MatDialog} from "@angular/material/dialog";
 import {ValueSetComponent} from "../valueset/valueset.component";
 
+
 @Component({
   selector: 'app-valuesetlibrary',
   templateUrl: './valuesetlibrary.component.html',
@@ -26,17 +27,16 @@ export class ValueSetLibraryComponent implements OnInit {
     private route: ActivatedRoute,
     private explorerService: ExplorerService,
     private log: LoggerService,
-    private dialog: MatDialog
-    ) { }
+    private dialog: MatDialog) { }
 
   ngOnInit() {
-    this.loadEvents()
+    this.loadEvents();
   }
 
   loadEvents() {
     this.events = null;
     console.log("page: "+this.page+", size: "+this.size);
-    this.explorerService.getDashboardLibrary(this.page, this.size)
+    this.explorerService.getValueSetLibrary(this.page, this.size)
       .subscribe(
         (result) => this.displayEvents(result),
         (error) => this.log.error(error)
@@ -55,10 +55,12 @@ export class ValueSetLibraryComponent implements OnInit {
     this.loadEvents();
   }
 
-  valuesDialog() {
+  valuesDialog(id: any) {
     const dialogRef = this.dialog.open(ValueSetComponent, {
       height: '850px',
       width: '1600px',
+
+      data: {id: id}
     });
 
   }

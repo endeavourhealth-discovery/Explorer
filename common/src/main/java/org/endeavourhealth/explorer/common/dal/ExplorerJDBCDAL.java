@@ -11,6 +11,113 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
     private static final Logger LOG = LoggerFactory.getLogger(ExplorerJDBCDAL.class);
 
+
+    public ValueSetResult getValueSet(Integer page, Integer size, String id) throws Exception {
+        ValueSetResult result = new ValueSetResult();
+
+        String sql = "";
+        String sqlCount = "";
+
+        sql = "SELECT type, original_code, original_term, snomed_id, updated " +
+                "FROM dashboards.value_set_codes " +
+                "WHERE value_set_id = ? " +
+                "order by type LIMIT ?,?";
+
+        sqlCount = "SELECT count(1) " +
+                "FROM dashboards.value_set_codes " +
+                "WHERE value_set_id = ?";
+
+        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            statement.setString(1, id);
+            statement.setInt(2, page*12);
+            statement.setInt(3, size);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                result.setResults(getValueSetList(resultSet));
+            }
+        }
+
+        try (PreparedStatement statement = conn.prepareStatement(sqlCount)) {
+            statement.setString(1, id);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                resultSet.next();
+                result.setLength(resultSet.getInt(1));
+            }
+        }
+
+        return result;
+    }
+
+    private List<ValueSet> getValueSetList(ResultSet resultSet) throws SQLException {
+        List<ValueSet> result = new ArrayList<>();
+        while (resultSet.next()) {
+            result.add(getValueSet(resultSet));
+        }
+
+        return result;
+    }
+
+    public static ValueSet getValueSet(ResultSet resultSet) throws SQLException {
+        ValueSet valueset = new ValueSet();
+
+        valueset
+                .setType(resultSet.getString("type"))
+                .setCode(resultSet.getString("code"))
+                .setTerm(resultSet.getString("term"))
+                .setSnomed(resultSet.getString("snomed"))
+                .setUpdated(resultSet.getDate("updated"));
+        return valueset;
+    }
+
+    public ValueSetLibraryResult getValueSetLibrary(Integer page, Integer size) throws Exception {
+        ValueSetLibraryResult result = new ValueSetLibraryResult();
+
+        String sql = "";
+        String sqlCount = "";
+
+        sql = "SELECT id, name, updated " +
+                "FROM dashboards.value_sets " +
+                "order by name LIMIT ?,?";
+
+        sqlCount = "SELECT count(1) " +
+                "FROM dashboards.value_sets";
+
+        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            statement.setInt(1, page*12);
+            statement.setInt(2, size);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                result.setResults(getValueSetLibraryList(resultSet));
+            }
+        }
+
+        try (PreparedStatement statement = conn.prepareStatement(sqlCount)) {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                resultSet.next();
+                result.setLength(resultSet.getInt(1));
+            }
+        }
+
+        return result;
+    }
+
+    private List<ValueSetLibrary> getValueSetLibraryList(ResultSet resultSet) throws SQLException {
+        List<ValueSetLibrary> result = new ArrayList<>();
+        while (resultSet.next()) {
+            result.add(getValueSetLibrary(resultSet));
+        }
+
+        return result;
+    }
+
+    public static ValueSetLibrary getValueSetLibrary(ResultSet resultSet) throws SQLException {
+        ValueSetLibrary valuesetlibrary = new ValueSetLibrary();
+
+        valuesetlibrary
+                .setId(resultSet.getInt("id"))
+                .setName(resultSet.getString("name"))
+                .setUpdated(resultSet.getDate("updated"));
+        return valuesetlibrary;
+    }
+
     public DashboardLibraryResult getDashboardLibrary(Integer page, Integer size) throws Exception {
         DashboardLibraryResult result = new DashboardLibraryResult();
 
