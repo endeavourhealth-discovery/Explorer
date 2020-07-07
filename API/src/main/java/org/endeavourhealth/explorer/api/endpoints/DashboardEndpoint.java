@@ -42,11 +42,12 @@ public class DashboardEndpoint {
     public Response getDashboard(@Context SecurityContext sc,
                                  @QueryParam("chartName") String chartName,
                                  @QueryParam("dateFrom") String dateFrom,
-                                 @QueryParam("dateTo") String dateTo) throws Exception {
+                                 @QueryParam("dateTo") String dateTo,
+                                 @QueryParam("accumulative") String accumulative) throws Exception {
         LOG.debug("getDashboard");
 
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
-            ChartResult result = viewerDAL.getDashboard(chartName,dateFrom,dateTo);
+            ChartResult result = viewerDAL.getDashboard(chartName,dateFrom,dateTo, accumulative);
 
             return Response
                     .ok()

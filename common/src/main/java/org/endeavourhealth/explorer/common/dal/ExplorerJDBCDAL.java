@@ -160,7 +160,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
     public static Dashboard getDashboard(ResultSet resultSet) throws SQLException {
         Dashboard dashboard = new Dashboard();
-        
+
         dashboard
                 .setDashboardId(resultSet.getInt("dashboard_id"))
                 .setName(resultSet.getString("name"))
@@ -168,7 +168,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         return dashboard;
     }
 
-    public ChartResult getDashboard(String chartName, String dateFrom, String dateTo) throws Exception {
+    public ChartResult getDashboard(String chartName, String dateFrom, String dateTo, String accumulative) throws Exception {
 
         List<String> charts = Arrays.asList(chartName.split("\\s*,\\s*"));
 
@@ -182,8 +182,18 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
             chartItem = new Chart();
             chartItem.setName(chart_name);
 
-            sql = "SELECT series_name,series_value from dashboards.dashboard_results where name = ? "+
+            if (accumulative.equals("0"))
+                sql = "SELECT series_name,series_value from dashboards.dashboard_results where name = ? "+
                     "and series_name between ? and ? order by series_name";
+            else
+                sql = "SELECT t.series_name," +
+                        "@running_total:=@running_total + t.series_value AS series_value " +
+                        "FROM " +
+                        "( SELECT name,series_name,series_value "+
+                        "FROM dashboards.dashboard_results " +
+                        "where name = ? and series_name between ? and ?) t " +
+                        "JOIN (SELECT @running_total:=0) r " +
+                        "ORDER BY t.series_name";
 
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
                 statement.setString(1, chart_name);
