@@ -28,9 +28,10 @@ export class TutorialsComponent implements OnInit {
 
     switch(video) {
       case 1:
-        link = "https://www.youtube.com/watch?v=7nVboVulFYA";
+        link = "https://youtu.be/uWZH7cb4in0";
         break;
       case 2:
+        link = "https://youtu.be/ASltpTGSpik";
         break;
       default:
 
