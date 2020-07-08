@@ -12,6 +12,58 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
     private static final Logger LOG = LoggerFactory.getLogger(ExplorerJDBCDAL.class);
 
 
+    public QueryLibraryResult getQueryLibrary(Integer page, Integer size) throws Exception {
+        QueryLibraryResult result = new QueryLibraryResult();
+
+        String sql = "";
+        String sqlCount = "";
+
+        sql = "SELECT id, type, name, updated " +
+                "FROM dashboards.query_library " +
+                "order by type,name LIMIT ?,?";
+
+        sqlCount = "SELECT count(1) " +
+                "FROM dashboards.query_library";
+
+        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            statement.setInt(1, page*12);
+            statement.setInt(2, size);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                result.setResults(getQueryLibraryList(resultSet));
+            }
+        }
+
+        try (PreparedStatement statement = conn.prepareStatement(sqlCount)) {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                resultSet.next();
+                result.setLength(resultSet.getInt(1));
+            }
+        }
+
+        return result;
+    }
+
+    private List<QueryLibrary> getQueryLibraryList(ResultSet resultSet) throws SQLException {
+        List<QueryLibrary> result = new ArrayList<>();
+        while (resultSet.next()) {
+            result.add(getQueryLibrary(resultSet));
+        }
+
+        return result;
+    }
+
+    public static QueryLibrary getQueryLibrary(ResultSet resultSet) throws SQLException {
+        QueryLibrary querylibrary = new QueryLibrary();
+
+        querylibrary
+                .setId(resultSet.getInt("id"))
+                .setType(resultSet.getString("type"))
+                .setName(resultSet.getString("name"))
+                .setUpdated(resultSet.getDate("updated"));
+        return querylibrary;
+    }
+
+
     public ValueSetResult getValueSet(Integer page, Integer size, String id) throws Exception {
         ValueSetResult result = new ValueSetResult();
 

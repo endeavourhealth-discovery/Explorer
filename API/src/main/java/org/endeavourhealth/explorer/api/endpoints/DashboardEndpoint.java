@@ -142,5 +142,26 @@ public class DashboardEndpoint {
         }
     }
 
+    @GET
+    @Path("/querylibrary")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getQueryLibrary(@Context SecurityContext sc,
+                                       @QueryParam("page") Integer page,
+                                       @QueryParam("size") Integer size) throws Exception {
+        LOG.debug("getQueryLibrary");
+
+        try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
+            QueryLibraryResult result = viewerDAL.getQueryLibrary(page, size);
+
+            return Response
+                    .ok()
+                    .entity(result)
+                    .build();
+        }
+    }
+
+
+
 
 }

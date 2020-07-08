@@ -18,7 +18,7 @@ export class QueryLibraryComponent implements OnInit {
   page: number = 0;
   size: number = 12;
 
-  displayedColumns: string[] = ['name', 'updated'];
+  displayedColumns: string[] = ['type', 'name', 'updated'];
 
   constructor(
     private route: ActivatedRoute,
@@ -33,7 +33,7 @@ export class QueryLibraryComponent implements OnInit {
   loadEvents() {
     this.events = null;
     console.log("page: "+this.page+", size: "+this.size);
-    this.explorerService.getDashboardLibrary(this.page, this.size)
+    this.explorerService.getQueryLibrary(this.page, this.size)
       .subscribe(
         (result) => this.displayEvents(result),
         (error) => this.log.error(error)
