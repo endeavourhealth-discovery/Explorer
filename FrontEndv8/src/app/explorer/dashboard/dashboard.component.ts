@@ -282,4 +282,29 @@ export class DashboardComponent implements OnInit {
     return [year, month, day].join('-');
   }
 
+  download() {
+    var csvData = this.ConvertToCSV(this.chartResults);
+    var blob = new Blob([csvData], { type: 'text/csv' });
+    var url= window.URL.createObjectURL(blob);
+    window.open(url);
+  }
+
+  ConvertToCSV(objArray) {
+    console.log(objArray.valueOf());
+    var array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
+    var str = '';
+    var row = "";
+    for (var i = 0; i < array.length; i++) {
+      if (array[i][4]!=null)
+        array[i][4] = array[i][4].replace(',','');
+      var line = '';
+      for (var index in array[i]) {
+        if (line != '') line += ','
+        line += array[i][index];
+      }
+      str += line + '\r\n';
+    }
+    return str;
+  }
+
 }

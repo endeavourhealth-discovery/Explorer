@@ -30,6 +30,7 @@
               <mat-option (click)="refresh()" *ngFor="let result of resultList" [value]="result">{{result}}</mat-option>
             </mat-select>
           </mat-form-field>
+          <button mat-raised-button style="margin-left: 20px" (click)="download()">Download</button>
           <br/>
           <mat-checkbox class="checkbox" [(ngModel)]="showGridLines">Show gridlines</mat-checkbox>
           <mat-checkbox class="checkbox" [(ngModel)]="showAreaChart">Show area chart</mat-checkbox>
