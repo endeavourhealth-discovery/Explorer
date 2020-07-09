@@ -55,6 +55,7 @@ export class DashboardComponent implements OnInit {
   showRefLines: boolean = false;
   logarithmic: boolean = false;
   accumulative: boolean = false;
+  multiChart: boolean = true;
 
   refLines = [{value: 1, name: 'Minimum'}, {value: 2, name: 'Average'}, {value: 3, name: 'Maximum'}];
 
@@ -84,8 +85,6 @@ export class DashboardComponent implements OnInit {
 
   refresh() {
     let values = "";
-    let multiChart = true;
-
     if (this.chartType == "NHS111 Dashboard") {
       this.resultList = ['[D]Fever NOS', '[D]Cough'];
       if (this.selected == "") {
@@ -147,7 +146,7 @@ export class DashboardComponent implements OnInit {
     } else if (this.chartType == "Covid Age Deceased Dashboard") {
       values = 'covid_death_age';
       this.chartTitle = 'NEL/NWL Age breakdown of deceased patients with Confirmed or Suspected Covid 19';
-      multiChart = false;
+      this.multiChart = false;
       this.chartName = values;
       this.gradient = false;
       this.showLineCharts = false;
@@ -162,7 +161,7 @@ export class DashboardComponent implements OnInit {
     } else if (this.chartType == "Covid CCG Deceased Dashboard") {
       values = 'covid_death_ccg';
       this.chartTitle = 'NEL/NWL CCG breakdown of deceased patients with Confirmed or Suspected Covid 19';
-      multiChart = false;
+      this.multiChart = false;
       this.chartName = values;
       this.gradient = false;
       this.showLineCharts = false;
@@ -170,7 +169,7 @@ export class DashboardComponent implements OnInit {
       this.xAxisLabel = 'CCG';
     }
 
-    if (multiChart) {
+    if (this.multiChart) {
       let accumulative = "0";
       if (this.accumulative) {
         accumulative = "1";
@@ -283,28 +282,52 @@ export class DashboardComponent implements OnInit {
   }
 
   download() {
-    var csvData = this.ConvertToCSV(this.chartResults);
-    var blob = new Blob([csvData], { type: 'text/csv' });
-    var url= window.URL.createObjectURL(blob);
+    var csvData = '';
+    if (this.multiChart)
+      csvData = this.ConvertToCSVMulti(this.chartResults);
+    else
+      csvData = this.ConvertToCSVSingle(this.chartResultsSingle);
+
+    let blob = new Blob([csvData], { type: 'text/csv' });
+    let url= window.URL.createObjectURL(blob);
     window.open(url);
   }
 
-  ConvertToCSV(objArray) {
-    console.log(objArray.valueOf());
-    var array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
-    var str = '';
-    var row = "";
-    for (var i = 0; i < array.length; i++) {
-      if (array[i][4]!=null)
-        array[i][4] = array[i][4].replace(',','');
-      var line = '';
-      for (var index in array[i]) {
-        if (line != '') line += ','
-        line += array[i][index];
+  ConvertToCSVMulti(objArray) {
+    let array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
+    let csv = 'key,point,count\r\n';
+    for (let key in array) {
+      if (array.hasOwnProperty(key)) {
+        for (let key2 in array[key].series) {
+          if (array[key].series.hasOwnProperty(key2)) {
+            let point = array[key].series[key2].name;
+            if (point.toString().indexOf("GMT") > -1) { // date type of series
+              point = this.formatDate(point);
+            }
+            csv += array[key].name+ ',' + point + ',' + array[key].series[key2].value + '\r\n';
+          }
+        }
       }
-      str += line + '\r\n';
     }
-    return str;
+
+    return csv;
+  }
+
+  ConvertToCSVSingle(objArray) {
+    let array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
+    console.log(array);
+    let csv = 'key,point,count\r\n';
+    for (let key in array) {
+      if (array.hasOwnProperty(key)) {
+          let point = array[key].name;
+          if (point.toString().indexOf("GMT") > -1) { // date type of series
+            point = this.formatDate(point);
+          }
+          csv += this.chartName+ ',' + point + ',' + array[key].value + '\r\n';
+      }
+    }
+
+    return csv;
   }
 
 }
