@@ -1,16 +1,10 @@
-<mat-card>
-  <mat-card-header class="header2">
-    <div mat-card-avatar>
-      <i class="fad fa-search"></i>
-    </div>
-    <mat-card-title>Value Set</mat-card-title>
-    <mat-card-subtitle>A list of codes, concepts and terms in this value set</mat-card-subtitle>
-  </mat-card-header>
-  <mat-card-content>
+ <div mat-dialog-title>
+    Value Set - A list of codes, concepts and terms in this value set
+ </div>
 
-    <div class="flex" fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="16px grid" fxLayoutAlign="start">
-      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 mat-table-compact" fxFlex="100" fxFill>
+ <div style="height: 900px" mat-dialog-content class="flex" fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="16px grid" fxLayoutAlign="start">
 
+   <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 mat-table-compact" fxFlex="100" fxFill>
         <ng-container matColumnDef="type">
           <th mat-header-cell *matHeaderCellDef>Type</th>
           <td mat-cell style="width: 300px" *matCellDef="let element"> {{element.type}} </td>
@@ -31,24 +25,21 @@
           <th mat-header-cell *matHeaderCellDef>Last updated</th>
           <td mat-cell *matCellDef="let element"> {{element.updated}} </td>
         </ng-container>
-
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr style="cursor: pointer" mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-      </table>
-      <div>
-      </div>
-      <mat-paginator [length]="events?.length"
+   </table>
+
+   <mat-paginator [length]="events?.length"
                      [pageSize]="size"
                      [pageIndex]="page"
                      [showFirstLastButtons]="true"
                      (page)="onPage($event)"
                      fxFlex="100"
                      fxFill>
-      </mat-paginator>
-    </div>
-    <div mat-dialog-actions>
-      <button mat-raised-button (click)="onCancelClick()">Cancel</button>
-    </div>
-  </mat-card-content>
+   </mat-paginator>
 
-</mat-card>
+ </div>
+
+ <div mat-dialog-actions align="end">
+   <button mat-flat-button color="accent" (click)="onCancelClick()">Ok</button>
+ </div>
