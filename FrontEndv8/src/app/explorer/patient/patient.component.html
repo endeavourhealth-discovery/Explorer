@@ -2,14 +2,12 @@
   Registry of patients identified in this dashboard series point
 </div>
 
-<mat-grid-list cols="7" rowHeight="2:1">
-  <mat-grid-tile>
+<div style="font-size: 14px">
     <mat-form-field appearance="outline">
       <mat-label>Filter list by name(s)</mat-label>
       <input matInput placeholder="Name(s)" [(ngModel)]="name" (keyup)="patientEntered($event)">
     </mat-form-field>
-  </mat-grid-tile>
-</mat-grid-list>
+</div>
 
 <div mat-dialog-content class="flex" fxLayout="row wrap" fxLayoutAlign="start">
 
