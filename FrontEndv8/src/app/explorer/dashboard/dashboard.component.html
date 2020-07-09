@@ -40,7 +40,7 @@
     </div>
 
     <div *ngIf="showLineCharts">
-      <div *ngIf="!showAreaChart" class="flex" fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="16px grid" fxLayoutAlign="start">
+      <div *ngIf="!showAreaChart" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
         <ngx-charts-line-chart
           [view]="view"
           [scheme]="colorScheme"
@@ -74,7 +74,7 @@
         </ngx-charts-line-chart>
       </div>
 
-      <div *ngIf="showAreaChart" class="flex" fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="16px grid" fxLayoutAlign="start">
+      <div *ngIf="showAreaChart" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
         <ngx-charts-area-chart
           [view]="view"
           [scheme]="colorScheme"
@@ -108,7 +108,7 @@
 
     </div>
 
-    <div *ngIf="showBarCharts" class="flex" fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="16px grid" fxLayoutAlign="start">
+    <div *ngIf="showBarCharts" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
       <ngx-charts-bar-vertical
         [view]="view"
         [scheme]="colorScheme"
