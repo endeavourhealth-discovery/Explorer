@@ -32,7 +32,6 @@ export class DashboardLibraryComponent implements OnInit {
 
   loadEvents() {
     this.events = null;
-    console.log("page: "+this.page+", size: "+this.size);
     this.explorerService.getDashboardLibrary(this.page, this.size)
       .subscribe(
         (result) => this.displayEvents(result),
@@ -41,7 +40,6 @@ export class DashboardLibraryComponent implements OnInit {
   }
 
   displayEvents(events: any) {
-    console.log("Events: " + events);
     this.events = events;
     this.dataSource = new MatTableDataSource(events.results);
   }

@@ -26,7 +26,7 @@ export class DashboardComponent implements OnInit {
   chartResultsSingle: any[];
   dateFrom: string = '2020-01-01';
   dateTo: string = this.formatDate(new Date());
-  chartType: string;
+  dashboardNumber: string;
   showLineCharts: boolean = false;
   showBarCharts: boolean = false;
   results = new FormControl();
@@ -77,49 +77,48 @@ export class DashboardComponent implements OnInit {
 
     this.route.queryParams
       .subscribe(params => {
-        console.log(params['chartType']);
-        this.chartType = params['chartType'];
+        this.dashboardNumber = params['dashboardNumber'];
       });
     this.refresh();
   }
 
   refresh() {
     let values = "";
-    if (this.chartType == "NHS111 Dashboard") {
+    if (this.dashboardNumber == "5") {
       this.resultList = ['[D]Fever NOS', '[D]Cough'];
       if (this.selected == "") {
         values = this.resultList.toString();
       } else {
         values = this.selected;
       }
-      this.chartTitle = 'NEL LONDON AMBULANCE SERVICE NHS TRUST - NHS111 CALL TREND - COUGH AND FEVER';
+      this.chartTitle = 'London Ambulance Service NHS Trust - NHS111 call trend - cough and fever';
       this.showLineCharts = true;
       this.showBarCharts = false;
       this.showResult = true;
-    } else if (this.chartType == "Covid Consultations Dashboard") {
+    } else if (this.dashboardNumber == "6") {
       this.resultList = ['All consultations', 'Suspected coronavirus consultation'];
       if (this.selected == "") {
         values = this.resultList.toString();
       } else {
         values = this.selected;
       }
-      this.chartTitle = 'NEL/NWL GP CONSULTATIONS';
+      this.chartTitle = 'GP consultations for suspected coronavirus';
       this.showLineCharts = true;
       this.showBarCharts = false;
       this.showResult = true;
-    } else if (this.chartType == "Consultation Types Dashboard") {
+    } else if (this.dashboardNumber == "7") {
       this.resultList = ['Home visit', 'Surgery face to face consultation', 'Telephone consultation', 'Video consultation', 'Email or Text message consultation'];
       if (this.selected == "") {
         values = this.resultList.toString();
       } else {
         values = this.selected;
       }
-      this.chartTitle = 'NEL/NWL GP CONSULTATIONS';
+      this.chartTitle = 'GP consultation types';
       this.showLineCharts = true;
       this.showBarCharts = false;
       this.showAreaChart = false;
       this.showResult = true;
-    } else if (this.chartType == "Hospital Encounter Dashboard") {
+    } else if (this.dashboardNumber == "8") {
       this.resultList = ['Hospital inpatient admission', 'Hospital day case discharge', 'A&E discharge/end visit', 'A&E transfer', 'A&E attendance', 'Hospital discharge'];
       if (this.selected == "") {
         values = this.resultList.toString();
@@ -131,36 +130,36 @@ export class DashboardComponent implements OnInit {
       this.showBarCharts = false;
       this.showAreaChart = false;
       this.showResult = true;
-    } else if (this.chartType == "Covid Trend Dashboard") {
+    } else if (this.dashboardNumber == "1") {
       this.resultList = ['Suspected coronavirus infection', 'Confirmed Covid 19', 'Tested for coronavirus infection'];
       if (this.selected == "") {
         values = this.resultList.toString();
       } else {
         values = this.selected;
       }
-      this.chartTitle = 'NEL/NWL Day trend of Confirmed, Suspected and Tested for Covid 19';
+      this.chartTitle = 'Day trend of Confirmed, Suspected and Tested for Covid 19';
       this.showLineCharts = true;
       this.showBarCharts = false;
       this.showAreaChart = false;
       this.showResult = true;
-    } else if (this.chartType == "Covid Age Deceased Dashboard") {
+    } else if (this.dashboardNumber == "2") {
       values = 'covid_death_age';
-      this.chartTitle = 'NEL/NWL Age breakdown of deceased patients with Confirmed or Suspected Covid 19';
+      this.chartTitle = 'Age breakdown of deceased patients with Confirmed or Suspected Covid 19';
       this.multiChart = false;
       this.chartName = values;
       this.gradient = false;
       this.showLineCharts = false;
       this.showBarCharts = true;
       this.xAxisLabel = 'Age Decile Band';
-    } else if (this.chartType == "Covid Daily Deceased Dashboard") {
+    } else if (this.dashboardNumber == "3") {
       values = 'covid_death_daily';
-      this.chartTitle = 'NEL/NWL Daily trend of deceased patients with Confirmed or Suspected Covid 19';
+      this.chartTitle = 'Daily trend of deceased patients with Confirmed or Suspected Covid 19';
       this.showLineCharts = true;
       this.showBarCharts = false;
       this.showAreaChart = true;
-    } else if (this.chartType == "Covid CCG Deceased Dashboard") {
+    } else if (this.dashboardNumber == "4") {
       values = 'covid_death_ccg';
-      this.chartTitle = 'NEL/NWL CCG breakdown of deceased patients with Confirmed or Suspected Covid 19';
+      this.chartTitle = 'CCG breakdown of deceased patients with Confirmed or Suspected Covid 19';
       this.multiChart = false;
       this.chartName = values;
       this.gradient = false;
