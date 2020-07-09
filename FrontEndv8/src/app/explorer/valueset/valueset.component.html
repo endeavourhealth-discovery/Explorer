@@ -2,7 +2,7 @@
     Value Set - A list of codes, concepts and terms in this value set
  </div>
 
- <div style="height: 900px" mat-dialog-content class="flex" fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="16px grid" fxLayoutAlign="start">
+ <div mat-dialog-content class="flex" fxLayout="row wrap" fxLayoutAlign="start">
 
    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 mat-table-compact" fxFlex="100" fxFill>
         <ng-container matColumnDef="type">
@@ -40,6 +40,8 @@
 
  </div>
 
+ <br/>
+
  <div mat-dialog-actions align="end">
-   <button mat-flat-button color="accent" (click)="onCancelClick()">Ok</button>
+   <button style="margin-right: 15px" mat-flat-button color="accent" (click)="onCancelClick()">Ok</button>
  </div>

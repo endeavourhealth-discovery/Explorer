@@ -57,7 +57,7 @@ export class ValueSetLibraryComponent implements OnInit {
 
   valuesDialog(id: any) {
     const dialogRef = this.dialog.open(ValueSetComponent, {
-      height: '850px',
+      height: '780px',
       width: '1600px',
 
       data: {id: id}
