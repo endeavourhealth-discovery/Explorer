@@ -252,7 +252,7 @@ export class DashboardComponent implements OnInit {
 
   patientDialog(chartName: any, seriesName: any) {
     const dialogRef = this.dialog.open(PatientComponent, {
-      height: '850px',
+      height: '780px',
       width: '1600px',
 
       data: {chartName: chartName, seriesName: seriesName}
