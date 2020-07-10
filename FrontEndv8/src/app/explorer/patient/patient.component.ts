@@ -9,6 +9,7 @@ import {PageEvent} from "@angular/material/paginator";
 export interface DialogData {
   chartName: string;
   seriesName: string;
+  ccgs: string;
 }
 
 @Component({
@@ -25,6 +26,7 @@ export class PatientComponent {
   name: string = "";
   chartName: string = "";
   seriesName: string = "";
+  ccgs: string = "";
 
   displayedColumns: string[] = ['name/address', 'dob/nhsNumber', 'age/gender', 'usual_gp/organisation', 'registration'];
 
@@ -44,6 +46,7 @@ export class PatientComponent {
     this.dataSource = new MatTableDataSource(this.events);
     this.chartName = data.chartName;
     this.seriesName = data.seriesName;
+    this.ccgs = data.ccgs;
 
     if (this.seriesName.toString().indexOf("GMT") > -1) { // date type of series
       this.seriesName = this.formatDate(this.seriesName);
@@ -54,7 +57,7 @@ export class PatientComponent {
 
   loadEvents() {
     this.events = null;
-    this.explorerService.getPatients(this.page, this.size, this.name, this.chartName, this.seriesName)
+    this.explorerService.getPatients(this.page, this.size, this.name, this.chartName, this.seriesName, this.ccgs)
       .subscribe(
         (result) => this.displayEvents(result),
         (error) => this.log.error(error)

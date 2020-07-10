@@ -220,9 +220,13 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         return dashboard;
     }
 
-    public ChartResult getDashboard(String chartName, String dateFrom, String dateTo, String accumulative) throws Exception {
+    public ChartResult getDashboard(String chartName, String dateFrom, String dateTo, String accumulative, String grouping) throws Exception {
 
         List<String> charts = Arrays.asList(chartName.split("\\s*,\\s*"));
+
+        grouping = grouping.replaceAll(",","','");
+        grouping = "'" + grouping + "'";
+        grouping = " and grouping in ("+grouping+")";
 
         ChartResult result = new ChartResult();
         String sql = "";
@@ -235,15 +239,15 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
             chartItem.setName(chart_name);
 
             if (accumulative.equals("0"))
-                sql = "SELECT series_name,series_value from dashboards.dashboard_results where name = ? "+
-                    "and series_name between ? and ? order by series_name";
+                sql = "SELECT series_name,sum(series_value) as series_value from dashboards.dashboard_results where name = ? "+
+                    "and series_name between ? and ? "+grouping+" group by series_name order by series_name";
             else
                 sql = "SELECT t.series_name," +
-                        "@running_total:=@running_total + t.series_value AS series_value " +
+                        "@running_total:=@running_total + t.series_value as series_value " +
                         "FROM " +
-                        "( SELECT name,series_name,series_value "+
+                        "( SELECT name,series_name,sum(series_value) as series_value "+
                         "FROM dashboards.dashboard_results " +
-                        "where name = ? and series_name between ? and ?) t " +
+                        "where name = ? and series_name between ? and ? "+grouping+" group by series_name) t " +
                         "JOIN (SELECT @running_total:=0) r " +
                         "ORDER BY t.series_name";
 
@@ -264,13 +268,17 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         return result;
     }
 
-    public Chart getDashboardSingle(String chartName, String dateFrom, String dateTo) throws Exception {
+    public Chart getDashboardSingle(String chartName, String dateFrom, String dateTo, String grouping) throws Exception {
+
+        grouping = grouping.replaceAll(",","','");
+        grouping = "'" + grouping + "'";
+        grouping = " and grouping in ("+grouping+")";
 
         Chart chartItem = new Chart();
         chartItem.setName(chartName);
 
-        String sql = "SELECT series_name,series_value from dashboards.dashboard_results where name = ? "+
-                    "and series_name between ? and ? order by series_name";
+        String sql = "SELECT series_name,sum(series_value) as series_value from dashboards.dashboard_results where name = ? "+
+                    "and series_name between ? and ? "+grouping+" group by series_name order by series_name";
 
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
             statement.setString(1, chartName);
@@ -284,13 +292,17 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         return chartItem;
     }
 
-    public Chart getDashboardSingle(String chartName) throws Exception {
+    public Chart getDashboardSingle(String chartName, String grouping) throws Exception {
+
+        grouping = grouping.replaceAll(",","','");
+        grouping = "'" + grouping + "'";
+        grouping = " and grouping in ("+grouping+")";
 
         Chart chartItem = new Chart();
         chartItem.setName(chartName);
 
-        String sql = "SELECT series_name,series_value from dashboards.dashboard_results where name = ? "+
-                "order by series_name";
+        String sql = "SELECT series_name,sum(series_value) as series_value from dashboards.dashboard_results where name = ? "+grouping+
+                " group by series_name order by series_name";
 
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
             statement.setString(1, chartName);
@@ -318,8 +330,12 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         return series;
     }
 
-    public PatientResult getPatientResult(Integer page, Integer size, String name, String chartName, String seriesName) throws Exception {
+    public PatientResult getPatientResult(Integer page, Integer size, String name, String chartName, String seriesName, String grouping) throws Exception {
         PatientResult result = new PatientResult();
+
+        grouping = grouping.replaceAll(",","','");
+        grouping = "'" + grouping + "'";
+        grouping = " and grouping in ("+grouping+")";
 
         String sql = "";
 
@@ -340,7 +356,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                     "where p.id in "+
                     "(SELECT patient_id FROM dashboards.dashboard_patients " +
                     "where name = ? " +
-                    "and series_name = ?) "+
+                    "and series_name = ? "+grouping+") "+
                     "LIMIT ?,?";
 
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
@@ -364,7 +380,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                     "where p.id in "+
                     "(SELECT patient_id FROM dashboards.dashboard_patients " +
                     "where name = ? " +
-                    "and series_name = ?)";
+                    "and series_name = ? "+grouping+")";
 
 
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
@@ -391,7 +407,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                     "where p.id in "+
                     "(SELECT patient_id FROM dashboards.dashboard_patients " +
                     "where name = ? " +
-                    "and series_name = ?) "+
+                    "and series_name = ? "+grouping+") "+
                     "and p.last_name like ? LIMIT ?,?";
 
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
@@ -416,7 +432,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                     "where p.id in "+
                     "(SELECT patient_id FROM dashboards.dashboard_patients " +
                     "where name = ? " +
-                    "and series_name = ?) "+
+                    "and series_name = ? "+grouping+") "+
                     "and p.last_name like ?";
 
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
@@ -444,7 +460,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                     "where p.id in "+
                     "(SELECT patient_id FROM dashboards.dashboard_patients " +
                     "where name = ? " +
-                    "and series_name = ?) "+
+                    "and series_name = ? "+grouping+") "+
                     "and (p.first_names like ? and p.last_name like ?) LIMIT ?,?";
 
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
@@ -470,7 +486,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                     "where p.id in "+
                     "(SELECT patient_id FROM dashboards.dashboard_patients " +
                     "where name = ? " +
-                    "and series_name = ?) "+
+                    "and series_name = ? "+grouping+") "+
                     "and (p.first_names like ? and p.last_name like ?)";
 
             try (PreparedStatement statement = conn.prepareStatement(sql)) {

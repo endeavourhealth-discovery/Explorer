@@ -3,14 +3,14 @@
     <div mat-card-avatar>
       <i class="fad fa-analytics"></i>
     </div>
-    <mat-card-title>Population Health Information for Integrated Care - PHISIC is powered by the Discovery Data Service</mat-card-title>
+    <mat-card-title>Population Health Information for Integrated Care</mat-card-title>
     <mat-card-subtitle>{{chartTitle}}</mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
     <div class="filter">
           <mat-form-field class="example-full-width" appearance="outline">
             <mat-label>Date from</mat-label>
-            <input matInput [matDatepicker]="picker1" placeholder="Date from" [(ngModel)]="dateFrom" (dateChange)="refresh()">
+            <input matInput [matDatepicker]="picker1" placeholder="Date from" [(ngModel)]="dateFrom" (dateChange)="refresh(false)">
             <mat-datepicker-toggle matSuffix [for]="picker1">
               <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
             </mat-datepicker-toggle>
@@ -18,16 +18,23 @@
           </mat-form-field>
           <mat-form-field style="margin-left: 10px" class="example-full-width" appearance="outline">
             <mat-label>Date to</mat-label>
-            <input matInput [matDatepicker]="picker2" placeholder="Date to" [(ngModel)]="dateTo" (dateChange)="refresh()">
+            <input matInput [matDatepicker]="picker2" placeholder="Date to" [(ngModel)]="dateTo" (dateChange)="refresh(false)">
             <mat-datepicker-toggle matSuffix [for]="picker2">
               <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
             </mat-datepicker-toggle>
             <mat-datepicker #picker2></mat-datepicker>
           </mat-form-field >
-          <mat-form-field *ngIf="showResult" style="width:300px; margin-left: 10px" class="example-full-width" appearance="outline">
+          <mat-form-field *ngIf="showSeriesFilter" style="width:300px; margin-left: 10px" class="example-full-width" appearance="outline">
             <mat-label>Select series</mat-label>
-            <mat-select style="width:280px" [formControl]="results" multiple [(value)]="selected">
-              <mat-option (click)="refresh()" *ngFor="let result of resultList" [value]="result">{{result}}</mat-option>
+            <mat-select style="width:280px" [formControl]="seriesValues" multiple [(value)]="selectedSeries">
+              <mat-option (click)="refresh(false)" *ngFor="let result of seriesList" [value]="result">{{result}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field style="width:300px; margin-left: 10px" class="example-full-width" appearance="outline">
+            <mat-label>Select CCG/TRUST</mat-label>
+            <mat-select style="width:280px" [formControl]="ccgValues" multiple [(value)]="selectedCCGs">
+              <mat-checkbox class="mat-option" [(ngModel)]="selectAll" (change)="toggleSelection($event)">Select All</mat-checkbox>
+              <mat-option (click)="refresh(true)" *ngFor="let result of ccgList" [value]="result">{{result}}</mat-option>
             </mat-select>
           </mat-form-field>
           <button mat-raised-button style="margin-left: 20px" (click)="download()">Download CSV</button>
@@ -35,8 +42,8 @@
           <mat-checkbox class="checkbox" [(ngModel)]="showGridLines">Show gridlines</mat-checkbox>
           <mat-checkbox class="checkbox" [(ngModel)]="showAreaChart">Show area chart</mat-checkbox>
           <mat-checkbox class="checkbox" [(ngModel)]="gradient">Gradient fill</mat-checkbox>
-          <mat-checkbox class="checkbox" (change)="refresh()" [(ngModel)]="logarithmic">Logarithmic</mat-checkbox>
-          <mat-checkbox class="checkbox" (change)="refresh()" [(ngModel)]="accumulative">Accumulative</mat-checkbox>
+          <mat-checkbox class="checkbox" (change)="refresh(false)" [(ngModel)]="logarithmic">Logarithmic</mat-checkbox>
+          <mat-checkbox class="checkbox" (change)="refresh(false)" [(ngModel)]="accumulative">Accumulative</mat-checkbox>
     </div>
 
     <div *ngIf="showLineCharts">

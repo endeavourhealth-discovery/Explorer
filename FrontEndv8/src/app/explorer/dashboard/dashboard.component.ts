@@ -1,11 +1,9 @@
-import {AfterViewInit, Component, OnInit, Output, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnInit, Output} from '@angular/core';
 import {ExplorerService} from '../explorer.service';
 import {LoggerService} from 'dds-angular8';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import {ActivatedRoute} from "@angular/router";
 import {FormControl} from '@angular/forms';
-import {MatOption} from "@angular/material/core";
-import {strictEqual} from "assert";
 import {MatDialog} from "@angular/material/dialog";
 import {PatientComponent} from "../patient/patient.component";
 import {Globals} from '../globals'
@@ -20,6 +18,7 @@ export class DashboardComponent implements OnInit {
   //patient find
   globals: Globals;
   name: string = "";
+  selectAll: boolean = true;
 
   view: any[] = [1400, 600];
   chartResults: any[];
@@ -29,10 +28,12 @@ export class DashboardComponent implements OnInit {
   dashboardNumber: string;
   showLineCharts: boolean = false;
   showBarCharts: boolean = false;
-  results = new FormControl();
-  resultList: string[] = [''];
-  selected: string = '';
-  showResult: boolean = false;
+  seriesValues = new FormControl();
+  seriesList: string[] = [''];
+  selectedSeries: string = '';
+  selectedCCGs: string = '';
+  selectedCCGString: string = '';
+  showSeriesFilter: boolean = false;
   months: string[] = [''];
   chartName: string = "";
 
@@ -59,6 +60,32 @@ export class DashboardComponent implements OnInit {
 
   refLines = [{value: 1, name: 'Minimum'}, {value: 2, name: 'Average'}, {value: 3, name: 'Maximum'}];
 
+  ccgList = [
+    'Barts Health Community Services',
+    'BARTS HEALTH NHS TRUST',
+    'GPs',
+    'HOMERTON UNIVERSITY HOSPITAL NHS FOUNDATION TRUST',
+    'LONDON AMBULANCE SERVICE NHS TRUST',
+    'NHS BARKING AND DAGENHAM CCG',
+    'NHS BRENT CCG',
+    'NHS CENTRAL LONDON (WESTMINSTER) CCG',
+    'NHS CITY AND HACKNEY CCG',
+    'NHS EALING CCG',
+    'NHS HAMMERSMITH AND FULHAM CCG',
+    'NHS HARROW CCG',
+    'NHS HAVERING CCG',
+    'NHS HILLINGDON CCG',
+    'NHS HOUNSLOW CCG',
+    'NHS NEWHAM CCG',
+    'NHS REDBRIDGE CCG',
+    'NHS TOWER HAMLETS CCG',
+    'NHS WALTHAM FOREST CCG',
+    'NHS WEST LONDON CCG',
+    'NULL'
+  ];
+
+  ccgValues = new FormControl(this.ccgList);
+
   colorScheme = {
     domain: ['#5aa454', '#e44d25', '#cfc0bb', '#7aa3e5', '#a8385d', '#aae3f5']
   };
@@ -78,70 +105,86 @@ export class DashboardComponent implements OnInit {
     this.route.queryParams
       .subscribe(params => {
         this.dashboardNumber = params['dashboardNumber'];
+
+        if (this.dashboardNumber == "5") {
+          this.seriesList = ['[D]Fever NOS', '[D]Cough'];
+        } else if (this.dashboardNumber == "6") {
+          this.seriesList = ['All consultations', 'Suspected coronavirus consultation'];
+        } else if (this.dashboardNumber == "7") {
+          this.seriesList = ['Home visit', 'Surgery face to face consultation', 'Telephone consultation', 'Video consultation', 'Email or Text message consultation'];
+        } else if (this.dashboardNumber == "8") {
+          this.seriesList = ['Hospital inpatient admission', 'Hospital day case discharge', 'A&E discharge/end visit', 'A&E transfer', 'A&E attendance', 'Hospital discharge'];
+        } else if (this.dashboardNumber == "1") {
+          this.seriesList = ['Suspected coronavirus infection', 'Confirmed Covid 19', 'Tested for coronavirus infection'];
+        }
+
+        this.seriesValues = new FormControl(this.seriesList);
+
       });
-    this.refresh();
+
+    this.refresh(false);
   }
 
-  refresh() {
+  toggleSelection(event) {
+    if (event.checked) {
+      this.ccgValues = new FormControl(this.ccgList);
+      this.selectedCCGString = this.ccgList.toString();
+    } else {
+      this.ccgValues = new FormControl([]);
+      this.selectedCCGString = "";
+    }
+    this.refresh(false);
+  }
+
+  refresh(override) {
     let values = "";
+
+    if (this.selectedCCGs=="" && this.selectAll) {
+      this.ccgValues = new FormControl(this.ccgList);
+      this.selectedCCGString = this.ccgList.toString();
+    }
+
+    if (this.selectedSeries=="")
+      this.selectedSeries = this.seriesList.toString();
+
+    if (override) {
+      this.selectAll = false;
+      this.selectedCCGString = this.selectedCCGs.toString();
+    }
+
     if (this.dashboardNumber == "5") {
-      this.resultList = ['[D]Fever NOS', '[D]Cough'];
-      if (this.selected == "") {
-        values = this.resultList.toString();
-      } else {
-        values = this.selected;
-      }
+      values = this.selectedSeries;
       this.chartTitle = 'London Ambulance Service NHS Trust - NHS111 call trend - cough and fever';
       this.showLineCharts = true;
       this.showBarCharts = false;
-      this.showResult = true;
+      this.showSeriesFilter = true;
     } else if (this.dashboardNumber == "6") {
-      this.resultList = ['All consultations', 'Suspected coronavirus consultation'];
-      if (this.selected == "") {
-        values = this.resultList.toString();
-      } else {
-        values = this.selected;
-      }
+      values = this.selectedSeries;
       this.chartTitle = 'GP consultations for suspected coronavirus';
       this.showLineCharts = true;
       this.showBarCharts = false;
-      this.showResult = true;
+      this.showSeriesFilter = true;
     } else if (this.dashboardNumber == "7") {
-      this.resultList = ['Home visit', 'Surgery face to face consultation', 'Telephone consultation', 'Video consultation', 'Email or Text message consultation'];
-      if (this.selected == "") {
-        values = this.resultList.toString();
-      } else {
-        values = this.selected;
-      }
+      values = this.selectedSeries;
       this.chartTitle = 'GP consultation types';
       this.showLineCharts = true;
       this.showBarCharts = false;
       this.showAreaChart = false;
-      this.showResult = true;
+      this.showSeriesFilter = true;
     } else if (this.dashboardNumber == "8") {
-      this.resultList = ['Hospital inpatient admission', 'Hospital day case discharge', 'A&E discharge/end visit', 'A&E transfer', 'A&E attendance', 'Hospital discharge'];
-      if (this.selected == "") {
-        values = this.resultList.toString();
-      } else {
-        values = this.selected;
-      }
+      values = this.selectedSeries;
       this.chartTitle = 'Barts NHS Trust - Daily Trend of Admissions and Discharges';
       this.showLineCharts = true;
       this.showBarCharts = false;
       this.showAreaChart = false;
-      this.showResult = true;
+      this.showSeriesFilter = true;
     } else if (this.dashboardNumber == "1") {
-      this.resultList = ['Suspected coronavirus infection', 'Confirmed Covid 19', 'Tested for coronavirus infection'];
-      if (this.selected == "") {
-        values = this.resultList.toString();
-      } else {
-        values = this.selected;
-      }
+      values = this.selectedSeries;
       this.chartTitle = 'Day trend of Confirmed, Suspected and Tested for Covid 19';
       this.showLineCharts = true;
       this.showBarCharts = false;
       this.showAreaChart = false;
-      this.showResult = true;
+      this.showSeriesFilter = true;
     } else if (this.dashboardNumber == "2") {
       values = 'covid_death_age';
       this.chartTitle = 'Age breakdown of deceased patients with Confirmed or Suspected Covid 19';
@@ -174,7 +217,7 @@ export class DashboardComponent implements OnInit {
         accumulative = "1";
       }
 
-      this.explorerService.getDashboard(values, this.formatDate(this.dateFrom), this.formatDate(this.dateTo), accumulative)
+      this.explorerService.getDashboard(values, this.formatDate(this.dateFrom), this.formatDate(this.dateTo), accumulative, this.selectedCCGString)
         .subscribe(result => {
           this.chartResults = result.results;
 
@@ -197,7 +240,7 @@ export class DashboardComponent implements OnInit {
         });
 
     } else {
-      this.explorerService.getDashboardSingle(values, this.formatDate(this.dateFrom), this.formatDate(this.dateTo), 1)
+      this.explorerService.getDashboardSingle(values, this.formatDate(this.dateFrom), this.formatDate(this.dateTo), 1, this.selectedCCGString)
         .subscribe(result => {
           this.chartResultsSingle = result.series;
         });
@@ -254,7 +297,7 @@ export class DashboardComponent implements OnInit {
       height: '780px',
       width: '1600px',
 
-      data: {chartName: chartName, seriesName: seriesName}
+      data: {chartName: chartName, seriesName: seriesName, ccgs: this.selectedCCGString}
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -318,11 +361,11 @@ export class DashboardComponent implements OnInit {
     let csv = 'key,point,count\r\n';
     for (let key in array) {
       if (array.hasOwnProperty(key)) {
-          let point = array[key].name;
-          if (point.toString().indexOf("GMT") > -1) { // date type of series
-            point = this.formatDate(point);
-          }
-          csv += this.chartName+ ',' + point + ',' + array[key].value + '\r\n';
+        let point = array[key].name;
+        if (point.toString().indexOf("GMT") > -1) { // date type of series
+          point = this.formatDate(point);
+        }
+        csv += this.chartName+ ',' + point + ',' + array[key].value + '\r\n';
       }
     }
 

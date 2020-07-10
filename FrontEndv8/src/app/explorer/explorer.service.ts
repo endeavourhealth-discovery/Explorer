@@ -11,28 +11,31 @@ export class ExplorerService {
 
   constructor(private http: HttpClient) { }
 
-  getDashboard(charts: string, dateFrom: string, dateTo: string, accumulative: string): Observable<any> {
+  getDashboard(charts: string, dateFrom: string, dateTo: string, accumulative: string, grouping: string): Observable<any> {
     let params = new HttpParams();
 
     params = params.append('chartName', charts);
     params = params.append('dateFrom', dateFrom);
     params = params.append('dateTo', dateTo);
     params = params.append('accumulative', accumulative);
+    params = params.append('grouping', grouping);
+
     return this.http.get('api/events/dashboard', {params});
   }
 
-  getDashboardSingle(chart: string, dateFrom: string, dateTo: string, ignoreDateRange: number): Observable<any> {
+  getDashboardSingle(chart: string, dateFrom: string, dateTo: string, ignoreDateRange: number, grouping: string): Observable<any> {
     let params = new HttpParams();
 
     params = params.append('chartName', chart);
     params = params.append('dateFrom', dateFrom);
     params = params.append('dateTo', dateTo);
     params = params.append('ignoreDateRange', ignoreDateRange.toString());
+    params = params.append('grouping', grouping);
 
     return this.http.get('api/events/dashboardsingle', {params});
   }
 
-  getPatients(page?: number, size?: number, name?: string, chartName?: string, seriesName?: string): Observable<any> {
+  getPatients(page?: number, size?: number, name?: string, chartName?: string, seriesName?: string, grouping?: string): Observable<any> {
     console.log("page: "+page+", size: "+size);
     let params = new HttpParams();
     params = params.append('page', page.toString());
@@ -40,6 +43,7 @@ export class ExplorerService {
     params = params.append('name', name);
     params = params.append('chartName', chartName);
     params = params.append('seriesName', seriesName);
+    params = params.append('grouping', grouping);
 
     return this.http.get('api/events/patients', {params});
   }

@@ -43,11 +43,12 @@ public class DashboardEndpoint {
                                  @QueryParam("chartName") String chartName,
                                  @QueryParam("dateFrom") String dateFrom,
                                  @QueryParam("dateTo") String dateTo,
-                                 @QueryParam("accumulative") String accumulative) throws Exception {
+                                 @QueryParam("accumulative") String accumulative,
+                                 @QueryParam("grouping") String grouping) throws Exception {
         LOG.debug("getDashboard");
 
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
-            ChartResult result = viewerDAL.getDashboard(chartName,dateFrom,dateTo, accumulative);
+            ChartResult result = viewerDAL.getDashboard(chartName,dateFrom,dateTo, accumulative, grouping);
 
             return Response
                     .ok()
@@ -64,15 +65,16 @@ public class DashboardEndpoint {
                                  @QueryParam("chartName") String chartName,
                                  @QueryParam("dateFrom") String dateFrom,
                                  @QueryParam("dateTo") String dateTo,
-                                 @QueryParam("ignoreDateRange") Integer ignoreDateRange) throws Exception {
+                                 @QueryParam("ignoreDateRange") Integer ignoreDateRange,
+                                 @QueryParam("grouping") String grouping) throws Exception {
         LOG.debug("getDashboardSingle");
 
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
             Chart result = null;
             if (ignoreDateRange==0)
-                result = viewerDAL.getDashboardSingle(chartName,dateFrom,dateTo);
+                result = viewerDAL.getDashboardSingle(chartName,dateFrom,dateTo, grouping);
             else if (ignoreDateRange==1)
-                result = viewerDAL.getDashboardSingle(chartName);
+                result = viewerDAL.getDashboardSingle(chartName, grouping);
 
             return Response
                     .ok()
@@ -90,11 +92,12 @@ public class DashboardEndpoint {
                                 @QueryParam("size") Integer size,
                                 @QueryParam("name") String name,
                                 @QueryParam("chartName") String chartName,
-                                @QueryParam("seriesName") String seriesName) throws Exception {
+                                @QueryParam("seriesName") String seriesName,
+                                @QueryParam("grouping") String grouping) throws Exception {
         LOG.debug("getPatients");
 
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
-            PatientResult result = viewerDAL.getPatientResult(page, size, name, chartName, seriesName);
+            PatientResult result = viewerDAL.getPatientResult(page, size, name, chartName, seriesName, grouping);
 
             return Response
                     .ok()
