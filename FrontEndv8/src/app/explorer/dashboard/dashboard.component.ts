@@ -61,11 +61,6 @@ export class DashboardComponent implements OnInit {
   refLines = [{value: 1, name: 'Minimum'}, {value: 2, name: 'Average'}, {value: 3, name: 'Maximum'}];
 
   ccgList = [
-    'Barts Health Community Services',
-    'BARTS HEALTH NHS TRUST',
-    'GPs',
-    'HOMERTON UNIVERSITY HOSPITAL NHS FOUNDATION TRUST',
-    'LONDON AMBULANCE SERVICE NHS TRUST',
     'NHS BARKING AND DAGENHAM CCG',
     'NHS BRENT CCG',
     'NHS CENTRAL LONDON (WESTMINSTER) CCG',
@@ -81,7 +76,10 @@ export class DashboardComponent implements OnInit {
     'NHS TOWER HAMLETS CCG',
     'NHS WALTHAM FOREST CCG',
     'NHS WEST LONDON CCG',
-    'NULL'
+    'BARTS HEALTH COMMUNITY SERVICES',
+    'BARTS HEALTH NHS TRUST',
+    'HOMERTON UNIVERSITY HOSPITAL NHS FOUNDATION TRUST',
+    'LONDON AMBULANCE SERVICE NHS TRUST'
   ];
 
   ccgValues = new FormControl(this.ccgList);
