@@ -63,7 +63,6 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         return querylibrary;
     }
 
-
     public ValueSetResult getValueSet(Integer page, Integer size, String id) throws Exception {
         ValueSetResult result = new ValueSetResult();
 
@@ -170,18 +169,24 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         return valuesetlibrary;
     }
 
-    public DashboardLibraryResult getDashboardLibrary(Integer page, Integer size) throws Exception {
+    public DashboardLibraryResult getDashboardLibrary(Integer page, Integer size, String selectedTypeString) throws Exception {
         DashboardLibraryResult result = new DashboardLibraryResult();
+
+        selectedTypeString = selectedTypeString.replaceAll(",","','");
+        selectedTypeString = "'" + selectedTypeString + "'";
+        selectedTypeString = "WHERE type in ("+selectedTypeString+")";
 
         String sql = "";
         String sqlCount = "";
 
-        sql = "SELECT dashboard_id, name, updated "+
+        sql = "SELECT dashboard_id, name, updated, type " +
                 "FROM dashboards.dashboard_library " +
-                "order by name LIMIT ?,?";
+                 selectedTypeString+
+                " order by type LIMIT ?,?";
 
         sqlCount = "SELECT count(1) " +
-                "FROM dashboards.dashboard_library";
+                " FROM dashboards.dashboard_library "+
+                 selectedTypeString;
 
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
             statement.setInt(1, page*12);
@@ -216,7 +221,8 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         dashboard
                 .setDashboardId(resultSet.getInt("dashboard_id"))
                 .setName(resultSet.getString("name"))
-                .setUpdated(resultSet.getDate("updated"));
+                .setUpdated(resultSet.getDate("updated"))
+                .setType(resultSet.getString("type"));
         return dashboard;
     }
 

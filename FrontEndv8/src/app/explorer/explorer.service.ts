@@ -48,11 +48,12 @@ export class ExplorerService {
     return this.http.get('api/events/patients', {params});
   }
 
-  getDashboardLibrary(page?: number, size?: number): Observable<any> {
+  getDashboardLibrary(page?: number, size?: number, selectedTypeString?: string): Observable<any> {
     console.log("page: "+page+", size: "+size);
     let params = new HttpParams();
     params = params.append('page', page.toString());
     params = params.append('size', size.toString());
+    params = params.append('selectedTypeString', selectedTypeString);
 
     return this.http.get('api/events/dashboardlibrary', {params});
   }

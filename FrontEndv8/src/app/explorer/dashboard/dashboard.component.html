@@ -30,6 +30,7 @@
               <mat-option (click)="refresh(false)" *ngFor="let result of seriesList" [value]="result">{{result}}</mat-option>
             </mat-select>
           </mat-form-field>
+
           <mat-form-field style="width:300px; margin-left: 10px" class="example-full-width" appearance="outline">
             <mat-label>Select CCG/TRUST</mat-label>
             <mat-select style="width:280px" [formControl]="ccgValues" multiple [(value)]="selectedCCGs">
@@ -37,6 +38,7 @@
               <mat-option (click)="refresh(true)" *ngFor="let result of ccgList" [value]="result">{{result}}</mat-option>
             </mat-select>
           </mat-form-field>
+
           <button mat-raised-button style="margin-left: 20px" (click)="download()">Download CSV</button>
           <br/>
           <mat-checkbox class="checkbox" [(ngModel)]="showGridLines">Show gridlines</mat-checkbox>

@@ -22,11 +22,12 @@ public class DashboardEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getDashboardLibrary(@Context SecurityContext sc,
                                         @QueryParam("page") Integer page,
-                                        @QueryParam("size") Integer size) throws Exception {
+                                        @QueryParam("size") Integer size,
+                                        @QueryParam("selectedTypeString") String selectedTypeString) throws Exception {
         LOG.debug("getDashboardLibrary");
 
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
-            DashboardLibraryResult result = viewerDAL.getDashboardLibrary(page, size);
+            DashboardLibraryResult result = viewerDAL.getDashboardLibrary(page, size, selectedTypeString);
 
             return Response
                     .ok()

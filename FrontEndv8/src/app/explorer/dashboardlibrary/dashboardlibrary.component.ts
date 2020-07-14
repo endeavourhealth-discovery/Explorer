@@ -4,6 +4,7 @@ import {ExplorerService} from '../explorer.service';
 import {LoggerService} from 'dds-angular8';
 import {PageEvent} from '@angular/material/paginator';
 import {ActivatedRoute} from "@angular/router";
+import {FormControl} from "@angular/forms";
 
 @Component({
   selector: 'app-dashboardlibrary',
@@ -18,7 +19,19 @@ export class DashboardLibraryComponent implements OnInit {
   page: number = 0;
   size: number = 12;
 
-  displayedColumns: string[] = ['name', 'updated'];
+  displayedColumns: string[] = ['type', 'name', 'updated'];
+
+  selectedType: string = '';
+  selectedTypeString: string = '';
+  selectAll: boolean = true;
+
+  typeList = [
+    'COVID-19',
+    'GP-CONSULTATION',
+    'HOSPITAL-ADT',
+  ];
+
+  typeValues = new FormControl(this.typeList);
 
   constructor(
     private route: ActivatedRoute,
@@ -27,12 +40,38 @@ export class DashboardLibraryComponent implements OnInit {
     ) { }
 
   ngOnInit() {
+    this.refresh(false);
     this.loadEvents()
+  }
+
+  toggleSelection(event) {
+    if (event.checked) {
+      this.typeValues = new FormControl(this.typeList);
+      this.selectedTypeString = this.typeList.toString();
+    } else {
+      this.typeValues = new FormControl([]);
+      this.selectedTypeString = "";
+    }
+    this.refresh(false);
+  }
+
+  refresh(override) {
+    if (this.selectedType=="" && this.selectAll) {
+      this.typeValues = new FormControl(this.typeList);
+      this.selectedTypeString = this.typeList.toString();
+    }
+
+    if (override) {
+      this.selectAll = false;
+      this.selectedTypeString = this.selectedType.toString();
+    }
+    console.log("Selected: " + this.selectedTypeString);
+    this.loadEvents();
   }
 
   loadEvents() {
     this.events = null;
-    this.explorerService.getDashboardLibrary(this.page, this.size)
+    this.explorerService.getDashboardLibrary(this.page, this.size, this.selectedTypeString)
       .subscribe(
         (result) => this.displayEvents(result),
         (error) => this.log.error(error)
@@ -49,5 +88,7 @@ export class DashboardLibraryComponent implements OnInit {
     this.size = event.pageSize;
     this.loadEvents();
   }
+
+
 
 }

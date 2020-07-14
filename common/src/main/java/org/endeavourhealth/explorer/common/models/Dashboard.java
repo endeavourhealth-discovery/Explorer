@@ -13,6 +13,7 @@ public class Dashboard {
     private Integer dashboardId;
     private String name;
     private String updated;
+    private String type;
 
     public String getUpdated() {
         return updated;
@@ -46,6 +47,15 @@ public class Dashboard {
 
     public Dashboard setDashboardId(Integer dashboardId) {
         this.dashboardId = dashboardId;
+        return this;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public Dashboard setType(String type) {
+        this.type = type;
         return this;
     }
 
