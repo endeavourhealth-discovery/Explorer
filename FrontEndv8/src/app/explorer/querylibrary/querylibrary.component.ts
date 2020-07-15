@@ -4,6 +4,7 @@ import {ExplorerService} from '../explorer.service';
 import {LoggerService} from 'dds-angular8';
 import {PageEvent} from '@angular/material/paginator';
 import {ActivatedRoute} from "@angular/router";
+import {FormControl} from "@angular/forms";
 
 @Component({
   selector: 'app-querylibrary',
@@ -20,6 +21,17 @@ export class QueryLibraryComponent implements OnInit {
 
   displayedColumns: string[] = ['type', 'name', 'updated'];
 
+  selectedType: string = '';
+  selectedTypeString: string = '';
+  selectAll: boolean = true;
+
+  typeList = [
+    'COVID-19',
+    'Diabetes'
+  ];
+
+  typeValues = new FormControl(this.typeList);
+
   constructor(
     private route: ActivatedRoute,
     private explorerService: ExplorerService,
@@ -27,13 +39,38 @@ export class QueryLibraryComponent implements OnInit {
     ) { }
 
   ngOnInit() {
+    this.refresh(false);
     this.loadEvents()
+  }
+
+  toggleSelection(event) {
+    if (event.checked) {
+      this.typeValues = new FormControl(this.typeList);
+      this.selectedTypeString = this.typeList.toString();
+    } else {
+      this.typeValues = new FormControl([]);
+      this.selectedTypeString = "";
+    }
+    this.refresh(false);
+  }
+
+  refresh(override) {
+    if (this.selectedType=="" && this.selectAll) {
+      this.typeValues = new FormControl(this.typeList);
+      this.selectedTypeString = this.typeList.toString();
+    }
+
+    if (override) {
+      this.selectAll = false;
+      this.selectedTypeString = this.selectedType.toString();
+    }
+    this.loadEvents();
   }
 
   loadEvents() {
     this.events = null;
     console.log("page: "+this.page+", size: "+this.size);
-    this.explorerService.getQueryLibrary(this.page, this.size)
+    this.explorerService.getQueryLibrary(this.page, this.size, this.selectedTypeString)
       .subscribe(
         (result) => this.displayEvents(result),
         (error) => this.log.error(error)

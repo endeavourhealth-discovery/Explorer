@@ -12,18 +12,24 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
     private static final Logger LOG = LoggerFactory.getLogger(ExplorerJDBCDAL.class);
 
 
-    public QueryLibraryResult getQueryLibrary(Integer page, Integer size) throws Exception {
+    public QueryLibraryResult getQueryLibrary(Integer page, Integer size, String selectedTypeString) throws Exception {
         QueryLibraryResult result = new QueryLibraryResult();
+
+        selectedTypeString = selectedTypeString.replaceAll(",","','");
+        selectedTypeString = "'" + selectedTypeString + "'";
+        selectedTypeString = "WHERE type in ("+selectedTypeString+")";
 
         String sql = "";
         String sqlCount = "";
 
         sql = "SELECT id, type, name, updated " +
                 "FROM dashboards.query_library " +
+                 selectedTypeString+
                 "order by type,name LIMIT ?,?";
 
         sqlCount = "SELECT count(1) " +
-                "FROM dashboards.query_library";
+                "FROM dashboards.query_library " +
+                 selectedTypeString;
 
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
             statement.setInt(1, page*12);
