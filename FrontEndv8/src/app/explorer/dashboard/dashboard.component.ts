@@ -60,28 +60,7 @@ export class DashboardComponent implements OnInit {
 
   refLines = [{value: 1, name: 'Minimum'}, {value: 2, name: 'Average'}, {value: 3, name: 'Maximum'}];
 
-  ccgList = [
-    'NHS BARKING AND DAGENHAM CCG',
-    'NHS BRENT CCG',
-    'NHS CENTRAL LONDON (WESTMINSTER) CCG',
-    'NHS CITY AND HACKNEY CCG',
-    'NHS EALING CCG',
-    'NHS HAMMERSMITH AND FULHAM CCG',
-    'NHS HARROW CCG',
-    'NHS HAVERING CCG',
-    'NHS HILLINGDON CCG',
-    'NHS HOUNSLOW CCG',
-    'NHS NEWHAM CCG',
-    'NHS REDBRIDGE CCG',
-    'NHS TOWER HAMLETS CCG',
-    'NHS WALTHAM FOREST CCG',
-    'NHS WEST LONDON CCG',
-    'BARTS HEALTH COMMUNITY SERVICES',
-    'BARTS HEALTH NHS TRUST',
-    'HOMERTON UNIVERSITY HOSPITAL NHS FOUNDATION TRUST',
-    'LONDON AMBULANCE SERVICE NHS TRUST'
-  ];
-
+  ccgList = [];
   ccgValues = new FormControl(this.ccgList);
 
   colorScheme = {
@@ -99,28 +78,11 @@ export class DashboardComponent implements OnInit {
 
 
   ngOnInit() {
-
-    this.route.queryParams
-      .subscribe(params => {
-        this.dashboardNumber = params['dashboardNumber'];
-
-        if (this.dashboardNumber == "5") {
-          this.seriesList = ['[D]Fever NOS', '[D]Cough'];
-        } else if (this.dashboardNumber == "6") {
-          this.seriesList = ['All consultations', 'Suspected coronavirus consultation'];
-        } else if (this.dashboardNumber == "7") {
-          this.seriesList = ['Home visit', 'Surgery face to face consultation', 'Telephone consultation', 'Video consultation', 'Email or Text message consultation'];
-        } else if (this.dashboardNumber == "8") {
-          this.seriesList = ['Hospital inpatient admission', 'Hospital day case discharge', 'A&E discharge/end visit', 'A&E transfer', 'A&E attendance', 'Hospital discharge'];
-        } else if (this.dashboardNumber == "1") {
-          this.seriesList = ['Suspected coronavirus infection', 'Confirmed Covid 19', 'Tested for coronavirus infection'];
-        }
-
-        this.seriesValues = new FormControl(this.seriesList);
-
-      });
-
-    this.refresh(false);
+    this.explorerService.getLookupLists('3')
+      .subscribe(
+        (result) => this.loadList(result),
+        (error) => this.log.error(error)
+      );
   }
 
   toggleSelection(event) {
@@ -215,6 +177,9 @@ export class DashboardComponent implements OnInit {
         cumulative = "1";
       }
 
+      console.log(values);
+      console.log(this.selectedCCGString);
+
       this.explorerService.getDashboard(values, this.formatDate(this.dateFrom), this.formatDate(this.dateTo), cumulative, this.selectedCCGString)
         .subscribe(result => {
           this.chartResults = result.results;
@@ -243,6 +208,38 @@ export class DashboardComponent implements OnInit {
           this.chartResultsSingle = result.series;
         });
     }
+  }
+
+  loadList(lists: any) {
+    lists.results.map(
+      e => {
+        this.ccgList.push(e.type);
+      }
+    )
+    this.ccgValues = new FormControl(this.ccgList);
+
+    this.route.queryParams
+      .subscribe(params => {
+        this.dashboardNumber = params['dashboardNumber'];
+
+        if (this.dashboardNumber == "5") {
+          this.seriesList = ['[D]Fever NOS', '[D]Cough'];
+        } else if (this.dashboardNumber == "6") {
+          this.seriesList = ['All consultations', 'Suspected coronavirus consultation'];
+        } else if (this.dashboardNumber == "7") {
+          this.seriesList = ['Home visit', 'Surgery face to face consultation', 'Telephone consultation', 'Video consultation', 'Email or Text message consultation'];
+        } else if (this.dashboardNumber == "8") {
+          this.seriesList = ['Hospital inpatient admission', 'Hospital day case discharge', 'A&E discharge/end visit', 'A&E transfer', 'A&E attendance', 'Hospital discharge'];
+        } else if (this.dashboardNumber == "1") {
+          this.seriesList = ['Suspected coronavirus infection', 'Confirmed Covid 19', 'Tested for coronavirus infection'];
+        }
+
+        this.seriesValues = new FormControl(this.seriesList);
+
+      });
+
+    this.refresh(false);
+
   }
 
   formatTooltipYAxis(val: number) {

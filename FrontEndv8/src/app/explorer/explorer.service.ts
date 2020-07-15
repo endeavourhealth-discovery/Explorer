@@ -11,6 +11,14 @@ export class ExplorerService {
 
   constructor(private http: HttpClient) { }
 
+  getLookupLists(list: string): Observable<any> {
+    let params = new HttpParams();
+
+    params = params.append('list', list);
+
+    return this.http.get('api/events/lookuplists', {params});
+  }
+
   getDashboard(charts: string, dateFrom: string, dateTo: string, cumulative: string, grouping: string): Observable<any> {
     let params = new HttpParams();
 
