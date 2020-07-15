@@ -133,7 +133,11 @@
         [gradient]="gradient"
         (select)="onSelectBar($event)"
       >
+        <ng-template #tooltipTemplate let-model="model">
+          <span class="tooltip-label">{{model.name}} • Patients: {{model.value}}</span>
+        </ng-template>
       </ngx-charts-bar-vertical>
+
     </div>
 
   </mat-card-content>
