@@ -13,7 +13,6 @@ import {FormControl} from "@angular/forms";
 })
 
 export class DashboardLibraryComponent implements OnInit {
-
   events: any;
   dataSource: MatTableDataSource<any>;
   page: number = 0;
@@ -25,12 +24,7 @@ export class DashboardLibraryComponent implements OnInit {
   selectedTypeString: string = '';
   selectAll: boolean = true;
 
-  typeList = [
-    'COVID-19',
-    'GP-CONSULTATION',
-    'HOSPITAL-ADT',
-  ];
-
+  typeList = [];
   typeValues = new FormControl(this.typeList);
 
   constructor(
@@ -40,8 +34,11 @@ export class DashboardLibraryComponent implements OnInit {
     ) { }
 
   ngOnInit() {
-    this.refresh(false);
-    this.loadEvents()
+    this.explorerService.getLookupLists('1')
+      .subscribe(
+        (result) => this.loadList(result),
+        (error) => this.log.error(error)
+      );
   }
 
   toggleSelection(event) {
@@ -75,6 +72,17 @@ export class DashboardLibraryComponent implements OnInit {
         (result) => this.displayEvents(result),
         (error) => this.log.error(error)
       );
+  }
+
+  loadList(lists: any) {
+    lists.results.map(
+      e => {
+        this.typeList.push(e.type);
+      }
+    )
+    this.typeValues = new FormControl(this.typeList);
+    this.refresh(false);
+
   }
 
   displayEvents(events: any) {

@@ -17,6 +17,24 @@ public class DashboardEndpoint {
     private static final Logger LOG = LoggerFactory.getLogger(DashboardEndpoint.class);
 
     @GET
+    @Path("/lookuplists")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getLookupLists(@Context SecurityContext sc,
+                                        @QueryParam("list") String list) throws Exception {
+        LOG.debug("getLookupLists");
+
+        try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
+            LookupListResult result = viewerDAL.getLookupLists(list);
+
+            return Response
+                    .ok()
+                    .entity(result)
+                    .build();
+        }
+    }
+
+    @GET
     @Path("/dashboardlibrary")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)

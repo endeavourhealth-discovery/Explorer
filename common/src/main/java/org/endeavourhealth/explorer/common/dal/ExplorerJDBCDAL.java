@@ -11,6 +11,73 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
     private static final Logger LOG = LoggerFactory.getLogger(ExplorerJDBCDAL.class);
 
+    public LookupListResult getLookupLists(String list) throws Exception {
+        LookupListResult result = new LookupListResult();
+
+        String sql = "";
+        String sqlCount = "";
+
+        switch (list) {
+            case "1":
+                sql = "SELECT distinct(type) as type " +
+                        "FROM dashboards.dashboard_library " +
+                        " order by type";
+
+                sqlCount = "SELECT count(distinct(type)) " +
+                        " FROM dashboards.dashboard_library";
+                break;
+            case "2":
+                sql = "SELECT distinct(type) as type " +
+                        "FROM dashboards.query_library " +
+                        " order by type";
+
+                sqlCount = "SELECT count(distinct(type)) " +
+                        " FROM dashboards.query_library";
+                break;
+            case "3":
+                sql = "SELECT distinct(grouping) as type " +
+                        "FROM dashboards.dashboard_results " +
+                        " order by grouping";
+
+                sqlCount = "SELECT count(distinct(grouping)) " +
+                        " FROM dashboards.dashboard_results";
+                break;
+            default:
+                break;
+        }
+
+        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                result.setResults(getLookupList(resultSet));
+            }
+        }
+
+        try (PreparedStatement statement = conn.prepareStatement(sqlCount)) {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                resultSet.next();
+                result.setLength(resultSet.getInt(1));
+            }
+        }
+
+        return result;
+    }
+
+    private List<LookupList> getLookupList(ResultSet resultSet) throws SQLException {
+        List<LookupList> result = new ArrayList<>();
+        while (resultSet.next()) {
+            result.add(getLookup(resultSet));
+        }
+
+        return result;
+    }
+
+    public static LookupList getLookup(ResultSet resultSet) throws SQLException {
+        LookupList lookupList = new LookupList();
+
+        lookupList
+                .setType(resultSet.getString("type"));
+        return lookupList;
+    }
 
     public QueryLibraryResult getQueryLibrary(Integer page, Integer size, String selectedTypeString) throws Exception {
         QueryLibraryResult result = new QueryLibraryResult();
@@ -544,5 +611,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
         return patientSummary;
     }
+
+
 
 }

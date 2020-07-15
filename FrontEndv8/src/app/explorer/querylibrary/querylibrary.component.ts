@@ -25,11 +25,7 @@ export class QueryLibraryComponent implements OnInit {
   selectedTypeString: string = '';
   selectAll: boolean = true;
 
-  typeList = [
-    'COVID-19',
-    'Diabetes'
-  ];
-
+  typeList = [];
   typeValues = new FormControl(this.typeList);
 
   constructor(
@@ -39,8 +35,11 @@ export class QueryLibraryComponent implements OnInit {
     ) { }
 
   ngOnInit() {
-    this.refresh(false);
-    this.loadEvents()
+    this.explorerService.getLookupLists('2')
+      .subscribe(
+        (result) => this.loadList(result),
+        (error) => this.log.error(error)
+      );
   }
 
   toggleSelection(event) {
@@ -69,7 +68,6 @@ export class QueryLibraryComponent implements OnInit {
 
   loadEvents() {
     this.events = null;
-    console.log("page: "+this.page+", size: "+this.size);
     this.explorerService.getQueryLibrary(this.page, this.size, this.selectedTypeString)
       .subscribe(
         (result) => this.displayEvents(result),
@@ -77,8 +75,18 @@ export class QueryLibraryComponent implements OnInit {
       );
   }
 
+  loadList(lists: any) {
+    lists.results.map(
+      e => {
+        this.typeList.push(e.type);
+      }
+    )
+    this.typeValues = new FormControl(this.typeList);
+    this.refresh(false);
+
+  }
+
   displayEvents(events: any) {
-    console.log("Events: " + events);
     this.events = events;
     this.dataSource = new MatTableDataSource(events.results);
   }
