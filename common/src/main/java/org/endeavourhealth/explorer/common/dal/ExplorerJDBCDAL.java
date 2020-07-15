@@ -226,13 +226,13 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         return dashboard;
     }
 
-    public ChartResult getDashboard(String chartName, String dateFrom, String dateTo, String accumulative, String grouping) throws Exception {
+    public ChartResult getDashboard(String chartName, String dateFrom, String dateTo, String cumulative, String grouping) throws Exception {
 
         List<String> charts = Arrays.asList(chartName.split("\\s*,\\s*"));
 
         grouping = grouping.replaceAll(",","','");
         grouping = "'" + grouping + "'";
-        grouping = " and grouping in ("+grouping+")";
+        grouping = " and `grouping` in ("+grouping+")";
 
         ChartResult result = new ChartResult();
         String sql = "";
@@ -244,7 +244,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
             chartItem = new Chart();
             chartItem.setName(chart_name);
 
-            if (accumulative.equals("0"))
+            if (cumulative.equals("0"))
                 sql = "SELECT series_name,sum(series_value) as series_value from dashboards.dashboard_results where name = ? "+
                     "and series_name between ? and ? "+grouping+" group by series_name order by series_name";
             else
@@ -278,7 +278,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
         grouping = grouping.replaceAll(",","','");
         grouping = "'" + grouping + "'";
-        grouping = " and grouping in ("+grouping+")";
+        grouping = " and `grouping` in ("+grouping+")";
 
         Chart chartItem = new Chart();
         chartItem.setName(chartName);

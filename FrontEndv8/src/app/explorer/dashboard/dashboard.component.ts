@@ -48,14 +48,14 @@ export class DashboardComponent implements OnInit {
   showXAxisLabel: boolean = true;
   chartTitle: string = "Chart Title";
   xAxisLabel: string = 'Date';
-  yAxisLabel: string = 'Count';
+  yAxisLabel: string = 'Number of people with indicator';
   timeline: boolean = true;
   showGridLines: boolean = true;
   showAreaChart: boolean = true;
   gradient: boolean = true;
   showRefLines: boolean = false;
   logarithmic: boolean = false;
-  accumulative: boolean = false;
+  cumulative: boolean = false;
   multiChart: boolean = true;
 
   refLines = [{value: 1, name: 'Minimum'}, {value: 2, name: 'Average'}, {value: 3, name: 'Maximum'}];
@@ -210,12 +210,12 @@ export class DashboardComponent implements OnInit {
     }
 
     if (this.multiChart) {
-      let accumulative = "0";
-      if (this.accumulative) {
-        accumulative = "1";
+      let cumulative = "0";
+      if (this.cumulative) {
+        cumulative = "1";
       }
 
-      this.explorerService.getDashboard(values, this.formatDate(this.dateFrom), this.formatDate(this.dateTo), accumulative, this.selectedCCGString)
+      this.explorerService.getDashboard(values, this.formatDate(this.dateFrom), this.formatDate(this.dateTo), cumulative, this.selectedCCGString)
         .subscribe(result => {
           this.chartResults = result.results;
 

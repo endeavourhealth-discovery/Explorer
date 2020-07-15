@@ -65,7 +65,6 @@ export class DashboardLibraryComponent implements OnInit {
       this.selectAll = false;
       this.selectedTypeString = this.selectedType.toString();
     }
-    console.log("Selected: " + this.selectedTypeString);
     this.loadEvents();
   }
 

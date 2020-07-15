@@ -30,7 +30,6 @@
               <mat-option (click)="refresh(false)" *ngFor="let result of seriesList" [value]="result">{{result}}</mat-option>
             </mat-select>
           </mat-form-field>
-
           <mat-form-field style="width:300px; margin-left: 10px" class="example-full-width" appearance="outline">
             <mat-label>Select CCG/TRUST</mat-label>
             <mat-select style="width:280px" [formControl]="ccgValues" multiple [(value)]="selectedCCGs">
@@ -38,14 +37,13 @@
               <mat-option (click)="refresh(true)" *ngFor="let result of ccgList" [value]="result">{{result}}</mat-option>
             </mat-select>
           </mat-form-field>
-
           <button mat-raised-button style="margin-left: 20px" (click)="download()">Download CSV</button>
           <br/>
           <mat-checkbox class="checkbox" [(ngModel)]="showGridLines">Show gridlines</mat-checkbox>
           <mat-checkbox class="checkbox" [(ngModel)]="showAreaChart">Show area chart</mat-checkbox>
           <mat-checkbox class="checkbox" [(ngModel)]="gradient">Gradient fill</mat-checkbox>
           <mat-checkbox class="checkbox" (change)="refresh(false)" [(ngModel)]="logarithmic">Logarithmic</mat-checkbox>
-          <mat-checkbox class="checkbox" (change)="refresh(false)" [(ngModel)]="accumulative">Accumulative</mat-checkbox>
+          <mat-checkbox class="checkbox" (change)="refresh(false)" [(ngModel)]="cumulative">Cumulative</mat-checkbox>
     </div>
 
     <div *ngIf="showLineCharts">
@@ -73,11 +71,11 @@
           (select)="onSelectLine($event)"
         >
           <ng-template #tooltipTemplate let-model="model">
-            <span class="tooltip-label">{{formatXAxis(model.name)}} •  {{model.series}} • {{formatTooltipYAxis(model.value)}}</span>
+            <span class="tooltip-label">{{formatXAxis(model.name)}} •  {{model.series}} • Patients: {{formatTooltipYAxis(model.value)}}</span>
           </ng-template>
           <ng-template #seriesTooltipTemplate let-model="model">
             <span class="tooltip-label" *ngFor="let series of model">
-            <span class="tooltip-label">{{formatXAxis(series.name)}} •  {{series.series}} • {{formatTooltipYAxis(series.value)}}</span>
+            <span class="tooltip-label">{{formatXAxis(series.name)}} •  {{series.series}} • Patients: {{formatTooltipYAxis(series.value)}}</span>
             </span>
           </ng-template>
         </ngx-charts-line-chart>
@@ -105,11 +103,11 @@
           (select)="onSelectLine($event)"
         >
           <ng-template #tooltipTemplate let-model="model">
-            <span class="tooltip-label">{{formatXAxis(model.name)}} •  {{model.series}} • {{formatTooltipYAxis(model.value)}}</span>
+            <span class="tooltip-label">{{formatXAxis(model.name)}} •  {{model.series}} • Patients: {{formatTooltipYAxis(model.value)}}</span>
           </ng-template>
           <ng-template #seriesTooltipTemplate let-model="model">
             <span class="tooltip-label" *ngFor="let series of model">
-            <span class="tooltip-label">{{formatXAxis(series.name)}} •  {{series.series}} • {{formatTooltipYAxis(series.value)}}</span>
+            <span class="tooltip-label">{{formatXAxis(series.name)}} •  {{series.series}} • Patients: {{formatTooltipYAxis(series.value)}}</span>
             </span>
           </ng-template>
         </ngx-charts-area-chart>
