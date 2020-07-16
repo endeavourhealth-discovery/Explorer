@@ -59,5 +59,4 @@ export class ValueSetComponent {
     this.dialogRef.close();
   }
 
-
 }

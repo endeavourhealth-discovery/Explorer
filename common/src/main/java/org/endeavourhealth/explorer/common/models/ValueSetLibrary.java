@@ -13,6 +13,7 @@ public class ValueSetLibrary {
     private Integer id;
     private String name;
     private String updated;
+    private String type;
 
     public String getUpdated() {
         return updated;
@@ -46,6 +47,15 @@ public class ValueSetLibrary {
 
     public ValueSetLibrary setId(Integer id) {
         this.id = id;
+        return this;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public ValueSetLibrary setType(String type) {
+        this.type = type;
         return this;
     }
 

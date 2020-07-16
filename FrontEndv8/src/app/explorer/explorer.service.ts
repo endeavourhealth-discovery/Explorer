@@ -95,4 +95,12 @@ export class ExplorerService {
     return this.http.get('api/events/querylibrary', {params});
   }
 
+  saveValueSet(type?: string, name?: string): Observable<any> {
+    let params = new HttpParams();
+    params = params.append('type', type);
+    params = params.append('name', name);
+
+    return this.http.get('api/events/valueseteditor', {params});
+  }
+
 }

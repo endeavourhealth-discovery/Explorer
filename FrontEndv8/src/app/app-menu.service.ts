@@ -30,9 +30,9 @@ export class AppMenuService implements  AbstractMenuProvider {
 
   getMenuOptions(): MenuOption[] {
     return [
-      {icon: 'fas fa-analytics', caption: 'Dashboard Library', state: 'dashboardlibrary'},
-      {icon: 'fas fa-file-search', caption: 'Query Library', state: 'querylibrary'},
-      {icon: 'fas fa-list-ol', caption: 'Value Sets', state: 'valuesetlibrary'},
+      {icon: 'fas fa-analytics', caption: 'Dashboard library', state: 'dashboardlibrary'},
+      {icon: 'fas fa-file-search', caption: 'Query library', state: 'querylibrary'},
+      {icon: 'fas fa-list-ol', caption: 'Value sets', state: 'valuesetlibrary'},
       {icon: 'fas fa-video-plus', caption: 'Tutorials', state: 'tutorials'}
     ];
   }

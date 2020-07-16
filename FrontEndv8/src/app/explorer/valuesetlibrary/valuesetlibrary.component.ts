@@ -6,7 +6,8 @@ import {PageEvent} from '@angular/material/paginator';
 import {ActivatedRoute} from "@angular/router";
 import {MatDialog} from "@angular/material/dialog";
 import {ValueSetComponent} from "../valueset/valueset.component";
-
+import {ValueSetEditorComponent} from "../valueseteditor/valueseteditor.component";
+import {SelectionModel} from '@angular/cdk/collections';
 
 @Component({
   selector: 'app-valuesetlibrary',
@@ -16,12 +17,14 @@ import {ValueSetComponent} from "../valueset/valueset.component";
 
 export class ValueSetLibraryComponent implements OnInit {
 
+  selection = new SelectionModel<any>(true, []);
+
   events: any;
   dataSource: MatTableDataSource<any>;
   page: number = 0;
   size: number = 12;
 
-  displayedColumns: string[] = ['name', 'updated'];
+  displayedColumns: string[] = ['select', 'type', 'name', 'updated'];
 
   constructor(
     private route: ActivatedRoute,
@@ -41,6 +44,8 @@ export class ValueSetLibraryComponent implements OnInit {
         (result) => this.displayEvents(result),
         (error) => this.log.error(error)
       );
+
+    this.selection.clear();
   }
 
   displayEvents(events: any) {
@@ -55,6 +60,25 @@ export class ValueSetLibraryComponent implements OnInit {
     this.loadEvents();
   }
 
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    return numSelected === numRows;
+  }
+
+  masterToggle() {
+    this.isAllSelected() ?
+      this.selection.clear() :
+      this.dataSource.data.forEach(row => this.selection.select(row));
+  }
+
+  checkboxLabel(row?: any): string {
+    if (!row) {
+      return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
+    }
+    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
+  }
+
   valuesDialog(id: any) {
     const dialogRef = this.dialog.open(ValueSetComponent, {
       height: '780px',
@@ -62,6 +86,23 @@ export class ValueSetLibraryComponent implements OnInit {
 
       data: {id: id}
     });
+
+
+  }
+
+  add() {
+    const dialogRef = this.dialog.open(ValueSetEditorComponent, {
+      height: '300px',
+      width: '600px',
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result)
+        this.loadEvents();
+    });
+
+  }
+
+  delete() {
 
   }
 

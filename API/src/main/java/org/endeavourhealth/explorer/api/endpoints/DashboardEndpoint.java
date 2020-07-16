@@ -184,6 +184,24 @@ public class DashboardEndpoint {
         }
     }
 
+    @GET
+    @Path("/valueseteditor")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response saveValueSet(@Context SecurityContext sc,
+                                       @QueryParam("type") String type,
+                                       @QueryParam("name") String name) throws Exception {
+        LOG.debug("saveValueSet");
+
+        try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
+            viewerDAL.saveValueSet(type, name);
+
+            return Response
+                    .ok()
+                    .build();
+        }
+    }
+
 
 
 

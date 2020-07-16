@@ -11,6 +11,16 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
     private static final Logger LOG = LoggerFactory.getLogger(ExplorerJDBCDAL.class);
 
+    public void saveValueSet(String type, String name) throws Exception {
+        String sql = "INSERT INTO dashboards.value_sets (type, name) " +
+                "VALUES (?, ?)";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, type);
+            stmt.setString(2, name);
+            stmt.executeUpdate();
+        }
+    }
+
     public LookupListResult getLookupLists(String list) throws Exception {
         LookupListResult result = new LookupListResult();
 
@@ -198,7 +208,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         String sql = "";
         String sqlCount = "";
 
-        sql = "SELECT id, name, updated " +
+        sql = "SELECT id, name, updated, type " +
                 "FROM dashboards.value_sets " +
                 "order by name LIMIT ?,?";
 
@@ -238,7 +248,8 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         valuesetlibrary
                 .setId(resultSet.getInt("id"))
                 .setName(resultSet.getString("name"))
-                .setUpdated(resultSet.getDate("updated"));
+                .setUpdated(resultSet.getDate("updated"))
+                .setType(resultSet.getString("type"));
         return valuesetlibrary;
     }
 

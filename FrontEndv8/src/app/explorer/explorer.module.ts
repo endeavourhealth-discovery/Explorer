@@ -34,6 +34,7 @@ import {QueryLibraryComponent} from "./querylibrary/querylibrary.component";
 import {ValueSetLibraryComponent} from "./valuesetlibrary/valuesetlibrary.component";
 import {ValueSetComponent} from "./valueset/valueset.component";
 import {TutorialsComponent} from "./tutorials/tutorials.component";
+import {ValueSetEditorComponent} from "./valueseteditor/valueseteditor.component";
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import {TutorialsComponent} from "./tutorials/tutorials.component";
     QueryLibraryComponent,
     ValueSetLibraryComponent,
     ValueSetComponent,
-    TutorialsComponent
+    TutorialsComponent,
+    ValueSetEditorComponent
   ],
     imports: [
         BrowserModule,
@@ -78,7 +80,8 @@ import {TutorialsComponent} from "./tutorials/tutorials.component";
     ],
   entryComponents: [
     PatientComponent,
-    ValueSetComponent
+    ValueSetComponent,
+    ValueSetEditorComponent
   ],
   providers: [ Globals ]
 })
