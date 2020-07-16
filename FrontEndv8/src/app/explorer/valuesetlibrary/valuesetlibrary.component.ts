@@ -61,6 +61,8 @@ export class ValueSetLibraryComponent implements OnInit {
   }
 
   isAllSelected() {
+    if (this.dataSource==undefined)
+      return false;
     const numSelected = this.selection.selected.length;
     const numRows = this.dataSource.data.length;
     return numSelected === numRows;
@@ -92,7 +94,7 @@ export class ValueSetLibraryComponent implements OnInit {
 
   add() {
     const dialogRef = this.dialog.open(ValueSetEditorComponent, {
-      height: '300px',
+      height: '320px',
       width: '600px',
     });
     dialogRef.afterClosed().subscribe(result => {

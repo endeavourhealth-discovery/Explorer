@@ -177,9 +177,6 @@ export class DashboardComponent implements OnInit {
         cumulative = "1";
       }
 
-      console.log(values);
-      console.log(this.selectedCCGString);
-
       this.explorerService.getDashboard(values, this.formatDate(this.dateFrom), this.formatDate(this.dateTo), cumulative, this.selectedCCGString)
         .subscribe(result => {
           this.chartResults = result.results;

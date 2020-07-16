@@ -30,7 +30,6 @@ export class ValueSetComponent {
     private log: LoggerService,
     @Inject(MAT_DIALOG_DATA) public data: DialogData) {
     this.id = data.id;
-    console.log("ID: " + this.id);
     this.loadEvents();
   }
 
