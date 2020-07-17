@@ -22,13 +22,29 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         }
     }
 
-    public void saveValueSet(String type, String name) throws Exception {
-        String sql = "INSERT INTO dashboards.value_sets (type, name) " +
-                "VALUES (?, ?)";
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, type);
-            stmt.setString(2, name);
-            stmt.executeUpdate();
+    public void saveValueSet(String type, String name, String id) throws Exception {
+
+        String sql = "";
+
+        if (id.equals("")) {
+            sql = "INSERT INTO dashboards.value_sets (type, name) " +
+                    "VALUES (?, ?)";
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, type);
+                stmt.setString(2, name);
+                stmt.executeUpdate();
+            }
+        } else // edit
+        {
+            sql = "UPDATE dashboards.value_sets SET type = ?, name = ? " +
+                    "WHERE id = ?";
+
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, type);
+                stmt.setString(2, name);
+                stmt.setString(3, id);
+                stmt.executeUpdate();
+            }
         }
     }
 

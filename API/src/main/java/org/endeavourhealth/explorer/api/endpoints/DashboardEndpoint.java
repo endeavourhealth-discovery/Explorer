@@ -190,11 +190,12 @@ public class DashboardEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     public Response saveValueSet(@Context SecurityContext sc,
                                        @QueryParam("type") String type,
-                                       @QueryParam("name") String name) throws Exception {
+                                       @QueryParam("name") String name,
+                                       @QueryParam("id") String id) throws Exception {
         LOG.debug("saveValueSet");
 
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
-            viewerDAL.saveValueSet(type, name);
+            viewerDAL.saveValueSet(type, name, id);
 
             return Response
                     .ok()

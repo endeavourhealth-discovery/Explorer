@@ -71,7 +71,7 @@ export class ValueSetLibraryComponent implements OnInit {
   masterToggle() {
     this.isAllSelected() ?
       this.selection.clear() :
-      this.dataSource.data.forEach(row => this.selection.select(row.id));
+      this.dataSource.data.forEach(row => this.selection.select(row));
   }
 
   checkboxLabel(row?: any): string {
@@ -94,6 +94,7 @@ export class ValueSetLibraryComponent implements OnInit {
     const dialogRef = this.dialog.open(ValueSetEditorComponent, {
       height: '320px',
       width: '600px',
+      data: {id: "", name: "", type: ""}
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result)
@@ -105,10 +106,18 @@ export class ValueSetLibraryComponent implements OnInit {
   delete() {
     console.log("Selected: " + this.selection.selected);
 
+    let id = "";
+    this.selection.selected.map(
+      e => {
+        id+=","+e.id;
+      }
+    )
+    id = id.substr(1);
+
     MessageBoxDialogComponent.open(this.dialog, 'Delete value set', 'Are you sure you want to delete this value set?', 'Delete', 'Cancel')
       .subscribe(result => {
         if (result) {
-          let id = this.selection.selected;
+
           this.explorerService.deleteValueSet(id.toString())
             .subscribe(saved => {
                 this.loadEvents();
@@ -117,6 +126,28 @@ export class ValueSetLibraryComponent implements OnInit {
             );
         }
       });
+  }
+
+  edit() {
+
+    let id = "";
+    this.selection.selected.map(
+      e => {
+        id+=","+e.id;
+      }
+    )
+    id = id.substr(1);
+
+    const dialogRef = this.dialog.open(ValueSetEditorComponent, {
+      height: '320px',
+      width: '600px',
+      data: {id: id, name: this.selection.selected[0].name, type:this.selection.selected[0].type}
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result)
+        this.loadEvents();
+    });
+
   }
 
 }

@@ -5,6 +5,9 @@ import {LoggerService} from 'dds-angular8';
 import {FormGroup} from "@angular/forms";
 
 export interface DialogData {
+  id: string;
+  name: string;
+  type: string;
 }
 
 @Component({
@@ -17,17 +20,21 @@ export class ValueSetEditorComponent {
   type: string;
   name: string;
   disableForm: boolean;
+  id: string;
 
   constructor(
     public dialogRef: MatDialogRef<ValueSetEditorComponent>,
     private explorerService: ExplorerService,
     private log: LoggerService,
     @Inject(MAT_DIALOG_DATA) public data: DialogData) {
+    this.id = data.id;
     this.disableForm = true;
+    this.name = data.name;
+    this.type = data.type;
   }
 
   saveValueSet() {
-    this.explorerService.saveValueSet(this.type, this.name)
+    this.explorerService.saveValueSet(this.type, this.name, this.id)
       .subscribe(saved => {
           this.dialogRef.close(true);
         },
