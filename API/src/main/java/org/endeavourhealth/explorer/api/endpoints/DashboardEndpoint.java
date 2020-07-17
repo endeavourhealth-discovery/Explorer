@@ -202,6 +202,23 @@ public class DashboardEndpoint {
         }
     }
 
+    @GET
+    @Path("/valuesetdelete")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response saveValueSet(@Context SecurityContext sc,
+                                 @QueryParam("id") String id) throws Exception {
+        LOG.debug("deleteValueSet");
+
+        try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
+            viewerDAL.deleteValueSet(id);
+
+            return Response
+                    .ok()
+                    .build();
+        }
+    }
+
 
 
 

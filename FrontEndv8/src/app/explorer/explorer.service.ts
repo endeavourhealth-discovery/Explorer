@@ -103,4 +103,11 @@ export class ExplorerService {
     return this.http.get('api/events/valueseteditor', {params});
   }
 
+  deleteValueSet(id?: string): Observable<any> {
+    let params = new HttpParams();
+    params = params.append('id', id);
+
+    return this.http.get('api/events/valuesetdelete', {params});
+  }
+
 }

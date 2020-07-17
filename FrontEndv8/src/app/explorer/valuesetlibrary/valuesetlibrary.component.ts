@@ -8,6 +8,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {ValueSetComponent} from "../valueset/valueset.component";
 import {ValueSetEditorComponent} from "../valueseteditor/valueseteditor.component";
 import {SelectionModel} from '@angular/cdk/collections';
+import {ValueSetDeleteComponent} from "../valuesetdelete/valuesetdelete.component";
 
 @Component({
   selector: 'app-valuesetlibrary',
@@ -71,7 +72,7 @@ export class ValueSetLibraryComponent implements OnInit {
   masterToggle() {
     this.isAllSelected() ?
       this.selection.clear() :
-      this.dataSource.data.forEach(row => this.selection.select(row));
+      this.dataSource.data.forEach(row => this.selection.select(row.id));
   }
 
   checkboxLabel(row?: any): string {
@@ -88,8 +89,6 @@ export class ValueSetLibraryComponent implements OnInit {
 
       data: {id: id}
     });
-
-
   }
 
   add() {
@@ -105,7 +104,17 @@ export class ValueSetLibraryComponent implements OnInit {
   }
 
   delete() {
+    console.log("Selected: " + this.selection.selected);
 
+    const dialogRef = this.dialog.open(ValueSetDeleteComponent, {
+      height: '180px',
+      width: '400px',
+      data: {id: this.selection.selected}
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result)
+        this.loadEvents();
+    });
   }
 
 }

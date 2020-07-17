@@ -11,6 +11,16 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
     private static final Logger LOG = LoggerFactory.getLogger(ExplorerJDBCDAL.class);
 
+    public void deleteValueSet(String id) throws Exception {
+
+        String sql = "DELETE FROM dashboards.value_sets WHERE id = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, id);
+            stmt.executeUpdate();
+        }
+    }
+
     public void saveValueSet(String type, String name) throws Exception {
         String sql = "INSERT INTO dashboards.value_sets (type, name) " +
                 "VALUES (?, ?)";

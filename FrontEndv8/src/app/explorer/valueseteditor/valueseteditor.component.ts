@@ -37,6 +37,7 @@ export class ValueSetEditorComponent {
 
   valuesetEntered(event) {
     if (event.key === "Enter") {
+      this.saveValueSet();
     }
   }
 
