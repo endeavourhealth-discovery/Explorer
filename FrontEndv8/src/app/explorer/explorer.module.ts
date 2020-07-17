@@ -35,8 +35,6 @@ import {ValueSetLibraryComponent} from "./valuesetlibrary/valuesetlibrary.compon
 import {ValueSetComponent} from "./valueset/valueset.component";
 import {TutorialsComponent} from "./tutorials/tutorials.component";
 import {ValueSetEditorComponent} from "./valueseteditor/valueseteditor.component";
-import {ValueSetDeleteComponent} from "./valuesetdelete/valuesetdelete.component";
-
 @NgModule({
   declarations: [
     DashboardComponent,
@@ -47,7 +45,6 @@ import {ValueSetDeleteComponent} from "./valuesetdelete/valuesetdelete.component
     ValueSetComponent,
     TutorialsComponent,
     ValueSetEditorComponent,
-    ValueSetDeleteComponent,
     MessageBoxDialogComponent
   ],
     imports: [
@@ -85,7 +82,6 @@ import {ValueSetDeleteComponent} from "./valuesetdelete/valuesetdelete.component
     PatientComponent,
     ValueSetComponent,
     ValueSetEditorComponent,
-    ValueSetDeleteComponent,
     MessageBoxDialogComponent
   ],
   providers: [ Globals ]

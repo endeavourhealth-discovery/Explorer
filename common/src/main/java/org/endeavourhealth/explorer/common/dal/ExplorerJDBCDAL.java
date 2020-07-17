@@ -13,10 +13,11 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
     public void deleteValueSet(String id) throws Exception {
 
-        String sql = "DELETE FROM dashboards.value_sets WHERE id = ?";
+        id = "WHERE id in ("+id+")";
+
+        String sql = "DELETE FROM dashboards.value_sets " +id;
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, id);
             stmt.executeUpdate();
         }
     }

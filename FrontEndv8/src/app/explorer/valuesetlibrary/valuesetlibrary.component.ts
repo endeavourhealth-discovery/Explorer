@@ -1,14 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 import {MatTableDataSource} from '@angular/material';
 import {ExplorerService} from '../explorer.service';
-import {LoggerService} from 'dds-angular8';
+import {LoggerService, MessageBoxDialogComponent} from 'dds-angular8';
 import {PageEvent} from '@angular/material/paginator';
 import {ActivatedRoute} from "@angular/router";
 import {MatDialog} from "@angular/material/dialog";
 import {ValueSetComponent} from "../valueset/valueset.component";
 import {ValueSetEditorComponent} from "../valueseteditor/valueseteditor.component";
 import {SelectionModel} from '@angular/cdk/collections';
-import {ValueSetDeleteComponent} from "../valuesetdelete/valuesetdelete.component";
 
 @Component({
   selector: 'app-valuesetlibrary',
@@ -106,15 +105,18 @@ export class ValueSetLibraryComponent implements OnInit {
   delete() {
     console.log("Selected: " + this.selection.selected);
 
-    const dialogRef = this.dialog.open(ValueSetDeleteComponent, {
-      height: '180px',
-      width: '400px',
-      data: {id: this.selection.selected}
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      if (result)
-        this.loadEvents();
-    });
+    MessageBoxDialogComponent.open(this.dialog, 'Delete value set', 'Are you sure you want to delete this value set?', 'Delete', 'Cancel')
+      .subscribe(result => {
+        if (result) {
+          let id = this.selection.selected;
+          this.explorerService.deleteValueSet(id.toString())
+            .subscribe(saved => {
+                this.loadEvents();
+              },
+              error => this.log.error('This value set could not be deleted.')
+            );
+        }
+      });
   }
 
 }
