@@ -104,8 +104,6 @@ export class ValueSetLibraryComponent implements OnInit {
   }
 
   delete() {
-    console.log("Selected: " + this.selection.selected);
-
     let id = "";
     this.selection.selected.map(
       e => {
@@ -129,19 +127,10 @@ export class ValueSetLibraryComponent implements OnInit {
   }
 
   edit() {
-
-    let id = "";
-    this.selection.selected.map(
-      e => {
-        id+=","+e.id;
-      }
-    )
-    id = id.substr(1);
-
     const dialogRef = this.dialog.open(ValueSetEditorComponent, {
       height: '320px',
       width: '600px',
-      data: {id: id, name: this.selection.selected[0].name, type:this.selection.selected[0].type}
+      data: {id: this.selection.selected[0].id, name: this.selection.selected[0].name, type:this.selection.selected[0].type}
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result)

@@ -207,7 +207,7 @@ public class DashboardEndpoint {
     @Path("/valuesetdelete")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response saveValueSet(@Context SecurityContext sc,
+    public Response deleteValueSet(@Context SecurityContext sc,
                                  @QueryParam("id") String id) throws Exception {
         LOG.debug("deleteValueSet");
 

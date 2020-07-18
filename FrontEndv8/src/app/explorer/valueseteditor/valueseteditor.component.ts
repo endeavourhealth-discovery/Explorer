@@ -27,8 +27,8 @@ export class ValueSetEditorComponent {
     private explorerService: ExplorerService,
     private log: LoggerService,
     @Inject(MAT_DIALOG_DATA) public data: DialogData) {
-    this.id = data.id;
     this.disableForm = true;
+    this.id = data.id;
     this.name = data.name;
     this.type = data.type;
   }
