@@ -1,0 +1,9 @@
+<h1 mat-dialog-title>{{title}}</h1>
+<div mat-dialog-content style="max-height: unset; overflow: unset">
+  {{prompt}}
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button color="accent" (click)="closeCancel()" *ngIf="cancel">{{cancel}}</button>
+  <button *ngIf="emphasis" mat-flat-button color="accent" (click)="closeOk()">{{ok}}</button>
+  <button *ngIf="!emphasis" mat-button color="accent" (click)="closeOk()">{{ok}}</button>
+</div>

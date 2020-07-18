@@ -8,6 +8,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {ValueSetComponent} from "../valueset/valueset.component";
 import {ValueSetEditorComponent} from "../valueseteditor/valueseteditor.component";
 import {SelectionModel} from '@angular/cdk/collections';
+import {MessageBoxDialogComponent} from "../message-box-dialog/message-box-dialog.component";
 
 @Component({
   selector: 'app-valuesetlibrary',
@@ -112,7 +113,7 @@ export class ValueSetLibraryComponent implements OnInit {
     )
     id = id.substr(1);
 
-    /*MessageBoxDialogComponent.open(this.dialog, 'Delete value set', 'Are you sure you want to delete this value set?', 'Delete', 'Cancel')
+    MessageBoxDialogComponent.open(this.dialog, 'Delete value set', 'Are you sure you want to delete this value set?', 'Delete', 'Cancel')
       .subscribe(result => {
         if (result) {
 
@@ -123,7 +124,7 @@ export class ValueSetLibraryComponent implements OnInit {
               error => this.log.error('This value set could not be deleted.')
             );
         }
-      });*/
+      });
   }
 
   edit() {

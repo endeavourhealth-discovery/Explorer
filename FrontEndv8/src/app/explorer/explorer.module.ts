@@ -35,6 +35,7 @@ import {ValueSetLibraryComponent} from "./valuesetlibrary/valuesetlibrary.compon
 import {ValueSetComponent} from "./valueset/valueset.component";
 import {TutorialsComponent} from "./tutorials/tutorials.component";
 import {ValueSetEditorComponent} from "./valueseteditor/valueseteditor.component";
+import {MessageBoxDialogComponent} from "./message-box-dialog/message-box-dialog.component";
 @NgModule({
   declarations: [
     DashboardComponent,
@@ -44,7 +45,8 @@ import {ValueSetEditorComponent} from "./valueseteditor/valueseteditor.component
     ValueSetLibraryComponent,
     ValueSetComponent,
     TutorialsComponent,
-    ValueSetEditorComponent
+    ValueSetEditorComponent,
+    MessageBoxDialogComponent
   ],
     imports: [
         BrowserModule,
@@ -80,7 +82,8 @@ import {ValueSetEditorComponent} from "./valueseteditor/valueseteditor.component
   entryComponents: [
     PatientComponent,
     ValueSetComponent,
-    ValueSetEditorComponent
+    ValueSetEditorComponent,
+    MessageBoxDialogComponent
   ],
   providers: [ Globals ]
 })
