@@ -4,13 +4,24 @@ import {AppMenuService} from './app-menu.service';
 import {RouterModule} from '@angular/router';
 import {ExplorerModule} from './explorer/explorer.module';
 import {HttpClientModule} from '@angular/common/http';
-import {AbstractMenuProvider, LayoutComponent, LayoutModule, LoggerModule, SecurityModule, UserManagerModule} from 'dds-angular8';
+import {
+  AbstractMenuProvider,
+  LayoutComponent,
+  LayoutModule,
+  LoggerModule,
+  MessageBoxDialogComponent,
+  SecurityModule,
+  UserManagerModule
+} from 'dds-angular8';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import {MAT_DATE_LOCALE} from "@angular/material/core";
 
 const keycloakService = new KeycloakService();
 
 @NgModule({
+  declarations: [
+    MessageBoxDialogComponent
+  ],
   imports: [
     KeycloakAngularModule,
     HttpClientModule,
@@ -21,6 +32,9 @@ const keycloakService = new KeycloakService();
     ExplorerModule,
     NgxChartsModule,
     RouterModule.forRoot(AppMenuService.getRoutes(), {useHash: true}),
+  ],
+  entryComponents: [
+    MessageBoxDialogComponent
   ],
   providers: [
     { provide: AbstractMenuProvider, useClass : AppMenuService },

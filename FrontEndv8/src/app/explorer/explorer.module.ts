@@ -17,7 +17,7 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatMenuModule} from '@angular/material/menu';
-import {CoreModule, MessageBoxDialogComponent} from 'dds-angular8';
+import {CoreModule} from 'dds-angular8';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatButtonModule} from '@angular/material/button';
 import {MatTreeModule} from '@angular/material/tree';
@@ -44,8 +44,7 @@ import {ValueSetEditorComponent} from "./valueseteditor/valueseteditor.component
     ValueSetLibraryComponent,
     ValueSetComponent,
     TutorialsComponent,
-    ValueSetEditorComponent,
-    MessageBoxDialogComponent
+    ValueSetEditorComponent
   ],
     imports: [
         BrowserModule,
@@ -81,8 +80,7 @@ import {ValueSetEditorComponent} from "./valueseteditor/valueseteditor.component
   entryComponents: [
     PatientComponent,
     ValueSetComponent,
-    ValueSetEditorComponent,
-    MessageBoxDialogComponent
+    ValueSetEditorComponent
   ],
   providers: [ Globals ]
 })
