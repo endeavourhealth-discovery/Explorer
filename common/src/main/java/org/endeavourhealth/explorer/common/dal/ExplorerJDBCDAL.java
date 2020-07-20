@@ -153,6 +153,14 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                 sqlCount = "SELECT count(distinct(grouping)) " +
                         " FROM dashboards.dashboard_results";
                 break;
+            case "4":
+                sql = "SELECT distinct(type) as type " +
+                        "FROM dashboards.value_sets " +
+                        " order by type";
+
+                sqlCount = "SELECT count(distinct(type)) " +
+                        " FROM dashboards.value_sets";
+                break;
             default:
                 break;
         }
@@ -303,18 +311,24 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         return valueset;
     }
 
-    public ValueSetLibraryResult getValueSetLibrary(Integer page, Integer size) throws Exception {
+    public ValueSetLibraryResult getValueSetLibrary(Integer page, Integer size, String selectedTypeString) throws Exception {
         ValueSetLibraryResult result = new ValueSetLibraryResult();
+
+        selectedTypeString = selectedTypeString.replaceAll(",","','");
+        selectedTypeString = "'" + selectedTypeString + "'";
+        selectedTypeString = "WHERE type in ("+selectedTypeString+")";
 
         String sql = "";
         String sqlCount = "";
 
-        sql = "SELECT id, name, updated, type " +
+        sql = "SELECT id, type, name, updated " +
                 "FROM dashboards.value_sets " +
-                "order by name LIMIT ?,?";
+                selectedTypeString+
+                "order by type,name LIMIT ?,?";
 
         sqlCount = "SELECT count(1) " +
-                "FROM dashboards.value_sets";
+                "FROM dashboards.value_sets " +
+                selectedTypeString;
 
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
             statement.setInt(1, page*12);
@@ -367,7 +381,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         sql = "SELECT dashboard_id, name, updated, type " +
                 "FROM dashboards.dashboard_library " +
                  selectedTypeString+
-                " order by type LIMIT ?,?";
+                " order by type,name LIMIT ?,?";
 
         sqlCount = "SELECT count(1) " +
                 " FROM dashboards.dashboard_library "+

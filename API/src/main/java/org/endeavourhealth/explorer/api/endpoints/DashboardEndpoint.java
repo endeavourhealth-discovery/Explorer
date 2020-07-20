@@ -131,11 +131,12 @@ public class DashboardEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getValueSetLibrary(@Context SecurityContext sc,
                                         @QueryParam("page") Integer page,
-                                        @QueryParam("size") Integer size) throws Exception {
+                                        @QueryParam("size") Integer size,
+                                        @QueryParam("selectedTypeString") String selectedTypeString) throws Exception {
         LOG.debug("getValueSetLibrary");
 
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
-            ValueSetLibraryResult result = viewerDAL.getValueSetLibrary(page, size);
+            ValueSetLibraryResult result = viewerDAL.getValueSetLibrary(page, size, selectedTypeString);
 
             return Response
                     .ok()

@@ -79,9 +79,13 @@ export class DashboardLibraryComponent implements OnInit {
         (result) => this.displayEvents(result),
         (error) => this.log.error(error)
       );
+
+    this.selection.clear();
   }
 
   loadList(lists: any) {
+    this.typeList = [];
+    this.typeValues = new FormControl(this.typeList);
     lists.results.map(
       e => {
         this.typeList.push(e.type);
@@ -132,11 +136,7 @@ export class DashboardLibraryComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result)
-        this.explorerService.getLookupLists('1')
-          .subscribe(
-            (result) => this.loadList(result),
-            (error) => this.log.error(error)
-          );
+        this.ngOnInit();
     });
 
   }
@@ -156,11 +156,7 @@ export class DashboardLibraryComponent implements OnInit {
 
           this.explorerService.deleteDashboard(dashboardId.toString())
             .subscribe(saved => {
-                this.explorerService.getLookupLists('1')
-                  .subscribe(
-                    (result) => this.loadList(result),
-                    (error) => this.log.error(error)
-                  );
+                this.ngOnInit();
               },
               error => this.log.error('This dashboard could not be deleted.')
             );
@@ -176,11 +172,7 @@ export class DashboardLibraryComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result)
-        this.explorerService.getLookupLists('1')
-          .subscribe(
-            (result) => this.loadList(result),
-            (error) => this.log.error(error)
-          );
+        this.ngOnInit();
     });
 
   }

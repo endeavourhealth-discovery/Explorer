@@ -84,6 +84,8 @@ export class QueryLibraryComponent implements OnInit {
   }
 
   loadList(lists: any) {
+    this.typeList = [];
+    this.typeValues = new FormControl(this.typeList);
     lists.results.map(
       e => {
         this.typeList.push(e.type);
@@ -134,11 +136,7 @@ export class QueryLibraryComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result)
-        this.explorerService.getLookupLists('2')
-          .subscribe(
-            (result) => this.loadList(result),
-            (error) => this.log.error(error)
-          );
+        this.ngOnInit();
     });
 
   }
@@ -158,11 +156,7 @@ export class QueryLibraryComponent implements OnInit {
 
           this.explorerService.deleteQuery(id.toString())
             .subscribe(saved => {
-                this.explorerService.getLookupLists('2')
-                  .subscribe(
-                    (result) => this.loadList(result),
-                    (error) => this.log.error(error)
-                  );
+                this.ngOnInit();
               },
               error => this.log.error('This query could not be deleted.')
             );
@@ -178,11 +172,7 @@ export class QueryLibraryComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result)
-        this.explorerService.getLookupLists('2')
-          .subscribe(
-            (result) => this.loadList(result),
-            (error) => this.log.error(error)
-          );
+        this.ngOnInit();
     });
 
   }
