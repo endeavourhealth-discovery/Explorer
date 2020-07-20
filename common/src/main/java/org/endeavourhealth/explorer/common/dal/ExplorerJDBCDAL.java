@@ -11,6 +11,80 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
     private static final Logger LOG = LoggerFactory.getLogger(ExplorerJDBCDAL.class);
 
+    public void deleteDashboard(String dashboardId) throws Exception {
+
+        dashboardId = "WHERE dashboard_id in ("+dashboardId+")";
+
+        String sql = "DELETE FROM dashboards.dashboard_library " +dashboardId;
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.executeUpdate();
+        }
+    }
+
+    public void saveDashboard(String type, String name, String dashboardId) throws Exception {
+
+        String sql = "";
+
+        if (dashboardId.equals("")) {
+            sql = "INSERT INTO dashboards.dashboard_library (type, name) " +
+                    "VALUES (?, ?)";
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, type);
+                stmt.setString(2, name);
+                stmt.executeUpdate();
+            }
+        } else // edit
+        {
+            sql = "UPDATE dashboards.dashboard_library SET type = ?, name = ? " +
+                    "WHERE dashboard_id = ?";
+
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, type);
+                stmt.setString(2, name);
+                stmt.setString(3, dashboardId);
+                stmt.executeUpdate();
+            }
+        }
+    }
+
+    public void deleteQuery(String id) throws Exception {
+
+        id = "WHERE id in ("+id+")";
+
+        String sql = "DELETE FROM dashboards.query_library " +id;
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.executeUpdate();
+        }
+    }
+
+    public void saveQuery(String type, String name, String id) throws Exception {
+
+        String sql = "";
+
+        if (id.equals("")) {
+            sql = "INSERT INTO dashboards.query_library (type, name) " +
+                    "VALUES (?, ?)";
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, type);
+                stmt.setString(2, name);
+                stmt.executeUpdate();
+            }
+        } else // edit
+        {
+            sql = "UPDATE dashboards.query_library SET type = ?, name = ? " +
+                    "WHERE id = ?";
+
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, type);
+                stmt.setString(2, name);
+                stmt.setString(3, id);
+                stmt.executeUpdate();
+            }
+        }
+    }
+
     public void deleteValueSet(String id) throws Exception {
 
         id = "WHERE id in ("+id+")";

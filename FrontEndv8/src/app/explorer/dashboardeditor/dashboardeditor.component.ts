@@ -5,47 +5,47 @@ import {LoggerService} from 'dds-angular8';
 import {FormGroup} from "@angular/forms";
 
 export interface DialogData {
-  id: string;
+  dashboardId: string;
   name: string;
   type: string;
 }
 
 @Component({
-  selector: 'app-valueseteditor',
-  templateUrl: './valueseteditor.component.html',
-  styleUrls: ['./valueseteditor.component.scss']
+  selector: 'app-dashboardeditor',
+  templateUrl: './dashboardeditor.component.html',
+  styleUrls: ['./dashboardeditor.component.scss']
 })
 
-export class ValueSetEditorComponent {
+export class DashboardEditorComponent {
   type: string;
   name: string;
   disableForm: boolean;
-  id: string;
+  dashboardId: string;
 
   constructor(
-    public dialogRef: MatDialogRef<ValueSetEditorComponent>,
+    public dialogRef: MatDialogRef<DashboardEditorComponent>,
     private explorerService: ExplorerService,
     private log: LoggerService,
     @Inject(MAT_DIALOG_DATA) public data: DialogData) {
     this.disableForm = true;
-    this.id = data.id;
+    this.dashboardId = data.dashboardId;
     this.name = data.name;
     this.type = data.type;
   }
 
-  saveValueSet() {
-    this.explorerService.saveValueSet(this.type, this.name, this.id)
+  saveDashboard() {
+    this.explorerService.saveDashboard(this.type, this.name, this.dashboardId)
       .subscribe(saved => {
           this.dialogRef.close(true);
         },
-        error => this.log.error('This value set could not be saved.')
+        error => this.log.error('This dashboard could not be saved.')
       );
   }
 
-  valuesetEntered(event) {
+  dashboardEntered(event) {
 
     if (event.key === "Enter") {
-      this.saveValueSet();
+      this.saveDashboard();
     }
   }
 

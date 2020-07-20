@@ -5,6 +5,10 @@ import {LoggerService} from 'dds-angular8';
 import {PageEvent} from '@angular/material/paginator';
 import {ActivatedRoute} from "@angular/router";
 import {FormControl} from "@angular/forms";
+import {SelectionModel} from "@angular/cdk/collections";
+import {MatDialog} from "@angular/material/dialog";
+import {MessageBoxDialogComponent} from "../message-box-dialog/message-box-dialog.component";
+import {DashboardEditorComponent} from "../dashboardeditor/dashboardeditor.component";
 
 @Component({
   selector: 'app-dashboardlibrary',
@@ -13,12 +17,15 @@ import {FormControl} from "@angular/forms";
 })
 
 export class DashboardLibraryComponent implements OnInit {
+
+  selection = new SelectionModel<any>(true, []);
+
   events: any;
   dataSource: MatTableDataSource<any>;
   page: number = 0;
   size: number = 12;
 
-  displayedColumns: string[] = ['type', 'name', 'updated'];
+  displayedColumns: string[] = ['select', 'type', 'name', 'updated'];
 
   selectedType: string = '';
   selectedTypeString: string = '';
@@ -30,8 +37,8 @@ export class DashboardLibraryComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private explorerService: ExplorerService,
-    private log: LoggerService
-    ) { }
+    private log: LoggerService,
+  private dialog: MatDialog) { }
 
   ngOnInit() {
     this.explorerService.getLookupLists('1')
@@ -96,6 +103,86 @@ export class DashboardLibraryComponent implements OnInit {
     this.loadEvents();
   }
 
+  isAllSelected() {
+    if (this.dataSource==undefined)
+      return false;
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    return numSelected === numRows;
+  }
 
+  masterToggle() {
+    this.isAllSelected() ?
+      this.selection.clear() :
+      this.dataSource.data.forEach(row => this.selection.select(row));
+  }
+
+  checkboxLabel(row?: any): string {
+    if (!row) {
+      return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
+    }
+    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
+  }
+
+  add() {
+    const dialogRef = this.dialog.open(DashboardEditorComponent, {
+      height: '320px',
+      width: '600px',
+      data: {dashboardId: "", name: "", type: ""}
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result)
+        this.explorerService.getLookupLists('1')
+          .subscribe(
+            (result) => this.loadList(result),
+            (error) => this.log.error(error)
+          );
+    });
+
+  }
+
+  delete() {
+    let dashboardId = "";
+    this.selection.selected.map(
+      e => {
+        dashboardId+=","+e.dashboardId;
+      }
+    )
+    dashboardId = dashboardId.substr(1);
+
+    MessageBoxDialogComponent.open(this.dialog, 'Delete dashboard', 'Are you sure you want to delete this dashboard?', 'Delete', 'Cancel')
+      .subscribe(result => {
+        if (result) {
+
+          this.explorerService.deleteDashboard(dashboardId.toString())
+            .subscribe(saved => {
+                this.explorerService.getLookupLists('1')
+                  .subscribe(
+                    (result) => this.loadList(result),
+                    (error) => this.log.error(error)
+                  );
+              },
+              error => this.log.error('This dashboard could not be deleted.')
+            );
+        }
+      });
+  }
+
+  edit() {
+    const dialogRef = this.dialog.open(DashboardEditorComponent, {
+      height: '320px',
+      width: '600px',
+      data: {dashboardId: this.selection.selected[0].dashboardId, name: this.selection.selected[0].name, type:this.selection.selected[0].type}
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result)
+        this.explorerService.getLookupLists('1')
+          .subscribe(
+            (result) => this.loadList(result),
+            (error) => this.log.error(error)
+          );
+    });
+
+  }
 
 }

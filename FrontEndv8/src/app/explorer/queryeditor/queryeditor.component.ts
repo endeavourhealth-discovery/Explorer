@@ -11,19 +11,19 @@ export interface DialogData {
 }
 
 @Component({
-  selector: 'app-valueseteditor',
-  templateUrl: './valueseteditor.component.html',
-  styleUrls: ['./valueseteditor.component.scss']
+  selector: 'app-queryeditor',
+  templateUrl: './queryeditor.component.html',
+  styleUrls: ['./queryeditor.component.scss']
 })
 
-export class ValueSetEditorComponent {
+export class QueryEditorComponent {
   type: string;
   name: string;
   disableForm: boolean;
   id: string;
 
   constructor(
-    public dialogRef: MatDialogRef<ValueSetEditorComponent>,
+    public dialogRef: MatDialogRef<QueryEditorComponent>,
     private explorerService: ExplorerService,
     private log: LoggerService,
     @Inject(MAT_DIALOG_DATA) public data: DialogData) {
@@ -33,19 +33,19 @@ export class ValueSetEditorComponent {
     this.type = data.type;
   }
 
-  saveValueSet() {
-    this.explorerService.saveValueSet(this.type, this.name, this.id)
+  saveQuery() {
+    this.explorerService.saveQuery(this.type, this.name, this.id)
       .subscribe(saved => {
           this.dialogRef.close(true);
         },
-        error => this.log.error('This value set could not be saved.')
+        error => this.log.error('This query could not be saved.')
       );
   }
 
-  valuesetEntered(event) {
+  queryEntered(event) {
 
     if (event.key === "Enter") {
-      this.saveValueSet();
+      this.saveQuery();
     }
   }
 

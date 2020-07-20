@@ -36,6 +36,9 @@ import {ValueSetComponent} from "./valueset/valueset.component";
 import {TutorialsComponent} from "./tutorials/tutorials.component";
 import {ValueSetEditorComponent} from "./valueseteditor/valueseteditor.component";
 import {MessageBoxDialogComponent} from "./message-box-dialog/message-box-dialog.component";
+import {QueryEditorComponent} from "./queryeditor/queryeditor.component";
+import {DashboardEditorComponent} from "./dashboardeditor/dashboardeditor.component";
+
 @NgModule({
   declarations: [
     DashboardComponent,
@@ -46,7 +49,9 @@ import {MessageBoxDialogComponent} from "./message-box-dialog/message-box-dialog
     ValueSetComponent,
     TutorialsComponent,
     ValueSetEditorComponent,
-    MessageBoxDialogComponent
+    MessageBoxDialogComponent,
+    QueryEditorComponent,
+    DashboardEditorComponent
   ],
     imports: [
         BrowserModule,
@@ -83,7 +88,9 @@ import {MessageBoxDialogComponent} from "./message-box-dialog/message-box-dialog
     PatientComponent,
     ValueSetComponent,
     ValueSetEditorComponent,
-    MessageBoxDialogComponent
+    MessageBoxDialogComponent,
+    QueryEditorComponent,
+    DashboardEditorComponent
   ],
   providers: [ Globals ]
 })

@@ -111,4 +111,36 @@ export class ExplorerService {
     return this.http.get('api/events/valuesetdelete', {params});
   }
 
+  saveQuery(type?: string, name?: string, id?: string): Observable<any> {
+    let params = new HttpParams();
+    params = params.append('type', type);
+    params = params.append('name', name);
+    params = params.append('id', id);
+
+    return this.http.get('api/events/queryeditor', {params});
+  }
+
+  deleteQuery(id?: string): Observable<any> {
+    let params = new HttpParams();
+    params = params.append('id', id);
+
+    return this.http.get('api/events/querydelete', {params});
+  }
+
+  saveDashboard(type?: string, name?: string, dashboardId?: string): Observable<any> {
+    let params = new HttpParams();
+    params = params.append('type', type);
+    params = params.append('name', name);
+    params = params.append('dashboardId', dashboardId);
+
+    return this.http.get('api/events/dashboardeditor', {params});
+  }
+
+  deleteDashboard(dashboardId?: string): Observable<any> {
+    let params = new HttpParams();
+    params = params.append('dashboardId', dashboardId);
+
+    return this.http.get('api/events/dashboarddelete', {params});
+  }
+
 }

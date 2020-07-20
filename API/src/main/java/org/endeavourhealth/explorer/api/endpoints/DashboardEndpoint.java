@@ -220,6 +220,80 @@ public class DashboardEndpoint {
         }
     }
 
+    @GET
+    @Path("/queryeditor")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response saveQuery(@Context SecurityContext sc,
+                                 @QueryParam("type") String type,
+                                 @QueryParam("name") String name,
+                                 @QueryParam("id") String id) throws Exception {
+        LOG.debug("saveQuery");
+
+        try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
+            viewerDAL.saveQuery(type, name, id);
+
+            return Response
+                    .ok()
+                    .build();
+        }
+    }
+
+    @GET
+    @Path("/querydelete")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteQuery(@Context SecurityContext sc,
+                                   @QueryParam("id") String id) throws Exception {
+        LOG.debug("deleteQuery");
+
+        try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
+            viewerDAL.deleteQuery(id);
+
+            return Response
+                    .ok()
+                    .build();
+        }
+    }
+
+    @GET
+    @Path("/dashboardeditor")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response saveDashboard(@Context SecurityContext sc,
+                              @QueryParam("type") String type,
+                              @QueryParam("name") String name,
+                              @QueryParam("dashboardId") String dashboardId) throws Exception {
+        LOG.debug("saveDashboard");
+
+        try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
+            viewerDAL.saveDashboard(type, name, dashboardId);
+
+            return Response
+                    .ok()
+                    .build();
+        }
+    }
+
+    @GET
+    @Path("/dashboarddelete")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteDashboard(@Context SecurityContext sc,
+                                @QueryParam("dashboardId") String dashboardId) throws Exception {
+        LOG.debug("deleteDashboard");
+
+        try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
+            viewerDAL.deleteDashboard(dashboardId);
+
+            return Response
+                    .ok()
+                    .build();
+        }
+    }
+
+
+
 
 
 
