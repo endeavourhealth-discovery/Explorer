@@ -144,4 +144,30 @@ export class ExplorerService {
     return this.http.get('api/events/dashboarddelete', {params});
   }
 
+  duplicateValueSet(id?: string): Observable<any> {
+    let params = new HttpParams();
+    params = params.append('id', id);
+
+    return this.http.get('api/events/valuesetduplicate', {params});
+  }
+
+  saveValue(type?: string, code?: string, term?: string, snomed?: string, value?: string, id?: string): Observable<any> {
+    let params = new HttpParams();
+    params = params.append('type', type);
+    params = params.append('code', code);
+    params = params.append('term', term);
+    params = params.append('snomed', snomed);
+    params = params.append('value', value);
+    params = params.append('id', id);
+
+    return this.http.get('api/events/valueeditor', {params});
+  }
+
+  deleteValue(id?: string): Observable<any> {
+    let params = new HttpParams();
+    params = params.append('id', id);
+
+    return this.http.get('api/events/valuedelete', {params});
+  }
+
 }

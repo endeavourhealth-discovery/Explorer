@@ -1,0 +1,32 @@
+  <div mat-dialog-title>
+    Add value set
+  </div>
+
+  <div style="font-size: 14px">
+      <mat-form-field appearance="outline" style="width: 500px">
+        <mat-label>Value type</mat-label>
+        <input required matInput placeholder="Type" [(ngModel)]="type" (ngModelChange)="formChanged()">
+      </mat-form-field>
+      <mat-form-field appearance="outline" style="width: 500px">
+        <mat-label>Value code</mat-label>
+        <input required matInput placeholder="Code" [(ngModel)]="code" (ngModelChange)="formChanged()">
+      </mat-form-field>
+      <mat-form-field appearance="outline" style="width: 500px">
+        <mat-label>Value term</mat-label>
+        <input required matInput placeholder="Term" [(ngModel)]="term" (ngModelChange)="formChanged()">
+      </mat-form-field>
+      <mat-form-field appearance="outline" style="width: 500px">
+        <mat-label>Snomed ID</mat-label>
+        <input required matInput placeholder="Snomed ID" [(ngModel)]="snomed" (ngModelChange)="formChanged()" (keyup)="valueEntered($event)">
+      </mat-form-field>
+  </div>
+
+  <div class="flex" fxLayout="row wrap" fxLayoutGap="16px grid" fxLayoutAlign="start">
+    <small style="color:red">* required fields</small>
+  </div>
+
+  <div mat-dialog-actions align="end">
+    <button style="margin-right: 15px" mat-button color="accent" (click)="onCancelClick()">Cancel</button>
+    <button style="margin-right: 15px" mat-flat-button color="accent" [disabled]="disableForm" (click)="saveValue()">Save</button>
+  </div>
+

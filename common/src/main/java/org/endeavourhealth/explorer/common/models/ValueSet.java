@@ -1,6 +1,7 @@
 package org.endeavourhealth.explorer.common.models;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.sun.xml.internal.ws.api.ha.StickyFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +17,7 @@ public class ValueSet {
     private String term;
     private String snomed;
     private String updated;
+    private String id;
 
 
     public String getType() {
@@ -68,6 +70,15 @@ public class ValueSet {
         catch (Exception e) {
             LOG.error(e.getMessage());
         }
+        return this;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public ValueSet setId(String id) {
+        this.id = id;
         return this;
     }
 

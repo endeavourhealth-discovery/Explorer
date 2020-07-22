@@ -148,7 +148,6 @@ export class ValueSetLibraryComponent implements OnInit {
       if (result)
         this.ngOnInit();
     });
-
   }
 
   delete() {
@@ -184,7 +183,31 @@ export class ValueSetLibraryComponent implements OnInit {
       if (result)
         this.ngOnInit();
     });
+  }
 
+  duplicate() {
+
+    let id = "";
+    this.selection.selected.map(
+      e => {
+        id+=","+e.id;
+      }
+    )
+    id = id.substr(1);
+    console.log("ID: " + id);
+
+    MessageBoxDialogComponent.open(this.dialog, 'Duplicate value set', 'Are you sure you want to duplicate this value set?', 'Duplicate', 'Cancel')
+      .subscribe(result => {
+        if (result) {
+
+          this.explorerService.duplicateValueSet(id.toString())
+            .subscribe(saved => {
+                this.ngOnInit();
+              },
+              error => this.log.error('This value set could not be duplicated.')
+            );
+        }
+      });
   }
 
 }

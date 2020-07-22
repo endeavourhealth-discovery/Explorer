@@ -11,6 +11,69 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
     private static final Logger LOG = LoggerFactory.getLogger(ExplorerJDBCDAL.class);
 
+    public void deleteValue(String id) throws Exception {
+
+        id = "WHERE id in ("+id+")";
+
+        String sql = "DELETE FROM dashboards.value_set_codes " +id;
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.executeUpdate();
+        }
+    }
+
+    public void saveValue(String type, String code, String term, String snomed, String value, String id) throws Exception {
+
+        String sql = "";
+
+        if (id.equals("")) {
+            sql = "INSERT INTO dashboards.value_set_codes (type, original_code, original_term, snomed_id, value_set_id) " +
+                    "VALUES (?, ?, ?, ?, ?)";
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, type);
+                stmt.setString(2, code);
+                stmt.setString(3, term);
+                stmt.setString(4, snomed);
+                stmt.setString(5, value);
+                stmt.executeUpdate();
+            }
+        } else // edit
+        {
+            sql = "UPDATE dashboards.value_set_codes SET type = ?, original_code = ?, original_term = ?, snomed_id = ? " +
+                    "WHERE id = ?";
+
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, type);
+                stmt.setString(2, code);
+                stmt.setString(3, term);
+                stmt.setString(4, snomed);
+                stmt.setString(5, id);
+                stmt.executeUpdate();
+            }
+        }
+    }
+
+    public void duplicateValueSet(String id) throws Exception {
+
+        String sql = "insert into dashboards.value_sets (type, name) " +
+                "select type, name from dashboards.value_sets where id = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, id);
+            stmt.executeUpdate();
+        }
+
+        String sqlCount = "insert into dashboards.value_set_codes (value_set_id, type, original_code, original_term, snomed_id) " +
+                "select (select max(id) as id from dashboards.value_sets), type, original_code, original_term, snomed_id " +
+                "from dashboards.value_set_codes " +
+                "where value_set_id = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sqlCount)) {
+            stmt.setString(1, id);
+            stmt.executeUpdate();
+        }
+    }
+
     public void deleteDashboard(String dashboardId) throws Exception {
 
         dashboardId = "WHERE dashboard_id in ("+dashboardId+")";
@@ -87,13 +150,22 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
     public void deleteValueSet(String id) throws Exception {
 
-        id = "WHERE id in ("+id+")";
+        String value_set_id = "WHERE value_set_id in ("+id+")";
+         String valueId = "WHERE id in ("+id+")";
 
-        String sql = "DELETE FROM dashboards.value_sets " +id;
+
+        String sql = "DELETE FROM dashboards.value_sets " +valueId;
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.executeUpdate();
         }
+
+        String sqlCount = "DELETE FROM dashboards.value_set_codes " + value_set_id;
+
+        try (PreparedStatement stmt = conn.prepareStatement(sqlCount)) {
+            stmt.executeUpdate();
+        }
+
     }
 
     public void saveValueSet(String type, String name, String id) throws Exception {
@@ -261,7 +333,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         String sql = "";
         String sqlCount = "";
 
-        sql = "SELECT type, original_code, original_term, snomed_id, updated " +
+        sql = "SELECT type, original_code, original_term, snomed_id, updated, id " +
                 "FROM dashboards.value_set_codes " +
                 "WHERE value_set_id = ? " +
                 "order by type, original_term LIMIT ?,?";
@@ -307,7 +379,8 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                 .setCode(resultSet.getString("original_code"))
                 .setTerm(resultSet.getString("original_term"))
                 .setSnomed(resultSet.getString("snomed_id"))
-                .setUpdated(resultSet.getDate("updated"));
+                .setUpdated(resultSet.getDate("updated"))
+                .setId(resultSet.getString("id"));
         return valueset;
     }
 

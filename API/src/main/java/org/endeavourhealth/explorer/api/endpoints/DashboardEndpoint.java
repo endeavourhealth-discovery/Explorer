@@ -293,6 +293,62 @@ public class DashboardEndpoint {
         }
     }
 
+    @GET
+    @Path("/valuesetduplicate")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response duplicateValueSet(@Context SecurityContext sc,
+                                    @QueryParam("id") String id) throws Exception {
+        LOG.debug("duplicateValueSet");
+
+        try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
+            viewerDAL.duplicateValueSet(id);
+
+            return Response
+                    .ok()
+                    .build();
+        }
+    }
+
+    @GET
+    @Path("/valueeditor")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response saveValue(@Context SecurityContext sc,
+                                  @QueryParam("type") String type,
+                                  @QueryParam("code") String code,
+                                  @QueryParam("term") String term,
+                                  @QueryParam("snomed") String snomed,
+                                  @QueryParam("value") String value,
+                                  @QueryParam("id") String id) throws Exception {
+        LOG.debug("saveValue");
+
+        try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
+            viewerDAL.saveValue(type, code, term, snomed, value, id);
+
+            return Response
+                    .ok()
+                    .build();
+        }
+    }
+
+    @GET
+    @Path("/valuedelete")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteValue(@Context SecurityContext sc,
+                                    @QueryParam("id") String id) throws Exception {
+        LOG.debug("deleteValue");
+
+        try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
+            viewerDAL.deleteValue(id);
+
+            return Response
+                    .ok()
+                    .build();
+        }
+    }
+
 
 
 
