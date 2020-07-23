@@ -44,6 +44,7 @@
           <mat-checkbox class="checkbox" [(ngModel)]="gradient">Gradient fill</mat-checkbox>
           <mat-checkbox class="checkbox" (change)="refresh(false)" [(ngModel)]="logarithmic">Logarithmic</mat-checkbox>
           <mat-checkbox class="checkbox" (change)="refresh(false)" [(ngModel)]="cumulative">Cumulative</mat-checkbox>
+      <mat-checkbox class="checkbox" (change)="refresh(false)" [(ngModel)]="weekly">Weekly</mat-checkbox>
     </div>
 
     <div *ngIf="showLineCharts">

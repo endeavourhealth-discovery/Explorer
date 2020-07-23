@@ -56,6 +56,7 @@ export class DashboardComponent implements OnInit {
   showRefLines: boolean = false;
   logarithmic: boolean = false;
   cumulative: boolean = false;
+  weekly: boolean = false;
   multiChart: boolean = true;
 
   refLines = [{value: 1, name: 'Minimum'}, {value: 2, name: 'Average'}, {value: 3, name: 'Maximum'}];
@@ -177,7 +178,12 @@ export class DashboardComponent implements OnInit {
         cumulative = "1";
       }
 
-      this.explorerService.getDashboard(values, this.formatDate(this.dateFrom), this.formatDate(this.dateTo), cumulative, this.selectedCCGString)
+      let weekly = "0";
+      if (this.weekly) {
+        weekly = "1";
+      }
+
+      this.explorerService.getDashboard(values, this.formatDate(this.dateFrom), this.formatDate(this.dateTo), cumulative, this.selectedCCGString, weekly)
         .subscribe(result => {
           this.chartResults = result.results;
 

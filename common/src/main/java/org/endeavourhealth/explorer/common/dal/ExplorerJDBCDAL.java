@@ -498,7 +498,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         return dashboard;
     }
 
-    public ChartResult getDashboard(String chartName, String dateFrom, String dateTo, String cumulative, String grouping) throws Exception {
+    public ChartResult getDashboard(String chartName, String dateFrom, String dateTo, String cumulative, String grouping, String weekly) throws Exception {
 
         List<String> charts = Arrays.asList(chartName.split("\\s*,\\s*"));
 
@@ -516,10 +516,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
             chartItem = new Chart();
             chartItem.setName(chart_name);
 
-            if (cumulative.equals("0"))
-                sql = "SELECT series_name,sum(series_value) as series_value from dashboards.dashboard_results where name = ? "+
-                    "and series_name between ? and ? "+grouping+" group by series_name order by series_name";
-            else
+            if (cumulative.equals("1")) {
                 sql = "SELECT t.series_name," +
                         "@running_total:=@running_total + t.series_value as series_value " +
                         "FROM " +
@@ -528,6 +525,21 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                         "where name = ? and series_name between ? and ? "+grouping+" group by series_name) t " +
                         "JOIN (SELECT @running_total:=0) r " +
                         "ORDER BY t.series_name";
+            } else {
+                if (weekly.equals("1")) {
+                    sql = "SELECT FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) AS series_name, " +
+                            "SUM(series_value) AS series_value " +
+                            "from dashboards.dashboard_results where name = ? " +
+                            "and series_name between ? and ? "+grouping+
+                            " GROUP BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) " +
+                            "ORDER BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7))";
+                } else
+                {
+                    sql = "SELECT series_name,sum(series_value) as series_value from dashboards.dashboard_results where name = ? "+
+                            "and series_name between ? and ? "+grouping+" group by series_name order by series_name";
+                }
+
+            }
 
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
                 statement.setString(1, chart_name);
