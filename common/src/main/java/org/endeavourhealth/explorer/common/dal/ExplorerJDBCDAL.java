@@ -11,7 +11,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
     private static final Logger LOG = LoggerFactory.getLogger(ExplorerJDBCDAL.class);
 
-    public void deleteValue(String id) throws Exception {
+    public void deleteValueSetCode(String id) throws Exception {
 
         id = "WHERE id in ("+id+")";
 
@@ -22,7 +22,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         }
     }
 
-    public void saveValue(String type, String code, String term, String snomed, String value, String id) throws Exception {
+    public void saveValueSetCode(String type, String code, String term, String snomed, String value_set_id, String id) throws Exception {
 
         String sql = "";
 
@@ -34,7 +34,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                 stmt.setString(2, code);
                 stmt.setString(3, term);
                 stmt.setString(4, snomed);
-                stmt.setString(5, value);
+                stmt.setString(5, value_set_id);
                 stmt.executeUpdate();
             }
         } else // edit
@@ -150,19 +150,15 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
     public void deleteValueSet(String id) throws Exception {
 
-        String value_set_id = "WHERE value_set_id in ("+id+")";
-         String valueId = "WHERE id in ("+id+")";
-
-
-        String sql = "DELETE FROM dashboards.value_sets " +valueId;
+        String sql = "DELETE FROM dashboards.value_sets WHERE id in ("+id+")";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.executeUpdate();
         }
 
-        String sqlCount = "DELETE FROM dashboards.value_set_codes " + value_set_id;
+        sql = "DELETE FROM dashboards.value_set_codes WHERE value_set_id in ("+id+")";
 
-        try (PreparedStatement stmt = conn.prepareStatement(sqlCount)) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.executeUpdate();
         }
 
@@ -327,8 +323,8 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         return querylibrary;
     }
 
-    public ValueSetResult getValueSet(Integer page, Integer size, String id) throws Exception {
-        ValueSetResult result = new ValueSetResult();
+    public ValueSetCodeResult getValueSetCodes(Integer page, Integer size, String value_set_id) throws Exception {
+        ValueSetCodeResult result = new ValueSetCodeResult();
 
         String sql = "";
         String sqlCount = "";
@@ -343,7 +339,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                 "WHERE value_set_id = ?";
 
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
-            statement.setString(1, id);
+            statement.setString(1, value_set_id);
             statement.setInt(2, page*12);
             statement.setInt(3, size);
             try (ResultSet resultSet = statement.executeQuery()) {
@@ -352,7 +348,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         }
 
         try (PreparedStatement statement = conn.prepareStatement(sqlCount)) {
-            statement.setString(1, id);
+            statement.setString(1, value_set_id);
             try (ResultSet resultSet = statement.executeQuery()) {
                 resultSet.next();
                 result.setLength(resultSet.getInt(1));
@@ -362,8 +358,8 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         return result;
     }
 
-    private List<ValueSet> getValueSetList(ResultSet resultSet) throws SQLException {
-        List<ValueSet> result = new ArrayList<>();
+    private List<ValueSetCode> getValueSetList(ResultSet resultSet) throws SQLException {
+        List<ValueSetCode> result = new ArrayList<>();
         while (resultSet.next()) {
             result.add(getValueSet(resultSet));
         }
@@ -371,8 +367,8 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         return result;
     }
 
-    public static ValueSet getValueSet(ResultSet resultSet) throws SQLException {
-        ValueSet valueset = new ValueSet();
+    public static ValueSetCode getValueSet(ResultSet resultSet) throws SQLException {
+        ValueSetCode valueset = new ValueSetCode();
 
         valueset
                 .setType(resultSet.getString("type"))
@@ -478,8 +474,8 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         return result;
     }
 
-    private List<Dashboard> getDashboardList(ResultSet resultSet) throws SQLException {
-        List<Dashboard> result = new ArrayList<>();
+    private List<DashboardLibrary> getDashboardList(ResultSet resultSet) throws SQLException {
+        List<DashboardLibrary> result = new ArrayList<>();
         while (resultSet.next()) {
             result.add(getDashboard(resultSet));
         }
@@ -487,15 +483,15 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         return result;
     }
 
-    public static Dashboard getDashboard(ResultSet resultSet) throws SQLException {
-        Dashboard dashboard = new Dashboard();
+    public static DashboardLibrary getDashboard(ResultSet resultSet) throws SQLException {
+        DashboardLibrary dashboardLibrary = new DashboardLibrary();
 
-        dashboard
+        dashboardLibrary
                 .setDashboardId(resultSet.getInt("dashboard_id"))
                 .setName(resultSet.getString("name"))
                 .setUpdated(resultSet.getDate("updated"))
                 .setType(resultSet.getString("type"));
-        return dashboard;
+        return dashboardLibrary;
     }
 
     public ChartResult getDashboard(String chartName, String dateFrom, String dateTo, String cumulative, String grouping, String weekly) throws Exception {

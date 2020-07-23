@@ -3,16 +3,16 @@ package org.endeavourhealth.explorer.common.models;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ValueSetResult {
+public class ValueSetCodeResult {
     private int page = 1;
     private int length = 0;
-    private List<ValueSet> results = new ArrayList<>();
+    private List<ValueSetCode> results = new ArrayList<>();
 
     public int getPage() {
         return page;
     }
 
-    public ValueSetResult setPage(int page) {
+    public ValueSetCodeResult setPage(int page) {
         this.page = page;
         return this;
     }
@@ -21,16 +21,16 @@ public class ValueSetResult {
         return length;
     }
 
-    public ValueSetResult setLength(int length) {
+    public ValueSetCodeResult setLength(int length) {
         this.length = length;
         return this;
     }
 
-    public List<ValueSet> getResults() {
+    public List<ValueSetCode> getResults() {
         return results;
     }
 
-    public ValueSetResult setResults(List<ValueSet> results) {
+    public ValueSetCodeResult setResults(List<ValueSetCode> results) {
         this.results = results;
         return this;
     }

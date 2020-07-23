@@ -10,26 +10,26 @@ export interface DialogData {
   term: string;
   snomed: string;
   id: string;
-  value: string;
+  value_set_id: string;
 }
 
 @Component({
-  selector: 'app-valueseteditor',
-  templateUrl: './valueeditor.component.html',
-  styleUrls: ['./valueeditor.component.scss']
+  selector: 'app-valuesetcodeeditor',
+  templateUrl: './valuesetcodeeditor.component.html',
+  styleUrls: ['./valuesetcodeeditor.component.scss']
 })
 
-export class ValueEditorComponent {
+export class ValueSetCodeEditorComponent {
   type: string;
   code: string;
   term: string;
   snomed: string;
   disableForm: boolean;
   id: string;
-  value: string;
+  value_set_id: string;
 
   constructor(
-    public dialogRef: MatDialogRef<ValueEditorComponent>,
+    public dialogRef: MatDialogRef<ValueSetCodeEditorComponent>,
     private explorerService: ExplorerService,
     private log: LoggerService,
     @Inject(MAT_DIALOG_DATA) public data: DialogData) {
@@ -39,22 +39,22 @@ export class ValueEditorComponent {
     this.term = data.term;
     this.snomed = data.snomed;
     this.id = data.id;
-    this.value = data.value;
+    this.value_set_id = data.value_set_id;
   }
 
-  saveValue() {
-    this.explorerService.saveValue(this.type, this.code, this.term, this.snomed, this.value, this.id)
+  saveValueSetCode() {
+    this.explorerService.saveValueSetCode(this.type, this.code, this.term, this.snomed, this.value_set_id, this.id)
       .subscribe(saved => {
           this.dialogRef.close(true);
         },
-        error => this.log.error('This value set could not be saved.')
+        error => this.log.error('This value set code could not be saved.')
       );
   }
 
-  valueEntered(event) {
+  valueSetCodeEntered(event) {
 
     if (event.key === "Enter") {
-      this.saveValue();
+      this.saveValueSetCode();
     }
   }
 

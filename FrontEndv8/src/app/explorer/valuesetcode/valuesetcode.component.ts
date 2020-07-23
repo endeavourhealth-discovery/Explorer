@@ -6,19 +6,19 @@ import {MatTableDataSource} from "@angular/material/table";
 import {PageEvent} from "@angular/material/paginator";
 import {MessageBoxDialogComponent} from "../message-box-dialog/message-box-dialog.component";
 import {SelectionModel} from "@angular/cdk/collections";
-import {ValueEditorComponent} from "../valueeditor/valueeditor.component";
+import {ValueSetCodeEditorComponent} from "../valuesetcodeeditor/valuesetcodeeditor.component";
 
 export interface DialogData {
-  id: string;
+  value_set_id: string;
 }
 
 @Component({
-  selector: 'app-valueset',
-  templateUrl: './valueset.component.html',
-  styleUrls: ['./valueset.component.scss']
+  selector: 'app-valuesetcode',
+  templateUrl: './valuesetcode.component.html',
+  styleUrls: ['./valuesetcode.component.scss']
 })
 
-export class ValueSetComponent {
+export class ValueSetCodeComponent {
 
   selection = new SelectionModel<any>(true, []);
 
@@ -26,23 +26,23 @@ export class ValueSetComponent {
   dataSource: MatTableDataSource<any>;
   page: number = 0;
   size: number = 12;
-  id: string = "";
+  value_set_id: string = "";
 
   displayedColumns: string[] = ['select', 'type', 'code', 'term', 'snomed', 'updated'];
 
   constructor(
-    public dialogRef: MatDialogRef<ValueSetComponent>,
+    public dialogRef: MatDialogRef<ValueSetCodeComponent>,
     private explorerService: ExplorerService,
     private log: LoggerService,
     private dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: DialogData) {
-    this.id = data.id;
+    this.value_set_id = data.value_set_id;
     this.loadEvents();
   }
 
   loadEvents() {
     this.events = null;
-    this.explorerService.getValueSet(this.page, this.size, this.id)
+    this.explorerService.getValueSetCodes(this.page, this.size, this.value_set_id)
       .subscribe(
         (result) => this.displayEvents(result),
         (error) => this.log.error(error)
@@ -88,10 +88,10 @@ export class ValueSetComponent {
   }
 
   add() {
-    const dialogRef = this.dialog.open(ValueEditorComponent, {
+    const dialogRef = this.dialog.open(ValueSetCodeEditorComponent, {
       height: '500px',
       width: '600px',
-      data: {type: "", code: "", term: "", snomed: "", id: "", value: this.id}
+      data: {type: "", code: "", term: "", snomed: "", id: "", value_set_id: this.value_set_id}
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result)
@@ -101,9 +101,6 @@ export class ValueSetComponent {
   }
 
   delete() {
-
-    console.log("ID: " + this.selection.selected[0].id);
-
     let id = "";
     this.selection.selected.map(
       e => {
@@ -113,25 +110,25 @@ export class ValueSetComponent {
 
     id = id.substr(1);
 
-    MessageBoxDialogComponent.open(this.dialog, 'Delete value set', 'Are you sure you want to delete this value set?', 'Delete', 'Cancel')
+    MessageBoxDialogComponent.open(this.dialog, 'Delete value set code', 'Are you sure you want to delete this value set code?', 'Delete', 'Cancel')
       .subscribe(result => {
         if (result) {
 
-          this.explorerService.deleteValue(id.toString())
+          this.explorerService.deleteValueSetCode(id.toString())
             .subscribe(saved => {
                 this.loadEvents();
               },
-              error => this.log.error('This value set could not be deleted.')
+              error => this.log.error('This value set code could not be deleted.')
             );
         }
       });
   }
 
   edit() {
-    const dialogRef = this.dialog.open(ValueEditorComponent, {
+    const dialogRef = this.dialog.open(ValueSetCodeEditorComponent, {
       height: '500px',
       width: '600px',
-      data: {type:this.selection.selected[0].type, code: this.selection.selected[0].code, term: this.selection.selected[0].term, snomed: this.selection.selected[0].snomed, id: this.selection.selected[0].id, value: ""}
+      data: {type:this.selection.selected[0].type, code: this.selection.selected[0].code, term: this.selection.selected[0].term, snomed: this.selection.selected[0].snomed, id: this.selection.selected[0].id, value_set_id: ""}
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result)

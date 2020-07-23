@@ -5,11 +5,11 @@ import {LoggerService} from 'dds-angular8';
 import {PageEvent} from '@angular/material/paginator';
 import {ActivatedRoute} from "@angular/router";
 import {MatDialog} from "@angular/material/dialog";
-import {ValueSetComponent} from "../valueset/valueset.component";
 import {ValueSetEditorComponent} from "../valueseteditor/valueseteditor.component";
 import {SelectionModel} from '@angular/cdk/collections';
 import {MessageBoxDialogComponent} from "../message-box-dialog/message-box-dialog.component";
 import {FormControl} from "@angular/forms";
+import {ValueSetCodeComponent} from "../valuesetcode/valuesetcode.component";
 
 @Component({
   selector: 'app-valuesetlibrary',
@@ -129,12 +129,11 @@ export class ValueSetLibraryComponent implements OnInit {
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
   }
 
-  valuesDialog(id: any) {
-    const dialogRef = this.dialog.open(ValueSetComponent, {
+  valueSetCodeDialog(value_set_id: any) {
+    const dialogRef = this.dialog.open(ValueSetCodeComponent, {
       height: '780px',
       width: '1600px',
-
-      data: {id: id}
+      data: {value_set_id: value_set_id}
     });
   }
 
@@ -186,21 +185,11 @@ export class ValueSetLibraryComponent implements OnInit {
   }
 
   duplicate() {
-
-    let id = "";
-    this.selection.selected.map(
-      e => {
-        id+=","+e.id;
-      }
-    )
-    id = id.substr(1);
-    console.log("ID: " + id);
-
     MessageBoxDialogComponent.open(this.dialog, 'Duplicate value set', 'Are you sure you want to duplicate this value set?', 'Duplicate', 'Cancel')
       .subscribe(result => {
         if (result) {
 
-          this.explorerService.duplicateValueSet(id.toString())
+          this.explorerService.duplicateValueSet(this.selection.selected[0].id.toString())
             .subscribe(saved => {
                 this.ngOnInit();
               },

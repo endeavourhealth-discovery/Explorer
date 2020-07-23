@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ValueEditorComponent } from './valueeditor.component';
+import {ValueSetCodeComponent} from "./valuesetcode.component";
 
-describe('PatientComponent', () => {
-  let component: ValueEditorComponent;
-  let fixture: ComponentFixture<ValueEditorComponent>;
+describe('ValueSetCodeComponent', () => {
+  let component: ValueSetCodeComponent;
+  let fixture: ComponentFixture<ValueSetCodeComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ValueEditorComponent ]
+      declarations: [ ValueSetCodeComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ValueEditorComponent);
+    fixture = TestBed.createComponent(ValueSetCodeComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -77,14 +77,14 @@ export class ExplorerService {
     return this.http.get('api/events/valuesetlibrary', {params});
   }
 
-  getValueSet(page?: number, size?: number, id?: string): Observable<any> {
+  getValueSetCodes(page?: number, size?: number, value_set_id?: string): Observable<any> {
 
     let params = new HttpParams();
     params = params.append('page', page.toString());
     params = params.append('size', size.toString());
-    params = params.append('id', id);
+    params = params.append('value_set_id', value_set_id);
 
-    return this.http.get('api/events/valueset', {params});
+    return this.http.get('api/events/valuesetcode', {params});
   }
 
   getQueryLibrary(page?: number, size?: number, selectedTypeString?: string): Observable<any> {
@@ -152,23 +152,23 @@ export class ExplorerService {
     return this.http.get('api/events/valuesetduplicate', {params});
   }
 
-  saveValue(type?: string, code?: string, term?: string, snomed?: string, value?: string, id?: string): Observable<any> {
+  saveValueSetCode(type?: string, code?: string, term?: string, snomed?: string, value_set_id?: string, id?: string): Observable<any> {
     let params = new HttpParams();
     params = params.append('type', type);
     params = params.append('code', code);
     params = params.append('term', term);
     params = params.append('snomed', snomed);
-    params = params.append('value', value);
+    params = params.append('value_set_id', value_set_id);
     params = params.append('id', id);
 
-    return this.http.get('api/events/valueeditor', {params});
+    return this.http.get('api/events/valuesetcodeeditor', {params});
   }
 
-  deleteValue(id?: string): Observable<any> {
+  deleteValueSetCode(id?: string): Observable<any> {
     let params = new HttpParams();
     params = params.append('id', id);
 
-    return this.http.get('api/events/valuedelete', {params});
+    return this.http.get('api/events/valuesetcodedelete', {params});
   }
 
 }

@@ -32,13 +32,13 @@ import {PatientComponent} from "./patient/patient.component";
 import {DashboardLibraryComponent} from "./dashboardlibrary/dashboardlibrary.component";
 import {QueryLibraryComponent} from "./querylibrary/querylibrary.component";
 import {ValueSetLibraryComponent} from "./valuesetlibrary/valuesetlibrary.component";
-import {ValueSetComponent} from "./valueset/valueset.component";
+import {ValueSetCodeComponent} from "./valuesetcode/valuesetcode.component";
 import {TutorialsComponent} from "./tutorials/tutorials.component";
 import {ValueSetEditorComponent} from "./valueseteditor/valueseteditor.component";
 import {MessageBoxDialogComponent} from "./message-box-dialog/message-box-dialog.component";
 import {QueryEditorComponent} from "./queryeditor/queryeditor.component";
 import {DashboardEditorComponent} from "./dashboardeditor/dashboardeditor.component";
-import {ValueEditorComponent} from "./valueeditor/valueeditor.component";
+import {ValueSetCodeEditorComponent} from "./valuesetcodeeditor/valuesetcodeeditor.component";
 
 @NgModule({
   declarations: [
@@ -47,13 +47,13 @@ import {ValueEditorComponent} from "./valueeditor/valueeditor.component";
     DashboardLibraryComponent,
     QueryLibraryComponent,
     ValueSetLibraryComponent,
-    ValueSetComponent,
+    ValueSetCodeComponent,
     TutorialsComponent,
     ValueSetEditorComponent,
     MessageBoxDialogComponent,
     QueryEditorComponent,
     DashboardEditorComponent,
-    ValueEditorComponent
+    ValueSetCodeEditorComponent
   ],
     imports: [
         BrowserModule,
@@ -88,12 +88,12 @@ import {ValueEditorComponent} from "./valueeditor/valueeditor.component";
     ],
   entryComponents: [
     PatientComponent,
-    ValueSetComponent,
+    ValueSetCodeComponent,
     ValueSetEditorComponent,
     MessageBoxDialogComponent,
     QueryEditorComponent,
     DashboardEditorComponent,
-    ValueEditorComponent
+    ValueSetCodeEditorComponent
   ],
   providers: [ Globals ]
 })

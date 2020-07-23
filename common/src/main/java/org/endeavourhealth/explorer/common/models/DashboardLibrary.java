@@ -8,8 +8,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Dashboard {
-    private static final Logger LOG = LoggerFactory.getLogger(Dashboard.class);
+public class DashboardLibrary {
+    private static final Logger LOG = LoggerFactory.getLogger(DashboardLibrary.class);
     private Integer dashboardId;
     private String name;
     private String updated;
@@ -19,7 +19,7 @@ public class Dashboard {
         return updated;
     }
 
-    public Dashboard setUpdated(Date updated) {
+    public DashboardLibrary setUpdated(Date updated) {
         try {
             String pattern = "dd-MMM-yyyy";
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
@@ -36,7 +36,7 @@ public class Dashboard {
         return name;
     }
 
-    public Dashboard setName(String name) {
+    public DashboardLibrary setName(String name) {
         this.name = name;
         return this;
     }
@@ -45,7 +45,7 @@ public class Dashboard {
         return dashboardId;
     }
 
-    public Dashboard setDashboardId(Integer dashboardId) {
+    public DashboardLibrary setDashboardId(Integer dashboardId) {
         this.dashboardId = dashboardId;
         return this;
     }
@@ -54,7 +54,7 @@ public class Dashboard {
         return type;
     }
 
-    public Dashboard setType(String type) {
+    public DashboardLibrary setType(String type) {
         this.type = type;
         return this;
     }

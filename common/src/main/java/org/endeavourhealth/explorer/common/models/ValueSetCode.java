@@ -1,7 +1,6 @@
 package org.endeavourhealth.explorer.common.models;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.sun.xml.internal.ws.api.ha.StickyFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,8 +8,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ValueSet {
-    private static final Logger LOG = LoggerFactory.getLogger(ValueSet.class);
+public class ValueSetCode {
+    private static final Logger LOG = LoggerFactory.getLogger(ValueSetCode.class);
 
     private String type;
     private String code;
@@ -24,7 +23,7 @@ public class ValueSet {
         return type;
     }
 
-    public ValueSet setType(String type) {
+    public ValueSetCode setType(String type) {
         this.type = type;
         return this;
     }
@@ -33,7 +32,7 @@ public class ValueSet {
         return code;
     }
 
-    public ValueSet setCode(String code) {
+    public ValueSetCode setCode(String code) {
         this.code = code;
         return this;
     }
@@ -42,7 +41,7 @@ public class ValueSet {
         return term;
     }
 
-    public ValueSet setTerm(String term) {
+    public ValueSetCode setTerm(String term) {
         this.term = term;
         return this;
     }
@@ -51,7 +50,7 @@ public class ValueSet {
         return snomed;
     }
 
-    public ValueSet setSnomed(String snomed) {
+    public ValueSetCode setSnomed(String snomed) {
         this.snomed = snomed;
         return this;
     }
@@ -60,7 +59,7 @@ public class ValueSet {
         return updated;
     }
 
-    public ValueSet setUpdated(Date updated) {
+    public ValueSetCode setUpdated(Date updated) {
         try {
             String pattern = "dd-MMM-yyyy";
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
@@ -77,7 +76,7 @@ public class ValueSet {
         return id;
     }
 
-    public ValueSet setId(String id) {
+    public ValueSetCode setId(String id) {
         this.id = id;
         return this;
     }

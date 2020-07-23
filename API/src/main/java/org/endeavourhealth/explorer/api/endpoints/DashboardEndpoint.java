@@ -10,7 +10,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
-import java.util.List;
 
 @Path("events")
 public class DashboardEndpoint {
@@ -147,17 +146,17 @@ public class DashboardEndpoint {
     }
 
     @GET
-    @Path("/valueset")
+    @Path("/valuesetcode")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getValueSet(@Context SecurityContext sc,
+    public Response getValueSetCodes(@Context SecurityContext sc,
                                        @QueryParam("page") Integer page,
                                        @QueryParam("size") Integer size,
-                                       @QueryParam("id") String id) throws Exception {
-        LOG.debug("getValueSet");
+                                       @QueryParam("value_set_id") String value_set_id) throws Exception {
+        LOG.debug("getValueSetCodes");
 
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
-            ValueSetResult result = viewerDAL.getValueSet(page, size, id);
+            ValueSetCodeResult result = viewerDAL.getValueSetCodes(page, size, value_set_id);
 
             return Response
                     .ok()
@@ -312,20 +311,20 @@ public class DashboardEndpoint {
     }
 
     @GET
-    @Path("/valueeditor")
+    @Path("/valuesetcodeeditor")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response saveValue(@Context SecurityContext sc,
+    public Response saveValueSetCode(@Context SecurityContext sc,
                                   @QueryParam("type") String type,
                                   @QueryParam("code") String code,
                                   @QueryParam("term") String term,
                                   @QueryParam("snomed") String snomed,
-                                  @QueryParam("value") String value,
+                                  @QueryParam("value_set_id") String value_set_id,
                                   @QueryParam("id") String id) throws Exception {
-        LOG.debug("saveValue");
+        LOG.debug("saveValueSetCode");
 
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
-            viewerDAL.saveValue(type, code, term, snomed, value, id);
+            viewerDAL.saveValueSetCode(type, code, term, snomed, value_set_id, id);
 
             return Response
                     .ok()
@@ -334,15 +333,15 @@ public class DashboardEndpoint {
     }
 
     @GET
-    @Path("/valuedelete")
+    @Path("/valuesetcodedelete")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteValue(@Context SecurityContext sc,
+    public Response deleteValueSetCode(@Context SecurityContext sc,
                                     @QueryParam("id") String id) throws Exception {
-        LOG.debug("deleteValue");
+        LOG.debug("deleteValueSetCode");
 
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
-            viewerDAL.deleteValue(id);
+            viewerDAL.deleteValueSetCode(id);
 
             return Response
                     .ok()

@@ -6,7 +6,7 @@ import java.util.List;
 public class DashboardLibraryResult {
     private int page = 1;
     private int length = 0;
-    private List<Dashboard> results = new ArrayList<>();
+    private List<DashboardLibrary> results = new ArrayList<>();
 
     public int getPage() {
         return page;
@@ -26,11 +26,11 @@ public class DashboardLibraryResult {
         return this;
     }
 
-    public List<Dashboard> getResults() {
+    public List<DashboardLibrary> getResults() {
         return results;
     }
 
-    public DashboardLibraryResult setResults(List<Dashboard> results) {
+    public DashboardLibraryResult setResults(List<DashboardLibrary> results) {
         this.results = results;
         return this;
     }
