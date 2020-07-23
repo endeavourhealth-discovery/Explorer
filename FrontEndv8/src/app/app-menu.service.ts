@@ -12,7 +12,7 @@ export class AppMenuService implements  AbstractMenuProvider {
   static getRoutes(): Routes {
     return [
       {path: '', redirectTo: '/dashboardlibrary', pathMatch: 'full'},
-      {path: 'dashboard', component: DashboardComponent, data: {role: 'explorer', chartType: 'name'}},
+      {path: 'dashboard', component: DashboardComponent, data: {role: 'explorer'}},
       {path: 'dashboardlibrary', component: DashboardLibraryComponent, data: {role: 'explorer'}},
       {path: 'querylibrary', component: QueryLibraryComponent, data: {role: 'explorer'}},
       {path: 'valuesetlibrary', component: ValueSetLibraryComponent, data: {role: 'explorer'}},
