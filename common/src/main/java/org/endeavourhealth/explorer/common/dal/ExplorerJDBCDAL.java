@@ -4,6 +4,7 @@ import org.endeavourhealth.explorer.common.models.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.rmi.registry.Registry;
 import java.sql.*;
 import java.util.*;
 
@@ -817,6 +818,63 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                 .setRegistration(resultSet.getString("reg_type"));
 
         return patientSummary;
+    }
+
+    public RegistryResult getRegistry(Integer page, Integer size, String selectedTypeString) throws Exception {
+        RegistryResult result = new RegistryResult();
+
+        selectedTypeString = selectedTypeString.replaceAll(",","','");
+        selectedTypeString = "'" + selectedTypeString + "'";
+        selectedTypeString = "WHERE type in ("+selectedTypeString+")";
+
+        String sql = "";
+        String sqlCount = "";
+
+        sql = "SELECT id, type, name, updated " +
+                "FROM dashboards.query_library " +
+                selectedTypeString+
+                "order by type,name LIMIT ?,?";
+
+        sqlCount = "SELECT count(1) " +
+                "FROM dashboards.query_library " +
+                selectedTypeString;
+
+        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            statement.setInt(1, page*12);
+            statement.setInt(2, size);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                result.setResults(getQueryLibraryList(resultSet));
+            }
+        }
+
+        try (PreparedStatement statement = conn.prepareStatement(sqlCount)) {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                resultSet.next();
+                result.setLength(resultSet.getInt(1));
+            }
+        }
+
+        return result;
+    }
+
+    private List<Registry> getQueryLibraryList(ResultSet resultSet) throws SQLException {
+        List<QueryLibrary> result = new ArrayList<>();
+        while (resultSet.next()) {
+            result.add(getQueryLibrary(resultSet));
+        }
+
+        return result;
+    }
+
+    public static Registry getQueryLibrary(ResultSet resultSet) throws SQLException {
+        QueryLibrary querylibrary = new QueryLibrary();
+
+        querylibrary
+                .setId(resultSet.getInt("id"))
+                .setType(resultSet.getString("type"))
+                .setName(resultSet.getString("name"))
+                .setUpdated(resultSet.getDate("updated"));
+        return querylibrary;
     }
 
 

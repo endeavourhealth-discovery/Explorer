@@ -39,6 +39,7 @@ import {MessageBoxDialogComponent} from "./message-box-dialog/message-box-dialog
 import {QueryEditorComponent} from "./queryeditor/queryeditor.component";
 import {DashboardEditorComponent} from "./dashboardeditor/dashboardeditor.component";
 import {ValueSetCodeEditorComponent} from "./valuesetcodeeditor/valuesetcodeeditor.component";
+import {RegistriesComponent} from "./registries/registries.component";
 
 @NgModule({
   declarations: [
@@ -53,7 +54,8 @@ import {ValueSetCodeEditorComponent} from "./valuesetcodeeditor/valuesetcodeedit
     MessageBoxDialogComponent,
     QueryEditorComponent,
     DashboardEditorComponent,
-    ValueSetCodeEditorComponent
+    ValueSetCodeEditorComponent,
+    RegistriesComponent
   ],
     imports: [
         BrowserModule,

@@ -6,6 +6,7 @@ import {DashboardLibraryComponent} from "./explorer/dashboardlibrary/dashboardli
 import {QueryLibraryComponent} from "./explorer/querylibrary/querylibrary.component";
 import {ValueSetLibraryComponent} from "./explorer/valuesetlibrary/valuesetlibrary.component";
 import {TutorialsComponent} from "./explorer/tutorials/tutorials.component";
+import {RegistriesComponent} from "./explorer/registries/registries.component";
 
 @Injectable()
 export class AppMenuService implements  AbstractMenuProvider {
@@ -16,6 +17,7 @@ export class AppMenuService implements  AbstractMenuProvider {
       {path: 'dashboardlibrary', component: DashboardLibraryComponent, data: {role: 'explorer'}},
       {path: 'querylibrary', component: QueryLibraryComponent, data: {role: 'explorer'}},
       {path: 'valuesetlibrary', component: ValueSetLibraryComponent, data: {role: 'explorer'}},
+      {path: 'registries', component: RegistriesComponent, data: {role: 'explorer'}},
       {path: 'tutorials', component: TutorialsComponent, data: {role: 'explorer'}}
     ];
   }
@@ -33,6 +35,7 @@ export class AppMenuService implements  AbstractMenuProvider {
       {icon: 'fas fa-analytics', caption: 'Dashboard library', state: 'dashboardlibrary'},
       {icon: 'fas fa-file-search', caption: 'Query library', state: 'querylibrary'},
       {icon: 'fas fa-list-ol', caption: 'Value sets', state: 'valuesetlibrary'},
+      {icon: 'fas fa-notes-medical', caption: 'Patient registries', state: 'registries'},
       {icon: 'fas fa-video-plus', caption: 'Tutorials', state: 'tutorials'}
     ];
   }
