@@ -253,29 +253,29 @@ export class DashboardComponent implements OnInit {
         if (this.dashboardNumber == "5") {
           this.seriesList = ['[D]Fever NOS', '[D]Cough'];
         } else if (this.dashboardNumber == "6") {
-          this.seriesList = ['All consultations', 'Suspected coronavirus consultation'];
+          this.seriesList = ['All consultations', 'Suspected Covid'];
         } else if (this.dashboardNumber == "7") {
           this.seriesList = ['Home visit', 'Surgery face to face consultation', 'Telephone consultation', 'Video consultation', 'Email or Text message consultation'];
         } else if (this.dashboardNumber == "8") {
           this.seriesList = ['Hospital inpatient admission', 'Hospital day case discharge', 'A&E discharge/end visit', 'A&E transfer', 'A&E attendance', 'Hospital discharge'];
         } else if (this.dashboardNumber == "1") {
-          this.seriesList = ['Suspected coronavirus infection', 'Confirmed Covid 19', 'Tested for coronavirus infection'];
+          this.seriesList = ['Suspected', 'Confirmed', 'Tested'];
         } else if (this.dashboardNumber == "9") {
-          this.seriesList = ['Suspected coronavirus infection (Black)',
-          'Suspected coronavirus infection (Not Stated)',
-          'Confirmed Covid 19 (Not Stated)',
-          'Suspected coronavirus infection (Other)',
-          'Confirmed Covid 19 (White)',
-          'Suspected coronavirus infection (White)',
-          'Tested for coronavirus infection (White)',
-          'Tested for coronavirus infection (Black)',
-          'Confirmed Covid 19 (South Asian)',
-          'Suspected coronavirus infection (South Asian)',
-          'Tested for coronavirus infection (Not Stated)',
-          'Confirmed Covid 19 (Other)',
-          'Tested for coronavirus infection (Other)',
-          'Confirmed Covid 19 (Black)',
-          'Tested for coronavirus infection (South Asian)'];
+          this.seriesList = ['Suspected (Black)',
+          'Suspected (Not Stated)',
+          'Confirmed (Not Stated)',
+          'Suspected (Other)',
+          'Confirmed (White)',
+          'Suspected (White)',
+          'Tested (White)',
+          'Tested (Black)',
+          'Confirmed (South Asian)',
+          'Suspected (South Asian)',
+          'Tested (Not Stated)',
+          'Confirmed (Other)',
+          'Tested (Other)',
+          'Confirmed (Black)',
+          'Tested (South Asian)'];
         }
 
         this.seriesValues = new FormControl(this.seriesList);
