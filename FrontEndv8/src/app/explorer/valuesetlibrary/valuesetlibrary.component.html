@@ -9,7 +9,7 @@
   <mat-card-content>
     <div class="filter">
       <mat-form-field style="width:300px; margin-left: 10px" class="example-full-width" appearance="outline">
-        <mat-label>Select type</mat-label>
+        <mat-label>Filter type</mat-label>
         <mat-select style="width:280px" [formControl]="typeValues" multiple [(value)]="selectedType">
           <mat-checkbox class="mat-option" [(ngModel)]="selectAll" (change)="toggleSelection($event)">Select All</mat-checkbox>
           <mat-option (click)="refresh(true)" *ngFor="let result of typeList" [value]="result">{{result}}</mat-option>
