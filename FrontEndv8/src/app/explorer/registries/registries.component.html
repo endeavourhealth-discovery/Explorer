@@ -9,41 +9,61 @@
   <mat-card-content>
 
     <div class="filter">
+
       <mat-form-field style="width:300px; margin-left: 10px" class="example-full-width" appearance="outline">
-        <mat-label>Select registry</mat-label>
+        <mat-label>Select CCG</mat-label>
         <mat-select style="width:280px" [formControl]="typeValues" multiple [(value)]="selectedType">
           <mat-checkbox class="mat-option" [(ngModel)]="selectAll" (change)="toggleSelection($event)">Select All</mat-checkbox>
           <mat-option (click)="refresh(true)" *ngFor="let result of typeList" [value]="result">{{result}}</mat-option>
         </mat-select>
       </mat-form-field>
+
+      <mat-form-field style="width:300px; margin-left: 10px" class="example-full-width" appearance="outline">
+        <mat-label>Select practice</mat-label>
+        <mat-select style="width:280px" [formControl]="practiceValues" multiple [(value)]="selectedPractice">
+          <mat-checkbox class="mat-option" [(ngModel)]="selectAll" (change)="toggleSelectionPractice($event)">Select All</mat-checkbox>
+          <mat-option (click)="refreshPractice(true)" *ngFor="let result of practiceList" [value]="result">{{result}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
     </div>
 
     <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
       <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 mat-table-compact" fxFlex="100" fxFill>
-        <ng-container matColumnDef="name">
+
+        <ng-container matColumnDef="ccg">
+          <th mat-header-cell *matHeaderCellDef>CCG</th>
+          <td mat-cell *matCellDef="let element"> {{element.ccg}} </td>
+        </ng-container>
+        <ng-container matColumnDef="practice">
           <th mat-header-cell *matHeaderCellDef>Practice name</th>
-          <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+          <td mat-cell *matCellDef="let element"> {{element.practice}} </td>
         </ng-container>
         <ng-container matColumnDef="code">
           <th mat-header-cell *matHeaderCellDef>ODS code</th>
           <td mat-cell *matCellDef="let element"> {{element.code}} </td>
         </ng-container>
-        <ng-container matColumnDef="list">
-          <th mat-header-cell *matHeaderCellDef>List size</th>
-          <td mat-cell *matCellDef="let element"> {{element.list}} </td>
+        <ng-container matColumnDef="listSize">
+          <th mat-header-cell *matHeaderCellDef>Registered patient count</th>
+          <td mat-cell *matCellDef="let element"> {{element.listSize}} </td>
         </ng-container>
         <ng-container matColumnDef="registry">
-          <th mat-header-cell *matHeaderCellDef>Registry size</th>
+          <th mat-header-cell *matHeaderCellDef>Registry</th>
           <td mat-cell *matCellDef="let element"> {{element.registry}} </td>
         </ng-container>
+        <ng-container matColumnDef="registrySize">
+          <th mat-header-cell *matHeaderCellDef>Registry patient count</th>
+          <td mat-cell *matCellDef="let element"> {{element.registrySize}} </td>
+        </ng-container>
         <ng-container matColumnDef="percentage">
-          <th mat-header-cell *matHeaderCellDef>Percentage</th>
-          <td mat-cell *matCellDef="let element"> {{element.percentage}} </td>
+          <th mat-header-cell *matHeaderCellDef>% of population</th>
+          <td mat-cell *matCellDef="let element"> {{(element.registrysize/element.listsize*100).toFixed(1)}}% </td>
         </ng-container>
         <ng-container matColumnDef="updated">
           <th mat-header-cell *matHeaderCellDef>Last updated</th>
           <td mat-cell *matCellDef="let element"> {{element.updated}} </td>
         </ng-container>
+
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
       </table>

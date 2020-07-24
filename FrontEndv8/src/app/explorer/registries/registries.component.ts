@@ -7,27 +7,31 @@ import {ActivatedRoute} from "@angular/router";
 import {FormControl} from "@angular/forms";
 
 @Component({
-  selector: 'app-querylibrary',
+  selector: 'app-registries',
   templateUrl: './registries.component.html',
   styleUrls: ['./registries.component.scss']
 })
 
 export class RegistriesComponent implements OnInit {
 
-
   events: any;
   dataSource: MatTableDataSource<any>;
   page: number = 0;
   size: number = 12;
 
-  displayedColumns: string[] = ['name', 'code', 'list', 'registry', 'percentage', 'updated'];
+  displayedColumns: string[] = ['ccg', 'practice', 'code', 'listSize', 'registry', 'registrySize', 'percentage', 'updated'];
+
+  selectAll: boolean = true;
 
   selectedType: string = '';
   selectedTypeString: string = '';
-  selectAll: boolean = true;
-
   typeList = [];
   typeValues = new FormControl(this.typeList);
+
+  selectedPractice: string = '';
+  selectedPracticeString: string = '';
+  practiceList = [];
+  practiceValues = new FormControl(this.practiceList);
 
   constructor(
     private route: ActivatedRoute,
@@ -35,9 +39,15 @@ export class RegistriesComponent implements OnInit {
     private log: LoggerService) { }
 
   ngOnInit() {
-    this.explorerService.getLookupLists('2')
+    this.explorerService.getLookupLists('5')
       .subscribe(
         (result) => this.loadList(result),
+        (error) => this.log.error(error)
+      );
+
+    this.explorerService.getLookupLists('6')
+      .subscribe(
+        (result) => this.loadListPractice(result),
         (error) => this.log.error(error)
       );
   }
@@ -66,15 +76,6 @@ export class RegistriesComponent implements OnInit {
     this.loadEvents();
   }
 
-  loadEvents() {
-    this.events = null;
-    this.explorerService.getRegistry(this.page, this.size, this.selectedTypeString)
-      .subscribe(
-        (result) => this.displayEvents(result),
-        (error) => this.log.error(error)
-      );
-  }
-
   loadList(lists: any) {
     this.typeList = [];
     this.typeValues = new FormControl(this.typeList);
@@ -85,7 +86,53 @@ export class RegistriesComponent implements OnInit {
     )
     this.typeValues = new FormControl(this.typeList);
     this.refresh(false);
+  }
 
+
+  toggleSelectionPractice(event) {
+    if (event.checked) {
+      this.practiceValues = new FormControl(this.practiceList);
+      this.selectedPracticeString = this.practiceList.toString();
+    } else {
+      this.practiceValues = new FormControl([]);
+      this.selectedPracticeString = "";
+    }
+    this.refresh(false);
+  }
+
+  refreshPractice(override) {
+    if (this.selectedPractice=="" && this.selectAll) {
+      this.practiceValues = new FormControl(this.practiceList);
+      this.selectedPracticeString = this.practiceList.toString();
+    }
+
+    if (override) {
+      this.selectAll = false;
+      this.selectedPracticeString = this.selectedPractice.toString();
+    }
+    this.loadEvents();
+  }
+
+  loadListPractice(lists: any) {
+    this.practiceList = [];
+    this.practiceValues = new FormControl(this.practiceList);
+    lists.results.map(
+      e => {
+        this.practiceList.push(e.type);
+      }
+    )
+    this.practiceValues = new FormControl(this.practiceList);
+    this.refresh(false);
+  }
+
+
+  loadEvents() {
+    this.events = null;
+    this.explorerService.getRegistries(this.page, this.size, this.selectedTypeString, this.selectedPracticeString)
+      .subscribe(
+        (result) => this.displayEvents(result),
+        (error) => this.log.error(error)
+      );
   }
 
   displayEvents(events: any) {

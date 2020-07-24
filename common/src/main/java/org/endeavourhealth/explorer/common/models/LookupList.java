@@ -10,6 +10,7 @@ import java.util.Date;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class LookupList {
     private static final Logger LOG = LoggerFactory.getLogger(LookupList.class);
+
     private String type;
 
     public String getType() {
@@ -20,6 +21,5 @@ public class LookupList {
         this.type = type;
         return this;
     }
-
 
 }

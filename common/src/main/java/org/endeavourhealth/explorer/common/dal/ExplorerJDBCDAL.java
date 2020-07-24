@@ -844,30 +844,34 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         return patientSummary;
     }
 
-    public RegistryResult getRegistry(Integer page, Integer size, String selectedTypeString) throws Exception {
-        RegistryResult result = new RegistryResult();
+    public RegistriesResult getRegistries(Integer page, Integer size, String selectedTypeString, String selectedPracticeString) throws Exception {
+        RegistriesResult result = new RegistriesResult();
 
         selectedTypeString = selectedTypeString.replaceAll(",","','");
         selectedTypeString = "'" + selectedTypeString + "'";
-        selectedTypeString = "WHERE type in ("+selectedTypeString+")";
+        selectedTypeString = "WHERE ccg in ("+selectedTypeString+")";
+
+        selectedPracticeString = selectedPracticeString.replaceAll(",","','");
+        selectedPracticeString = "'" + selectedPracticeString + "'";
+        selectedPracticeString = "and practice_name in ("+selectedPracticeString+")";
 
         String sql = "";
         String sqlCount = "";
 
-        sql = "SELECT id, type, name, updated " +
-                "FROM dashboards.query_library " +
-                selectedTypeString+
-                "order by type,name LIMIT ?,?";
+        sql = "SELECT id, registry, ccg, practice_name, ods_code, list_size, registry_size, updated, parent_registry " +
+                "FROM dashboards.registries " +
+                selectedTypeString+selectedPracticeString+
+                "order by ccg LIMIT ?,?";
 
         sqlCount = "SELECT count(1) " +
-                "FROM dashboards.query_library " +
+                "FROM dashboards.registries " +
                 selectedTypeString;
 
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
             statement.setInt(1, page*12);
             statement.setInt(2, size);
             try (ResultSet resultSet = statement.executeQuery()) {
-                result.setResults(getQueryLibraryList(resultSet));
+                result.setResults(getRegistriesList(resultSet));
             }
         }
 
@@ -881,26 +885,29 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         return result;
     }
 
-    private List<Registry> getQueryLibraryList(ResultSet resultSet) throws SQLException {
-        List<QueryLibrary> result = new ArrayList<>();
+    private List<Registries> getRegistriesList(ResultSet resultSet) throws SQLException {
+        List<Registries> result = new ArrayList<>();
         while (resultSet.next()) {
-            result.add(getQueryLibrary(resultSet));
+            result.add(getRegistries(resultSet));
         }
 
         return result;
     }
 
-    public static Registry getQueryLibrary(ResultSet resultSet) throws SQLException {
-        QueryLibrary querylibrary = new QueryLibrary();
+    public static Registries getRegistries(ResultSet resultSet) throws SQLException {
+        Registries registries = new Registries();
 
-        querylibrary
+        registries
                 .setId(resultSet.getInt("id"))
-                .setType(resultSet.getString("type"))
-                .setName(resultSet.getString("name"))
-                .setUpdated(resultSet.getDate("updated"));
-        return querylibrary;
+                .setRegistry(resultSet.getString("registry"))
+                .setCcg(resultSet.getString("ccg"))
+                .setPractice(resultSet.getString("practice_name"))
+                .setCode(resultSet.getString("ods_code"))
+                .setListSize(resultSet.getString("list_size"))
+                .setRegistrySize(resultSet.getString("registry_size"))
+                .setUpdated(resultSet.getDate("updated"))
+                .setParentRegistry(resultSet.getString("parent_registry"));
+        return registries;
     }
-
-
 
 }

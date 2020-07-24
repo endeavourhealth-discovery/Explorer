@@ -353,14 +353,15 @@ public class DashboardEndpoint {
     @Path("/registries")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getRegistry(@Context SecurityContext sc,
+    public Response getRegistries(@Context SecurityContext sc,
                                     @QueryParam("page") Integer page,
                                     @QueryParam("size") Integer size,
-                                    @QueryParam("selectedTypeString") String selectedTypeString) throws Exception {
-        LOG.debug("getRegistry");
+                                    @QueryParam("selectedTypeString") String selectedTypeString,
+                                    @QueryParam("selectedPracticeString") String selectedPracticeString) throws Exception {
+        LOG.debug("getRegistries");
 
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
-            RegistryResult result = viewerDAL.getRegistry(page, size, selectedTypeString);
+            RegistriesResult result = viewerDAL.getRegistries(page, size, selectedTypeString, selectedPracticeString);
 
             return Response
                     .ok()
