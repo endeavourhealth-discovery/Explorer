@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ValueSetEditorComponent } from './valueseteditor.component';
 
-describe('PatientComponent', () => {
+describe('ValueSetEditorComponent', () => {
   let component: ValueSetEditorComponent;
   let fixture: ComponentFixture<ValueSetEditorComponent>;
 
