@@ -146,6 +146,13 @@ export class DashboardComponent implements OnInit {
       this.showBarCharts = false;
       this.showAreaChart = false;
       this.showSeriesFilter = true;
+    } else if (this.dashboardNumber == "9") {
+      values = this.selectedSeries;
+      this.chartTitle = 'Day trend of Confirmed, Suspected and Tested for Covid 19 by Ethnic Group';
+      this.showLineCharts = true;
+      this.showBarCharts = false;
+      this.showAreaChart = false;
+      this.showSeriesFilter = true;
     } else if (this.dashboardNumber == "2") {
       values = 'covid_death_age';
       this.chartTitle = 'Age breakdown of deceased patients with Confirmed or Suspected Covid 19';
@@ -170,6 +177,24 @@ export class DashboardComponent implements OnInit {
       this.showLineCharts = false;
       this.showBarCharts = true;
       this.xAxisLabel = 'CCG';
+    } else if (this.dashboardNumber == "10") {
+      values = 'covid_shielding_ccg';
+      this.chartTitle = 'Shielding groups by Age Bands';
+      this.multiChart = false;
+      this.chartName = values;
+      this.gradient = false;
+      this.showLineCharts = false;
+      this.showBarCharts = true;
+      this.xAxisLabel = 'Shielding Group';
+    } else if (this.dashboardNumber == "11") {
+      values = 'covid_death_ethnic';
+      this.chartTitle = 'Ethnic/Age group breakdown of deceased patients with Confirmed or Suspected Covid 19';
+      this.multiChart = false;
+      this.chartName = values;
+      this.gradient = false;
+      this.showLineCharts = false;
+      this.showBarCharts = true;
+      this.xAxisLabel = 'Ethnic Group';
     }
 
     if (this.multiChart) {
@@ -235,6 +260,22 @@ export class DashboardComponent implements OnInit {
           this.seriesList = ['Hospital inpatient admission', 'Hospital day case discharge', 'A&E discharge/end visit', 'A&E transfer', 'A&E attendance', 'Hospital discharge'];
         } else if (this.dashboardNumber == "1") {
           this.seriesList = ['Suspected coronavirus infection', 'Confirmed Covid 19', 'Tested for coronavirus infection'];
+        } else if (this.dashboardNumber == "9") {
+          this.seriesList = ['Suspected coronavirus infection (Black)',
+          'Suspected coronavirus infection (Not Stated)',
+          'Confirmed Covid 19 (Not Stated)',
+          'Suspected coronavirus infection (Other)',
+          'Confirmed Covid 19 (White)',
+          'Suspected coronavirus infection (White)',
+          'Tested for coronavirus infection (White)',
+          'Tested for coronavirus infection (Black)',
+          'Confirmed Covid 19 (South Asian)',
+          'Suspected coronavirus infection (South Asian)',
+          'Tested for coronavirus infection (Not Stated)',
+          'Confirmed Covid 19 (Other)',
+          'Tested for coronavirus infection (Other)',
+          'Confirmed Covid 19 (Black)',
+          'Tested for coronavirus infection (South Asian)'];
         }
 
         this.seriesValues = new FormControl(this.seriesList);
