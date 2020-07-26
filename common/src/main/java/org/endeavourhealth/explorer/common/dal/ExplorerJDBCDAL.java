@@ -239,20 +239,20 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                         " FROM dashboards.registries";
                 break;
             case "6":
-                sql = "SELECT distinct(practice_name) as type " +
-                        "FROM dashboards.registries " +
-                        " order by practice_name";
-
-                sqlCount = "SELECT count(distinct(practice_name)) " +
-                        " FROM dashboards.registries";
-                break;
-            case "7":
                 sql = "SELECT distinct(registry) as type " +
-                        "FROM dashboards.registries " +
+                        "FROM dashboards.registries WHERE parent_registry is NULL" +
                         " order by registry";
 
                 sqlCount = "SELECT count(distinct(registry)) " +
-                        " FROM dashboards.registries";
+                        " FROM dashboards.registries WHERE parent_registry is NULL";
+                break;
+            case "7":
+                sql = "SELECT distinct(registry) as type " +
+                        "FROM dashboards.registries WHERE parent_registry is NOT NULL" +
+                        " order by registry";
+
+                sqlCount = "SELECT count(distinct(registry)) " +
+                        " FROM dashboards.registries WHERE parent_registry is NOT NULL";
                 break;
             default:
                 break;
@@ -844,7 +844,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         return patientSummary;
     }
 
-    public RegistriesResult getRegistries(Integer page, Integer size, String selectedCCGString, String selectedRegistryString) throws Exception {
+    public RegistriesResult getRegistries(Integer page, Integer size, String selectedCCGString, String selectedRegistryString, String odsCode, String parentRegistry) throws Exception {
         RegistriesResult result = new RegistriesResult();
 
         selectedCCGString = selectedCCGString.replaceAll(",","','");
@@ -858,27 +858,56 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         String sql = "";
         String sqlCount = "";
 
-        sql = "SELECT id, registry, ccg, practice_name, ods_code, list_size, registry_size, updated, parent_registry " +
-                "FROM dashboards.registries " +
-                selectedCCGString+selectedRegistryString+
-                " order by registry, ccg, practice_name LIMIT ?,?";
+        if (parentRegistry.equals("")) {
+            sql = "SELECT id, registry, ccg, practice_name, ods_code, list_size, registry_size, updated, parent_registry " +
+                    "FROM dashboards.registries " +
+                    selectedCCGString+selectedRegistryString+
+                    " AND parent_registry is NULL order by practice_name,registry, ccg, practice_name LIMIT ?,?";
 
-        sqlCount = "SELECT count(1) " +
-                "FROM dashboards.registries " +
-                selectedCCGString+selectedRegistryString;
+            sqlCount = "SELECT count(1) " +
+                    "FROM dashboards.registries " +
+                    selectedCCGString+selectedRegistryString+" AND parent_registry is NULL";
 
-        try (PreparedStatement statement = conn.prepareStatement(sql)) {
-            statement.setInt(1, page*12);
-            statement.setInt(2, size);
-            try (ResultSet resultSet = statement.executeQuery()) {
-                result.setResults(getRegistriesList(resultSet));
+            try (PreparedStatement statement = conn.prepareStatement(sql)) {
+                statement.setInt(1, page*12);
+                statement.setInt(2, size);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    result.setResults(getRegistriesList(resultSet));
+                }
             }
-        }
 
-        try (PreparedStatement statement = conn.prepareStatement(sqlCount)) {
-            try (ResultSet resultSet = statement.executeQuery()) {
-                resultSet.next();
-                result.setLength(resultSet.getInt(1));
+            try (PreparedStatement statement = conn.prepareStatement(sqlCount)) {
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    resultSet.next();
+                    result.setLength(resultSet.getInt(1));
+                }
+            }
+        } else {
+            sql = "SELECT id, registry, ccg, practice_name, ods_code, list_size, registry_size, updated, parent_registry " +
+                    "FROM dashboards.registries "+
+                    " WHERE ods_code = ? and parent_registry = ? order by registry, ccg, practice_name LIMIT ?,?";
+
+            sqlCount = "SELECT count(1) " +
+                    "FROM dashboards.registries " +
+                    " WHERE ods_code = ? and parent_registry = ?";
+
+            try (PreparedStatement statement = conn.prepareStatement(sql)) {
+                statement.setString(1, odsCode);
+                statement.setString(2, parentRegistry);
+                statement.setInt(3, page*12);
+                statement.setInt(4, size);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    result.setResults(getRegistriesList(resultSet));
+                }
+            }
+
+            try (PreparedStatement statement = conn.prepareStatement(sqlCount)) {
+                statement.setString(1, odsCode);
+                statement.setString(2, parentRegistry);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    resultSet.next();
+                    result.setLength(resultSet.getInt(1));
+                }
             }
         }
 

@@ -95,7 +95,7 @@ export class RegistriesComponent implements OnInit {
     this.selectAllCCG = false;
     this.selectedCCGString = this.selectedCCG.toString();
 
-    this.explorerService.getLookupLists('7')
+    this.explorerService.getLookupLists('6')
       .subscribe(
         (result) => this.loadListRegistry(result),
         (error) => this.log.error(error)
@@ -104,7 +104,7 @@ export class RegistriesComponent implements OnInit {
 
   loadEvents() {
     this.events = null;
-    this.explorerService.getRegistries(this.page, this.size, this.selectedCCGString, this.selectedRegistryString)
+    this.explorerService.getRegistries(this.page, this.size, this.selectedCCGString, this.selectedRegistryString, '', '')
       .subscribe(
         (result) => this.displayEvents(result),
         (error) => this.log.error(error)
@@ -121,7 +121,7 @@ export class RegistriesComponent implements OnInit {
     )
     this.ccgValues = new FormControl(this.ccgList);
 
-    this.explorerService.getLookupLists('7')
+    this.explorerService.getLookupLists('6')
       .subscribe(
         (result) => this.loadListRegistry(result),
         (error) => this.log.error(error)

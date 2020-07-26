@@ -57,6 +57,10 @@ export class PatientComponent {
 
   loadEvents() {
     this.events = null;
+    console.log(this.chartName);
+    console.log(this.seriesName);
+    console.log(this.ccgs);
+
     this.explorerService.getPatients(this.page, this.size, this.name, this.chartName, this.seriesName, this.ccgs)
       .subscribe(
         (result) => this.displayEvents(result),

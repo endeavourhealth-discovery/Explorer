@@ -8,24 +8,10 @@
   </mat-card-header>
   <mat-card-content>
 
-    <div class="filter">
-
-      <mat-form-field style="width:300px; margin-left: 10px" class="example-full-width" appearance="outline">
-        <mat-label>Filter CCG</mat-label>
-        <mat-select style="width:280px" [formControl]="ccgValues" multiple [(value)]="selectedCCG">
-          <mat-checkbox class="mat-option" [(ngModel)]="selectAllCCG" (change)="toggleSelectionCCG($event)">Select All</mat-checkbox>
-          <mat-option (click)="refreshCCG()" *ngFor="let result of ccgList" [value]="result">{{result}}</mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <mat-form-field style="width:300px; margin-left: 10px" class="example-full-width" appearance="outline">
-        <mat-label>Filter registry</mat-label>
-        <mat-select style="width:280px" [formControl]="registryValues" multiple [(value)]="selectedRegistry">
-          <mat-checkbox class="mat-option" [(ngModel)]="selectAllRegistry" (change)="toggleSelectionRegistry($event)">Select All</mat-checkbox>
-          <mat-option (click)="refresh(true)" *ngFor="let result of registryList" [value]="result">{{result}}</mat-option>
-        </mat-select>
-      </mat-form-field>
-
+    <div style="font-size:16px; padding: 10px; padding-bottom: 20px">
+      <b>Indicators for {{this.registry}} registry</b>
+      <button mat-flat-button color="accent" style="margin-left: 20px" (click)="back()">Back to registries</button>
+      <br/>
     </div>
 
     <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
@@ -43,20 +29,24 @@
           <th mat-header-cell *matHeaderCellDef>ODS code</th>
           <td mat-cell *matCellDef="let element"> {{element.code}} </td>
         </ng-container>
+        <ng-container matColumnDef="parentRegistry">
+          <th mat-header-cell *matHeaderCellDef>Registry</th>
+          <td mat-cell *matCellDef="let element"> {{element.parentRegistry}} </td>
+        </ng-container>
         <ng-container matColumnDef="listSize">
-          <th mat-header-cell *matHeaderCellDef>Registered patient count</th>
+          <th mat-header-cell *matHeaderCellDef>Registry patient count</th>
           <td mat-cell *matCellDef="let element"> {{element.listSize.toLocaleString()}} </td>
         </ng-container>
         <ng-container matColumnDef="registry">
-          <th mat-header-cell *matHeaderCellDef>Registry</th>
+          <th mat-header-cell *matHeaderCellDef>Indicator</th>
           <td mat-cell *matCellDef="let element"> {{element.registry}} </td>
         </ng-container>
         <ng-container matColumnDef="registrySize">
-          <th mat-header-cell *matHeaderCellDef>Registry patient count</th>
+          <th mat-header-cell *matHeaderCellDef>Indicator patient count</th>
           <td mat-cell *matCellDef="let element"> {{element.registrySize.toLocaleString()}} </td>
         </ng-container>
         <ng-container matColumnDef="percentage">
-          <th mat-header-cell *matHeaderCellDef>% of population</th>
+          <th mat-header-cell *matHeaderCellDef>% achieved</th>
           <td mat-cell *matCellDef="let element" [ngClass]="{ 'poor': toPercent(element.registrySize,element.listSize)<80, 'ok': toPercent(element.registrySize,element.listSize)>79&&toPercent(element.registrySize,element.listSize)<90, 'good': toPercent(element.registrySize,element.listSize)>89}"> {{toPercent(element.registrySize,element.listSize)}}% </td>
         </ng-container>
         <ng-container matColumnDef="updated">
@@ -65,7 +55,7 @@
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr style="cursor:pointer" mat-row *matRowDef="let row; columns: displayedColumns;" [routerLink]="['/registryindicators']" [queryParams] = "{role: 'explorer', registry: row.registry, odscode: row.code}"></tr>
+        <tr style="cursor:pointer" mat-row *matRowDef="let row; columns: displayedColumns;" (click)="showPatientDialog()"></tr>
       </table>
     <div>
     </div>

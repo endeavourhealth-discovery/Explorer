@@ -40,6 +40,7 @@ import {QueryEditorComponent} from "./queryeditor/queryeditor.component";
 import {DashboardEditorComponent} from "./dashboardeditor/dashboardeditor.component";
 import {ValueSetCodeEditorComponent} from "./valuesetcodeeditor/valuesetcodeeditor.component";
 import {RegistriesComponent} from "./registries/registries.component";
+import {RegistryIndicatorsComponent} from "./registryindicators/registryindicators.component";
 
 @NgModule({
   declarations: [
@@ -55,7 +56,8 @@ import {RegistriesComponent} from "./registries/registries.component";
     QueryEditorComponent,
     DashboardEditorComponent,
     ValueSetCodeEditorComponent,
-    RegistriesComponent
+    RegistriesComponent,
+    RegistryIndicatorsComponent
   ],
     imports: [
         BrowserModule,
