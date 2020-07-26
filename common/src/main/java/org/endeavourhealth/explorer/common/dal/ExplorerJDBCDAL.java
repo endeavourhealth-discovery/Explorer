@@ -844,28 +844,28 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         return patientSummary;
     }
 
-    public RegistriesResult getRegistries(Integer page, Integer size, String selectedTypeString, String selectedPracticeString) throws Exception {
+    public RegistriesResult getRegistries(Integer page, Integer size, String selectedCCGString, String selectedRegistryString) throws Exception {
         RegistriesResult result = new RegistriesResult();
 
-        selectedTypeString = selectedTypeString.replaceAll(",","','");
-        selectedTypeString = "'" + selectedTypeString + "'";
-        selectedTypeString = "WHERE ccg in ("+selectedTypeString+")";
+        selectedCCGString = selectedCCGString.replaceAll(",","','");
+        selectedCCGString = "'" + selectedCCGString + "'";
+        selectedCCGString = "WHERE ccg in ("+selectedCCGString+")";
 
-        selectedPracticeString = selectedPracticeString.replaceAll(",","','");
-        selectedPracticeString = "'" + selectedPracticeString + "'";
-        selectedPracticeString = "and practice_name in ("+selectedPracticeString+")";
+        selectedRegistryString = selectedRegistryString.replaceAll(",","','");
+        selectedRegistryString = "'" + selectedRegistryString + "'";
+        selectedRegistryString = " and registry in ("+selectedRegistryString+")";
 
         String sql = "";
         String sqlCount = "";
 
         sql = "SELECT id, registry, ccg, practice_name, ods_code, list_size, registry_size, updated, parent_registry " +
                 "FROM dashboards.registries " +
-                selectedTypeString+selectedPracticeString+
-                "order by ccg LIMIT ?,?";
+                selectedCCGString+selectedRegistryString+
+                " order by registry, ccg, practice_name LIMIT ?,?";
 
         sqlCount = "SELECT count(1) " +
                 "FROM dashboards.registries " +
-                selectedTypeString;
+                selectedCCGString+selectedRegistryString;
 
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
             statement.setInt(1, page*12);
@@ -903,8 +903,8 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                 .setCcg(resultSet.getString("ccg"))
                 .setPractice(resultSet.getString("practice_name"))
                 .setCode(resultSet.getString("ods_code"))
-                .setListSize(resultSet.getString("list_size"))
-                .setRegistrySize(resultSet.getString("registry_size"))
+                .setListSize(resultSet.getInt("list_size"))
+                .setRegistrySize(resultSet.getInt("registry_size"))
                 .setUpdated(resultSet.getDate("updated"))
                 .setParentRegistry(resultSet.getString("parent_registry"));
         return registries;

@@ -13,7 +13,6 @@ import {FormControl} from "@angular/forms";
 })
 
 export class RegistriesComponent implements OnInit {
-
   events: any;
   dataSource: MatTableDataSource<any>;
   page: number = 0;
@@ -21,17 +20,17 @@ export class RegistriesComponent implements OnInit {
 
   displayedColumns: string[] = ['ccg', 'practice', 'code', 'listSize', 'registry', 'registrySize', 'percentage', 'updated'];
 
-  selectAll: boolean = true;
+  selectedCCG: string = '';
+  selectedCCGString: string = '';
+  selectAllCCG: boolean = true;
+  ccgList = [];
+  ccgValues = new FormControl(this.ccgList);
 
-  selectedType: string = '';
-  selectedTypeString: string = '';
-  typeList = [];
-  typeValues = new FormControl(this.typeList);
-
-  selectedPractice: string = '';
-  selectedPracticeString: string = '';
-  practiceList = [];
-  practiceValues = new FormControl(this.practiceList);
+  selectedRegistry: string = '';
+  selectedRegistryString: string = '';
+  selectAllRegistry: boolean = true;
+  registryList = [];
+  registryValues = new FormControl(this.registryList);
 
   constructor(
     private route: ActivatedRoute,
@@ -41,98 +40,105 @@ export class RegistriesComponent implements OnInit {
   ngOnInit() {
     this.explorerService.getLookupLists('5')
       .subscribe(
-        (result) => this.loadList(result),
-        (error) => this.log.error(error)
-      );
-
-    this.explorerService.getLookupLists('6')
-      .subscribe(
-        (result) => this.loadListPractice(result),
+        (result) => this.loadListCCG(result),
         (error) => this.log.error(error)
       );
   }
 
-  toggleSelection(event) {
+  toggleSelectionCCG(event) {
     if (event.checked) {
-      this.typeValues = new FormControl(this.typeList);
-      this.selectedTypeString = this.typeList.toString();
+      this.ccgValues = new FormControl(this.ccgList);
+      this.selectedCCGString = this.ccgList.toString();
     } else {
-      this.typeValues = new FormControl([]);
-      this.selectedTypeString = "";
+      this.ccgValues = new FormControl([]);
+      this.selectedCCGString = "";
+    }
+    this.refresh(false);
+  }
+
+  toggleSelectionRegistry(event) {
+    if (event.checked) {
+      this.registryValues = new FormControl(this.registryList);
+      this.selectedRegistryString = this.registryList.toString();
+    } else {
+      this.registryValues = new FormControl([]);
+      this.selectedRegistryString = "";
     }
     this.refresh(false);
   }
 
   refresh(override) {
-    if (this.selectedType=="" && this.selectAll) {
-      this.typeValues = new FormControl(this.typeList);
-      this.selectedTypeString = this.typeList.toString();
+    if (this.selectedCCG=="" && this.selectAllCCG) {
+      this.ccgValues = new FormControl(this.ccgList);
+      this.selectedCCGString = this.ccgList.toString();
     }
 
     if (override) {
-      this.selectAll = false;
-      this.selectedTypeString = this.selectedType.toString();
+      this.selectAllCCG = false;
+      this.selectedCCGString = this.selectedCCG.toString();
     }
-    this.loadEvents();
-  }
 
-  loadList(lists: any) {
-    this.typeList = [];
-    this.typeValues = new FormControl(this.typeList);
-    lists.results.map(
-      e => {
-        this.typeList.push(e.type);
-      }
-    )
-    this.typeValues = new FormControl(this.typeList);
-    this.refresh(false);
-  }
-
-
-  toggleSelectionPractice(event) {
-    if (event.checked) {
-      this.practiceValues = new FormControl(this.practiceList);
-      this.selectedPracticeString = this.practiceList.toString();
-    } else {
-      this.practiceValues = new FormControl([]);
-      this.selectedPracticeString = "";
-    }
-    this.refresh(false);
-  }
-
-  refreshPractice(override) {
-    if (this.selectedPractice=="" && this.selectAll) {
-      this.practiceValues = new FormControl(this.practiceList);
-      this.selectedPracticeString = this.practiceList.toString();
+    if (this.selectedRegistry=="" && this.selectAllRegistry) {
+      this.registryValues = new FormControl(this.registryList);
+      this.selectedRegistryString = this.registryList.toString();
     }
 
     if (override) {
-      this.selectAll = false;
-      this.selectedPracticeString = this.selectedPractice.toString();
+      this.selectAllRegistry = false;
+      this.selectedRegistryString = this.selectedRegistry.toString();
     }
+
     this.loadEvents();
   }
 
-  loadListPractice(lists: any) {
-    this.practiceList = [];
-    this.practiceValues = new FormControl(this.practiceList);
-    lists.results.map(
-      e => {
-        this.practiceList.push(e.type);
-      }
-    )
-    this.practiceValues = new FormControl(this.practiceList);
-    this.refresh(false);
-  }
+  refreshCCG() {
+    this.selectAllCCG = false;
+    this.selectedCCGString = this.selectedCCG.toString();
 
+    this.explorerService.getLookupLists('7')
+      .subscribe(
+        (result) => this.loadListRegistry(result),
+        (error) => this.log.error(error)
+      );
+  }
 
   loadEvents() {
     this.events = null;
-    this.explorerService.getRegistries(this.page, this.size, this.selectedTypeString, this.selectedPracticeString)
+    this.explorerService.getRegistries(this.page, this.size, this.selectedCCGString, this.selectedRegistryString)
       .subscribe(
         (result) => this.displayEvents(result),
         (error) => this.log.error(error)
       );
+  }
+
+  loadListCCG(lists: any) {
+    this.ccgList = [];
+
+    lists.results.map(
+      e => {
+        this.ccgList.push(e.type);
+      }
+    )
+    this.ccgValues = new FormControl(this.ccgList);
+
+    this.explorerService.getLookupLists('7')
+      .subscribe(
+        (result) => this.loadListRegistry(result),
+        (error) => this.log.error(error)
+      );
+  }
+
+  loadListRegistry(lists: any) {
+    this.registryList = [];
+
+    lists.results.map(
+      e => {
+        this.registryList.push(e.type);
+      }
+    )
+    this.registryValues = new FormControl(this.registryList);
+
+    this.refresh(false);
   }
 
   displayEvents(events: any) {
@@ -146,4 +152,7 @@ export class RegistriesComponent implements OnInit {
     this.loadEvents();
   }
 
+  toPercent(registrysize: any, listsize: any) {
+    return (registrysize/listsize*100).toFixed(1);
+  }
 }

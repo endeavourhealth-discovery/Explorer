@@ -85,7 +85,7 @@ export class QueryLibraryComponent implements OnInit {
 
   loadList(lists: any) {
     this.typeList = [];
-    this.typeValues = new FormControl(this.typeList);
+
     lists.results.map(
       e => {
         this.typeList.push(e.type);

@@ -16,8 +16,8 @@ public class Registries {
     private String ccg;
     private String practice;
     private String code;
-    private String listSize;
-    private String registrySize;
+    private Integer listSize;
+    private Integer registrySize;
     private String updated;
     private String parentRegistry;
 
@@ -67,20 +67,20 @@ public class Registries {
         return this;
     }
 
-    public String getListSize() {
+    public Integer getListSize() {
         return listSize;
     }
 
-    public Registries setListSize(String listSize) {
+    public Registries setListSize(Integer listSize) {
         this.listSize = listSize;
         return this;
     }
 
-    public String getRegistrySize() {
+    public Integer getRegistrySize() {
         return registrySize;
     }
 
-    public Registries setRegistrySize(String registrySize) {
+    public Registries setRegistrySize(Integer registrySize) {
         this.registrySize = registrySize;
         return this;
     }

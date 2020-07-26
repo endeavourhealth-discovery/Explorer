@@ -171,13 +171,13 @@ export class ExplorerService {
     return this.http.get('api/events/valuesetcodedelete', {params});
   }
 
-  getRegistries(page?: number, size?: number, selectedTypeString?: string, selectedPracticeString?: string): Observable<any> {
+  getRegistries(page?: number, size?: number, selectedCCGString?: string, selectedRegistryString?: string): Observable<any> {
 
     let params = new HttpParams();
     params = params.append('page', page.toString());
     params = params.append('size', size.toString());
-    params = params.append('selectedTypeString', selectedTypeString);
-    params = params.append('selectedPracticeString', selectedPracticeString);
+    params = params.append('selectedCCGString', selectedCCGString);
+    params = params.append('selectedRegistryString', selectedRegistryString);
 
     return this.http.get('api/events/registries', {params});
   }

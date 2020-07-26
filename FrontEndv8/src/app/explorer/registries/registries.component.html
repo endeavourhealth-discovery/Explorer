@@ -11,18 +11,18 @@
     <div class="filter">
 
       <mat-form-field style="width:300px; margin-left: 10px" class="example-full-width" appearance="outline">
-        <mat-label>Select CCG</mat-label>
-        <mat-select style="width:280px" [formControl]="typeValues" multiple [(value)]="selectedType">
-          <mat-checkbox class="mat-option" [(ngModel)]="selectAll" (change)="toggleSelection($event)">Select All</mat-checkbox>
-          <mat-option (click)="refresh(true)" *ngFor="let result of typeList" [value]="result">{{result}}</mat-option>
+        <mat-label>Filter CCG</mat-label>
+        <mat-select style="width:280px" [formControl]="ccgValues" multiple [(value)]="selectedCCG">
+          <mat-checkbox class="mat-option" [(ngModel)]="selectAllCCG" (change)="toggleSelectionCCG($event)">Select All</mat-checkbox>
+          <mat-option (click)="refreshCCG()" *ngFor="let result of ccgList" [value]="result">{{result}}</mat-option>
         </mat-select>
       </mat-form-field>
 
       <mat-form-field style="width:300px; margin-left: 10px" class="example-full-width" appearance="outline">
-        <mat-label>Select practice</mat-label>
-        <mat-select style="width:280px" [formControl]="practiceValues" multiple [(value)]="selectedPractice">
-          <mat-checkbox class="mat-option" [(ngModel)]="selectAll" (change)="toggleSelectionPractice($event)">Select All</mat-checkbox>
-          <mat-option (click)="refreshPractice(true)" *ngFor="let result of practiceList" [value]="result">{{result}}</mat-option>
+        <mat-label>Filter registry</mat-label>
+        <mat-select style="width:280px" [formControl]="registryValues" multiple [(value)]="selectedRegistry">
+          <mat-checkbox class="mat-option" [(ngModel)]="selectAllRegistry" (change)="toggleSelectionRegistry($event)">Select All</mat-checkbox>
+          <mat-option (click)="refresh(true)" *ngFor="let result of registryList" [value]="result">{{result}}</mat-option>
         </mat-select>
       </mat-form-field>
 
@@ -45,7 +45,7 @@
         </ng-container>
         <ng-container matColumnDef="listSize">
           <th mat-header-cell *matHeaderCellDef>Registered patient count</th>
-          <td mat-cell *matCellDef="let element"> {{element.listSize}} </td>
+          <td mat-cell *matCellDef="let element"> {{element.listSize.toLocaleString()}} </td>
         </ng-container>
         <ng-container matColumnDef="registry">
           <th mat-header-cell *matHeaderCellDef>Registry</th>
@@ -53,11 +53,11 @@
         </ng-container>
         <ng-container matColumnDef="registrySize">
           <th mat-header-cell *matHeaderCellDef>Registry patient count</th>
-          <td mat-cell *matCellDef="let element"> {{element.registrySize}} </td>
+          <td mat-cell *matCellDef="let element"> {{element.registrySize.toLocaleString()}} </td>
         </ng-container>
         <ng-container matColumnDef="percentage">
           <th mat-header-cell *matHeaderCellDef>% of population</th>
-          <td mat-cell *matCellDef="let element"> {{(element.registrysize/element.listsize*100).toFixed(1)}}% </td>
+          <td mat-cell *matCellDef="let element"> {{toPercent(element.registrySize,element.listSize)}}% </td>
         </ng-container>
         <ng-container matColumnDef="updated">
           <th mat-header-cell *matHeaderCellDef>Last updated</th>
