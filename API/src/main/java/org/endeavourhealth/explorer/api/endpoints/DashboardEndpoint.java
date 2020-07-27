@@ -359,11 +359,12 @@ public class DashboardEndpoint {
                                     @QueryParam("selectedCCGString") String selectedCCGString,
                                     @QueryParam("selectedRegistryString") String selectedRegistryString,
                                     @QueryParam("odsCode") String odsCode,
-                                    @QueryParam("parentRegistry") String parentRegistry) throws Exception {
+                                    @QueryParam("parentRegistry") String parentRegistry,
+                                    @QueryParam("practice") String practice) throws Exception {
         LOG.debug("getRegistries");
 
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
-            RegistriesResult result = viewerDAL.getRegistries(page, size, selectedCCGString, selectedRegistryString, odsCode, parentRegistry);
+            RegistriesResult result = viewerDAL.getRegistries(page, size, selectedCCGString, selectedRegistryString, odsCode, parentRegistry, practice);
 
             return Response
                     .ok()

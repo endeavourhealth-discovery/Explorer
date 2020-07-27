@@ -32,6 +32,8 @@ export class RegistriesComponent implements OnInit {
   registryList = [];
   registryValues = new FormControl(this.registryList);
 
+  practice: string = '';
+
   constructor(
     private route: ActivatedRoute,
     private explorerService: ExplorerService,
@@ -104,7 +106,7 @@ export class RegistriesComponent implements OnInit {
 
   loadEvents() {
     this.events = null;
-    this.explorerService.getRegistries(this.page, this.size, this.selectedCCGString, this.selectedRegistryString, '', '')
+    this.explorerService.getRegistries(this.page, this.size, this.selectedCCGString, this.selectedRegistryString, '', '', this.practice)
       .subscribe(
         (result) => this.displayEvents(result),
         (error) => this.log.error(error)
@@ -154,5 +156,11 @@ export class RegistriesComponent implements OnInit {
 
   toPercent(registrysize: any, listsize: any) {
     return (registrysize/listsize*100).toFixed(1);
+  }
+
+  practiceEntered(event) {
+    if (event.key === "Enter") {
+      this.loadEvents();
+    }
   }
 }

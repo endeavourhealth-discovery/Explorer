@@ -26,6 +26,12 @@
         </mat-select>
       </mat-form-field>
 
+      <mat-form-field style="margin-left: 10px" appearance="outline">
+        <mat-label>Search practice</mat-label>
+        <input matInput placeholder="Practice" [(ngModel)]="practice" (keyup)="practiceEntered($event)">
+        <mat-icon style="cursor: pointer" (click)="loadEvents()" matSuffix>search</mat-icon>
+      </mat-form-field>
+
     </div>
 
     <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">

@@ -17,6 +17,7 @@ import {MatDialog} from "@angular/material/dialog";
 export class RegistryIndicatorsComponent implements OnInit {
   registry: string = '';
   odscode: string = '';
+  practice: string = '';
 
   events: any;
   dataSource: MatTableDataSource<any>;
@@ -43,7 +44,7 @@ export class RegistryIndicatorsComponent implements OnInit {
       });
 
     this.events = null;
-    this.explorerService.getRegistries(this.page, this.size, "", "", this.odscode, this.registry)
+    this.explorerService.getRegistries(this.page, this.size, "", "", this.odscode, this.registry, this.practice)
       .subscribe(
         (result) => this.displayEvents(result),
         (error) => this.log.error(error)

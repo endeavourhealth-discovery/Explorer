@@ -844,7 +844,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         return patientSummary;
     }
 
-    public RegistriesResult getRegistries(Integer page, Integer size, String selectedCCGString, String selectedRegistryString, String odsCode, String parentRegistry) throws Exception {
+    public RegistriesResult getRegistries(Integer page, Integer size, String selectedCCGString, String selectedRegistryString, String odsCode, String parentRegistry, String practice) throws Exception {
         RegistriesResult result = new RegistriesResult();
 
         selectedCCGString = selectedCCGString.replaceAll(",","','");
@@ -858,7 +858,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         String sql = "";
         String sqlCount = "";
 
-        if (parentRegistry.equals("")) {
+        if (parentRegistry.equals("") && practice.equals("")) {
             sql = "SELECT id, registry, ccg, practice_name, ods_code, list_size, registry_size, updated, parent_registry " +
                     "FROM dashboards.registries " +
                     selectedCCGString+selectedRegistryString+
@@ -882,7 +882,35 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                     result.setLength(resultSet.getInt(1));
                 }
             }
-        } else {
+        }
+        else if (parentRegistry.equals("") && !practice.equals("")) {
+            sql = "SELECT id, registry, ccg, practice_name, ods_code, list_size, registry_size, updated, parent_registry " +
+                    "FROM dashboards.registries " +
+                    selectedCCGString+selectedRegistryString+
+                    " AND parent_registry is NULL AND practice_name like ? order by practice_name,registry, ccg, practice_name LIMIT ?,?";
+
+            sqlCount = "SELECT count(1) " +
+                    "FROM dashboards.registries " +
+                    selectedCCGString+selectedRegistryString+" AND parent_registry is NULL AND practice_name like ?";
+
+            try (PreparedStatement statement = conn.prepareStatement(sql)) {
+                statement.setInt(1, page*12);
+                statement.setInt(2, size);
+                statement.setString(3, "%"+practice+"%");
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    result.setResults(getRegistriesList(resultSet));
+                }
+            }
+
+            try (PreparedStatement statement = conn.prepareStatement(sqlCount)) {
+                statement.setString(1, "%"+practice+"%");
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    resultSet.next();
+                    result.setLength(resultSet.getInt(1));
+                }
+            }
+        }
+        else {
             sql = "SELECT id, registry, ccg, practice_name, ods_code, list_size, registry_size, updated, parent_registry " +
                     "FROM dashboards.registries "+
                     " WHERE ods_code = ? and parent_registry = ? order by registry, ccg, practice_name LIMIT ?,?";
