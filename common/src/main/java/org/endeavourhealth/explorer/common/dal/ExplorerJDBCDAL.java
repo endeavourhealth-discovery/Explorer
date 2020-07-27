@@ -862,7 +862,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
             sql = "SELECT id, registry, ccg, practice_name, ods_code, list_size, registry_size, updated, parent_registry " +
                     "FROM dashboards.registries " +
                     selectedCCGString+selectedRegistryString+
-                    " AND parent_registry is NULL order by practice_name,registry, ccg, practice_name LIMIT ?,?";
+                    " AND parent_registry is NULL order by ccg, practice_name,registry LIMIT ?,?";
 
             sqlCount = "SELECT count(1) " +
                     "FROM dashboards.registries " +
@@ -886,17 +886,16 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         else if (parentRegistry.equals("") && !practice.equals("")) {
             sql = "SELECT id, registry, ccg, practice_name, ods_code, list_size, registry_size, updated, parent_registry " +
                     "FROM dashboards.registries " +
-                    selectedCCGString+selectedRegistryString+
-                    " AND parent_registry is NULL AND practice_name like ? order by practice_name,registry, ccg, practice_name LIMIT ?,?";
+                    " WHERE parent_registry is NULL AND practice_name like ? "+selectedRegistryString+" order by ccg, practice_name,registry LIMIT ?,?";
 
             sqlCount = "SELECT count(1) " +
                     "FROM dashboards.registries " +
-                    selectedCCGString+selectedRegistryString+" AND parent_registry is NULL AND practice_name like ?";
+                    " WHERE parent_registry is NULL AND practice_name like ? "+selectedRegistryString;
 
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
-                statement.setInt(1, page*12);
-                statement.setInt(2, size);
-                statement.setString(3, "%"+practice+"%");
+                statement.setString(1, "%"+practice+"%");
+                statement.setInt(2, page*12);
+                statement.setInt(3, size);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     result.setResults(getRegistriesList(resultSet));
                 }
@@ -913,7 +912,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         else {
             sql = "SELECT id, registry, ccg, practice_name, ods_code, list_size, registry_size, updated, parent_registry " +
                     "FROM dashboards.registries "+
-                    " WHERE ods_code = ? and parent_registry = ? order by registry, ccg, practice_name LIMIT ?,?";
+                    " WHERE ods_code = ? and parent_registry = ? order by ccg, practice_name,registry LIMIT ?,?";
 
             sqlCount = "SELECT count(1) " +
                     "FROM dashboards.registries " +
