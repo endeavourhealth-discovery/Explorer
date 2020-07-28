@@ -7,6 +7,7 @@ import {HttpClientModule} from '@angular/common/http';
 import {AbstractMenuProvider, LayoutComponent, LayoutModule, LoggerModule, SecurityModule, UserManagerModule} from 'dds-angular8';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import {MAT_DATE_LOCALE} from "@angular/material/core";
+import { GaugeModule } from 'angular-gauge';
 
 const keycloakService = new KeycloakService();
 
@@ -20,6 +21,7 @@ const keycloakService = new KeycloakService();
     UserManagerModule,
     ExplorerModule,
     NgxChartsModule,
+    GaugeModule.forRoot(),
     RouterModule.forRoot(AppMenuService.getRoutes(), {useHash: true}),
   ],
   providers: [
