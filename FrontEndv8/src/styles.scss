@@ -138,3 +138,20 @@ mwl-gauge > .gauge > .value-text {
   font-size: 1em;
 }
 
+mwl-gauge > .gauge > .good {
+  stroke: green;
+  stroke-width: 6;
+  fill: rgba(0,0,0,0);
+}
+
+mwl-gauge > .gauge > .ok {
+  stroke: orange;
+  stroke-width: 6;
+  fill: rgba(0,0,0,0);
+}
+
+mwl-gauge > .gauge > .poor {
+  stroke: red;
+  stroke-width: 6;
+  fill: rgba(0,0,0,0);
+}

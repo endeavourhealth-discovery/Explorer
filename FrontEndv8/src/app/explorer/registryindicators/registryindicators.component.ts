@@ -16,7 +16,9 @@ import {MatDialog} from "@angular/material/dialog";
 export class RegistryIndicatorsComponent implements OnInit {
   registry: string = '';
   odscode: string = '';
+  registrySize: string = '';
   practice: string = '';
+  practiceTitle: string = '';
 
   events: any;
   dataSource: MatTableDataSource<any>;
@@ -40,6 +42,8 @@ export class RegistryIndicatorsComponent implements OnInit {
       .subscribe(params => {
         this.registry = params['registry'];
         this.odscode = params['odscode'];
+        this.registrySize = params['registrySize'];
+        this.practiceTitle = params['practiceTitle'];
       });
 
     this.events = null;
@@ -63,10 +67,6 @@ export class RegistryIndicatorsComponent implements OnInit {
 
   toPercent(registrysize: any, listsize: any) {
     return (registrysize/listsize*100).toFixed(1);
-  }
-
-  back() {
-    window.history.back();
   }
 
   showPatientDialog() {

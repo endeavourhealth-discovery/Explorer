@@ -16,15 +16,16 @@ export class RegistryDashboardComponent implements OnInit {
 
   registry: string = '';
   odscode: string = '';
+  registrySize: string = '';
   practice: string = '';
+  practiceTitle: string = '';
+
   events: any;
   dataSource: MatTableDataSource<any>;
   page: number = 0;
   size: number = 12;
   displayedColumns: string[] = ['ccg', 'practice', 'code', 'parentRegistry', 'listSize', 'registry', 'registrySize', 'percentage', 'updated'];
   tiles: any[];
-  gaugeValue: any;
-  showTile: boolean = true;
 
   constructor(
     private route: ActivatedRoute,
@@ -41,6 +42,8 @@ export class RegistryDashboardComponent implements OnInit {
       .subscribe(params => {
         this.registry = params['registry'];
         this.odscode = params['odscode'];
+        this.registrySize = params['registrySize'];
+        this.practiceTitle = params['practiceTitle'];
       });
     this.events = null;
     this.explorerService.getRegistries(this.page, this.size, "", "", this.odscode, this.registry, this.practice)
@@ -53,20 +56,28 @@ export class RegistryDashboardComponent implements OnInit {
   displayEvents(events: any) {
     this.events = events;
     this.dataSource = new MatTableDataSource(events.results);
-    let registryCount = 0;
     this.tiles = [];
     events.results.map(
       e => {
         let tile = {
-          "header": this.registry,
-          "text": "% Achieved"
+          "header": e.registry,
+          "text": "% patients meeting target",
+          "registrySize": e.registrySize,
+          "percentage": this.toPercent(e.registrySize,e.listSize)
         }
         this.tiles.push(tile);
-        registryCount = e.listSize;
-        this.gaugeValue = this.toPercent(e.registrySize,e.listSize)
       }
     )
 
+  }
+
+  valueDialClass(percentage) {
+    if (percentage>"89")
+      return "good";
+    else if (percentage>"79"&&percentage<"90")
+      return "ok";
+    else if (percentage<"80")
+      return "poor";
   }
 
   onPage(event: PageEvent) {
@@ -81,10 +92,6 @@ export class RegistryDashboardComponent implements OnInit {
 
   toPercent(registrysize: any, listsize: any) {
     return (registrysize/listsize*100).toFixed(1);
-  }
-
-  back() {
-    window.history.back();
   }
 
 }

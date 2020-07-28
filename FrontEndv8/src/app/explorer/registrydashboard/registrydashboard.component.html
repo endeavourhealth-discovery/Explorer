@@ -4,22 +4,34 @@
       <i class="fad fa-chart-line"></i>
     </div>
     <mat-card-title>Registry dashboard</mat-card-title>
-    <mat-card-subtitle>Registry indicators.</mat-card-subtitle>
+    <mat-card-subtitle>Registry indicators dashboard</mat-card-subtitle>
   </mat-card-header>
 
   <mat-card-content>
 
   <div style="font-size:16px; padding: 10px; padding-bottom: 20px">
-    <b>Indicators for {{this.registry}} registry</b>
-    <button mat-flat-button color="accent" style="margin-left: 25px" (click)="back()">Grid view</button>
+    <b>{{practiceTitle}} - Indicators for {{this.registry}} registry</b>
+    <button mat-flat-button color="accent" style="margin-left: 25px" [routerLink]="['/registryindicators']" [queryParams] = "{role: 'explorer', registry: registry, odscode: odscode,registrySize: registrySize, practiceTitle: practiceTitle}">Grid view</button>
+    <button mat-button color="accent" style="margin-left: 25px" [routerLink]="['/registries']">Back to registries</button>
   </div>
 
-
     <div class="table">
+      <div class="table-row">
+        <div class="table-cell-full">
+          <div style="font-size: 18px; position: center">Patients with {{registry}}</div>
+          <br/>
+          <div>Patients qualifying on register</div>
+          <br/><br/><br/><br/>
+          <div style="font-size: 40px; color: #0074D9; text-align: center">
+            {{registrySize.toLocaleString()}}
+          </div>
+        </div>
+      </div>
       <div class="table-row" *ngFor="let tile of tiles">
-        <div class="table-cell" *ngIf="showTile">
-
+        <div class="table-cell">
           <div style="font-size: 18px; position: center">{{tile.header}}</div>
+          <br/>
+          <div>Patients met - {{tile.registrySize}}</div>
           <br/>
           <div>{{tile.text}}</div>
           <mwl-gauge
@@ -27,11 +39,11 @@
             [label]="gaugeLabel"
             [dialStartAngle]="-90"
             [dialEndAngle]="-90.001"
-            [value]=gaugeValue
+            [value]=tile.percentage
             [animated]="true"
+            [valueDialClass]="valueDialClass(tile.percentage)"
             [animationDuration]="1">
           </mwl-gauge>
-
         </div>
       </div>
     </div>
