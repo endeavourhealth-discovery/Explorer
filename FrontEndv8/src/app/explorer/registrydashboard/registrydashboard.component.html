@@ -8,17 +8,12 @@
   </mat-card-header>
 
   <mat-card-content>
-    <div style="background: whitesmoke; padding: 30px">
-      <mat-grid-list cols="4" rowHeight="150px" [gutterSize]="'20px'">
-        <mat-grid-tile
-          *ngFor="let tile of tiles"
-          [colspan]="tile.cols"
-          [rowspan]="tile.rows"
-          [style.background]="tile.color"
-          [style.border]="tile.border"
-
-        >
-          {{tile.text}}
+    <div style="height:400px;width:400px; background: whitesmoke; padding: 30px">
+      <div *ngFor="let tile of tiles">
+        <div *ngIf="showTile">
+          <div style="font-size: 18px">{{tile.header}}</div>
+          <br/>
+          <div>{{tile.text}}</div>
           <mwl-gauge
             [max]="100"
             [label]="gaugeLabel"
@@ -28,8 +23,11 @@
             [animated]="true"
             [animationDuration]="1">
           </mwl-gauge>
-        </mat-grid-tile>
-      </mat-grid-list>
+        </div>
+
+      </div>
+
+
     </div>
 
 

@@ -24,6 +24,7 @@ export class RegistryDashboardComponent implements OnInit {
   displayedColumns: string[] = ['ccg', 'practice', 'code', 'parentRegistry', 'listSize', 'registry', 'registrySize', 'percentage', 'updated'];
   tiles: any[];
   gaugeValue: any;
+  showTile: boolean = true;
 
   constructor(
     private route: ActivatedRoute,
@@ -61,8 +62,13 @@ export class RegistryDashboardComponent implements OnInit {
           "border": '1px solid gainsboro',
           "cols": 1,
           "rows": 2,
+          "header": "Patients with Diabetes",
           "text": e.registry
         }
+        if (e.registry=="Annual Foot Exam")
+          this.showTile = false;
+        else
+          this.showTile = true;
         this.tiles.push(tile);
         registryCount = e.listSize;
         this.gaugeValue = this.toPercent(e.registrySize,e.listSize)
@@ -73,7 +79,8 @@ export class RegistryDashboardComponent implements OnInit {
         "border": '1px solid gainsboro',
         "cols": 1,
         "rows": 2,
-        "text": "Patients with Diabetes" + registryCount
+        "header": "Patients with Diabetes",
+        "text": registryCount
       }
       this.tiles.push(tile);
   }
