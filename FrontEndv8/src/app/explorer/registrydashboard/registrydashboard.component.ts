@@ -23,6 +23,7 @@ export class RegistryDashboardComponent implements OnInit {
   size: number = 12;
   displayedColumns: string[] = ['ccg', 'practice', 'code', 'parentRegistry', 'listSize', 'registry', 'registrySize', 'percentage', 'updated'];
   tiles: any[];
+  gaugeValue: any;
 
   constructor(
     private route: ActivatedRoute,
@@ -64,6 +65,7 @@ export class RegistryDashboardComponent implements OnInit {
         }
         this.tiles.push(tile);
         registryCount = e.listSize;
+        this.gaugeValue = this.toPercent(e.registrySize,e.listSize)
       }
     )
       let tile = {
@@ -84,6 +86,10 @@ export class RegistryDashboardComponent implements OnInit {
 
   gaugeLabel(value: number) {
     return value+" %";
+  }
+
+  toPercent(registrysize: any, listsize: any) {
+    return (registrysize/listsize*100).toFixed(1);
   }
 
 }

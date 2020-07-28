@@ -16,21 +16,22 @@
           [rowspan]="tile.rows"
           [style.background]="tile.color"
           [style.border]="tile.border"
+
         >
           {{tile.text}}
+          <mwl-gauge
+            [max]="100"
+            [label]="gaugeLabel"
+            [dialStartAngle]="-90"
+            [dialEndAngle]="-90.001"
+            [value]=gaugeValue
+            [animated]="true"
+            [animationDuration]="1">
+          </mwl-gauge>
         </mat-grid-tile>
       </mat-grid-list>
     </div>
 
-    <mwl-gauge
-      [max]="100"
-      [label]="gaugeLabel"
-      [dialStartAngle]="-90"
-      [dialEndAngle]="-90.001"
-      [value]="75"
-      [animated]="true"
-      [animationDuration]="1">
-    </mwl-gauge>
 
   </mat-card-content>
 </mat-card>
