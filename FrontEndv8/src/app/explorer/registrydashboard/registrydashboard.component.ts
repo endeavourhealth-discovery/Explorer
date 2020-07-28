@@ -58,31 +58,15 @@ export class RegistryDashboardComponent implements OnInit {
     events.results.map(
       e => {
         let tile = {
-          "color": 'white',
-          "border": '1px solid gainsboro',
-          "cols": 1,
-          "rows": 2,
-          "header": "Patients with Diabetes",
-          "text": e.registry
+          "header": this.registry,
+          "text": "% Achieved"
         }
-        if (e.registry=="Annual Foot Exam")
-          this.showTile = false;
-        else
-          this.showTile = true;
         this.tiles.push(tile);
         registryCount = e.listSize;
         this.gaugeValue = this.toPercent(e.registrySize,e.listSize)
       }
     )
-      let tile = {
-        "color": 'white',
-        "border": '1px solid gainsboro',
-        "cols": 1,
-        "rows": 2,
-        "header": "Patients with Diabetes",
-        "text": registryCount
-      }
-      this.tiles.push(tile);
+
   }
 
   onPage(event: PageEvent) {
@@ -97,6 +81,10 @@ export class RegistryDashboardComponent implements OnInit {
 
   toPercent(registrysize: any, listsize: any) {
     return (registrysize/listsize*100).toFixed(1);
+  }
+
+  back() {
+    window.history.back();
   }
 
 }

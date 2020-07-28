@@ -12,8 +12,8 @@
 
     <div style="font-size:16px; padding: 10px; padding-bottom: 20px">
       <b>Indicators for {{this.registry}} registry</b>
-      <mat-checkbox style="margin-left: 25px" class="checkbox" [routerLink]="['/registrydashboard']" [queryParams] = "{role: 'explorer', registry: registry, odscode: odscode}">Dashboard</mat-checkbox>
-      <button mat-flat-button color="accent" style="margin-left: 25px" (click)="back()">Back to registries</button>
+      <button mat-flat-button color="accent" style="margin-left: 25px" [routerLink]="['/registrydashboard']" [queryParams] = "{role: 'explorer', registry: registry, odscode: odscode}">Dashboard view</button>
+      <button mat-button color="accent" style="margin-left: 25px" (click)="back()">Back to registries</button>
       <br/>
     </div>
 

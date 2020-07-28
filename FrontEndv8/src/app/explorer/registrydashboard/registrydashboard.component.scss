@@ -9,3 +9,27 @@
 .ok{
   color: orange;
 }
+
+.table {
+  display: table;
+  height: fit-content;
+  width: fit-content;
+  padding: 30px;
+  background: whitesmoke;
+}
+
+.table-row {
+  display: table-row;
+  float: left;
+  padding-right: 25px;
+  padding-bottom: 25px;
+}
+
+.table-cell {
+  display: table-cell;
+  background: white;
+  padding: 50px;
+  height: 200px;
+  width: 200px;
+  border-radius: 10px;
+}

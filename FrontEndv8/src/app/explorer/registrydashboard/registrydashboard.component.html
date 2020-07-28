@@ -8,10 +8,18 @@
   </mat-card-header>
 
   <mat-card-content>
-    <div style="height:400px;width:400px; background: whitesmoke; padding: 30px">
-      <div *ngFor="let tile of tiles">
-        <div *ngIf="showTile">
-          <div style="font-size: 18px">{{tile.header}}</div>
+
+  <div style="font-size:16px; padding: 10px; padding-bottom: 20px">
+    <b>Indicators for {{this.registry}} registry</b>
+    <button mat-flat-button color="accent" style="margin-left: 25px" (click)="back()">Grid view</button>
+  </div>
+
+
+    <div class="table">
+      <div class="table-row" *ngFor="let tile of tiles">
+        <div class="table-cell" *ngIf="showTile">
+
+          <div style="font-size: 18px; position: center">{{tile.header}}</div>
           <br/>
           <div>{{tile.text}}</div>
           <mwl-gauge
@@ -23,11 +31,9 @@
             [animated]="true"
             [animationDuration]="1">
           </mwl-gauge>
+
         </div>
-
       </div>
-
-
     </div>
 
 
