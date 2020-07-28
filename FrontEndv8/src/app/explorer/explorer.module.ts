@@ -41,6 +41,8 @@ import {DashboardEditorComponent} from "./dashboardeditor/dashboardeditor.compon
 import {ValueSetCodeEditorComponent} from "./valuesetcodeeditor/valuesetcodeeditor.component";
 import {RegistriesComponent} from "./registries/registries.component";
 import {RegistryIndicatorsComponent} from "./registryindicators/registryindicators.component";
+import {RegistryDashboardComponent} from "./registrydashboard/registrydashboard.component";
+import {GaugeModule} from "angular-gauge";
 
 @NgModule({
   declarations: [
@@ -57,39 +59,41 @@ import {RegistryIndicatorsComponent} from "./registryindicators/registryindicato
     DashboardEditorComponent,
     ValueSetCodeEditorComponent,
     RegistriesComponent,
-    RegistryIndicatorsComponent
+    RegistryIndicatorsComponent,
+    RegistryDashboardComponent
   ],
-    imports: [
-        BrowserModule,
-        BrowserAnimationsModule,
-        MatCardModule,
-        MatTableModule,
-        MatSortModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatIconModule,
-        FormsModule,
-        MatPaginatorModule,
-        MatProgressSpinnerModule,
-        RouterModule,
-        FlexModule,
-        MatSelectModule,
-        MatSnackBarModule,
-        MatCheckboxModule,
-        MatMenuModule,
-        MatDialogModule,
-        CoreModule,
-        MatButtonModule,
-        MatTreeModule,
-        MatProgressBarModule,
-        MatGridListModule,
-        MatNativeDateModule,
-        MatDatepickerModule,
-        BarChartModule,
-        LineChartModule,
-        AreaChartModule,
-        ReactiveFormsModule
-    ],
+  imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    MatCardModule,
+    MatTableModule,
+    MatSortModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+    FormsModule,
+    MatPaginatorModule,
+    MatProgressSpinnerModule,
+    RouterModule,
+    FlexModule,
+    MatSelectModule,
+    MatSnackBarModule,
+    MatCheckboxModule,
+    MatMenuModule,
+    MatDialogModule,
+    CoreModule,
+    MatButtonModule,
+    MatTreeModule,
+    MatProgressBarModule,
+    MatGridListModule,
+    MatNativeDateModule,
+    MatDatepickerModule,
+    BarChartModule,
+    LineChartModule,
+    AreaChartModule,
+    ReactiveFormsModule,
+    GaugeModule
+  ],
   entryComponents: [
     PatientComponent,
     ValueSetCodeComponent,
