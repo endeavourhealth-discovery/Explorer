@@ -22,7 +22,7 @@
           <br/>
           <div>Patients qualifying on register</div>
           <br/><br/><br/><br/>
-          <div style="font-size: 40px; color: #0074D9; text-align: center">
+          <div (click)="showPatientDialog()" style="cursor:pointer; font-size: 40px; color: #0074D9; text-align: center">
             {{registrySize.toLocaleString()}}
           </div>
         </div>
@@ -31,7 +31,7 @@
         <div class="table-cell">
           <div style="font-size: 18px; position: center">{{tile.header}}</div>
           <br/>
-          <div>Patients met - {{tile.registrySize}}</div>
+          <div (click)="showPatientDialog()" style="cursor:pointer;" >Patients met - {{tile.registrySize}}</div>
           <br/>
           <div>{{tile.text}}</div>
           <mwl-gauge

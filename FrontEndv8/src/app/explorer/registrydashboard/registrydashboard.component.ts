@@ -5,6 +5,7 @@ import {LoggerService} from 'dds-angular8';
 import {PageEvent} from '@angular/material/paginator';
 import {ActivatedRoute} from "@angular/router";
 import {MatDialog} from "@angular/material/dialog";
+import {PatientComponent} from "../patient/patient.component";
 
 @Component({
   selector: 'app-registrydashboard',
@@ -92,6 +93,27 @@ export class RegistryDashboardComponent implements OnInit {
 
   toPercent(registrysize: any, listsize: any) {
     return (registrysize/listsize*100).toFixed(1);
+  }
+
+  showPatientDialog() {
+    this.patientDialog("", "");
+  }
+
+  patientDialog(chartName: any, seriesName: any) {
+    const dialogRef = this.dialog.open(PatientComponent, {
+      height: '780px',
+      width: '1600px',
+
+      data: {chartName: "covid_shielding_ccg", seriesName: "high/moderate risk (50-59)", ccgs: "NHS Tower Hamlets CCG"}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      let patientId = 0;
+      if (result) {
+        patientId = result;
+        window.location.href = "https://devgateway.discoverydataservice.net/record-viewer/#/summary?patient_id="+patientId;
+      }
+    });
   }
 
 }
