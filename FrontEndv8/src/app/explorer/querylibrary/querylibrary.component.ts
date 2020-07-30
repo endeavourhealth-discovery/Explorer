@@ -130,15 +130,14 @@ export class QueryLibraryComponent implements OnInit {
 
   add() {
     const dialogRef = this.dialog.open(QueryEditorComponent, {
-      height: '320px',
-      width: '600px',
+      height: '650px',
+      width: '500px',
       data: {id: "", name: "", type: ""}
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result)
         this.ngOnInit();
     });
-
   }
 
   delete() {
@@ -166,8 +165,8 @@ export class QueryLibraryComponent implements OnInit {
 
   edit() {
     const dialogRef = this.dialog.open(QueryEditorComponent, {
-      height: '320px',
-      width: '600px',
+      height: '650px',
+      width: '500px',
       data: {id: this.selection.selected[0].id, name: this.selection.selected[0].name, type:this.selection.selected[0].type}
     });
     dialogRef.afterClosed().subscribe(result => {

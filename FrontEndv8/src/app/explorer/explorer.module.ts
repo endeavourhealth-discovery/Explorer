@@ -43,6 +43,7 @@ import {RegistriesComponent} from "./registries/registries.component";
 import {RegistryIndicatorsComponent} from "./registryindicators/registryindicators.component";
 import {RegistryDashboardComponent} from "./registrydashboard/registrydashboard.component";
 import {GaugeModule} from "angular-gauge";
+import {MatStepperModule} from "@angular/material/stepper";
 
 @NgModule({
   declarations: [
@@ -62,38 +63,39 @@ import {GaugeModule} from "angular-gauge";
     RegistryIndicatorsComponent,
     RegistryDashboardComponent
   ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    MatCardModule,
-    MatTableModule,
-    MatSortModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatIconModule,
-    FormsModule,
-    MatPaginatorModule,
-    MatProgressSpinnerModule,
-    RouterModule,
-    FlexModule,
-    MatSelectModule,
-    MatSnackBarModule,
-    MatCheckboxModule,
-    MatMenuModule,
-    MatDialogModule,
-    CoreModule,
-    MatButtonModule,
-    MatTreeModule,
-    MatProgressBarModule,
-    MatGridListModule,
-    MatNativeDateModule,
-    MatDatepickerModule,
-    BarChartModule,
-    LineChartModule,
-    AreaChartModule,
-    ReactiveFormsModule,
-    GaugeModule
-  ],
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        MatCardModule,
+        MatTableModule,
+        MatSortModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatIconModule,
+        FormsModule,
+        MatPaginatorModule,
+        MatProgressSpinnerModule,
+        RouterModule,
+        FlexModule,
+        MatSelectModule,
+        MatSnackBarModule,
+        MatCheckboxModule,
+        MatMenuModule,
+        MatDialogModule,
+        CoreModule,
+        MatButtonModule,
+        MatTreeModule,
+        MatProgressBarModule,
+        MatGridListModule,
+        MatNativeDateModule,
+        MatDatepickerModule,
+        BarChartModule,
+        LineChartModule,
+        AreaChartModule,
+        ReactiveFormsModule,
+        GaugeModule,
+        MatStepperModule
+    ],
 
   entryComponents: [
     PatientComponent,

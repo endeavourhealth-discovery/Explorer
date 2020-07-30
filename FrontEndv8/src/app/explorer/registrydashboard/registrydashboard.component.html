@@ -18,7 +18,7 @@
     <div class="table">
       <div class="table-row">
         <div class="table-cell-full">
-          <div style="font-size: 18px; position: center">Patients with {{registry}}</div>
+          <div style="font-size: 18px; position: center"><b>Patients with {{registry}}</b></div>
           <br/>
           <div>Patients qualifying on register</div>
           <br/><br/><br/><br/>
@@ -29,9 +29,11 @@
       </div>
       <div class="table-row" *ngFor="let tile of tiles">
         <div class="table-cell">
-          <div style="font-size: 18px; position: center">{{tile.header}}</div>
+          <div style="font-size: 18px; position: center"><b>{{tile.header}}</b></div>
           <br/>
-          <div>Patients met - {{tile.registrySize}}</div>
+          <div>Patients met - <b style="color: #0074D9">{{tile.registrySize}}</b></div>
+          <br/>
+          <div>Patients not met - <b style="color: #0074D9">{{(tile.listSize - tile.registrySize)}}</b></div>
           <br/>
           <div>{{tile.text}}</div>
           <mwl-gauge

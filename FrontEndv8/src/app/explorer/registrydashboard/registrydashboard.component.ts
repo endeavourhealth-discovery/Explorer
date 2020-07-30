@@ -63,6 +63,7 @@ export class RegistryDashboardComponent implements OnInit {
           "header": e.registry,
           "text": "% patients meeting target",
           "registrySize": e.registrySize,
+          "listSize": e.listSize,
           "percentage": this.toPercent(e.registrySize,e.listSize)
         }
         this.tiles.push(tile);
