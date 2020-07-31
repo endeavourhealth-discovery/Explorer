@@ -32,9 +32,9 @@
           <div style="font-size: 18px; position: center"><b>{{tile.header}}</b></div>
           <br/>
 
-          <div (click)="showPatientDialog()">Patients met - <b style="color: #0074D9">{{tile.registrySize}}</b></div>
+          <div style="cursor: pointer" (click)="showPatientDialog()">Patients met - <b style="color: #0074D9">{{tile.registrySize}}</b></div>
           <br/>
-          <div (click)="showPatientDialog()">Patients not met - <b style="color: #0074D9">{{(tile.listSize - tile.registrySize)}}</b></div>
+          <div style="cursor: pointer" (click)="showPatientDialog()">Patients not met - <b style="color: #0074D9">{{(tile.listSize - tile.registrySize)}}</b></div>
 
           <br/>
           <div>{{tile.text}}</div>
