@@ -3,20 +3,20 @@
   </div>
 
   <mat-horizontal-stepper [linear]=true #stepper style="font-size: 14px">
+
     <mat-step [stepControl]="firstFormGroup">
       <form [formGroup]="firstFormGroup">
-        <ng-template matStepLabel>Query name parameters</ng-template>
-
-        <mat-form-field appearance="outline" style="margin-left: 25px">
-          <mat-label>Query type</mat-label>
-          <input required matInput placeholder="Type" [(ngModel)]="type" formControlName="firstCtrl">
+        <ng-template matStepLabel>Query name definition</ng-template>
+        <br/>
+        <mat-form-field appearance="outline" style="margin-left: 25px; width: 400px">
+          <mat-label>Query category</mat-label>
+          <input required matInput placeholder="Category" [(ngModel)]="type" formControlName="firstCtrl">
         </mat-form-field>
-
-        <mat-form-field appearance="outline" style="margin-left: 25px">
+        <br/>
+        <mat-form-field appearance="outline" style="margin-left: 25px; width: 400px">
           <mat-label>Query name</mat-label>
           <input required matInput placeholder="Name" [(ngModel)]="name" formControlName="firstCtrl">
         </mat-form-field>
-
         <div mat-dialog-actions align="end">
           <button style="margin-right: 15px" mat-button (click)="stepper.next()">Next</button>
         </div>
@@ -25,19 +25,49 @@
 
     <mat-step [stepControl]="secondFormGroup">
       <form [formGroup]="secondFormGroup">
-        <ng-template matStepLabel>Define data type</ng-template>
+        <ng-template matStepLabel>Cohort definition</ng-template>
+        <br/>
+        <mat-form-field appearance="outline" style="margin-left: 25px; width: 300px">
+          <mat-label>Provider organisations</mat-label>
+          <mat-select [(ngModel)]="selectedOrganisation" formControlName="secondCtrl">
+            <mat-option *ngFor="let organisation of organisations" [value]="organisation.orgValue">
+              {{organisation.orgValue}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
 
-          <mat-form-field appearance="outline" style="margin-left: 25px">
-            <mat-label>Data source</mat-label>
-            <mat-select [(ngModel)]="selectedSource" formControlName="secondCtrl">
-              <mat-option *ngFor="let source of sources" [value]="source.value">
-                {{source.value}}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
+        <mat-form-field appearance="outline" style="margin-left: 25px; width: 300px">
+          <mat-label>Patient GP registration status</mat-label>
+          <mat-select [(ngModel)]="selectedRegistration" formControlName="secondCtrl">
+            <mat-option *ngFor="let registration of registrations" [value]="registration.regValue">
+              {{registration.regValue}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <br/>
+        <mat-form-field appearance="outline" style="margin-left: 25px; width: 140px">
+          <mat-label>Age range from</mat-label>
+          <input required matInput placeholder="Age" [(ngModel)]="ageFrom" formControlName="secondCtrl">
+        </mat-form-field>
 
-          <mat-checkbox class="checkbox" [(ngModel)]="active" formControlName="secondCtrl" style="margin-left: 50px">Active items only</mat-checkbox>
+        <mat-form-field appearance="outline" style="margin-left: 18px; width: 140px">
+          <mat-label>Age range to</mat-label>
+          <input required matInput placeholder="Age" [(ngModel)]="ageTo" formControlName="secondCtrl">
+        </mat-form-field>
 
+        <mat-form-field appearance="outline" style="margin-left: 28px; width: 95px">
+          <mat-label>Gender</mat-label>
+          <mat-select [(ngModel)]="selectedGender" formControlName="secondCtrl">
+            <mat-option *ngFor="let gender of genders" [value]="gender.genValue">
+              {{gender.genValue}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" style="margin-left: 15px; width: 190px">
+          <mat-label>Home address postcode</mat-label>
+          <input required matInput placeholder="Postcode" [(ngModel)]="postcode" formControlName="secondCtrl">
+        </mat-form-field>
 
         <div mat-dialog-actions align="end">
           <button style="margin-right: 15px" mat-button color="accent" matStepperPrevious>Back</button>
@@ -46,9 +76,19 @@
       </form>
     </mat-step>
 
+
     <mat-step [stepControl]="thirdFormGroup">
       <form [formGroup]="thirdFormGroup">
-        <ng-template matStepLabel>Define query</ng-template>
+        <ng-template matStepLabel>Input criteria</ng-template>
+        <br/>
+        <mat-form-field appearance="outline" style="margin-left: 25px">
+          <mat-label>Data source</mat-label>
+          <mat-select [(ngModel)]="selectedSource" formControlName="secondCtrl">
+            <mat-option *ngFor="let source of sources" [value]="source.value">
+              {{source.value}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
 
         <mat-form-field appearance="outline" style="margin-left: 15px">
           <mat-label>Value set</mat-label>
@@ -59,7 +99,11 @@
           </mat-select>
         </mat-form-field>
 
-        <mat-form-field class="example-full-width" appearance="outline" style="margin-left: 15px">
+        <mat-checkbox class="checkbox" [(ngModel)]="active" formControlName="secondCtrl" style="margin-left: 35px">Active items only</mat-checkbox>
+
+        <br/>
+
+        <mat-form-field class="example-full-width" appearance="outline" style="margin-left: 25px">
           <mat-label>Date from</mat-label>
           <input matInput [matDatepicker]="picker1" placeholder="Date from" [(ngModel)]="dateFrom" formControlName="thirdCtrl">
           <mat-datepicker-toggle matSuffix [for]="picker1">
@@ -76,6 +120,37 @@
           </mat-datepicker-toggle>
           <mat-datepicker #picker2></mat-datepicker>
         </mat-form-field >
+
+        <div mat-dialog-actions align="end">
+          <button style="margin-right: 15px" mat-button color="accent" matStepperPrevious>Back</button>
+          <button style="margin-right: 15px" mat-button (click)="stepper.next()">Next</button>
+        </div>
+      </form>
+    </mat-step>
+
+    <mat-step [stepControl]="fourthFormGroup">
+      <form [formGroup]="fourthFormGroup">
+        <ng-template matStepLabel>Output definition</ng-template>
+        <br/>
+        <mat-form-field appearance="outline" style="margin-left: 15px">
+          <mat-label>Aggregate output type</mat-label>
+          <mat-select [(ngModel)]="selectedAggregate" formControlName="fourthCtrl">
+            <mat-option *ngFor="let aggregate of aggregates" [value]="aggregate.aggValue">
+              {{aggregate.aggValue}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" style="margin-left: 15px">
+          <mat-label>Event level output type</mat-label>
+          <mat-select [(ngModel)]="selectedEvent" formControlName="fourthCtrl">
+            <mat-option *ngFor="let event of events" [value]="event.eventValue">
+              {{event.eventValue}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <br/>
 
         <div mat-dialog-actions align="end">
           <button style="margin-right: 15px" mat-button color="accent" matStepperPrevious>Back</button>

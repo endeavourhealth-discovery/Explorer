@@ -130,8 +130,8 @@ export class QueryLibraryComponent implements OnInit {
 
   add() {
     const dialogRef = this.dialog.open(QueryEditorComponent, {
-      height: '350px',
-      width: '850px',
+      height: '450px',
+      width: '1275px',
       data: {id: "", name: "", type: ""}
     });
     dialogRef.afterClosed().subscribe(result => {
