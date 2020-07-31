@@ -1,22 +1,24 @@
   <div mat-dialog-title>
-    Add query
+    Query editor
   </div>
 
-  <mat-vertical-stepper [linear]=true #stepper>
+  <mat-horizontal-stepper [linear]=true #stepper style="font-size: 14px">
     <mat-step [stepControl]="firstFormGroup">
       <form [formGroup]="firstFormGroup">
         <ng-template matStepLabel>Query name parameters</ng-template>
-        <mat-form-field>
+
+        <mat-form-field appearance="outline" style="margin-left: 25px">
           <mat-label>Query type</mat-label>
           <input required matInput placeholder="Type" [(ngModel)]="type" formControlName="firstCtrl">
         </mat-form-field>
-        <br/>
-        <mat-form-field>
+
+        <mat-form-field appearance="outline" style="margin-left: 25px">
           <mat-label>Query name</mat-label>
           <input required matInput placeholder="Name" [(ngModel)]="name" formControlName="firstCtrl">
         </mat-form-field>
-        <div>
-          <button mat-button (click)="stepper.next()">Next</button>
+
+        <div mat-dialog-actions align="end">
+          <button style="margin-right: 15px" mat-button (click)="stepper.next()">Next</button>
         </div>
       </form>
     </mat-step>
@@ -24,7 +26,8 @@
     <mat-step [stepControl]="secondFormGroup">
       <form [formGroup]="secondFormGroup">
         <ng-template matStepLabel>Define data type</ng-template>
-          <mat-form-field appearance="outline">
+
+          <mat-form-field appearance="outline" style="margin-left: 25px">
             <mat-label>Data source</mat-label>
             <mat-select [(ngModel)]="selectedSource" formControlName="secondCtrl">
               <mat-option *ngFor="let source of sources" [value]="source.value">
@@ -32,13 +35,13 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
-        <div>
-          <mat-checkbox class="checkbox" [(ngModel)]="active" formControlName="secondCtrl">Active items only</mat-checkbox>
-        </div>
-        <br/>
-        <div>
-          <button mat-button color="accent" matStepperPrevious>Back</button>
-          <button mat-button (click)="stepper.next()">Next</button>
+
+          <mat-checkbox class="checkbox" [(ngModel)]="active" formControlName="secondCtrl" style="margin-left: 50px">Active items only</mat-checkbox>
+
+
+        <div mat-dialog-actions align="end">
+          <button style="margin-right: 15px" mat-button color="accent" matStepperPrevious>Back</button>
+          <button style="margin-right: 15px" mat-button (click)="stepper.next()">Next</button>
         </div>
       </form>
     </mat-step>
@@ -47,7 +50,7 @@
       <form [formGroup]="thirdFormGroup">
         <ng-template matStepLabel>Define query</ng-template>
 
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" style="margin-left: 15px">
           <mat-label>Value set</mat-label>
           <mat-select [(ngModel)]="selectedValue" formControlName="thirdCtrl">
             <mat-option *ngFor="let value of values" [value]="value.valueSet">
@@ -55,30 +58,30 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
-        <br/>
-        <mat-form-field class="example-full-width" appearance="outline">
+
+        <mat-form-field class="example-full-width" appearance="outline" style="margin-left: 15px">
           <mat-label>Date from</mat-label>
           <input matInput [matDatepicker]="picker1" placeholder="Date from" [(ngModel)]="dateFrom" formControlName="thirdCtrl">
           <mat-datepicker-toggle matSuffix [for]="picker1">
-            <mat-icon matDatepickerToggleIcon>keyboard_arrow_up</mat-icon>
+            <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
           </mat-datepicker-toggle>
           <mat-datepicker #picker1></mat-datepicker>
         </mat-form-field>
-        <br/>
-        <mat-form-field class="example-full-width" appearance="outline">
+
+        <mat-form-field class="example-full-width" appearance="outline" style="margin-left: 15px">
           <mat-label>Date to</mat-label>
           <input matInput [matDatepicker]="picker2" placeholder="Date to" [(ngModel)]="dateTo" formControlName="thirdCtrl">
           <mat-datepicker-toggle matSuffix [for]="picker2">
-            <mat-icon matDatepickerToggleIcon>keyboard_arrow_up</mat-icon>
+            <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
           </mat-datepicker-toggle>
           <mat-datepicker #picker2></mat-datepicker>
         </mat-form-field >
-        <br/>
-        <div>
-          <button mat-button color="accent" matStepperPrevious>Back</button>
-          <button mat-flat-button color="accent" (click)="saveQuery()">Save</button>
+
+        <div mat-dialog-actions align="end">
+          <button style="margin-right: 15px" mat-button color="accent" matStepperPrevious>Back</button>
+          <button style="margin-right: 15px" mat-flat-button color="accent" (click)="saveQuery()">Save</button>
         </div>
       </form>
     </mat-step>
 
-  </mat-vertical-stepper>
+  </mat-horizontal-stepper>
