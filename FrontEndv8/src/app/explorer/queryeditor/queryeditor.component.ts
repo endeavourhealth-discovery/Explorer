@@ -2,7 +2,7 @@ import {Component, Inject} from '@angular/core';
 import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {ExplorerService} from '../explorer.service';
 import {LoggerService} from 'dds-angular8';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 
 export interface DialogData {
   id: string;
@@ -21,10 +21,6 @@ interface value {
   valueSet: string;
 }
 
-interface organisation {
-  orgValue: string;
-}
-
 interface registration {
   regValue: string;
 }
@@ -41,6 +37,10 @@ interface event {
   eventValue: string;
 }
 
+interface organisation {
+  orgValue: string;
+}
+
 @Component({
   selector: 'app-queryeditor',
   templateUrl: './queryeditor.component.html',
@@ -48,17 +48,39 @@ interface event {
 })
 
 export class QueryEditorComponent {
-  type: string;
-  name: string;
+  type: string = '';
+  name: string = '';
+  selectedSource: string = '';
+  active: boolean = true;
+  selectedValue: string = '';
+  dateFrom: string = this.formatDate(new Date());
+  dateTo: string = this.formatDate(new Date());
+  selectedRegistration: string = '';
+  ageFrom: string = '';
+  ageTo: string = '';
+  selectedGender: string = '';
+  postcode: string = '';
+  selectedAggregate: string = '';
+  selectedEvent: string = '';
+
+  selectedOrganisation: string = '';
+  orgList = new FormControl();
+  selectedOrganisationString: string = '';
+
+  disableForm: boolean;
+  id: string;
+  firstFormGroup: FormGroup;
+  secondFormGroup: FormGroup;
+  thirdFormGroup: FormGroup;
+  fourthFormGroup: FormGroup;
+  selectAll: boolean = true;
+
   sources: source[] = [
-    {value: 'Patients'},
     {value: 'Clinical events'},
     {value: 'Medication'},
     {value: 'Encounters'},
     {value: 'Appointments'}
   ];
-  selectedSource: string;
-  active: boolean;
   values: value[] = [
     {valueSet: 'Diabetes'},
     {valueSet: 'Asthma'},
@@ -66,9 +88,6 @@ export class QueryEditorComponent {
     {valueSet: 'Atrial Fibrillation'},
     {valueSet: 'CKD'}
   ];
-  selectedValue: string;
-  dateFrom: string = this.formatDate(new Date());
-  dateTo: string = this.formatDate(new Date());
   organisations: organisation[] = [
     {orgValue: 'HS Waltham Forest CCG'},
     {orgValue: 'NHS Tower Hamlets CCG'},
@@ -78,29 +97,21 @@ export class QueryEditorComponent {
     {orgValue: 'NHS BARKING AND DAGENHAM CCG'},
     {orgValue: 'NHS Redbridge CCG'}
   ];
-  selectedOrganisation: string;
   registrations: registration[] = [
     {regValue: 'Currently registered patients'},
     {regValue: 'All patients included left and deads'}
   ];
-  selectedRegistration: string;
-  ageFrom: string;
-  ageTo: string;
   genders: gender[] = [
     {genValue: 'Male'},
     {genValue: 'Female'},
     {genValue: 'Other'}
   ];
-  selectedGender: string;
-  postcode: string;
   aggregates: aggregate[] = [
     {aggValue: 'Organisational grouping'},
     {aggValue: 'Date range'},
     {aggValue: 'High level postcodes'},
     {aggValue: 'Age'}
-
   ];
-  selectedAggregate: string;
   events: event[] = [
     {eventValue: 'Patient ID'},
     {eventValue: 'Patient NHS number'},
@@ -114,14 +125,6 @@ export class QueryEditorComponent {
     {eventValue: 'Registered organisation'},
     {eventValue: 'Death status'}
   ];
-  selectedEvent: string;
-
-  disableForm: boolean;
-  id: string;
-  firstFormGroup: FormGroup;
-  secondFormGroup: FormGroup;
-  thirdFormGroup: FormGroup;
-  fourthFormGroup: FormGroup;
 
   constructor(
     public dialogRef: MatDialogRef<QueryEditorComponent>,
@@ -151,7 +154,6 @@ export class QueryEditorComponent {
     });
   }
 
-
   saveQuery() {
     this.explorerService.saveQuery(this.type, this.name, this.id)
       .subscribe(saved => {
@@ -159,12 +161,23 @@ export class QueryEditorComponent {
         },
         error => this.log.error('This query could not be saved.')
       );
+
+    console.log("Provider organisation: " + this.selectedOrganisation);
+    console.log("Patient GP registration status: " + this.selectedRegistration);
+    console.log("Age from: " + this.ageFrom);
+    console.log("Age to: " + this.ageTo);
+    console.log("Gender: " + this.selectedGender);
+    console.log("Postcode: " + this.postcode);
+    console.log("Value set: " + this.selectedValue);
+    console.log("Event type: " + this.selectedSource);
+    console.log("Active: " + this.active);
     console.log("Date from: " + this.formatDate(this.dateFrom));
     console.log("Date to: " + this.formatDate(this.dateTo));
+    console.log("Aggregate output: " + this.selectedAggregate);
+    console.log("Event level output: " + this.selectedEvent);
   }
 
   queryEntered(event) {
-
     if (event.key === "Enter") {
       this.saveQuery();
     }
@@ -186,6 +199,19 @@ export class QueryEditorComponent {
       day = '0' + day;
 
     return [year, month, day].join('-');
+  }
+
+  toggleSelection() {
+    if (this.selectedOrganisation == "" && this.selectAll) {
+      this.orgList = new FormControl(this.organisations);
+      this.selectedOrganisationString = this.organisations.toString();
+    } else {
+      this.orgList = new FormControl([]);
+    }
+  }
+
+  formChanged() {
+    this.disableForm = this.type=='' || this.type==undefined || this.name=='' || this.name==undefined || this.selectedOrganisation=='' || this.selectedOrganisation==undefined || this.selectedRegistration=='' || this.selectedRegistration==undefined || this.selectedValue=='' || this.selectedValue==undefined || this.selectedEvent=='' || this.selectedEvent==undefined || this.selectedSource=='' || this.selectedSource==undefined;
   }
 
 }

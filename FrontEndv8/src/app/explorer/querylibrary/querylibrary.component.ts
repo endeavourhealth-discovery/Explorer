@@ -30,7 +30,6 @@ export class QueryLibraryComponent implements OnInit {
   selectedType: string = '';
   selectedTypeString: string = '';
   selectAll: boolean = true;
-
   typeList = [];
   typeValues = new FormControl(this.typeList);
 
@@ -130,7 +129,7 @@ export class QueryLibraryComponent implements OnInit {
 
   add() {
     const dialogRef = this.dialog.open(QueryEditorComponent, {
-      height: '450px',
+      height: '620px',
       width: '1275px',
       data: {id: "", name: "", type: ""}
     });
