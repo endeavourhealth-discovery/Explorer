@@ -37,7 +37,7 @@ export class TutorialsComponent implements OnInit {
         link = "https://youtu.be/tOEARtSdTV0";
         break;
       case 4:
-        link = "https://www.youtube.com/watch?v=NtNDrEP0DWw";
+        link = "https://www.youtube.com/watch?v=Q_4YF9CmVxM";
         break;
       default:
 

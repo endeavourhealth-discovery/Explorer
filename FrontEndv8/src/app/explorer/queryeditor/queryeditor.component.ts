@@ -1,24 +1,26 @@
-import {Component, Inject} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {ExplorerService} from '../explorer.service';
 import {LoggerService} from 'dds-angular8';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {STEPPER_GLOBAL_OPTIONS} from "@angular/cdk/stepper";
 
 export interface DialogData {
   id: string;
   name: string;
   type: string;
-  value: string;
-  active: boolean;
-  valueSet: string;
 }
 
-interface source {
+interface eventType {
   value: string;
 }
 
-interface value {
-  valueSet: string;
+interface cohortValueSet {
+  cohortValueSet: string;
+}
+
+interface datasetValueSet {
+  datasetValueSet: string;
 }
 
 interface registration {
@@ -29,6 +31,14 @@ interface gender {
   genValue: string;
 }
 
+interface schedule {
+  scheduleValue: string;
+}
+
+interface delivery {
+  deliveryValue: string;
+}
+
 interface aggregate {
   aggValue: string;
 }
@@ -37,22 +47,22 @@ interface event {
   eventValue: string;
 }
 
-interface organisation {
-  orgValue: string;
-}
-
 @Component({
   selector: 'app-queryeditor',
   templateUrl: './queryeditor.component.html',
-  styleUrls: ['./queryeditor.component.scss']
+  styleUrls: ['./queryeditor.component.scss'],
+  providers: [{
+    provide: STEPPER_GLOBAL_OPTIONS, useValue: {showError: true}
+  }]
 })
 
-export class QueryEditorComponent {
+export class QueryEditorComponent implements OnInit {
   type: string = '';
   name: string = '';
-  selectedSource: string = '';
+  selectedEventType: string = '';
   active: boolean = true;
-  selectedValue: string = '';
+  selectedCohortValueSet: string = '';
+  selectedDatasetValueSet: string = '';
   dateFrom: string = this.formatDate(new Date());
   dateTo: string = this.formatDate(new Date());
   selectedRegistration: string = '';
@@ -61,11 +71,11 @@ export class QueryEditorComponent {
   selectedGender: string = '';
   postcode: string = '';
   selectedAggregate: string = '';
+  selectedDelivery: string = '';
+  selectedSchedule: string = '';
   selectedEvent: string = '';
-
   selectedOrganisation: string = '';
-  orgList = new FormControl();
-  selectedOrganisationString: string = '';
+  selectedIncludedOrganisation: string = '';
 
   disableForm: boolean;
   id: string;
@@ -73,53 +83,74 @@ export class QueryEditorComponent {
   secondFormGroup: FormGroup;
   thirdFormGroup: FormGroup;
   fourthFormGroup: FormGroup;
-  selectAll: boolean = true;
 
-  sources: source[] = [
+  orgList = [];
+  orgIncList = [];
+
+  eventTypes: eventType[] = [
+    {value: 'Person'},
     {value: 'Clinical events'},
     {value: 'Medication'},
-    {value: 'Encounters'},
-    {value: 'Appointments'}
+    {value: 'Encounters'}
   ];
-  values: value[] = [
-    {valueSet: 'Diabetes'},
-    {valueSet: 'Asthma'},
-    {valueSet: 'COPD'},
-    {valueSet: 'Atrial Fibrillation'},
-    {valueSet: 'CKD'}
+  cohortValueSet: cohortValueSet[] = [
+    {cohortValueSet: 'All diseases'},
+    {cohortValueSet: 'Diabetes'},
+    {cohortValueSet: 'Asthma'},
+    {cohortValueSet: 'COPD'},
+    {cohortValueSet: 'Atrial Fibrillation'},
+    {cohortValueSet: 'Hypertension'},
+    {cohortValueSet: 'CKD'}
   ];
-  organisations: organisation[] = [
-    {orgValue: 'HS Waltham Forest CCG'},
-    {orgValue: 'NHS Tower Hamlets CCG'},
-    {orgValue: 'NHS Newham CCG'},
-    {orgValue: 'NHS City and Hackney CCG'},
-    {orgValue: 'NHS Havering CCG'},
-    {orgValue: 'NHS BARKING AND DAGENHAM CCG'},
-    {orgValue: 'NHS Redbridge CCG'}
+  datasetValueSet: datasetValueSet[] = [
+    {datasetValueSet: 'All diseases'},
+    {datasetValueSet: 'Diabetes'},
+    {datasetValueSet: 'Asthma'},
+    {datasetValueSet: 'COPD'},
+    {datasetValueSet: 'Atrial Fibrillation'},
+    {datasetValueSet: 'Hypertension'},
+    {datasetValueSet: 'CKD'}
   ];
+
   registrations: registration[] = [
     {regValue: 'Currently registered patients'},
     {regValue: 'All patients included left and deads'}
   ];
   genders: gender[] = [
+    {genValue: 'All'},
     {genValue: 'Male'},
     {genValue: 'Female'},
     {genValue: 'Other'}
   ];
   aggregates: aggregate[] = [
+    {aggValue: 'Event level'},
     {aggValue: 'Organisational grouping'},
     {aggValue: 'Date range'},
-    {aggValue: 'High level postcodes'},
+    {aggValue: 'High level post codes'},
     {aggValue: 'Age'}
+  ];
+  deliveries: delivery[] = [
+    {deliveryValue: 'Dashboard'},
+    {deliveryValue: 'NHS email'},
+    {deliveryValue: 'Encrypted cloud drive'},
+    {deliveryValue: 'Secure ftp'}
+  ];
+  schedules: schedule[] = [
+    {scheduleValue: 'Daily'},
+    {scheduleValue: 'Weekly'},
+    {scheduleValue: 'Monthly'},
+    {scheduleValue: 'Quarterly'},
+    {scheduleValue: 'One-off'}
   ];
   events: event[] = [
     {eventValue: 'Patient ID'},
     {eventValue: 'Patient NHS number'},
+    {eventValue: 'Pseudo NHS number'},
     {eventValue: 'Effective date'},
-    {eventValue: 'Concept'},
+    {eventValue: 'Concept name'},
     {eventValue: 'Owning organisation'},
     {eventValue: 'Numeric value'},
-    {eventValue: 'Postcode'},
+    {eventValue: 'Post code'},
     {eventValue: 'Age'},
     {eventValue: 'Gender'},
     {eventValue: 'Registered organisation'},
@@ -136,22 +167,41 @@ export class QueryEditorComponent {
     this.id = data.id;
     this.name = data.name;
     this.type = data.type;
-    this.selectedSource = data.value;
-    this.active = data.active;
-    this.selectedValue = data.valueSet;
 
     this.firstFormGroup = this._formBuilder.group({
-      firstCtrl: ['', Validators.required]
+      control1: ['', Validators.required], control2: ['', Validators.required]
     });
     this.secondFormGroup = this._formBuilder.group({
-      secondCtrl: ['', Validators.required]
+      control17: [''], control3: ['', Validators.required], control4: ['', Validators.required], control5: [''], control6: [''], control7: [''], control8: [''], control9: ['']
     });
     this.thirdFormGroup = this._formBuilder.group({
-      thirdCtrl: ['', Validators.required]
+      control10: ['', Validators.required], control11: [''], control12: [''], control13: [''], control16: ['']
     });
     this.fourthFormGroup = this._formBuilder.group({
-      fourthCtrl: ['', Validators.required]
+      control14: [''], control15: [''], control18: ['', Validators.required], control19: ['', Validators.required]
     });
+
+  }
+
+  ngOnInit() {
+    this.explorerService.getLookupLists('3')
+      .subscribe(
+        (result) => this.loadOrgList(result),
+        (error) => this.log.error(error)
+      );
+  }
+
+  loadOrgList(lists: any) {
+    lists.results.map(
+      e => {
+        this.orgList.push(e.type);
+      }
+    )
+    lists.results.map(
+      e => {
+        this.orgIncList.push(e.type);
+      }
+    )
   }
 
   saveQuery() {
@@ -163,18 +213,22 @@ export class QueryEditorComponent {
       );
 
     console.log("Provider organisation: " + this.selectedOrganisation);
+    console.log("Included organisation: " + this.selectedIncludedOrganisation);
     console.log("Patient GP registration status: " + this.selectedRegistration);
     console.log("Age from: " + this.ageFrom);
     console.log("Age to: " + this.ageTo);
     console.log("Gender: " + this.selectedGender);
     console.log("Postcode: " + this.postcode);
-    console.log("Value set: " + this.selectedValue);
-    console.log("Event type: " + this.selectedSource);
+    console.log("Cohort value set: " + this.selectedCohortValueSet);
+    console.log("Dataset value set: " + this.selectedDatasetValueSet);
+    console.log("Event type: " + this.selectedEventType);
     console.log("Active: " + this.active);
     console.log("Date from: " + this.formatDate(this.dateFrom));
     console.log("Date to: " + this.formatDate(this.dateTo));
     console.log("Aggregate output: " + this.selectedAggregate);
     console.log("Event level output: " + this.selectedEvent);
+    console.log("Schedule: " + this.selectedSchedule);
+    console.log("Delivery: " + this.selectedDelivery);
   }
 
   queryEntered(event) {
@@ -201,17 +255,12 @@ export class QueryEditorComponent {
     return [year, month, day].join('-');
   }
 
-  toggleSelection() {
-    if (this.selectedOrganisation == "" && this.selectAll) {
-      this.orgList = new FormControl(this.organisations);
-      this.selectedOrganisationString = this.organisations.toString();
-    } else {
-      this.orgList = new FormControl([]);
-    }
-  }
 
   formChanged() {
-    this.disableForm = this.type=='' || this.type==undefined || this.name=='' || this.name==undefined || this.selectedOrganisation=='' || this.selectedOrganisation==undefined || this.selectedRegistration=='' || this.selectedRegistration==undefined || this.selectedValue=='' || this.selectedValue==undefined || this.selectedEvent=='' || this.selectedEvent==undefined || this.selectedSource=='' || this.selectedSource==undefined;
+    this.disableForm = this.type=='' || this.type==undefined || this.name=='' || this.name==undefined || this.selectedOrganisation=='' || this.selectedOrganisation==undefined ||
+      this.selectedRegistration=='' || this.selectedRegistration==undefined || this.selectedEventType=='' || this.selectedEventType==undefined
+    || this.selectedDelivery=='' || this.selectedDelivery==undefined || this.selectedSchedule=='' || this.selectedSchedule==undefined ||
+      ( (this.selectedEvent=='' || this.selectedEvent==undefined) &&  (this.selectedAggregate=='' || this.selectedAggregate==undefined) );
   }
 
 }
