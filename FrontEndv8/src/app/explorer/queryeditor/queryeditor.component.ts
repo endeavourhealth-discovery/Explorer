@@ -9,6 +9,7 @@ export interface DialogData {
   id: string;
   name: string;
   type: string;
+  jsonQuery: string;
 }
 
 interface eventType {
@@ -86,6 +87,7 @@ export class QueryEditorComponent implements OnInit {
 
   orgList = [];
   orgIncList = [];
+  jsonQuery: string;
 
   eventTypes: eventType[] = [
     {value: 'Person'},
@@ -157,6 +159,7 @@ export class QueryEditorComponent implements OnInit {
     {eventValue: 'Death status'}
   ];
 
+
   constructor(
     public dialogRef: MatDialogRef<QueryEditorComponent>,
     private explorerService: ExplorerService,
@@ -167,6 +170,8 @@ export class QueryEditorComponent implements OnInit {
     this.id = data.id;
     this.name = data.name;
     this.type = data.type;
+    this.jsonQuery = data.jsonQuery;
+
 
     this.firstFormGroup = this._formBuilder.group({
       control1: ['', Validators.required], control2: ['', Validators.required]
@@ -205,7 +210,31 @@ export class QueryEditorComponent implements OnInit {
   }
 
   saveQuery() {
-    this.explorerService.saveQuery(this.type, this.name, this.id)
+
+    let query = {
+      providerOrganisation: this.selectedOrganisation,
+      includedOrganisation: this.selectedIncludedOrganisation,
+      registrationStatus: this.selectedRegistration,
+      ageFrom: this.ageFrom,
+      ageTo: this.ageTo,
+      gender: this.selectedGender,
+      postcode: this.postcode,
+      cohortValue: this.selectedCohortValueSet,
+      datasetValue: this.selectedDatasetValueSet,
+      eventType: this.selectedEventType,
+      active: this.active,
+      dateFrom: this.formatDate(this.dateFrom),
+      dateTo: this.formatDate(this.dateTo),
+      aggregateOutput: this.selectedAggregate,
+      eventOutput: this.selectedEvent,
+      schedule: this.selectedSchedule,
+      delivery: this.selectedDelivery
+    };
+    this.jsonQuery = JSON.stringify(query);
+
+    console.log(this.jsonQuery);
+
+    this.explorerService.saveQuery(this.type, this.name, this.id, this.jsonQuery)
       .subscribe(saved => {
           this.dialogRef.close(true);
         },
@@ -229,6 +258,7 @@ export class QueryEditorComponent implements OnInit {
     console.log("Event level output: " + this.selectedEvent);
     console.log("Schedule: " + this.selectedSchedule);
     console.log("Delivery: " + this.selectedDelivery);
+
   }
 
   queryEntered(event) {
@@ -262,5 +292,6 @@ export class QueryEditorComponent implements OnInit {
     || this.selectedDelivery=='' || this.selectedDelivery==undefined || this.selectedSchedule=='' || this.selectedSchedule==undefined ||
       ( (this.selectedEvent=='' || this.selectedEvent==undefined) &&  (this.selectedAggregate=='' || this.selectedAggregate==undefined) );
   }
+
 
 }

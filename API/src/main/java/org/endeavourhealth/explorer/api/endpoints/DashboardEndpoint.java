@@ -228,11 +228,12 @@ public class DashboardEndpoint {
     public Response saveQuery(@Context SecurityContext sc,
                                  @QueryParam("type") String type,
                                  @QueryParam("name") String name,
-                                 @QueryParam("id") String id) throws Exception {
+                                 @QueryParam("id") String id,
+                                 @QueryParam("jsonQuery") String jsonQuery) throws Exception {
         LOG.debug("saveQuery");
 
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
-            viewerDAL.saveQuery(type, name, id);
+            viewerDAL.saveQuery(type, name, id, jsonQuery);
 
             return Response
                     .ok()

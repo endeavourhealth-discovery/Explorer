@@ -123,27 +123,29 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         }
     }
 
-    public void saveQuery(String type, String name, String id) throws Exception {
+    public void saveQuery(String type, String name, String id, String jsonQuery) throws Exception {
 
         String sql = "";
 
         if (id.equals("")) {
-            sql = "INSERT INTO dashboards.query_library (type, name) " +
-                    "VALUES (?, ?)";
+            sql = "INSERT INTO dashboards.query_library (type, name, query) " +
+                    "VALUES (?, ?, ?)";
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
                 stmt.setString(1, type);
                 stmt.setString(2, name);
+                stmt.setString(3, jsonQuery);
                 stmt.executeUpdate();
             }
         } else // edit
         {
-            sql = "UPDATE dashboards.query_library SET type = ?, name = ? " +
+            sql = "UPDATE dashboards.query_library SET type = ?, name = ?, query = ? " +
                     "WHERE id = ?";
 
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
                 stmt.setString(1, type);
                 stmt.setString(2, name);
-                stmt.setString(3, id);
+                stmt.setString(3, jsonQuery);
+                stmt.setString(4, id);
                 stmt.executeUpdate();
             }
         }
@@ -215,11 +217,11 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                         " FROM dashboards.query_library";
                 break;
             case "3":
-                sql = "SELECT distinct(grouping) as type " +
+                sql = "SELECT distinct(`grouping`) as type " +
                         "FROM dashboards.dashboard_results " +
-                        " order by grouping";
+                        " order by `grouping`";
 
-                sqlCount = "SELECT count(distinct(grouping)) " +
+                sqlCount = "SELECT count(distinct(`grouping`)) " +
                         " FROM dashboards.dashboard_results";
                 break;
             case "4":

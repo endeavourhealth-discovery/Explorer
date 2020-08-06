@@ -113,11 +113,12 @@ export class ExplorerService {
     return this.http.get('api/events/valuesetdelete', {params});
   }
 
-  saveQuery(type?: string, name?: string, id?: string): Observable<any> {
+  saveQuery(type?: string, name?: string, id?: string, jsonQuery?: string): Observable<any> {
     let params = new HttpParams();
     params = params.append('type', type);
     params = params.append('name', name);
     params = params.append('id', id);
+    params = params.append('jsonQuery', jsonQuery);
 
     return this.http.get('api/events/queryeditor', {params});
   }

@@ -10,6 +10,26 @@ import {MessageBoxDialogComponent} from "../message-box-dialog/message-box-dialo
 import {MatDialog} from "@angular/material/dialog";
 import {QueryEditorComponent} from "../queryeditor/queryeditor.component";
 
+interface savedQuery {
+  providerOrganisation: string;
+  includedOrganisation: string;
+  registrationStatus: string;
+  ageFrom: string;
+  ageTo: string;
+  gender: string;
+  postcode: string;
+  cohortValue: string;
+  datasetValue: string;
+  eventType: string;
+  active: boolean;
+  dateFrom: string;
+  dateTo: string;
+  aggregateOutput: string;
+  eventOutput: string;
+  schedule: string;
+  delivery: string;
+}
+
 @Component({
   selector: 'app-querylibrary',
   templateUrl: './querylibrary.component.html',
@@ -131,7 +151,7 @@ export class QueryLibraryComponent implements OnInit {
     const dialogRef = this.dialog.open(QueryEditorComponent, {
       height: '720px',
       width: '1275px',
-      data: {id: "", name: "", type: ""}
+      data: {id: "", name: "", type: "", jsonQuery: ""}
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result)
@@ -163,16 +183,21 @@ export class QueryLibraryComponent implements OnInit {
   }
 
   edit() {
+
+    let query: savedQuery = JSON.parse('{ "providerOrganisation": "XXX"}');
+
+    console.log(JSON.parse(query.providerOrganisation));
+
     const dialogRef = this.dialog.open(QueryEditorComponent, {
       height: '720px',
       width: '1275px',
-      data: {id: this.selection.selected[0].id, name: this.selection.selected[0].name, type:this.selection.selected[0].type}
+      data: {id: this.selection.selected[0].id, name: this.selection.selected[0].name, type:this.selection.selected[0].type, jsonQuery:this.selection.selected[0].jsonQuery}
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result)
         this.ngOnInit();
     });
-
   }
-
 }
+
+
