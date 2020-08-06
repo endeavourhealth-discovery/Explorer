@@ -303,7 +303,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         String sql = "";
         String sqlCount = "";
 
-        sql = "SELECT id, type, name, updated " +
+        sql = "SELECT id, type, name, updated, query " +
                 "FROM dashboards.query_library " +
                  selectedTypeString+
                 "order by type,name LIMIT ?,?";
@@ -346,7 +346,8 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                 .setId(resultSet.getInt("id"))
                 .setType(resultSet.getString("type"))
                 .setName(resultSet.getString("name"))
-                .setUpdated(resultSet.getDate("updated"));
+                .setUpdated(resultSet.getDate("updated"))
+                .setQuery(resultSet.getString("query"));
         return querylibrary;
     }
 

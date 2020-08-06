@@ -151,7 +151,7 @@ export class QueryLibraryComponent implements OnInit {
     const dialogRef = this.dialog.open(QueryEditorComponent, {
       height: '720px',
       width: '1275px',
-      data: {id: "", name: "", type: "", jsonQuery: ""}
+      data: {id: "", name: "", type: ""}
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result)
@@ -184,14 +184,33 @@ export class QueryLibraryComponent implements OnInit {
 
   edit() {
 
-    let query: savedQuery = JSON.parse('{ "providerOrganisation": "XXX"}');
 
-    console.log(JSON.parse(query.providerOrganisation));
+
+    let query: savedQuery = JSON.parse(this.selection.selected[0].jsonQuery);
 
     const dialogRef = this.dialog.open(QueryEditorComponent, {
       height: '720px',
       width: '1275px',
-      data: {id: this.selection.selected[0].id, name: this.selection.selected[0].name, type:this.selection.selected[0].type, jsonQuery:this.selection.selected[0].jsonQuery}
+      data: {id: this.selection.selected[0].id,
+        name: this.selection.selected[0].name,
+        type:this.selection.selected[0].type,
+        selectedOrganisation:query.providerOrganisation,
+        selectedIncludedOrganisation:query.includedOrganisation,
+        selectedRegistration:query.registrationStatus,
+        ageFrom:query.ageFrom,
+        ageTo:query.ageTo,
+        selectedGender:query.gender,
+        postcode:query.postcode,
+        selectedCohortValueSet:query.cohortValue,
+        selectedDatasetValueSet:query.datasetValue,
+        selectedEventType:query.eventType,
+        active:query.active,
+        dateFrom:query.dateFrom,
+        dateTo:query.dateTo,
+        selectedAggregate:query.aggregateOutput,
+        selectedEvent:query.eventOutput,
+        selectedSchedule:query.schedule,
+        selectedDelivery:query.delivery}
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result)
@@ -199,5 +218,3 @@ export class QueryLibraryComponent implements OnInit {
     });
   }
 }
-
-

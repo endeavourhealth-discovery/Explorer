@@ -2,14 +2,30 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {ExplorerService} from '../explorer.service';
 import {LoggerService} from 'dds-angular8';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {STEPPER_GLOBAL_OPTIONS} from "@angular/cdk/stepper";
 
 export interface DialogData {
   id: string;
   name: string;
   type: string;
-  jsonQuery: string;
+  selectedOrganisation: string;
+  selectedIncludedOrganisation: string;
+  selectedRegistration: string;
+  ageFrom: string;
+  ageTo: string;
+  selectedGender: string;
+  postcode: string;
+  selectedCohortValueSet: string;
+  selectedDatasetValueSet: string;
+  selectedEventType: string;
+  active: boolean;
+  dateFrom: string;
+  dateTo: string;
+  selectedAggregate: string;
+  selectedEvent: string;
+  selectedSchedule: string;
+  selectedDelivery: string;
 }
 
 interface eventType {
@@ -170,7 +186,23 @@ export class QueryEditorComponent implements OnInit {
     this.id = data.id;
     this.name = data.name;
     this.type = data.type;
-    this.jsonQuery = data.jsonQuery;
+    this.selectedOrganisation = data.selectedOrganisation;
+    this.selectedIncludedOrganisation = data.selectedIncludedOrganisation
+    this.selectedRegistration = data.selectedRegistration
+    this.ageFrom = data.ageFrom
+    this.ageTo = data.ageTo
+    this.selectedGender = data.selectedGender
+    this.postcode = data.postcode
+    this.selectedCohortValueSet = data.selectedCohortValueSet
+    this.selectedDatasetValueSet = data.selectedDatasetValueSet
+    this.selectedEventType = data.selectedEventType
+    this.active = data.active
+    this.dateFrom = data.dateFrom
+    this.dateTo = data.dateTo
+    this.selectedAggregate = data.selectedAggregate
+    this.selectedEvent = data.selectedEvent
+    this.selectedSchedule = data.selectedSchedule
+    this.selectedDelivery = data.selectedDelivery
 
 
     this.firstFormGroup = this._formBuilder.group({

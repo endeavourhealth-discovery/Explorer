@@ -14,6 +14,7 @@ public class QueryLibrary {
     private String type;
     private String name;
     private String updated;
+    private String jsonQuery;
 
     public String getUpdated() {
         return updated;
@@ -56,6 +57,15 @@ public class QueryLibrary {
 
     public QueryLibrary setId(Integer id) {
         this.id = id;
+        return this;
+    }
+
+    public String getJsonQuery() {
+        return jsonQuery;
+    }
+
+    public QueryLibrary setQuery(String jsonQuery) {
+        this.jsonQuery = jsonQuery;
         return this;
     }
 
