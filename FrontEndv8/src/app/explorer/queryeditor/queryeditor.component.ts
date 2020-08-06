@@ -9,23 +9,27 @@ export interface DialogData {
   id: string;
   name: string;
   type: string;
-  selectedOrganisation: string;
-  selectedIncludedOrganisation: string;
-  selectedRegistration: string;
+  query: string;
+}
+
+interface savedQuery {
+  providerOrganisation: string;
+  includedOrganisation: string;
+  registrationStatus: string;
   ageFrom: string;
   ageTo: string;
-  selectedGender: string;
+  gender: string;
   postcode: string;
-  selectedCohortValueSet: string;
-  selectedDatasetValueSet: string;
-  selectedEventType: string;
+  cohortValue: string;
+  datasetValue: string;
+  eventType: string;
   active: boolean;
   dateFrom: string;
   dateTo: string;
-  selectedAggregate: string;
-  selectedEvent: string;
-  selectedSchedule: string;
-  selectedDelivery: string;
+  aggregateOutput: string;
+  eventOutput: string;
+  schedule: string;
+  delivery: string;
 }
 
 interface eventType {
@@ -186,24 +190,26 @@ export class QueryEditorComponent implements OnInit {
     this.id = data.id;
     this.name = data.name;
     this.type = data.type;
-    this.selectedOrganisation = data.selectedOrganisation;
-    this.selectedIncludedOrganisation = data.selectedIncludedOrganisation
-    this.selectedRegistration = data.selectedRegistration
-    this.ageFrom = data.ageFrom
-    this.ageTo = data.ageTo
-    this.selectedGender = data.selectedGender
-    this.postcode = data.postcode
-    this.selectedCohortValueSet = data.selectedCohortValueSet
-    this.selectedDatasetValueSet = data.selectedDatasetValueSet
-    this.selectedEventType = data.selectedEventType
-    this.active = data.active
-    this.dateFrom = data.dateFrom
-    this.dateTo = data.dateTo
-    this.selectedAggregate = data.selectedAggregate
-    this.selectedEvent = data.selectedEvent
-    this.selectedSchedule = data.selectedSchedule
-    this.selectedDelivery = data.selectedDelivery
 
+    let query: savedQuery = JSON.parse(data.query);
+
+    this.selectedOrganisation = query.providerOrganisation;
+    this.selectedIncludedOrganisation = query.includedOrganisation;
+    this.selectedRegistration = query.registrationStatus;
+    this.ageFrom = query.ageFrom;
+    this.ageTo = query.ageTo;
+    this.selectedGender = query.gender;
+    this.postcode = query.postcode;
+    this.selectedCohortValueSet = query.cohortValue;
+    this.selectedDatasetValueSet = query.datasetValue;
+    this.selectedEventType = query.eventType;
+    this.active = query.active;
+    this.dateFrom = query.dateFrom;
+    this.dateTo = query.dateTo;
+    this.selectedAggregate = query.aggregateOutput;
+    this.selectedEvent = query.eventOutput;
+    this.selectedSchedule = query.schedule;
+    this.selectedDelivery = query.delivery;
 
     this.firstFormGroup = this._formBuilder.group({
       control1: ['', Validators.required], control2: ['', Validators.required]

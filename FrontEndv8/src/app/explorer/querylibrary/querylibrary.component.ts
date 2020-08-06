@@ -10,26 +10,6 @@ import {MessageBoxDialogComponent} from "../message-box-dialog/message-box-dialo
 import {MatDialog} from "@angular/material/dialog";
 import {QueryEditorComponent} from "../queryeditor/queryeditor.component";
 
-interface savedQuery {
-  providerOrganisation: string;
-  includedOrganisation: string;
-  registrationStatus: string;
-  ageFrom: string;
-  ageTo: string;
-  gender: string;
-  postcode: string;
-  cohortValue: string;
-  datasetValue: string;
-  eventType: string;
-  active: boolean;
-  dateFrom: string;
-  dateTo: string;
-  aggregateOutput: string;
-  eventOutput: string;
-  schedule: string;
-  delivery: string;
-}
-
 @Component({
   selector: 'app-querylibrary',
   templateUrl: './querylibrary.component.html',
@@ -183,34 +163,15 @@ export class QueryLibraryComponent implements OnInit {
   }
 
   edit() {
-
-
-
-    let query: savedQuery = JSON.parse(this.selection.selected[0].jsonQuery);
-
     const dialogRef = this.dialog.open(QueryEditorComponent, {
       height: '720px',
       width: '1275px',
-      data: {id: this.selection.selected[0].id,
-        name: this.selection.selected[0].name,
-        type:this.selection.selected[0].type,
-        selectedOrganisation:query.providerOrganisation,
-        selectedIncludedOrganisation:query.includedOrganisation,
-        selectedRegistration:query.registrationStatus,
-        ageFrom:query.ageFrom,
-        ageTo:query.ageTo,
-        selectedGender:query.gender,
-        postcode:query.postcode,
-        selectedCohortValueSet:query.cohortValue,
-        selectedDatasetValueSet:query.datasetValue,
-        selectedEventType:query.eventType,
-        active:query.active,
-        dateFrom:query.dateFrom,
-        dateTo:query.dateTo,
-        selectedAggregate:query.aggregateOutput,
-        selectedEvent:query.eventOutput,
-        selectedSchedule:query.schedule,
-        selectedDelivery:query.delivery}
+      data: {
+          id: this.selection.selected[0].id,
+          name: this.selection.selected[0].name,
+          type: this.selection.selected[0].type,
+          query: this.selection.selected[0].jsonQuery
+        }
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result)
