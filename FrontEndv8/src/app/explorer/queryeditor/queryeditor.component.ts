@@ -191,25 +191,27 @@ export class QueryEditorComponent implements OnInit {
     this.name = data.name;
     this.type = data.type;
 
-    let query: savedQuery = JSON.parse(data.query);
+    if (data.query!='') { // edit mode
+      let query: savedQuery = JSON.parse(data.query);
 
-    this.selectedOrganisation = query.providerOrganisation;
-    this.selectedIncludedOrganisation = query.includedOrganisation;
-    this.selectedRegistration = query.registrationStatus;
-    this.ageFrom = query.ageFrom;
-    this.ageTo = query.ageTo;
-    this.selectedGender = query.gender;
-    this.postcode = query.postcode;
-    this.selectedCohortValueSet = query.cohortValue;
-    this.selectedDatasetValueSet = query.datasetValue;
-    this.selectedEventType = query.eventType;
-    this.active = query.active;
-    this.dateFrom = query.dateFrom;
-    this.dateTo = query.dateTo;
-    this.selectedAggregate = query.aggregateOutput;
-    this.selectedEvent = query.eventOutput;
-    this.selectedSchedule = query.schedule;
-    this.selectedDelivery = query.delivery;
+      this.selectedOrganisation = query.providerOrganisation;
+      this.selectedIncludedOrganisation = query.includedOrganisation;
+      this.selectedRegistration = query.registrationStatus;
+      this.ageFrom = query.ageFrom;
+      this.ageTo = query.ageTo;
+      this.selectedGender = query.gender;
+      this.postcode = query.postcode;
+      this.selectedCohortValueSet = query.cohortValue;
+      this.selectedDatasetValueSet = query.datasetValue;
+      this.selectedEventType = query.eventType;
+      this.active = query.active;
+      this.dateFrom = query.dateFrom;
+      this.dateTo = query.dateTo;
+      this.selectedAggregate = query.aggregateOutput;
+      this.selectedEvent = query.eventOutput;
+      this.selectedSchedule = query.schedule;
+      this.selectedDelivery = query.delivery;
+    }
 
     this.firstFormGroup = this._formBuilder.group({
       control1: ['', Validators.required], control2: ['', Validators.required]

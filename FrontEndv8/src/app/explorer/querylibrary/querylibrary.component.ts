@@ -131,7 +131,7 @@ export class QueryLibraryComponent implements OnInit {
     const dialogRef = this.dialog.open(QueryEditorComponent, {
       height: '720px',
       width: '1275px',
-      data: {id: "", name: "", type: ""}
+      data: {id: "", name: "", type: "", query: ""}
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result)
