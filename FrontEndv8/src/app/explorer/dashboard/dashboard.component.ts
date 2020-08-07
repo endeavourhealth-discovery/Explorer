@@ -146,6 +146,13 @@ export class DashboardComponent implements OnInit {
       this.showBarCharts = false;
       this.showAreaChart = false;
       this.showSeriesFilter = true;
+    } else if (this.dashboardNumber == "12") {
+      values = this.selectedSeries;
+      this.chartTitle = 'Day trend of Suspected Covid 19 BY CCG';
+      this.showLineCharts = true;
+      this.showBarCharts = false;
+      this.showAreaChart = false;
+      this.showSeriesFilter = true;
     } else if (this.dashboardNumber == "9") {
       values = this.selectedSeries;
       this.chartTitle = 'Day trend of Confirmed, Suspected and Tested for Covid 19 by Ethnic Group';
@@ -260,6 +267,24 @@ export class DashboardComponent implements OnInit {
           this.seriesList = ['Hospital inpatient admission', 'Hospital day case discharge', 'A&E discharge/end visit', 'A&E transfer', 'A&E attendance', 'Hospital discharge'];
         } else if (this.dashboardNumber == "1") {
           this.seriesList = ['Suspected', 'Confirmed', 'Tested'];
+        } else if (this.dashboardNumber == "12") {
+          this.seriesList = [
+            'Suspected (NHS CENTRAL LONDON (WESTMINSTER) CCG)',
+            'Suspected (NHS HAVERING CCG)',
+            'Suspected (NHS REDBRIDGE CCG)',
+            'Suspected (NHS HARROW CCG)',
+            'Suspected (NHS HAMMERSMITH AND FULHAM CCG)',
+            'Suspected (NHS CITY AND HACKNEY CCG)',
+            'Suspected (NHS TOWER HAMLETS CCG)',
+            'Suspected (NHS WEST LONDON CCG)',
+            'Suspected (NHS EALING CCG)',
+            'Suspected (NHS BRENT CCG)',
+            'Suspected (NHS HILLINGDON CCG)',
+            'Suspected (NHS Newham CCG)',
+            'Suspected (NHS BARKING AND DAGENHAM CCG)',
+            'Suspected (NHS WALTHAM FOREST CCG)',
+            'Suspected (NHS HOUNSLOW CCG)'
+          ];
         } else if (this.dashboardNumber == "9") {
           this.seriesList = ['Suspected (Black)',
           'Suspected (Not Stated)',
