@@ -44,6 +44,7 @@ import {RegistryIndicatorsComponent} from "./registryindicators/registryindicato
 import {RegistryDashboardComponent} from "./registrydashboard/registrydashboard.component";
 import {GaugeModule} from "angular-gauge";
 import {MatStepperModule} from "@angular/material/stepper";
+import {AdvancedQueryEditorComponent} from "./advancedqueryeditor/advancedqueryeditor.component";
 
 @NgModule({
   declarations: [
@@ -61,7 +62,8 @@ import {MatStepperModule} from "@angular/material/stepper";
     ValueSetCodeEditorComponent,
     RegistriesComponent,
     RegistryIndicatorsComponent,
-    RegistryDashboardComponent
+    RegistryDashboardComponent,
+    AdvancedQueryEditorComponent
   ],
     imports: [
         BrowserModule,
@@ -104,7 +106,8 @@ import {MatStepperModule} from "@angular/material/stepper";
     MessageBoxDialogComponent,
     QueryEditorComponent,
     DashboardEditorComponent,
-    ValueSetCodeEditorComponent
+    ValueSetCodeEditorComponent,
+    AdvancedQueryEditorComponent
   ],
   providers: [ Globals ]
 })

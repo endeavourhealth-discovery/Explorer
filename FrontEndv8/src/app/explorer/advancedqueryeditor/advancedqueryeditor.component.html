@@ -1,0 +1,303 @@
+  <div mat-dialog-title>
+    Advanced query editor
+  </div>
+
+  <mat-horizontal-stepper #stepper style="font-size: 14px">
+
+    <mat-step [stepControl]="firstFormGroup" errorMessage="Step not completed.">
+      <form [formGroup]="firstFormGroup">
+        <ng-template matStepLabel>Query name</ng-template>
+        <br/>
+        <div class="summary-column">
+          <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <mat-form-field appearance="outline" style="margin-left: 25px; width: 400px">
+              <mat-label>Query category</mat-label>
+              <input required matInput placeholder="Category" [(ngModel)]="type" formControlName="control1" (ngModelChange)="formChanged()">
+            </mat-form-field>
+          </div>
+          <br/>
+          <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <mat-form-field appearance="outline" style="margin-left: 25px; width: 400px">
+              <mat-label>Query name</mat-label>
+              <input required matInput placeholder="Name" [(ngModel)]="name" formControlName="control2" (ngModelChange)="formChanged()">
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="summary-column">
+          <div style="margin-top: 5px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <p>Category of query for grouping in the library.</p>
+          </div>
+
+          <div style="margin-top: 30px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <p>Name of query.</p>
+          </div>
+        </div>
+        <div style="margin-top: 300px" mat-dialog-actions align="end">
+          <button style="margin-right: 15px" mat-flat-button color="accent" (click)="onCancelClick()">Cancel</button>
+          <button style="margin-right: 15px" mat-button (click)="stepper.next()">Next</button>
+        </div>
+
+      </form>
+    </mat-step>
+
+    <mat-step [stepControl]="secondFormGroup" errorMessage="Step not completed.">
+      <form [formGroup]="secondFormGroup">
+        <ng-template matStepLabel>Cohort definition</ng-template>
+        <br/>
+        <div class="summary-column">
+          <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <mat-form-field appearance="outline" style="margin-left: 25px; width: 300px">
+              <mat-label>Provider organisations</mat-label>
+              <mat-select multiple [(ngModel)]="selectedOrganisation" formControlName="control3" (ngModelChange)="formChanged()" required>
+                <mat-option *ngFor="let result of orgList" [value]="result">{{result}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <br/>
+          <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <mat-form-field appearance="outline" style="margin-left: 25px; width: 300px">
+              <mat-label>Included organisations</mat-label>
+              <mat-select multiple [(ngModel)]="selectedIncludedOrganisation" formControlName="control17" (ngModelChange)="formChanged()">
+                <mat-option *ngFor="let result of orgIncList" [value]="result">{{result}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <br/>
+          <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <mat-form-field appearance="outline" style="margin-left: 25px; width: 300px">
+              <mat-label>Patient GP registration status</mat-label>
+              <mat-select [(ngModel)]="selectedRegistration" formControlName="control4" (ngModelChange)="formChanged()" required>
+                <mat-option *ngFor="let registration of registrations" [value]="registration.regValue">
+                  {{registration.regValue}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <br/>
+          <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <mat-form-field appearance="outline" style="margin-left: 25px; width: 300px">
+              <mat-label>Cohort value set</mat-label>
+              <mat-select multiple [(ngModel)]="selectedCohortValueSet" formControlName="control5" (ngModelChange)="formChanged()">
+                <mat-option *ngFor="let value of cohortValueSet" [value]="value.cohortValueSet">
+                  {{value.cohortValueSet}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <br/>
+          <div class="flex" fxLayout.xs="column"  fxLayoutAlign="start">
+            <mat-form-field appearance="outline" style="margin-left: 25px; width: 140px">
+              <mat-label>Age range from</mat-label>
+              <input matInput placeholder="Age" [(ngModel)]="ageFrom" formControlName="control6">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" style="margin-left: 20px; width: 140px">
+              <mat-label>Age range to</mat-label>
+              <input matInput placeholder="Age" [(ngModel)]="ageTo" formControlName="control7">
+            </mat-form-field>
+          </div>
+          <br/>
+          <div class="flex" fxLayout.xs="column"  fxLayoutAlign="start">
+            <mat-form-field appearance="outline" style="margin-left: 25px; width: 100px">
+              <mat-label>Gender</mat-label>
+              <mat-select [(ngModel)]="selectedGender" formControlName="control8">
+                <mat-option *ngFor="let gender of genders" [value]="gender.genValue">
+                  {{gender.genValue}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" style="margin-left: 20px; width: 180px">
+              <mat-label>Home address postcode</mat-label>
+              <input matInput placeholder="Postcode" [(ngModel)]="postcode" formControlName="control9">
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="summary-column">
+          <div style="margin-top: 20px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            List of organisations, or list of organisations groups, whose records will be used as the base cohort.
+          </div>
+
+          <div style="margin-top: 45px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            This is the list of organisations whose records are included for the patients who are in the base cohort, but not included if they are not. For example, patient who have records in a GP practice may be in the base, and they may have visited hospital and the hospital may be included in the included organisation list. If not defined NO other organisational records are included.
+          </div>
+
+          <div style="margin-top: 40px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            Limit the cohort by patient registration status.
+          </div>
+
+          <div style="margin-top: 57px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            Limit the cohort to only include patients that have clinical events containing concepts that are part of the selected value set(s).
+          </div>
+
+          <div style="margin-top: 57px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            Limit the cohort by age range.
+          </div>
+
+          <div style="margin-top: 57px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            Limit the cohort by gender and/or partial or full post code.
+          </div>
+        </div>
+
+        <div mat-dialog-actions align="end">
+          <button style="margin-right: 15px" mat-flat-button color="accent" (click)="onCancelClick()">Cancel</button>
+          <button style="margin-right: 15px" mat-button color="accent" matStepperPrevious>Back</button>
+          <button style="margin-right: 15px" mat-button (click)="stepper.next()">Next</button>
+        </div>
+      </form>
+    </mat-step>
+
+
+    <mat-step [stepControl]="thirdFormGroup" errorMessage="Step not completed.">
+      <form [formGroup]="thirdFormGroup">
+        <ng-template matStepLabel>Data set criteria</ng-template>
+        <br/>
+
+        <div class="summary-column">
+          <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <mat-form-field appearance="outline" style="margin-left: 25px; width: 235px">
+              <mat-label>Included event types</mat-label>
+              <mat-select multiple [(ngModel)]="selectedEventType" formControlName="control10" (ngModelChange)="formChanged()" required>
+                <mat-option *ngFor="let eventType of eventTypes" [value]="eventType.value">
+                  {{eventType.value}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <div style="margin-left: 25px; width: 235px">
+              <br/>
+              <mat-checkbox class="checkbox" [(ngModel)]="active" formControlName="control13">Active items only</mat-checkbox>
+            </div>
+          </div>
+          <br/>
+          <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <mat-form-field appearance="outline" style="margin-left: 25px; width: 235px">
+              <mat-label>Dataset value set</mat-label>
+              <mat-select multiple [(ngModel)]="selectedDatasetValueSet" formControlName="control16" (ngModelChange)="formChanged()">
+                <mat-option *ngFor="let value of datasetValueSet" [value]="value.datasetValueSet">
+                  {{value.datasetValueSet}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <br/>
+          <div class="flex" fxLayout.xs="column"  fxLayoutAlign="start">
+            <mat-form-field class="example-full-width" appearance="outline" style="margin-left: 25px">
+              <mat-label>Date range from</mat-label>
+              <input matInput [matDatepicker]="picker1" placeholder="Date from" [(ngModel)]="dateFrom" formControlName="control11">
+              <mat-datepicker-toggle matSuffix [for]="picker1">
+                <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+              </mat-datepicker-toggle>
+              <mat-datepicker #picker1></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field class="example-full-width" appearance="outline" style="margin-left: 25px">
+              <mat-label>Date range to</mat-label>
+              <input matInput [matDatepicker]="picker2" placeholder="Date to" [(ngModel)]="dateTo" formControlName="control12">
+              <mat-datepicker-toggle matSuffix [for]="picker2">
+                <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+              </mat-datepicker-toggle>
+              <mat-datepicker #picker2></mat-datepicker>
+            </mat-form-field>
+          </div>
+
+        </div>
+
+        <div class="summary-column">
+          <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <p>Clinical events include conditions, values, procedures, immunisations, family history, referrals and allergies. Encounters include consultations, admissions, discharges, outpatient attendances.</p>
+          </div>
+
+          <div style="margin-top: 10px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <p>Filter data set by the selected value sets.</p>
+          </div>
+
+          <div style="margin-top: 20px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <p>Filter the data set by date range.</p>
+          </div>
+        </div>
+
+        <div style="margin-top: 220px" mat-dialog-actions align="end">
+          <button style="margin-right: 15px" mat-flat-button color="accent" (click)="onCancelClick()">Cancel</button>
+          <button style="margin-right: 15px" mat-button color="accent" matStepperPrevious>Back</button>
+          <button style="margin-right: 15px" mat-button (click)="stepper.next()">Next</button>
+        </div>
+      </form>
+    </mat-step>
+
+    <mat-step [stepControl]="fourthFormGroup" errorMessage="Step not completed.">
+      <form [formGroup]="fourthFormGroup">
+        <ng-template matStepLabel>Data set output definition</ng-template>
+        <br/>
+
+        <div class="summary-column">
+          <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <mat-form-field appearance="outline" style="margin-left: 15px">
+              <mat-label>Event level output type</mat-label>
+              <mat-select multiple [(ngModel)]="selectedEvent" formControlName="control14" (ngModelChange)="formChanged()">
+                <mat-option *ngFor="let event of events" [value]="event.eventValue">
+                  {{event.eventValue}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <br/>
+          <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <mat-form-field appearance="outline" style="margin-left: 15px">
+              <mat-label>Aggregate output type</mat-label>
+              <mat-select [(ngModel)]="selectedAggregate" formControlName="control15" (ngModelChange)="formChanged()">
+                <mat-option *ngFor="let aggregate of aggregates" [value]="aggregate.aggValue">
+                  {{aggregate.aggValue}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <br/>
+          <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <mat-form-field appearance="outline" style="margin-left: 15px">
+              <mat-label>Refresh schedule</mat-label>
+              <mat-select [(ngModel)]="selectedSchedule" formControlName="control18" (ngModelChange)="formChanged()" required>
+                <mat-option *ngFor="let schedule of schedules" [value]="schedule.scheduleValue">
+                  {{schedule.scheduleValue}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <br/>
+          <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <mat-form-field appearance="outline" style="margin-left: 15px">
+              <mat-label>Delivery mechanism</mat-label>
+              <mat-select [(ngModel)]="selectedDelivery" formControlName="control19" (ngModelChange)="formChanged()" required>
+                <mat-option *ngFor="let delivery of deliveries" [value]="delivery.deliveryValue">
+                  {{delivery.deliveryValue}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="summary-column">
+          <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <p>Output type is event level (e.g. 1 line per event and 1 line per patient). For each observation, medication or encounter table, include the following attributes.</p>
+          </div>
+
+          <div style="margin-top: 15px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <p>Output type is aggregated by one common attribute type such as multi-level organisational grouping, personal demographic grouping, or event level date time grouping.</p>
+          </div>
+          <div style="margin-top: 20px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <p>How often should this data set be refreshed.</p>
+          </div>
+          <div style="margin-top: 30px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <p>The mechanism that is used to deliver the report.</p>
+          </div>
+        </div>
+
+        <div style="margin-top: 150px" mat-dialog-actions align="end">
+          <button style="margin-right: 15px" mat-flat-button color="accent" (click)="onCancelClick()">Cancel</button>
+          <button style="margin-right: 15px" mat-button color="accent" matStepperPrevious>Back</button>
+          <button style="margin-right: 15px" mat-button [disabled]="disableForm" (click)="saveQuery()">Save</button>
+        </div>
+      </form>
+    </mat-step>
+  </mat-horizontal-stepper>

@@ -9,6 +9,7 @@ import {SelectionModel} from "@angular/cdk/collections";
 import {MessageBoxDialogComponent} from "../message-box-dialog/message-box-dialog.component";
 import {MatDialog} from "@angular/material/dialog";
 import {QueryEditorComponent} from "../queryeditor/queryeditor.component";
+import {AdvancedQueryEditorComponent} from "../advancedqueryeditor/advancedqueryeditor.component";
 
 @Component({
   selector: 'app-querylibrary',
@@ -128,15 +129,32 @@ export class QueryLibraryComponent implements OnInit {
   }
 
   add() {
-    const dialogRef = this.dialog.open(QueryEditorComponent, {
-      height: '720px',
-      width: '1275px',
-      data: {id: "", name: "", type: "", query: ""}
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      if (result)
-        this.ngOnInit();
-    });
+
+    MessageBoxDialogComponent.open(this.dialog, 'Choose query editor', 'Select query editor type', 'Advanced', 'Normal')
+      .subscribe(result => {
+        if (result) {
+          const dialogRef = this.dialog.open(AdvancedQueryEditorComponent, {
+            height: '720px',
+            width: '1275px',
+            data: {id: "", name: "", type: "", query: ""}
+          });
+          dialogRef.afterClosed().subscribe(result => {
+            if (result)
+              this.ngOnInit();
+          })
+        }
+        else {
+          const dialogRef = this.dialog.open(QueryEditorComponent, {
+            height: '720px',
+            width: '1275px',
+            data: {id: "", name: "", type: "", query: ""}
+          });
+          dialogRef.afterClosed().subscribe(result => {
+            if (result)
+              this.ngOnInit();
+          })
+        }
+      });
   }
 
   delete() {
@@ -151,7 +169,6 @@ export class QueryLibraryComponent implements OnInit {
     MessageBoxDialogComponent.open(this.dialog, 'Delete query', 'Are you sure you want to delete this query?', 'Delete', 'Cancel')
       .subscribe(result => {
         if (result) {
-
           this.explorerService.deleteQuery(id.toString())
             .subscribe(saved => {
                 this.ngOnInit();
