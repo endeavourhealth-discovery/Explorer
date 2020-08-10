@@ -260,7 +260,7 @@ export class DashboardComponent implements OnInit {
         if (this.dashboardNumber == "5") {
           this.seriesList = ['[D]Fever NOS', '[D]Cough'];
         } else if (this.dashboardNumber == "6") {
-          this.seriesList = ['All consultations', 'Suspected Covid'];
+          this.seriesList = ['Suspected Covid'];
         } else if (this.dashboardNumber == "7") {
           this.seriesList = ['Home visit', 'Surgery face to face consultation', 'Telephone consultation', 'Video consultation', 'Email or Text message consultation'];
         } else if (this.dashboardNumber == "8") {
