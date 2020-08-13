@@ -41,7 +41,6 @@ import {DashboardEditorComponent} from "./dashboardeditor/dashboardeditor.compon
 import {ValueSetCodeEditorComponent} from "./valuesetcodeeditor/valuesetcodeeditor.component";
 import {RegistriesComponent} from "./registries/registries.component";
 import {RegistryIndicatorsComponent} from "./registryindicators/registryindicators.component";
-import {RegistryDashboardComponent} from "./registrydashboard/registrydashboard.component";
 import {GaugeModule} from "angular-gauge";
 import {MatStepperModule} from "@angular/material/stepper";
 import {AdvancedQueryEditorComponent} from "./advancedqueryeditor/advancedqueryeditor.component";
@@ -62,7 +61,6 @@ import {AdvancedQueryEditorComponent} from "./advancedqueryeditor/advancedquerye
     ValueSetCodeEditorComponent,
     RegistriesComponent,
     RegistryIndicatorsComponent,
-    RegistryDashboardComponent,
     AdvancedQueryEditorComponent
   ],
     imports: [

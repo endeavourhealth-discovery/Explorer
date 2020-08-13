@@ -117,6 +117,46 @@ th {
   font-size: 14px !important;
 }
 
+.table {
+  display: table;
+  height: fit-content;
+  width: fit-content;
+  padding: 20px;
+  background: whitesmoke;
+}
+
+.table-row {
+  display: table-row;
+  float: left;
+  padding-right: 25px;
+  padding-bottom: 25px;
+}
+
+.table-cell {
+  display: table-cell;
+  background: white;
+  padding-left: 35px;
+  padding-right: 25px;
+  padding-top: 25px;
+  padding-bottom: 15px;
+  width: 200px;
+  border-radius: 5px;
+  border: solid gainsboro 1px;
+}
+
+.table-cell-full {
+  display: table-cell;
+  background: white;
+  height: 288px;
+  padding-left: 35px;
+  padding-right: 25px;
+  padding-top: 25px;
+  padding-bottom: 15px;
+  width: 200px;
+  border-radius: 5px;
+  border: solid gainsboro 1px;
+}
+
 mwl-gauge {
   width: 150px;
   height: 150px;
@@ -125,7 +165,7 @@ mwl-gauge {
 }
 mwl-gauge > .gauge > .dial {
   stroke: #eee;
-  stroke-width: 4;
+  stroke-width: 6;
   fill: rgba(0,0,0,0);
 }
 mwl-gauge > .gauge > .value {
@@ -140,20 +180,41 @@ mwl-gauge > .gauge > .value-text {
   font-size: 1em;
 }
 
+mwl-gauge > .gauge > .goodValue {
+  fill: green;
+  font-family: sans-serif;
+  font-weight: bold;
+  font-size: 1em;
+}
+
+mwl-gauge > .gauge > .okValue {
+  fill: orange;
+  font-family: sans-serif;
+  font-weight: bold;
+  font-size: 1em;
+}
+
+mwl-gauge > .gauge > .poorValue {
+  fill: red;
+  font-family: sans-serif;
+  font-weight: bold;
+  font-size: 1em;
+}
+
 mwl-gauge > .gauge > .good {
   stroke: green;
-  stroke-width: 6;
+  stroke-width: 10;
   fill: rgba(0,0,0,0);
 }
 
 mwl-gauge > .gauge > .ok {
   stroke: orange;
-  stroke-width: 6;
+  stroke-width: 10;
   fill: rgba(0,0,0,0);
 }
 
 mwl-gauge > .gauge > .poor {
   stroke: red;
-  stroke-width: 6;
+  stroke-width: 10;
   fill: rgba(0,0,0,0);
 }
