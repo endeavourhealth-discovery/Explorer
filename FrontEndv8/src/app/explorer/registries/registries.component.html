@@ -41,7 +41,7 @@
         <div class="table-cell">
           <div style="font-size: 18px; position: center">{{tile.practice}}</div>
           <br/>
-          <div style="cursor: pointer;font-size: 18px; position: center" [routerLink]="['/registryindicators']" [queryParams] = "{role: 'explorer', registry: tile.registry, odscode: tile.code, registrySize: tile.registrySize, practiceTitle: tile.ccg+' - '+tile.practice+' ('+tile.code+')'}"><b>{{tile.registry}}</b></div>
+          <div style="cursor: pointer;font-size: 18px; position: center" title="View Indicators" [routerLink]="['/registryindicators']" [queryParams] = "{role: 'explorer', registry: tile.registry, odscode: tile.code, registrySize: tile.registrySize, practiceTitle: tile.ccg+' - '+tile.practice+' ('+tile.code+')'}"><b>{{tile.registry}}</b></div>
           <br/>
 
           <div style="cursor: pointer;color: gray" (click)="showPatientDialog()">Practice population - <b style="color: #0074D9">{{(tile.listSize.toLocaleString())}}</b></div>
