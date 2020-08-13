@@ -198,7 +198,8 @@ export class RegistriesComponent implements OnInit {
   }
 
   toPercent(registrysize: any, listsize: any) {
-    return (registrysize/listsize*100).toFixed(1);
+    let val: any = (registrysize/listsize*100).toFixed(1);
+    return val;
   }
 
   practiceEntered(event) {

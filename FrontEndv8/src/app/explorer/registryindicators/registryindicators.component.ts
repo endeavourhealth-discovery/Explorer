@@ -99,7 +99,8 @@ export class RegistryIndicatorsComponent implements OnInit {
   }
 
   toPercent(registrysize: any, listsize: any) {
-    return (registrysize/listsize*100).toFixed(1);
+    let val: any = (registrysize/listsize*100).toFixed(1);
+    return val;
   }
 
   showPatientDialog() {
