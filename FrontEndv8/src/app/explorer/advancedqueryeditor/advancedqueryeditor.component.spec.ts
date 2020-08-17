@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AdvancedQueryEditorComponent } from './advancedqueryeditor.component';
 
-describe('PatientComponent', () => {
+describe('AdvancedQueryEditorComponent', () => {
   let component: AdvancedQueryEditorComponent;
   let fixture: ComponentFixture<AdvancedQueryEditorComponent>;
 

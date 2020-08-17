@@ -103,8 +103,8 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr style="cursor:pointer" mat-row *matRowDef="let row; columns: displayedColumns;" [routerLink]="['/registryindicators']" [queryParams] = "{role: 'explorer', registry: row.registry, odscode: row.code, registrySize: row.registrySize, practiceTitle: row.ccg+' - '+row.practice+' ('+row.code+')'}"></tr>
       </table>
-    <div>
     </div>
+    <div>
       <mat-paginator [length]="events?.length"
                      [pageSize]="size"
                      [pageIndex]="page"
@@ -114,6 +114,7 @@
                      fxFill>
       </mat-paginator>
     </div>
+
   </mat-card-content>
 
 </mat-card>

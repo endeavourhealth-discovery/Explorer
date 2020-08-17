@@ -95,8 +95,8 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr style="cursor:pointer" mat-row *matRowDef="let row; columns: displayedColumns;" (click)="showPatientDialog()"></tr>
       </table>
-    <div>
     </div>
+    <div>
       <mat-paginator [length]="events?.length"
                      [pageSize]="size"
                      [pageIndex]="page"
