@@ -44,6 +44,7 @@ import {RegistryIndicatorsComponent} from "./registryindicators/registryindicato
 import {GaugeModule} from "angular-gauge";
 import {MatStepperModule} from "@angular/material/stepper";
 import {AdvancedQueryEditorComponent} from "./advancedqueryeditor/advancedqueryeditor.component";
+import {MatDividerModule} from "@angular/material/divider";
 
 @NgModule({
   declarations: [
@@ -94,7 +95,8 @@ import {AdvancedQueryEditorComponent} from "./advancedqueryeditor/advancedquerye
         AreaChartModule,
         ReactiveFormsModule,
         GaugeModule,
-        MatStepperModule
+        MatStepperModule,
+        MatDividerModule
     ],
 
   entryComponents: [

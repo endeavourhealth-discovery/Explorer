@@ -36,12 +36,8 @@ interface eventType {
   value: string;
 }
 
-interface cohortValueSet {
-  cohortValueSet: string;
-}
-
-interface datasetValueSet {
-  datasetValueSet: string;
+interface valueSet {
+  valueSet: string;
 }
 
 interface registration {
@@ -115,23 +111,33 @@ export class QueryEditorComponent implements OnInit {
     {value: 'Medication'},
     {value: 'Encounters'}
   ];
-  cohortValueSet: cohortValueSet[] = [
-    {cohortValueSet: 'All diseases'},
-    {cohortValueSet: 'Diabetes'},
-    {cohortValueSet: 'Asthma'},
-    {cohortValueSet: 'COPD'},
-    {cohortValueSet: 'Atrial Fibrillation'},
-    {cohortValueSet: 'Hypertension'},
-    {cohortValueSet: 'CKD'}
-  ];
-  datasetValueSet: datasetValueSet[] = [
-    {datasetValueSet: 'All diseases'},
-    {datasetValueSet: 'Diabetes'},
-    {datasetValueSet: 'Asthma'},
-    {datasetValueSet: 'COPD'},
-    {datasetValueSet: 'Atrial Fibrillation'},
-    {datasetValueSet: 'Hypertension'},
-    {datasetValueSet: 'CKD'}
+
+  valueSet: valueSet[] = [
+    {valueSet: 'All diseases'},
+    {valueSet: 'Asthma'},
+    {valueSet: 'Atrial Fibrillation'},
+    {valueSet: 'Blood Pressure'},
+    {valueSet: 'Cancer'},
+    {valueSet: 'Cervical Screening'},
+    {valueSet: 'CHD'},
+    {valueSet: 'CKD'},
+    {valueSet: 'COPD'},
+    {valueSet: 'CVD'},
+    {valueSet: 'Dementia'},
+    {valueSet: 'Depression'},
+    {valueSet: 'Diabetes'},
+    {valueSet: 'Epilepsy'},
+    {valueSet: 'HF'},
+    {valueSet: 'Hypertension'},
+    {valueSet: 'Learning Disability'},
+    {valueSet: 'Mental Health'},
+    {valueSet: 'Obesity'},
+    {valueSet: 'Osteoporosis'},
+    {valueSet: 'PAD'},
+    {valueSet: 'Palliative Care'},
+    {valueSet: 'Rheumatoid Arthritis'},
+    {valueSet: 'Smoking'},
+    {valueSet: 'Stroke'}
   ];
 
   registrations: registration[] = [

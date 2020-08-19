@@ -134,7 +134,7 @@ export class QueryLibraryComponent implements OnInit {
       .subscribe(result => {
         if (result) {
           const dialogRef = this.dialog.open(AdvancedQueryEditorComponent, {
-            height: '720px',
+            height: '780px',
             width: '1275px',
             data: {id: "", name: "", type: "", query: ""}
           });
@@ -145,7 +145,7 @@ export class QueryLibraryComponent implements OnInit {
         }
         else {
           const dialogRef = this.dialog.open(QueryEditorComponent, {
-            height: '720px',
+            height: '780px',
             width: '1275px',
             data: {id: "", name: "", type: "", query: ""}
           });
@@ -181,7 +181,7 @@ export class QueryLibraryComponent implements OnInit {
 
   edit() {
     const dialogRef = this.dialog.open(QueryEditorComponent, {
-      height: '720px',
+      height: '780px',
       width: '1275px',
       data: {
           id: this.selection.selected[0].id,

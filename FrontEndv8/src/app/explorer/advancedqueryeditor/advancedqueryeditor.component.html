@@ -36,7 +36,6 @@
           <button style="margin-right: 15px" mat-flat-button color="accent" (click)="onCancelClick()">Cancel</button>
           <button style="margin-right: 15px" mat-button (click)="stepper.next()">Next</button>
         </div>
-
       </form>
     </mat-step>
 
@@ -78,12 +77,34 @@
             <mat-form-field appearance="outline" style="margin-left: 25px; width: 300px">
               <mat-label>Cohort value set</mat-label>
               <mat-select multiple [(ngModel)]="selectedCohortValueSet" formControlName="control5" (ngModelChange)="formChanged()">
-                <mat-option *ngFor="let value of cohortValueSet" [value]="value.cohortValueSet">
-                  {{value.cohortValueSet}}
+                <mat-option *ngFor="let value of valueSet" [value]="value.valueSet">
+                  {{value.valueSet}}
                 </mat-option>
               </mat-select>
             </mat-form-field>
           </div>
+          <br/>
+
+          <div class="flex" fxLayout.xs="column"  fxLayoutAlign="start">
+            <mat-form-field class="example-full-width" appearance="outline" style="margin-left: 25px; width: 140px">
+              <mat-label>Date range from</mat-label>
+              <input matInput [matDatepicker]="valuepicker1" placeholder="Date from" [(ngModel)]="valueDateFrom" formControlName="control20">
+              <mat-datepicker-toggle matSuffix [for]="valuepicker1">
+                <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+              </mat-datepicker-toggle>
+              <mat-datepicker #valuepicker1></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field class="example-full-width" appearance="outline" style="margin-left: 20px; width: 140px">
+              <mat-label>Date range to</mat-label>
+              <input matInput [matDatepicker]="valuepicker2" placeholder="Date to" [(ngModel)]="valueDateTo" formControlName="control21">
+              <mat-datepicker-toggle matSuffix [for]="valuepicker2">
+                <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+              </mat-datepicker-toggle>
+              <mat-datepicker #valuepicker2></mat-datepicker>
+            </mat-form-field>
+          </div>
+
           <br/>
           <div class="flex" fxLayout.xs="column"  fxLayoutAlign="start">
             <mat-form-field appearance="outline" style="margin-left: 25px; width: 140px">
@@ -132,6 +153,10 @@
           </div>
 
           <div style="margin-top: 57px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            Filter the value set by date range.
+          </div>
+
+          <div style="margin-top: 57px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
             Limit the cohort by age range.
           </div>
 
@@ -148,9 +173,246 @@
       </form>
     </mat-step>
 
-
     <mat-step [stepControl]="thirdFormGroup" errorMessage="Step not completed.">
       <form [formGroup]="thirdFormGroup">
+        <ng-template matStepLabel>Advanced criteria</ng-template>
+        <br/>
+        <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+          <mat-form-field appearance="outline" style="margin-left: 10px; width: 150px">
+            <mat-label>Include/Exclude</mat-label>
+            <mat-select [(ngModel)]="includedExclude1" formControlName="control22" (ngModelChange)="formChanged()">
+              <mat-option *ngFor="let value of exclude" [value]="value.exclude">
+                {{value.exclude}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <br/>
+          <p style="margin-left: 10px; margin-top: 24px">patients if they have entries containing concepts that are part of value set(s)</p>
+          <mat-form-field appearance="outline" style="width: 170px; margin-left: 10px">
+            <mat-label>Cohort value set</mat-label>
+            <mat-select multiple [(ngModel)]="includedValueSet1" formControlName="control23" (ngModelChange)="formChanged()">
+              <mat-option *ngFor="let value of valueSet" [value]="value.valueSet">
+                {{value.valueSet}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <p style="margin-left: 10px; margin-top: 24px">within the time period</p>
+          <mat-form-field class="example-full-width" appearance="outline" style="margin-left: 10px; width: 140px">
+            <mat-label>Date from</mat-label>
+            <input matInput [matDatepicker]="picker3" placeholder="Date from" [(ngModel)]="includedDateFrom1" formControlName="control24">
+            <mat-datepicker-toggle matSuffix [for]="picker3">
+              <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+            </mat-datepicker-toggle>
+            <mat-datepicker #picker3></mat-datepicker>
+          </mat-form-field>
+          <p style="margin-left: 10px; margin-top: 24px">to</p>
+          <mat-form-field class="example-full-width" appearance="outline" style="margin-left: 10px; width: 140px">
+            <mat-label>Date to</mat-label>
+            <input matInput [matDatepicker]="picker4" placeholder="Date to" [(ngModel)]="includedDateTo1" formControlName="control25">
+            <mat-datepicker-toggle matSuffix [for]="picker4">
+              <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+            </mat-datepicker-toggle>
+            <mat-datepicker #picker4></mat-datepicker>
+          </mat-form-field>
+          <p style="margin-left: 5px; margin-top: 24px">.</p>
+        </div>
+        <br/>
+        <mat-divider></mat-divider>
+        <br/>
+        <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+          <mat-form-field appearance="outline" style="margin-left: 10px; width: 150px">
+            <mat-label>Include/Exclude</mat-label>
+            <mat-select [(ngModel)]="includedExclude2" formControlName="control26" (ngModelChange)="formChanged()">
+              <mat-option *ngFor="let value of exclude" [value]="value.exclude">
+                {{value.exclude}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <br/>
+          <p style="margin-left: 10px; margin-top: 24px">patients if they have entries containing concepts that are part of the value set(s)</p>
+          <mat-form-field appearance="outline" style="width: 170px; margin-left: 10px">
+            <mat-label>Cohort value set</mat-label>
+            <mat-select multiple [(ngModel)]="includedValueSet2" formControlName="control27" (ngModelChange)="formChanged()">
+              <mat-option *ngFor="let value of valueSet" [value]="value.valueSet">
+                {{value.valueSet}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <p style="margin-left: 10px; margin-top: 24px">and the value of the</p>
+          <mat-form-field appearance="outline" style="margin-left: 10px; width: 150px">
+            <mat-label>Earliest/Latest</mat-label>
+            <mat-select [(ngModel)]="includedEarliestLatest2" formControlName="control28" (ngModelChange)="formChanged()">
+              <mat-option *ngFor="let value of earliestLatest" [value]="value.earliestLatest">
+                {{value.earliestLatest}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <p style="margin-left: 10px; margin-top: 24px">entry is</p>
+          <mat-form-field appearance="outline" style="margin-left: 10px; width: 180px">
+            <mat-label>Less/Greater</mat-label>
+            <mat-select [(ngModel)]="includedOperator2" formControlName="control29" (ngModelChange)="formChanged()">
+              <mat-option *ngFor="let value of operator" [value]="value.operator">
+                {{value.operator}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline" style="margin-left: 10px; width: 140px">
+            <mat-label>Entry value</mat-label>
+            <input matInput placeholder="Value" [(ngModel)]="includedEntryValue2" formControlName="control30">
+          </mat-form-field>
+          <p style="margin-left: 5px; margin-top: 24px">.</p>
+        </div>
+        <br/>
+        <mat-divider></mat-divider>
+        <br/>
+        <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+          <mat-form-field appearance="outline" style="margin-left: 10px; width: 150px">
+            <mat-label>Include/Exclude</mat-label>
+            <mat-select [(ngModel)]="includedExclude3" formControlName="control31" (ngModelChange)="formChanged()">
+              <mat-option *ngFor="let value of exclude" [value]="value.exclude">
+                {{value.exclude}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <p style="margin-left: 10px; margin-top: 24px">patients if they have entries containing concepts that are part of the value set(s)</p>
+          <mat-form-field appearance="outline" style="width: 170px; margin-left: 10px">
+            <mat-label>Cohort value set</mat-label>
+            <mat-select multiple [(ngModel)]="includedValueSet3" formControlName="control32" (ngModelChange)="formChanged()">
+              <mat-option *ngFor="let value of valueSet" [value]="value.valueSet">
+                {{value.valueSet}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <p style="margin-left: 10px; margin-top: 24px">and the value of the</p>
+          <mat-form-field appearance="outline" style="margin-left: 10px; width: 150px">
+            <mat-label>Earliest/Latest</mat-label>
+            <mat-select [(ngModel)]="includedEarliestLatest3" formControlName="control33" (ngModelChange)="formChanged()">
+              <mat-option *ngFor="let value of earliestLatest" [value]="value.earliestLatest">
+                {{value.earliestLatest}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <p style="margin-left: 10px; margin-top: 24px">entry concept is</p>
+          <mat-form-field appearance="outline" style="width: 170px; margin-left: 10px">
+            <mat-label>Cohort value set</mat-label>
+            <mat-select multiple [(ngModel)]="includedTestedValueSet3" formControlName="control34" (ngModelChange)="formChanged()">
+              <mat-option *ngFor="let value of valueSet" [value]="value.valueSet">
+                {{value.valueSet}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <p style="margin-left: 5px; margin-top: 24px">.</p>
+        </div>
+        <br/>
+        <mat-divider></mat-divider>
+        <br/>
+        <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+          <mat-form-field appearance="outline" style="margin-left: 10px; width: 150px">
+            <mat-label>Include/Exclude</mat-label>
+            <mat-select [(ngModel)]="includedExclude4" formControlName="control35" (ngModelChange)="formChanged()">
+              <mat-option *ngFor="let value of exclude" [value]="value.exclude">
+                {{value.exclude}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <p style="margin-left: 10px; margin-top: 24px">patients if they have entries containing concepts that are part of the value set(s)</p>
+          <mat-form-field appearance="outline" style="width: 170px; margin-left: 10px">
+            <mat-label>Cohort value set</mat-label>
+            <mat-select multiple [(ngModel)]="includedValueSet4" formControlName="control36" (ngModelChange)="formChanged()">
+              <mat-option *ngFor="let value of valueSet" [value]="value.valueSet">
+                {{value.valueSet}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <span style="margin-left: 10px; margin-top: 24px; display: inline">and those entries are NOT followed by entries containing concepts that are part of the value set(s)</span>
+          <mat-form-field appearance="outline" style="width: 170px; margin-left: 10px">
+            <mat-label>Cohort value set</mat-label>
+            <mat-select multiple [(ngModel)]="includedFollowedByValueSet4" formControlName="control37" (ngModelChange)="formChanged()">
+              <mat-option *ngFor="let value of valueSet" [value]="value.valueSet">
+                {{value.valueSet}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <p style="margin-left: 10px; margin-top: 24px">within the time period</p>
+          <mat-form-field appearance="outline" style="margin-left: 10px; width: 140px">
+            <mat-label>Value</mat-label>
+            <input matInput placeholder="Value" [(ngModel)]="includedPeriodValue4" formControlName="control38">
+          </mat-form-field>
+          <mat-form-field appearance="outline" style="margin-left: 10px; width: 180px">
+            <mat-label>Days/Weeks/Months</mat-label>
+            <mat-select [(ngModel)]="includedPeriodType4" formControlName="control39" (ngModelChange)="formChanged()">
+              <mat-option *ngFor="let value of period" [value]="value.period">
+                {{value.period}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <p style="margin-left: 5px; margin-top: 24px">.</p>
+        </div>
+        <br/>
+        <mat-divider></mat-divider>
+        <br/>
+        <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+          <mat-form-field appearance="outline" style="margin-left: 10px; width: 150px">
+            <mat-label>Include/Exclude</mat-label>
+            <mat-select [(ngModel)]="includedExclude5" formControlName="control40" (ngModelChange)="formChanged()">
+              <mat-option *ngFor="let value of exclude" [value]="value.exclude">
+                {{value.exclude}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <p style="margin-left: 10px; margin-top: 24px">patients if they have entries containing concepts that are part of the value set(s)</p>
+          <mat-form-field appearance="outline" style="width: 170px; margin-left: 10px">
+            <mat-label>Cohort value set</mat-label>
+            <mat-select multiple [(ngModel)]="includedValueSet5" formControlName="control41" (ngModelChange)="formChanged()">
+              <mat-option *ngFor="let value of valueSet" [value]="value.valueSet">
+                {{value.valueSet}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <p style="margin-left: 5px; margin-top: 24px">, and there are</p>
+          <mat-form-field appearance="outline" style="margin-left: 10px; width: 180px">
+            <mat-label>Less/Greater</mat-label>
+            <mat-select [(ngModel)]="includedOperator5" formControlName="control42" (ngModelChange)="formChanged()">
+              <mat-option *ngFor="let value of operator" [value]="value.operator">
+                {{value.operator}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline" style="margin-left: 10px; width: 140px">
+            <mat-label>Value</mat-label>
+            <input matInput placeholder="Value" [(ngModel)]="includedEntryValue5" formControlName="control43">
+          </mat-form-field>
+          <p style="margin-left: 10px; margin-top: 24px">occurrences of these concepts within the time period</p>
+          <mat-form-field class="example-full-width" appearance="outline" style="margin-left: 10px; width: 140px">
+            <mat-label>Date from</mat-label>
+            <input matInput [matDatepicker]="picker5" placeholder="Date from" [(ngModel)]="includedDateFrom5" formControlName="control44">
+            <mat-datepicker-toggle matSuffix [for]="picker5">
+              <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+            </mat-datepicker-toggle>
+            <mat-datepicker #picker5></mat-datepicker>
+          </mat-form-field>
+          <p style="margin-left: 10px; margin-top: 24px">to</p>
+          <mat-form-field class="example-full-width" appearance="outline" style="margin-left: 10px; width: 140px">
+            <mat-label>Date to</mat-label>
+            <input matInput [matDatepicker]="picker6" placeholder="Date to" [(ngModel)]="includedDateTo5" formControlName="control45">
+            <mat-datepicker-toggle matSuffix [for]="picker6">
+              <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+            </mat-datepicker-toggle>
+            <mat-datepicker #picker6></mat-datepicker>
+          </mat-form-field>
+          <p style="margin-left: 5px; margin-top: 24px">.</p>
+        </div>
+
+        <div style="margin-top: 220px" mat-dialog-actions align="end">
+          <button style="margin-right: 15px" mat-flat-button color="accent" (click)="onCancelClick()">Cancel</button>
+          <button style="margin-right: 15px" mat-button color="accent" matStepperPrevious>Back</button>
+          <button style="margin-right: 15px" mat-button (click)="stepper.next()">Next</button>
+        </div>
+      </form>
+    </mat-step>
+
+    <mat-step [stepControl]="fourthFormGroup" errorMessage="Step not completed.">
+      <form [formGroup]="fourthFormGroup">
         <ng-template matStepLabel>Data set criteria</ng-template>
         <br/>
 
@@ -175,8 +437,8 @@
             <mat-form-field appearance="outline" style="margin-left: 25px; width: 235px">
               <mat-label>Dataset value set</mat-label>
               <mat-select multiple [(ngModel)]="selectedDatasetValueSet" formControlName="control16" (ngModelChange)="formChanged()">
-                <mat-option *ngFor="let value of datasetValueSet" [value]="value.datasetValueSet">
-                  {{value.datasetValueSet}}
+                <mat-option *ngFor="let value of valueSet" [value]="value.valueSet">
+                  {{value.valueSet}}
                 </mat-option>
               </mat-select>
             </mat-form-field>
@@ -226,8 +488,8 @@
       </form>
     </mat-step>
 
-    <mat-step [stepControl]="fourthFormGroup" errorMessage="Step not completed.">
-      <form [formGroup]="fourthFormGroup">
+    <mat-step [stepControl]="fifthFormGroup" errorMessage="Step not completed.">
+      <form [formGroup]="fifthFormGroup">
         <ng-template matStepLabel>Data set output definition</ng-template>
         <br/>
 
@@ -246,7 +508,7 @@
           <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
             <mat-form-field appearance="outline" style="margin-left: 15px">
               <mat-label>Aggregate output type</mat-label>
-              <mat-select [(ngModel)]="selectedAggregate" formControlName="control15" (ngModelChange)="formChanged()">
+              <mat-select [(ngModel)]="selectedAggregate" formControlName="control15" (ngModelChange)="formChanged()" required>
                 <mat-option *ngFor="let aggregate of aggregates" [value]="aggregate.aggValue">
                   {{aggregate.aggValue}}
                 </mat-option>

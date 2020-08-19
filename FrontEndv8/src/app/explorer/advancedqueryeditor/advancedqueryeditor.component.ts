@@ -21,6 +21,8 @@ interface savedQuery {
   gender: string;
   postcode: string;
   cohortValue: string;
+  valueDateFrom: string;
+  valueDateTo: string;
   datasetValue: string;
   eventType: string;
   active: boolean;
@@ -36,12 +38,8 @@ interface eventType {
   value: string;
 }
 
-interface cohortValueSet {
-  cohortValueSet: string;
-}
-
-interface datasetValueSet {
-  datasetValueSet: string;
+interface valueSet {
+  valueSet: string;
 }
 
 interface registration {
@@ -68,6 +66,22 @@ interface event {
   eventValue: string;
 }
 
+interface exclude {
+  exclude: string;
+}
+
+interface earliestLatest {
+  earliestLatest: string;
+}
+
+interface operator {
+  operator: string;
+}
+
+interface period {
+  period: string;
+}
+
 @Component({
   selector: 'app-queryeditor',
   templateUrl: './advancedqueryeditor.component.html',
@@ -83,6 +97,8 @@ export class AdvancedQueryEditorComponent implements OnInit {
   selectedEventType: string = '';
   active: boolean = true;
   selectedCohortValueSet: string = '';
+  valueDateFrom: string = this.formatDate(new Date());
+  valueDateTo: string = this.formatDate(new Date());
   selectedDatasetValueSet: string = '';
   dateFrom: string = this.formatDate(new Date());
   dateTo: string = this.formatDate(new Date());
@@ -97,6 +113,30 @@ export class AdvancedQueryEditorComponent implements OnInit {
   selectedEvent: string = '';
   selectedOrganisation: string = '';
   selectedIncludedOrganisation: string = '';
+  includedExclude1: string = '';
+  includedValueSet1: string = '';
+  includedDateFrom1: string = '';
+  includedDateTo1: string = '';
+  includedExclude2: string = '';
+  includedValueSet2: string = '';
+  includedEarliestLatest2: string = '';
+  includedOperator2: string = '';
+  includedEntryValue2: string = '';
+  includedExclude3: string = '';
+  includedValueSet3: string = '';
+  includedEarliestLatest3: string = '';
+  includedTestedValueSet3: string = '';
+  includedExclude4: string = '';
+  includedValueSet4: string = '';
+  includedFollowedByValueSet4: string = '';
+  includedPeriodValue4: string = '';
+  includedPeriodType4: string = '';
+  includedExclude5: string = '';
+  includedValueSet5: string = '';
+  includedOperator5: string = '';
+  includedEntryValue5: string = '';
+  includedDateFrom5: string = '';
+  includedDateTo5: string = '';
 
   disableForm: boolean;
   id: string;
@@ -104,6 +144,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
   secondFormGroup: FormGroup;
   thirdFormGroup: FormGroup;
   fourthFormGroup: FormGroup;
+  fifthFormGroup: FormGroup;
 
   orgList = [];
   orgIncList = [];
@@ -115,25 +156,33 @@ export class AdvancedQueryEditorComponent implements OnInit {
     {value: 'Medication'},
     {value: 'Encounters'}
   ];
-  cohortValueSet: cohortValueSet[] = [
-    {cohortValueSet: 'All diseases'},
-    {cohortValueSet: 'Diabetes'},
-    {cohortValueSet: 'Asthma'},
-    {cohortValueSet: 'COPD'},
-    {cohortValueSet: 'Atrial Fibrillation'},
-    {cohortValueSet: 'Hypertension'},
-    {cohortValueSet: 'CKD'}
+  valueSet: valueSet[] = [
+    {valueSet: 'All diseases'},
+    {valueSet: 'Asthma'},
+    {valueSet: 'Atrial Fibrillation'},
+    {valueSet: 'Blood Pressure'},
+    {valueSet: 'Cancer'},
+    {valueSet: 'Cervical Screening'},
+    {valueSet: 'CHD'},
+    {valueSet: 'CKD'},
+    {valueSet: 'COPD'},
+    {valueSet: 'CVD'},
+    {valueSet: 'Dementia'},
+    {valueSet: 'Depression'},
+    {valueSet: 'Diabetes'},
+    {valueSet: 'Epilepsy'},
+    {valueSet: 'HF'},
+    {valueSet: 'Hypertension'},
+    {valueSet: 'Learning Disability'},
+    {valueSet: 'Mental Health'},
+    {valueSet: 'Obesity'},
+    {valueSet: 'Osteoporosis'},
+    {valueSet: 'PAD'},
+    {valueSet: 'Palliative Care'},
+    {valueSet: 'Rheumatoid Arthritis'},
+    {valueSet: 'Smoking'},
+    {valueSet: 'Stroke'}
   ];
-  datasetValueSet: datasetValueSet[] = [
-    {datasetValueSet: 'All diseases'},
-    {datasetValueSet: 'Diabetes'},
-    {datasetValueSet: 'Asthma'},
-    {datasetValueSet: 'COPD'},
-    {datasetValueSet: 'Atrial Fibrillation'},
-    {datasetValueSet: 'Hypertension'},
-    {datasetValueSet: 'CKD'}
-  ];
-
   registrations: registration[] = [
     {regValue: 'Currently registered patients'},
     {regValue: 'All patients included left and deads'}
@@ -178,7 +227,23 @@ export class AdvancedQueryEditorComponent implements OnInit {
     {eventValue: 'Registered organisation'},
     {eventValue: 'Death status'}
   ];
-
+  exclude: exclude[] = [
+    {exclude: 'Include'},
+    {exclude: 'Exclude'}
+  ];
+  earliestLatest: earliestLatest[] = [
+    {earliestLatest: 'Earliest'},
+    {earliestLatest: 'Latest'}
+  ];
+  operator: operator[] = [
+    {operator: 'Less than'},
+    {operator: 'Greater than'}
+  ];
+  period: period[] = [
+    {period: 'Days'},
+    {period: 'Weeks'},
+    {period: 'Months'}
+  ];
 
   constructor(
     public dialogRef: MatDialogRef<AdvancedQueryEditorComponent>,
@@ -202,6 +267,8 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.selectedGender = query.gender;
       this.postcode = query.postcode;
       this.selectedCohortValueSet = query.cohortValue;
+      this.valueDateFrom = query.valueDateFrom;
+      this.valueDateTo = query.valueDateTo;
       this.selectedDatasetValueSet = query.datasetValue;
       this.selectedEventType = query.eventType;
       this.active = query.active;
@@ -217,12 +284,15 @@ export class AdvancedQueryEditorComponent implements OnInit {
       control1: ['', Validators.required], control2: ['', Validators.required]
     });
     this.secondFormGroup = this._formBuilder.group({
-      control17: [''], control3: ['', Validators.required], control4: ['', Validators.required], control5: [''], control6: [''], control7: [''], control8: [''], control9: ['']
+      control17: [''], control3: ['', Validators.required], control4: ['', Validators.required], control5: [''], control20: [''], control21: [''], control6: [''], control7: [''], control8: [''], control9: ['']
     });
     this.thirdFormGroup = this._formBuilder.group({
-      control10: ['', Validators.required], control11: [''], control12: [''], control13: [''], control16: ['']
+      control22: ['', Validators.required], control23: [''], control24: [''], control25: [''], control26: [''], control27: [''], control28: [''], control29: [''], control30: [''], control31: ['', Validators.required], control32: [''], control33: [''], control34: [''], control35: [''], control36: [''], control37: [''], control38: [''], control39: [''], control40: [''], control41: [''], control42: [''], control43: [''], control44: [''], control45: ['']
     });
     this.fourthFormGroup = this._formBuilder.group({
+      control10: ['', Validators.required], control11: [''], control12: [''], control13: [''], control16: ['']
+    });
+    this.fifthFormGroup = this._formBuilder.group({
       control14: [''], control15: [''], control18: ['', Validators.required], control19: ['', Validators.required]
     });
 
@@ -260,6 +330,8 @@ export class AdvancedQueryEditorComponent implements OnInit {
       gender: this.selectedGender,
       postcode: this.postcode,
       cohortValue: this.selectedCohortValueSet,
+      valueDateFrom: this.valueDateFrom,
+      valueDateTo: this.valueDateTo,
       datasetValue: this.selectedDatasetValueSet,
       eventType: this.selectedEventType,
       active: this.active,
@@ -298,6 +370,31 @@ export class AdvancedQueryEditorComponent implements OnInit {
     console.log("Event level output: " + this.selectedEvent);
     console.log("Schedule: " + this.selectedSchedule);
     console.log("Delivery: " + this.selectedDelivery);
+
+    console.log("Test: " + this.includedExclude1);
+    console.log("Test: " + this.includedValueSet1);
+    console.log("Test: " + this.includedDateFrom1);
+    console.log("Test: " + this.includedDateTo1);
+    console.log("Test: " + this.includedExclude2);
+    console.log("Test: " + this.includedValueSet2);
+    console.log("Test: " + this.includedEarliestLatest2);
+    console.log("Test: " + this.includedOperator2);
+    console.log("Test: " + this.includedEntryValue2);
+    console.log("Test: " + this.includedExclude3);
+    console.log("Test: " + this.includedValueSet3);
+    console.log("Test: " + this.includedEarliestLatest3);
+    console.log("Test: " + this.includedTestedValueSet3);
+    console.log("Test: " + this.includedExclude4);
+    console.log("Test: " + this.includedValueSet4);
+    console.log("Test: " + this.includedFollowedByValueSet4);
+    console.log("Test: " + this.includedPeriodValue4);
+    console.log("Test: " + this.includedPeriodType4);
+    console.log("Test: " + this.includedExclude5);
+    console.log("Test: " + this.includedValueSet5);
+    console.log("Test: " + this.includedOperator5);
+    console.log("Test: " + this.includedEntryValue5);
+    console.log("Test: " + this.includedDateFrom5);
+    console.log("Test: " + this.includedDateTo5);
 
   }
 

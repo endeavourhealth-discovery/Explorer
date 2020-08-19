@@ -36,7 +36,6 @@
           <button style="margin-right: 15px" mat-flat-button color="accent" (click)="onCancelClick()">Cancel</button>
           <button style="margin-right: 15px" mat-button (click)="stepper.next()">Next</button>
         </div>
-
       </form>
     </mat-step>
 
@@ -78,12 +77,34 @@
             <mat-form-field appearance="outline" style="margin-left: 25px; width: 300px">
               <mat-label>Cohort value set</mat-label>
               <mat-select multiple [(ngModel)]="selectedCohortValueSet" formControlName="control5" (ngModelChange)="formChanged()">
-                <mat-option *ngFor="let value of cohortValueSet" [value]="value.cohortValueSet">
-                  {{value.cohortValueSet}}
+                <mat-option *ngFor="let value of valueSet" [value]="value.valueSet">
+                  {{value.valueSet}}
                 </mat-option>
               </mat-select>
             </mat-form-field>
           </div>
+          <br/>
+
+          <div class="flex" fxLayout.xs="column"  fxLayoutAlign="start">
+            <mat-form-field class="example-full-width" appearance="outline" style="margin-left: 25px; width: 140px">
+              <mat-label>Date range from</mat-label>
+              <input matInput [matDatepicker]="valuepicker1" placeholder="Date from" [(ngModel)]="valueDateFrom" formControlName="control20">
+              <mat-datepicker-toggle matSuffix [for]="valuepicker1">
+                <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+              </mat-datepicker-toggle>
+              <mat-datepicker #valuepicker1></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field class="example-full-width" appearance="outline" style="margin-left: 20px; width: 140px">
+              <mat-label>Date range to</mat-label>
+              <input matInput [matDatepicker]="valuepicker2" placeholder="Date to" [(ngModel)]="valueDateTo" formControlName="control21">
+              <mat-datepicker-toggle matSuffix [for]="valuepicker2">
+                <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+              </mat-datepicker-toggle>
+              <mat-datepicker #valuepicker2></mat-datepicker>
+            </mat-form-field>
+          </div>
+
           <br/>
           <div class="flex" fxLayout.xs="column"  fxLayoutAlign="start">
             <mat-form-field appearance="outline" style="margin-left: 25px; width: 140px">
@@ -132,6 +153,10 @@
           </div>
 
           <div style="margin-top: 57px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            Filter the value set by date range.
+          </div>
+
+          <div style="margin-top: 57px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
             Limit the cohort by age range.
           </div>
 
@@ -148,12 +173,10 @@
       </form>
     </mat-step>
 
-
     <mat-step [stepControl]="thirdFormGroup" errorMessage="Step not completed.">
       <form [formGroup]="thirdFormGroup">
         <ng-template matStepLabel>Data set criteria</ng-template>
         <br/>
-
         <div class="summary-column">
           <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
             <mat-form-field appearance="outline" style="margin-left: 25px; width: 235px">
@@ -164,7 +187,6 @@
                 </mat-option>
               </mat-select>
             </mat-form-field>
-
             <div style="margin-left: 25px; width: 235px">
               <br/>
               <mat-checkbox class="checkbox" [(ngModel)]="active" formControlName="control13">Active items only</mat-checkbox>
@@ -175,8 +197,8 @@
             <mat-form-field appearance="outline" style="margin-left: 25px; width: 235px">
               <mat-label>Dataset value set</mat-label>
               <mat-select multiple [(ngModel)]="selectedDatasetValueSet" formControlName="control16" (ngModelChange)="formChanged()">
-                <mat-option *ngFor="let value of datasetValueSet" [value]="value.datasetValueSet">
-                  {{value.datasetValueSet}}
+                <mat-option *ngFor="let value of valueSet" [value]="value.valueSet">
+                  {{value.valueSet}}
                 </mat-option>
               </mat-select>
             </mat-form-field>
@@ -201,23 +223,19 @@
               <mat-datepicker #picker2></mat-datepicker>
             </mat-form-field>
           </div>
-
         </div>
 
         <div class="summary-column">
           <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
             <p>Clinical events include conditions, values, procedures, immunisations, family history, referrals and allergies. Encounters include consultations, admissions, discharges, outpatient attendances.</p>
           </div>
-
           <div style="margin-top: 10px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
             <p>Filter data set by the selected value sets.</p>
           </div>
-
           <div style="margin-top: 20px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
             <p>Filter the data set by date range.</p>
           </div>
         </div>
-
         <div style="margin-top: 220px" mat-dialog-actions align="end">
           <button style="margin-right: 15px" mat-flat-button color="accent" (click)="onCancelClick()">Cancel</button>
           <button style="margin-right: 15px" mat-button color="accent" matStepperPrevious>Back</button>
@@ -230,7 +248,6 @@
       <form [formGroup]="fourthFormGroup">
         <ng-template matStepLabel>Data set output definition</ng-template>
         <br/>
-
         <div class="summary-column">
           <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
             <mat-form-field appearance="outline" style="margin-left: 15px">
@@ -246,7 +263,7 @@
           <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
             <mat-form-field appearance="outline" style="margin-left: 15px">
               <mat-label>Aggregate output type</mat-label>
-              <mat-select [(ngModel)]="selectedAggregate" formControlName="control15" (ngModelChange)="formChanged()">
+              <mat-select [(ngModel)]="selectedAggregate" formControlName="control15" (ngModelChange)="formChanged()" required>
                 <mat-option *ngFor="let aggregate of aggregates" [value]="aggregate.aggValue">
                   {{aggregate.aggValue}}
                 </mat-option>
@@ -276,12 +293,10 @@
             </mat-form-field>
           </div>
         </div>
-
         <div class="summary-column">
           <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
             <p>Output type is event level (e.g. 1 line per event and 1 line per patient). For each observation, medication or encounter table, include the following attributes.</p>
           </div>
-
           <div style="margin-top: 15px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
             <p>Output type is aggregated by one common attribute type such as multi-level organisational grouping, personal demographic grouping, or event level date time grouping.</p>
           </div>
@@ -292,7 +307,6 @@
             <p>The mechanism that is used to deliver the report.</p>
           </div>
         </div>
-
         <div style="margin-top: 150px" mat-dialog-actions align="end">
           <button style="margin-right: 15px" mat-flat-button color="accent" (click)="onCancelClick()">Cancel</button>
           <button style="margin-right: 15px" mat-button color="accent" matStepperPrevious>Back</button>
