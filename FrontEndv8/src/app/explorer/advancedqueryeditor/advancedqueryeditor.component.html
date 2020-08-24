@@ -32,7 +32,7 @@
             <p>Name of query.</p>
           </div>
         </div>
-        <div style="margin-top: 300px" mat-dialog-actions align="end">
+        <div style="margin-top: 375px" mat-dialog-actions align="end">
           <button style="margin-right: 15px" mat-flat-button color="accent" (click)="onCancelClick()">Cancel</button>
           <button style="margin-right: 15px" mat-button (click)="stepper.next()">Next</button>
         </div>
@@ -187,7 +187,7 @@
             </mat-select>
           </mat-form-field>
           <br/>
-          <p style="margin-left: 10px; margin-top: 24px">patients if they have entries containing concepts that are part of value set(s)</p>
+          <p style="margin-left: 10px; margin-top: 24px"><span style="color: blue">patients</span> if they have <span style="color: blue">entries</span> containing <span style="color: blue">concepts</span> that are part of <span style="color: blue">value set(s)</span></p>
           <mat-form-field appearance="outline" style="width: 170px; margin-left: 10px">
             <mat-label>Cohort value set</mat-label>
             <mat-select multiple [(ngModel)]="includedValueSet1" formControlName="control23" (ngModelChange)="formChanged()">
@@ -229,7 +229,7 @@
             </mat-select>
           </mat-form-field>
           <br/>
-          <p style="margin-left: 10px; margin-top: 24px">patients if they have entries containing concepts that are part of the value set(s)</p>
+          <p style="margin-left: 10px; margin-top: 24px"><span style="color: blue">patients</span> if they have <span style="color: blue">entries</span> containing <span style="color: blue">concepts</span> that are part of the <span style="color: blue">value set(s)</span></p>
           <mat-form-field appearance="outline" style="width: 170px; margin-left: 10px">
             <mat-label>Cohort value set</mat-label>
             <mat-select multiple [(ngModel)]="includedValueSet2" formControlName="control27" (ngModelChange)="formChanged()">
@@ -274,7 +274,7 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
-          <p style="margin-left: 10px; margin-top: 24px">patients if they have entries containing concepts that are part of the value set(s)</p>
+          <p style="margin-left: 10px; margin-top: 24px"><span style="color: blue">patients</span> if they have <span style="color: blue">entries</span> containing <span style="color: blue">concepts</span> that are part of the <span style="color: blue">value set(s)</span></p>
           <mat-form-field appearance="outline" style="width: 170px; margin-left: 10px">
             <mat-label>Cohort value set</mat-label>
             <mat-select multiple [(ngModel)]="includedValueSet3" formControlName="control32" (ngModelChange)="formChanged()">
@@ -292,7 +292,7 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
-          <p style="margin-left: 10px; margin-top: 24px">entry concept is</p>
+          <p style="margin-left: 10px; margin-top: 24px">entry <span style="color: blue">concept</span> is</p>
           <mat-form-field appearance="outline" style="width: 170px; margin-left: 10px">
             <mat-label>Cohort value set</mat-label>
             <mat-select multiple [(ngModel)]="includedTestedValueSet3" formControlName="control34" (ngModelChange)="formChanged()">
@@ -315,7 +315,7 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
-          <p style="margin-left: 10px; margin-top: 24px">patients if they have entries containing concepts that are part of the value set(s)</p>
+          <p style="margin-left: 10px; margin-top: 24px"><span style="color: blue">patients</span> if they have <span style="color: blue">entries</span> containing <span style="color: blue">concepts</span> that are part of the <span style="color: blue">value set(s)</span></p>
           <mat-form-field appearance="outline" style="width: 170px; margin-left: 10px">
             <mat-label>Cohort value set</mat-label>
             <mat-select multiple [(ngModel)]="includedValueSet4" formControlName="control36" (ngModelChange)="formChanged()">
@@ -324,7 +324,7 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
-          <span style="margin-left: 10px; margin-top: 24px; display: inline">and those entries are NOT followed by entries containing concepts that are part of the value set(s)</span>
+          <span style="margin-left: 10px; margin-top: 24px; display: inline">and those <span style="color: blue">entries</span> are <span style="color: red">NOT</span> followed by <span style="color: blue">entries</span> containing concepts that are part of the <span style="color: blue">value set(s)</span></span>
           <mat-form-field appearance="outline" style="width: 170px; margin-left: 10px">
             <mat-label>Cohort value set</mat-label>
             <mat-select multiple [(ngModel)]="includedFollowedByValueSet4" formControlName="control37" (ngModelChange)="formChanged()">
@@ -360,7 +360,7 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
-          <p style="margin-left: 10px; margin-top: 24px">patients if they have entries containing concepts that are part of the value set(s)</p>
+          <p style="margin-left: 10px; margin-top: 24px"><span style="color: blue">patients</span> if they have <span style="color: blue">entries</span> containing <span style="color: blue">concepts</span> that are part of the <span style="color: blue">value set(s)</span></p>
           <mat-form-field appearance="outline" style="width: 170px; margin-left: 10px">
             <mat-label>Cohort value set</mat-label>
             <mat-select multiple [(ngModel)]="includedValueSet5" formControlName="control41" (ngModelChange)="formChanged()">
@@ -382,7 +382,7 @@
             <mat-label>Value</mat-label>
             <input matInput placeholder="Value" [(ngModel)]="includedEntryValue5" formControlName="control43">
           </mat-form-field>
-          <p style="margin-left: 10px; margin-top: 24px">occurrences of these concepts within the time period</p>
+          <p style="margin-left: 10px; margin-top: 24px">occurrences of these <span style="color: blue">concepts</span> within the time period</p>
           <mat-form-field class="example-full-width" appearance="outline" style="margin-left: 10px; width: 140px">
             <mat-label>Date from</mat-label>
             <input matInput [matDatepicker]="picker5" placeholder="Date from" [(ngModel)]="includedDateFrom5" formControlName="control44">
@@ -403,7 +403,7 @@
           <p style="margin-left: 5px; margin-top: 24px">.</p>
         </div>
 
-        <div style="margin-top: 220px" mat-dialog-actions align="end">
+        <div mat-dialog-actions align="end">
           <button style="margin-right: 15px" mat-flat-button color="accent" (click)="onCancelClick()">Cancel</button>
           <button style="margin-right: 15px" mat-button color="accent" matStepperPrevious>Back</button>
           <button style="margin-right: 15px" mat-button (click)="stepper.next()">Next</button>
@@ -480,7 +480,7 @@
           </div>
         </div>
 
-        <div style="margin-top: 220px" mat-dialog-actions align="end">
+        <div style="margin-top: 300px" mat-dialog-actions align="end">
           <button style="margin-right: 15px" mat-flat-button color="accent" (click)="onCancelClick()">Cancel</button>
           <button style="margin-right: 15px" mat-button color="accent" matStepperPrevious>Back</button>
           <button style="margin-right: 15px" mat-button (click)="stepper.next()">Next</button>
@@ -543,7 +543,6 @@
           <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
             <p>Output type is event level (e.g. 1 line per event and 1 line per patient). For each observation, medication or encounter table, include the following attributes.</p>
           </div>
-
           <div style="margin-top: 15px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
             <p>Output type is aggregated by one common attribute type such as multi-level organisational grouping, personal demographic grouping, or event level date time grouping.</p>
           </div>
@@ -555,7 +554,7 @@
           </div>
         </div>
 
-        <div style="margin-top: 150px" mat-dialog-actions align="end">
+        <div style="margin-top: 225px" mat-dialog-actions align="end">
           <button style="margin-right: 15px" mat-flat-button color="accent" (click)="onCancelClick()">Cancel</button>
           <button style="margin-right: 15px" mat-button color="accent" matStepperPrevious>Back</button>
           <button style="margin-right: 15px" mat-button [disabled]="disableForm" (click)="saveQuery()">Save</button>

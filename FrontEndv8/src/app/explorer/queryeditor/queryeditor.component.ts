@@ -21,6 +21,8 @@ interface savedQuery {
   gender: string;
   postcode: string;
   cohortValue: string;
+  valueDateFrom: string;
+  valueDateTo: string;
   datasetValue: string;
   eventType: string;
   active: boolean;
@@ -79,6 +81,8 @@ export class QueryEditorComponent implements OnInit {
   selectedEventType: string = '';
   active: boolean = true;
   selectedCohortValueSet: string = '';
+  valueDateFrom: string = this.formatDate(new Date());
+  valueDateTo: string = this.formatDate(new Date());
   selectedDatasetValueSet: string = '';
   dateFrom: string = this.formatDate(new Date());
   dateTo: string = this.formatDate(new Date());
@@ -266,6 +270,8 @@ export class QueryEditorComponent implements OnInit {
       gender: this.selectedGender,
       postcode: this.postcode,
       cohortValue: this.selectedCohortValueSet,
+      valueDateFrom: this.valueDateFrom,
+      valueDateTo: this.valueDateTo,
       datasetValue: this.selectedDatasetValueSet,
       eventType: this.selectedEventType,
       active: this.active,

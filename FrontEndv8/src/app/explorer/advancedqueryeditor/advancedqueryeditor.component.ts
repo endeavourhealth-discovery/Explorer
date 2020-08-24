@@ -32,6 +32,31 @@ interface savedQuery {
   eventOutput: string;
   schedule: string;
   delivery: string;
+
+  includedExclude1: string;
+  includedValueSet1: string;
+  includedDateFrom1: string;
+  includedDateTo1: string;
+  includedExclude2: string;
+  includedValueSet2: string;
+  includedEarliestLatest2: string;
+  includedOperator2: string;
+  includedEntryValue2: string;
+  includedExclude3: string;
+  includedValueSet3: string;
+  includedEarliestLatest3: string;
+  includedTestedValueSet3: string;
+  includedExclude4: string;
+  includedValueSet4: string;
+  includedFollowedByValueSet4: string;
+  includedPeriodValue4: string;
+  includedPeriodType4: string;
+  includedExclude5: string;
+  includedValueSet5: string;
+  includedOperator5: string;
+  includedEntryValue5: string;
+  includedDateFrom5: string;
+  includedDateTo5: string;
 }
 
 interface eventType {
@@ -113,6 +138,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
   selectedEvent: string = '';
   selectedOrganisation: string = '';
   selectedIncludedOrganisation: string = '';
+
   includedExclude1: string = '';
   includedValueSet1: string = '';
   includedDateFrom1: string = '';
@@ -278,6 +304,31 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.selectedEvent = query.eventOutput;
       this.selectedSchedule = query.schedule;
       this.selectedDelivery = query.delivery;
+      this.includedExclude1 = query.includedExclude1;
+      this.includedValueSet1 = query.includedValueSet1;
+      this.includedDateFrom1 = query.includedDateFrom1;
+      this.includedDateTo1 = query.includedDateTo1;
+      this.includedExclude2 = query.includedExclude2;
+      this.includedValueSet2 = query.includedValueSet2;
+      this.includedEarliestLatest2 = query.includedEarliestLatest2;
+      this.includedOperator2 = query.includedOperator2;
+      this.includedEntryValue2 = query.includedEntryValue2;
+      this.includedExclude3 = query.includedExclude3;
+      this.includedValueSet3 = query.includedValueSet3;
+      this.includedEarliestLatest3 = query.includedEarliestLatest3;
+      this.includedTestedValueSet3 = query.includedTestedValueSet3;
+      this.includedExclude4 = query.includedExclude4;
+      this.includedValueSet4 = query.includedValueSet4;
+      this.includedFollowedByValueSet4 = query.includedFollowedByValueSet4;
+      this.includedPeriodValue4 = query.includedPeriodValue4;
+      this.includedPeriodType4 = query.includedPeriodType4;
+      this.includedExclude5 = query.includedExclude5;
+      this.includedValueSet5 = query.includedValueSet5;
+      this.includedOperator5 = query.includedOperator5;
+      this.includedEntryValue5 = query.includedEntryValue5;
+      this.includedDateFrom5 = query.includedDateFrom5;
+      this.includedDateTo5 = query.includedDateTo5;
+
     }
 
     this.firstFormGroup = this._formBuilder.group({
@@ -340,7 +391,32 @@ export class AdvancedQueryEditorComponent implements OnInit {
       aggregateOutput: this.selectedAggregate,
       eventOutput: this.selectedEvent,
       schedule: this.selectedSchedule,
-      delivery: this.selectedDelivery
+      delivery: this.selectedDelivery,
+      includedExclude1: this.includedExclude1,
+      includedValueSet1: this.includedValueSet1,
+      includedDateFrom1: this.formatDate(this.includedDateFrom1),
+      includedDateTo1: this.formatDate(this.includedDateTo1),
+      includedExclude2: this.includedExclude2,
+      includedValueSet2: this.includedValueSet2,
+      includedEarliestLatest2: this.includedEarliestLatest2,
+      includedOperator2: this.includedOperator2,
+      includedEntryValue2: this.includedEntryValue2,
+      includedExclude3: this.includedExclude3,
+      includedValueSet3: this.includedValueSet3,
+      includedEarliestLatest3: this.includedEarliestLatest3,
+      includedTestedValueSet3: this.includedTestedValueSet3,
+      includedExclude4: this.includedExclude4,
+      includedValueSet4: this.includedValueSet4,
+      includedFollowedByValueSet4: this.includedFollowedByValueSet4,
+      includedPeriodValue4: this.includedPeriodValue4,
+      includedPeriodType4: this.includedPeriodType4,
+      includedExclude5: this.includedExclude5,
+      includedValueSet5: this.includedValueSet5,
+      includedOperator5: this.includedOperator5,
+      includedEntryValue5: this.includedEntryValue5,
+      includedDateFrom5: this.formatDate(this.includedDateFrom5),
+      includedDateTo5: this.formatDate(this.includedDateTo5)
+
     };
     this.jsonQuery = JSON.stringify(query);
 
