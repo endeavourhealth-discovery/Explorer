@@ -148,6 +148,11 @@ export class AdvancedQueryEditorComponent implements OnInit {
   includedEarliestLatest2: string = '';
   includedOperator2: string = '';
   includedEntryValue2: string = '';
+  includedExclude2a: string = '';
+  includedValueSet2a: string = '';
+  includedEarliestLatest2a: string = '';
+  includedOperator2a: string = '';
+  includedEntryValue2a: string = '';
   includedExclude3: string = '';
   includedValueSet3: string = '';
   includedEarliestLatest3: string = '';
@@ -175,6 +180,8 @@ export class AdvancedQueryEditorComponent implements OnInit {
   orgList = [];
   orgIncList = [];
   jsonQuery: string;
+
+  select2a: boolean = false;
 
   eventTypes: eventType[] = [
     {value: 'Person'},
@@ -376,22 +383,13 @@ export class AdvancedQueryEditorComponent implements OnInit {
       providerOrganisation: this.selectedOrganisation,
       includedOrganisation: this.selectedIncludedOrganisation,
       registrationStatus: this.selectedRegistration,
+      cohortValue: this.selectedCohortValueSet,
+      valueDateFrom: this.valueDateFrom,
+      valueDateTo: this.valueDateTo,
       ageFrom: this.ageFrom,
       ageTo: this.ageTo,
       gender: this.selectedGender,
       postcode: this.postcode,
-      cohortValue: this.selectedCohortValueSet,
-      valueDateFrom: this.valueDateFrom,
-      valueDateTo: this.valueDateTo,
-      datasetValue: this.selectedDatasetValueSet,
-      eventType: this.selectedEventType,
-      active: this.active,
-      dateFrom: this.formatDate(this.dateFrom),
-      dateTo: this.formatDate(this.dateTo),
-      aggregateOutput: this.selectedAggregate,
-      eventOutput: this.selectedEvent,
-      schedule: this.selectedSchedule,
-      delivery: this.selectedDelivery,
       includedExclude1: this.includedExclude1,
       includedValueSet1: this.includedValueSet1,
       includedDateFrom1: this.formatDate(this.includedDateFrom1),
@@ -415,8 +413,16 @@ export class AdvancedQueryEditorComponent implements OnInit {
       includedOperator5: this.includedOperator5,
       includedEntryValue5: this.includedEntryValue5,
       includedDateFrom5: this.formatDate(this.includedDateFrom5),
-      includedDateTo5: this.formatDate(this.includedDateTo5)
-
+      includedDateTo5: this.formatDate(this.includedDateTo5),
+      eventType: this.selectedEventType,
+      active: this.active,
+      datasetValue: this.selectedDatasetValueSet,
+      dateFrom: this.formatDate(this.dateFrom),
+      dateTo: this.formatDate(this.dateTo),
+      eventOutput: this.selectedEvent,
+      aggregateOutput: this.selectedAggregate,
+      schedule: this.selectedSchedule,
+      delivery: this.selectedDelivery
     };
     this.jsonQuery = JSON.stringify(query);
 
@@ -504,6 +510,11 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.selectedRegistration=='' || this.selectedRegistration==undefined || this.selectedEventType=='' || this.selectedEventType==undefined
     || this.selectedDelivery=='' || this.selectedDelivery==undefined || this.selectedSchedule=='' || this.selectedSchedule==undefined ||
       ( (this.selectedEvent=='' || this.selectedEvent==undefined) &&  (this.selectedAggregate=='' || this.selectedAggregate==undefined) );
+  }
+
+  addSameRule() {
+    this.select2a = true;
+    console.log("2a = " + this.select2a);
   }
 
 

@@ -212,6 +212,8 @@ export class QueryEditorComponent implements OnInit {
       this.selectedGender = query.gender;
       this.postcode = query.postcode;
       this.selectedCohortValueSet = query.cohortValue;
+      this.valueDateFrom = query.valueDateFrom;
+      this.valueDateTo = query.valueDateTo;
       this.selectedDatasetValueSet = query.datasetValue;
       this.selectedEventType = query.eventType;
       this.active = query.active;
@@ -265,20 +267,20 @@ export class QueryEditorComponent implements OnInit {
       providerOrganisation: this.selectedOrganisation,
       includedOrganisation: this.selectedIncludedOrganisation,
       registrationStatus: this.selectedRegistration,
+      cohortValue: this.selectedCohortValueSet,
+      valueDateFrom: this.valueDateFrom,
+      valueDateTo: this.valueDateTo,
       ageFrom: this.ageFrom,
       ageTo: this.ageTo,
       gender: this.selectedGender,
       postcode: this.postcode,
-      cohortValue: this.selectedCohortValueSet,
-      valueDateFrom: this.valueDateFrom,
-      valueDateTo: this.valueDateTo,
-      datasetValue: this.selectedDatasetValueSet,
       eventType: this.selectedEventType,
       active: this.active,
+      datasetValue: this.selectedDatasetValueSet,
       dateFrom: this.formatDate(this.dateFrom),
       dateTo: this.formatDate(this.dateTo),
-      aggregateOutput: this.selectedAggregate,
       eventOutput: this.selectedEvent,
+      aggregateOutput: this.selectedAggregate,
       schedule: this.selectedSchedule,
       delivery: this.selectedDelivery
     };
