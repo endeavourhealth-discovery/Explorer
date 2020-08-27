@@ -345,7 +345,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
       control17: [''], control3: ['', Validators.required], control4: ['', Validators.required], control5: [''], control20: [''], control21: [''], control6: [''], control7: [''], control8: [''], control9: ['']
     });
     this.thirdFormGroup = this._formBuilder.group({
-      control22: ['', Validators.required], control23: [''], control24: [''], control25: [''], control26: [''], control27: [''], control28: [''], control29: [''], control30: [''], control31: ['', Validators.required], control32: [''], control33: [''], control34: [''], control35: [''], control36: [''], control37: [''], control38: [''], control39: [''], control40: [''], control41: [''], control42: [''], control43: [''], control44: [''], control45: ['']
+      control22: [''], control23: [''], control24: [''], control25: [''], control26: ['', Validators.required], control27: ['', Validators.required], control28: ['', Validators.required], control29: ['', Validators.required], control30: [''], control31: [''], control32: [''], control33: [''], control34: [''], control35: [''], control36: [''], control37: [''], control38: [''], control39: [''], control40: [''], control41: [''], control42: [''], control43: [''], control44: [''], control45: [''], control26a: [''], control27a: [''], control28a: [''], control29a: ['']
     });
     this.fourthFormGroup = this._formBuilder.group({
       control10: ['', Validators.required], control11: [''], control12: [''], control13: [''], control16: ['']

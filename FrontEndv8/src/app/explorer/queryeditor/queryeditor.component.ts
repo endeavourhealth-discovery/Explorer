@@ -229,7 +229,7 @@ export class QueryEditorComponent implements OnInit {
       control1: ['', Validators.required], control2: ['', Validators.required]
     });
     this.secondFormGroup = this._formBuilder.group({
-      control17: [''], control3: ['', Validators.required], control4: ['', Validators.required], control5: [''], control6: [''], control7: [''], control8: [''], control9: ['']
+      control17: [''], control3: ['', Validators.required], control4: ['', Validators.required], control5: [''], control6: [''], control7: [''], control8: [''], control9: [''], control20: [''], control21: ['']
     });
     this.thirdFormGroup = this._formBuilder.group({
       control10: ['', Validators.required], control11: [''], control12: [''], control13: [''], control16: ['']
