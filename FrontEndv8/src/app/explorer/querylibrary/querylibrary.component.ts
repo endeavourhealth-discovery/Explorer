@@ -8,7 +8,6 @@ import {FormControl} from "@angular/forms";
 import {SelectionModel} from "@angular/cdk/collections";
 import {MessageBoxDialogComponent} from "../message-box-dialog/message-box-dialog.component";
 import {MatDialog} from "@angular/material/dialog";
-import {QueryEditorComponent} from "../queryeditor/queryeditor.component";
 import {AdvancedQueryEditorComponent} from "../advancedqueryeditor/advancedqueryeditor.component";
 
 @Component({
@@ -129,32 +128,15 @@ export class QueryLibraryComponent implements OnInit {
   }
 
   add() {
-
-    MessageBoxDialogComponent.open(this.dialog, 'Choose query editor', 'Select query editor type', 'Advanced', 'Normal')
-      .subscribe(result => {
-        if (result) {
-          const dialogRef = this.dialog.open(AdvancedQueryEditorComponent, {
-            height: '780px',
-            width: '1275px',
-            data: {id: "", name: "", type: "", query: ""}
-          });
-          dialogRef.afterClosed().subscribe(result => {
-            if (result)
-              this.ngOnInit();
-          })
-        }
-        else {
-          const dialogRef = this.dialog.open(QueryEditorComponent, {
-            height: '780px',
-            width: '1275px',
-            data: {id: "", name: "", type: "", query: ""}
-          });
-          dialogRef.afterClosed().subscribe(result => {
-            if (result)
-              this.ngOnInit();
-          })
-        }
+      const dialogRef = this.dialog.open(AdvancedQueryEditorComponent, {
+        height: '780px',
+        width: '1275px',
+        data: {id: "", name: "", type: "", query: ""}
       });
+      dialogRef.afterClosed().subscribe(result => {
+        if (result)
+          this.ngOnInit();
+      })
   }
 
   delete() {
@@ -180,40 +162,19 @@ export class QueryLibraryComponent implements OnInit {
   }
 
   edit() {
-    MessageBoxDialogComponent.open(this.dialog, 'Choose query editor', 'Select query editor type', 'Advanced', 'Normal')
-    .subscribe(result => {
-      if (result) {
-        const dialogRef = this.dialog.open(AdvancedQueryEditorComponent, {
-          height: '780px',
-          width: '1275px',
-          data: {
-            id: this.selection.selected[0].id,
-            name: this.selection.selected[0].name,
-            type: this.selection.selected[0].type,
-            query: this.selection.selected[0].jsonQuery
-          }
-        });
-        dialogRef.afterClosed().subscribe(result => {
-          if (result)
-            this.ngOnInit();
-        })
-      }
-      else {
-        const dialogRef = this.dialog.open(QueryEditorComponent, {
-          height: '780px',
-          width: '1275px',
-          data: {
-            id: this.selection.selected[0].id,
-            name: this.selection.selected[0].name,
-            type: this.selection.selected[0].type,
-            query: this.selection.selected[0].jsonQuery
-          }
-        });
-        dialogRef.afterClosed().subscribe(result => {
-          if (result)
-            this.ngOnInit();
-        })
-      }
-    });
+      const dialogRef = this.dialog.open(AdvancedQueryEditorComponent, {
+        height: '780px',
+        width: '1275px',
+        data: {
+          id: this.selection.selected[0].id,
+          name: this.selection.selected[0].name,
+          type: this.selection.selected[0].type,
+          query: this.selection.selected[0].jsonQuery
+        }
+      });
+      dialogRef.afterClosed().subscribe(result => {
+        if (result)
+          this.ngOnInit();
+      })
   }
 }

@@ -36,7 +36,6 @@ import {ValueSetCodeComponent} from "./valuesetcode/valuesetcode.component";
 import {TutorialsComponent} from "./tutorials/tutorials.component";
 import {ValueSetEditorComponent} from "./valueseteditor/valueseteditor.component";
 import {MessageBoxDialogComponent} from "./message-box-dialog/message-box-dialog.component";
-import {QueryEditorComponent} from "./queryeditor/queryeditor.component";
 import {DashboardEditorComponent} from "./dashboardeditor/dashboardeditor.component";
 import {ValueSetCodeEditorComponent} from "./valuesetcodeeditor/valuesetcodeeditor.component";
 import {RegistriesComponent} from "./registries/registries.component";
@@ -57,7 +56,6 @@ import {MatDividerModule} from "@angular/material/divider";
     TutorialsComponent,
     ValueSetEditorComponent,
     MessageBoxDialogComponent,
-    QueryEditorComponent,
     DashboardEditorComponent,
     ValueSetCodeEditorComponent,
     RegistriesComponent,
@@ -104,7 +102,6 @@ import {MatDividerModule} from "@angular/material/divider";
     ValueSetCodeComponent,
     ValueSetEditorComponent,
     MessageBoxDialogComponent,
-    QueryEditorComponent,
     DashboardEditorComponent,
     ValueSetCodeEditorComponent,
     AdvancedQueryEditorComponent
