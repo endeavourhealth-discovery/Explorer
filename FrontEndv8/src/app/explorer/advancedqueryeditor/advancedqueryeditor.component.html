@@ -74,9 +74,9 @@
           </div>
           <br/>
           <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            <mat-form-field appearance="standard" style="width: 170px; margin-left: 10px">
+            <mat-form-field appearance="outline" style="margin-left: 25px; width: 300px">
               <mat-label>Cohort value set</mat-label>
-              <mat-select multiple [(ngModel)]="includedValueSet1" formControlName="control23" (ngModelChange)="formChanged()">
+              <mat-select multiple [(ngModel)]="selectedCohortValueSet" formControlName="control5" (ngModelChange)="formChanged()">
                 <mat-option *ngFor="let result of valueSet" [value]="result">
                   {{result}}
                 </mat-option>
@@ -199,7 +199,6 @@
             </mat-select>
           </mat-form-field>
           <p style="margin-left: 10px; margin-top: 28px"> of the <span style="color: blue">value set(s)</span></p>
-
           <mat-form-field appearance="standard" style="width: 170px; margin-left: 10px">
             <mat-label>Cohort value set</mat-label>
             <mat-select multiple [(ngModel)]="includedValueSet1" formControlName="control23" (ngModelChange)="formChanged()">
@@ -208,7 +207,6 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
-
           <br/>
           <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
           <p style="margin-left: 10px; margin-top: 28px">within the <span style="color: blue">time</span> period</p>
@@ -272,7 +270,7 @@
           <p style="margin-left: 10px; margin-top: 28px"> of the <span style="color: blue">value set(s)</span></p>
           <mat-form-field appearance="standard" style="width: 170px; margin-left: 10px">
             <mat-label>Cohort value set</mat-label>
-            <mat-select multiple [(ngModel)]="includedValueSet1" formControlName="control23" (ngModelChange)="formChanged()">
+            <mat-select multiple [(ngModel)]="includedValueSet2" formControlName="control27" (ngModelChange)="formChanged()">
               <mat-option *ngFor="let result of valueSet" [value]="result">
                 {{result}}
               </mat-option>
@@ -335,7 +333,7 @@
           <p style="margin-left: 10px; margin-top: 28px"> of the <span style="color: blue">value set(s)</span></p>
           <mat-form-field appearance="standard" style="width: 170px; margin-left: 10px">
             <mat-label>Cohort value set</mat-label>
-            <mat-select multiple [(ngModel)]="includedValueSet1" formControlName="control23" (ngModelChange)="formChanged()">
+            <mat-select multiple [(ngModel)]="includedValueSet2a" formControlName="control27a" (ngModelChange)="formChanged()">
               <mat-option *ngFor="let result of valueSet" [value]="result">
                 {{result}}
               </mat-option>
@@ -394,7 +392,7 @@
           <p style="margin-left: 10px; margin-top: 28px"> of the <span style="color: blue">value set(s)</span></p>
           <mat-form-field appearance="standard" style="width: 170px; margin-left: 10px">
             <mat-label>Cohort value set</mat-label>
-            <mat-select multiple [(ngModel)]="includedValueSet1" formControlName="control23" (ngModelChange)="formChanged()">
+            <mat-select multiple [(ngModel)]="includedValueSet3" formControlName="control32" (ngModelChange)="formChanged()">
               <mat-option *ngFor="let result of valueSet" [value]="result">
                 {{result}}
               </mat-option>
@@ -421,14 +419,14 @@
             </mat-select>
           </mat-form-field>
           <p style="margin-left: 10px; margin-top: 28px">of</p>
-            <mat-form-field appearance="standard" style="width: 170px; margin-left: 10px">
-              <mat-label>Cohort value set</mat-label>
-              <mat-select multiple [(ngModel)]="includedValueSet1" formControlName="control23" (ngModelChange)="formChanged()">
-                <mat-option *ngFor="let result of valueSet" [value]="result">
-                  {{result}}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
+          <mat-form-field appearance="standard" style="width: 170px; margin-left: 10px">
+            <mat-label>Cohort value set</mat-label>
+            <mat-select multiple [(ngModel)]="includedTestedValueSet3" formControlName="control34" (ngModelChange)="formChanged()">
+              <mat-option *ngFor="let result of valueSet" [value]="result">
+                {{result}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
           <p style="margin-left: 5px; margin-top: 28px">.</p>
         </div>
         </div>
@@ -458,7 +456,7 @@
           <p style="margin-left: 10px; margin-top: 28px">of the <span style="color: blue">value set(s)</span></p>
           <mat-form-field appearance="standard" style="width: 170px; margin-left: 10px">
             <mat-label>Cohort value set</mat-label>
-            <mat-select multiple [(ngModel)]="includedValueSet1" formControlName="control23" (ngModelChange)="formChanged()">
+            <mat-select multiple [(ngModel)]="includedValueSet4" formControlName="control36" (ngModelChange)="formChanged()">
               <mat-option *ngFor="let result of valueSet" [value]="result">
                 {{result}}
               </mat-option>
@@ -485,7 +483,7 @@
           <p style="margin-left: 10px; margin-top: 28px">of the <span style="color: blue">value set(s)</span></p>
           <mat-form-field appearance="standard" style="width: 170px; margin-left: 10px">
             <mat-label>Cohort value set</mat-label>
-            <mat-select multiple [(ngModel)]="includedValueSet1" formControlName="control23" (ngModelChange)="formChanged()">
+            <mat-select multiple [(ngModel)]="includedFollowedByValueSet4" formControlName="control37" (ngModelChange)="formChanged()">
               <mat-option *ngFor="let result of valueSet" [value]="result">
                 {{result}}
               </mat-option>
@@ -534,7 +532,7 @@
           <p style="margin-left: 10px; margin-top: 28px">of the <span style="color: blue">value set(s)</span></p>
           <mat-form-field appearance="standard" style="width: 170px; margin-left: 10px">
             <mat-label>Cohort value set</mat-label>
-            <mat-select multiple [(ngModel)]="includedValueSet1" formControlName="control23" (ngModelChange)="formChanged()">
+            <mat-select multiple [(ngModel)]="includedValueSet5" formControlName="control41" (ngModelChange)="formChanged()">
               <mat-option *ngFor="let result of valueSet" [value]="result">
                 {{result}}
               </mat-option>
@@ -627,8 +625,8 @@
             <mat-form-field appearance="outline" style="margin-left: 25px; width: 235px">
               <mat-label>Dataset value set</mat-label>
               <mat-select multiple [(ngModel)]="selectedDatasetValueSet" formControlName="control16" (ngModelChange)="formChanged()">
-                <mat-option *ngFor="let value of valueSet" [value]="value.valueSet">
-                  {{value.valueSet}}
+                <mat-option *ngFor="let result of valueSet" [value]="result">
+                  {{result}}
                 </mat-option>
               </mat-select>
             </mat-form-field>
