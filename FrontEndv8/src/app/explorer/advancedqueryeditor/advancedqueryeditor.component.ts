@@ -224,6 +224,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
   jsonQuery: string;
 
   select2a: boolean = false;
+  addQuery: boolean = true;
 
   eventTypes: eventType[] = [
     {value: 'Person'},
@@ -403,6 +404,11 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.includedPeriodValue5 = query.includedPeriodValue5
       this.includedPeriodType5 = query.includedPeriodType5
       this.includedAnyAll5 = query.includedAnyAll5
+
+      if (this.includedExclude2a != "" || this.includedValueSet2a != "" || this.includedEarliestLatest2a != "" || this.includedOperator2a != "" ||  this.includedEntryValue2a != "" ||  this.includedAnyAll2a != "") {
+        this.select2a = true;
+        this.addQuery = false;
+      }
     }
 
     this.firstFormGroup = this._formBuilder.group({

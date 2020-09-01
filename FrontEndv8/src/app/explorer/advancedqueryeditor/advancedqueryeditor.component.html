@@ -302,7 +302,7 @@
           </mat-form-field>
           <p style="margin-left: 5px; margin-top: 28px">.</p>
           </div>
-          <div mat-dialog-actions style="margin-bottom: 10px; margin-left: 20px">
+          <div mat-dialog-actions style="margin-bottom: 10px; margin-left: 20px" *ngIf="addQuery">
           <button mat-flat-button color="accent" (click)="addSameRule()">Add same rule</button>
           </div>
         </div>
