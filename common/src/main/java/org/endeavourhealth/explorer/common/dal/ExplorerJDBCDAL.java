@@ -256,6 +256,14 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                 sqlCount = "SELECT count(distinct(registry)) " +
                         " FROM dashboards.registries WHERE parent_registry is NOT NULL";
                 break;
+            case "8":
+                sql = "SELECT distinct(name) as type " +
+                        "FROM dashboards.value_sets" +
+                        " order by name";
+
+                sqlCount = "SELECT count(distinct(name)) " +
+                        " FROM dashboards.value_sets";
+                break;
             default:
                 break;
         }

@@ -2,7 +2,7 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {ExplorerService} from '../explorer.service';
 import {LoggerService} from 'dds-angular8';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {STEPPER_GLOBAL_OPTIONS} from "@angular/cdk/stepper";
 
 export interface DialogData {
@@ -218,6 +218,9 @@ export class AdvancedQueryEditorComponent implements OnInit {
 
   orgList = [];
   orgIncList = [];
+  valueSet = [];
+
+
   jsonQuery: string;
 
   select2a: boolean = false;
@@ -228,7 +231,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
     {value: 'Medication'},
     {value: 'Encounters'}
   ];
-  valueSet: valueSet[] = [
+  /*valueSet: valueSet[] = [
     {valueSet: 'All diseases'},
     {valueSet: 'Asthma'},
     {valueSet: 'Atrial Fibrillation'},
@@ -254,7 +257,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
     {valueSet: 'Rheumatoid Arthritis'},
     {valueSet: 'Smoking'},
     {valueSet: 'Stroke'}
-  ];
+  ];*/
   registrations: registration[] = [
     {regValue: 'Currently registered patients'},
     {regValue: 'All patients included left and deads'}
@@ -438,6 +441,20 @@ export class AdvancedQueryEditorComponent implements OnInit {
         this.orgIncList.push(e.type);
       }
     )
+
+    this.explorerService.getLookupLists('8')
+      .subscribe(
+        (result) => this.loadValueSet(result),
+        (error) => this.log.error(error)
+      );
+  }
+
+  loadValueSet(lists: any) {
+    lists.results.map(
+      e => {
+        this.valueSet.push(e.type);
+      }
+    )
   }
 
   saveQuery() {
@@ -597,6 +614,5 @@ export class AdvancedQueryEditorComponent implements OnInit {
     this.select2a = true;
     console.log("2a = " + this.select2a);
   }
-
 
 }
