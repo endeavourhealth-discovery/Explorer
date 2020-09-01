@@ -1,0 +1,74 @@
+<mat-card>
+  <mat-card-header class="header2">
+    <div mat-card-avatar>
+      <i class="fad fa-clinic-medical"></i>
+    </div>
+    <mat-card-title>Organisation groups</mat-card-title>
+    <mat-card-subtitle>A list of organisation groups available for queries and data sets</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="filter">
+      <mat-form-field style="width:300px; margin-left: 10px" class="example-full-width" appearance="outline">
+        <mat-label>Filter type</mat-label>
+        <mat-select style="width:280px" [formControl]="typeValues" multiple [(value)]="selectedType">
+          <mat-checkbox class="mat-option" [(ngModel)]="selectAll" (change)="toggleSelection($event)">Select All</mat-checkbox>
+          <mat-option (click)="refresh(true)" *ngFor="let result of typeList" [value]="result">{{result}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 mat-table-compact" fxFlex="100" fxFill>
+        <ng-container matColumnDef="select">
+          <th mat-header-cell *matHeaderCellDef style="width: 220px">
+            <mat-checkbox (change)="$event ? masterToggle() : null"
+                          [checked]="selection.hasValue() && isAllSelected()"
+                          [indeterminate]="selection.hasValue() && !isAllSelected()"
+                          [aria-label]="checkboxLabel()">
+            </mat-checkbox>
+            <button mat-icon-button color="grey" (click)="add()" style="margin-left: 10px"><mat-icon>add</mat-icon></button>
+            <button *ngIf="selection.selected.length == 1" mat-icon-button color="grey" (click)="edit()" style="margin-left: 3px"><mat-icon>edit</mat-icon></button>
+            <button *ngIf="selection.selected.length == 1" mat-icon-button color="grey" (click)="duplicate()" style="margin-left: 6px"><mat-icon style="font-size: 20px">content_copy</mat-icon></button>
+            <button *ngIf="selection.selected.length > 0" mat-icon-button color="warn" (click)="delete()" style="margin-left: 6px"><mat-icon>delete</mat-icon></button>
+          </th>
+          <td mat-cell *matCellDef="let row">
+            <mat-checkbox (click)="$event.stopPropagation()"
+                          (change)="$event ? selection.toggle(row) : null"
+                          [checked]="selection.isSelected(row)"
+                          [aria-label]="checkboxLabel(row)">
+            </mat-checkbox>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="type">
+          <th mat-header-cell *matHeaderCellDef>Type</th>
+          <td mat-cell *matCellDef="let element"> {{element.type}} </td>
+        </ng-container>
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Name</th>
+          <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+        </ng-container>
+        <ng-container matColumnDef="updated">
+          <th mat-header-cell *matHeaderCellDef>Last updated</th>
+          <td mat-cell *matCellDef="let element"> {{element.updated}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr style="cursor: pointer" mat-row *matRowDef="let row; columns: displayedColumns;" (click)="valueSetCodeDialog(row.id)" ></tr>
+      </table>
+    <div>
+    </div>
+      <mat-paginator [length]="events?.length"
+                     [pageSize]="size"
+                     [pageIndex]="page"
+                     [showFirstLastButtons]="true"
+                     (page)="onPage($event)"
+                     fxFlex="100"
+                     fxFill>
+      </mat-paginator>
+    </div>
+
+  </mat-card-content>
+
+</mat-card>
+

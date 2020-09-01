@@ -374,6 +374,26 @@ public class DashboardEndpoint {
         }
     }
 
+    @GET
+    @Path("/organisationgroups")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getOrganisationGroups(@Context SecurityContext sc,
+                                       @QueryParam("page") Integer page,
+                                       @QueryParam("size") Integer size,
+                                       @QueryParam("selectedTypeString") String selectedTypeString) throws Exception {
+        LOG.debug("getOrganisationGroups");
+
+        try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
+            OrganisationGroupsResult result = viewerDAL.getOrganisationGroups(page, size, selectedTypeString);
+
+            return Response
+                    .ok()
+                    .entity(result)
+                    .build();
+        }
+    }
+
 
 
 

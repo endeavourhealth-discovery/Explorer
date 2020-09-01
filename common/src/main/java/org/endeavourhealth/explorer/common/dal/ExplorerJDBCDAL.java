@@ -264,6 +264,14 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                 sqlCount = "SELECT count(distinct(name)) " +
                         " FROM dashboards.value_sets";
                 break;
+            case "9":
+                sql = "SELECT distinct(type) as type " +
+                        "FROM dashboards.organisation_groups" +
+                        " order by type";
+
+                sqlCount = "SELECT count(distinct(type))" +
+                        " FROM dashboards.organisation_groups";
+                break;
             default:
                 break;
         }
@@ -975,6 +983,63 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                 .setUpdated(resultSet.getDate("updated"))
                 .setParentRegistry(resultSet.getString("parent_registry"));
         return registries;
+    }
+
+    public OrganisationGroupsResult getOrganisationGroups(Integer page, Integer size, String selectedTypeString) throws Exception {
+        OrganisationGroupsResult result = new OrganisationGroupsResult();
+
+        selectedTypeString = selectedTypeString.replaceAll(",","','");
+        selectedTypeString = "'" + selectedTypeString + "'";
+        selectedTypeString = "WHERE type in ("+selectedTypeString+")";
+
+        String sql = "";
+        String sqlCount = "";
+
+        sql = "SELECT id, type, name, updated " +
+                "FROM dashboards.organisation_groups " +
+                selectedTypeString+
+                "order by type,name LIMIT ?,?";
+
+        sqlCount = "SELECT count(1) " +
+                "FROM dashboards.organisation_groups " +
+                selectedTypeString;
+
+        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            statement.setInt(1, page*12);
+            statement.setInt(2, size);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                result.setResults(getOrganisationGroupsList(resultSet));
+            }
+        }
+
+        try (PreparedStatement statement = conn.prepareStatement(sqlCount)) {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                resultSet.next();
+                result.setLength(resultSet.getInt(1));
+            }
+        }
+
+        return result;
+    }
+
+    private List<OrganisationGroups> getOrganisationGroupsList(ResultSet resultSet) throws SQLException {
+        List<OrganisationGroups> result = new ArrayList<>();
+        while (resultSet.next()) {
+            result.add(getOrganisationGroups(resultSet));
+        }
+
+        return result;
+    }
+
+    public static OrganisationGroups getOrganisationGroups(ResultSet resultSet) throws SQLException {
+        OrganisationGroups organisationgroups = new OrganisationGroups();
+
+        organisationgroups
+                .setId(resultSet.getInt("id"))
+                .setType(resultSet.getString("type"))
+                .setName(resultSet.getString("name"))
+                .setUpdated(resultSet.getDate("updated"));
+        return organisationgroups;
     }
 
 }

@@ -44,6 +44,7 @@ import {GaugeModule} from "angular-gauge";
 import {MatStepperModule} from "@angular/material/stepper";
 import {AdvancedQueryEditorComponent} from "./advancedqueryeditor/advancedqueryeditor.component";
 import {MatDividerModule} from "@angular/material/divider";
+import {OrganisationGroupsComponent} from "./organisationgroups/organisationgroups.component";
 
 @NgModule({
   declarations: [
@@ -60,7 +61,8 @@ import {MatDividerModule} from "@angular/material/divider";
     ValueSetCodeEditorComponent,
     RegistriesComponent,
     RegistryIndicatorsComponent,
-    AdvancedQueryEditorComponent
+    AdvancedQueryEditorComponent,
+    OrganisationGroupsComponent
   ],
     imports: [
         BrowserModule,
