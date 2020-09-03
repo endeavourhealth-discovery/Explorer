@@ -1042,4 +1042,164 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         return organisationgroups;
     }
 
+    public OrganisationGroupsCodesResult getOrganisationGroupsCodes(Integer page, Integer size, String organisation_group_id) throws Exception {
+        OrganisationGroupsCodesResult result = new OrganisationGroupsCodesResult();
+
+        String sql = "";
+        String sqlCount = "";
+
+        sql = "SELECT type, name, ods_code, updated, id " +
+                "FROM dashboards.organisations " +
+                "WHERE organisation_group_id = ? " +
+                "order by type, name LIMIT ?,?";
+
+        sqlCount = "SELECT count(1) " +
+                "FROM dashboards.organisations " +
+                "WHERE organisation_group_id = ?";
+
+        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            statement.setString(1, organisation_group_id);
+            statement.setInt(2, page*12);
+            statement.setInt(3, size);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                result.setResults(getOrganisationGroupsCodesList(resultSet));
+            }
+        }
+
+        try (PreparedStatement statement = conn.prepareStatement(sqlCount)) {
+            statement.setString(1, organisation_group_id);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                resultSet.next();
+                result.setLength(resultSet.getInt(1));
+            }
+        }
+
+        return result;
+    }
+
+    private List<OrganisationGroupsCodes> getOrganisationGroupsCodesList(ResultSet resultSet) throws SQLException {
+        List<OrganisationGroupsCodes> result = new ArrayList<>();
+        while (resultSet.next()) {
+            result.add(getOrganisationGroupsCodes(resultSet));
+        }
+
+        return result;
+    }
+
+    public static OrganisationGroupsCodes getOrganisationGroupsCodes(ResultSet resultSet) throws SQLException {
+        OrganisationGroupsCodes organisationgroupscodes = new OrganisationGroupsCodes();
+
+        organisationgroupscodes
+                .setType(resultSet.getString("type"))
+                .setName(resultSet.getString("name"))
+                .setCode(resultSet.getString("ods_code"))
+                .setUpdated(resultSet.getDate("updated"))
+                .setId(resultSet.getString("id"));
+        return organisationgroupscodes;
+    }
+
+    public void saveOrganisationGroup(String type, String name, String id) throws Exception {
+
+        String sql = "";
+
+        if (id.equals("")) {
+            sql = "INSERT INTO dashboards.organisation_groups (type, name) " +
+                    "VALUES (?, ?)";
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, type);
+                stmt.setString(2, name);
+                stmt.executeUpdate();
+            }
+        } else // edit
+        {
+            sql = "UPDATE dashboards.organisation_groups SET type = ?, name = ? " +
+                    "WHERE id = ?";
+
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, type);
+                stmt.setString(2, name);
+                stmt.setString(3, id);
+                stmt.executeUpdate();
+            }
+        }
+    }
+
+    public void deleteOrganisationGroup(String id) throws Exception {
+
+        String sql = "DELETE FROM dashboards.organisation_groups WHERE id in ("+id+")";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.executeUpdate();
+        }
+
+        sql = "DELETE FROM dashboards.organisation WHERE organisation_group_id in ("+id+")";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.executeUpdate();
+        }
+
+    }
+
+    public void saveOrganisationGroupCode(String name, String type, String code, String organisation_group_id, String id) throws Exception {
+
+        String sql = "";
+
+        if (id.equals("")) {
+            sql = "INSERT INTO dashboards.organisations (name, type, ods_code, organisation_group_id) " +
+                    "VALUES (?, ?, ?, ?)";
+
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, name);
+                stmt.setString(2, type);
+                stmt.setString(3, code);
+                stmt.setString(4, organisation_group_id);
+                stmt.executeUpdate();
+            }
+        } else // edit
+        {
+            sql = "UPDATE dashboards.organisations SET name = ?, type = ?, ods_code = ? " +
+                    "WHERE id = ?";
+
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, name);
+                stmt.setString(2, type);
+                stmt.setString(3, code);
+                stmt.setString(4, id);
+                stmt.executeUpdate();
+            }
+        }
+    }
+
+    public void deleteOrganisationGroupCode(String id) throws Exception {
+
+        id = "WHERE id in ("+id+")";
+
+        String sql = "DELETE FROM dashboards.organisations " +id;
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.executeUpdate();
+        }
+    }
+
+    public void duplicateOrganisationGroup(String id) throws Exception {
+
+        String sql = "insert into dashboards.organisation_groups (type, name) " +
+                "select type, name from dashboards.organisation_groups where id = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, id);
+            stmt.executeUpdate();
+        }
+
+        String sqlCount = "insert into dashboards.organisations (organisation_group_id, name, type, ods_code) " +
+                "select (select max(id) as id from dashboards.organisation_groups), name, type, ods_code " +
+                "from dashboards.organisations " +
+                "where organisation_group_id = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sqlCount)) {
+            stmt.setString(1, id);
+            stmt.executeUpdate();
+        }
+    }
+
 }

@@ -394,9 +394,115 @@ public class DashboardEndpoint {
         }
     }
 
+    @GET
+    @Path("/organisationgroupscodes")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getOrganisationGroupsCodes(@Context SecurityContext sc,
+                                     @QueryParam("page") Integer page,
+                                     @QueryParam("size") Integer size,
+                                     @QueryParam("organisation_group_id") String organisation_group_id) throws Exception {
+        LOG.debug("getOrganisationGroupsCodes");
 
+        try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
+            OrganisationGroupsCodesResult result = viewerDAL.getOrganisationGroupsCodes(page, size, organisation_group_id);
 
+            return Response
+                    .ok()
+                    .entity(result)
+                    .build();
+        }
+    }
 
+    @GET
+    @Path("/organisationgroupeditor")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response saveOrganisationGroup(@Context SecurityContext sc,
+                                 @QueryParam("type") String type,
+                                 @QueryParam("name") String name,
+                                 @QueryParam("id") String id) throws Exception {
+        LOG.debug("saveOrganisationGroup");
 
+        try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
+            viewerDAL.saveOrganisationGroup(type, name, id);
+
+            return Response
+                    .ok()
+                    .build();
+        }
+    }
+
+    @GET
+    @Path("/organisationgroupdelete")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteOrganisationGroup(@Context SecurityContext sc,
+                                   @QueryParam("id") String id) throws Exception {
+        LOG.debug("deleteOrganisationGroup");
+
+        try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
+            viewerDAL.deleteOrganisationGroup(id);
+
+            return Response
+                    .ok()
+                    .build();
+        }
+    }
+
+    @GET
+    @Path("/organisationgroupscodeeditor")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response saveOrganisationGroupCode(@Context SecurityContext sc,
+                                     @QueryParam("name") String name,
+                                     @QueryParam("type") String type,
+                                     @QueryParam("code") String code,
+                                     @QueryParam("organisation_group_id") String organisation_group_id,
+                                     @QueryParam("id") String id) throws Exception {
+        LOG.debug("saveOrganisationGroupCode");
+
+        try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
+            viewerDAL.saveOrganisationGroupCode(name, type, code, organisation_group_id, id);
+
+            return Response
+                    .ok()
+                    .build();
+        }
+    }
+
+    @GET
+    @Path("/organisationgroupscodedelete")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteOrganisationGroupCode(@Context SecurityContext sc,
+                                       @QueryParam("id") String id) throws Exception {
+        LOG.debug("deleteOrganisationGroupCode");
+
+        try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
+            viewerDAL.deleteOrganisationGroupCode(id);
+
+            return Response
+                    .ok()
+                    .build();
+        }
+    }
+
+    @GET
+    @Path("/organisationgroupduplicate")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response duplicateOrganisationGroup(@Context SecurityContext sc,
+                                      @QueryParam("id") String id) throws Exception {
+        LOG.debug("duplicateOrganisationGroup");
+
+        try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
+            viewerDAL.duplicateOrganisationGroup(id);
+
+            return Response
+                    .ok()
+                    .build();
+        }
+    }
 
 }

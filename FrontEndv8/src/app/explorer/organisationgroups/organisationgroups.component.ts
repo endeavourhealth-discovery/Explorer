@@ -5,11 +5,11 @@ import {LoggerService} from 'dds-angular8';
 import {PageEvent} from '@angular/material/paginator';
 import {ActivatedRoute} from "@angular/router";
 import {MatDialog} from "@angular/material/dialog";
-import {ValueSetEditorComponent} from "../valueseteditor/valueseteditor.component";
 import {SelectionModel} from '@angular/cdk/collections';
 import {MessageBoxDialogComponent} from "../message-box-dialog/message-box-dialog.component";
 import {FormControl} from "@angular/forms";
-import {ValueSetCodeComponent} from "../valuesetcode/valuesetcode.component";
+import {OrganisationGroupsCodeComponent} from "../organisationgroupscode/organisationgroupscode.component";
+import {OrganisationGroupsEditorComponent} from "../organisationgroupseditor/organisationgroupseditor.component";
 
 @Component({
   selector: 'app-organisationgroups',
@@ -129,16 +129,16 @@ export class OrganisationGroupsComponent implements OnInit {
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
   }
 
-  valueSetCodeDialog(value_set_id: any) {
-    const dialogRef = this.dialog.open(ValueSetCodeComponent, {
+  organisationGroupsCodeDialog(organisation_group_id: any) {
+    const dialogRef = this.dialog.open(OrganisationGroupsCodeComponent, {
       height: '780px',
       width: '1600px',
-      data: {value_set_id: value_set_id}
+      data: {organisation_group_id: organisation_group_id}
     });
   }
 
   add() {
-    const dialogRef = this.dialog.open(ValueSetEditorComponent, {
+    const dialogRef = this.dialog.open(OrganisationGroupsEditorComponent, {
       height: '320px',
       width: '600px',
       data: {id: "", name: "", type: ""}
@@ -158,22 +158,21 @@ export class OrganisationGroupsComponent implements OnInit {
     )
     id = id.substr(1);
 
-    MessageBoxDialogComponent.open(this.dialog, 'Delete value set', 'Are you sure you want to delete this value set?', 'Delete', 'Cancel')
+    MessageBoxDialogComponent.open(this.dialog, 'Delete organisation group', 'Are you sure you want to delete this organisation group?', 'Delete', 'Cancel')
       .subscribe(result => {
         if (result) {
-
-          this.explorerService.deleteValueSet(id.toString())
+          this.explorerService.deleteOrganisationGroup(id.toString())
             .subscribe(saved => {
                 this.ngOnInit();
               },
-              error => this.log.error('This value set could not be deleted.')
+              error => this.log.error('This organisation group could not be deleted.')
             );
         }
       });
   }
 
   edit() {
-    const dialogRef = this.dialog.open(ValueSetEditorComponent, {
+    const dialogRef = this.dialog.open(OrganisationGroupsEditorComponent, {
       height: '320px',
       width: '600px',
       data: {id: this.selection.selected[0].id, name: this.selection.selected[0].name, type:this.selection.selected[0].type}
@@ -185,15 +184,15 @@ export class OrganisationGroupsComponent implements OnInit {
   }
 
   duplicate() {
-    MessageBoxDialogComponent.open(this.dialog, 'Duplicate value set', 'Are you sure you want to duplicate this value set?', 'Duplicate', 'Cancel')
+    MessageBoxDialogComponent.open(this.dialog, 'Duplicate organisation group', 'Are you sure you want to duplicate this organisation group?', 'Duplicate', 'Cancel')
       .subscribe(result => {
         if (result) {
 
-          this.explorerService.duplicateValueSet(this.selection.selected[0].id.toString())
+          this.explorerService.duplicateOrganisationGroup(this.selection.selected[0].id.toString())
             .subscribe(saved => {
                 this.ngOnInit();
               },
-              error => this.log.error('This value set could not be duplicated.')
+              error => this.log.error('This organisation group could not be duplicated.')
             );
         }
       });

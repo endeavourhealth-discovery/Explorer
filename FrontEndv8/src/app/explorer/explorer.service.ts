@@ -196,6 +196,55 @@ export class ExplorerService {
     return this.http.get('api/events/organisationgroups', {params});
   }
 
+  getOrganisationGroupsCodes(page?: number, size?: number, organisation_group_id?: string): Observable<any> {
 
+    let params = new HttpParams();
+    params = params.append('page', page.toString());
+    params = params.append('size', size.toString());
+    params = params.append('organisation_group_id', organisation_group_id);
+
+    return this.http.get('api/events/organisationgroupscodes', {params});
+  }
+
+  saveOrganisationGroup(type?: string, name?: string, id?: string): Observable<any> {
+    let params = new HttpParams();
+    params = params.append('type', type);
+    params = params.append('name', name);
+    params = params.append('id', id);
+
+    return this.http.get('api/events/organisationgroupeditor', {params});
+  }
+
+  deleteOrganisationGroup(id?: string): Observable<any> {
+    let params = new HttpParams();
+    params = params.append('id', id);
+
+    return this.http.get('api/events/organisationgroupdelete', {params});
+  }
+
+  saveOrganisationGroupCode(name?: string, type?: string, code?: string, organisation_group_id?: string, id?: string): Observable<any> {
+    let params = new HttpParams();
+    params = params.append('name', name);
+    params = params.append('type', type);
+    params = params.append('code', code);
+    params = params.append('organisation_group_id', organisation_group_id);
+    params = params.append('id', id);
+
+    return this.http.get('api/events/organisationgroupscodeeditor', {params});
+  }
+
+  deleteOrganisationGroupCode(id?: string): Observable<any> {
+    let params = new HttpParams();
+    params = params.append('id', id);
+
+    return this.http.get('api/events/organisationgroupscodedelete', {params});
+  }
+
+  duplicateOrganisationGroup(id?: string): Observable<any> {
+    let params = new HttpParams();
+    params = params.append('id', id);
+
+    return this.http.get('api/events/organisationgroupduplicate', {params});
+  }
 
 }

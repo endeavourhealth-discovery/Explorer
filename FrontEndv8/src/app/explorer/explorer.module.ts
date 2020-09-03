@@ -45,6 +45,9 @@ import {MatStepperModule} from "@angular/material/stepper";
 import {AdvancedQueryEditorComponent} from "./advancedqueryeditor/advancedqueryeditor.component";
 import {MatDividerModule} from "@angular/material/divider";
 import {OrganisationGroupsComponent} from "./organisationgroups/organisationgroups.component";
+import {OrganisationGroupsCodeComponent} from "./organisationgroupscode/organisationgroupscode.component";
+import {OrganisationGroupsEditorComponent} from "./organisationgroupseditor/organisationgroupseditor.component";
+import {OrganisationGroupsCodeEditorComponent} from "./organisationgroupscodeeditor/organisationgroupscodeeditor.component";
 
 @NgModule({
   declarations: [
@@ -62,7 +65,10 @@ import {OrganisationGroupsComponent} from "./organisationgroups/organisationgrou
     RegistriesComponent,
     RegistryIndicatorsComponent,
     AdvancedQueryEditorComponent,
-    OrganisationGroupsComponent
+    OrganisationGroupsComponent,
+    OrganisationGroupsCodeComponent,
+    OrganisationGroupsEditorComponent,
+    OrganisationGroupsCodeEditorComponent
   ],
     imports: [
         BrowserModule,
@@ -106,7 +112,10 @@ import {OrganisationGroupsComponent} from "./organisationgroups/organisationgrou
     MessageBoxDialogComponent,
     DashboardEditorComponent,
     ValueSetCodeEditorComponent,
-    AdvancedQueryEditorComponent
+    AdvancedQueryEditorComponent,
+    OrganisationGroupsCodeComponent,
+    OrganisationGroupsEditorComponent,
+    OrganisationGroupsCodeEditorComponent
   ],
   providers: [ Globals ]
 })
