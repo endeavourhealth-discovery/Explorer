@@ -475,7 +475,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.explorerService.getLookupLists('3')
+    this.explorerService.getLookupLists('10')
       .subscribe(
         (result) => this.loadOrgList(result),
         (error) => this.log.error(error)
