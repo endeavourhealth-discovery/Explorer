@@ -6,20 +6,19 @@ import {MatTableDataSource} from "@angular/material/table";
 import {PageEvent} from "@angular/material/paginator";
 import {MessageBoxDialogComponent} from "../message-box-dialog/message-box-dialog.component";
 import {SelectionModel} from "@angular/cdk/collections";
-import {ValueSetCodeEditorComponent} from "../valuesetcodeeditor/valuesetcodeeditor.component";
-import {OrganisationGroupsCodeEditorComponent} from "../organisationgroupscodeeditor/organisationgroupscodeeditor.component";
+import {OrganisationsEditorComponent} from "../organisationseditor/organisationseditor.component";
 
 export interface DialogData {
   organisation_group_id: string;
 }
 
 @Component({
-  selector: 'app-organisationgroupscode',
-  templateUrl: './organisationgroupscode.component.html',
-  styleUrls: ['./organisationgroupscode.component.scss']
+  selector: 'app-organisations',
+  templateUrl: './organisations.component.html',
+  styleUrls: ['./organisations.component.scss']
 })
 
-export class OrganisationGroupsCodeComponent {
+export class OrganisationsComponent {
 
   selection = new SelectionModel<any>(true, []);
 
@@ -32,7 +31,7 @@ export class OrganisationGroupsCodeComponent {
   displayedColumns: string[] = ['select', 'type', 'name', 'code', 'updated'];
 
   constructor(
-    public dialogRef: MatDialogRef<OrganisationGroupsCodeComponent>,
+    public dialogRef: MatDialogRef<OrganisationsComponent>,
     private explorerService: ExplorerService,
     private log: LoggerService,
     private dialog: MatDialog,
@@ -43,7 +42,7 @@ export class OrganisationGroupsCodeComponent {
 
   loadEvents() {
     this.events = null;
-    this.explorerService.getOrganisationGroupsCodes(this.page, this.size, this.organisation_group_id)
+    this.explorerService.getOrganisations(this.page, this.size, this.organisation_group_id)
       .subscribe(
         (result) => this.displayEvents(result),
         (error) => this.log.error(error)
@@ -89,7 +88,7 @@ export class OrganisationGroupsCodeComponent {
   }
 
   add() {
-    const dialogRef = this.dialog.open(OrganisationGroupsCodeEditorComponent, {
+    const dialogRef = this.dialog.open(OrganisationsEditorComponent, {
       height: '500px',
       width: '600px',
       data: {name: "", type: "", code: "", id: "", organisation_group_id: this.organisation_group_id}
@@ -115,7 +114,7 @@ export class OrganisationGroupsCodeComponent {
       .subscribe(result => {
         if (result) {
 
-          this.explorerService.deleteOrganisationGroupCode(id.toString())
+          this.explorerService.deleteOrganisation(id.toString())
             .subscribe(saved => {
                 this.loadEvents();
               },
@@ -126,7 +125,7 @@ export class OrganisationGroupsCodeComponent {
   }
 
   edit() {
-    const dialogRef = this.dialog.open(OrganisationGroupsCodeEditorComponent, {
+    const dialogRef = this.dialog.open(OrganisationsEditorComponent, {
       height: '500px',
       width: '600px',
       data: {name:this.selection.selected[0].name, type:this.selection.selected[0].type, code: this.selection.selected[0].code, id: this.selection.selected[0].id, organisation_group_id: ""}

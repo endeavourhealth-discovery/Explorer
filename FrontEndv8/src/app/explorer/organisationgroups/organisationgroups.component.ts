@@ -8,7 +8,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {SelectionModel} from '@angular/cdk/collections';
 import {MessageBoxDialogComponent} from "../message-box-dialog/message-box-dialog.component";
 import {FormControl} from "@angular/forms";
-import {OrganisationGroupsCodeComponent} from "../organisationgroupscode/organisationgroupscode.component";
+import {OrganisationsComponent} from "../organisations/organisations.component";
 import {OrganisationGroupsEditorComponent} from "../organisationgroupseditor/organisationgroupseditor.component";
 
 @Component({
@@ -129,8 +129,8 @@ export class OrganisationGroupsComponent implements OnInit {
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
   }
 
-  organisationGroupsCodeDialog(organisation_group_id: any) {
-    const dialogRef = this.dialog.open(OrganisationGroupsCodeComponent, {
+  organisationsDialog(organisation_group_id: any) {
+    const dialogRef = this.dialog.open(OrganisationsComponent, {
       height: '780px',
       width: '1600px',
       data: {organisation_group_id: organisation_group_id}

@@ -395,17 +395,17 @@ public class DashboardEndpoint {
     }
 
     @GET
-    @Path("/organisationgroupscodes")
+    @Path("/organisations")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getOrganisationGroupsCodes(@Context SecurityContext sc,
+    public Response getOrganisations(@Context SecurityContext sc,
                                      @QueryParam("page") Integer page,
                                      @QueryParam("size") Integer size,
                                      @QueryParam("organisation_group_id") String organisation_group_id) throws Exception {
-        LOG.debug("getOrganisationGroupsCodes");
+        LOG.debug("getOrganisations");
 
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
-            OrganisationGroupsCodesResult result = viewerDAL.getOrganisationGroupsCodes(page, size, organisation_group_id);
+            OrganisationsResult result = viewerDAL.getOrganisations(page, size, organisation_group_id);
 
             return Response
                     .ok()
@@ -451,19 +451,19 @@ public class DashboardEndpoint {
     }
 
     @GET
-    @Path("/organisationgroupscodeeditor")
+    @Path("/organisationeditor")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response saveOrganisationGroupCode(@Context SecurityContext sc,
+    public Response saveOrganisation(@Context SecurityContext sc,
                                      @QueryParam("name") String name,
                                      @QueryParam("type") String type,
                                      @QueryParam("code") String code,
                                      @QueryParam("organisation_group_id") String organisation_group_id,
                                      @QueryParam("id") String id) throws Exception {
-        LOG.debug("saveOrganisationGroupCode");
+        LOG.debug("saveOrganisation");
 
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
-            viewerDAL.saveOrganisationGroupCode(name, type, code, organisation_group_id, id);
+            viewerDAL.saveOrganisation(name, type, code, organisation_group_id, id);
 
             return Response
                     .ok()
@@ -472,15 +472,15 @@ public class DashboardEndpoint {
     }
 
     @GET
-    @Path("/organisationgroupscodedelete")
+    @Path("/organisationdelete")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteOrganisationGroupCode(@Context SecurityContext sc,
+    public Response deleteOrganisation(@Context SecurityContext sc,
                                        @QueryParam("id") String id) throws Exception {
-        LOG.debug("deleteOrganisationGroupCode");
+        LOG.debug("deleteOrganisation");
 
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
-            viewerDAL.deleteOrganisationGroupCode(id);
+            viewerDAL.deleteOrganisation(id);
 
             return Response
                     .ok()

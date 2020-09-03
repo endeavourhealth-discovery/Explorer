@@ -13,7 +13,7 @@
       </mat-form-field>
       <mat-form-field appearance="outline" style="width: 500px">
         <mat-label>ODS code</mat-label>
-        <input required matInput placeholder="Code" [(ngModel)]="code" (ngModelChange)="formChanged()">
+        <input required matInput placeholder="Code" [(ngModel)]="code" (ngModelChange)="formChanged()" (keyup)="organisationEntered($event)">
       </mat-form-field>
   </div>
 
@@ -23,6 +23,6 @@
 
   <div mat-dialog-actions align="end">
     <button style="margin-right: 15px" mat-button color="accent" (click)="onCancelClick()">Cancel</button>
-    <button style="margin-right: 15px" mat-flat-button color="accent" [disabled]="disableForm" (click)="saveOrganisationGroupCode()">Save</button>
+    <button style="margin-right: 15px" mat-flat-button color="accent" [disabled]="disableForm" (click)="saveOrganisation()">Save</button>
   </div>
 

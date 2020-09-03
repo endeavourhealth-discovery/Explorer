@@ -12,12 +12,12 @@ export interface DialogData {
 }
 
 @Component({
-  selector: 'app-organisationgroupscodeeditor',
-  templateUrl: './organisationgroupscodeeditor.component.html',
-  styleUrls: ['./organisationgroupscodeeditor.component.scss']
+  selector: 'app-organisationeditor',
+  templateUrl: './organisationseditor.component.html',
+  styleUrls: ['./organisationseditor.component.scss']
 })
 
-export class OrganisationGroupsCodeEditorComponent {
+export class OrganisationsEditorComponent {
   name: string;
   type: string;
   code: string;
@@ -26,7 +26,7 @@ export class OrganisationGroupsCodeEditorComponent {
   organisation_group_id: string;
 
   constructor(
-    public dialogRef: MatDialogRef<OrganisationGroupsCodeEditorComponent>,
+    public dialogRef: MatDialogRef<OrganisationsEditorComponent>,
     private explorerService: ExplorerService,
     private log: LoggerService,
     @Inject(MAT_DIALOG_DATA) public data: DialogData) {
@@ -38,8 +38,8 @@ export class OrganisationGroupsCodeEditorComponent {
     this.organisation_group_id = data.organisation_group_id;
   }
 
-  saveOrganisationGroupCode() {
-    this.explorerService.saveOrganisationGroupCode(this.name, this.type, this.code, this.organisation_group_id, this.id)
+  saveOrganisation() {
+    this.explorerService.saveOrganisation(this.name, this.type, this.code, this.organisation_group_id, this.id)
       .subscribe(saved => {
           this.dialogRef.close(true);
         },
@@ -47,10 +47,9 @@ export class OrganisationGroupsCodeEditorComponent {
       );
   }
 
-  organisationGroupCodeEntered(event) {
-
+  organisationEntered(event) {
     if (event.key === "Enter") {
-      this.saveOrganisationGroupCode();
+      this.saveOrganisation();
     }
   }
 

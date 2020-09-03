@@ -8,8 +8,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class OrganisationGroupsCodes {
-    private static final Logger LOG = LoggerFactory.getLogger(OrganisationGroupsCodes.class);
+public class Organisations {
+    private static final Logger LOG = LoggerFactory.getLogger(Organisations.class);
 
     private String type;
     private String name;
@@ -22,7 +22,7 @@ public class OrganisationGroupsCodes {
         return type;
     }
 
-    public OrganisationGroupsCodes setType(String type) {
+    public Organisations setType(String type) {
         this.type = type;
         return this;
     }
@@ -30,7 +30,7 @@ public class OrganisationGroupsCodes {
 
     public String getName() { return name; }
 
-    public OrganisationGroupsCodes setName(String name) {
+    public Organisations setName(String name) {
         this.name = name;
         return this;
     }
@@ -40,7 +40,7 @@ public class OrganisationGroupsCodes {
         return code;
     }
 
-    public OrganisationGroupsCodes setCode(String code) {
+    public Organisations setCode(String code) {
         this.code = code;
         return this;
     }
@@ -50,7 +50,7 @@ public class OrganisationGroupsCodes {
         return updated;
     }
 
-    public OrganisationGroupsCodes setUpdated(Date updated) {
+    public Organisations setUpdated(Date updated) {
         try {
             String pattern = "dd-MMM-yyyy";
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
@@ -67,7 +67,7 @@ public class OrganisationGroupsCodes {
         return id;
     }
 
-    public OrganisationGroupsCodes setId(String id) {
+    public Organisations setId(String id) {
         this.id = id;
         return this;
     }

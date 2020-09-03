@@ -196,14 +196,14 @@ export class ExplorerService {
     return this.http.get('api/events/organisationgroups', {params});
   }
 
-  getOrganisationGroupsCodes(page?: number, size?: number, organisation_group_id?: string): Observable<any> {
+  getOrganisations(page?: number, size?: number, organisation_group_id?: string): Observable<any> {
 
     let params = new HttpParams();
     params = params.append('page', page.toString());
     params = params.append('size', size.toString());
     params = params.append('organisation_group_id', organisation_group_id);
 
-    return this.http.get('api/events/organisationgroupscodes', {params});
+    return this.http.get('api/events/organisations', {params});
   }
 
   saveOrganisationGroup(type?: string, name?: string, id?: string): Observable<any> {
@@ -222,7 +222,7 @@ export class ExplorerService {
     return this.http.get('api/events/organisationgroupdelete', {params});
   }
 
-  saveOrganisationGroupCode(name?: string, type?: string, code?: string, organisation_group_id?: string, id?: string): Observable<any> {
+  saveOrganisation(name?: string, type?: string, code?: string, organisation_group_id?: string, id?: string): Observable<any> {
     let params = new HttpParams();
     params = params.append('name', name);
     params = params.append('type', type);
@@ -230,14 +230,14 @@ export class ExplorerService {
     params = params.append('organisation_group_id', organisation_group_id);
     params = params.append('id', id);
 
-    return this.http.get('api/events/organisationgroupscodeeditor', {params});
+    return this.http.get('api/events/organisationeditor', {params});
   }
 
-  deleteOrganisationGroupCode(id?: string): Observable<any> {
+  deleteOrganisation(id?: string): Observable<any> {
     let params = new HttpParams();
     params = params.append('id', id);
 
-    return this.http.get('api/events/organisationgroupscodedelete', {params});
+    return this.http.get('api/events/organisationdelete', {params});
   }
 
   duplicateOrganisationGroup(id?: string): Observable<any> {

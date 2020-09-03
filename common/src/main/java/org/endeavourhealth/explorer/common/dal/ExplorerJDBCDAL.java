@@ -1042,8 +1042,8 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         return organisationgroups;
     }
 
-    public OrganisationGroupsCodesResult getOrganisationGroupsCodes(Integer page, Integer size, String organisation_group_id) throws Exception {
-        OrganisationGroupsCodesResult result = new OrganisationGroupsCodesResult();
+    public OrganisationsResult getOrganisations(Integer page, Integer size, String organisation_group_id) throws Exception {
+        OrganisationsResult result = new OrganisationsResult();
 
         String sql = "";
         String sqlCount = "";
@@ -1062,7 +1062,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
             statement.setInt(2, page*12);
             statement.setInt(3, size);
             try (ResultSet resultSet = statement.executeQuery()) {
-                result.setResults(getOrganisationGroupsCodesList(resultSet));
+                result.setResults(getOrganisationsList(resultSet));
             }
         }
 
@@ -1077,25 +1077,25 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         return result;
     }
 
-    private List<OrganisationGroupsCodes> getOrganisationGroupsCodesList(ResultSet resultSet) throws SQLException {
-        List<OrganisationGroupsCodes> result = new ArrayList<>();
+    private List<Organisations> getOrganisationsList(ResultSet resultSet) throws SQLException {
+        List<Organisations> result = new ArrayList<>();
         while (resultSet.next()) {
-            result.add(getOrganisationGroupsCodes(resultSet));
+            result.add(getOrganisations(resultSet));
         }
 
         return result;
     }
 
-    public static OrganisationGroupsCodes getOrganisationGroupsCodes(ResultSet resultSet) throws SQLException {
-        OrganisationGroupsCodes organisationgroupscodes = new OrganisationGroupsCodes();
+    public static Organisations getOrganisations(ResultSet resultSet) throws SQLException {
+        Organisations organisations = new Organisations();
 
-        organisationgroupscodes
+        organisations
                 .setType(resultSet.getString("type"))
                 .setName(resultSet.getString("name"))
                 .setCode(resultSet.getString("ods_code"))
                 .setUpdated(resultSet.getDate("updated"))
                 .setId(resultSet.getString("id"));
-        return organisationgroupscodes;
+        return organisations;
     }
 
     public void saveOrganisationGroup(String type, String name, String id) throws Exception {
@@ -1132,7 +1132,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
             stmt.executeUpdate();
         }
 
-        sql = "DELETE FROM dashboards.organisation WHERE organisation_group_id in ("+id+")";
+        sql = "DELETE FROM dashboards.organisations WHERE organisation_group_id in ("+id+")";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.executeUpdate();
@@ -1140,7 +1140,28 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
     }
 
-    public void saveOrganisationGroupCode(String name, String type, String code, String organisation_group_id, String id) throws Exception {
+    public void duplicateOrganisationGroup(String id) throws Exception {
+
+        String sql = "insert into dashboards.organisation_groups (type, name) " +
+                "select type, name from dashboards.organisation_groups where id = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, id);
+            stmt.executeUpdate();
+        }
+
+        String sqlCount = "insert into dashboards.organisations (organisation_group_id, name, type, ods_code) " +
+                "select (select max(id) as id from dashboards.organisation_groups), name, type, ods_code " +
+                "from dashboards.organisations " +
+                "where organisation_group_id = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sqlCount)) {
+            stmt.setString(1, id);
+            stmt.executeUpdate();
+        }
+    }
+
+    public void saveOrganisation(String name, String type, String code, String organisation_group_id, String id) throws Exception {
 
         String sql = "";
 
@@ -1170,34 +1191,13 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         }
     }
 
-    public void deleteOrganisationGroupCode(String id) throws Exception {
+    public void deleteOrganisation(String id) throws Exception {
 
         id = "WHERE id in ("+id+")";
 
         String sql = "DELETE FROM dashboards.organisations " +id;
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.executeUpdate();
-        }
-    }
-
-    public void duplicateOrganisationGroup(String id) throws Exception {
-
-        String sql = "insert into dashboards.organisation_groups (type, name) " +
-                "select type, name from dashboards.organisation_groups where id = ?";
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, id);
-            stmt.executeUpdate();
-        }
-
-        String sqlCount = "insert into dashboards.organisations (organisation_group_id, name, type, ods_code) " +
-                "select (select max(id) as id from dashboards.organisation_groups), name, type, ods_code " +
-                "from dashboards.organisations " +
-                "where organisation_group_id = ?";
-
-        try (PreparedStatement stmt = conn.prepareStatement(sqlCount)) {
-            stmt.setString(1, id);
             stmt.executeUpdate();
         }
     }
