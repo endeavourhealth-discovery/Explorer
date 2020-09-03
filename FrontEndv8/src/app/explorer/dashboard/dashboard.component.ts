@@ -127,7 +127,7 @@ export class DashboardComponent implements OnInit {
       this.showSeriesFilter = true;
     } else if (this.dashboardNumber == "7") {
       values = this.selectedSeries;
-      this.chartTitle = 'GP consultation types for suspected coronavirus';
+      this.chartTitle = 'GP consultation types';
       this.showLineCharts = true;
       this.showBarCharts = false;
       this.showAreaChart = false;
