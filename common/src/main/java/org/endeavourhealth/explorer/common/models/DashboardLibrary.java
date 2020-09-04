@@ -14,6 +14,7 @@ public class DashboardLibrary {
     private String name;
     private String updated;
     private String type;
+    private String jsonQuery;
 
     public String getUpdated() {
         return updated;
@@ -56,6 +57,15 @@ public class DashboardLibrary {
 
     public DashboardLibrary setType(String type) {
         this.type = type;
+        return this;
+    }
+
+    public String getJsonQuery() {
+        return jsonQuery;
+    }
+
+    public DashboardLibrary setJsonQuery(String jsonQuery) {
+        this.jsonQuery = jsonQuery;
         return this;
     }
 

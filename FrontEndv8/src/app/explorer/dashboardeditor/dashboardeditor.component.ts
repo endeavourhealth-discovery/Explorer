@@ -67,8 +67,6 @@ export class DashboardEditorComponent {
     };
     this.jsonQuery = JSON.stringify(query);
 
-    console.log(this.jsonQuery);
-
     this.explorerService.saveDashboard(this.type, this.name, this.dashboardId, this.jsonQuery)
       .subscribe(saved => {
           this.dialogRef.close(true);
@@ -92,7 +90,7 @@ export class DashboardEditorComponent {
   }
 
   ngOnInit() {
-    this.explorerService.getLookupLists('10')
+    this.explorerService.getLookupLists('11')
       .subscribe(
         (result) => this.loadQueryList(result),
         (error) => this.log.error(error)
