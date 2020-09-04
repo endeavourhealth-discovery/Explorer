@@ -280,9 +280,10 @@ export class AdvancedQueryEditorComponent implements OnInit {
   aggregates: aggregate[] = [
     {aggValue: 'Event level'},
     {aggValue: 'Organisational grouping'},
-    {aggValue: 'Date range'},
-    {aggValue: 'High level post codes'},
-    {aggValue: 'Age'}
+    {aggValue: 'Timeline'},
+    {aggValue: 'Geospatial grouping'},
+    {aggValue: 'Age bands'},
+    {aggValue: 'Ethnic grouping'}
   ];
   deliveries: delivery[] = [
     {deliveryValue: 'Dashboard'},

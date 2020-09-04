@@ -12,14 +12,14 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
-public class ConnectionPool extends GenericCache<Connection> {
-    private static final Logger LOG = LoggerFactory.getLogger(ConnectionPool.class);
+public class EMISConnectionPool extends GenericCache<Connection> {
+    private static final Logger LOG = LoggerFactory.getLogger(EMISConnectionPool.class);
     private static final int VALID_TIMEOUT = 5;
-    private static ConnectionPool instance = null;
+    private static EMISConnectionPool instance = null;
 
-    public static ConnectionPool getInstance() {
+    public static EMISConnectionPool getInstance() {
         if (instance == null)
-            instance = new ConnectionPool();
+            instance = new EMISConnectionPool();
 
         return instance;
     }
@@ -50,13 +50,16 @@ public class ConnectionPool extends GenericCache<Connection> {
     @Override
     protected Connection create() {
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
+            Class.forName("com.facebook.presto.jdbc.PrestoDriver");
 
             ConfigManager.Initialize("explorer");
             JsonNode json = ConfigManager.getConfigurationAsJson("database");
             String url = json.get("url").asText();
+            url = "jdbc:presto://explorerplus-test.testemisnightingale.co.uk:443/hive";
             String user = json.get("username").asText();
+            user = "darren.sheavills";
             String pass = json.get("password").asText();
+            pass = "XNlOeXu3A9gRgEDLpUT2";
             String driver = json.get("class") == null ? null : json.get("class").asText();
 
             if (driver != null && !driver.isEmpty())
@@ -66,6 +69,7 @@ public class ConnectionPool extends GenericCache<Connection> {
 
             props.setProperty("user", user);
             props.setProperty("password", pass);
+            props.setProperty("SSL", "true");
 
             Connection connection = DriverManager.getConnection(url, props);
 

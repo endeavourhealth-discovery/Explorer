@@ -29,6 +29,11 @@
       <artifactId>utility</artifactId>
       <version>1.64-SNAPSHOT</version>
     </dependency>
+    <dependency>
+      <groupId>com.facebook.presto</groupId>
+      <artifactId>presto-jdbc</artifactId>
+      <version>0.240</version>
+    </dependency>
   </dependencies>
 
   <build>

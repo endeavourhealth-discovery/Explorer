@@ -861,7 +861,7 @@
           <br/>
           <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
             <mat-form-field appearance="outline" style="margin-left: 15px">
-              <mat-label>Aggregate output type</mat-label>
+              <mat-label>Output type</mat-label>
               <mat-select [(ngModel)]="selectedAggregate" formControlName="control15" (ngModelChange)="formChanged()" required>
                 <mat-option *ngFor="let aggregate of aggregates" [value]="aggregate.aggValue">
                   {{aggregate.aggValue}}
@@ -898,7 +898,7 @@
             <p>Output type is event level (e.g. 1 line per event and 1 line per patient). For each observation, medication or encounter table, include the following attributes.</p>
           </div>
           <div style="margin-top: 15px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            <p>Output type is aggregated by one common attribute type such as multi-level organisational grouping, personal demographic grouping, or event level date time grouping.</p>
+            <p>Output type for dashboards or export files</p>
           </div>
           <div style="margin-top: 20px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
             <p>How often should this data set be refreshed.</p>
