@@ -47,6 +47,13 @@ interface savedQuery {
   includedPeriodValue1a: string;
   includedPeriodType1a: string;
   includedAnyAll1a: string;
+  includedExclude1b: string;
+  includedValueSet1b: string;
+  includedDateFrom1b: string;
+  includedDateTo1b: string;
+  includedPeriodValue1b: string;
+  includedPeriodType1b: string;
+  includedAnyAll1b: string;
   includedExclude2: string;
   includedValueSet2: string;
   includedEarliestLatest2: string;
@@ -196,6 +203,13 @@ export class AdvancedQueryEditorComponent implements OnInit {
   includedPeriodValue1a: string = '';
   includedPeriodType1a: string = '';
   includedAnyAll1a: string = '';
+  includedExclude1b: string = '';
+  includedValueSet1b: string = '';
+  includedDateFrom1b: string = '';
+  includedDateTo1b: string = '';
+  includedPeriodValue1b: string = '';
+  includedPeriodType1b: string = '';
+  includedAnyAll1b: string = '';
   includedExclude2: string = '';
   includedValueSet2: string = '';
   includedEarliestLatest2: string = '';
@@ -258,6 +272,8 @@ export class AdvancedQueryEditorComponent implements OnInit {
 
   select1a: boolean = false;
   addQuery1: boolean = true;
+  select1b: boolean = false;
+  addQuery1b: boolean = true;
   select2a: boolean = false;
   addQuery2: boolean = true;
 
@@ -385,6 +401,13 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.includedPeriodValue1a = query.includedPeriodValue1a;
       this.includedPeriodType1a = query.includedPeriodType1a;
       this.includedAnyAll1a = query.includedAnyAll1a;
+      this.includedExclude1b = query.includedExclude1b;
+      this.includedValueSet1b = query.includedValueSet1b;
+      this.includedDateFrom1b = query.includedDateFrom1b;
+      this.includedDateTo1b = query.includedDateTo1b;
+      this.includedPeriodValue1b = query.includedPeriodValue1b;
+      this.includedPeriodType1b = query.includedPeriodType1b;
+      this.includedAnyAll1b = query.includedAnyAll1b;
       this.includedExclude2 = query.includedExclude2;
       this.includedValueSet2 = query.includedValueSet2;
       this.includedEarliestLatest2 = query.includedEarliestLatest2;
@@ -438,6 +461,11 @@ export class AdvancedQueryEditorComponent implements OnInit {
         this.addQuery1 = false;
       }
 
+      if (this.includedExclude1b != "") {
+        this.select1b = true;
+        this.addQuery1b = false;
+      }
+
       if (this.includedExclude2a != "") {
         this.select2a = true;
         this.addQuery2 = false;
@@ -454,6 +482,8 @@ export class AdvancedQueryEditorComponent implements OnInit {
       control22: [''], control23: [''], control24: [''], control25: [''],
       control22a: [''], control23a: [''], control24a: [''], control25a: [''],
       control46a: [''], control47a: [''], control48a: [''],
+      control22b: [''], control23b: [''], control24b: [''], control25b: [''],
+      control46b: [''], control47b: [''], control48b: [''],
       control26: [''], control27: [''], control28: [''], control29: [''],
       control30: [''], control31: [''], control32: [''], control33: [''],
       control34: [''], control35: [''], control36: [''], control37: [''],
@@ -537,6 +567,13 @@ export class AdvancedQueryEditorComponent implements OnInit {
       includedDateTo1a: this.formatDate(this.includedDateTo1a),
       includedPeriodValue1a: this.includedPeriodValue1a,
       includedPeriodType1a: this.includedPeriodType1a,
+      includedExclude1b: this.includedExclude1b,
+      includedAnyAll1b: this.includedAnyAll1b,
+      includedValueSet1b: this.includedValueSet1b,
+      includedDateFrom1b: this.formatDate(this.includedDateFrom1b),
+      includedDateTo1b: this.formatDate(this.includedDateTo1b),
+      includedPeriodValue1b: this.includedPeriodValue1b,
+      includedPeriodType1b: this.includedPeriodType1b,
       includedExclude2: this.includedExclude2,
       includedAnyAll2: this.includedAnyAll2,
       includedValueSet2: this.includedValueSet2,
@@ -639,6 +676,10 @@ export class AdvancedQueryEditorComponent implements OnInit {
 
   addSameRule1() {
     this.select1a = true;
+  }
+
+  addSameRule1b() {
+    this.select1b = true;
   }
 
   addSameRule2() {
