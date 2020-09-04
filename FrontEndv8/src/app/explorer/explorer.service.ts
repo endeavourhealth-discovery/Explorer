@@ -130,11 +130,12 @@ export class ExplorerService {
     return this.http.get('api/events/querydelete', {params});
   }
 
-  saveDashboard(type?: string, name?: string, dashboardId?: string): Observable<any> {
+  saveDashboard(type?: string, name?: string, dashboardId?: string, jsonQuery?: string): Observable<any> {
     let params = new HttpParams();
     params = params.append('type', type);
     params = params.append('name', name);
     params = params.append('dashboardId', dashboardId);
+    params = params.append('jsonQuery', jsonQuery);
 
     return this.http.get('api/events/dashboardeditor', {params});
   }

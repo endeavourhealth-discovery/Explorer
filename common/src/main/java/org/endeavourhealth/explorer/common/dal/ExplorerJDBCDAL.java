@@ -86,27 +86,29 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         }
     }
 
-    public void saveDashboard(String type, String name, String dashboardId) throws Exception {
+    public void saveDashboard(String type, String name, String dashboardId, String jsonQuery) throws Exception {
 
         String sql = "";
 
         if (dashboardId.equals("")) {
-            sql = "INSERT INTO dashboards.dashboard_library (type, name) " +
-                    "VALUES (?, ?)";
+            sql = "INSERT INTO dashboards.dashboard_library (type, name, query) " +
+                    "VALUES (?, ?, ?)";
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
                 stmt.setString(1, type);
                 stmt.setString(2, name);
+                stmt.setString(3, jsonQuery);
                 stmt.executeUpdate();
             }
         } else // edit
         {
-            sql = "UPDATE dashboards.dashboard_library SET type = ?, name = ? " +
+            sql = "UPDATE dashboards.dashboard_library SET type = ?, name = ?, query = ? " +
                     "WHERE dashboard_id = ?";
 
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
                 stmt.setString(1, type);
                 stmt.setString(2, name);
-                stmt.setString(3, dashboardId);
+                stmt.setString(3, jsonQuery);
+                stmt.setString(4, dashboardId);
                 stmt.executeUpdate();
             }
         }
