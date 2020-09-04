@@ -130,9 +130,9 @@ export class DashboardLibraryComponent implements OnInit {
 
   add() {
     const dialogRef = this.dialog.open(DashboardEditorComponent, {
-      height: '320px',
-      width: '600px',
-      data: {dashboardId: "", name: "", type: ""}
+      height: '500px',
+      width: '1000px',
+      data: {dashboardId: "", name: "", type: "", query: ""}
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result)
@@ -168,7 +168,7 @@ export class DashboardLibraryComponent implements OnInit {
     const dialogRef = this.dialog.open(DashboardEditorComponent, {
       height: '320px',
       width: '600px',
-      data: {dashboardId: this.selection.selected[0].dashboardId, name: this.selection.selected[0].name, type:this.selection.selected[0].type}
+      data: {dashboardId: this.selection.selected[0].dashboardId, name: this.selection.selected[0].name, type:this.selection.selected[0].type, query: this.selection.selected[0].jsonQuery}
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result)

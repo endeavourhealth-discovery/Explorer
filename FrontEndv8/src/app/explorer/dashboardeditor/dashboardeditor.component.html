@@ -1,25 +1,71 @@
-  <div mat-dialog-title>
-    Add dashboard
-  </div>
+<div mat-dialog-title>
+  Dashboard editor
+</div>
 
-  <div style="font-size: 14px">
-      <mat-form-field appearance="outline" style="width: 500px">
-        <mat-label>Dashboard type</mat-label>
-        <input required matInput placeholder="Type" [(ngModel)]="type" (ngModelChange)="formChanged()">
-      </mat-form-field>
+<mat-horizontal-stepper #stepper style="font-size: 14px">
+  <mat-step [stepControl]="firstFormGroup" errorMessage="Step not completed.">
+    <form [formGroup]="firstFormGroup">
+      <ng-template matStepLabel>Dashboard name</ng-template>
       <br/>
-      <mat-form-field appearance="outline" style="width: 500px">
-        <mat-label>Dashboard name</mat-label>
-        <input required matInput placeholder="Name" [(ngModel)]="name" (ngModelChange)="formChanged()" (keyup)="dashboardEntered($event)">
-      </mat-form-field>
-  </div>
+      <div class="summary-column">
+        <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+          <mat-form-field appearance="outline" style="margin-left: 25px; width: 400px">
+            <mat-label>Dashboard type</mat-label>
+            <input matInput placeholder="Type" [(ngModel)]="type" formControlName="control1" (ngModelChange)="formChanged()" required>
+          </mat-form-field>
+        </div>
+        <br/>
+        <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+          <mat-form-field appearance="outline" style="margin-left: 25px; width: 400px">
+            <mat-label>Dashboard name</mat-label>
+            <input matInput placeholder="Name" [(ngModel)]="name" formControlName="control2" (ngModelChange)="formChanged()" required>
+          </mat-form-field>
+        </div>
+      </div>
 
-  <div class="flex" fxLayout="row wrap" fxLayoutGap="16px grid" fxLayoutAlign="start">
-    <small style="color:red">* required fields</small>
-  </div>
+      <div class="summary-column">
+        <div style="margin-top: 5px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+          <p>Type of dashboard for grouping in the library.</p>
+        </div>
 
-  <div mat-dialog-actions align="end">
-    <button style="margin-right: 15px" mat-button color="accent" (click)="onCancelClick()">Cancel</button>
-    <button style="margin-right: 15px" mat-flat-button color="accent" [disabled]="disableForm" (click)="saveDashboard()">Save</button>
-  </div>
+        <div style="margin-top: 30px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+          <p>Name of dashboard.</p>
+        </div>
+      </div>
 
+      <div style="margin-top: 100px" mat-dialog-actions align="end">
+        <button style="margin-right: 15px" mat-flat-button color="accent" (click)="onCancelClick()">Cancel</button>
+        <button style="margin-right: 15px" mat-button (click)="stepper.next()">Next</button>
+      </div>
+    </form>
+  </mat-step>
+
+  <mat-step [stepControl]="secondFormGroup" errorMessage="Step not completed.">
+    <form [formGroup]="secondFormGroup">
+      <ng-template matStepLabel>Dashboard layout</ng-template>
+      <br/>
+      <div class="summary-column">
+        <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+          <mat-form-field appearance="outline" style="margin-left: 25px; width: 300px">
+            <mat-label>Query/Dataset</mat-label>
+            <mat-select [(ngModel)]="selectedQuery" formControlName="control3" (ngModelChange)="formChanged()" required>
+              <mat-option *ngFor="let result of queryList" [value]="result">{{result}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="summary-column">
+        <div style="margin-top: 5px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+          <p>Select the query/dataset to be used as the dashboard data source.</p>
+        </div>
+      </div>
+
+      <div style="margin-top: 180px" mat-dialog-actions align="end">
+        <button style="margin-right: 15px" mat-flat-button color="accent" (click)="onCancelClick()">Cancel</button>
+        <button style="margin-right: 15px" mat-button color="accent" matStepperPrevious>Back</button>
+        <button style="margin-right: 15px" mat-button [disabled]="disableForm" (click)="saveDashboard()">Save</button>
+      </div>
+    </form>
+  </mat-step>
+</mat-horizontal-stepper>

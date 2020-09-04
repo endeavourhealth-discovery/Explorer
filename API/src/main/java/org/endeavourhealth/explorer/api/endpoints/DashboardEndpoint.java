@@ -266,11 +266,12 @@ public class DashboardEndpoint {
     public Response saveDashboard(@Context SecurityContext sc,
                               @QueryParam("type") String type,
                               @QueryParam("name") String name,
-                              @QueryParam("dashboardId") String dashboardId) throws Exception {
+                              @QueryParam("dashboardId") String dashboardId,
+                              @QueryParam("jsonQuery") String jsonQuery) throws Exception {
         LOG.debug("saveDashboard");
 
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
-            viewerDAL.saveDashboard(type, name, dashboardId);
+            viewerDAL.saveDashboard(type, name, dashboardId, jsonQuery);
 
             return Response
                     .ok()

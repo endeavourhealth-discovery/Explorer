@@ -431,8 +431,6 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.includedPeriodType5 = query.includedPeriodType5;
       this.includedAnyAll5 = query.includedAnyAll5;
 
-      console.log(this.includedExclude1a);
-
       if (this.includedExclude1a != "") {
         this.select1a = true;
         this.addQuery1 = false;
