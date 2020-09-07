@@ -30,6 +30,10 @@ export class DashboardEditorComponent {
   name: string;
   queryList = [];
   selectedQuery: string = '';
+  selectedOutputField: string = '';
+  selectedOutputType: string = '';
+  selectedSchedule: string = '';
+  visualisation: string = '';
   disableForm: boolean;
   dashboardId: string;
   firstFormGroup: FormGroup;
@@ -57,7 +61,7 @@ export class DashboardEditorComponent {
       control1: ['', Validators.required], control2: ['', Validators.required]
     });
     this.secondFormGroup = this._formBuilder.group({
-      control3: ['', Validators.required]
+      control3: ['', Validators.required], control4: [''], control5: [''], control6: [''], control7: ['']
     });
   }
 
@@ -73,6 +77,7 @@ export class DashboardEditorComponent {
         },
         error => this.log.error('This dashboard could not be saved.')
       );
+    console.log(this.visualisation);
   }
 
   dashboardEntered(event) {

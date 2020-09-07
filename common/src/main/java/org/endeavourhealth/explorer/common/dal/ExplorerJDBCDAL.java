@@ -112,6 +112,12 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                 stmt.executeUpdate();
             }
         }
+
+        sql = "SELECT query FROM dashboards.query_library";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.executeUpdate();
+        }
     }
 
     public void deleteQuery(String id) throws Exception {

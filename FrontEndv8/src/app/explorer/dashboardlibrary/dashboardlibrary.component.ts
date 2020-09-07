@@ -130,7 +130,7 @@ export class DashboardLibraryComponent implements OnInit {
 
   add() {
     const dialogRef = this.dialog.open(DashboardEditorComponent, {
-      height: '500px',
+      height: '650px',
       width: '1000px',
       data: {dashboardId: "", name: "", type: "", query: ""}
     });

@@ -48,6 +48,8 @@ import {OrganisationGroupsComponent} from "./organisationgroups/organisationgrou
 import {OrganisationsComponent} from "./organisations/organisations.component";
 import {OrganisationGroupsEditorComponent} from "./organisationgroupseditor/organisationgroupseditor.component";
 import {OrganisationsEditorComponent} from "./organisationseditor/organisationseditor.component";
+import {MatRadioModule} from "@angular/material/radio";
+import {MatTooltipModule} from "@angular/material/tooltip";
 
 @NgModule({
   declarations: [
@@ -70,40 +72,42 @@ import {OrganisationsEditorComponent} from "./organisationseditor/organisationse
     OrganisationGroupsEditorComponent,
     OrganisationsEditorComponent
   ],
-    imports: [
-        BrowserModule,
-        BrowserAnimationsModule,
-        MatCardModule,
-        MatTableModule,
-        MatSortModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatIconModule,
-        FormsModule,
-        MatPaginatorModule,
-        MatProgressSpinnerModule,
-        RouterModule,
-        FlexModule,
-        MatSelectModule,
-        MatSnackBarModule,
-        MatCheckboxModule,
-        MatMenuModule,
-        MatDialogModule,
-        CoreModule,
-        MatButtonModule,
-        MatTreeModule,
-        MatProgressBarModule,
-        MatGridListModule,
-        MatNativeDateModule,
-        MatDatepickerModule,
-        BarChartModule,
-        LineChartModule,
-        AreaChartModule,
-        ReactiveFormsModule,
-        GaugeModule,
-        MatStepperModule,
-        MatDividerModule
-    ],
+  imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    MatCardModule,
+    MatTableModule,
+    MatSortModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+    FormsModule,
+    MatPaginatorModule,
+    MatProgressSpinnerModule,
+    RouterModule,
+    FlexModule,
+    MatSelectModule,
+    MatSnackBarModule,
+    MatCheckboxModule,
+    MatMenuModule,
+    MatDialogModule,
+    CoreModule,
+    MatButtonModule,
+    MatTreeModule,
+    MatProgressBarModule,
+    MatGridListModule,
+    MatNativeDateModule,
+    MatDatepickerModule,
+    BarChartModule,
+    LineChartModule,
+    AreaChartModule,
+    ReactiveFormsModule,
+    GaugeModule,
+    MatStepperModule,
+    MatDividerModule,
+    MatRadioModule,
+    MatTooltipModule
+  ],
 
   entryComponents: [
     PatientComponent,

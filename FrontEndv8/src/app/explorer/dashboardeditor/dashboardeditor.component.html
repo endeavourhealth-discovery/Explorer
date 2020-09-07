@@ -53,15 +53,74 @@
             </mat-select>
           </mat-form-field>
         </div>
-      </div>
-
-      <div class="summary-column">
-        <div style="margin-top: 5px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-          <p>Select the query/dataset to be used as the dashboard data source.</p>
+        <br/>
+        <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+          <mat-form-field appearance="outline" style="margin-left: 25px">
+            <mat-label>Output fields</mat-label>
+            <mat-select multiple [(ngModel)]="selectedOutputField" formControlName="control4" (ngModelChange)="formChanged()">
+              <mat-option *ngFor="let field of outputFields" [value]="field.outputField">
+                {{field.outputField}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <br/>
+        <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+          <mat-form-field appearance="outline" style="margin-left: 25px">
+            <mat-label>Output type</mat-label>
+            <mat-select [(ngModel)]="selectedOutputType" formControlName="control5" (ngModelChange)="formChanged()" required>
+              <mat-option *ngFor="let outputType of outputTypes" [value]="outputType.outputType">
+                {{outputType.outputType}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <br/>
+        <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+          <mat-form-field appearance="outline" style="margin-left: 25px">
+            <mat-label>Refresh schedule</mat-label>
+            <mat-select [(ngModel)]="selectedSchedule" formControlName="control6" (ngModelChange)="formChanged()" required>
+              <mat-option *ngFor="let schedule of schedules" [value]="schedule.scheduleValue">
+                {{schedule.scheduleValue}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <br/><br/>
+        <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+          <mat-radio-group formControlName="control7" [(ngModel)]="visualisation">
+            <mat-radio-button matTooltip="Bar chart" style="margin-left: 25px" value="barchart">
+              <i class="far fa-chart-bar fa-2x"></i>
+            </mat-radio-button>
+            <mat-radio-button matTooltip="Line chart" style="margin-left: 50px" value="linechart">
+              <i class="far fa-chart-line fa-2x"></i>
+            </mat-radio-button>
+            <mat-radio-button matTooltip="Table" style="margin-left: 50px" value="table">
+              <i class="fal fa-table fa-2x"></i>
+            </mat-radio-button>
+          </mat-radio-group>
         </div>
       </div>
 
-      <div style="margin-top: 180px" mat-dialog-actions align="end">
+      <div class="summary-column">
+        <div style="margin-top: 8px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+          <p>Select the query/dataset to be used as the dashboard data source.</p>
+        </div>
+        <div style="margin-top: 20px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+          <p>Output fields. Fields for comparing/aggregating/grouping in dashboards or fields to be output as rows in tables.</p>
+        </div>
+        <div style="margin-top: 26px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+          <p>Output type for visualisations or exporting to files.</p>
+        </div>
+        <div style="margin-top: 30px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+          <p>How often should this data set be refreshed.</p>
+        </div>
+        <div style="margin-top: 30px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+          <p>Select the type of visualisation.</p>
+        </div>
+      </div>
+
+      <div style="margin-top: 100px" mat-dialog-actions align="end">
         <button style="margin-right: 15px" mat-flat-button color="accent" (click)="onCancelClick()">Cancel</button>
         <button style="margin-right: 15px" mat-button color="accent" matStepperPrevious>Back</button>
         <button style="margin-right: 15px" mat-button [disabled]="disableForm" (click)="saveDashboard()">Save</button>
