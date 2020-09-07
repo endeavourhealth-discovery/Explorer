@@ -28,8 +28,8 @@ interface savedQuery {
   active: boolean;
   dateFrom: string;
   dateTo: string;
-  aggregateOutput: string;
-  eventOutput: string;
+  outputType: string;
+  outputField: string;
   schedule: string;
   delivery: string;
 
@@ -125,12 +125,12 @@ interface delivery {
   deliveryValue: string;
 }
 
-interface aggregate {
-  aggValue: string;
+interface outputType {
+  outputType: string;
 }
 
-interface event {
-  eventValue: string;
+interface outputField {
+  outputField: string;
 }
 
 interface exclude {
@@ -182,10 +182,10 @@ export class AdvancedQueryEditorComponent implements OnInit {
   ageTo: string = '';
   selectedGender: string = '';
   postcode: string = '';
-  selectedAggregate: string = '';
+  selectedOutputType: string = '';
   selectedDelivery: string = '';
   selectedSchedule: string = '';
-  selectedEvent: string = '';
+  selectedOutputField: string = '';
   selectedOrganisation: string = '';
   selectedIncludedOrganisation: string = '';
 
@@ -293,13 +293,13 @@ export class AdvancedQueryEditorComponent implements OnInit {
     {genValue: 'Female'},
     {genValue: 'Other'}
   ];
-  aggregates: aggregate[] = [
-    {aggValue: 'Event level'},
-    {aggValue: 'Organisational grouping'},
-    {aggValue: 'Timeline'},
-    {aggValue: 'Geospatial grouping'},
-    {aggValue: 'Age bands'},
-    {aggValue: 'Ethnic grouping'}
+  outputTypes: outputType[] = [
+    {outputType: 'Rows in tables'},
+    {outputType: 'Organisational grouping'},
+    {outputType: 'Timeline'},
+    {outputType: 'Geospatial grouping'},
+    {outputType: 'Age bands'},
+    {outputType: 'Ethnic grouping'}
   ];
   deliveries: delivery[] = [
     {deliveryValue: 'Dashboard'},
@@ -314,19 +314,19 @@ export class AdvancedQueryEditorComponent implements OnInit {
     {scheduleValue: 'Quarterly'},
     {scheduleValue: 'One-off'}
   ];
-  events: event[] = [
-    {eventValue: 'Patient ID'},
-    {eventValue: 'Patient NHS number'},
-    {eventValue: 'Pseudo NHS number'},
-    {eventValue: 'Effective date'},
-    {eventValue: 'Concept name'},
-    {eventValue: 'Owning organisation'},
-    {eventValue: 'Numeric value'},
-    {eventValue: 'Post code'},
-    {eventValue: 'Age'},
-    {eventValue: 'Gender'},
-    {eventValue: 'Registered organisation'},
-    {eventValue: 'Death status'}
+  outputFields: outputField[] = [
+    {outputField: 'Patient ID'},
+    {outputField: 'Patient NHS number'},
+    {outputField: 'Pseudo NHS number'},
+    {outputField: 'Effective date'},
+    {outputField: 'Concept name'},
+    {outputField: 'Owning organisation'},
+    {outputField: 'Numeric value'},
+    {outputField: 'Post code'},
+    {outputField: 'Age'},
+    {outputField: 'Gender'},
+    {outputField: 'Registered organisation'},
+    {outputField: 'Death status'}
   ];
   exclude: exclude[] = [
     {exclude: 'Include'},
@@ -383,8 +383,8 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.active = query.active;
       this.dateFrom = query.dateFrom;
       this.dateTo = query.dateTo;
-      this.selectedAggregate = query.aggregateOutput;
-      this.selectedEvent = query.eventOutput;
+      this.selectedOutputType = query.outputType;
+      this.selectedOutputField = query.outputField;
       this.selectedSchedule = query.schedule;
       this.selectedDelivery = query.delivery;
       this.includedExclude1 = query.includedExclude1;
@@ -622,8 +622,8 @@ export class AdvancedQueryEditorComponent implements OnInit {
       datasetValue: this.selectedDatasetValueSet,
       dateFrom: this.formatDate(this.dateFrom),
       dateTo: this.formatDate(this.dateTo),
-      eventOutput: this.selectedEvent,
-      aggregateOutput: this.selectedAggregate,
+      outputField: this.selectedOutputField,
+      outputType: this.selectedOutputType,
       schedule: this.selectedSchedule,
       delivery: this.selectedDelivery
     };
@@ -669,7 +669,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
     this.disableForm = this.type=='' || this.type==undefined || this.name=='' || this.name==undefined || this.selectedOrganisation=='' || this.selectedOrganisation==undefined ||
       this.selectedRegistration=='' || this.selectedRegistration==undefined || this.selectedEventType=='' || this.selectedEventType==undefined
     || this.selectedDelivery=='' || this.selectedDelivery==undefined || this.selectedSchedule=='' || this.selectedSchedule==undefined ||
-      ( (this.selectedEvent=='' || this.selectedEvent==undefined) &&  (this.selectedAggregate=='' || this.selectedAggregate==undefined) );
+      ( (this.selectedOutputField=='' || this.selectedOutputField==undefined) &&  (this.selectedOutputType=='' || this.selectedOutputType==undefined) );
   }
 
   addSameRule1() {

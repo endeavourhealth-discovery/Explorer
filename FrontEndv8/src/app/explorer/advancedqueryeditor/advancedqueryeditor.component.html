@@ -24,7 +24,7 @@
           </div>
         </div>
         <div class="summary-column">
-          <div style="margin-top: 5px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+          <div style="margin-top: 7px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
             <p>Category of query for grouping in the library.</p>
           </div>
 
@@ -152,7 +152,7 @@
             Limit the cohort to only include patients that have clinical events containing concepts that are part of the selected value set(s).
           </div>
 
-          <div style="margin-top: 57px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+          <div style="margin-top: 60px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
             Filter the value set by date range.
           </div>
 
@@ -900,7 +900,7 @@
             <p>Filter data set by the selected value sets.</p>
           </div>
 
-          <div style="margin-top: 20px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+          <div style="margin-top: 25px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
             <p>Filter the data set by date range.</p>
           </div>
         </div>
@@ -921,10 +921,10 @@
         <div class="summary-column">
           <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
             <mat-form-field appearance="outline" style="margin-left: 15px">
-              <mat-label>Event level output type</mat-label>
-              <mat-select multiple [(ngModel)]="selectedEvent" formControlName="control14" (ngModelChange)="formChanged()">
-                <mat-option *ngFor="let event of events" [value]="event.eventValue">
-                  {{event.eventValue}}
+              <mat-label>Output fields</mat-label>
+              <mat-select multiple [(ngModel)]="selectedOutputField" formControlName="control14" (ngModelChange)="formChanged()">
+                <mat-option *ngFor="let field of outputFields" [value]="field.outputField">
+                  {{field.outputField}}
                 </mat-option>
               </mat-select>
             </mat-form-field>
@@ -933,9 +933,9 @@
           <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
             <mat-form-field appearance="outline" style="margin-left: 15px">
               <mat-label>Output type</mat-label>
-              <mat-select [(ngModel)]="selectedAggregate" formControlName="control15" (ngModelChange)="formChanged()" required>
-                <mat-option *ngFor="let aggregate of aggregates" [value]="aggregate.aggValue">
-                  {{aggregate.aggValue}}
+              <mat-select [(ngModel)]="selectedOutputType" formControlName="control15" (ngModelChange)="formChanged()" required>
+                <mat-option *ngFor="let outputType of outputTypes" [value]="outputType.outputType">
+                  {{outputType.outputType}}
                 </mat-option>
               </mat-select>
             </mat-form-field>
@@ -965,13 +965,13 @@
         </div>
 
         <div class="summary-column">
-          <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            <p>Output type is event level (e.g. 1 line per event and 1 line per patient). For each observation, medication or encounter table, include the following attributes.</p>
+          <div style="margin-top: 8px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <p>Output fields. Fields for comparing/aggregating/grouping in dashboards or fields to be output as rows in tables.</p>
           </div>
-          <div style="margin-top: 15px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            <p>Output type for dashboards or export files</p>
+          <div style="margin-top: 29px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <p>Output type for visualisations or exporting to files.</p>
           </div>
-          <div style="margin-top: 20px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+          <div style="margin-top: 30px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
             <p>How often should this data set be refreshed.</p>
           </div>
           <div style="margin-top: 30px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
