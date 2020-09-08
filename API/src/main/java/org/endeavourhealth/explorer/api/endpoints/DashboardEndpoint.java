@@ -507,4 +507,22 @@ public class DashboardEndpoint {
         }
     }
 
+    @GET
+    @Path("/query")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getQuery(@Context SecurityContext sc,
+                          @QueryParam("selectedQuery") String selectedQuery) throws Exception {
+        LOG.debug("getQuery");
+
+        try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
+            QueryResult result = viewerDAL.getQuery(selectedQuery);
+
+            return Response
+                    .ok()
+                    .entity(result)
+                    .build();
+        }
+    }
+
 }

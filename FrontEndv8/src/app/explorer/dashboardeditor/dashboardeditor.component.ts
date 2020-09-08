@@ -12,8 +12,26 @@ export interface DialogData {
   query: string;
 }
 
-interface savedQuery {
+interface query {
+  outputType: string;
+  outputField: string;
+  schedule: string;
+}
+
+interface savedDashboard {
   selectedQuery: string;
+}
+
+interface outputType {
+  outputType: string;
+}
+
+interface outputField {
+  outputField: string;
+}
+
+interface schedule {
+  scheduleValue: string;
 }
 
 @Component({
@@ -40,6 +58,38 @@ export class DashboardEditorComponent {
   secondFormGroup: FormGroup;
   jsonQuery: string;
 
+  outputTypes: outputType[] = [
+    {outputType: 'Rows in tables'},
+    {outputType: 'Organisational grouping'},
+    {outputType: 'Timeline'},
+    {outputType: 'Geospatial grouping'},
+    {outputType: 'Age bands'},
+    {outputType: 'Ethnic grouping'}
+  ];
+
+  outputFields: outputField[] = [
+    {outputField: 'Patient ID'},
+    {outputField: 'Patient NHS number'},
+    {outputField: 'Pseudo NHS number'},
+    {outputField: 'Effective date'},
+    {outputField: 'Concept name'},
+    {outputField: 'Owning organisation'},
+    {outputField: 'Numeric value'},
+    {outputField: 'Post code'},
+    {outputField: 'Age'},
+    {outputField: 'Gender'},
+    {outputField: 'Registered organisation'},
+    {outputField: 'Death status'}
+  ];
+
+  schedules: schedule[] = [
+    {scheduleValue: 'Daily'},
+    {scheduleValue: 'Weekly'},
+    {scheduleValue: 'Monthly'},
+    {scheduleValue: 'Quarterly'},
+    {scheduleValue: 'One-off'}
+  ];
+
   constructor(
     public dialogRef: MatDialogRef<DashboardEditorComponent>,
     private explorerService: ExplorerService,
@@ -52,7 +102,7 @@ export class DashboardEditorComponent {
     this.type = data.type;
 
     if (data.query!='') { // edit mode
-      let query: savedQuery = JSON.parse(data.query);
+      let query: savedDashboard = JSON.parse(data.query);
 
       this.selectedQuery = query.selectedQuery;
     }
@@ -108,6 +158,30 @@ export class DashboardEditorComponent {
         this.queryList.push(e.type);
       }
     )
+  }
+
+  querySelected() {
+    this.explorerService.getQuery(this.selectedQuery)
+      .subscribe(
+        (result) => this.loadQuery(result),
+        (error) => this.log.error(error)
+      );
+
+  }
+
+
+
+  loadQuery(result: any) {
+    result.results.map(
+      e => {
+        let query: query = JSON.parse(e.jsonQuery);
+
+        this.selectedOutputField =  query.outputField;
+        this.selectedOutputType = query.outputType;
+        this.selectedSchedule = query.schedule;
+      }
+    )
+    this.ngOnInit();
   }
 
 }

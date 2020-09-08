@@ -1227,4 +1227,39 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         }
     }
 
+    public QueryResult getQuery(String selectedQuery) throws Exception {
+        QueryResult result = new QueryResult();
+
+        String sql = "";
+
+        sql = "SELECT query " +
+                "FROM dashboards.query_library " +
+                "WHERE name = ?";
+
+        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            statement.setString(1, selectedQuery);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                result.setResults(getQueryList(resultSet));
+            }
+        }
+        return result;
+    }
+
+    private List<Query> getQueryList(ResultSet resultSet) throws SQLException {
+        List<Query> result = new ArrayList<>();
+        while (resultSet.next()) {
+            result.add(getQuery(resultSet));
+        }
+
+        return result;
+    }
+
+    public static Query getQuery(ResultSet resultSet) throws SQLException {
+        Query query = new Query();
+
+        query
+                .setQuery(resultSet.getString("query"));
+        return query;
+    }
+
 }

@@ -33,7 +33,7 @@
         </div>
       </div>
 
-      <div style="margin-top: 100px" mat-dialog-actions align="end">
+      <div style="margin-top: 300px" mat-dialog-actions align="end">
         <button style="margin-right: 15px" mat-flat-button color="accent" (click)="onCancelClick()">Cancel</button>
         <button style="margin-right: 15px" mat-button (click)="stepper.next()">Next</button>
       </div>
@@ -49,7 +49,7 @@
           <mat-form-field appearance="outline" style="margin-left: 25px; width: 300px">
             <mat-label>Query/Dataset</mat-label>
             <mat-select [(ngModel)]="selectedQuery" formControlName="control3" (ngModelChange)="formChanged()" required>
-              <mat-option *ngFor="let result of queryList" [value]="result">{{result}}</mat-option>
+              <mat-option *ngFor="let result of queryList" [value]="result" (click)="querySelected()">{{result}}</mat-option>
             </mat-select>
           </mat-form-field>
         </div>
@@ -120,7 +120,7 @@
         </div>
       </div>
 
-      <div style="margin-top: 100px" mat-dialog-actions align="end">
+      <div style="margin-top: 85px" mat-dialog-actions align="end">
         <button style="margin-right: 15px" mat-flat-button color="accent" (click)="onCancelClick()">Cancel</button>
         <button style="margin-right: 15px" mat-button color="accent" matStepperPrevious>Back</button>
         <button style="margin-right: 15px" mat-button [disabled]="disableForm" (click)="saveDashboard()">Save</button>
