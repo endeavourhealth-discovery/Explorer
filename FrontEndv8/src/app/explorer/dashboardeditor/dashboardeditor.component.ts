@@ -20,6 +20,10 @@ interface query {
 
 interface savedDashboard {
   selectedQuery: string;
+  selectedOutputField: string;
+  selectedOutputType: string;
+  selectedSchedule: string;
+  visualType: string;
 }
 
 interface outputType {
@@ -51,7 +55,7 @@ export class DashboardEditorComponent {
   selectedOutputField: string = '';
   selectedOutputType: string = '';
   selectedSchedule: string = '';
-  visualisation: string = '';
+  visualType: string = '';
   disableForm: boolean;
   dashboardId: string;
   firstFormGroup: FormGroup;
@@ -105,6 +109,10 @@ export class DashboardEditorComponent {
       let query: savedDashboard = JSON.parse(data.query);
 
       this.selectedQuery = query.selectedQuery;
+      this.selectedOutputField = query.selectedOutputField;
+      this.selectedOutputType = query.selectedOutputType;
+      this.selectedSchedule = query.selectedSchedule;
+      this.visualType = query.visualType;
     }
 
     this.firstFormGroup = this._formBuilder.group({
@@ -117,7 +125,11 @@ export class DashboardEditorComponent {
 
   saveDashboard() {
     let query = {
-      selectedQuery: this.selectedQuery
+      selectedQuery: this.selectedQuery,
+      selectedOutputField: this.selectedOutputField,
+      selectedOutputType: this.selectedOutputType,
+      selectedSchedule: this.selectedSchedule,
+      visualType: this.visualType
     };
     this.jsonQuery = JSON.stringify(query);
 
@@ -127,7 +139,6 @@ export class DashboardEditorComponent {
         },
         error => this.log.error('This dashboard could not be saved.')
       );
-    console.log(this.visualisation);
   }
 
   dashboardEntered(event) {
@@ -168,8 +179,6 @@ export class DashboardEditorComponent {
       );
 
   }
-
-
 
   loadQuery(result: any) {
     result.results.map(
