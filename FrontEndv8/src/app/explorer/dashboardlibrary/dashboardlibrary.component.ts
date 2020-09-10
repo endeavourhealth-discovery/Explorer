@@ -9,30 +9,50 @@ import {SelectionModel} from "@angular/cdk/collections";
 import {MatDialog} from "@angular/material/dialog";
 import {MessageBoxDialogComponent} from "../message-box-dialog/message-box-dialog.component";
 import {DashboardEditorComponent} from "../dashboardeditor/dashboardeditor.component";
+import {animate, state, style, transition, trigger} from '@angular/animations';
+
+interface query {
+  query: string;
+  outputType: string;
+  outputField: string;
+  schedule: string;
+  visualType: string;
+}
 
 @Component({
   selector: 'app-dashboardlibrary',
   templateUrl: './dashboardlibrary.component.html',
-  styleUrls: ['./dashboardlibrary.component.scss']
+  styleUrls: ['./dashboardlibrary.component.scss'],
+  animations: [
+    trigger('detailExpand', [
+      state('collapsed', style({height: '0px', minHeight: '0'})),
+      state('expanded', style({height: '*'})),
+      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+    ]),
+  ],
 })
 
 export class DashboardLibraryComponent implements OnInit {
 
   selection = new SelectionModel<any>(true, []);
-
   events: any;
   dataSource: MatTableDataSource<any>;
   page: number = 0;
   size: number = 12;
 
-  displayedColumns: string[] = ['select', 'type', 'name', 'updated'];
+  displayedColumns: string[] = ['select', 'type', 'name', 'updated', 'expandArrow'];
+  expandedElement: DashboardLibraryComponent | null;
 
   selectedType: string = '';
   selectedTypeString: string = '';
   selectAll: boolean = true;
-
   typeList = [];
   typeValues = new FormControl(this.typeList);
+  selectedQuery: string = '';
+  selectedOutputField: string = '';
+  selectedOutputType: string = '';
+  selectedSchedule: string = '';
+  visualType: string = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -85,15 +105,14 @@ export class DashboardLibraryComponent implements OnInit {
 
   loadList(lists: any) {
     this.typeList = [];
-
     lists.results.map(
       e => {
         this.typeList.push(e.type);
       }
     )
     this.typeValues = new FormControl(this.typeList);
-    this.refresh(false);
 
+    this.refresh(false);
   }
 
   displayEvents(events: any) {
@@ -126,6 +145,18 @@ export class DashboardLibraryComponent implements OnInit {
       return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
     }
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
+  }
+
+  queryId (jsonQuery: any) {
+    if (jsonQuery != undefined) {
+      let query: query = JSON.parse(jsonQuery);
+
+      this.selectedQuery = query.query;
+      this.selectedOutputField = query.outputField;
+      this.selectedOutputType = query.outputType;
+      this.selectedSchedule = query.schedule;
+      this.visualType = query.visualType;
+    }
   }
 
   add() {
@@ -166,7 +197,7 @@ export class DashboardLibraryComponent implements OnInit {
 
   edit() {
     const dialogRef = this.dialog.open(DashboardEditorComponent, {
-      height: '500px',
+      height: '700px',
       width: '1000px',
       data: {dashboardId: this.selection.selected[0].dashboardId, name: this.selection.selected[0].name, type:this.selection.selected[0].type, query: this.selection.selected[0].jsonQuery}
     });
