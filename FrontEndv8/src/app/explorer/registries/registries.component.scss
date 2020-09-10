@@ -9,3 +9,15 @@
 .ok{
   color: orange;
 }
+
+tr.expanded-detail-row {
+  height: 0;
+}
+
+tr.expanded-element-row:not(.expanded-expanded-row):hover {
+  background: whitesmoke;
+}
+
+tr.expanded-element-row:not(.expanded-expanded-row):active {
+  background: #efefef;
+}

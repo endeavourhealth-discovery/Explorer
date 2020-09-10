@@ -54,7 +54,7 @@
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr style="cursor: pointer" mat-row *matRowDef="let row; columns: displayedColumns;" (click)="valueSetCodeDialog(row.id)" ></tr>
+        <tr style="cursor: pointer" mat-row *matRowDef="let row; columns: displayedColumns;" class="expanded-element-row" (click)="valueSetCodeDialog(row.id)" ></tr>
       </table>
     <div>
     </div>

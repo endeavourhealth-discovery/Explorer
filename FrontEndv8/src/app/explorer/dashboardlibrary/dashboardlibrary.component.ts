@@ -3,7 +3,7 @@ import {MatTableDataSource} from '@angular/material';
 import {ExplorerService} from '../explorer.service';
 import {LoggerService} from 'dds-angular8';
 import {PageEvent} from '@angular/material/paginator';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {FormControl} from "@angular/forms";
 import {SelectionModel} from "@angular/cdk/collections";
 import {MatDialog} from "@angular/material/dialog";
@@ -12,10 +12,10 @@ import {DashboardEditorComponent} from "../dashboardeditor/dashboardeditor.compo
 import {animate, state, style, transition, trigger} from '@angular/animations';
 
 interface query {
-  query: string;
-  outputType: string;
-  outputField: string;
-  schedule: string;
+  selectedQuery: string;
+  selectedOutputField: string;
+  selectedOutputType: string;
+  selectedSchedule: string;
   visualType: string;
 }
 
@@ -48,17 +48,13 @@ export class DashboardLibraryComponent implements OnInit {
   selectAll: boolean = true;
   typeList = [];
   typeValues = new FormControl(this.typeList);
-  selectedQuery: string = '';
-  selectedOutputField: string = '';
-  selectedOutputType: string = '';
-  selectedSchedule: string = '';
-  visualType: string = '';
 
   constructor(
     private route: ActivatedRoute,
     private explorerService: ExplorerService,
     private log: LoggerService,
-  private dialog: MatDialog) { }
+    private router: Router,
+    private dialog: MatDialog) { }
 
   ngOnInit() {
     this.explorerService.getLookupLists('1')
@@ -147,18 +143,6 @@ export class DashboardLibraryComponent implements OnInit {
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
   }
 
-  queryId (jsonQuery: any) {
-    if (jsonQuery != undefined) {
-      let query: query = JSON.parse(jsonQuery);
-
-      this.selectedQuery = query.query;
-      this.selectedOutputField = query.outputField;
-      this.selectedOutputType = query.outputType;
-      this.selectedSchedule = query.schedule;
-      this.visualType = query.visualType;
-    }
-  }
-
   add() {
     const dialogRef = this.dialog.open(DashboardEditorComponent, {
       height: '700px',
@@ -206,6 +190,22 @@ export class DashboardLibraryComponent implements OnInit {
         this.ngOnInit();
     });
 
+  }
+
+  formatDetail(jsonQuery){
+
+    if (jsonQuery != undefined) {
+      let query: query = JSON.parse(jsonQuery);
+      let details = '';
+
+      details = "<table><tr><td><b>Query/Dataset</b>: </td><td>"+query.selectedQuery+"</td></tr>";
+      details += "<tr><td><b>Output fields</b>: </td><td>"+query.selectedOutputField+"</td></tr>";
+      details += "<tr><td><b>Output type</b>: </td><td>"+query.selectedOutputType+"</td></tr>";
+      details += "<tr><td><b>Schedule</b>: </td><td>"+query.selectedSchedule+"</td></tr>";
+      details += "<tr><td><b>Visual type</b>: </td><td>"+query.visualType+"</td></tr></table>";
+
+      return details;
+    }
   }
 
 }
