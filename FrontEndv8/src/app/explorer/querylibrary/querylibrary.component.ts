@@ -9,11 +9,25 @@ import {SelectionModel} from "@angular/cdk/collections";
 import {MessageBoxDialogComponent} from "../message-box-dialog/message-box-dialog.component";
 import {MatDialog} from "@angular/material/dialog";
 import {AdvancedQueryEditorComponent} from "../advancedqueryeditor/advancedqueryeditor.component";
+import {animate, state, style, transition, trigger} from "@angular/animations";
+
+interface query {
+  outputField: string;
+  outputType: string;
+  schedule: string;
+}
 
 @Component({
   selector: 'app-querylibrary',
   templateUrl: './querylibrary.component.html',
-  styleUrls: ['./querylibrary.component.scss']
+  styleUrls: ['./querylibrary.component.scss'],
+  animations: [
+    trigger('detailExpand', [
+      state('collapsed', style({height: '0px', minHeight: '0'})),
+      state('expanded', style({height: '*'})),
+      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+    ]),
+  ],
 })
 
 export class QueryLibraryComponent implements OnInit {
@@ -25,7 +39,8 @@ export class QueryLibraryComponent implements OnInit {
   page: number = 0;
   size: number = 12;
 
-  displayedColumns: string[] = ['select', 'type', 'name', 'updated'];
+  displayedColumns: string[] = ['select', 'type', 'name', 'updated', 'expandArrow'];
+  expandedElement: QueryLibraryComponent | null;
 
   selectedType: string = '';
   selectedTypeString: string = '';
@@ -176,5 +191,19 @@ export class QueryLibraryComponent implements OnInit {
         if (result)
           this.ngOnInit();
       })
+  }
+
+  formatDetail(jsonQuery){
+
+    if (jsonQuery != undefined && jsonQuery != "stored_proc_1"&& jsonQuery != "stored_proc_2"&& jsonQuery != "stored_proc_3"&& jsonQuery != "stored_proc_4"&& jsonQuery != "stored_proc_5"&& jsonQuery != "stored_proc_6"&& jsonQuery != "stored_proc_7") {
+      let query: query = JSON.parse(jsonQuery);
+      let details = '';
+
+      details += "<table><tr><td><b>Output fields</b>: </td><td>"+query.outputField+"</td></tr>";
+      details += "<tr><td><b>Output type</b>: </td><td>"+query.outputType+"</td></tr>";
+      details += "<tr><td><b>Schedule</b>: </td><td>"+query.schedule+"</td></tr></table>";
+
+      return details;
+    }
   }
 }
