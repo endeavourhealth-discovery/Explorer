@@ -218,3 +218,32 @@ mwl-gauge > .gauge > .poor {
   stroke-width: 10;
   fill: rgba(0,0,0,0);
 }
+
+div.layout-header span.title {
+  visibility: hidden;
+}
+
+div.layout-header span.title:after {
+  content: "Population Health for Integrated Care";
+  visibility: visible;
+  display: block;
+  position: absolute;
+  top: 16px;
+}
+
+.logo {
+  content: url("assets/chart.png");
+}
+
+div.logo-container span.title {
+  visibility: hidden;
+}
+
+div.logo-container span.title:after {
+  content: "Explorer Population Health";
+  visibility: visible;
+  display: block;
+  position: absolute;
+  top: 0px;
+}
+
