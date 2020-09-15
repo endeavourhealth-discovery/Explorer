@@ -192,17 +192,23 @@ export class DashboardLibraryComponent implements OnInit {
 
   }
 
-  formatDetail(jsonQuery){
+  formatDetail(jsonQuery, fieldName){
 
     if (jsonQuery != undefined) {
       let query: query = JSON.parse(jsonQuery);
       let details = '';
 
-      details = "<table><tr><td><b>Query/Dataset</b>: </td><td>"+query.selectedQuery+"</td></tr>";
-      details += "<tr><td><b>Output fields</b>: </td><td>"+query.selectedOutputField+"</td></tr>";
-      details += "<tr><td><b>Output type</b>: </td><td>"+query.selectedOutputType+"</td></tr>";
-      details += "<tr><td><b>Schedule</b>: </td><td>"+query.selectedSchedule+"</td></tr>";
-      details += "<tr><td><b>Visual type</b>: </td><td>"+query.visualType+"</td></tr></table>";
+      if (fieldName=='selectedQuery') {
+        details = query.selectedQuery
+      } else if (fieldName=='selectedOutputField') {
+        details = query.selectedOutputField
+      } else if (fieldName=='selectedOutputType') {
+        details = query.selectedOutputType
+      } else if (fieldName=='selectedSchedule') {
+        details = query.selectedSchedule
+      } else if (fieldName=='visualType') {
+        details = query.visualType
+      }
 
       return details;
     }

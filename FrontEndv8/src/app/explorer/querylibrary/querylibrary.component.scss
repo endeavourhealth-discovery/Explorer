@@ -31,3 +31,7 @@ tr.expanded-element-row:not(.expanded-expanded-row):active {
   opacity: 0.5;
 }
 
+.expanded-table {
+  border-collapse: separate;
+  border-spacing: 100px 5px;
+}

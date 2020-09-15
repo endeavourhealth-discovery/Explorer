@@ -15,6 +15,21 @@ interface query {
   outputField: string;
   outputType: string;
   schedule: string;
+  delivery: string;
+  eventType: string;
+  datasetValue: string;
+  dateFrom: string;
+  dateTo: string;
+  providerOrganisation: string;
+  includedOrganisation: string;
+  registrationStatus: string;
+  cohortValue: string;
+  valueDateFrom: string;
+  valueDateTo: string;
+  ageFrom: string;
+  ageTo: string;
+  gender: string;
+  postcode: string;
 }
 
 @Component({
@@ -193,15 +208,49 @@ export class QueryLibraryComponent implements OnInit {
       })
   }
 
-  formatDetail(jsonQuery){
+  formatDetail(jsonQuery, fieldName) {
 
     if (jsonQuery != undefined && jsonQuery != "stored_proc_1"&& jsonQuery != "stored_proc_2"&& jsonQuery != "stored_proc_3"&& jsonQuery != "stored_proc_4"&& jsonQuery != "stored_proc_5"&& jsonQuery != "stored_proc_6"&& jsonQuery != "stored_proc_7") {
       let query: query = JSON.parse(jsonQuery);
       let details = '';
 
-      details += "<table><tr><td><b>Output fields</b>: </td><td>"+query.outputField+"</td></tr>";
-      details += "<tr><td><b>Output type</b>: </td><td>"+query.outputType+"</td></tr>";
-      details += "<tr><td><b>Schedule</b>: </td><td>"+query.schedule+"</td></tr></table>";
+      if (fieldName=='providerOrganisation') {
+        details = query.providerOrganisation
+      } else if (fieldName=='includedOrganisation') {
+        details = query.includedOrganisation
+      } else if (fieldName=='registrationStatus') {
+        details = query.registrationStatus
+      }else if (fieldName=='cohortValue') {
+        details = query.cohortValue
+      }else if (fieldName=='valueDateFrom') {
+        details = query.valueDateFrom
+      }else if (fieldName=='valueDateTo') {
+        details = query.valueDateTo
+      }else if (fieldName=='ageFrom') {
+        details = query.ageFrom
+      }else if (fieldName=='ageTo') {
+        details = query.ageTo
+      }else if (fieldName=='gender') {
+        details = query.gender
+      }else if (fieldName=='postcode') {
+        details = query.postcode
+      }else if (fieldName=='eventType') {
+        details = query.eventType
+      }else if (fieldName=='datasetValue') {
+        details = query.datasetValue
+      }else if (fieldName=='dateFrom') {
+        details = query.dateFrom
+      }else if (fieldName=='dateTo') {
+        details = query.dateTo
+      }else if (fieldName=='outputField') {
+        details = query.outputField
+      }else if (fieldName=='outputType') {
+        details = query.outputType
+      }else if (fieldName=='schedule') {
+        details = query.schedule
+      }else if (fieldName=='delivery') {
+      details = query.delivery
+    }
 
       return details;
     }
