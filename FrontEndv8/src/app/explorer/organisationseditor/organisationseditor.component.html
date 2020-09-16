@@ -15,10 +15,8 @@
         <mat-label>ODS code</mat-label>
         <input required matInput placeholder="Code" [(ngModel)]="code" (ngModelChange)="formChanged()" (keyup)="organisationEntered($event)">
       </mat-form-field>
-  </div>
-
-  <div class="flex" fxLayout="row wrap" fxLayoutGap="16px grid" fxLayoutAlign="start">
-    <small style="color:red">* required fields</small>
+      <br/>
+      <span style="margin-left: 5px; color: gray">*Required</span>
   </div>
 
   <div mat-dialog-actions align="end">

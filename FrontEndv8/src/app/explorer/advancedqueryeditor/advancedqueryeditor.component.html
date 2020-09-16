@@ -12,29 +12,30 @@
           <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
             <mat-form-field appearance="outline" style="margin-left: 25px; width: 400px">
               <mat-label>Query category</mat-label>
-              <input required matInput placeholder="Category" [(ngModel)]="type" formControlName="control1" (ngModelChange)="formChanged()">
+              <input required matInput placeholder="Category" [(ngModel)]="type" formControlName="control1" (ngModelChange)="formChanged()" (keydown.enter)="stepper.next()">
             </mat-form-field>
           </div>
           <br/>
           <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
             <mat-form-field appearance="outline" style="margin-left: 25px; width: 400px">
               <mat-label>Query name</mat-label>
-              <input required matInput placeholder="Name" [(ngModel)]="name" formControlName="control2" (ngModelChange)="formChanged()">
+              <input required matInput placeholder="Name" [(ngModel)]="name" formControlName="control2" (ngModelChange)="formChanged()" (keydown.enter)="stepper.next()">
             </mat-form-field>
           </div>
+          <br/>
+          <span style="margin-left: 30px">*Required</span>
         </div>
         <div class="summary-column">
           <div style="margin-top: 7px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
             <p>Category of query for grouping in the library.</p>
           </div>
-
           <div style="margin-top: 30px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
             <p>Name of query.</p>
           </div>
         </div>
         <div style="margin-top: 375px" mat-dialog-actions align="end">
-          <button style="margin-right: 15px" mat-flat-button color="accent" (click)="onCancelClick()">Cancel</button>
-          <button style="margin-right: 15px" mat-button (click)="stepper.next()">Next</button>
+          <button style="margin-right: 15px" mat-button color="accent" (click)="onCancelClick()">Cancel</button>
+          <button style="margin-right: 15px" mat-flat-button color="accent" (click)="stepper.next()">Next</button>
         </div>
       </form>
     </mat-step>
@@ -109,12 +110,12 @@
           <div class="flex" fxLayout.xs="column"  fxLayoutAlign="start">
             <mat-form-field appearance="outline" style="margin-left: 25px; width: 140px">
               <mat-label>Age range from</mat-label>
-              <input matInput placeholder="Age" [(ngModel)]="ageFrom" formControlName="control6">
+              <input matInput placeholder="Age" [(ngModel)]="ageFrom" formControlName="control6" (keydown.enter)="stepper.next()">
             </mat-form-field>
 
             <mat-form-field appearance="outline" style="margin-left: 20px; width: 140px">
               <mat-label>Age range to</mat-label>
-              <input matInput placeholder="Age" [(ngModel)]="ageTo" formControlName="control7">
+              <input matInput placeholder="Age" [(ngModel)]="ageTo" formControlName="control7" (keydown.enter)="stepper.next()">
             </mat-form-field>
           </div>
           <br/>
@@ -130,18 +131,20 @@
 
             <mat-form-field appearance="outline" style="margin-left: 20px; width: 180px">
               <mat-label>Home address postcode</mat-label>
-              <input matInput placeholder="Postcode" [(ngModel)]="postcode" formControlName="control9">
+              <input matInput placeholder="Postcode" [(ngModel)]="postcode" formControlName="control9" (keydown.enter)="stepper.next()">
             </mat-form-field>
           </div>
+          <br/>
+          <span style="margin-left: 30px">*Required</span>
         </div>
 
         <div class="summary-column">
           <div style="margin-top: 20px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            List of organisations, or list of organisations groups, whose records will be used as the base cohort.
+            List of organisations, or list of organisation groups, whose records will be used as the base cohort.
           </div>
 
           <div style="margin-top: 45px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            This is the list of organisations whose records are included for the patients who are in the base cohort, but not included if they are not. For example, patient who have records in a GP practice may be in the base, and they may have visited hospital and the hospital may be included in the included organisation list. If not defined NO other organisational records are included.
+            This is the list of organisations whose records are included for the patients in the base cohort. For example, patients who have records in a GP practice might be in the cohort base, they might have visited hospital and the hospital could also be included in the included organisation list. If an organisation is not defined, those organisations records are not included.
           </div>
 
           <div style="margin-top: 40px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
@@ -166,9 +169,9 @@
         </div>
 
         <div mat-dialog-actions align="end">
-          <button style="margin-right: 15px" mat-flat-button color="accent" (click)="onCancelClick()">Cancel</button>
+          <button style="margin-right: 15px" mat-button color="accent" (click)="onCancelClick()">Cancel</button>
           <button style="margin-right: 15px" mat-button color="accent" matStepperPrevious>Back</button>
-          <button style="margin-right: 15px" mat-button (click)="stepper.next()">Next</button>
+          <button style="margin-right: 15px" mat-flat-button color="accent" (click)="stepper.next()">Next</button>
         </div>
       </form>
     </mat-step>
@@ -230,7 +233,7 @@
             <p style="margin-left: 10px; margin-top: 28px">or <span style="color: blue">within</span> the <span style="color: blue">last</span></p>
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 60px">
               <mat-label>Period</mat-label>
-              <input matInput placeholder="Value" [(ngModel)]="includedPeriodValue1" formControlName="control47">
+              <input matInput placeholder="Value" [(ngModel)]="includedPeriodValue1" formControlName="control47" (keydown.enter)="stepper.next()">
             </mat-form-field>
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 160px">
               <mat-label>Days/Weeks/Months</mat-label>
@@ -301,7 +304,7 @@
             <p style="margin-left: 10px; margin-top: 28px">or <span style="color: blue">within</span> the <span style="color: blue">last</span></p>
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 60px">
               <mat-label>Period</mat-label>
-              <input matInput placeholder="Value" [(ngModel)]="includedPeriodValue1a" formControlName="control47a">
+              <input matInput placeholder="Value" [(ngModel)]="includedPeriodValue1a" formControlName="control47a" (keydown.enter)="stepper.next()">
             </mat-form-field>
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 160px">
               <mat-label>Days/Weeks/Months</mat-label>
@@ -372,7 +375,7 @@
             <p style="margin-left: 10px; margin-top: 28px">or <span style="color: blue">within</span> the <span style="color: blue">last</span></p>
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 60px">
               <mat-label>Period</mat-label>
-              <input matInput placeholder="Value" [(ngModel)]="includedPeriodValue1b" formControlName="control47b">
+              <input matInput placeholder="Value" [(ngModel)]="includedPeriodValue1b" formControlName="control47b" (keydown.enter)="stepper.next()">
             </mat-form-field>
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 160px">
               <mat-label>Days/Weeks/Months</mat-label>
@@ -439,7 +442,7 @@
             </mat-form-field>
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 100px">
               <mat-label>Entry value</mat-label>
-              <input matInput placeholder="Value" [(ngModel)]="includedEntryValue2" formControlName="control30">
+              <input matInput placeholder="Value" [(ngModel)]="includedEntryValue2" formControlName="control30" (keydown.enter)="stepper.next()">
             </mat-form-field>
           </div>
           <br/>
@@ -467,7 +470,7 @@
               <p style="margin-left: 10px; margin-top: 28px">or <span style="color: blue">within the last</span></p>
               <mat-form-field appearance="standard" style="margin-left: 10px; width: 60px">
                 <mat-label>Period</mat-label>
-                <input matInput placeholder="Value" [(ngModel)]="includedPeriodValue2" formControlName="control63">
+                <input matInput placeholder="Value" [(ngModel)]="includedPeriodValue2" formControlName="control63" (keydown.enter)="stepper.next()">
               </mat-form-field>
               <mat-form-field appearance="standard" style="margin-left: 10px; width: 160px">
                 <mat-label>Days/Weeks/Months</mat-label>
@@ -539,7 +542,7 @@
             </mat-form-field>
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 100px">
               <mat-label>Entry value</mat-label>
-              <input matInput placeholder="Value" [(ngModel)]="includedEntryValue2a" formControlName="control30a">
+              <input matInput placeholder="Value" [(ngModel)]="includedEntryValue2a" formControlName="control30a" (keydown.enter)="stepper.next()">
             </mat-form-field>
           </div>
           <br/>
@@ -567,7 +570,7 @@
               <p style="margin-left: 10px; margin-top: 28px">or <span style="color: blue">within the last</span></p>
               <mat-form-field appearance="standard" style="margin-left: 10px; width: 60px">
                 <mat-label>Period</mat-label>
-                <input matInput placeholder="Value" [(ngModel)]="includedPeriodValue2a" formControlName="control63a">
+                <input matInput placeholder="Value" [(ngModel)]="includedPeriodValue2a" formControlName="control63a" (keydown.enter)="stepper.next()">
               </mat-form-field>
               <mat-form-field appearance="standard" style="margin-left: 10px; width: 160px">
                 <mat-label>Days/Weeks/Months</mat-label>
@@ -727,7 +730,7 @@
               <p style="margin-left: 10px; margin-top: 28px">or <span style="color: blue">within the last</span></p>
               <mat-form-field appearance="standard" style="margin-left: 10px; width: 60px">
                 <mat-label>Period</mat-label>
-                <input matInput placeholder="Value" [(ngModel)]="includedPeriodValue4" formControlName="control38">
+                <input matInput placeholder="Value" [(ngModel)]="includedPeriodValue4" formControlName="control38" (keydown.enter)="stepper.next()">
               </mat-form-field>
               <mat-form-field appearance="standard" style="margin-left: 10px; width: 160px">
                 <mat-label>Days/Weeks/Months</mat-label>
@@ -785,7 +788,7 @@
             </mat-form-field>
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 60px">
               <mat-label>Value</mat-label>
-              <input matInput placeholder="Value" [(ngModel)]="includedEntryValue5" formControlName="control43">
+              <input matInput placeholder="Value" [(ngModel)]="includedEntryValue5" formControlName="control43" (keydown.enter)="stepper.next()">
             </mat-form-field>
             <p style="margin-left: 10px; margin-top: 28px"><span style="color: blue">occurrences</span> of these <span style="color: blue">concepts</span>
             <br/>
@@ -813,7 +816,7 @@
                 <p style="margin-left: 10px; margin-top: 28px">or <span style="color: blue">within the last</span></p>
                 <mat-form-field appearance="standard" style="margin-left: 10px; width: 60px">
                   <mat-label>Period</mat-label>
-                  <input matInput placeholder="Value" [(ngModel)]="includedPeriodValue5" formControlName="control57">
+                  <input matInput placeholder="Value" [(ngModel)]="includedPeriodValue5" formControlName="control57" (keydown.enter)="stepper.next()">
                 </mat-form-field>
                 <mat-form-field appearance="standard" style="margin-left: 10px; width: 160px">
                   <mat-label>Days/Weeks/Months</mat-label>
@@ -827,11 +830,10 @@
             </div>
           </div>
         </div>
-
         <div mat-dialog-actions align="end">
-          <button style="margin-right: 15px" mat-flat-button color="accent" (click)="onCancelClick()">Cancel</button>
+          <button style="margin-right: 15px" mat-button color="accent" (click)="onCancelClick()">Cancel</button>
           <button style="margin-right: 15px" mat-button color="accent" matStepperPrevious>Back</button>
-          <button style="margin-right: 15px" mat-button (click)="stepper.next()">Next</button>
+          <button style="margin-right: 15px" mat-flat-button color="accent" (click)="stepper.next()">Next</button>
         </div>
       </form>
     </mat-step>
@@ -888,12 +890,13 @@
               <mat-datepicker #picker2></mat-datepicker>
             </mat-form-field>
           </div>
-
+          <br/>
+          <span style="margin-left: 30px">*Required</span>
         </div>
 
         <div class="summary-column">
           <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            <p>Clinical events include conditions, values, procedures, immunisations, family history, referrals and allergies. Encounters include consultations, admissions, discharges, outpatient attendances.</p>
+            <p>Clinical events include conditions, values, procedures, immunisations, family history, referrals, and allergies. Encounters include consultations, admissions, discharges, and outpatient attendances.</p>
           </div>
 
           <div style="margin-top: 10px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
@@ -906,9 +909,9 @@
         </div>
 
         <div style="margin-top: 300px" mat-dialog-actions align="end">
-          <button style="margin-right: 15px" mat-flat-button color="accent" (click)="onCancelClick()">Cancel</button>
+          <button style="margin-right: 15px" mat-button color="accent" (click)="onCancelClick()">Cancel</button>
           <button style="margin-right: 15px" mat-button color="accent" matStepperPrevious>Back</button>
-          <button style="margin-right: 15px" mat-button (click)="stepper.next()">Next</button>
+          <button style="margin-right: 15px" mat-flat-button color="accent" (click)="stepper.next()">Next</button>
         </div>
       </form>
     </mat-step>
@@ -920,7 +923,7 @@
 
         <div class="summary-column">
           <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            <mat-form-field appearance="outline" style="margin-left: 15px">
+            <mat-form-field appearance="outline" style="margin-left: 25px">
               <mat-label>Output fields</mat-label>
               <mat-select multiple [(ngModel)]="selectedOutputField" formControlName="control14" (ngModelChange)="formChanged()">
                 <mat-option *ngFor="let field of outputFields" [value]="field.outputField">
@@ -931,7 +934,7 @@
           </div>
           <br/>
           <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            <mat-form-field appearance="outline" style="margin-left: 15px">
+            <mat-form-field appearance="outline" style="margin-left: 25px">
               <mat-label>Output type</mat-label>
               <mat-select [(ngModel)]="selectedOutputType" formControlName="control15" (ngModelChange)="formChanged()" required>
                 <mat-option *ngFor="let outputType of outputTypes" [value]="outputType.outputType">
@@ -942,7 +945,7 @@
           </div>
           <br/>
           <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            <mat-form-field appearance="outline" style="margin-left: 15px">
+            <mat-form-field appearance="outline" style="margin-left: 25px">
               <mat-label>Refresh schedule</mat-label>
               <mat-select [(ngModel)]="selectedSchedule" formControlName="control18" (ngModelChange)="formChanged()" required>
                 <mat-option *ngFor="let schedule of schedules" [value]="schedule.scheduleValue">
@@ -953,7 +956,7 @@
           </div>
           <br/>
           <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            <mat-form-field appearance="outline" style="margin-left: 15px">
+            <mat-form-field appearance="outline" style="margin-left: 25px">
               <mat-label>Delivery mechanism</mat-label>
               <mat-select [(ngModel)]="selectedDelivery" formControlName="control19" (ngModelChange)="formChanged()" required>
                 <mat-option *ngFor="let delivery of deliveries" [value]="delivery.deliveryValue">
@@ -962,6 +965,8 @@
               </mat-select>
             </mat-form-field>
           </div>
+          <br/>
+          <span style="margin-left: 30px">*Required</span>
         </div>
 
         <div class="summary-column">
@@ -980,9 +985,9 @@
         </div>
 
         <div style="margin-top: 225px" mat-dialog-actions align="end">
-          <button style="margin-right: 15px" mat-flat-button color="accent" (click)="onCancelClick()">Cancel</button>
+          <button style="margin-right: 15px" mat-button color="accent" (click)="onCancelClick()">Cancel</button>
           <button style="margin-right: 15px" mat-button color="accent" matStepperPrevious>Back</button>
-          <button style="margin-right: 15px" mat-button [disabled]="disableForm" (click)="saveQuery()">Save</button>
+          <button style="margin-right: 15px" mat-flat-button color="accent" [disabled]="disableForm" (click)="saveQuery()">Save</button>
         </div>
       </form>
     </mat-step>
