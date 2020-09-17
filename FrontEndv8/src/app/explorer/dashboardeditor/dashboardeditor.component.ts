@@ -4,6 +4,7 @@ import {ExplorerService} from '../explorer.service';
 import {LoggerService} from 'dds-angular8';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {STEPPER_GLOBAL_OPTIONS} from "@angular/cdk/stepper";
+import {CdkDragDrop, transferArrayItem} from "@angular/cdk/drag-drop";
 
 export interface DialogData {
   dashboardId: string;
@@ -60,6 +61,7 @@ export class DashboardEditorComponent {
   dashboardId: string;
   firstFormGroup: FormGroup;
   secondFormGroup: FormGroup;
+  thirdFormGroup: FormGroup;
   jsonQuery: string;
 
   outputTypes: outputType[] = [
@@ -120,6 +122,9 @@ export class DashboardEditorComponent {
     });
     this.secondFormGroup = this._formBuilder.group({
       control3: ['', Validators.required], control4: [''], control5: [''], control6: [''], control7: ['']
+    });
+    this.thirdFormGroup = this._formBuilder.group({
+
     });
   }
 
@@ -191,6 +196,34 @@ export class DashboardEditorComponent {
       }
     )
     this.ngOnInit();
+  }
+
+  widgets = [
+    'Bar chart',
+    'Line chart',
+    'Table',
+    'Gauge',
+    'Indicator',
+    'Map'
+  ];
+
+  selectedWidgets = [
+  ];
+
+  drop(event: CdkDragDrop<string[]>) {
+    transferArrayItem(event.previousContainer.data,
+      event.container.data,
+      event.previousIndex,
+      event.currentIndex);
+
+    this.widgets = [
+      'Bar chart',
+      'Line chart',
+      'Table',
+      'Gauge',
+      'Indicator',
+      'Map'
+    ];
   }
 
 }

@@ -50,6 +50,7 @@ import {OrganisationGroupsEditorComponent} from "./organisationgroupseditor/orga
 import {OrganisationsEditorComponent} from "./organisationseditor/organisationseditor.component";
 import {MatRadioModule} from "@angular/material/radio";
 import {MatTooltipModule} from "@angular/material/tooltip";
+import {DragDropModule} from '@angular/cdk/drag-drop';
 
 @NgModule({
   declarations: [
@@ -70,7 +71,7 @@ import {MatTooltipModule} from "@angular/material/tooltip";
     OrganisationGroupsComponent,
     OrganisationsComponent,
     OrganisationGroupsEditorComponent,
-    OrganisationsEditorComponent
+    OrganisationsEditorComponent,
   ],
   imports: [
     BrowserModule,
@@ -106,7 +107,8 @@ import {MatTooltipModule} from "@angular/material/tooltip";
     MatStepperModule,
     MatDividerModule,
     MatRadioModule,
-    MatTooltipModule
+    MatTooltipModule,
+    DragDropModule
   ],
 
   entryComponents: [

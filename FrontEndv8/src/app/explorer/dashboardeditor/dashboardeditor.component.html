@@ -44,7 +44,7 @@
 
   <mat-step [stepControl]="secondFormGroup" errorMessage="Step not completed.">
     <form [formGroup]="secondFormGroup">
-      <ng-template matStepLabel>Dashboard layout</ng-template>
+      <ng-template matStepLabel>Dashboard data</ng-template>
       <br/>
       <div class="summary-column">
         <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
@@ -124,11 +124,67 @@
         </div>
       </div>
 
+      <div style="margin-top: 260px" mat-dialog-actions align="end">
+        <button style="margin-right: 15px" mat-flat-button color="accent" (click)="onCancelClick()">Cancel</button>
+        <button style="margin-right: 15px" mat-button (click)="stepper.next()">Next</button>
+      </div>
+
+    </form>
+  </mat-step>
+
+  <mat-step [stepControl]="thirdFormGroup" errorMessage="Step not completed.">
+    <form [formGroup]="thirdFormGroup">
+      <ng-template matStepLabel>Dashboard layout</ng-template>
+      <br/>
+
+      <div class="summary-column" style="width: 200px">
+        <h2>Available widgets</h2>
+        <mat-grid-list cols = "2" rowHeight="1:1" cdkDropList
+                       #widgetList="cdkDropList"
+                       [cdkDropListData]="widgets"
+                       [cdkDropListConnectedTo]="[selectedWidgetList]"
+                       class="widget-grid-list"
+                       (cdkDropListDropped)="drop($event)"
+                       gutterSize="5px">
+
+          <mat-grid-tile colspan="1" rowspan="1" class="widget-grid-tile" cdkDrag *ngFor="let item of widgets">
+            {{item}}
+
+            <span *cdkDragPreview>
+              <mat-grid-tile colspan="1" rowspan="1" class="widget-grid-tile">
+                  {{item}}
+              </mat-grid-tile>
+            </span>
+
+          </mat-grid-tile>
+
+
+
+        </mat-grid-list>
+      </div>
+
+      <div class="summary-column" style="width: 600px">
+        <h2>Dashboard layout</h2>
+        <b>{{name}}</b>
+        <mat-grid-list cols = "3" rowHeight="1:1" cdkDropList
+                       #selectedWidgetList="cdkDropList"
+                       [cdkDropListData]="selectedWidgets"
+                       [cdkDropListConnectedTo]="[widgetList]"
+                       class="dashboard-grid-list"
+                       (cdkDropListDropped)="drop($event)">
+          <mat-grid-tile class="dashboard-grid-tile" cdkDrag *ngFor="let item of selectedWidgets">
+            {{item}}
+          </mat-grid-tile>
+        </mat-grid-list>
+      </div>
+
       <div style="margin-top: 40px" mat-dialog-actions align="end">
         <button style="margin-right: 15px" mat-flat-button color="accent" (click)="onCancelClick()">Cancel</button>
         <button style="margin-right: 15px" mat-button color="accent" matStepperPrevious>Back</button>
         <button style="margin-right: 15px" mat-button [disabled]="disableForm" (click)="saveDashboard()">Save</button>
       </div>
+
     </form>
   </mat-step>
+
 </mat-horizontal-stepper>
