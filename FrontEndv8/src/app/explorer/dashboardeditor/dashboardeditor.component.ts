@@ -19,12 +19,17 @@ interface query {
   schedule: string;
 }
 
+interface widget {
+  icon: string;
+  name: string;
+}
+
 interface savedDashboard {
   selectedQuery: string;
   selectedOutputField: string;
   selectedOutputType: string;
   selectedSchedule: string;
-  visualType: string;
+  visualType: widget[];
 }
 
 interface outputType {
@@ -56,7 +61,8 @@ export class DashboardEditorComponent {
   selectedOutputField: string = '';
   selectedOutputType: string = '';
   selectedSchedule: string = '';
-  visualType: string = '';
+  selectedWidgets : widget[] = [
+  ];
   disableForm: boolean;
   dashboardId: string;
   firstFormGroup: FormGroup;
@@ -114,7 +120,7 @@ export class DashboardEditorComponent {
       this.selectedOutputField = query.selectedOutputField;
       this.selectedOutputType = query.selectedOutputType;
       this.selectedSchedule = query.selectedSchedule;
-      this.visualType = query.visualType;
+      this.selectedWidgets = query.visualType;
     }
 
     this.firstFormGroup = this._formBuilder.group({
@@ -134,7 +140,7 @@ export class DashboardEditorComponent {
       selectedOutputField: this.selectedOutputField,
       selectedOutputType: this.selectedOutputType,
       selectedSchedule: this.selectedSchedule,
-      visualType: this.visualType
+      visualType: this.selectedWidgets
     };
     this.jsonQuery = JSON.stringify(query);
 
@@ -198,31 +204,28 @@ export class DashboardEditorComponent {
     this.ngOnInit();
   }
 
-  widgets = [
-    'Bar chart',
-    'Line chart',
-    'Table',
-    'Gauge',
-    'Indicator',
-    'Map'
+  widgets : widget[] = [
+    {icon: "fad fa-chart-bar", name: 'Bar chart'},
+    {icon: "fad fa-chart-line", name: 'Line chart'},
+    {icon: "fal fa-table", name: 'Table'},
+    {icon: "fad fa-spinner-third", name: 'Gauge'},
+    {icon: "fad fa-flag", name: 'Indicator'},
+    {icon: "fad fa-globe-africa", name: 'Map'}
   ];
 
-  selectedWidgets = [
-  ];
-
-  drop(event: CdkDragDrop<string[]>) {
+  drop(event: CdkDragDrop<widget[]>) {
     transferArrayItem(event.previousContainer.data,
       event.container.data,
       event.previousIndex,
       event.currentIndex);
 
     this.widgets = [
-      'Bar chart',
-      'Line chart',
-      'Table',
-      'Gauge',
-      'Indicator',
-      'Map'
+      {icon: "fad fa-chart-bar", name: 'Bar chart'},
+      {icon: "fad fa-chart-line", name: 'Line chart'},
+      {icon: "fal fa-table", name: 'Table'},
+      {icon: "fad fa-spinner-third", name: 'Gauge'},
+      {icon: "fad fa-flag", name: 'Indicator'},
+      {icon: "fad fa-globe-africa", name: 'Map'}
     ];
   }
 

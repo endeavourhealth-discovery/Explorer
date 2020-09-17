@@ -1,24 +1,38 @@
+
 .widget-grid-list {
-  border: solid gainsboro 1px;
-  background: whitesmoke;
-  border-radius: 5px;
-}
-.dashboard-grid-list {
   border: solid 1px #ccc;
   background: whitesmoke;
-  border-radius: 5px;
   display: block;
-  min-height: 540px;
   overflow: hidden;
+  padding-top: 10px;
+  height: 310px;
 }
 .widget-grid-tile {
-  color: rgba(0, 0, 0, 0.87);
+  margin-left: 12px;
+  margin-bottom: 11px;
+  width: 90px;
+  height: 70px;
+  border: solid 1px #ccc;
+  color: gray;
+  text-align: center;
   cursor: move;
   background: white;
   font-size: 14px;
-  border-radius: 5px;
-  border: solid gainsboro 1px;
-  box-sizing: border-box;
+  display: inline-block;
+  padding-top: 20px;
+}
+.dashboard-grid {
+  border: solid 1px #ccc;
+  background: whitesmoke;
+  display: block;
+  padding: 10px;
+  height:300px
+}
+.dashboard-grid-list {
+  background: whitesmoke;
+  display: block;
+  min-height: 200px;
+  overflow: hidden;
 }
 .dashboard-grid-tile {
   color: rgba(0, 0, 0, 0.87);
@@ -42,8 +56,5 @@
   opacity: 0;
 }
 .cdk-drag-animating {
-  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-}
-.grid-list.cdk-drop-list-dragging .grid-tile:not(.cdk-drag-placeholder) {
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }

@@ -35,9 +35,9 @@
         </div>
       </div>
 
-      <div style="margin-top: 260px" mat-dialog-actions align="end">
-        <button style="margin-right: 15px" mat-flat-button color="accent" (click)="onCancelClick()">Cancel</button>
-        <button style="margin-right: 15px" mat-button (click)="stepper.next()">Next</button>
+      <div style="margin-top: 280px" mat-dialog-actions align="end">
+        <button style="margin-right: 15px" mat-button color="accent" (click)="onCancelClick()">Cancel</button>
+        <button style="margin-right: 15px" mat-flat-button color="accent" (click)="stepper.next()">Next</button>
       </div>
     </form>
   </mat-step>
@@ -89,20 +89,6 @@
           </mat-form-field>
         </div>
         <br/><br/>
-        <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-          <mat-radio-group formControlName="control7" [(ngModel)]="visualType">
-            <mat-radio-button matTooltip="Bar chart" style="margin-left: 25px" value="Bar chart">
-              <i class="far fa-chart-bar fa-2x"></i>
-            </mat-radio-button>
-            <mat-radio-button matTooltip="Line chart" style="margin-left: 50px" value="Line chart">
-              <i class="far fa-chart-line fa-2x"></i>
-            </mat-radio-button>
-            <mat-radio-button matTooltip="Table" style="margin-left: 50px" value="Table">
-              <i class="fal fa-table fa-2x"></i>
-            </mat-radio-button>
-          </mat-radio-group>
-        </div>
-        <br/><br/>
         <span style="margin-left: 30px">*Required</span>
       </div>
 
@@ -119,14 +105,12 @@
         <div style="margin-top: 30px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
           <p>How often should this data set be refreshed.</p>
         </div>
-        <div style="margin-top: 30px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-          <p>Select the type of visualisation.</p>
-        </div>
       </div>
 
-      <div style="margin-top: 260px" mat-dialog-actions align="end">
-        <button style="margin-right: 15px" mat-flat-button color="accent" (click)="onCancelClick()">Cancel</button>
-        <button style="margin-right: 15px" mat-button (click)="stepper.next()">Next</button>
+      <div style="margin-top: 120px" mat-dialog-actions align="end">
+        <button style="margin-right: 15px" mat-button color="accent" (click)="onCancelClick()">Cancel</button>
+        <button style="margin-right: 15px" mat-button color="accent" matStepperPrevious>Back</button>
+        <button style="margin-right: 15px" mat-flat-button color="accent" (click)="stepper.next()">Next</button>
       </div>
 
     </form>
@@ -137,51 +121,48 @@
       <ng-template matStepLabel>Dashboard layout</ng-template>
       <br/>
 
-      <div class="summary-column" style="width: 200px">
+      <div class="summary-column" style="width: 240px">
         <h2>Available widgets</h2>
-        <mat-grid-list cols = "2" rowHeight="1:1" cdkDropList
-                       #widgetList="cdkDropList"
-                       [cdkDropListData]="widgets"
-                       [cdkDropListConnectedTo]="[selectedWidgetList]"
-                       class="widget-grid-list"
-                       (cdkDropListDropped)="drop($event)"
-                       gutterSize="5px">
+        Drag & drop widgets on dashboard
 
-          <mat-grid-tile colspan="1" rowspan="1" class="widget-grid-tile" cdkDrag *ngFor="let item of widgets">
-            {{item}}
+        <br/><br/>
 
-            <span *cdkDragPreview>
-              <mat-grid-tile colspan="1" rowspan="1" class="widget-grid-tile">
-                  {{item}}
-              </mat-grid-tile>
-            </span>
-
-          </mat-grid-tile>
-
-
-
-        </mat-grid-list>
+        <div
+          cdkDropList
+          #widgetList="cdkDropList"
+          [cdkDropListData]="widgets"
+          [cdkDropListConnectedTo]="[selectedWidgetList]"
+          class="widget-grid-list"
+          (cdkDropListDropped)="drop($event)">
+          <div class="widget-grid-tile" *ngFor="let item of widgets" cdkDrag>
+            <i class="{{item.icon}} fa-3x"></i><br/>{{item.name}}
+          </div>
+        </div>
       </div>
 
-      <div class="summary-column" style="width: 600px">
+      <div class="summary-column" style="width: 700px">
         <h2>Dashboard layout</h2>
-        <b>{{name}}</b>
-        <mat-grid-list cols = "3" rowHeight="1:1" cdkDropList
-                       #selectedWidgetList="cdkDropList"
-                       [cdkDropListData]="selectedWidgets"
-                       [cdkDropListConnectedTo]="[widgetList]"
-                       class="dashboard-grid-list"
-                       (cdkDropListDropped)="drop($event)">
-          <mat-grid-tile class="dashboard-grid-tile" cdkDrag *ngFor="let item of selectedWidgets">
-            {{item}}
-          </mat-grid-tile>
-        </mat-grid-list>
+        &nbsp;<i class="fad fa-analytics"></i>&nbsp;&nbsp;{{name}}
+        <br/><br/>
+        <div class="dashboard-grid">
+          <mat-grid-list cols = "2" rowHeight="145px" gutterSize="10" cdkDropList
+                         #selectedWidgetList="cdkDropList"
+                         [cdkDropListData]="selectedWidgets"
+                         [cdkDropListConnectedTo]="[widgetList]"
+                         class="dashboard-grid-list"
+                         (cdkDropListDropped)="drop($event)">
+            <mat-grid-tile class="dashboard-grid-tile" cdkDrag *ngFor="let item of selectedWidgets">
+              <i class="{{item.icon}} fa-5x"></i>
+            </mat-grid-tile>
+          </mat-grid-list>
+
+        </div>
       </div>
 
       <div style="margin-top: 40px" mat-dialog-actions align="end">
-        <button style="margin-right: 15px" mat-flat-button color="accent" (click)="onCancelClick()">Cancel</button>
+        <button style="margin-right: 15px" mat-button color="accent" (click)="onCancelClick()">Cancel</button>
         <button style="margin-right: 15px" mat-button color="accent" matStepperPrevious>Back</button>
-        <button style="margin-right: 15px" mat-button [disabled]="disableForm" (click)="saveDashboard()">Save</button>
+        <button style="margin-right: 15px" mat-flat-button color="accent" [disabled]="disableForm" (click)="saveDashboard()">Save</button>
       </div>
 
     </form>
