@@ -145,7 +145,7 @@ export class DashboardLibraryComponent implements OnInit {
 
   add() {
     const dialogRef = this.dialog.open(DashboardEditorComponent, {
-      height: '700px',
+      height: '720px',
       width: '1000px',
       data: {dashboardId: "", name: "", type: "", query: ""}
     });
@@ -181,7 +181,7 @@ export class DashboardLibraryComponent implements OnInit {
 
   edit() {
     const dialogRef = this.dialog.open(DashboardEditorComponent, {
-      height: '700px',
+      height: '720px',
       width: '1000px',
       data: {dashboardId: this.selection.selected[0].dashboardId, name: this.selection.selected[0].name, type:this.selection.selected[0].type, query: this.selection.selected[0].jsonQuery}
     });
