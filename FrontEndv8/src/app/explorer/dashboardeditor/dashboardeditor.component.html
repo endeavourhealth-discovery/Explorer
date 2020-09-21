@@ -46,66 +46,256 @@
     <form [formGroup]="secondFormGroup">
       <ng-template matStepLabel>Dashboard data</ng-template>
       <br/>
-      <div class="summary-column">
-        <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-          <mat-form-field appearance="outline" style="margin-left: 25px; width: 300px">
-            <mat-label>Query/Dataset</mat-label>
-            <mat-select [(ngModel)]="selectedQuery" formControlName="control3" (ngModelChange)="formChanged()" required>
-              <mat-option *ngFor="let result of queryList" [value]="result" (click)="querySelected()">{{result}}</mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-        <br/>
-        <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-          <mat-form-field appearance="outline" style="margin-left: 25px">
-            <mat-label>Output fields</mat-label>
-            <mat-select multiple [(ngModel)]="selectedOutputField" formControlName="control4" (ngModelChange)="formChanged()">
-              <mat-option *ngFor="let field of outputFields" [value]="field.outputField">
-                {{field.outputField}}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-        <br/>
-        <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-          <mat-form-field appearance="outline" style="margin-left: 25px">
-            <mat-label>Output type</mat-label>
-            <mat-select [(ngModel)]="selectedOutputType" formControlName="control5" (ngModelChange)="formChanged()" required>
-              <mat-option *ngFor="let outputType of outputTypes" [value]="outputType.outputType">
-                {{outputType.outputType}}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-        <br/>
-        <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-          <mat-form-field appearance="outline" style="margin-left: 25px">
-            <mat-label>Refresh schedule</mat-label>
-            <mat-select [(ngModel)]="selectedSchedule" formControlName="control6" (ngModelChange)="formChanged()" required>
-              <mat-option *ngFor="let schedule of schedules" [value]="schedule.scheduleValue">
-                {{schedule.scheduleValue}}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-        <br/><br/>
-        <span style="margin-left: 30px">*Required</span>
-      </div>
-
-      <div class="summary-column">
-        <div style="margin-top: 8px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-          <p>Select the query/dataset to be used as the dashboard data source.</p>
-        </div>
-        <div style="margin-top: 20px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-          <p>Output fields. Fields for comparing/aggregating/grouping in dashboards or fields to be output as rows in tables.</p>
-        </div>
-        <div style="margin-top: 26px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-          <p>Output type for visualisations or exporting to files.</p>
-        </div>
-        <div style="margin-top: 30px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-          <p>How often should this data set be refreshed.</p>
-        </div>
-      </div>
+      <mat-tab-group animationDuration="0ms">
+        <mat-tab label="Query 1">
+          <br/>
+          <div class="summary-column">
+            <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <mat-form-field appearance="outline" style="margin-left: 25px; width: 300px">
+                <mat-label>Query/Dataset</mat-label>
+                <mat-select [(ngModel)]="selectedQuery1" formControlName="control3a" (ngModelChange)="formChanged()" required>
+                  <mat-option *ngFor="let result of queryList" [value]="result" (click)="querySelected()">{{result}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <br/>
+            <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <mat-form-field appearance="outline" style="margin-left: 25px">
+                <mat-label>Output fields</mat-label>
+                <mat-select multiple [(ngModel)]="selectedOutputField1" formControlName="control4a" (ngModelChange)="formChanged()">
+                  <mat-option *ngFor="let field of outputFields" [value]="field.outputField">
+                    {{field.outputField}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <br/>
+            <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <mat-form-field appearance="outline" style="margin-left: 25px">
+                <mat-label>Output type</mat-label>
+                <mat-select [(ngModel)]="selectedOutputType1" formControlName="control5a" (ngModelChange)="formChanged()" required>
+                  <mat-option *ngFor="let outputType of outputTypes" [value]="outputType.outputType">
+                    {{outputType.outputType}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <br/>
+            <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <mat-form-field appearance="outline" style="margin-left: 25px">
+                <mat-label>Refresh schedule</mat-label>
+                <mat-select [(ngModel)]="selectedSchedule1" formControlName="control6a" (ngModelChange)="formChanged()" required>
+                  <mat-option *ngFor="let schedule of schedules" [value]="schedule.scheduleValue">
+                    {{schedule.scheduleValue}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <br/><br/>
+            <span style="margin-left: 30px">*Required</span>
+          </div>
+          <div class="summary-column">
+            <div style="margin-top: 8px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <p>Select the query/dataset to be used as the dashboard data source.</p>
+            </div>
+            <div style="margin-top: 20px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <p>Output fields. Fields for comparing/aggregating/grouping in dashboards or fields to be output as rows in tables.</p>
+            </div>
+            <div style="margin-top: 26px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <p>Output type for visualisations or exporting to files.</p>
+            </div>
+            <div style="margin-top: 30px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <p>How often should this data set be refreshed.</p>
+            </div>
+          </div>
+        </mat-tab>
+        <mat-tab label="Query 2">
+          <br/>
+          <div class="summary-column">
+            <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <mat-form-field appearance="outline" style="margin-left: 25px; width: 300px">
+                <mat-label>Query/Dataset</mat-label>
+                <mat-select [(ngModel)]="selectedQuery2" formControlName="control3b" (ngModelChange)="formChanged()" required>
+                  <mat-option *ngFor="let result of queryList" [value]="result" (click)="querySelected()">{{result}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <br/>
+            <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <mat-form-field appearance="outline" style="margin-left: 25px">
+                <mat-label>Output fields</mat-label>
+                <mat-select multiple [(ngModel)]="selectedOutputField2" formControlName="control4b" (ngModelChange)="formChanged()">
+                  <mat-option *ngFor="let field of outputFields" [value]="field.outputField">
+                    {{field.outputField}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <br/>
+            <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <mat-form-field appearance="outline" style="margin-left: 25px">
+                <mat-label>Output type</mat-label>
+                <mat-select [(ngModel)]="selectedOutputType2" formControlName="control5b" (ngModelChange)="formChanged()" required>
+                  <mat-option *ngFor="let outputType of outputTypes" [value]="outputType.outputType">
+                    {{outputType.outputType}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <br/>
+            <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <mat-form-field appearance="outline" style="margin-left: 25px">
+                <mat-label>Refresh schedule</mat-label>
+                <mat-select [(ngModel)]="selectedSchedule2" formControlName="control6b" (ngModelChange)="formChanged()" required>
+                  <mat-option *ngFor="let schedule of schedules" [value]="schedule.scheduleValue">
+                    {{schedule.scheduleValue}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <br/><br/>
+            <span style="margin-left: 30px">*Required</span>
+          </div>
+          <div class="summary-column">
+            <div style="margin-top: 8px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <p>Select the query/dataset to be used as the dashboard data source.</p>
+            </div>
+            <div style="margin-top: 20px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <p>Output fields. Fields for comparing/aggregating/grouping in dashboards or fields to be output as rows in tables.</p>
+            </div>
+            <div style="margin-top: 26px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <p>Output type for visualisations or exporting to files.</p>
+            </div>
+            <div style="margin-top: 30px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <p>How often should this data set be refreshed.</p>
+            </div>
+          </div>
+        </mat-tab>
+        <mat-tab label="Query 3">
+          <br/>
+          <div class="summary-column">
+            <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <mat-form-field appearance="outline" style="margin-left: 25px; width: 300px">
+                <mat-label>Query/Dataset</mat-label>
+                <mat-select [(ngModel)]="selectedQuery3" formControlName="control3c" (ngModelChange)="formChanged()" required>
+                  <mat-option *ngFor="let result of queryList" [value]="result" (click)="querySelected()">{{result}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <br/>
+            <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <mat-form-field appearance="outline" style="margin-left: 25px">
+                <mat-label>Output fields</mat-label>
+                <mat-select multiple [(ngModel)]="selectedOutputField3" formControlName="control4c" (ngModelChange)="formChanged()">
+                  <mat-option *ngFor="let field of outputFields" [value]="field.outputField">
+                    {{field.outputField}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <br/>
+            <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <mat-form-field appearance="outline" style="margin-left: 25px">
+                <mat-label>Output type</mat-label>
+                <mat-select [(ngModel)]="selectedOutputType3" formControlName="control5c" (ngModelChange)="formChanged()" required>
+                  <mat-option *ngFor="let outputType of outputTypes" [value]="outputType.outputType">
+                    {{outputType.outputType}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <br/>
+            <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <mat-form-field appearance="outline" style="margin-left: 25px">
+                <mat-label>Refresh schedule</mat-label>
+                <mat-select [(ngModel)]="selectedSchedule3" formControlName="control6c" (ngModelChange)="formChanged()" required>
+                  <mat-option *ngFor="let schedule of schedules" [value]="schedule.scheduleValue">
+                    {{schedule.scheduleValue}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <br/><br/>
+            <span style="margin-left: 30px">*Required</span>
+          </div>
+          <div class="summary-column">
+            <div style="margin-top: 8px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <p>Select the query/dataset to be used as the dashboard data source.</p>
+            </div>
+            <div style="margin-top: 20px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <p>Output fields. Fields for comparing/aggregating/grouping in dashboards or fields to be output as rows in tables.</p>
+            </div>
+            <div style="margin-top: 26px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <p>Output type for visualisations or exporting to files.</p>
+            </div>
+            <div style="margin-top: 30px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <p>How often should this data set be refreshed.</p>
+            </div>
+          </div>
+        </mat-tab>
+        <mat-tab label="Query 4">
+          <br/>
+          <div class="summary-column">
+            <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <mat-form-field appearance="outline" style="margin-left: 25px; width: 300px">
+                <mat-label>Query/Dataset</mat-label>
+                <mat-select [(ngModel)]="selectedQuery4" formControlName="control3d" (ngModelChange)="formChanged()" required>
+                  <mat-option *ngFor="let result of queryList" [value]="result" (click)="querySelected()">{{result}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <br/>
+            <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <mat-form-field appearance="outline" style="margin-left: 25px">
+                <mat-label>Output fields</mat-label>
+                <mat-select multiple [(ngModel)]="selectedOutputField4" formControlName="control4d" (ngModelChange)="formChanged()">
+                  <mat-option *ngFor="let field of outputFields" [value]="field.outputField">
+                    {{field.outputField}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <br/>
+            <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <mat-form-field appearance="outline" style="margin-left: 25px">
+                <mat-label>Output type</mat-label>
+                <mat-select [(ngModel)]="selectedOutputType4" formControlName="control5d" (ngModelChange)="formChanged()" required>
+                  <mat-option *ngFor="let outputType of outputTypes" [value]="outputType.outputType">
+                    {{outputType.outputType}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <br/>
+            <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <mat-form-field appearance="outline" style="margin-left: 25px">
+                <mat-label>Refresh schedule</mat-label>
+                <mat-select [(ngModel)]="selectedSchedule4" formControlName="control6d" (ngModelChange)="formChanged()" required>
+                  <mat-option *ngFor="let schedule of schedules" [value]="schedule.scheduleValue">
+                    {{schedule.scheduleValue}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <br/><br/>
+            <span style="margin-left: 30px">*Required</span>
+          </div>
+          <div class="summary-column">
+            <div style="margin-top: 8px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <p>Select the query/dataset to be used as the dashboard data source.</p>
+            </div>
+            <div style="margin-top: 20px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <p>Output fields. Fields for comparing/aggregating/grouping in dashboards or fields to be output as rows in tables.</p>
+            </div>
+            <div style="margin-top: 26px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <p>Output type for visualisations or exporting to files.</p>
+            </div>
+            <div style="margin-top: 30px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <p>How often should this data set be refreshed.</p>
+            </div>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
 
       <div style="margin-top: 120px" mat-dialog-actions align="end">
         <button style="margin-right: 15px" mat-button color="accent" (click)="onCancelClick()">Cancel</button>
@@ -151,11 +341,21 @@
                          [cdkDropListConnectedTo]="[widgetList]"
                          class="dashboard-grid-list"
                          (cdkDropListDropped)="drop($event)">
-            <mat-grid-tile class="dashboard-grid-tile" cdkDrag *ngFor="let item of selectedWidgets">
-              <i class="{{item.icon}} fa-5x"></i>
+            <mat-grid-tile class="dashboard-grid-tile" cdkDrag *ngFor="let item of selectedWidgets; index as i">
+              <table>
+                <tr>
+                  <td>
+                    <div class="query-name"><i class="{{item.icon}} fa-5x"></i></div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="query-name"><br/>{{getSelectedQuery(i)}}</div>
+                  </td>
+                </tr>
+              </table>
             </mat-grid-tile>
           </mat-grid-list>
-
         </div>
       </div>
 

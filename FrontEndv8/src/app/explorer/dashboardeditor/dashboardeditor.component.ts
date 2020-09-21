@@ -14,6 +14,7 @@ export interface DialogData {
 }
 
 interface query {
+  query: string;
   outputType: string;
   outputField: string;
   schedule: string;
@@ -25,10 +26,23 @@ interface widget {
 }
 
 interface savedDashboard {
-  selectedQuery: string;
-  selectedOutputField: string;
-  selectedOutputType: string;
-  selectedSchedule: string;
+  selectedQuery1: string;
+  selectedOutputField1: string;
+  selectedOutputType1: string;
+  selectedSchedule1: string;
+  selectedQuery2: string;
+  selectedOutputField2: string;
+  selectedOutputType2: string;
+  selectedSchedule2: string;
+  selectedQuery3: string;
+  selectedOutputField3: string;
+  selectedOutputType3: string;
+  selectedSchedule3: string;
+  selectedQuery4: string;
+  selectedOutputField4: string;
+  selectedOutputType4: string;
+  selectedSchedule4: string;
+
   visualType: widget[];
 }
 
@@ -57,10 +71,27 @@ export class DashboardEditorComponent {
   type: string;
   name: string;
   queryList = [];
-  selectedQuery: string = '';
-  selectedOutputField: string = '';
-  selectedOutputType: string = '';
-  selectedSchedule: string = '';
+
+  selectedQuery1: string = '';
+  selectedOutputField1: string = '';
+  selectedOutputType1: string = '';
+  selectedSchedule1: string = '';
+
+  selectedQuery2: string = '';
+  selectedOutputField2: string = '';
+  selectedOutputType2: string = '';
+  selectedSchedule2: string = '';
+
+  selectedQuery3: string = '';
+  selectedOutputField3: string = '';
+  selectedOutputType3: string = '';
+  selectedSchedule3: string = '';
+
+  selectedQuery4: string = '';
+  selectedOutputField4: string = '';
+  selectedOutputType4: string = '';
+  selectedSchedule4: string = '';
+
   selectedWidgets : widget[] = [
   ];
   disableForm: boolean;
@@ -116,10 +147,23 @@ export class DashboardEditorComponent {
     if (data.query!='') { // edit mode
       let query: savedDashboard = JSON.parse(data.query);
 
-      this.selectedQuery = query.selectedQuery;
-      this.selectedOutputField = query.selectedOutputField;
-      this.selectedOutputType = query.selectedOutputType;
-      this.selectedSchedule = query.selectedSchedule;
+      this.selectedQuery1 = query.selectedQuery1;
+      this.selectedOutputField1 = query.selectedOutputField1;
+      this.selectedOutputType1 = query.selectedOutputType1;
+      this.selectedSchedule1 = query.selectedSchedule1;
+      this.selectedQuery2 = query.selectedQuery2;
+      this.selectedOutputField2 = query.selectedOutputField2;
+      this.selectedOutputType2 = query.selectedOutputType2;
+      this.selectedSchedule2 = query.selectedSchedule2;
+      this.selectedQuery3 = query.selectedQuery3;
+      this.selectedOutputField3 = query.selectedOutputField3;
+      this.selectedOutputType3 = query.selectedOutputType3;
+      this.selectedSchedule3 = query.selectedSchedule3;
+      this.selectedQuery4 = query.selectedQuery4;
+      this.selectedOutputField4 = query.selectedOutputField4;
+      this.selectedOutputType4 = query.selectedOutputType4;
+      this.selectedSchedule4 = query.selectedSchedule4;
+
       this.selectedWidgets = query.visualType;
     }
 
@@ -127,7 +171,10 @@ export class DashboardEditorComponent {
       control1: ['', Validators.required], control2: ['', Validators.required]
     });
     this.secondFormGroup = this._formBuilder.group({
-      control3: ['', Validators.required], control4: [''], control5: [''], control6: [''], control7: ['']
+      control3a: ['', Validators.required], control4a: [''], control5a: [''], control6a: [''],
+      control3b: [''], control4b: [''], control5b: [''], control6b: [''],
+      control3c: [''], control4c: [''], control5c: [''], control6c: [''],
+      control3d: [''], control4d: [''], control5d: [''], control6d: ['']
     });
     this.thirdFormGroup = this._formBuilder.group({
 
@@ -136,10 +183,22 @@ export class DashboardEditorComponent {
 
   saveDashboard() {
     let query = {
-      selectedQuery: this.selectedQuery,
-      selectedOutputField: this.selectedOutputField,
-      selectedOutputType: this.selectedOutputType,
-      selectedSchedule: this.selectedSchedule,
+      selectedQuery1: this.selectedQuery1,
+      selectedOutputField1: this.selectedOutputField1,
+      selectedOutputType1: this.selectedOutputType1,
+      selectedSchedule1: this.selectedSchedule1,
+      selectedQuery2: this.selectedQuery2,
+      selectedOutputField2: this.selectedOutputField2,
+      selectedOutputType2: this.selectedOutputType2,
+      selectedSchedule2: this.selectedSchedule2,
+      selectedQuery3: this.selectedQuery3,
+      selectedOutputField3: this.selectedOutputField3,
+      selectedOutputType3: this.selectedOutputType3,
+      selectedSchedule3: this.selectedSchedule3,
+      selectedQuery4: this.selectedQuery4,
+      selectedOutputField4: this.selectedOutputField4,
+      selectedOutputType4: this.selectedOutputType4,
+      selectedSchedule4: this.selectedSchedule4,
       visualType: this.selectedWidgets
     };
     this.jsonQuery = JSON.stringify(query);
@@ -163,7 +222,7 @@ export class DashboardEditorComponent {
   }
 
   formChanged() {
-    this.disableForm = this.type=='' || this.type==undefined || this.name=='' || this.name==undefined || this.selectedQuery=='' || this.selectedQuery==undefined;
+    this.disableForm = this.type=='' || this.type==undefined || this.name=='' || this.name==undefined || this.selectedQuery1=='' || this.selectedQuery1==undefined;
   }
 
   ngOnInit() {
@@ -182,8 +241,19 @@ export class DashboardEditorComponent {
     )
   }
 
+  getSelectedQuery(i) {
+    if (i==0)
+      return this.selectedQuery1;
+    else if (i==1)
+      return this.selectedQuery2;
+    else if (i==2)
+      return this.selectedQuery3;
+    else if (i==3)
+      return this.selectedQuery4;
+  }
+
   querySelected() {
-    this.explorerService.getQuery(this.selectedQuery)
+    this.explorerService.getQuery(this.selectedQuery1, this.selectedQuery2, this.selectedQuery3, this.selectedQuery4)
       .subscribe(
         (result) => this.loadQuery(result),
         (error) => this.log.error(error)
@@ -196,9 +266,26 @@ export class DashboardEditorComponent {
       e => {
         let query: query = JSON.parse(e.jsonQuery);
 
-        this.selectedOutputField =  query.outputField;
-        this.selectedOutputType = query.outputType;
-        this.selectedSchedule = query.schedule;
+        if (this.selectedQuery1 != '') {
+          this.selectedOutputField1 =  query.outputField;
+          this.selectedOutputType1 = query.outputType;
+          this.selectedSchedule1 = query.schedule;
+        }
+        else if (this.selectedQuery2 != '') {
+          this.selectedOutputField2 = query.outputField;
+          this.selectedOutputType2 = query.outputType;
+          this.selectedSchedule2 = query.schedule;
+        }
+        else if (this.selectedQuery3 != '') {
+          this.selectedOutputField3 = query.outputField;
+          this.selectedOutputType3 = query.outputType;
+          this.selectedSchedule3 = query.schedule;
+        }
+        else if (this.selectedQuery4 != '') {
+          this.selectedOutputField4 = query.outputField;
+          this.selectedOutputType4 = query.outputType;
+          this.selectedSchedule4 = query.schedule;
+        }
       }
     )
     this.ngOnInit();

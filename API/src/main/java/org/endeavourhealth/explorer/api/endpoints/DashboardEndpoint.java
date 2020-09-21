@@ -512,11 +512,14 @@ public class DashboardEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getQuery(@Context SecurityContext sc,
-                          @QueryParam("selectedQuery") String selectedQuery) throws Exception {
+                          @QueryParam("selectedQuery1") String selectedQuery1,
+                          @QueryParam("selectedQuery2") String selectedQuery2,
+                          @QueryParam("selectedQuery3") String selectedQuery3,
+                          @QueryParam("selectedQuery4") String selectedQuery4) throws Exception {
         LOG.debug("getQuery");
 
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
-            QueryResult result = viewerDAL.getQuery(selectedQuery);
+            QueryResult result = viewerDAL.getQuery(selectedQuery1,selectedQuery2,selectedQuery3,selectedQuery4);
 
             return Response
                     .ok()
