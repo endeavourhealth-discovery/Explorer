@@ -54,7 +54,7 @@
               <mat-form-field appearance="outline" style="margin-left: 25px; width: 300px">
                 <mat-label>Query/Dataset</mat-label>
                 <mat-select [(ngModel)]="selectedQuery1" formControlName="control3a" (ngModelChange)="formChanged()" required>
-                  <mat-option *ngFor="let result of queryList" [value]="result" (click)="querySelected()">{{result}}</mat-option>
+                  <mat-option *ngFor="let result of queryList" [value]="result" (click)="querySelected1()">{{result}}</mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
@@ -116,7 +116,7 @@
               <mat-form-field appearance="outline" style="margin-left: 25px; width: 300px">
                 <mat-label>Query/Dataset</mat-label>
                 <mat-select [(ngModel)]="selectedQuery2" formControlName="control3b" (ngModelChange)="formChanged()" required>
-                  <mat-option *ngFor="let result of queryList" [value]="result" (click)="querySelected()">{{result}}</mat-option>
+                  <mat-option *ngFor="let result of queryList" [value]="result" (click)="querySelected2()">{{result}}</mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
@@ -178,7 +178,7 @@
               <mat-form-field appearance="outline" style="margin-left: 25px; width: 300px">
                 <mat-label>Query/Dataset</mat-label>
                 <mat-select [(ngModel)]="selectedQuery3" formControlName="control3c" (ngModelChange)="formChanged()" required>
-                  <mat-option *ngFor="let result of queryList" [value]="result" (click)="querySelected()">{{result}}</mat-option>
+                  <mat-option *ngFor="let result of queryList" [value]="result" (click)="querySelected3()">{{result}}</mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
@@ -240,7 +240,7 @@
               <mat-form-field appearance="outline" style="margin-left: 25px; width: 300px">
                 <mat-label>Query/Dataset</mat-label>
                 <mat-select [(ngModel)]="selectedQuery4" formControlName="control3d" (ngModelChange)="formChanged()" required>
-                  <mat-option *ngFor="let result of queryList" [value]="result" (click)="querySelected()">{{result}}</mat-option>
+                  <mat-option *ngFor="let result of queryList" [value]="result" (click)="querySelected4()">{{result}}</mat-option>
                 </mat-select>
               </mat-form-field>
             </div>

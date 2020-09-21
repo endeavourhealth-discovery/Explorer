@@ -248,13 +248,10 @@ export class ExplorerService {
     return this.http.get('api/events/organisationgroupduplicate', {params});
   }
 
-  getQuery(selectedQuery1?: string, selectedQuery2?: string, selectedQuery3?: string, selectedQuery4?: string): Observable<any> {
+  getQuery(selectedQuery?: string): Observable<any> {
 
     let params = new HttpParams();
-    params = params.append('selectedQuery1', selectedQuery1);
-    params = params.append('selectedQuery2', selectedQuery2);
-    params = params.append('selectedQuery3', selectedQuery3);
-    params = params.append('selectedQuery4', selectedQuery4);
+    params = params.append('selectedQuery', selectedQuery);
 
     return this.http.get('api/events/query', {params});
   }

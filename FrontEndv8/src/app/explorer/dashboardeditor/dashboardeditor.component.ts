@@ -252,43 +252,92 @@ export class DashboardEditorComponent {
       return this.selectedQuery4;
   }
 
-  querySelected() {
-    this.explorerService.getQuery(this.selectedQuery1, this.selectedQuery2, this.selectedQuery3, this.selectedQuery4)
+  querySelected1() {
+    this.explorerService.getQuery(this.selectedQuery1)
       .subscribe(
-        (result) => this.loadQuery(result),
+        (result) => this.loadQuery1(result),
         (error) => this.log.error(error)
       );
 
   }
 
-  loadQuery(result: any) {
+  loadQuery1(result: any) {
     result.results.map(
       e => {
         let query: query = JSON.parse(e.jsonQuery);
 
-        if (this.selectedQuery1 != '') {
-          this.selectedOutputField1 =  query.outputField;
-          this.selectedOutputType1 = query.outputType;
-          this.selectedSchedule1 = query.schedule;
-        }
-        else if (this.selectedQuery2 != '') {
-          this.selectedOutputField2 = query.outputField;
-          this.selectedOutputType2 = query.outputType;
-          this.selectedSchedule2 = query.schedule;
-        }
-        else if (this.selectedQuery3 != '') {
-          this.selectedOutputField3 = query.outputField;
-          this.selectedOutputType3 = query.outputType;
-          this.selectedSchedule3 = query.schedule;
-        }
-        else if (this.selectedQuery4 != '') {
-          this.selectedOutputField4 = query.outputField;
-          this.selectedOutputType4 = query.outputType;
-          this.selectedSchedule4 = query.schedule;
-        }
+        this.selectedOutputField1 =  query.outputField;
+        this.selectedOutputType1 = query.outputType;
+        this.selectedSchedule1 = query.schedule;
       }
     )
-    this.ngOnInit();
+    //this.ngOnInit();
+  }
+
+  querySelected2() {
+    this.explorerService.getQuery(this.selectedQuery2)
+      .subscribe(
+        (result) => this.loadQuery2(result),
+        (error) => this.log.error(error)
+      );
+
+  }
+
+  loadQuery2(result: any) {
+    result.results.map(
+      e => {
+        let query: query = JSON.parse(e.jsonQuery);
+
+        this.selectedOutputField2 =  query.outputField;
+        this.selectedOutputType2 = query.outputType;
+        this.selectedSchedule2 = query.schedule;
+      }
+    )
+    //this.ngOnInit();
+  }
+
+  querySelected3() {
+    this.explorerService.getQuery(this.selectedQuery3)
+      .subscribe(
+        (result) => this.loadQuery3(result),
+        (error) => this.log.error(error)
+      );
+
+  }
+
+  loadQuery3(result: any) {
+    result.results.map(
+      e => {
+        let query: query = JSON.parse(e.jsonQuery);
+
+        this.selectedOutputField3 =  query.outputField;
+        this.selectedOutputType3 = query.outputType;
+        this.selectedSchedule3 = query.schedule;
+      }
+    )
+    //this.ngOnInit();
+  }
+
+  querySelected4() {
+    this.explorerService.getQuery(this.selectedQuery4)
+      .subscribe(
+        (result) => this.loadQuery4(result),
+        (error) => this.log.error(error)
+      );
+
+  }
+
+  loadQuery4(result: any) {
+    result.results.map(
+      e => {
+        let query: query = JSON.parse(e.jsonQuery);
+
+        this.selectedOutputField4 =  query.outputField;
+        this.selectedOutputType4 = query.outputType;
+        this.selectedSchedule4 = query.schedule;
+      }
+    )
+    //this.ngOnInit();
   }
 
   widgets : widget[] = [

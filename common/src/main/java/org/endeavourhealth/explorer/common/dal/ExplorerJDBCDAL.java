@@ -1221,58 +1221,19 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         }
     }
 
-    public QueryResult getQuery(String selectedQuery1, String selectedQuery2, String selectedQuery3, String selectedQuery4) throws Exception {
+    public QueryResult getQuery(String selectedQuery) throws Exception {
         QueryResult result = new QueryResult();
 
         String sql = "";
 
-        if (!selectedQuery1.equals("")) {
+        sql = "SELECT query " +
+                "FROM dashboards.query_library " +
+                "WHERE name = ?";
 
-            sql = "SELECT query " +
-                    "FROM dashboards.query_library " +
-                    "WHERE name = ?";
-
-            try (PreparedStatement statement = conn.prepareStatement(sql)) {
-                statement.setString(1, selectedQuery1);
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    result.setResults(getQueryList(resultSet));
-                }
-            }
-        }
-        else if (!selectedQuery2.equals("")) {
-            sql = "SELECT query " +
-                    "FROM dashboards.query_library " +
-                    "WHERE name = ?";
-
-            try (PreparedStatement statement = conn.prepareStatement(sql)) {
-                statement.setString(1, selectedQuery2);
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    result.setResults(getQueryList(resultSet));
-                }
-            }
-        }
-        else if (!selectedQuery3.equals("")) {
-            sql = "SELECT query " +
-                    "FROM dashboards.query_library " +
-                    "WHERE name = ?";
-
-            try (PreparedStatement statement = conn.prepareStatement(sql)) {
-                statement.setString(1, selectedQuery3);
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    result.setResults(getQueryList(resultSet));
-                }
-            }
-        }
-        else if (!selectedQuery4.equals("")) {
-            sql = "SELECT query " +
-                    "FROM dashboards.query_library " +
-                    "WHERE name = ?";
-
-            try (PreparedStatement statement = conn.prepareStatement(sql)) {
-                statement.setString(1, selectedQuery4);
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    result.setResults(getQueryList(resultSet));
-                }
+        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            statement.setString(1, selectedQuery);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                result.setResults(getQueryList(resultSet));
             }
         }
 
