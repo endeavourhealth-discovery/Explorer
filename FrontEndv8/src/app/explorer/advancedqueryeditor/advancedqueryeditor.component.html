@@ -78,7 +78,8 @@
             <mat-form-field appearance="outline" style="margin-left: 25px; width: 300px">
               <mat-label>Cohort value set</mat-label>
               <mat-select multiple [(ngModel)]="selectedCohortValueSet" formControlName="control5" (ngModelChange)="formChanged()">
-                <mat-option *ngFor="let result of valueSet" [value]="result">
+                <mat-select-search [formControl]="filterCtrl"></mat-select-search>
+                <mat-option *ngFor="let result of filteredValueset | async" [value]="result">
                   {{result}}
                 </mat-option>
               </mat-select>
@@ -205,7 +206,8 @@
           <mat-form-field appearance="standard" style="width: 170px; margin-left: 10px">
             <mat-label>Cohort value set</mat-label>
             <mat-select multiple [(ngModel)]="includedValueSet1" formControlName="control23" (ngModelChange)="formChanged()">
-              <mat-option *ngFor="let result of valueSet" [value]="result">
+              <mat-select-search [formControl]="filterCtrl"></mat-select-search>
+              <mat-option *ngFor="let result of filteredValueset | async" [value]="result">
                 {{result}}
               </mat-option>
             </mat-select>
@@ -276,7 +278,8 @@
           <mat-form-field appearance="standard" style="width: 170px; margin-left: 10px">
             <mat-label>Cohort value set</mat-label>
             <mat-select multiple [(ngModel)]="includedValueSet1a" formControlName="control23a" (ngModelChange)="formChanged()">
-              <mat-option *ngFor="let result of valueSet" [value]="result">
+              <mat-select-search [formControl]="filterCtrl"></mat-select-search>
+              <mat-option *ngFor="let result of filteredValueset | async" [value]="result">
                 {{result}}
               </mat-option>
             </mat-select>
@@ -347,7 +350,8 @@
           <mat-form-field appearance="standard" style="width: 170px; margin-left: 10px">
             <mat-label>Cohort value set</mat-label>
             <mat-select multiple [(ngModel)]="includedValueSet1b" formControlName="control23b" (ngModelChange)="formChanged()">
-              <mat-option *ngFor="let result of valueSet" [value]="result">
+              <mat-select-search [formControl]="filterCtrl"></mat-select-search>
+              <mat-option *ngFor="let result of filteredValueset | async" [value]="result">
                 {{result}}
               </mat-option>
             </mat-select>
@@ -415,7 +419,8 @@
           <mat-form-field appearance="standard" style="width: 170px; margin-left: 10px">
             <mat-label>Cohort value set</mat-label>
             <mat-select multiple [(ngModel)]="includedValueSet2" formControlName="control27" (ngModelChange)="formChanged()">
-              <mat-option *ngFor="let result of valueSet" [value]="result">
+              <mat-select-search [formControl]="filterCtrl"></mat-select-search>
+              <mat-option *ngFor="let result of filteredValueset | async" [value]="result">
                 {{result}}
               </mat-option>
             </mat-select>
@@ -515,7 +520,8 @@
           <mat-form-field appearance="standard" style="width: 170px; margin-left: 10px">
             <mat-label>Cohort value set</mat-label>
             <mat-select multiple [(ngModel)]="includedValueSet2a" formControlName="control27a" (ngModelChange)="formChanged()">
-              <mat-option *ngFor="let result of valueSet" [value]="result">
+              <mat-select-search [formControl]="filterCtrl"></mat-select-search>
+              <mat-option *ngFor="let result of filteredValueset | async" [value]="result">
                 {{result}}
               </mat-option>
             </mat-select>
@@ -610,7 +616,8 @@
           <mat-form-field appearance="standard" style="width: 170px; margin-left: 10px">
             <mat-label>Cohort value set</mat-label>
             <mat-select multiple [(ngModel)]="includedValueSet3" formControlName="control32" (ngModelChange)="formChanged()">
-              <mat-option *ngFor="let result of valueSet" [value]="result">
+              <mat-select-search [formControl]="filterCtrl"></mat-select-search>
+              <mat-option *ngFor="let result of filteredValueset | async" [value]="result">
                 {{result}}
               </mat-option>
             </mat-select>
@@ -639,7 +646,8 @@
             <mat-form-field appearance="standard" style="width: 170px; margin-left: 10px">
               <mat-label>Cohort value set</mat-label>
               <mat-select multiple [(ngModel)]="includedTestedValueSet3" formControlName="control34" (ngModelChange)="formChanged()">
-                <mat-option *ngFor="let result of valueSet" [value]="result">
+                <mat-select-search [formControl]="filterCtrl"></mat-select-search>
+                <mat-option *ngFor="let result of filteredValueset | async" [value]="result">
                   {{result}}
                 </mat-option>
               </mat-select>
@@ -673,7 +681,8 @@
           <mat-form-field appearance="standard" style="width: 170px; margin-left: 10px">
             <mat-label>Cohort value set</mat-label>
             <mat-select multiple [(ngModel)]="includedValueSet4" formControlName="control36" (ngModelChange)="formChanged()">
-              <mat-option *ngFor="let result of valueSet" [value]="result">
+              <mat-select-search [formControl]="filterCtrl"></mat-select-search>
+              <mat-option *ngFor="let result of filteredValueset | async" [value]="result">
                 {{result}}
               </mat-option>
             </mat-select>
@@ -700,7 +709,8 @@
           <mat-form-field appearance="standard" style="width: 170px; margin-left: 10px">
             <mat-label>Cohort value set</mat-label>
             <mat-select multiple [(ngModel)]="includedFollowedByValueSet4" formControlName="control37" (ngModelChange)="formChanged()">
-              <mat-option *ngFor="let result of valueSet" [value]="result">
+              <mat-select-search [formControl]="filterCtrl"></mat-select-search>
+              <mat-option *ngFor="let result of filteredValueset | async" [value]="result">
                 {{result}}
               </mat-option>
             </mat-select>
@@ -770,7 +780,8 @@
           <mat-form-field appearance="standard" style="width: 170px; margin-left: 10px">
             <mat-label>Cohort value set</mat-label>
             <mat-select multiple [(ngModel)]="includedValueSet5" formControlName="control41" (ngModelChange)="formChanged()">
-              <mat-option *ngFor="let result of valueSet" [value]="result">
+              <mat-select-search [formControl]="filterCtrl"></mat-select-search>
+              <mat-option *ngFor="let result of filteredValueset | async" [value]="result">
                 {{result}}
               </mat-option>
             </mat-select>
@@ -864,7 +875,8 @@
             <mat-form-field appearance="outline" style="margin-left: 25px; width: 235px">
               <mat-label>Dataset value set</mat-label>
               <mat-select multiple [(ngModel)]="selectedDatasetValueSet" formControlName="control16" (ngModelChange)="formChanged()">
-                <mat-option *ngFor="let result of valueSet" [value]="result">
+                <mat-select-search [formControl]="filterCtrl"></mat-select-search>
+                <mat-option *ngFor="let result of filteredValueset | async" [value]="result">
                   {{result}}
                 </mat-option>
               </mat-select>

@@ -52,6 +52,7 @@ import {MatRadioModule} from "@angular/material/radio";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import {MatTabsModule} from "@angular/material/tabs";
+import { MatSelectSearchModule } from './mat-select-search/mat-select-search.module';
 
 @NgModule({
   declarations: [
@@ -110,7 +111,8 @@ import {MatTabsModule} from "@angular/material/tabs";
         MatRadioModule,
         MatTooltipModule,
         DragDropModule,
-        MatTabsModule
+        MatTabsModule,
+        MatSelectSearchModule
     ],
 
   entryComponents: [

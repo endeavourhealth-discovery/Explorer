@@ -2,8 +2,10 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {ExplorerService} from '../explorer.service';
 import {LoggerService} from 'dds-angular8';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {STEPPER_GLOBAL_OPTIONS} from "@angular/cdk/stepper";
+import {takeUntil} from "rxjs/operators";
+import {ReplaySubject, Subject} from "rxjs";
 
 export interface DialogData {
   id: string;
@@ -153,6 +155,10 @@ interface areNot {
   areNot: string;
 }
 
+interface valueSet {
+  value: string;
+}
+
 @Component({
   selector: 'app-queryeditor',
   templateUrl: './advancedqueryeditor.component.html',
@@ -163,6 +169,8 @@ interface areNot {
 })
 
 export class AdvancedQueryEditorComponent implements OnInit {
+  filterCtrl: FormControl = new FormControl();
+
   type: string = '';
   name: string = '';
   selectedEventType: string = '';
@@ -263,6 +271,8 @@ export class AdvancedQueryEditorComponent implements OnInit {
   orgList = [];
   orgIncList = [];
   valueSet = [];
+
+  filteredValueset: ReplaySubject<valueSet[]> = new ReplaySubject<valueSet[]>(1);
 
   jsonQuery: string;
 
@@ -499,6 +509,8 @@ export class AdvancedQueryEditorComponent implements OnInit {
     });
   }
 
+  private _onDestroy = new Subject<void>();
+
   ngOnInit() {
     this.explorerService.getLookupLists('10')
       .subscribe(
@@ -532,6 +544,30 @@ export class AdvancedQueryEditorComponent implements OnInit {
         this.valueSet.push(e.type);
       }
     )
+
+    this.filteredValueset.next(this.valueSet.slice());
+
+    this.filterCtrl.valueChanges
+      .pipe(takeUntil(this._onDestroy))
+      .subscribe(() => {
+        this.filterValueset();
+      });
+
+  }
+
+  filterValueset() {
+    let search = this.filterCtrl.value;
+
+    if (!search) {
+      this.filteredValueset.next(this.valueSet.slice());
+      return;
+    } else {
+      search = search.toLowerCase();
+    }
+
+    this.filteredValueset.next(
+      this.valueSet.filter(value => value.toLowerCase().indexOf(search) > -1)
+    );
   }
 
   saveQuery() {
