@@ -90,7 +90,7 @@ SET p_includedEntryValue = IF(p_includedEntryValue = '', NULL, p_includedEntryVa
       -- filter out earliest and latest observations
       CALL filterObservationByEarliestLatest(p_includeConcepttab, p_observationcohorttab, p_earliestLatestObservationtab, p_includedEarliestLatest, p_includedOperator, p_includedEntryValue, timeperioddaterange);
       -- build include exclud string
-      SET p_includeExcludeString = buildIncludeExcludeString(p_includedExclude, p_includedAnyAll, NULL, NULL, NULL, 
+      SET p_includeExcludeString = buildIncludeExcludeString(p_includedExclude, p_includedAnyAll, NULL, NULL, p_observationcohorttab, 
       p_earliestLatestObservationtab, NULL, NULL, NULL, NULL, NULL, 2);
 
     ELSE 
@@ -125,7 +125,7 @@ SET p_includedEntryValue = IF(p_includedEntryValue = '', NULL, p_includedEntryVa
       -- filter out earliest and latest observations
       CALL filterObservationByEarliestLatest(p_includeConcepttab, p_observationcohorttab, p_earliestLatestObservationtab, p_includedEarliestLatest, NULL, NULL, NULL);
       -- build include exclude string
-      SET p_includeExcludeString = buildIncludeExcludeString(p_includedExclude, p_includedAnyAll, NULL, NULL, NULL, 
+      SET p_includeExcludeString = buildIncludeExcludeString(p_includedExclude, p_includedAnyAll, NULL, NULL, p_observationcohorttab, 
       p_earliestLatestObservationtab, p_includedAnyAllTested,p_includeTestedConcepttab, NULL, NULL, NULL, 3);
 
     ELSE 
