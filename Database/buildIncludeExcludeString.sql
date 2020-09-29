@@ -101,7 +101,7 @@ ELSEIF p_filtertype = 5 THEN
 
    SET p_includeexcludestring = 
    CONCAT(p_includedExclude,' (SELECT 1 FROM ', p_observationcohorttab, ' o1 
-   WHERE o1.non_core_concept_id = ANY (SELECT o2.non_core_concept_id FROM ', 
+   WHERE o1.non_core_concept_id = ',p_includedAnyAll ,' (SELECT o2.non_core_concept_id FROM ', 
    p_observationcohorttab,' o2 JOIN ', p_concepttab,' c ON o2.non_core_concept_id = c.non_core_concept_id 
    WHERE WHERE o2.patient_id = o1.patient_id 
    AND EXISTS (SELECT 1 FROM ', p_incoccurrencestab,' oc WHERE oc.patient_id = o2.patient_id ) ) 
