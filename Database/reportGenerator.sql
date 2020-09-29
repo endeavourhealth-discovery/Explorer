@@ -95,19 +95,15 @@ DECLARE includedDateTo4 VARCHAR(20) DEFAULT NULL;
 DECLARE includedPeriodValue4 VARCHAR(10) DEFAULT NULL; 
 DECLARE includedPeriodType4 VARCHAR(20) DEFAULT NULL; 
 
-
-/*
-includedExclude5
-includedAnyAll5
-includedValueSet5
-includedOperator5
-includedEntryValue5
-includedDateFrom5
-includedDateTo5
-includedPeriodValue5
-includedPeriodType5
-
-*/
+DECLARE includedExclude5 VARCHAR(10) DEFAULT NULL; 
+DECLARE includedAnyAll5 VARCHAR(10) DEFAULT NULL; 
+DECLARE includedValueSet5 VARCHAR(1000) DEFAULT NULL; 
+DECLARE includedOperator5 VARCHAR(50) DEFAULT NULL; 
+DECLARE includedEntryValue5 VARCHAR(20) DEFAULT NULL; 
+DECLARE includedDateFrom5 VARCHAR(20) DEFAULT NULL; 
+DECLARE includedDateTo5 VARCHAR(20) DEFAULT NULL; 
+DECLARE includedPeriodValue5 VARCHAR(10) DEFAULT NULL; 
+DECLARE includedPeriodType5 VARCHAR(20) DEFAULT NULL; 
 
 DECLARE includeExclude1String VARCHAR(1000) DEFAULT NULL; 
 DECLARE includeExclude1aString VARCHAR(1000) DEFAULT NULL; 
@@ -116,6 +112,7 @@ DECLARE includeExclude2String VARCHAR(1000) DEFAULT NULL;
 DECLARE includeExclude2aString VARCHAR(1000) DEFAULT NULL; 
 DECLARE includeExclude3String VARCHAR(1000) DEFAULT NULL; 
 DECLARE includeExclude4String VARCHAR(1000) DEFAULT NULL; 
+DECLARE includeExclude5String VARCHAR(1000) DEFAULT NULL; 
 
 SET providerOrganisation = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.providerOrganisation'),'[',''),']',''),'"','');
 SET includedOrganisation = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.includedOrganisation'),'[',''),']',''),'"','');
@@ -136,10 +133,10 @@ SET datasetValue = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.datasetValue'),
 SET dateFrom = JSON_UNQUOTE(JSON_EXTRACT(query,'$.dateFrom')); 
 SET dateTo = JSON_UNQUOTE(JSON_EXTRACT(query,'$.dateTo')); 
 
-SET eventOutput = JSON_EXTRACT(query,'$.eventOutput');
-SET aggregateOutput = JSON_EXTRACT(query,'$.aggregateOutput');
-SET schedule = JSON_EXTRACT(query,'$.schedule');
-SET delivery = JSON_EXTRACT(query,'$.delivery');
+SET eventOutput = JSON_UNQUOTE(JSON_EXTRACT(query,'$.eventOutput')); 
+SET aggregateOutput = JSON_UNQUOTE(JSON_EXTRACT(query,'$.aggregateOutput')); 
+SET schedule = JSON_UNQUOTE(JSON_EXTRACT(query,'$.schedule')); 
+SET delivery = JSON_UNQUOTE(JSON_EXTRACT(query,'$.delivery')); 
 
 SET includedExclude1 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedExclude1')); 
 SET includedAnyAll1 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedAnyAll1')); 
@@ -205,6 +202,16 @@ SET includedDateTo4 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedDateTo4'));
 SET includedPeriodValue4 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodValue4')); 
 SET includedPeriodType4 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodType4')); 
 
+SET includedExclude5 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedExclude5')); 
+SET includedAnyAll5 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedAnyAll5'));
+SET includedValueSet5 = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.includedValueSet5'),'[',''),']',''),'"','');
+SET includedOperator5 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedOperator5'));
+SET includedEntryValue5 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedEntryValue5')); 
+SET includedDateFrom5 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedDateFrom5')); 
+SET includedDateTo5 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedDateTo5')); 
+SET includedPeriodValue5 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodValue5')); 
+SET includedPeriodType5 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodType5')); 
+
 -- build cohort definition --
 CALL buildCohortDefinition(providerOrganisation,includedOrganisation,registrationStatus,
 ageFrom,ageTo,gender,postcode,valueDateFrom,valueDateTo,cohortValue,'org_tmp','valueset_tmp','concept_tmp','cohort_tmp','observation_tmp');
@@ -212,44 +219,57 @@ ageFrom,ageTo,gender,postcode,valueDateFrom,valueDateTo,cohortValue,'org_tmp','v
 -- 1 to 1b -- 
 CALL getIncludeExcludeString(includedExclude1,includedAnyAll1,
 includedValueSet1, includedDateFrom1, includedDateTo1, includedPeriodValue1,includedPeriodType1,
-'incValueSet1_tmp', 'incConcept1_tmp', 'observation_tmp', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, @includeExclude1String);
+'incValueSet1_tmp', 'incConcept1_tmp', 'observation_tmp', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
+NULL, NULL, NULL, NULL, NULL, NULL, NULL, @includeExclude1String);
 SET includeExclude1String = @includeExclude1String;
 
 CALL getIncludeExcludeString(includedExclude1a,includedAnyAll1a,
 includedValueSet1a, includedDateFrom1a, includedDateTo1a, includedPeriodValue1a,includedPeriodType1a,
-'incValueSet1a_tmp', 'incConcept1a_tmp', 'observation_tmp', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, @includeExclude1aString);
+'incValueSet1a_tmp', 'incConcept1a_tmp', 'observation_tmp', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
+NULL, NULL, NULL, NULL, NULL, NULL, NULL, @includeExclude1aString);
 SET includeExclude1aString = @includeExclude1aString;
 
 CALL getIncludeExcludeString(includedExclude1b,includedAnyAll1b,
 includedValueSet1b, includedDateFrom1b, includedDateTo1b, includedPeriodValue1b,includedPeriodType1b, 
-'incValueSet1b_tmp', 'incConcept1b_tmp', 'observation_tmp', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, @includeExclude1bString);
+'incValueSet1b_tmp', 'incConcept1b_tmp', 'observation_tmp', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
+NULL, NULL, NULL, NULL, NULL, NULL, NULL,@includeExclude1bString);
 SET includeExclude1bString = @includeExclude1bString;
 
 -- 2 to 2a -- 
 CALL getIncludeExcludeString(includedExclude2,includedAnyAll2,
 includedValueSet2, includedDateFrom2, includedDateTo2, includedPeriodValue2,includedPeriodType2, 
 'incValueSet2_tmp', 'incConcept2_tmp', 'observation_tmp', 2, includedEarliestLatest2, includedOperator2, includedEntryValue2, 
-'observation2_tmp',  NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, @includeExclude2String);
+'observation2_tmp',  NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,@includeExclude2String);
 SET includeExclude2String = @includeExclude2String;
 
 CALL getIncludeExcludeString(includedExclude2a,includedAnyAll2a,
 includedValueSet2a, includedDateFrom2a, includedDateTo2a, includedPeriodValue2a,includedPeriodType2a, 
 'incValueSet2a_tmp', 'incConcept2a_tmp', 'observation_tmp', 2, includedEarliestLatest2a, includedOperator2a, includedEntryValue2a, 
-'observation2a_tmp', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, @includeExclude2aString);
+'observation2a_tmp', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,@includeExclude2aString);
 SET includeExclude2aString = @includeExclude2aString;
 
 -- 3 --
 CALL getIncludeExcludeString(includedExclude3,includedAnyAll3,
 includedValueSet3, NULL, NULL, NULL, NULL, 'incValueSet3_tmp', 'incConcept3_tmp', 'observation_tmp', 3, includedEarliestLatest3, NULL, NULL, 
-'observation3_tmp', includedAnyAllTested3, includedTestedValueSet3, 'incTestedValueset3_tmp', 'incTestedConcept3_tmp', NULL, NULL, NULL, NULL, NULL, @includeExclude3String);
+'observation3_tmp', includedAnyAllTested3, includedTestedValueSet3, 'incTestedValueset3_tmp', 'incTestedConcept3_tmp', NULL, NULL, 
+NULL, NULL, NULL, NULL, NULL, NULL, @includeExclude3String);
 SET includeExclude3String = @includeExclude3String;
 
 -- 4 -- 
 CALL getIncludeExcludeString(includedExclude4,includedAnyAll4,
-includedValueSet4, includedDateFrom4, includedDateTo4, includedPeriodValue4, includedPeriodType4, 'incValueSet4_tmp', 'incConcept4_tmp', 'observation_tmp', 4, NULL, NULL, NULL, 
-NULL, NULL, NULL, NULL, NULL, includedAreNot4, includedAnyAllFollowedBy4, p_includedFollowedByValueSet, 'incFollowedByValueSet4_tmp', 'incFollowedByConcept4a_tmp', @includeExclude4String);
+includedValueSet4, includedDateFrom4, includedDateTo4, includedPeriodValue4, includedPeriodType4, 'incValueSet4_tmp', 'incConcept4_tmp', 'observation_tmp', 4, 
+NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, includedAreNot4, includedAnyAllFollowedBy4, p_includedFollowedByValueSet, 
+'incFollowedByValueSet4_tmp', 'incFollowedByConcept4a_tmp', NULL, NULL, NULL, @includeExclude4String);
 SET includeExclude4String = @includeExclude4String;
 
+-- 5 -- 
+CALL getIncludeExcludeString(includedExclude5,includedAnyAll5,
+includedValueSet5, includedDateFrom5, includedDateTo5, includedPeriodValue5, includedPeriodType5, 'incValueSet5_tmp', 'incConcept5_tmp', 
+'observation_tmp', 5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,'incOccurrences5_tmp', 
+includedOperator5, includedEntryValue5, @includeExclude4String);
+SET includeExclude5String = @includeExclude5String;
+
+-- build data set here
 
 /*
   -- testing
@@ -351,11 +371,8 @@ call reportGenerator('{"providerOrganisation":["NHS CITY AND HACKNEY CCG","NHS N
  "delivery":"NHS email"}');  */
 
 
--- clean up
---  DROP TABLE IF EXISTS org_tmp;
---  DROP TABLE IF EXISTS valueset_tmp;
---  DROP TABLE IF EXISTS concept_tmp;
---  DROP TABLE IF EXISTS observation_tmp;
+-- remove tmp tables here
+
 
 END//
 DELIMITER ;
