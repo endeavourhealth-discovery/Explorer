@@ -258,7 +258,7 @@ SET includeExclude3String = @includeExclude3String;
 -- 4 -- 
 CALL getIncludeExcludeString(includedExclude4,includedAnyAll4,
 includedValueSet4, includedDateFrom4, includedDateTo4, includedPeriodValue4, includedPeriodType4, 'incValueSet4_tmp', 'incConcept4_tmp', 'observation_tmp', 4, 
-NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, includedAreNot4, includedAnyAllFollowedBy4, p_includedFollowedByValueSet, 
+NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, includedAreNot4, includedAnyAllFollowedBy4, includedFollowedByValueSet4, 
 'incFollowedByValueSet4_tmp', 'incFollowedByConcept4a_tmp', NULL, NULL, NULL, @includeExclude4String);
 SET includeExclude4String = @includeExclude4String;
 
@@ -266,17 +266,17 @@ SET includeExclude4String = @includeExclude4String;
 CALL getIncludeExcludeString(includedExclude5,includedAnyAll5,
 includedValueSet5, includedDateFrom5, includedDateTo5, includedPeriodValue5, includedPeriodType5, 'incValueSet5_tmp', 'incConcept5_tmp', 
 'observation_tmp', 5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,'incOccurrences5_tmp', 
-includedOperator5, includedEntryValue5, @includeExclude4String);
+includedOperator5, includedEntryValue5, @includeExclude5String);
 SET includeExclude5String = @includeExclude5String;
 
--- build data set here
+-- filter observation cohort
+CALL filterObservationCohort('observation_cohort_tmp', 'observation_tmp', includeExclude1String, includeExclude1aString, includeExclude1bString, 
+includeExclude2String, includeExclude2aString, includeExclude3String, includeExclude4String, includeExclude5String);
+
+-- build dataset
+
 
 /*
-  -- testing
-SELECT includeExclude1String;
-SELECT includeExclude1aString;
-SELECT includeExclude1bString;
-
 select registrationStatus; 
 
 select cohortValue;
@@ -340,13 +340,33 @@ select includedDateTo2a;
 select includedPeriodValue2a;
 select includedPeriodType2a;
 
+select includedExclude3; 
+select  includedAnyAll3;
+select  includedValueSet3;
+select  includedEarliestLatest3;
+select  includedAnyAllTested3;
+select  includedTestedValueSet3;
 
+select  includedExclude4; 
+select  includedAnyAll4 ;
+select  includedValueSet4;
+select  includedAreNot4;
+select  includedAnyAllFollowedBy4;
+select  includedFollowedByValueSet4;
+select  includedDateFrom4; 
+select  includedDateTo4 ; 
+select  includedPeriodValue4; 
+select  includedPeriodType4; 
 
-
-
-
-
-
+select  includedExclude5; 
+select  includedAnyAll5;
+select  includedValueSet5;
+select  includedOperator5;
+select  includedEntryValue5 ; 
+select  includedDateFrom5 ; 
+select  includedDateTo5 ; 
+select  includedPeriodValue5 ; 
+select  includedPeriodType5 ; 
 
 */
 
@@ -371,8 +391,39 @@ call reportGenerator('{"providerOrganisation":["NHS CITY AND HACKNEY CCG","NHS N
  "delivery":"NHS email"}');  */
 
 
--- remove tmp tables here
+-- remove tmp tables -- 
 
+DROP TABLE IF EXISTS org_tmp;
+DROP TABLE IF EXISTS store;
+DROP TABLE IF EXISTS valueset_tmp;
+DROP TABLE IF EXISTS concept_tmp;
+DROP TABLE IF EXISTS cohort_tmp;
+DROP TABLE IF EXISTS observation_tmp;
+DROP TABLE IF EXISTS incValueSet1_tmp;
+DROP TABLE IF EXISTS incConcept1_tmp;
+DROP TABLE IF EXISTS incValueSet1a_tmp;
+DROP TABLE IF EXISTS incConcept1a_tmp;
+DROP TABLE IF EXISTS incValueSet1b_tmp;
+DROP TABLE IF EXISTS incConcept1b_tmp;
+DROP TABLE IF EXISTS incValueSet2_tmp;
+
+DROP TABLE IF EXISTS incConcept2_tmp;
+DROP TABLE IF EXISTS incValueSet2a_tmp;
+DROP TABLE IF EXISTS incConcept2a_tmp;
+DROP TABLE IF EXISTS observation2a_tmp;
+DROP TABLE IF EXISTS incValueSet3_tmp;
+DROP TABLE IF EXISTS incConcept3_tmp;
+DROP TABLE IF EXISTS observation3_tmp;
+DROP TABLE IF EXISTS incTestedValueset3_tmp;
+DROP TABLE IF EXISTS incTestedConcept3_tmp;
+DROP TABLE IF EXISTS incValueSet4_tmp;
+DROP TABLE IF EXISTS incConcept4_tmp;
+DROP TABLE IF EXISTS incFollowedByValueSet4_tmp;
+DROP TABLE IF EXISTS incFollowedByConcept4a_tmp;
+DROP TABLE IF EXISTS incValueSet5_tmp;
+DROP TABLE IF EXISTS incConcept5_tmp;
+DROP TABLE IF EXISTS incOccurrences5_tmp;
+-- DROP TABLE IF EXISTS observation_cohort_tmp;
 
 END//
 DELIMITER ;
