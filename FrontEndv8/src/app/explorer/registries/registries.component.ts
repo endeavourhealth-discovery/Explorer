@@ -27,7 +27,7 @@ export class RegistriesComponent implements OnInit {
 
   displayedColumns: string[] = ['select', 'ccg', 'practice', 'code', 'listSize', 'registry', 'registrySize', 'percentage', 'updated'];
   tiles: any[];
-  showGridView: boolean = true;
+  showDashboard: boolean = false;
 
   selectedCCG: string = '';
   selectedCCGString: string = '';

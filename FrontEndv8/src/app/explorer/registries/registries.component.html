@@ -32,11 +32,11 @@
         <mat-icon style="cursor: pointer" (click)="loadEvents()" matSuffix>search</mat-icon>
       </mat-form-field>
 
-      <mat-checkbox style="margin-left:10px" class="checkbox" [(ngModel)]="showGridView">Show grid view</mat-checkbox>
+      <mat-checkbox style="margin-left:10px" class="checkbox" [(ngModel)]="showDashboard">Show dashboard</mat-checkbox>
 
     </div>
 
-    <div class="table" *ngIf="!showGridView">
+    <div class="table" *ngIf="showDashboard">
       <div class="table-row" *ngFor="let tile of tiles">
         <div class="table-cell">
           <div style="font-size: 18px; position: center">{{tile.practice}}</div>
@@ -64,7 +64,7 @@
       </div>
     </div>
 
-    <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start" *ngIf="showGridView">
+    <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start" *ngIf="!showDashboard">
       <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 mat-table-compact" fxFlex="100" fxFill>
         <ng-container matColumnDef="select">
           <th mat-header-cell *matHeaderCellDef style="width: 220px">

@@ -28,14 +28,14 @@ export class RegistryIndicatorsComponent implements OnInit {
   practice: string = '';
   practiceTitle: string = '';
   tiles: any[];
-  showGridView: boolean = true;
+  showDashboard: boolean = false;
 
   events: any;
   dataSource: MatTableDataSource<any>;
   page: number = 0;
   size: number = 10;
 
-  displayedColumns: string[] = ['select','ccg', 'practice', 'code', 'parentRegistry', 'listSize', 'registry', 'registrySize', 'percentage', 'updated'];
+  displayedColumns: string[] = ['select','listSize', 'registry', 'registrySize', 'percentage', 'updated'];
 
   constructor(
     private route: ActivatedRoute,

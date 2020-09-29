@@ -11,10 +11,10 @@
     <div style="font-size:16px; padding: 10px; padding-bottom: 20px">
       <b>{{practiceTitle}} - Indicators for {{this.registry}} registry</b>
       <button mat-button color="accent" style="margin-left: 25px" [routerLink]="['/registries']">Back to registries</button>
-      <mat-checkbox style="margin-left:10px;font-size: 14px" class="checkbox" [(ngModel)]="showGridView">Show Grid View</mat-checkbox>
+      <mat-checkbox style="margin-left:10px;font-size: 14px" class="checkbox" [(ngModel)]="showDashboard">Show dashboard</mat-checkbox>
     </div>
 
-    <div class="table" *ngIf="!showGridView">
+    <div class="table" *ngIf="showDashboard">
       <div class="table-row">
         <div class="table-cell-full">
           <div style="font-size: 18px; position: center"><b>Patients with {{registry}}</b></div>
@@ -52,7 +52,7 @@
       </div>
     </div>
 
-    <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start" *ngIf="showGridView">
+    <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start" *ngIf="!showDashboard">
       <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 mat-table-compact" fxFlex="100" fxFill>
         <ng-container matColumnDef="select">
           <th mat-header-cell *matHeaderCellDef style="width: 220px">
@@ -75,22 +75,6 @@
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="ccg">
-          <th mat-header-cell *matHeaderCellDef>CCG</th>
-          <td mat-cell *matCellDef="let element"> {{element.ccg}} </td>
-        </ng-container>
-        <ng-container matColumnDef="practice">
-          <th mat-header-cell *matHeaderCellDef>Practice name</th>
-          <td mat-cell *matCellDef="let element"> {{element.practice}} </td>
-        </ng-container>
-        <ng-container matColumnDef="code">
-          <th mat-header-cell *matHeaderCellDef>ODS code</th>
-          <td mat-cell *matCellDef="let element"> {{element.code}} </td>
-        </ng-container>
-        <ng-container matColumnDef="parentRegistry">
-          <th mat-header-cell *matHeaderCellDef>Registry</th>
-          <td mat-cell *matCellDef="let element"> {{element.parentRegistry}} </td>
-        </ng-container>
         <ng-container matColumnDef="listSize">
           <th mat-header-cell *matHeaderCellDef>Registry patient count</th>
           <td mat-cell *matCellDef="let element"> {{element.listSize.toLocaleString()}} </td>
