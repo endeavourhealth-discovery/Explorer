@@ -244,19 +244,19 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                 break;
             case "6":
                 sql = "SELECT distinct(registry) as type " +
-                        "FROM dashboards.registries WHERE parent_registry is NULL" +
+                        "FROM dashboards.registries WHERE parent_registry = ''" +
                         " order by registry";
 
                 sqlCount = "SELECT count(distinct(registry)) " +
-                        " FROM dashboards.registries WHERE parent_registry is NULL";
+                        " FROM dashboards.registries WHERE parent_registry = ''";
                 break;
             case "7":
                 sql = "SELECT distinct(registry) as type " +
-                        "FROM dashboards.registries WHERE parent_registry is NOT NULL" +
+                        "FROM dashboards.registries WHERE parent_registry != ''" +
                         " order by registry";
 
                 sqlCount = "SELECT count(distinct(registry)) " +
-                        " FROM dashboards.registries WHERE parent_registry is NOT NULL";
+                        " FROM dashboards.registries WHERE parent_registry != ''";
                 break;
             case "8":
                 sql = "SELECT distinct(type) " +
@@ -905,14 +905,14 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         String sqlCount = "";
 
         if (parentRegistry.equals("") && practice.equals("")) {
-            sql = "SELECT id, registry, ccg, practice_name, ods_code, list_size, registry_size, updated, parent_registry " +
+            sql = "SELECT id, registry as name, query, registry, ccg, practice_name, ods_code, list_size, registry_size, updated, parent_registry " +
                     "FROM dashboards.registries " +
                     selectedCCGString+selectedRegistryString+
-                    " AND parent_registry is NULL order by ccg, practice_name,registry LIMIT ?,?";
+                    " AND parent_registry = '' order by ccg, practice_name,registry LIMIT ?,?";
 
             sqlCount = "SELECT count(1) " +
                     "FROM dashboards.registries " +
-                    selectedCCGString+selectedRegistryString+" AND parent_registry is NULL";
+                    selectedCCGString+selectedRegistryString+" AND parent_registry = ''";
 
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
                 statement.setInt(1, page*12);
@@ -930,13 +930,13 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
             }
         }
         else if (parentRegistry.equals("") && !practice.equals("")) {
-            sql = "SELECT id, registry, ccg, practice_name, ods_code, list_size, registry_size, updated, parent_registry " +
+            sql = "SELECT id, registry as name, query, registry, ccg, practice_name, ods_code, list_size, registry_size, updated, parent_registry " +
                     "FROM dashboards.registries " +
-                    " WHERE parent_registry is NULL AND practice_name like ? "+selectedRegistryString+" order by ccg, practice_name,registry LIMIT ?,?";
+                    " WHERE parent_registry = '' AND practice_name like ? "+selectedRegistryString+" order by ccg, practice_name,registry LIMIT ?,?";
 
             sqlCount = "SELECT count(1) " +
                     "FROM dashboards.registries " +
-                    " WHERE parent_registry is NULL AND practice_name like ? "+selectedRegistryString;
+                    " WHERE parent_registry = '' AND practice_name like ? "+selectedRegistryString;
 
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
                 statement.setString(1, "%"+practice+"%");
@@ -956,7 +956,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
             }
         }
         else {
-            sql = "SELECT id, registry, ccg, practice_name, ods_code, list_size, registry_size, updated, parent_registry " +
+            sql = "SELECT id, registry as name, query, registry, ccg, practice_name, ods_code, list_size, registry_size, updated, parent_registry " +
                     "FROM dashboards.registries "+
                     " WHERE ods_code = ? and parent_registry = ? order by ccg, practice_name,registry LIMIT ?,?";
 
@@ -1002,6 +1002,8 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         registries
                 .setId(resultSet.getInt("id"))
                 .setRegistry(resultSet.getString("registry"))
+                .setName(resultSet.getString("name"))
+                .setQuery(resultSet.getString("query"))
                 .setCcg(resultSet.getString("ccg"))
                 .setPractice(resultSet.getString("practice_name"))
                 .setCode(resultSet.getString("ods_code"))
@@ -1263,6 +1265,164 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         query
                 .setQuery(resultSet.getString("query"));
         return query;
+    }
+
+    public void saveRegistry(String query, String name, String id, String orgs) throws Exception {
+
+        String sql = "";
+
+        if (id.equals("")) {
+            orgs = orgs.replaceAll(",","','");
+            orgs = "'" + orgs + "'";
+            orgs = "SELECT g.name as grp, o.name as org, o.ods_code FROM dashboards.organisation_groups g " +
+                    "join dashboards.organisations o on o.organisation_group_id = g.id " +
+                    "where g.name in ("+orgs+")";
+
+            try (PreparedStatement statement = conn.prepareStatement(orgs)) {
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    while (resultSet.next()) {
+                        String group = resultSet.getString("grp");
+                        String org = resultSet.getString("org");
+                        String ods_code = resultSet.getString("ods_code");
+
+                        sql = "INSERT INTO dashboards.registries (registry, query, ccg, practice_name, ods_code) " +
+                                "VALUES (?, ?, ?, ?, ?)";
+                        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                            stmt.setString(1, name);
+                            stmt.setString(2, query);
+                            stmt.setString(3, group);
+                            stmt.setString(4, org);
+                            stmt.setString(5, ods_code);
+                            stmt.executeUpdate();
+                        }
+                    }
+                }
+            }
+
+        } else // edit
+        {
+            sql = "UPDATE dashboards.registries SET parent_registry = ? " +
+                    "WHERE "+
+                    "parent_registry in (select registry from (select registry from dashboards.registries where id = ? limit 1) as t) "+
+                    "and ods_code in (select ods_code from (select ods_code from dashboards.registries where id = ? limit 1) as t2) ";
+
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, name);
+                stmt.setString(2, id);
+                stmt.setString(3, id);
+                stmt.executeUpdate();
+            }
+
+            sql = "UPDATE dashboards.registries SET registry = ?, query = ? " +
+                    "WHERE id = ?";
+
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, name);
+                stmt.setString(2, query);
+                stmt.setString(3, id);
+                stmt.executeUpdate();
+            }
+        }
+    }
+
+    public void deleteRegistry(String id, String name, String odscode) throws Exception {
+
+        name = name.replaceAll(",","','");
+        name = "'" + name + "'";
+
+        odscode = odscode.replaceAll(",","','");
+        odscode = "'" + odscode + "'";
+
+        String sql = "DELETE FROM dashboards.registries WHERE id in ("+id+")";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.executeUpdate();
+        }
+
+        sql = "DELETE FROM dashboards.registries WHERE parent_registry in ("+name+") and ods_code in ("+odscode+")";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.executeUpdate();
+        }
+
+    }
+
+    public void duplicateRegistry(String id, String registry) throws Exception {
+
+        String sql = "insert into dashboards.registries (registry, query, ccg, practice_name, ods_code) " +
+                "select concat('Copy of ',registry), query, ccg, practice_name, ods_code from dashboards.registries where id = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, id);
+            stmt.executeUpdate();
+        }
+
+        String sqlCount = "insert into dashboards.registries (registry, query, ccg, practice_name, ods_code, parent_registry) " +
+                "select registry, query, ccg, practice_name, ods_code, concat('Copy of ',parent_registry) " +
+                "from dashboards.registries " +
+                "WHERE "+
+                "parent_registry in (select registry from (select registry from dashboards.registries where id = ? limit 1) as t) "+
+                "and ods_code in (select ods_code from (select ods_code from dashboards.registries where id = ? limit 1) as t2) ";
+
+
+        try (PreparedStatement stmt = conn.prepareStatement(sqlCount)) {
+            stmt.setString(1, id);
+            stmt.setString(2, id);
+            stmt.executeUpdate();
+        }
+    }
+
+    public void saveRegistryIndicator(String query, String name, String indicator, String ccg, String practice, String code, String id) throws Exception {
+
+        String sql = "";
+
+        if (id.equals("")) {
+            sql = "INSERT INTO dashboards.registries (registry, query, ccg, practice_name, ods_code, parent_registry) " +
+                    "VALUES (?, ?, ?, ?, ?, ?)";
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, indicator);
+                stmt.setString(2, query);
+                stmt.setString(3, ccg);
+                stmt.setString(4, practice);
+                stmt.setString(5, code);
+                stmt.setString(6, name);
+                stmt.executeUpdate();
+            }
+        } else // edit
+        {
+            sql = "UPDATE dashboards.registries SET registry = ?, query = ?, parent_registry = ? " +
+                    "WHERE id = ?";
+
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, indicator);
+                stmt.setString(2, query);
+                stmt.setString(3, name);
+                stmt.setString(4, id);
+                stmt.executeUpdate();
+            }
+        }
+    }
+
+    public void deleteRegistryIndicator(String id) throws Exception {
+
+        String sql = "DELETE FROM dashboards.registries WHERE id in ("+id+")";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.executeUpdate();
+        }
+
+    }
+
+    public void duplicateRegistryIndicator(String id) throws Exception {
+
+        String sql = "insert into dashboards.registries (registry, query, ccg, practice_name, ods_code, parent_registry) " +
+                "select registry, query, ccg, practice_name, ods_code, parent_registry from dashboards.registries where id = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, id);
+            stmt.executeUpdate();
+        }
+
     }
 
 }

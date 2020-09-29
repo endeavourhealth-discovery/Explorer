@@ -53,6 +53,8 @@ import {MatTooltipModule} from "@angular/material/tooltip";
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import {MatTabsModule} from "@angular/material/tabs";
 import { MatSelectSearchModule } from './mat-select-search/mat-select-search.module';
+import {RegistryEditorComponent} from "./registryeditor/registryeditor.component";
+import {RegistryIndicatorEditorComponent} from "./registryindicatoreditor/registryindicatoreditor.component";
 
 @NgModule({
   declarations: [
@@ -74,6 +76,8 @@ import { MatSelectSearchModule } from './mat-select-search/mat-select-search.mod
     OrganisationsComponent,
     OrganisationGroupsEditorComponent,
     OrganisationsEditorComponent,
+    RegistryEditorComponent,
+    RegistryIndicatorEditorComponent
   ],
     imports: [
         BrowserModule,
@@ -125,7 +129,9 @@ import { MatSelectSearchModule } from './mat-select-search/mat-select-search.mod
     AdvancedQueryEditorComponent,
     OrganisationsComponent,
     OrganisationGroupsEditorComponent,
-    OrganisationsEditorComponent
+    OrganisationsEditorComponent,
+    RegistryEditorComponent,
+    RegistryIndicatorEditorComponent
   ],
   providers: [ Globals ]
 })

@@ -248,6 +248,60 @@ export class ExplorerService {
     return this.http.get('api/events/organisationgroupduplicate', {params});
   }
 
+  duplicateRegistry(id?: string, name?: string): Observable<any> {
+    let params = new HttpParams();
+    params = params.append('id', id);
+    params = params.append('name', name);
+
+    return this.http.get('api/events/registryduplicate', {params});
+  }
+
+  saveRegistry(query?: string, name?: string, id?: string, orgs?: string): Observable<any> {
+    let params = new HttpParams();
+    params = params.append('query', query);
+    params = params.append('name', name);
+    params = params.append('id', id);
+    params = params.append('orgs', orgs);
+
+    return this.http.get('api/events/registryeditor', {params});
+  }
+
+  deleteRegistry(id?: string, name?: string, odscode?: string): Observable<any> {
+    let params = new HttpParams();
+    params = params.append('id', id);
+    params = params.append('name', name);
+    params = params.append('odscode', odscode);
+
+    return this.http.get('api/events/registrydelete', {params});
+  }
+
+  duplicateRegistryIndicator(id?: string): Observable<any> {
+    let params = new HttpParams();
+    params = params.append('id', id);
+
+    return this.http.get('api/events/registryindicatorduplicate', {params});
+  }
+
+  saveRegistryIndicator(query?: string, name?: string, indicator?: string, ccg?: string, practice?: string, code?: string, id?: string): Observable<any> {
+    let params = new HttpParams();
+    params = params.append('query', query);
+    params = params.append('name', name);
+    params = params.append('indicator', indicator);
+    params = params.append('ccg', ccg);
+    params = params.append('practice', practice);
+    params = params.append('code', code);
+    params = params.append('id', id);
+
+    return this.http.get('api/events/registryindicatoreditor', {params});
+  }
+
+  deleteRegistryIndicator(id?: string): Observable<any> {
+    let params = new HttpParams();
+    params = params.append('id', id);
+
+    return this.http.get('api/events/registryindicatordelete', {params});
+  }
+
   getQuery(selectedQuery?: string): Observable<any> {
 
     let params = new HttpParams();

@@ -20,6 +20,8 @@ public class Registries {
     private Integer registrySize;
     private String updated;
     private String parentRegistry;
+    private String name;
+    private String query;
 
 
     public Integer getId() {
@@ -108,6 +110,24 @@ public class Registries {
 
     public Registries setParentRegistry(String parentRegistry) {
         this.parentRegistry = parentRegistry;
+        return this;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Registries setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public String getQuery() {
+        return query;
+    }
+
+    public Registries setQuery(String query) {
+        this.query = query;
         return this;
     }
 
