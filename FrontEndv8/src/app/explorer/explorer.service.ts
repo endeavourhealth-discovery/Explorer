@@ -256,4 +256,12 @@ export class ExplorerService {
     return this.http.get('api/events/query', {params});
   }
 
+  getDashboardView(dashboardNumber: string): Observable<any> {
+    let params = new HttpParams();
+
+    params = params.append('dashboardNumber', dashboardNumber);
+
+    return this.http.get('api/events/dashboardview', {params});
+  }
+
 }

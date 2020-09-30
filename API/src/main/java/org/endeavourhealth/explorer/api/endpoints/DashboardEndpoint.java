@@ -525,4 +525,22 @@ public class DashboardEndpoint {
         }
     }
 
+    @GET
+    @Path("/dashboardview")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getDashboardView(@Context SecurityContext sc,
+                             @QueryParam("dashboardNumber") String dashboardNumber) throws Exception {
+        LOG.debug("getDashboardView");
+
+        try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
+            DashboardViewResult result = viewerDAL.getDashboardView(dashboardNumber);
+
+            return Response
+                    .ok()
+                    .entity(result)
+                    .build();
+        }
+    }
+
 }

@@ -91,21 +91,51 @@
                 </mat-select>
               </mat-form-field>
             </div>
+            <br/>
+            <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <mat-form-field appearance="outline" style="margin-left: 25px; width: 300px">
+                <mat-label>Series</mat-label>
+                <mat-select multiple [(ngModel)]="selectedSeries1" formControlName="control7a" (ngModelChange)="formChanged()" required>
+                  <mat-option *ngFor="let series of seriesList" [value]="series">{{series}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <br/>
+            <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <mat-form-field appearance="outline" style="margin-left: 25px; width: 400px">
+                <mat-label>X Axis label</mat-label>
+                <input matInput placeholder="X Axis label" [(ngModel)]="xAxisLabel1" formControlName="control8a" (ngModelChange)="formChanged()">
+              </mat-form-field>
+            </div>
+            <br/>
+            <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <mat-form-field appearance="outline" style="margin-left: 25px; width: 400px">
+                <mat-label>Y Axis label</mat-label>
+                <input matInput placeholder="Y Axis label" [(ngModel)]="yAxisLabel1" formControlName="control9a" (ngModelChange)="formChanged()">
+              </mat-form-field>
+            </div>
             <br/><br/>
             <span style="margin-left: 30px">*Required</span>
           </div>
           <div class="summary-column">
-            <div style="margin-top: 8px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <div style="margin-top: 5px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
               <p>Select the query/dataset to be used as the dashboard data source.</p>
             </div>
-            <div style="margin-top: 20px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <br/>
+            <div style="margin-top: 5px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
               <p>Output fields. Fields for comparing/aggregating/grouping in dashboards or fields to be output as rows in tables.</p>
             </div>
-            <div style="margin-top: 26px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <br/>
+            <div style="margin-top: 5px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
               <p>Output type for visualisations or exporting to files.</p>
             </div>
-            <div style="margin-top: 30px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <br/>
+            <div style="margin-top: 5px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
               <p>How often should this data set be refreshed.</p>
+            </div>
+            <br/>
+            <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <p>Select the series data items for charts.</p>
             </div>
           </div>
         </mat-tab>
@@ -153,21 +183,51 @@
                 </mat-select>
               </mat-form-field>
             </div>
+            <br/>
+            <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <mat-form-field appearance="outline" style="margin-left: 25px; width: 300px">
+                <mat-label>Series</mat-label>
+                <mat-select multiple [(ngModel)]="selectedSeries2" formControlName="control7b" (ngModelChange)="formChanged()" required>
+                  <mat-option *ngFor="let series of seriesList" [value]="series">{{series}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <br/>
+            <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <mat-form-field appearance="outline" style="margin-left: 25px; width: 400px">
+                <mat-label>X Axis label</mat-label>
+                <input matInput placeholder="X Axis label" [(ngModel)]="xAxisLabel2" formControlName="control8b" (ngModelChange)="formChanged()">
+              </mat-form-field>
+            </div>
+            <br/>
+            <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <mat-form-field appearance="outline" style="margin-left: 25px; width: 400px">
+                <mat-label>Y Axis label</mat-label>
+                <input matInput placeholder="Y Axis label" [(ngModel)]="yAxisLabel2" formControlName="control9b" (ngModelChange)="formChanged()">
+              </mat-form-field>
+            </div>
             <br/><br/>
             <span style="margin-left: 30px">*Required</span>
           </div>
           <div class="summary-column">
-            <div style="margin-top: 8px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <div style="margin-top: 5px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
               <p>Select the query/dataset to be used as the dashboard data source.</p>
             </div>
-            <div style="margin-top: 20px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <br/>
+            <div style="margin-top: 5px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
               <p>Output fields. Fields for comparing/aggregating/grouping in dashboards or fields to be output as rows in tables.</p>
             </div>
-            <div style="margin-top: 26px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <br/>
+            <div style="margin-top: 5px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
               <p>Output type for visualisations or exporting to files.</p>
             </div>
-            <div style="margin-top: 30px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <br/>
+            <div style="margin-top: 5px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
               <p>How often should this data set be refreshed.</p>
+            </div>
+            <br/>
+            <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <p>Select the series data items for charts.</p>
             </div>
           </div>
         </mat-tab>
@@ -215,21 +275,51 @@
                 </mat-select>
               </mat-form-field>
             </div>
+            <br/>
+            <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <mat-form-field appearance="outline" style="margin-left: 25px; width: 300px">
+                <mat-label>Series</mat-label>
+                <mat-select multiple [(ngModel)]="selectedSeries3" formControlName="control7c" (ngModelChange)="formChanged()" required>
+                  <mat-option *ngFor="let series of seriesList" [value]="series">{{series}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <br/>
+            <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <mat-form-field appearance="outline" style="margin-left: 25px; width: 400px">
+                <mat-label>X Axis label</mat-label>
+                <input matInput placeholder="X Axis label" [(ngModel)]="xAxisLabel3" formControlName="control8c" (ngModelChange)="formChanged()">
+              </mat-form-field>
+            </div>
+            <br/>
+            <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <mat-form-field appearance="outline" style="margin-left: 25px; width: 400px">
+                <mat-label>Y Axis label</mat-label>
+                <input matInput placeholder="Y Axis label" [(ngModel)]="yAxisLabel3" formControlName="control9c" (ngModelChange)="formChanged()">
+              </mat-form-field>
+            </div>
             <br/><br/>
             <span style="margin-left: 30px">*Required</span>
           </div>
           <div class="summary-column">
-            <div style="margin-top: 8px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <div style="margin-top: 5px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
               <p>Select the query/dataset to be used as the dashboard data source.</p>
             </div>
-            <div style="margin-top: 20px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <br/>
+            <div style="margin-top: 5px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
               <p>Output fields. Fields for comparing/aggregating/grouping in dashboards or fields to be output as rows in tables.</p>
             </div>
-            <div style="margin-top: 26px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <br/>
+            <div style="margin-top: 5px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
               <p>Output type for visualisations or exporting to files.</p>
             </div>
-            <div style="margin-top: 30px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <br/>
+            <div style="margin-top: 5px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
               <p>How often should this data set be refreshed.</p>
+            </div>
+            <br/>
+            <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <p>Select the series data items for charts.</p>
             </div>
           </div>
         </mat-tab>
@@ -277,21 +367,51 @@
                 </mat-select>
               </mat-form-field>
             </div>
+            <br/>
+            <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <mat-form-field appearance="outline" style="margin-left: 25px; width: 300px">
+                <mat-label>Series</mat-label>
+                <mat-select multiple [(ngModel)]="selectedSeries4" formControlName="control7d" (ngModelChange)="formChanged()" required>
+                  <mat-option *ngFor="let series of seriesList" [value]="series">{{series}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <br/>
+            <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <mat-form-field appearance="outline" style="margin-left: 25px; width: 400px">
+                <mat-label>X Axis label</mat-label>
+                <input matInput placeholder="X Axis label" [(ngModel)]="xAxisLabel4" formControlName="control8d" (ngModelChange)="formChanged()">
+              </mat-form-field>
+            </div>
+            <br/>
+            <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <mat-form-field appearance="outline" style="margin-left: 25px; width: 400px">
+                <mat-label>Y Axis label</mat-label>
+                <input matInput placeholder="Y Axis label" [(ngModel)]="yAxisLabel4" formControlName="control9d" (ngModelChange)="formChanged()">
+              </mat-form-field>
+            </div>
             <br/><br/>
             <span style="margin-left: 30px">*Required</span>
           </div>
           <div class="summary-column">
-            <div style="margin-top: 8px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <div style="margin-top: 5px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
               <p>Select the query/dataset to be used as the dashboard data source.</p>
             </div>
-            <div style="margin-top: 20px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <br/>
+            <div style="margin-top: 5px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
               <p>Output fields. Fields for comparing/aggregating/grouping in dashboards or fields to be output as rows in tables.</p>
             </div>
-            <div style="margin-top: 26px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <br/>
+            <div style="margin-top: 5px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
               <p>Output type for visualisations or exporting to files.</p>
             </div>
-            <div style="margin-top: 30px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <br/>
+            <div style="margin-top: 5px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
               <p>How often should this data set be refreshed.</p>
+            </div>
+            <br/>
+            <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <p>Select the series data items for charts.</p>
             </div>
           </div>
         </mat-tab>
@@ -367,5 +487,4 @@
 
     </form>
   </mat-step>
-
 </mat-horizontal-stepper>

@@ -596,7 +596,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                 if (weekly.equals("1")) {
                     sql = "SELECT FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) AS series_name, " +
                             "SUM(series_value) AS series_value " +
-                            "from dashboards.dashboard_results where name = ? " +
+                            "from dashboards.dashboard_results where n+ame = ? " +
                             "and series_name between ? and ? "+grouping+
                             " GROUP BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) " +
                             "ORDER BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7))";
@@ -1263,6 +1263,45 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         query
                 .setQuery(resultSet.getString("query"));
         return query;
+    }
+
+
+    public DashboardViewResult getDashboardView(String dashboardNumber) throws Exception {
+        DashboardViewResult result = new DashboardViewResult();
+
+        String sql = "";
+
+        sql = "SELECT type, name, query " +
+                "FROM dashboards.dashboard_library " +
+                "WHERE dashboard_id = ?";
+
+        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            statement.setString(1, dashboardNumber);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                result.setResults(getDashboardViewList(resultSet));
+            }
+        }
+
+        return result;
+    }
+
+    private List<DashboardView> getDashboardViewList(ResultSet resultSet) throws SQLException {
+        List<DashboardView> result = new ArrayList<>();
+        while (resultSet.next()) {
+            result.add(getDashboardView(resultSet));
+        }
+
+        return result;
+    }
+
+    public static DashboardView getDashboardView(ResultSet resultSet) throws SQLException {
+        DashboardView dashboardView = new DashboardView();
+
+        dashboardView
+                .setType(resultSet.getString("type"))
+                .setName(resultSet.getString("name"))
+                .setQuery(resultSet.getString("query"));
+        return dashboardView;
     }
 
 }

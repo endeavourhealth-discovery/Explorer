@@ -30,18 +30,33 @@ interface savedDashboard {
   selectedOutputField1: string;
   selectedOutputType1: string;
   selectedSchedule1: string;
+  selectedSeries1: string;
+  xAxisLabel1: string;
+  yAxisLabel1: string;
+
   selectedQuery2: string;
   selectedOutputField2: string;
   selectedOutputType2: string;
   selectedSchedule2: string;
+  selectedSeries2: string;
+  xAxisLabel2: string;
+  yAxisLabel2: string;
+
   selectedQuery3: string;
   selectedOutputField3: string;
   selectedOutputType3: string;
   selectedSchedule3: string;
+  selectedSeries3: string;
+  xAxisLabel3: string;
+  yAxisLabel3: string;
+
   selectedQuery4: string;
   selectedOutputField4: string;
   selectedOutputType4: string;
   selectedSchedule4: string;
+  selectedSeries4: string;
+  xAxisLabel4: string;
+  yAxisLabel4: string;
 
   visualType: widget[];
 }
@@ -71,26 +86,39 @@ export class DashboardEditorComponent {
   type: string;
   name: string;
   queryList = [];
+  seriesList = [];
 
   selectedQuery1: string = '';
   selectedOutputField1: string = '';
   selectedOutputType1: string = '';
   selectedSchedule1: string = '';
+  selectedSeries1: string = '';
+  xAxisLabel1: string = '';
+  yAxisLabel1: string = '';
 
   selectedQuery2: string = '';
   selectedOutputField2: string = '';
   selectedOutputType2: string = '';
   selectedSchedule2: string = '';
+  selectedSeries2: string = '';
+  xAxisLabel2: string = '';
+  yAxisLabel2: string = '';
 
   selectedQuery3: string = '';
   selectedOutputField3: string = '';
   selectedOutputType3: string = '';
   selectedSchedule3: string = '';
+  selectedSeries3: string = '';
+  xAxisLabel3: string = '';
+  yAxisLabel3: string = '';
 
   selectedQuery4: string = '';
   selectedOutputField4: string = '';
   selectedOutputType4: string = '';
   selectedSchedule4: string = '';
+  selectedSeries4: string = '';
+  xAxisLabel4: string = '';
+  yAxisLabel4: string = '';
 
   selectedWidgets : widget[] = [
   ];
@@ -151,18 +179,33 @@ export class DashboardEditorComponent {
       this.selectedOutputField1 = query.selectedOutputField1;
       this.selectedOutputType1 = query.selectedOutputType1;
       this.selectedSchedule1 = query.selectedSchedule1;
+      this.selectedSeries1 = query.selectedSeries1;
+      this.xAxisLabel1 = query.xAxisLabel1;
+      this.yAxisLabel1 = query.yAxisLabel1;
+
       this.selectedQuery2 = query.selectedQuery2;
       this.selectedOutputField2 = query.selectedOutputField2;
       this.selectedOutputType2 = query.selectedOutputType2;
       this.selectedSchedule2 = query.selectedSchedule2;
+      this.selectedSeries2 = query.selectedSeries2;
+      this.xAxisLabel2 = query.xAxisLabel2;
+      this.yAxisLabel2 = query.yAxisLabel2;
+
       this.selectedQuery3 = query.selectedQuery3;
       this.selectedOutputField3 = query.selectedOutputField3;
       this.selectedOutputType3 = query.selectedOutputType3;
       this.selectedSchedule3 = query.selectedSchedule3;
+      this.selectedSeries3 = query.selectedSeries3;
+      this.xAxisLabel3 = query.xAxisLabel3;
+      this.yAxisLabel3 = query.yAxisLabel3;
+
       this.selectedQuery4 = query.selectedQuery4;
       this.selectedOutputField4 = query.selectedOutputField4;
       this.selectedOutputType4 = query.selectedOutputType4;
       this.selectedSchedule4 = query.selectedSchedule4;
+      this.selectedSeries4 = query.selectedSeries4;
+      this.xAxisLabel4 = query.xAxisLabel4;
+      this.yAxisLabel4 = query.yAxisLabel4;
 
       this.selectedWidgets = query.visualType;
     }
@@ -171,10 +214,10 @@ export class DashboardEditorComponent {
       control1: ['', Validators.required], control2: ['', Validators.required]
     });
     this.secondFormGroup = this._formBuilder.group({
-      control3a: ['', Validators.required], control4a: [''], control5a: [''], control6a: [''],
-      control3b: [''], control4b: [''], control5b: [''], control6b: [''],
-      control3c: [''], control4c: [''], control5c: [''], control6c: [''],
-      control3d: [''], control4d: [''], control5d: [''], control6d: ['']
+      control3a: ['', Validators.required], control4a: [''], control5a: [''], control6a: [''], control7a: [''], control8a: [''], control9a: [''],
+      control3b: [''], control4b: [''], control5b: [''], control6b: [''], control7b: [''], control8b: [''], control9b: [''],
+      control3c: [''], control4c: [''], control5c: [''], control6c: [''], control7c: [''], control8c: [''], control9c: [''],
+      control3d: [''], control4d: [''], control5d: [''], control6d: [''], control7d: [''], control8d: [''], control9d: ['']
     });
     this.thirdFormGroup = this._formBuilder.group({
 
@@ -187,18 +230,34 @@ export class DashboardEditorComponent {
       selectedOutputField1: this.selectedOutputField1,
       selectedOutputType1: this.selectedOutputType1,
       selectedSchedule1: this.selectedSchedule1,
+      selectedSeries1: this.selectedSeries1,
+      xAxisLabel1: this.xAxisLabel1,
+      yAxisLabel1: this.yAxisLabel1,
+
       selectedQuery2: this.selectedQuery2,
       selectedOutputField2: this.selectedOutputField2,
       selectedOutputType2: this.selectedOutputType2,
       selectedSchedule2: this.selectedSchedule2,
+      selectedSeries2: this.selectedSeries2,
+      xAxisLabel2: this.xAxisLabel2,
+      yAxisLabel2: this.yAxisLabel2,
+
       selectedQuery3: this.selectedQuery3,
       selectedOutputField3: this.selectedOutputField3,
       selectedOutputType3: this.selectedOutputType3,
       selectedSchedule3: this.selectedSchedule3,
+      selectedSeries3: this.selectedSeries3,
+      xAxisLabel3: this.xAxisLabel3,
+      yAxisLabel3: this.yAxisLabel3,
+
       selectedQuery4: this.selectedQuery4,
       selectedOutputField4: this.selectedOutputField4,
       selectedOutputType4: this.selectedOutputType4,
       selectedSchedule4: this.selectedSchedule4,
+      selectedSeries4: this.selectedSeries4,
+      xAxisLabel4: this.xAxisLabel4,
+      yAxisLabel4: this.yAxisLabel4,
+
       visualType: this.selectedWidgets
     };
     this.jsonQuery = JSON.stringify(query);
@@ -237,6 +296,20 @@ export class DashboardEditorComponent {
     lists.results.map(
       e => {
         this.queryList.push(e.type);
+      }
+    )
+
+    this.explorerService.getLookupLists('12')
+      .subscribe(
+        (result) => this.loadSeriesList(result),
+        (error) => this.log.error(error)
+      );
+  }
+
+  loadSeriesList(lists: any) {
+    lists.results.map(
+      e => {
+        this.seriesList.push(e.type);
       }
     )
   }

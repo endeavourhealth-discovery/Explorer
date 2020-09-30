@@ -9,6 +9,7 @@ import {TutorialsComponent} from "./explorer/tutorials/tutorials.component";
 import {RegistriesComponent} from "./explorer/registries/registries.component";
 import {RegistryIndicatorsComponent} from "./explorer/registryindicators/registryindicators.component";
 import {OrganisationGroupsComponent} from "./explorer/organisationgroups/organisationgroups.component";
+import {DashboardViewerComponent} from "./explorer/dashboardviewer/dashboardviewer.component";
 
 @Injectable()
 export class AppMenuService implements  AbstractMenuProvider {
@@ -16,6 +17,7 @@ export class AppMenuService implements  AbstractMenuProvider {
     return [
       {path: '', redirectTo: '/dashboardlibrary', pathMatch: 'full'},
       {path: 'dashboard', component: DashboardComponent, data: {role: 'explorer'}},
+      {path: 'dashboardviewer', component: DashboardViewerComponent, data: {role: 'explorer'}},
       {path: 'registryindicators', component: RegistryIndicatorsComponent, data: {role: 'explorer'}},
       {path: 'registries', component: RegistriesComponent, data: {role: 'explorer'}},
       {path: 'dashboardlibrary', component: DashboardLibraryComponent, data: {role: 'explorer'}},
