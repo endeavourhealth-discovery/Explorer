@@ -28,6 +28,9 @@ IN p_includedAnyAllFollowedBy VARCHAR(10),
 IN p_includedFollowedByValueSet VARCHAR(1000),
 IN p_includedFollowedByValuesettab VARCHAR(64),
 IN p_includedFollowedByConcepttab VARCHAR(64),
+IN p_incoccurrencestab VARCHAR(64), 
+IN p_greaterless VARCHAR(10), 
+IN p_greaterlessvalue VARCHAR(10), 
 OUT p_includeExcludeString VARCHAR(1000)
 )
 BEGIN
@@ -64,8 +67,10 @@ SET p_includedEntryValue = IF(p_includedEntryValue = '', NULL, p_includedEntryVa
       -- get time period date range string
       SET timeperioddaterange = getTimePeriodDateRange(p_includedDateFrom, p_includedDateTo, p_includedPeriodValue, p_includedPeriodType);
       -- build include exclud string
-      SET p_includeExcludeString = buildIncludeExcludeString(p_includedExclude, p_includedAnyAll, timeperioddaterange, 
-      p_includeConcepttab, p_observationcohorttab, NULL, NULL, NULL, NULL, NULL, NULL, 1);
+      CALL buildIncludeExcludeString(p_includedExclude, p_includedAnyAll, timeperioddaterange, 
+      p_includeConcepttab, p_observationcohorttab, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, @includeExcludeString);
+      SET p_includeExcludeString = @includeExcludeString;
+
     ELSE 
       SET p_includeExcludeString = '1';
     END IF;
@@ -81,17 +86,21 @@ SET p_includedEntryValue = IF(p_includedEntryValue = '', NULL, p_includedEntryVa
 
       CALL getValueSetString(p_includedValueSet, @includedValueSetString);
       SET includedValueSetString = @includedValueSetString;
+
       -- create includeexclude valueset
       CALL createValueSet(includedValueSetString, p_includeValuesettab);
       -- create concept from includeexclude valueset
       CALL createConcept(p_includeConcepttab, p_includeValuesettab);
       -- get time period date range string
       SET timeperioddaterange = getTimePeriodDateRange(p_includedDateFrom, p_includedDateTo, p_includedPeriodValue, p_includedPeriodType);
+
       -- filter out earliest and latest observations
-      CALL filterObservationByEarliestLatest(p_includeConcepttab, p_observationcohorttab, p_earliestLatestObservationtab, p_includedEarliestLatest, p_includedOperator, p_includedEntryValue, timeperioddaterange);
+      CALL filterObservationByEarliestLatest(p_includeConcepttab, p_observationcohorttab, p_earliestLatestObservationtab, 
+      p_includedEarliestLatest, p_includedOperator, p_includedEntryValue, timeperioddaterange);
       -- build include exclud string
-      SET p_includeExcludeString = buildIncludeExcludeString(p_includedExclude, p_includedAnyAll, NULL, NULL, p_observationcohorttab, 
-      p_earliestLatestObservationtab, NULL, NULL, NULL, NULL, NULL, 2);
+      CALL buildIncludeExcludeString(p_includedExclude, p_includedAnyAll, NULL, NULL, p_observationcohorttab, 
+      p_earliestLatestObservationtab, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, @includeExcludeString);
+      SET p_includeExcludeString = @includeExcludeString;
 
     ELSE 
       SET p_includeExcludeString = '1';
@@ -105,10 +114,11 @@ SET p_includedEntryValue = IF(p_includedEntryValue = '', NULL, p_includedEntryVa
        p_includedEarliestLatest IS NOT NULL AND
        p_includedAnyAllTested IS NOT NULL AND
        p_includedTestedValueSet IS NOT NULL THEN
-
+      
       -- valueset
       CALL getValueSetString(p_includedValueSet, @includedValueSetString);
       SET includedValueSetString = @includedValueSetString;
+
       -- create includeexclude valueset
       CALL createValueSet(includedValueSetString, p_includeValuesettab);
       -- create concept from includeexclude valueset
@@ -117,16 +127,18 @@ SET p_includedEntryValue = IF(p_includedEntryValue = '', NULL, p_includedEntryVa
       -- tested valueset
       CALL getValueSetString(p_includedTestedValueSet, @includedTestedValueSetString);
       SET includedTestedValueSetString = @includedTestedValueSetString;
+
       -- create includeexclude valueset
       CALL createValueSet(includedTestedValueSetString, p_includeTestedValuesettab);
       -- create concept from includeexclude valueset
       CALL createConcept(p_includeTestedConcepttab, p_includeTestedValuesettab);
 
       -- filter out earliest and latest observations
-      CALL filterObservationByEarliestLatest(p_includeConcepttab, p_observationcohorttab, p_earliestLatestObservationtab, p_includedEarliestLatest, NULL, NULL, NULL);
+      CALL filterObservationByEarliestLatest(p_includeConcepttab, p_observationcohorttab, p_earliestLatestObservationtab, 
+      p_includedEarliestLatest, NULL, NULL, NULL);
       -- build include exclude string
-      SET p_includeExcludeString = buildIncludeExcludeString(p_includedExclude, p_includedAnyAll, NULL, NULL, p_observationcohorttab, 
-      p_earliestLatestObservationtab, p_includedAnyAllTested,p_includeTestedConcepttab, NULL, NULL, NULL, 3);
+      CALL buildIncludeExcludeString(p_includedExclude, p_includedAnyAll, NULL, NULL, p_observationcohorttab, p_earliestLatestObservationtab, p_includedAnyAllTested,p_includeTestedConcepttab, NULL, NULL, NULL, NULL, NULL, NULL, 3, @includeExcludeString);
+      SET p_includeExcludeString = @includeExcludeString;
 
     ELSE 
       SET p_includeExcludeString = '1';
@@ -159,14 +171,39 @@ SET p_includedEntryValue = IF(p_includedEntryValue = '', NULL, p_includedEntryVa
       -- get time period date range string
       SET timeperioddaterange = getTimePeriodDateRange(p_includedDateFrom, p_includedDateTo, p_includedPeriodValue, p_includedPeriodType);
       -- build include exclude string
-      SET p_includeExcludeString = buildIncludeExcludeString(p_includedExclude, p_includedAnyAll, timeperioddaterange, p_includeConcepttab, p_observationcohorttab, 
-      NULL, NULL, NULL, p_includedAreNot, p_includedAnyAllFollowedBy, p_includedFollowedByConcepttab, 4);
-
+      CALL buildIncludeExcludeString(p_includedExclude, p_includedAnyAll, timeperioddaterange, p_includeConcepttab, p_observationcohorttab, 
+      NULL, NULL, NULL, p_includedAreNot, p_includedAnyAllFollowedBy, p_includedFollowedByConcepttab, NULL, NULL, NULL, 4, @includeExcludeString);
+      SET p_includeExcludeString = @includeExcludeString;
 
     ELSE
       SET p_includeExcludeString = '1';
     END IF;
     
+ ELSEIF p_filterType = 5 THEN -- filter rule 5
+    
+    IF p_includedExclude IS NOT NULL AND
+       p_includedAnyAll IS NOT NULL AND
+       p_includedValueSet IS NOT NULL AND 
+       p_greaterless IS NOT NULL AND 
+       p_greaterlessvalue IS NOT NULL THEN
+
+      CALL getValueSetString(p_includedValueSet, @includedValueSetString);
+      SET includedValueSetString = @includedValueSetString;
+      -- create includeexclude valueset
+      CALL createValueSet(includedValueSetString, p_includeValuesettab);
+      -- create concept from includeexclude valueset
+      CALL createConcept(p_includeConcepttab, p_includeValuesettab);
+      -- get time period date range string
+      SET timeperioddaterange = getTimePeriodDateRange(p_includedDateFrom, p_includedDateTo, p_includedPeriodValue, p_includedPeriodType);
+      -- build include exclude string
+      CALL buildIncludeExcludeString(p_includedExclude, p_includedAnyAll, timeperioddaterange, p_includeConcepttab, p_observationcohorttab, 
+      NULL, NULL, NULL, NULL, NULL, NULL, p_incoccurrencestab, p_greaterless, p_greaterlessvalue, 5, @includeExcludeString);
+      SET p_includeExcludeString = @includeExcludeString;
+
+    ELSE
+      SET p_includeExcludeString = '1';
+    END IF;   
+
  END IF;
 
 END//

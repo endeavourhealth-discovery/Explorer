@@ -54,6 +54,8 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
 import {MatTabsModule} from "@angular/material/tabs";
 import { MatSelectSearchModule } from './mat-select-search/mat-select-search.module';
 import {DashboardViewerComponent} from "./dashboardviewer/dashboardviewer.component";
+import {RegistryEditorComponent} from "./registryeditor/registryeditor.component";
+import {RegistryIndicatorEditorComponent} from "./registryindicatoreditor/registryindicatoreditor.component";
 
 @NgModule({
   declarations: [
@@ -116,6 +118,8 @@ import {DashboardViewerComponent} from "./dashboardviewer/dashboardviewer.compon
     DragDropModule,
     MatTabsModule,
     MatSelectSearchModule
+    RegistryEditorComponent,
+    RegistryIndicatorEditorComponent
   ],
 
   entryComponents: [
@@ -128,7 +132,9 @@ import {DashboardViewerComponent} from "./dashboardviewer/dashboardviewer.compon
     AdvancedQueryEditorComponent,
     OrganisationsComponent,
     OrganisationGroupsEditorComponent,
-    OrganisationsEditorComponent
+    OrganisationsEditorComponent,
+    RegistryEditorComponent,
+    RegistryIndicatorEditorComponent
   ],
   providers: [ Globals ]
 })

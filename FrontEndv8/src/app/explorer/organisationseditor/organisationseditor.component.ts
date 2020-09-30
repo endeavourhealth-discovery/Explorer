@@ -43,7 +43,7 @@ export class OrganisationsEditorComponent {
       .subscribe(saved => {
           this.dialogRef.close(true);
         },
-        error => this.log.error('This value set code could not be saved.')
+        error => this.log.error('This organisation could not be saved.')
       );
   }
 

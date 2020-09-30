@@ -38,7 +38,7 @@ export class OrganisationGroupsEditorComponent {
       .subscribe(saved => {
           this.dialogRef.close(true);
         },
-        error => this.log.error('This value set could not be saved.')
+        error => this.log.error('This organisation group could not be saved.')
       );
   }
 
