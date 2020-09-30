@@ -6,6 +6,7 @@ DROP PROCEDURE IF EXISTS createDataset;
 DELIMITER //
 
 CREATE PROCEDURE createDataset (
+  p_query_id INT,
   p_patientcohorttab VARCHAR(64), 
   p_sourcetab VARCHAR(255), 
   p_col VARCHAR(64),
@@ -25,12 +26,12 @@ BEGIN
       SET datasetconceptString = '1';
     END IF;
 
-    SET @sql = CONCAT('DROP TABLE IF EXISTS ', p_datasettab);
+    SET @sql = CONCAT('DELETE FROM ', p_datasettab ,' WHERE query_id = ',p_query_id);
     PREPARE stmt FROM @sql;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 
-    SET @sql = CONCAT('CREATE TABLE ', p_datasettab,' AS 
+    SET @sql = CONCAT('INSERT INTO ', p_datasettab,'  
     SELECT DISTINCT
            p.query_id, 
            o.id
@@ -39,11 +40,6 @@ BEGIN
     ' AND ', p_daterange,
     ' AND ', p_activeString);
 
-    PREPARE stmt FROM @sql;
-    EXECUTE stmt;
-    DEALLOCATE PREPARE stmt;
-
-    SET @sql = CONCAT('ALTER TABLE ',p_datasettab ,' ADD PRIMARY KEY id_ix(id)');
     PREPARE stmt FROM @sql;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;

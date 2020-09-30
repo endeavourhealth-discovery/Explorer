@@ -6,6 +6,7 @@ DROP PROCEDURE IF EXISTS buildResultDatasets;
 DELIMITER //
 
 CREATE PROCEDURE buildResultDatasets (
+  p_query_id INT,
   p_patientcohorttab VARCHAR(64),
   p_event_type VARCHAR(500),
   p_active VARCHAR(20),
@@ -42,7 +43,7 @@ BEGIN
   END IF;
       
   -- build datasets from event types
-  CALL buildDatasets(p_patientcohorttab, p_event_type, p_datasetconcepttab, datasetValueString, p_active, p_schema);
+  CALL buildDatasets(p_query_id, p_patientcohorttab, p_event_type, p_datasetconcepttab, datasetValueString, p_active, p_schema);
 
 
 END //

@@ -5,6 +5,7 @@ DROP PROCEDURE IF EXISTS buildDatasets;
 DELIMITER //
 
 CREATE PROCEDURE buildDatasets (
+  p_query_id INT,
   p_patientcohorttab VARCHAR(64),
   p_event_type VARCHAR(500),
   p_datasetconcepttab VARCHAR(64),
@@ -68,7 +69,7 @@ BEGIN
                 SET datasettab = 'encounters_dataset';
              END IF;
 
-    CALL createDataset(p_patientcohorttab, sourcetab, sourcecol, p_datasetconcepttab, p_daterange, activeString, datasettab);
+    CALL createDataset(p_query_id, p_patientcohorttab, sourcetab, sourcecol, p_datasetconcepttab, p_daterange, activeString, datasettab);
     SET p_event_type = INSERT(p_event_type, 1, frontlen + 1, '');
     
     END LOOP;
