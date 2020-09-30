@@ -18,7 +18,8 @@ CREATE PROCEDURE buildCohortDefinition(
      p_valuesettab VARCHAR(64),
      p_concepttab VARCHAR(64),
      p_cohorttab VARCHAR(64),
-     p_observationtab VARCHAR(64)
+     p_observationtab VARCHAR(64),
+     p_schema VARCHAR(255)
 )
 
 BEGIN
@@ -88,11 +89,11 @@ BEGIN
 -- create valueset cohort
   CALL createValueSet(cohortvalueset, p_valuesettab);
 -- create concept cohort from the valueset
-  CALL createConcept(p_concepttab, p_valuesettab);
+  CALL createConcept(p_concepttab, p_valuesettab, p_schema);
 -- create patient cohort
-  CALL createPatientCohort(orgrange, regstatus, agerange, genderrange, postcoderange, p_cohorttab);
+  CALL createPatientCohort(orgrange, regstatus, agerange, genderrange, postcoderange, p_cohorttab, p_schema);
 -- create observation patient cohort
-  CALL createObservationCohort(daterange, p_observationtab, p_cohorttab, p_concepttab);
+  CALL createObservationCohort(daterange, p_observationtab, p_cohorttab, p_concepttab, p_schema);
 
 
 END//

@@ -3,7 +3,13 @@ USE dashboards;
 DROP PROCEDURE IF EXISTS createObservationCohort;
 
 DELIMITER //
-CREATE PROCEDURE createObservationCohort(p_daterange VARCHAR(255), p_observationtab VARCHAR(64), p_cohorttab VARCHAR(64), p_concepttab VARCHAR(64))
+CREATE PROCEDURE createObservationCohort(
+   p_daterange VARCHAR(255), 
+   p_observationtab VARCHAR(64), 
+   p_cohorttab VARCHAR(64), 
+   p_concepttab VARCHAR(64),
+   p_schema VARCHAR(255)
+   )
 BEGIN
 
    SET @sql = CONCAT('DROP TABLE IF EXISTS ', p_observationtab);
@@ -31,7 +37,7 @@ BEGIN
           o.result_value,
           o.result_value_units,
           o.non_core_concept_id
-      FROM ',p_cohorttab ,' c JOIN subscriber_pi_rv.observation o ON c.patient_id = o.patient_id AND c.organization_id = o.organization_id AND c.person_id = o.person_id
+      FROM ',p_cohorttab ,' c JOIN ',p_schema ,'.observation o ON c.patient_id = o.patient_id AND c.organization_id = o.organization_id AND c.person_id = o.person_id
       JOIN ',p_concepttab ,' ct ON ct.non_core_concept_id = o.non_core_concept_id
       WHERE ',p_daterange);
 

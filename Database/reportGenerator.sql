@@ -3,9 +3,11 @@ USE dashboards;
 DROP PROCEDURE IF EXISTS reportGenerator;
 
 DELIMITER //
-CREATE PROCEDURE reportGenerator(query JSON)
+CREATE PROCEDURE reportGenerator(query_id INT, query JSON)
 
 BEGIN
+
+-- declare variables --
 
 DECLARE providerOrganisation VARCHAR(5000) DEFAULT NULL;
 DECLARE includedOrganisation VARCHAR(5000) DEFAULT NULL; 
@@ -114,6 +116,11 @@ DECLARE includeExclude3String VARCHAR(1000) DEFAULT NULL;
 DECLARE includeExclude4String VARCHAR(1000) DEFAULT NULL; 
 DECLARE includeExclude5String VARCHAR(1000) DEFAULT NULL; 
 
+DECLARE sourceSchema VARCHAR(255);
+
+-- set variables -- 
+SET sourceSchema = 'subscriber_pi_rv';
+
 SET providerOrganisation = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.providerOrganisation'),'[',''),']',''),'"','');
 SET includedOrganisation = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.includedOrganisation'),'[',''),']',''),'"','');
 SET registrationStatus = JSON_UNQUOTE(JSON_EXTRACT(query,'$.registrationStatus'));
@@ -126,8 +133,8 @@ SET ageFrom = JSON_UNQUOTE(JSON_EXTRACT(query,'$.ageFrom'));
 SET ageTo = JSON_UNQUOTE(JSON_EXTRACT(query,'$.ageTo'));  
 SET gender = LOWER(JSON_UNQUOTE(JSON_EXTRACT(query,'$.gender'))); 
 SET postcode = JSON_UNQUOTE(JSON_EXTRACT(query,'$.postcode'));
-SET eventType = REPLACE(REPLACE(JSON_EXTRACT(query,'$.eventType'),'[',''),']','');
-SET active = JSON_EXTRACT(query,'$.active');
+SET eventType = UPPER(REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.eventType'),'[',''),']',''),'"',''));
+SET active = UPPER(JSON_EXTRACT(query,'$.active'));
 
 SET datasetValue = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.datasetValue'),'[',''),']',''),'"','');
 SET dateFrom = JSON_UNQUOTE(JSON_EXTRACT(query,'$.dateFrom')); 
@@ -213,68 +220,71 @@ SET includedPeriodValue5 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodValu
 SET includedPeriodType5 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodType5')); 
 
 -- build cohort definition --
-CALL buildCohortDefinition(providerOrganisation,includedOrganisation,registrationStatus,
-ageFrom,ageTo,gender,postcode,valueDateFrom,valueDateTo,cohortValue,'org_tmp','valueset_tmp','concept_tmp','cohort_tmp','observation_tmp');
--- build advance query --
--- 1 to 1b -- 
+
+CALL buildCohortDefinition(providerOrganisation, includedOrganisation, registrationStatus, ageFrom, ageTo, gender, postcode, 
+valueDateFrom, valueDateTo, cohortValue, 'org_tmp', 'valueset_tmp', 'concept_tmp', 'cohort_tmp', 'observation_tmp', sourceSchema);
+
+-- build advance criteria --
+
+-- 1 --
 CALL getIncludeExcludeString(includedExclude1,includedAnyAll1,
 includedValueSet1, includedDateFrom1, includedDateTo1, includedPeriodValue1,includedPeriodType1,
 'incValueSet1_tmp', 'incConcept1_tmp', 'observation_tmp', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
-NULL, NULL, NULL, NULL, NULL, NULL, NULL, @includeExclude1String);
+NULL, NULL, NULL, NULL, NULL, NULL, NULL, sourceSchema ,@includeExclude1String);
 SET includeExclude1String = @includeExclude1String;
-
+-- 1a --
 CALL getIncludeExcludeString(includedExclude1a,includedAnyAll1a,
 includedValueSet1a, includedDateFrom1a, includedDateTo1a, includedPeriodValue1a,includedPeriodType1a,
 'incValueSet1a_tmp', 'incConcept1a_tmp', 'observation_tmp', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
-NULL, NULL, NULL, NULL, NULL, NULL, NULL, @includeExclude1aString);
+NULL, NULL, NULL, NULL, NULL, NULL, NULL, sourceSchema ,@includeExclude1aString);
 SET includeExclude1aString = @includeExclude1aString;
-
+-- 1b --
 CALL getIncludeExcludeString(includedExclude1b,includedAnyAll1b,
 includedValueSet1b, includedDateFrom1b, includedDateTo1b, includedPeriodValue1b,includedPeriodType1b, 
 'incValueSet1b_tmp', 'incConcept1b_tmp', 'observation_tmp', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
-NULL, NULL, NULL, NULL, NULL, NULL, NULL,@includeExclude1bString);
+NULL, NULL, NULL, NULL, NULL, NULL, NULL, sourceSchema ,@includeExclude1bString);
 SET includeExclude1bString = @includeExclude1bString;
 
--- 2 to 2a -- 
+-- 2 -- 
 CALL getIncludeExcludeString(includedExclude2,includedAnyAll2,
 includedValueSet2, includedDateFrom2, includedDateTo2, includedPeriodValue2,includedPeriodType2, 
 'incValueSet2_tmp', 'incConcept2_tmp', 'observation_tmp', 2, includedEarliestLatest2, includedOperator2, includedEntryValue2, 
-'observation2_tmp',  NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,@includeExclude2String);
+'observation2_tmp',  NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, sourceSchema ,@includeExclude2String);
 SET includeExclude2String = @includeExclude2String;
-
+-- 2a --
 CALL getIncludeExcludeString(includedExclude2a,includedAnyAll2a,
 includedValueSet2a, includedDateFrom2a, includedDateTo2a, includedPeriodValue2a,includedPeriodType2a, 
 'incValueSet2a_tmp', 'incConcept2a_tmp', 'observation_tmp', 2, includedEarliestLatest2a, includedOperator2a, includedEntryValue2a, 
-'observation2a_tmp', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,@includeExclude2aString);
+'observation2a_tmp', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, sourceSchema ,@includeExclude2aString);
 SET includeExclude2aString = @includeExclude2aString;
 
 -- 3 --
 CALL getIncludeExcludeString(includedExclude3,includedAnyAll3,
 includedValueSet3, NULL, NULL, NULL, NULL, 'incValueSet3_tmp', 'incConcept3_tmp', 'observation_tmp', 3, includedEarliestLatest3, NULL, NULL, 
 'observation3_tmp', includedAnyAllTested3, includedTestedValueSet3, 'incTestedValueset3_tmp', 'incTestedConcept3_tmp', NULL, NULL, 
-NULL, NULL, NULL, NULL, NULL, NULL, @includeExclude3String);
+NULL, NULL, NULL, NULL, NULL, NULL, sourceSchema ,@includeExclude3String);
 SET includeExclude3String = @includeExclude3String;
 
 -- 4 -- 
 CALL getIncludeExcludeString(includedExclude4,includedAnyAll4,
 includedValueSet4, includedDateFrom4, includedDateTo4, includedPeriodValue4, includedPeriodType4, 'incValueSet4_tmp', 'incConcept4_tmp', 'observation_tmp', 4, 
 NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, includedAreNot4, includedAnyAllFollowedBy4, includedFollowedByValueSet4, 
-'incFollowedByValueSet4_tmp', 'incFollowedByConcept4a_tmp', NULL, NULL, NULL, @includeExclude4String);
+'incFollowedByValueSet4_tmp', 'incFollowedByConcept4a_tmp', NULL, NULL, NULL, sourceSchema ,@includeExclude4String);
 SET includeExclude4String = @includeExclude4String;
 
 -- 5 -- 
 CALL getIncludeExcludeString(includedExclude5,includedAnyAll5,
 includedValueSet5, includedDateFrom5, includedDateTo5, includedPeriodValue5, includedPeriodType5, 'incValueSet5_tmp', 'incConcept5_tmp', 
 'observation_tmp', 5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,'incOccurrences5_tmp', 
-includedOperator5, includedEntryValue5, @includeExclude5String);
+includedOperator5, includedEntryValue5, sourceSchema ,@includeExclude5String);
 SET includeExclude5String = @includeExclude5String;
 
--- filter observation cohort
-CALL filterObservationCohort('observation_cohort_tmp', 'observation_tmp', includeExclude1String, includeExclude1aString, includeExclude1bString, 
+-- build final patient cohort based on advance criteria -- 
+CALL buildFinalPatientCohort(query_id,'patient_cohort_tmp', 'observation_tmp', includeExclude1String, includeExclude1aString, includeExclude1bString, 
 includeExclude2String, includeExclude2aString, includeExclude3String, includeExclude4String, includeExclude5String);
 
--- build dataset
-
+-- build result datasets
+CALL buildResultDatasets('patient_cohort_tmp', eventType,active,datasetValue, 'datasetValue_tmp', 'datasetConcept_tmp', dateFrom, dateTo, sourceSchema);
 
 /*
 select registrationStatus; 
@@ -423,7 +433,10 @@ DROP TABLE IF EXISTS incFollowedByConcept4a_tmp;
 DROP TABLE IF EXISTS incValueSet5_tmp;
 DROP TABLE IF EXISTS incConcept5_tmp;
 DROP TABLE IF EXISTS incOccurrences5_tmp;
--- DROP TABLE IF EXISTS observation_cohort_tmp;
+DROP TABLE IF EXISTS datasetValue_tmp;
+DROP TABLE IF EXISTS datasetConcept_tmp;
+
+-- DROP TABLE IF EXISTS patient_cohort_tmp;
 
 END//
 DELIMITER ;

@@ -31,6 +31,7 @@ IN p_includedFollowedByConcepttab VARCHAR(64),
 IN p_incoccurrencestab VARCHAR(64), 
 IN p_greaterless VARCHAR(10), 
 IN p_greaterlessvalue VARCHAR(10), 
+IN p_schema VARCHAR(255),
 OUT p_includeExcludeString VARCHAR(1000)
 )
 BEGIN
@@ -63,7 +64,7 @@ SET p_includedEntryValue = IF(p_includedEntryValue = '', NULL, p_includedEntryVa
       -- create includeexclude valueset
       CALL createValueSet(includedValueSetString, p_includeValuesettab);
       -- create concept from includeexclude valueset
-      CALL createConcept(p_includeConcepttab, p_includeValuesettab);
+      CALL createConcept(p_includeConcepttab, p_includeValuesettab, p_schema);
       -- get time period date range string
       SET timeperioddaterange = getTimePeriodDateRange(p_includedDateFrom, p_includedDateTo, p_includedPeriodValue, p_includedPeriodType);
       -- build include exclud string
@@ -90,7 +91,7 @@ SET p_includedEntryValue = IF(p_includedEntryValue = '', NULL, p_includedEntryVa
       -- create includeexclude valueset
       CALL createValueSet(includedValueSetString, p_includeValuesettab);
       -- create concept from includeexclude valueset
-      CALL createConcept(p_includeConcepttab, p_includeValuesettab);
+      CALL createConcept(p_includeConcepttab, p_includeValuesettab, p_schema);
       -- get time period date range string
       SET timeperioddaterange = getTimePeriodDateRange(p_includedDateFrom, p_includedDateTo, p_includedPeriodValue, p_includedPeriodType);
 
@@ -122,7 +123,7 @@ SET p_includedEntryValue = IF(p_includedEntryValue = '', NULL, p_includedEntryVa
       -- create includeexclude valueset
       CALL createValueSet(includedValueSetString, p_includeValuesettab);
       -- create concept from includeexclude valueset
-      CALL createConcept(p_includeConcepttab, p_includeValuesettab);
+      CALL createConcept(p_includeConcepttab, p_includeValuesettab, p_schema);
       
       -- tested valueset
       CALL getValueSetString(p_includedTestedValueSet, @includedTestedValueSetString);
@@ -159,7 +160,7 @@ SET p_includedEntryValue = IF(p_includedEntryValue = '', NULL, p_includedEntryVa
       -- create includeexclude valueset
       CALL createValueSet(includedValueSetString, p_includeValuesettab);
       -- create concept from includeexclude valueset
-      CALL createConcept(p_includeConcepttab, p_includeValuesettab);
+      CALL createConcept(p_includeConcepttab, p_includeValuesettab, p_schema);
 
       -- followed by valueset
       CALL getValueSetString(p_includedFollowedByValueSet, @includedFollowedByValueSetString);
@@ -192,7 +193,7 @@ SET p_includedEntryValue = IF(p_includedEntryValue = '', NULL, p_includedEntryVa
       -- create includeexclude valueset
       CALL createValueSet(includedValueSetString, p_includeValuesettab);
       -- create concept from includeexclude valueset
-      CALL createConcept(p_includeConcepttab, p_includeValuesettab);
+      CALL createConcept(p_includeConcepttab, p_includeValuesettab, p_schema);
       -- get time period date range string
       SET timeperioddaterange = getTimePeriodDateRange(p_includedDateFrom, p_includedDateTo, p_includedPeriodValue, p_includedPeriodType);
       -- build include exclude string
