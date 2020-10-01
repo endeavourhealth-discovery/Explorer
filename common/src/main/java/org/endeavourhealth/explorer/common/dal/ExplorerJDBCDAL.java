@@ -596,7 +596,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                 if (weekly.equals("1")) {
                     sql = "SELECT FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) AS series_name, " +
                             "SUM(series_value) AS series_value " +
-                            "from dashboards.dashboard_results where n+ame = ? " +
+                            "from dashboards.dashboard_results where name = ? " +
                             "and series_name between ? and ? "+grouping+
                             " GROUP BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) " +
                             "ORDER BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7))";
