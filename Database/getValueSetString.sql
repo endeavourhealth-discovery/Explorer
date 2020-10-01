@@ -9,7 +9,7 @@ BEGIN
   
    CALL storeString(p_value);
 
-   SET p_valueString = "EXISTS (SELECT 1 FROM store s WHERE vs.name LIKE CONCAT(s.code,'%'))";
+   SET p_valueString = "EXISTS (SELECT 1 FROM store s WHERE s.code = vsc.type)";
 
 END//
 DELIMITER ;

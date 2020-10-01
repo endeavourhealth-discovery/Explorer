@@ -30,18 +30,19 @@ BEGIN
     SET dateRangeString = '1';
   END IF;
 
+  -- dataset value set
+  SET p_datasetValue = IF(p_datasetValue = '', NULL, p_datasetValue); 
   IF p_datasetValue IS NOT NULL THEN
-      -- get valueset string
-      CALL getValueSetString(p_datasetValue, @datasetValueString);
-      SET datasetValueString = @datasetValueString;
-      -- create datset valueset
-      CALL createValueSet(datasetValueString, p_datasetValuetab);
-      -- create concept from dataset valueset
-      CALL createConcept(p_datasetconcepttab, p_datasetValuetab, p_schema);
-  ELSE
-      -- no valueset filtering
-      SET p_datasetconcepttab = NULL;
+    CALL getValueSetString(p_datasetValue, @datasetValueString);
+    SET datasetValueString = @datasetValueString;
+  ELSE  -- bring back everything
+    SET datasetValueString = '1';
   END IF;
+
+  -- create datset valueset
+  CALL createValueSet(datasetValueString, p_datasetValuetab);
+  -- create concept from dataset valueset
+  CALL createConcept(p_datasetconcepttab, p_datasetValuetab, p_schema);
 
   -- build datasets from event types
   CALL buildDatasets(p_query_id, p_patientcohorttab, p_event_type, p_datasetconcepttab, dateRangeString, p_active, p_schema);

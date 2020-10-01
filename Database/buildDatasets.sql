@@ -26,6 +26,30 @@ BEGIN
   DECLARE frontlen INT DEFAULT NULL;
   DECLARE TempValue VARCHAR(500) DEFAULT NULL;
 
+
+  -- remove previous query id data
+
+    SET @sql = CONCAT('DELETE FROM person_dataset WHERE query_id = ', p_query_id);
+    PREPARE stmt FROM @sql;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+
+    SET @sql = CONCAT('DELETE FROM observation_dataset WHERE query_id = ', p_query_id);
+    PREPARE stmt FROM @sql;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+
+    SET @sql = CONCAT('DELETE FROM medication_dataset WHERE query_id = ', p_query_id);
+    PREPARE stmt FROM @sql;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+
+    SET @sql = CONCAT('DELETE FROM encounter_dataset WHERE query_id = ', p_query_id);
+    PREPARE stmt FROM @sql;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+
+
     processloop:
     LOOP  
 
@@ -72,7 +96,7 @@ BEGIN
                 SET sourcetab = CONCAT(p_schema,'.encounter');
                 SET sourcecol = 'o.patient_id';
                 SET activeString = '1';  -- not applicable
-                SET datasettab = 'encounters_dataset';
+                SET datasettab = 'encounter_dataset';
                 SET datasetconcepttab = p_datasetconcepttab;
                 SET daterange = p_daterange;
              END IF;

@@ -12,14 +12,12 @@ BEGIN
    DEALLOCATE PREPARE stmt;
 
    SET @sql = CONCAT("CREATE TABLE ", p_tab_name, 
-   " AS SELECT 
-              vsc.value_set_id, 
+   " AS SELECT DISTINCT
               vsc.original_code, 
               vsc.original_term, 
               vsc.snomed_id,
-              vs.name AS value_name,
-              vs.type AS value_type
-        FROM value_set_codes vsc JOIN value_sets vs ON vsc.value_set_id = vs.id
+              vsc.type AS value_set_code_type
+        FROM value_set_codes vsc 
         WHERE ", p_valueString);
 
    PREPARE stmt FROM @sql;

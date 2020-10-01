@@ -41,7 +41,7 @@ BEGIN
           ob.clinical_effective_date,
           ob.result_value,
           ob.non_core_concept_id,
-          ob.value_set_id,
+          ob.value_set_code_type,
           ob.rnk
     FROM (
       SELECT 
@@ -50,14 +50,14 @@ BEGIN
           o2.clinical_effective_date,
           o2.result_value,
           o2.non_core_concept_id,
-          c.value_set_id,
-          @currank := IF(@curpatient = o2.patient_id AND @curvaluesetid = c.value_set_id, @currank + 1, 1) AS rnk,
+          c.value_set_code_type,
+          @currank := IF(@curpatient = o2.patient_id AND @curvaluesettype = c.value_set_code_type, @currank + 1, 1) AS rnk,
           @curpatient := o2.patient_id AS cur_patient,
-          @curvaluesetid := c.value_set_id AS cur_valuesetid
+          @curvaluesettype := c.value_set_code_type AS cur_valuesetid
           FROM ',p_observationcohorttab,' o2 JOIN ',p_includeconcepttab,' c ON o2.non_core_concept_id = c.non_core_concept_id
-                                 JOIN (SELECT @currank := 0, @curpatient := 0, @curvaluesetid := 0) r
+                                 JOIN (SELECT @currank := 0, @curpatient := 0, @curvaluesettype := 0) r
           WHERE ',resultvaluestring,' AND ', p_timeperioddaterange, ' 
-          ORDER BY o2.patient_id, c.value_set_id, o2.clinical_effective_date DESC, o2.id DESC 
+          ORDER BY o2.patient_id, c.value_set_code_type, o2.clinical_effective_date DESC, o2.id DESC 
           ) ob
     WHERE ob.rnk = 1');
 
@@ -74,7 +74,7 @@ BEGIN
           ob.clinical_effective_date,
           ob.result_value,
           ob.non_core_concept_id,
-          ob.value_set_id,
+          ob.value_set_code_type,
           ob.rnk
     FROM (
       SELECT 
@@ -83,14 +83,14 @@ BEGIN
           o2.clinical_effective_date,
           o2.result_value,
           o2.non_core_concept_id,
-          c.value_set_id,
-          @currank := IF(@curpatient = o2.patient_id AND @curvaluesetid = c.value_set_id, @currank + 1, 1) AS rnk,
+          c.value_set_code_type,
+          @currank := IF(@curpatient = o2.patient_id AND @curvaluesettype = c.value_set_code_type, @currank + 1, 1) AS rnk,
           @curpatient := o2.patient_id AS cur_patient,
-          @curvaluesetid := c.value_set_id AS cur_valuesetid
+          @curvaluesettype := c.value_set_code_type AS cur_valuesetid
           FROM ',p_observationcohorttab,' o2 JOIN ',p_includeconcepttab,' c ON o2.non_core_concept_id = c.non_core_concept_id
-                                 JOIN (SELECT @currank := 0, @curpatient := 0, @curvaluesetid := 0) r
+                                 JOIN (SELECT @currank := 0, @curpatient := 0, @curvaluesettype := 0) r
           WHERE ',resultvaluestring,' AND ', p_timeperioddaterange, ' 
-          ORDER BY o2.patient_id, c.value_set_id, o2.clinical_effective_date ASC, o2.id ASC 
+          ORDER BY o2.patient_id, c.value_set_code_type, o2.clinical_effective_date ASC, o2.id ASC 
           ) ob
     WHERE ob.rnk = 1');
 
