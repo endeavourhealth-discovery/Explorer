@@ -284,7 +284,7 @@ CALL buildFinalPatientCohort(query_id,'patient_cohort_tmp', 'observation_tmp', i
 includeExclude2String, includeExclude2aString, includeExclude3String, includeExclude4String, includeExclude5String);
 
 -- build result datasets
-CALL buildResultDatasets(query_id, 'patient_cohort_tmp', eventType,active,datasetValue, 'datasetValue_tmp', 'datasetConcept_tmp', dateFrom, dateTo, sourceSchema);
+CALL buildResultDatasets(query_id, 'patient_cohort_tmp', eventType, active, datasetValue, 'datasetValue_tmp', 'datasetConcept_tmp', dateFrom, dateTo, sourceSchema);
 
 /*
 select registrationStatus; 

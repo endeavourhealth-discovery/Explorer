@@ -18,6 +18,8 @@ BEGIN
   DECLARE sourcetab VARCHAR(255);
   DECLARE activeString VARCHAR(255);
   DECLARE datasettab VARCHAR(255);
+  DECLARE datasetconcepttab VARCHAR(255);
+  DECLARE daterange VARCHAR(255);
   DECLARE sourcecol VARCHAR(64);
 
   DECLARE front VARCHAR(500) DEFAULT NULL;
@@ -42,8 +44,8 @@ BEGIN
                 SET sourcecol = 'o.id';
                 SET activeString = '1';  -- not applicable
                 SET datasettab = 'person_dataset';
-                SET p_datasetconcepttab = NULL;  -- no valueset for patient
-                SET p_daterange = '1';  -- no valueset date range for patient
+                SET datasetconcepttab = NULL;  -- no valueset for patient
+                SET daterange = '1';  -- no valueset date range for patient
              ELSEIF TempValue = 'CLINICAL EVENTS' THEN
                 SET sourcetab = CONCAT(p_schema,'.observation');
                 SET sourcecol = 'o.patient_id';
@@ -53,6 +55,8 @@ BEGIN
                    SET activeString = '1';
                 END IF;
                 SET datasettab = 'observation_dataset';
+                SET datasetconcepttab = p_datasetconcepttab;
+                SET daterange = p_daterange;
              ELSEIF TempValue = 'MEDICATION' THEN
                 SET sourcetab = CONCAT(p_schema,'.medication_statement');
                 SET sourcecol = 'o.patient_id';
@@ -62,14 +66,18 @@ BEGIN
                    SET activeString = '1';
                 END IF;
                 SET datasettab = 'medication_dataset';
+                SET datasetconcepttab = p_datasetconcepttab;
+                SET daterange = p_daterange;
              ELSEIF TempValue = 'ENCOUNTERS' THEN
                 SET sourcetab = CONCAT(p_schema,'.encounter');
                 SET sourcecol = 'o.patient_id';
                 SET activeString = '1';  -- not applicable
                 SET datasettab = 'encounters_dataset';
+                SET datasetconcepttab = p_datasetconcepttab;
+                SET daterange = p_daterange;
              END IF;
 
-    CALL createDataset(p_query_id, p_patientcohorttab, sourcetab, sourcecol, p_datasetconcepttab, p_daterange, activeString, datasettab);
+    CALL createDataset(p_query_id, p_patientcohorttab, sourcetab, sourcecol, datasetconcepttab, daterange, activeString, datasettab);
     SET p_event_type = INSERT(p_event_type, 1, frontlen + 1, '');
     
     END LOOP;

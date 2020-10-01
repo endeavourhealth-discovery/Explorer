@@ -21,12 +21,13 @@ CREATE PROCEDURE buildResultDatasets (
 BEGIN
 
   DECLARE datasetValueString VARCHAR(255);
+  DECLARE dateRangeString VARCHAR(255); 
 
   -- set date range
   IF p_dateFrom IS NOT NULL AND p_dateTo IS NOT NULL THEN
-    SET datasetValueString = getAgeDateRangeString(p_dateFrom, p_dateTo, 2); 
+    SET dateRangeString = getAgeDateRangeString(p_dateFrom, p_dateTo, 2); 
   ELSE
-    SET datasetValueString = '1';
+    SET dateRangeString = '1';
   END IF;
 
   IF p_datasetValue IS NOT NULL THEN
@@ -41,9 +42,9 @@ BEGIN
       -- no valueset filtering
       SET p_datasetconcepttab = NULL;
   END IF;
-      
+
   -- build datasets from event types
-  CALL buildDatasets(p_query_id, p_patientcohorttab, p_event_type, p_datasetconcepttab, datasetValueString, p_active, p_schema);
+  CALL buildDatasets(p_query_id, p_patientcohorttab, p_event_type, p_datasetconcepttab, dateRangeString, p_active, p_schema);
 
 
 END //

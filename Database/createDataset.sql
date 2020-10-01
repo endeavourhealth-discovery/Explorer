@@ -18,27 +18,33 @@ CREATE PROCEDURE createDataset (
 
 BEGIN
 
- DECLARE datasetconceptString VARCHAR(500);
-
-    IF p_datasetconcepttab IS NOT NULL THEN
-      SET datasetconceptString = CONCAT('EXISTS (SELECT 1 FROM ',p_datasetconcepttab ,' c WHERE o.non_core_concept_id = c.non_core_concept_id )');
-    ELSE
-      SET datasetconceptString = '1';
-    END IF;
-
     SET @sql = CONCAT('DELETE FROM ', p_datasettab ,' WHERE query_id = ',p_query_id);
     PREPARE stmt FROM @sql;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 
-    SET @sql = CONCAT('INSERT INTO ', p_datasettab,'  
-    SELECT DISTINCT
-           p.query_id, 
-           o.id
-    FROM ',p_sourcetab ,' o JOIN ', p_patientcohorttab ,' p ON ',p_col ,' = p.patient_id 
-    WHERE ', datasetconceptString ,
-    ' AND ', p_daterange,
-    ' AND ', p_activeString);
+    IF p_datasetconcepttab IS NOT NULL THEN
+
+       SET @sql = CONCAT('INSERT INTO ', p_datasettab,'  
+       SELECT DISTINCT
+              p.query_id, 
+              o.id
+       FROM ', p_sourcetab,' o JOIN ', p_patientcohorttab,' p ON ', p_col,' = p.patient_id 
+                               JOIN ', p_datasetconcepttab,' c ON o.non_core_concept_id = c.non_core_concept_id 
+       WHERE ', p_daterange,
+       ' AND ', p_activeString);
+
+    ELSE
+
+       SET @sql = CONCAT('INSERT INTO ', p_datasettab,'  
+       SELECT DISTINCT
+              p.query_id, 
+              o.id
+       FROM ', p_sourcetab,' o JOIN ', p_patientcohorttab,' p ON ', p_col,' = p.patient_id 
+       WHERE ', p_daterange,
+       ' AND ', p_activeString);
+
+    END IF;
 
     PREPARE stmt FROM @sql;
     EXECUTE stmt;
