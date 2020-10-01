@@ -344,7 +344,6 @@ export class DashboardEditorComponent {
         this.selectedSchedule1 = query.schedule;
       }
     )
-    //this.ngOnInit();
   }
 
   querySelected2() {
@@ -366,7 +365,6 @@ export class DashboardEditorComponent {
         this.selectedSchedule2 = query.schedule;
       }
     )
-    //this.ngOnInit();
   }
 
   querySelected3() {
@@ -388,7 +386,6 @@ export class DashboardEditorComponent {
         this.selectedSchedule3 = query.schedule;
       }
     )
-    //this.ngOnInit();
   }
 
   querySelected4() {
@@ -410,7 +407,6 @@ export class DashboardEditorComponent {
         this.selectedSchedule4 = query.schedule;
       }
     )
-    //this.ngOnInit();
   }
 
   widgets : widget[] = [

@@ -52,7 +52,7 @@ import {MatRadioModule} from "@angular/material/radio";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import {MatTabsModule} from "@angular/material/tabs";
-import { MatSelectSearchModule } from './mat-select-search/mat-select-search.module';
+import {MatSelectSearchModule } from './mat-select-search/mat-select-search.module';
 import {DashboardViewerComponent} from "./dashboardviewer/dashboardviewer.component";
 import {RegistryEditorComponent} from "./registryeditor/registryeditor.component";
 import {RegistryIndicatorEditorComponent} from "./registryindicatoreditor/registryindicatoreditor.component";
@@ -77,7 +77,9 @@ import {RegistryIndicatorEditorComponent} from "./registryindicatoreditor/regist
     OrganisationsComponent,
     OrganisationGroupsEditorComponent,
     OrganisationsEditorComponent,
-    DashboardViewerComponent
+    DashboardViewerComponent,
+    RegistryEditorComponent,
+    RegistryIndicatorEditorComponent
   ],
   imports: [
     BrowserModule,
@@ -118,8 +120,6 @@ import {RegistryIndicatorEditorComponent} from "./registryindicatoreditor/regist
     DragDropModule,
     MatTabsModule,
     MatSelectSearchModule
-    RegistryEditorComponent,
-    RegistryIndicatorEditorComponent
   ],
 
   entryComponents: [

@@ -14,12 +14,10 @@ import {Globals} from '../globals'
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
-
   //patient find
   globals: Globals;
   name: string = "";
   selectAll: boolean = true;
-
   view: any[] = [1400, 600];
   chartResults: any[];
   chartResultsSingle: any[];
@@ -58,12 +56,9 @@ export class DashboardComponent implements OnInit {
   cumulative: boolean = false;
   weekly: boolean = false;
   multiChart: boolean = true;
-
   refLines = [{value: 1, name: 'Minimum'}, {value: 2, name: 'Average'}, {value: 3, name: 'Maximum'}];
-
   ccgList = [];
   ccgValues = new FormControl(this.ccgList);
-
   colorScheme = {
     domain: ['#5aa454', '#e44d25', '#cfc0bb', '#7aa3e5', '#a8385d', '#aae3f5']
   };
@@ -308,7 +303,6 @@ export class DashboardComponent implements OnInit {
       });
 
     this.refresh(false);
-
   }
 
   formatTooltipYAxis(val: number) {
@@ -415,7 +409,6 @@ export class DashboardComponent implements OnInit {
         }
       }
     }
-
     return csv;
   }
 
@@ -432,7 +425,6 @@ export class DashboardComponent implements OnInit {
         csv += this.chartName+ ',' + point + ',' + array[key].value + '\r\n';
       }
     }
-
     return csv;
   }
 

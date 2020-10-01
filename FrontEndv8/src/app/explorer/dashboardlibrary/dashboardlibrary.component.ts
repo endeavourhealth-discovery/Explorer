@@ -11,12 +11,41 @@ import {MessageBoxDialogComponent} from "../message-box-dialog/message-box-dialo
 import {DashboardEditorComponent} from "../dashboardeditor/dashboardeditor.component";
 import {animate, state, style, transition, trigger} from '@angular/animations';
 
+interface widget {
+  icon: string;
+  name: string;
+}
+
 interface query {
-  selectedQuery: string;
-  selectedOutputField: string;
-  selectedOutputType: string;
-  selectedSchedule: string;
-  visualType: string;
+  selectedQuery1: string;
+  selectedOutputField1: string;
+  selectedOutputType1: string;
+  selectedSchedule1: string;
+  selectedSeries1: string[];
+  xAxisLabel1: string;
+  yAxisLabel1: string;
+  selectedQuery2: string;
+  selectedOutputField2: string;
+  selectedOutputType2: string;
+  selectedSchedule2: string;
+  selectedSeries2: string[];
+  xAxisLabel2: string;
+  yAxisLabel2: string;
+  selectedQuery3: string;
+  selectedOutputField3: string;
+  selectedOutputType3: string;
+  selectedSchedule3: string;
+  selectedSeries3: string[];
+  xAxisLabel3: string;
+  yAxisLabel3: string;
+  selectedQuery4: string;
+  selectedOutputField4: string;
+  selectedOutputType4: string;
+  selectedSchedule4: string;
+  selectedSeries4: string[];
+  xAxisLabel4: string;
+  yAxisLabel4: string;
+  visualType: widget[];
 }
 
 @Component({
@@ -145,8 +174,8 @@ export class DashboardLibraryComponent implements OnInit {
 
   add() {
     const dialogRef = this.dialog.open(DashboardEditorComponent, {
-      height: '720px',
-      width: '1000px',
+      height: '900px',
+      width: '1200px',
       data: {dashboardId: "", name: "", type: "", query: ""}
     });
     dialogRef.afterClosed().subscribe(result => {
@@ -181,8 +210,8 @@ export class DashboardLibraryComponent implements OnInit {
 
   edit() {
     const dialogRef = this.dialog.open(DashboardEditorComponent, {
-      height: '720px',
-      width: '1000px',
+      height: '900px',
+      width: '1200px',
       data: {dashboardId: this.selection.selected[0].dashboardId, name: this.selection.selected[0].name, type:this.selection.selected[0].type, query: this.selection.selected[0].jsonQuery}
     });
     dialogRef.afterClosed().subscribe(result => {
@@ -199,15 +228,15 @@ export class DashboardLibraryComponent implements OnInit {
       let details = '';
 
       if (fieldName=='selectedQuery') {
-        details = query.selectedQuery
+        details = query.selectedQuery1
       } else if (fieldName=='selectedOutputField') {
-        details = query.selectedOutputField
+        details = query.selectedOutputField1
       } else if (fieldName=='selectedOutputType') {
-        details = query.selectedOutputType
+        details = query.selectedOutputType1
       } else if (fieldName=='selectedSchedule') {
-        details = query.selectedSchedule
-      } else if (fieldName=='visualType') {
-        details = query.visualType
+        details = query.selectedSchedule1
+      } else if (fieldName=='selectedSeries') {
+        details = query.selectedSeries1.toString()
       }
 
       return details;

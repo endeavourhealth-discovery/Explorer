@@ -1,50 +1,24 @@
 .checkbox {
-  margin: 0 10px;
+  margin: 0 5px;
 }
 
 mat-grid-tile {
- background: whitesmoke;
+ background: white;
  border: solid 1px #ccc;
 }
 
-.bar-filter {
-  font-size: 13px;
-  margin-bottom: 350px;
-  margin-right: 10%;
+.filter-background
+{
+  background-color: transparent;
+  font-size: 12px;
   position: absolute;
-  .checkbox {
-    margin-top: 20px;
-  }
-  .saveCSV {
-    margin-top: 12px;
-    height: 50%;
-  }
+  vertical-align: top;
+  margin-top: -260px;
+  margin-left: 5px;
 }
 
-.line-filter {
-  font-size: 13px;
-  margin-bottom: 325px;
-  margin-right: 30px;
-  position: absolute;
-  .checkbox {
-    margin-top: 10px;
-  }
-  .saveCSV {
-    margin-top: 5px;
-    height: 50%;
-  }
-}
-
-.series-filter {
-  font-size: 13px;
-  margin-bottom: 325px;
-  margin-right: 30px;
-  position: absolute;
-  .checkbox {
-    margin-top: 10px;
-  }
-  .saveCSV {
-    margin-top: 5px;
-    height: 50%;
-  }
+.download {
+  margin-left: 5px;
+  font-size: 12px;
+  padding: 0px;
 }

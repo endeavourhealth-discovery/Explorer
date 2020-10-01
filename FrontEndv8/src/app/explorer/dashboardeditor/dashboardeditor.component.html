@@ -26,16 +26,16 @@
       </div>
 
       <div class="summary-column">
-        <div style="margin-top: 5px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+        <div style="margin-top: 10px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
           <p>Type of dashboard for grouping in the library.</p>
         </div>
 
-        <div style="margin-top: 30px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+        <div style="margin-top: 27px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
           <p>Name of dashboard.</p>
         </div>
       </div>
 
-      <div style="margin-top: 280px" mat-dialog-actions align="end">
+      <div style="margin-top: 450px" mat-dialog-actions align="end">
         <button style="margin-right: 15px" mat-button color="accent" (click)="onCancelClick()">Cancel</button>
         <button style="margin-right: 15px" mat-flat-button color="accent" (click)="stepper.next()">Next</button>
       </div>
@@ -54,7 +54,7 @@
               <mat-form-field appearance="outline" style="margin-left: 25px; width: 300px">
                 <mat-label>Query/Dataset</mat-label>
                 <mat-select [(ngModel)]="selectedQuery1" formControlName="control3a" (ngModelChange)="formChanged()" required>
-                  <mat-option *ngFor="let result of queryList" [value]="result" (click)="querySelected1()">{{result}}</mat-option>
+                  <mat-option *ngFor="let result of queryList" [value]="result" (click)="querySelected1()" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">{{result}}</mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
@@ -118,24 +118,32 @@
             <span style="margin-left: 30px">*Required</span>
           </div>
           <div class="summary-column">
-            <div style="margin-top: 5px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <div style="margin-top: 7px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
               <p>Select the query/dataset to be used as the dashboard data source.</p>
             </div>
             <br/>
-            <div style="margin-top: 5px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <div style="margin-top: 8px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
               <p>Output fields. Fields for comparing/aggregating/grouping in dashboards or fields to be output as rows in tables.</p>
             </div>
             <br/>
-            <div style="margin-top: 5px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <div style="margin-top: 4px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
               <p>Output type for visualisations or exporting to files.</p>
             </div>
             <br/>
-            <div style="margin-top: 5px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <div style="margin-top: 13px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
               <p>How often should this data set be refreshed.</p>
             </div>
             <br/>
-            <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <div style="margin-top: 15px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
               <p>Select the series data items for charts.</p>
+            </div>
+            <br/>
+            <div style="margin-top: 15px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <p>The title of the chart X-Axis.</p>
+            </div>
+            <br/>
+            <div style="margin-top: 15px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <p>The title of the chart Y-Axis.</p>
             </div>
           </div>
         </mat-tab>
@@ -146,7 +154,7 @@
               <mat-form-field appearance="outline" style="margin-left: 25px; width: 300px">
                 <mat-label>Query/Dataset</mat-label>
                 <mat-select [(ngModel)]="selectedQuery2" formControlName="control3b" (ngModelChange)="formChanged()" required>
-                  <mat-option *ngFor="let result of queryList" [value]="result" (click)="querySelected2()">{{result}}</mat-option>
+                  <mat-option *ngFor="let result of queryList" [value]="result" (click)="querySelected2()" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">{{result}}</mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
@@ -210,24 +218,32 @@
             <span style="margin-left: 30px">*Required</span>
           </div>
           <div class="summary-column">
-            <div style="margin-top: 5px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <div style="margin-top: 7px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
               <p>Select the query/dataset to be used as the dashboard data source.</p>
             </div>
             <br/>
-            <div style="margin-top: 5px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <div style="margin-top: 8px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
               <p>Output fields. Fields for comparing/aggregating/grouping in dashboards or fields to be output as rows in tables.</p>
             </div>
             <br/>
-            <div style="margin-top: 5px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <div style="margin-top: 4px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
               <p>Output type for visualisations or exporting to files.</p>
             </div>
             <br/>
-            <div style="margin-top: 5px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <div style="margin-top: 13px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
               <p>How often should this data set be refreshed.</p>
             </div>
             <br/>
-            <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <div style="margin-top: 15px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
               <p>Select the series data items for charts.</p>
+            </div>
+            <br/>
+            <div style="margin-top: 15px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <p>The title of the chart X-Axis.</p>
+            </div>
+            <br/>
+            <div style="margin-top: 15px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <p>The title of the chart Y-Axis.</p>
             </div>
           </div>
         </mat-tab>
@@ -238,7 +254,7 @@
               <mat-form-field appearance="outline" style="margin-left: 25px; width: 300px">
                 <mat-label>Query/Dataset</mat-label>
                 <mat-select [(ngModel)]="selectedQuery3" formControlName="control3c" (ngModelChange)="formChanged()" required>
-                  <mat-option *ngFor="let result of queryList" [value]="result" (click)="querySelected3()">{{result}}</mat-option>
+                  <mat-option *ngFor="let result of queryList" [value]="result" (click)="querySelected3()" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">{{result}}</mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
@@ -302,24 +318,32 @@
             <span style="margin-left: 30px">*Required</span>
           </div>
           <div class="summary-column">
-            <div style="margin-top: 5px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <div style="margin-top: 7px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
               <p>Select the query/dataset to be used as the dashboard data source.</p>
             </div>
             <br/>
-            <div style="margin-top: 5px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <div style="margin-top: 8px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
               <p>Output fields. Fields for comparing/aggregating/grouping in dashboards or fields to be output as rows in tables.</p>
             </div>
             <br/>
-            <div style="margin-top: 5px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <div style="margin-top: 4px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
               <p>Output type for visualisations or exporting to files.</p>
             </div>
             <br/>
-            <div style="margin-top: 5px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <div style="margin-top: 13px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
               <p>How often should this data set be refreshed.</p>
             </div>
             <br/>
-            <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <div style="margin-top: 15px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
               <p>Select the series data items for charts.</p>
+            </div>
+            <br/>
+            <div style="margin-top: 15px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <p>The title of the chart X-Axis.</p>
+            </div>
+            <br/>
+            <div style="margin-top: 15px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <p>The title of the chart Y-Axis.</p>
             </div>
           </div>
         </mat-tab>
@@ -330,7 +354,7 @@
               <mat-form-field appearance="outline" style="margin-left: 25px; width: 300px">
                 <mat-label>Query/Dataset</mat-label>
                 <mat-select [(ngModel)]="selectedQuery4" formControlName="control3d" (ngModelChange)="formChanged()" required>
-                  <mat-option *ngFor="let result of queryList" [value]="result" (click)="querySelected4()">{{result}}</mat-option>
+                  <mat-option *ngFor="let result of queryList" [value]="result" (click)="querySelected4()" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">{{result}}</mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
@@ -394,30 +418,38 @@
             <span style="margin-left: 30px">*Required</span>
           </div>
           <div class="summary-column">
-            <div style="margin-top: 5px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <div style="margin-top: 7px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
               <p>Select the query/dataset to be used as the dashboard data source.</p>
             </div>
             <br/>
-            <div style="margin-top: 5px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <div style="margin-top: 8px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
               <p>Output fields. Fields for comparing/aggregating/grouping in dashboards or fields to be output as rows in tables.</p>
             </div>
             <br/>
-            <div style="margin-top: 5px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <div style="margin-top: 4px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
               <p>Output type for visualisations or exporting to files.</p>
             </div>
             <br/>
-            <div style="margin-top: 5px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <div style="margin-top: 13px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
               <p>How often should this data set be refreshed.</p>
             </div>
             <br/>
-            <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <div style="margin-top: 15px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
               <p>Select the series data items for charts.</p>
+            </div>
+            <br/>
+            <div style="margin-top: 15px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <p>The title of the chart X-Axis.</p>
+            </div>
+            <br/>
+            <div style="margin-top: 15px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <p>The title of the chart Y-Axis.</p>
             </div>
           </div>
         </mat-tab>
       </mat-tab-group>
 
-      <div style="margin-top: 60px" mat-dialog-actions align="end">
+      <div mat-dialog-actions align="end">
         <button style="margin-right: 15px" mat-button color="accent" (click)="onCancelClick()">Cancel</button>
         <button style="margin-right: 15px" mat-button color="accent" matStepperPrevious>Back</button>
         <button style="margin-right: 15px" mat-flat-button color="accent" (click)="stepper.next()">Next</button>
@@ -431,7 +463,7 @@
       <ng-template matStepLabel>Dashboard layout</ng-template>
       <br/>
 
-      <div class="summary-column" style="width: 240px">
+      <div class="summary-column" style="width: 300px">
         <h2>Available widgets</h2>
         Drag & drop widgets on dashboard
 
@@ -450,7 +482,7 @@
         </div>
       </div>
 
-      <div class="summary-column" style="width: 700px">
+      <div class="summary-column" style="width: 750px">
         <h2>Dashboard layout</h2>
         &nbsp;<i class="fad fa-analytics"></i>&nbsp;&nbsp;{{name}}
         <br/><br/>
@@ -479,7 +511,7 @@
         </div>
       </div>
 
-      <div style="margin-top: 40px" mat-dialog-actions align="end">
+      <div style="margin-top: 205px" mat-dialog-actions align="end">
         <button style="margin-right: 15px" mat-button color="accent" (click)="onCancelClick()">Cancel</button>
         <button style="margin-right: 15px" mat-button color="accent" matStepperPrevious>Back</button>
         <button style="margin-right: 15px" mat-flat-button color="accent" [disabled]="disableForm" (click)="saveDashboard()">Save</button>

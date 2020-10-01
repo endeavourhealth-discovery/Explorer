@@ -7,38 +7,42 @@ import {FormControl} from '@angular/forms';
 import {MatDialog} from "@angular/material/dialog";
 import {PatientComponent} from "../patient/patient.component";
 import {Globals} from '../globals'
-import {MatTableDataSource} from "@angular/material/table";
+
+interface widget {
+  icon: string;
+  name: string;
+}
 
 interface dashboardQuery {
   selectedQuery1: string;
   selectedOutputField1: string;
   selectedOutputType1: string;
   selectedSchedule1: string;
-  selectedSeries1: string;
+  selectedSeries1: string[];
   xAxisLabel1: string;
   yAxisLabel1: string;
   selectedQuery2: string;
   selectedOutputField2: string;
   selectedOutputType2: string;
   selectedSchedule2: string;
-  selectedSeries2: string;
+  selectedSeries2: string[];
   xAxisLabel2: string;
   yAxisLabel2: string;
   selectedQuery3: string;
   selectedOutputField3: string;
   selectedOutputType3: string;
   selectedSchedule3: string;
-  selectedSeries3: string;
+  selectedSeries3: string[];
   xAxisLabel3: string;
   yAxisLabel3: string;
   selectedQuery4: string;
   selectedOutputField4: string;
   selectedOutputType4: string;
   selectedSchedule4: string;
-  selectedSeries4: string;
+  selectedSeries4: string[];
   xAxisLabel4: string;
   yAxisLabel4: string;
-  visualType: string[];
+  visualType: widget[];
 }
 
 @Component({
@@ -47,14 +51,11 @@ interface dashboardQuery {
   styleUrls: ['./dashboardviewer.component.scss']
 })
 export class DashboardViewerComponent implements OnInit {
-
-  events: any[] = [];
-
   //patient find
   globals: Globals;
   name: string = "";
   selectAll: boolean = true;
-  view: any[] = [700, 300];
+  view: any[] = [770, 250];
   chartResults: any[];
   chartResultsSingle: any[];
   dateFrom: string = '2020-01-01';
@@ -82,7 +83,7 @@ export class DashboardViewerComponent implements OnInit {
   showXAxisLabel: boolean = true;
   chartTitle: string = "Chart Title";
   xAxisLabel: string = 'Date';
-  yAxisLabel: string = 'Number of people with indicator';
+  yAxisLabel: string = 'People with indicator';
   timeline: boolean = true;
   showGridLines: boolean = true;
   showAreaChart: boolean = true;
@@ -103,31 +104,32 @@ export class DashboardViewerComponent implements OnInit {
   selectedOutputField1: string;
   selectedOutputType1: string;
   selectedSchedule1: string;
-  selectedSeries1: string;
+  selectedSeries1: string[] = [''];
   xAxisLabel1: string;
   yAxisLabel1: string;
   selectedQuery2: string;
   selectedOutputField2: string;
   selectedOutputType2: string;
   selectedSchedule2: string;
-  selectedSeries2: string;
+  selectedSeries2: string[] = [''];
   xAxisLabel2: string;
   yAxisLabel2: string;
   selectedQuery3: string;
   selectedOutputField3: string;
   selectedOutputType3: string;
   selectedSchedule3: string;
-  selectedSeries3: string;
+  selectedSeries3: string[] = [''];
   xAxisLabel3: string;
   yAxisLabel3: string;
   selectedQuery4: string;
   selectedOutputField4: string;
   selectedOutputType4: string;
   selectedSchedule4: string;
-  selectedSeries4: string;
+  selectedSeries4: string[] = [''];
   xAxisLabel4: string;
   yAxisLabel4: string;
-  selectedWidgets: string[];
+  selectedWidgets : widget[] = [
+  ];
 
   constructor(
     private route: ActivatedRoute,
@@ -173,58 +175,60 @@ export class DashboardViewerComponent implements OnInit {
       this.selectedCCGString = this.selectedCCGs.toString();
     }
 
+    values = this.selectedSeries;
+
     if (this.dashboardNumber == "5") {
-      values = this.selectedSeries;
-      this.chartTitle = 'London Ambulance Service NHS Trust - NHS111 call trend - cough and fever';
+
+      //this.chartTitle = 'London Ambulance Service NHS Trust - NHS111 call trend - cough and fever';
       this.showLineCharts = true;
       this.showBarCharts = false;
       this.showSeriesFilter = true;
     } else if (this.dashboardNumber == "6") {
-      values = this.selectedSeries;
-      this.chartTitle = 'GP consultations for suspected coronavirus';
+
+      //this.chartTitle = 'GP consultations for suspected coronavirus';
       this.showLineCharts = true;
       this.showBarCharts = false;
       this.showSeriesFilter = true;
     } else if (this.dashboardNumber == "7") {
-      values = this.selectedSeries;
-      this.chartTitle = 'GP consultation types';
+
+      //this.chartTitle = 'GP consultation types';
       this.showLineCharts = true;
       this.showBarCharts = false;
       this.showAreaChart = false;
       this.showSeriesFilter = true;
     } else if (this.dashboardNumber == "8") {
-      values = this.selectedSeries;
-      this.chartTitle = 'Barts NHS Trust - Daily Trend of Admissions and Discharges';
+
+      //this.chartTitle = 'Barts NHS Trust - Daily Trend of Admissions and Discharges';
       this.showLineCharts = true;
       this.showBarCharts = false;
       this.showAreaChart = false;
       this.showSeriesFilter = true;
     }
     else if (this.dashboardNumber == "1") {
-      values = this.selectedSeries;
-      this.chartTitle = 'Day trend of Confirmed, Suspected and Tested for Covid 19';
+
+      //this.chartTitle = 'Day trend of Confirmed, Suspected and Tested for Covid 19';
       this.showLineCharts = true;
       this.showBarCharts = false;
       this.showAreaChart = false;
       this.showSeriesFilter = true;
     }
     else if (this.dashboardNumber == "12") {
-      values = this.selectedSeries;
-      this.chartTitle = 'Day trend of Suspected Covid 19 BY CCG';
+
+      //this.chartTitle = 'Day trend of Suspected Covid 19 BY CCG';
       this.showLineCharts = true;
       this.showBarCharts = false;
       this.showAreaChart = false;
       this.showSeriesFilter = true;
     } else if (this.dashboardNumber == "9") {
-      values = this.selectedSeries;
-      this.chartTitle = 'Day trend of Confirmed, Suspected and Tested for Covid 19 by Ethnic Group';
+
+      //this.chartTitle = 'Day trend of Confirmed, Suspected and Tested for Covid 19 by Ethnic Group';
       this.showLineCharts = true;
       this.showBarCharts = false;
       this.showAreaChart = false;
       this.showSeriesFilter = true;
     } else if (this.dashboardNumber == "2") {
-      values = 'covid_death_age';
-      this.chartTitle = 'Age breakdown of deceased patients with Confirmed or Suspected Covid 19';
+
+      //this.chartTitle = 'Age breakdown of deceased patients with Confirmed or Suspected Covid 19';
       this.multiChart = false;
       this.chartName = values;
       this.gradient = false;
@@ -233,15 +237,15 @@ export class DashboardViewerComponent implements OnInit {
       this.xAxisLabel = 'Age Decile Band';
     }
     else if (this.dashboardNumber == "3") {
-      values = 'covid_death_daily';
-      this.chartTitle = 'Daily trend of deceased patients with Confirmed or Suspected Covid 19';
+
+      //this.chartTitle = 'Daily trend of deceased patients with Confirmed or Suspected Covid 19';
       this.showLineCharts = true;
       this.showBarCharts = false;
       this.showAreaChart = true;
     }
     else if (this.dashboardNumber == "4") {
-      values = 'covid_death_ccg';
-      this.chartTitle = 'CCG breakdown of deceased patients with Confirmed or Suspected Covid 19';
+
+      //this.chartTitle = 'CCG breakdown of deceased patients with Confirmed or Suspected Covid 19';
       this.multiChart = false;
       this.chartName = values;
       this.gradient = false;
@@ -249,8 +253,8 @@ export class DashboardViewerComponent implements OnInit {
       this.showBarCharts = true;
       this.xAxisLabel = 'CCG';
     } else if (this.dashboardNumber == "10") {
-      values = 'covid_shielding_ccg';
-      this.chartTitle = 'Shielding groups by Age Bands';
+
+      //this.chartTitle = 'Shielding groups by Age Bands';
       this.multiChart = false;
       this.chartName = values;
       this.gradient = false;
@@ -258,8 +262,8 @@ export class DashboardViewerComponent implements OnInit {
       this.showBarCharts = true;
       this.xAxisLabel = 'Shielding Group';
     } else if (this.dashboardNumber == "11") {
-      values = 'covid_death_ethnic';
-      this.chartTitle = 'Ethnic/Age group breakdown of deceased patients with Confirmed or Suspected Covid 19';
+
+      //this.chartTitle = 'Ethnic/Age group breakdown of deceased patients with Confirmed or Suspected Covid 19';
       this.multiChart = false;
       this.chartName = values;
       this.gradient = false;
@@ -325,63 +329,14 @@ export class DashboardViewerComponent implements OnInit {
             (result) => this.parseDashboard(result),
             (error) => this.log.error(error)
           );
-
-        if (this.dashboardNumber == "5") {
-          this.seriesList = ['[D]Fever NOS', '[D]Cough'];
-        } else if (this.dashboardNumber == "6") {
-          this.seriesList = ['Suspected Covid'];
-        } else if (this.dashboardNumber == "7") {
-          this.seriesList = ['Home visit', 'Surgery face to face consultation', 'Telephone consultation', 'Video consultation', 'Email or Text message consultation'];
-        } else if (this.dashboardNumber == "8") {
-          this.seriesList = ['Hospital inpatient admission', 'Hospital day case discharge', 'A&E discharge/end visit', 'A&E transfer', 'A&E attendance', 'Hospital discharge'];
-        } else if (this.dashboardNumber == "1") {
-          this.seriesList = ['Suspected', 'Confirmed', 'Tested'];
-        } else if (this.dashboardNumber == "12") {
-          this.seriesList = [
-            'Suspected (NHS CENTRAL LONDON (WESTMINSTER) CCG)',
-            'Suspected (NHS HAVERING CCG)',
-            'Suspected (NHS REDBRIDGE CCG)',
-            'Suspected (NHS HARROW CCG)',
-            'Suspected (NHS HAMMERSMITH AND FULHAM CCG)',
-            'Suspected (NHS CITY AND HACKNEY CCG)',
-            'Suspected (NHS TOWER HAMLETS CCG)',
-            'Suspected (NHS WEST LONDON CCG)',
-            'Suspected (NHS EALING CCG)',
-            'Suspected (NHS BRENT CCG)',
-            'Suspected (NHS HILLINGDON CCG)',
-            'Suspected (NHS Newham CCG)',
-            'Suspected (NHS BARKING AND DAGENHAM CCG)',
-            'Suspected (NHS WALTHAM FOREST CCG)',
-            'Suspected (NHS HOUNSLOW CCG)'
-          ];
-        } else if (this.dashboardNumber == "9") {
-          this.seriesList = ['Suspected (Black)',
-          'Suspected (Not Stated)',
-          'Confirmed (Not Stated)',
-          'Suspected (Other)',
-          'Confirmed (White)',
-          'Suspected (White)',
-          'Tested (White)',
-          'Tested (Black)',
-          'Confirmed (South Asian)',
-          'Suspected (South Asian)',
-          'Tested (Not Stated)',
-          'Confirmed (Other)',
-          'Tested (Other)',
-          'Confirmed (Black)',
-          'Tested (South Asian)'];
-        }
-
-        this.seriesValues = new FormControl(this.seriesList);
-
       });
-
-    this.refresh(false);
   }
 
   parseDashboard (result: any) {
     result.results.map(
       e => {
+        this.chartTitle = e.name;
+
         let query: dashboardQuery = JSON.parse(e.jsonQuery);
 
         this.selectedQuery1 = query.selectedQuery1;
@@ -419,6 +374,13 @@ export class DashboardViewerComponent implements OnInit {
         this.selectedWidgets = query.visualType;
       }
     )
+
+    this.seriesList = this.selectedSeries1;
+
+    this.seriesValues = new FormControl(this.seriesList);
+
+    this.refresh(false);
+
   }
 
   formatTooltipYAxis(val: number) {

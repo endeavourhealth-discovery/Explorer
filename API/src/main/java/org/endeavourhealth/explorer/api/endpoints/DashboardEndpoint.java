@@ -543,7 +543,7 @@ public class DashboardEndpoint {
         }
     }
 
-
+    @GET
     @Path("/registryduplicate")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
