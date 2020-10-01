@@ -257,7 +257,7 @@ export class DashboardComponent implements OnInit {
         } else if (this.dashboardNumber == "6") {
           this.seriesList = ['Suspected Covid'];
         } else if (this.dashboardNumber == "7") {
-          this.seriesList = ['Home visit', 'Surgery face to face consultation', 'Telephone consultation', 'Video consultation', 'Email or Text message consultation'];
+          this.seriesList = ['All consultations','Home visit', 'Surgery face to face consultation', 'Telephone consultation', 'Video consultation', 'Email or Text message consultation'];
         } else if (this.dashboardNumber == "8") {
           this.seriesList = ['Hospital inpatient admission', 'Hospital day case discharge', 'A&E discharge/end visit', 'A&E transfer', 'A&E attendance', 'Hospital discharge'];
         } else if (this.dashboardNumber == "1") {
