@@ -20,7 +20,7 @@ BEGIN
          LEAVE processloop;
        END IF;
 
-      -- retrieve event type from comma separated list
+      -- retrieve temp tables from comma separated list
       SET front = SUBSTRING_INDEX(p_tempString, ',', 1);
       SET frontlen = LENGTH(front);
       SET TempValue = TRIM(front);
