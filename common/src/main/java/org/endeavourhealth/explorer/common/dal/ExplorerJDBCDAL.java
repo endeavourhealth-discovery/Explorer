@@ -355,7 +355,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                  selectedTypeString;
 
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
-            statement.setInt(1, page*12);
+            statement.setInt(1, page*size);
             statement.setInt(2, size);
             try (ResultSet resultSet = statement.executeQuery()) {
                 result.setResults(getQueryLibraryList(resultSet));
@@ -410,7 +410,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
             statement.setString(1, value_set_id);
-            statement.setInt(2, page*12);
+            statement.setInt(2, page*size);
             statement.setInt(3, size);
             try (ResultSet resultSet = statement.executeQuery()) {
                 result.setResults(getValueSetList(resultSet));
@@ -470,7 +470,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                 selectedTypeString;
 
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
-            statement.setInt(1, page*12);
+            statement.setInt(1, page*size);
             statement.setInt(2, size);
             try (ResultSet resultSet = statement.executeQuery()) {
                 result.setResults(getValueSetLibraryList(resultSet));
@@ -527,7 +527,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                  selectedTypeString;
 
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
-            statement.setInt(1, page*12);
+            statement.setInt(1, page*size);
             statement.setInt(2, size);
             try (ResultSet resultSet = statement.executeQuery()) {
                 result.setResults(getDashboardList(resultSet));
@@ -915,7 +915,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                     selectedCCGString+selectedRegistryString+" AND parent_registry = ''";
 
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
-                statement.setInt(1, page*12);
+                statement.setInt(1, page*size);
                 statement.setInt(2, size);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     result.setResults(getRegistriesList(resultSet));
@@ -940,7 +940,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
                 statement.setString(1, "%"+practice+"%");
-                statement.setInt(2, page*12);
+                statement.setInt(2, page*size);
                 statement.setInt(3, size);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     result.setResults(getRegistriesList(resultSet));
@@ -967,7 +967,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
                 statement.setString(1, odsCode);
                 statement.setString(2, parentRegistry);
-                statement.setInt(3, page*12);
+                statement.setInt(3, page*size);
                 statement.setInt(4, size);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     result.setResults(getRegistriesList(resultSet));
@@ -1034,7 +1034,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                 selectedTypeString;
 
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
-            statement.setInt(1, page*12);
+            statement.setInt(1, page*size);
             statement.setInt(2, size);
             try (ResultSet resultSet = statement.executeQuery()) {
                 result.setResults(getOrganisationGroupsList(resultSet));
@@ -1088,7 +1088,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
             statement.setString(1, organisation_group_id);
-            statement.setInt(2, page*12);
+            statement.setInt(2, page*size);
             statement.setInt(3, size);
             try (ResultSet resultSet = statement.executeQuery()) {
                 result.setResults(getOrganisationsList(resultSet));
