@@ -50,27 +50,65 @@ interface dashboardQuery {
   templateUrl: './dashboardviewer.component.html',
   styleUrls: ['./dashboardviewer.component.scss']
 })
+
 export class DashboardViewerComponent implements OnInit {
-  //patient find
   globals: Globals;
   name: string = "";
-  selectAll: boolean = true;
-  view: any[] = [770, 250];
-  chartResults: any[];
-  chartResultsSingle: any[];
-  dateFrom: string = '2020-01-01';
-  dateTo: string = this.formatDate(new Date());
+  selectAll1: boolean = true;
+  selectAll2: boolean = true;
+  selectAll3: boolean = true;
+  selectAll4: boolean = true;
+  view1: any[] = [770, 250];
+  view2: any[] = [770, 250];
+  view3: any[] = [770, 250];
+  view4: any[] = [770, 250];
+  chartResults1: any[];
+  chartResultsSingle1: any[];
+  chartResults2: any[];
+  chartResultsSingle2: any[];
+  chartResults3: any[];
+  chartResultsSingle3: any[];
+  chartResults4: any[];
+  chartResultsSingle4: any[];
+  dateFrom1: string = '2020-01-01';
+  dateTo1: string = this.formatDate(new Date());
+  dateFrom2: string = '2020-01-01';
+  dateTo2: string = this.formatDate(new Date());
+  dateFrom3: string = '2020-01-01';
+  dateTo3: string = this.formatDate(new Date());
+  dateFrom4: string = '2020-01-01';
+  dateTo4: string = this.formatDate(new Date());
   dashboardNumber: string;
-  showLineCharts: boolean = false;
-  showBarCharts: boolean = false;
-  seriesValues = new FormControl();
-  seriesList: string[] = [''];
-  selectedSeries: string = '';
-  selectedCCGs: string = '';
-  selectedCCGString: string = '';
-  showSeriesFilter: boolean = false;
+  showLineCharts1: boolean = false;
+  showLineCharts2: boolean = false;
+  showLineCharts3: boolean = false;
+  showLineCharts4: boolean = false;
+  showBarCharts1: boolean = false;
+  showBarCharts2: boolean = false;
+  showBarCharts3: boolean = false;
+  showBarCharts4: boolean = false;
+  seriesValues1 = new FormControl();
+  seriesValues2 = new FormControl();
+  seriesValues3 = new FormControl();
+  seriesValues4 = new FormControl();
+  seriesList1: string[] = [''];
+  seriesList2: string[] = [''];
+  seriesList3: string[] = [''];
+  seriesList4: string[] = [''];
+  selectedCCG1: string = '';
+  selectedCCGString1: string = '';
+  selectedCCG2: string = '';
+  selectedCCGString2: string = '';
+  selectedCCG3: string = '';
+  selectedCCGString3: string = '';
+  selectedCCG4: string = '';
+  selectedCCGString4: string = '';
   months: string[] = [''];
   chartName: string = "";
+  widget1: boolean = false;
+  widget2: boolean = false;
+  widget3: boolean = false;
+  widget4: boolean = false;
 
   // options
   legend: boolean = true;
@@ -81,24 +119,73 @@ export class DashboardViewerComponent implements OnInit {
   yAxis: boolean = true;
   showYAxisLabel: boolean = true;
   showXAxisLabel: boolean = true;
-  chartTitle: string = "Chart Title";
-  xAxisLabel: string = 'Date';
-  yAxisLabel: string = 'People with indicator';
+  chartTitle1: string = "Chart Title";
+  chartTitle2: string = "Chart Title";
+  chartTitle3: string = "Chart Title";
+  chartTitle4: string = "Chart Title";
+  xAxisLab1: string = 'Date';
+  yAxisLab1: string = 'People with indicator';
+  xAxisLab2: string = 'Date';
+  yAxisLab2: string = 'People with indicator';
+  xAxisLab3: string = 'Date';
+  yAxisLab3: string = 'People with indicator';
+  xAxisLab4: string = 'Date';
+  yAxisLab4: string = 'People with indicator';
   timeline: boolean = true;
-  showGridLines: boolean = true;
-  showAreaChart: boolean = true;
-  gradient: boolean = true;
-  showRefLines: boolean = false;
-  logarithmic: boolean = false;
-  cumulative: boolean = false;
-  weekly: boolean = false;
-  multiChart: boolean = true;
-  refLines = [{value: 1, name: 'Minimum'}, {value: 2, name: 'Average'}, {value: 3, name: 'Maximum'}];
-  ccgList = [];
-  ccgValues = new FormControl(this.ccgList);
+  showGridLines1: boolean = true;
+  showAreaChart1: boolean = false;
+  gradient1: boolean = false;
+  showRefLines1: boolean = false;
+  logarithmic1: boolean = false;
+  cumulative1: boolean = false;
+  weekly1: boolean = false;
+  refLines1 = [{value: 1, name: 'Minimum'}, {value: 2, name: 'Average'}, {value: 3, name: 'Maximum'}];
+  ccgList1 = [];
+  ccgValues1 = new FormControl(this.ccgList1);
+  showGridLines2: boolean = true;
+  showAreaChart2: boolean = false;
+  gradient2: boolean = false;
+  showRefLines2: boolean = false;
+  logarithmic2: boolean = false;
+  cumulative2: boolean = false;
+  weekly2: boolean = false;
+  refLines2 = [{value: 1, name: 'Minimum'}, {value: 2, name: 'Average'}, {value: 3, name: 'Maximum'}];
+  ccgList2 = [];
+  ccgValues2 = new FormControl(this.ccgList2);
+  showGridLines3: boolean = true;
+  showAreaChart3: boolean = false;
+  gradient3: boolean = false;
+  showRefLines3: boolean = false;
+  logarithmic3: boolean = false;
+  cumulative3: boolean = false;
+  weekly3: boolean = false;
+  refLines3 = [{value: 1, name: 'Minimum'}, {value: 2, name: 'Average'}, {value: 3, name: 'Maximum'}];
+  ccgList3 = [];
+  ccgValues3 = new FormControl(this.ccgList3);
+  showGridLines4: boolean = true;
+  showAreaChart4: boolean = false;
+  gradient4: boolean = false;
+  showRefLines4: boolean = false;
+  logarithmic4: boolean = false;
+  cumulative4: boolean = false;
+  weekly4: boolean = false;
+  refLines4 = [{value: 1, name: 'Minimum'}, {value: 2, name: 'Average'}, {value: 3, name: 'Maximum'}];
+  ccgList4 = [];
+  ccgValues4 = new FormControl(this.ccgList4);
   colorScheme = {
-    domain: ['#5aa454', '#e44d25', '#cfc0bb', '#7aa3e5', '#a8385d', '#aae3f5']
+    domain: ['#e6194B', '#3cb44b', '#ffe119', '#4363d8', '#f58231', '#911eb4', '#42d4f4', '#f032e6', '#bfef45', '#fabed4', '#469990', '#dcbeff',
+      '#9A6324', '#fffac8', '#800000', '#aaffc3', '#808000', '#ffd8b1', '#000075', '#a9a9a9', '#000000']
   };
+  cols = "2";
+  rowHeight = "49%";
+  margin1 = "margin1";
+  margin2 = "margin1";
+  margin3 = "margin1";
+  margin4 = "margin1";
+  filterbackground1 = "filter-background1";
+  filterbackground2 = "filter-background1";
+  filterbackground3 = "filter-background1";
+  filterbackground4 = "filter-background1";
 
   selectedQuery1: string;
   selectedOutputField1: string;
@@ -148,146 +235,82 @@ export class DashboardViewerComponent implements OnInit {
       );
   }
 
-  toggleSelection(event) {
+  toggleSelection1(event) {
     if (event.checked) {
-      this.ccgValues = new FormControl(this.ccgList);
-      this.selectedCCGString = this.ccgList.toString();
+      this.ccgValues1 = new FormControl(this.ccgList1);
+      this.selectedCCGString1 = this.ccgList1.toString();
     } else {
-      this.ccgValues = new FormControl([]);
-      this.selectedCCGString = "";
+      this.ccgValues1 = new FormControl([]);
+      this.selectedCCGString1 = "";
     }
-    this.refresh(false);
+    this.refresh1(false);
   }
 
-  refresh(override) {
-    let values = "";
-
-    if (this.selectedCCGs=="" && this.selectAll) {
-      this.ccgValues = new FormControl(this.ccgList);
-      this.selectedCCGString = this.ccgList.toString();
+  toggleSelection2(event) {
+    if (event.checked) {
+      this.ccgValues2 = new FormControl(this.ccgList2);
+      this.selectedCCGString2 = this.ccgList2.toString();
+    } else {
+      this.ccgValues2 = new FormControl([]);
+      this.selectedCCGString2 = "";
     }
+    this.refresh2(false);
+  }
 
-    if (this.selectedSeries=="")
-      this.selectedSeries = this.seriesList.toString();
+  toggleSelection3(event) {
+    if (event.checked) {
+      this.ccgValues3 = new FormControl(this.ccgList3);
+      this.selectedCCGString3 = this.ccgList3.toString();
+    } else {
+      this.ccgValues3 = new FormControl([]);
+      this.selectedCCGString3 = "";
+    }
+    this.refresh3(false);
+  }
+
+  toggleSelection4(event) {
+    if (event.checked) {
+      this.ccgValues4 = new FormControl(this.ccgList4);
+      this.selectedCCGString4 = this.ccgList4.toString();
+    } else {
+      this.ccgValues4 = new FormControl([]);
+      this.selectedCCGString4 = "";
+    }
+    this.refresh4(false);
+  }
+
+  refresh1(override) {
+    if (this.selectedCCG1=="" && this.selectAll1) {
+      this.ccgValues1 = new FormControl(this.ccgList1);
+      this.selectedCCGString1 = this.ccgList1.toString();
+    }
 
     if (override) {
-      this.selectAll = false;
-      this.selectedCCGString = this.selectedCCGs.toString();
+      this.selectAll1 = false;
+      this.selectedCCGString1 = this.selectedCCG1.toString();
     }
 
-    values = this.selectedSeries;
+    let values1 = this.selectedSeries1.toString();
 
-    if (this.dashboardNumber == "5") {
+    this.showLineCharts1 = this.selectedWidgets[0].name=='Line chart';
+    this.showBarCharts1 = this.selectedWidgets[0].name=='Bar chart';
 
-      //this.chartTitle = 'London Ambulance Service NHS Trust - NHS111 call trend - cough and fever';
-      this.showLineCharts = true;
-      this.showBarCharts = false;
-      this.showSeriesFilter = true;
-    } else if (this.dashboardNumber == "6") {
-
-      //this.chartTitle = 'GP consultations for suspected coronavirus';
-      this.showLineCharts = true;
-      this.showBarCharts = false;
-      this.showSeriesFilter = true;
-    } else if (this.dashboardNumber == "7") {
-
-      //this.chartTitle = 'GP consultation types';
-      this.showLineCharts = true;
-      this.showBarCharts = false;
-      this.showAreaChart = false;
-      this.showSeriesFilter = true;
-    } else if (this.dashboardNumber == "8") {
-
-      //this.chartTitle = 'Barts NHS Trust - Daily Trend of Admissions and Discharges';
-      this.showLineCharts = true;
-      this.showBarCharts = false;
-      this.showAreaChart = false;
-      this.showSeriesFilter = true;
-    }
-    else if (this.dashboardNumber == "1") {
-
-      //this.chartTitle = 'Day trend of Confirmed, Suspected and Tested for Covid 19';
-      this.showLineCharts = true;
-      this.showBarCharts = false;
-      this.showAreaChart = false;
-      this.showSeriesFilter = true;
-    }
-    else if (this.dashboardNumber == "12") {
-
-      //this.chartTitle = 'Day trend of Suspected Covid 19 BY CCG';
-      this.showLineCharts = true;
-      this.showBarCharts = false;
-      this.showAreaChart = false;
-      this.showSeriesFilter = true;
-    } else if (this.dashboardNumber == "9") {
-
-      //this.chartTitle = 'Day trend of Confirmed, Suspected and Tested for Covid 19 by Ethnic Group';
-      this.showLineCharts = true;
-      this.showBarCharts = false;
-      this.showAreaChart = false;
-      this.showSeriesFilter = true;
-    } else if (this.dashboardNumber == "2") {
-
-      //this.chartTitle = 'Age breakdown of deceased patients with Confirmed or Suspected Covid 19';
-      this.multiChart = false;
-      this.chartName = values;
-      this.gradient = false;
-      this.showLineCharts = false;
-      this.showBarCharts = true;
-      this.xAxisLabel = 'Age Decile Band';
-    }
-    else if (this.dashboardNumber == "3") {
-
-      //this.chartTitle = 'Daily trend of deceased patients with Confirmed or Suspected Covid 19';
-      this.showLineCharts = true;
-      this.showBarCharts = false;
-      this.showAreaChart = true;
-    }
-    else if (this.dashboardNumber == "4") {
-
-      //this.chartTitle = 'CCG breakdown of deceased patients with Confirmed or Suspected Covid 19';
-      this.multiChart = false;
-      this.chartName = values;
-      this.gradient = false;
-      this.showLineCharts = false;
-      this.showBarCharts = true;
-      this.xAxisLabel = 'CCG';
-    } else if (this.dashboardNumber == "10") {
-
-      //this.chartTitle = 'Shielding groups by Age Bands';
-      this.multiChart = false;
-      this.chartName = values;
-      this.gradient = false;
-      this.showLineCharts = false;
-      this.showBarCharts = true;
-      this.xAxisLabel = 'Shielding Group';
-    } else if (this.dashboardNumber == "11") {
-
-      //this.chartTitle = 'Ethnic/Age group breakdown of deceased patients with Confirmed or Suspected Covid 19';
-      this.multiChart = false;
-      this.chartName = values;
-      this.gradient = false;
-      this.showLineCharts = false;
-      this.showBarCharts = true;
-      this.xAxisLabel = 'Ethnic Group';
-    }
-
-    if (this.multiChart) {
+    if (this.showLineCharts1) {
       let cumulative = "0";
-      if (this.cumulative) {
+      if (this.cumulative1) {
         cumulative = "1";
       }
       let weekly = "0";
-      if (this.weekly) {
+      if (this.weekly1) {
         weekly = "1";
       }
 
-      this.explorerService.getDashboard(values, this.formatDate(this.dateFrom), this.formatDate(this.dateTo), cumulative, this.selectedCCGString, weekly)
+      this.explorerService.getDashboard(values1, this.formatDate(this.dateFrom1), this.formatDate(this.dateTo1), cumulative, this.selectedCCGString1, weekly)
         .subscribe(result => {
-          this.chartResults = result.results;
+          this.chartResults1 = result.results;
 
           // apply log10 to values in series
-          this.chartResults = this.chartResults.map(
+          this.chartResults1 = this.chartResults1.map(
             e => {
               return {
                 name: e.name,
@@ -295,7 +318,7 @@ export class DashboardViewerComponent implements OnInit {
                   v => {
                     return {
                       name: new Date(v.name),
-                      value: this.applyLogarithm(v.value)
+                      value: this.applyLogarithm1(v.value)
                     }
                   }
                 )
@@ -303,11 +326,186 @@ export class DashboardViewerComponent implements OnInit {
             }
           )
         });
+    }
 
-    } else {
-      this.explorerService.getDashboardSingle(values, this.formatDate(this.dateFrom), this.formatDate(this.dateTo), 1, this.selectedCCGString)
+    if (this.showBarCharts1) {
+      this.explorerService.getDashboardSingle(values1, this.formatDate(this.dateFrom1), this.formatDate(this.dateTo1), 1, this.selectedCCGString1)
         .subscribe(result => {
-          this.chartResultsSingle = result.series;
+          this.chartResultsSingle1 = result.series;
+        });
+    }
+
+  }
+
+  refresh2(override) {
+    if (this.selectedCCG2=="" && this.selectAll2) {
+      this.ccgValues2 = new FormControl(this.ccgList2);
+      this.selectedCCGString2 = this.ccgList2.toString();
+    }
+
+    if (override) {
+      this.selectAll2 = false;
+      this.selectedCCGString2 = this.selectedCCG2.toString();
+    }
+
+    let values2 = this.selectedSeries2.toString();
+
+    this.showLineCharts2 = this.selectedWidgets[1].name=='Line chart';
+    this.showBarCharts2 = this.selectedWidgets[1].name=='Bar chart';
+
+    if (this.showLineCharts2) {
+      let cumulative = "0";
+      if (this.cumulative2) {
+        cumulative = "1";
+      }
+      let weekly = "0";
+      if (this.weekly2) {
+        weekly = "1";
+      }
+
+      this.explorerService.getDashboard(values2, this.formatDate(this.dateFrom2), this.formatDate(this.dateTo2), cumulative, this.selectedCCGString2, weekly)
+        .subscribe(result => {
+          this.chartResults2 = result.results;
+
+          // apply log10 to values in series
+          this.chartResults2 = this.chartResults2.map(
+            e => {
+              return {
+                name: e.name,
+                series: e.series.map(
+                  v => {
+                    return {
+                      name: new Date(v.name),
+                      value: this.applyLogarithm2(v.value)
+                    }
+                  }
+                )
+              }
+            }
+          )
+        });
+    }
+
+    if (this.showBarCharts2) {
+      this.explorerService.getDashboardSingle(values2, this.formatDate(this.dateFrom2), this.formatDate(this.dateTo2), 1, this.selectedCCGString2)
+        .subscribe(result => {
+          this.chartResultsSingle2 = result.series;
+        });
+    }
+
+  }
+
+  refresh3(override) {
+    if (this.selectedCCG3=="" && this.selectAll3) {
+      this.ccgValues3 = new FormControl(this.ccgList3);
+      this.selectedCCGString3 = this.ccgList3.toString();
+    }
+
+    if (override) {
+      this.selectAll3 = false;
+      this.selectedCCGString3 = this.selectedCCG3.toString();
+    }
+
+    let values3 = this.selectedSeries3.toString();
+
+    this.showLineCharts3 = this.selectedWidgets[2].name=='Line chart';
+    this.showBarCharts3 = this.selectedWidgets[2].name=='Bar chart';
+
+    if (this.showLineCharts3) {
+      let cumulative = "0";
+      if (this.cumulative3) {
+        cumulative = "1";
+      }
+      let weekly = "0";
+      if (this.weekly3) {
+        weekly = "1";
+      }
+
+      this.explorerService.getDashboard(values3, this.formatDate(this.dateFrom3), this.formatDate(this.dateTo3), cumulative, this.selectedCCGString3, weekly)
+        .subscribe(result => {
+          this.chartResults3 = result.results;
+
+          // apply log10 to values in series
+          this.chartResults3 = this.chartResults3.map(
+            e => {
+              return {
+                name: e.name,
+                series: e.series.map(
+                  v => {
+                    return {
+                      name: new Date(v.name),
+                      value: this.applyLogarithm3(v.value)
+                    }
+                  }
+                )
+              }
+            }
+          )
+        });
+    }
+
+    if (this.showBarCharts3) {
+      this.explorerService.getDashboardSingle(values3, this.formatDate(this.dateFrom3), this.formatDate(this.dateTo3), 1, this.selectedCCGString3)
+        .subscribe(result => {
+          this.chartResultsSingle3 = result.series;
+        });
+    }
+
+  }
+
+  refresh4(override) {
+    if (this.selectedCCG4=="" && this.selectAll4) {
+      this.ccgValues4 = new FormControl(this.ccgList4);
+      this.selectedCCGString4 = this.ccgList4.toString();
+    }
+
+    if (override) {
+      this.selectAll4 = false;
+      this.selectedCCGString4 = this.selectedCCG4.toString();
+    }
+
+    let values4 = this.selectedSeries4.toString();
+
+    this.showLineCharts4 = this.selectedWidgets[3].name=='Line chart';
+    this.showBarCharts4 = this.selectedWidgets[3].name=='Bar chart';
+
+    if (this.showLineCharts4) {
+      let cumulative = "0";
+      if (this.cumulative4) {
+        cumulative = "1";
+      }
+      let weekly = "0";
+      if (this.weekly4) {
+        weekly = "1";
+      }
+
+      this.explorerService.getDashboard(values4, this.formatDate(this.dateFrom4), this.formatDate(this.dateTo4), cumulative, this.selectedCCGString4, weekly)
+        .subscribe(result => {
+          this.chartResults4 = result.results;
+
+          // apply log10 to values in series
+          this.chartResults4 = this.chartResults4.map(
+            e => {
+              return {
+                name: e.name,
+                series: e.series.map(
+                  v => {
+                    return {
+                      name: new Date(v.name),
+                      value: this.applyLogarithm4(v.value)
+                    }
+                  }
+                )
+              }
+            }
+          )
+        });
+    }
+
+    if (this.showBarCharts4) {
+      this.explorerService.getDashboardSingle(values4, this.formatDate(this.dateFrom4), this.formatDate(this.dateTo4), 1, this.selectedCCGString4)
+        .subscribe(result => {
+          this.chartResultsSingle4 = result.series;
         });
     }
   }
@@ -315,10 +513,16 @@ export class DashboardViewerComponent implements OnInit {
   loadList(lists: any) {
     lists.results.map(
       e => {
-        this.ccgList.push(e.type);
+        this.ccgList1.push(e.type);
+        this.ccgList2.push(e.type);
+        this.ccgList3.push(e.type);
+        this.ccgList4.push(e.type);
       }
     )
-    this.ccgValues = new FormControl(this.ccgList);
+    this.ccgValues1 = new FormControl(this.ccgList1);
+    this.ccgValues2 = new FormControl(this.ccgList2);
+    this.ccgValues3 = new FormControl(this.ccgList3);
+    this.ccgValues4 = new FormControl(this.ccgList4);
 
     this.route.queryParams
       .subscribe(params => {
@@ -335,7 +539,10 @@ export class DashboardViewerComponent implements OnInit {
   parseDashboard (result: any) {
     result.results.map(
       e => {
-        this.chartTitle = e.name;
+        this.chartTitle1 = e.name;
+        this.chartTitle2 = e.name;
+        this.chartTitle3 = e.name;
+        this.chartTitle4 = e.name;
 
         let query: dashboardQuery = JSON.parse(e.jsonQuery);
 
@@ -372,19 +579,134 @@ export class DashboardViewerComponent implements OnInit {
         this.yAxisLabel4 = query.yAxisLabel4;
 
         this.selectedWidgets = query.visualType;
+
       }
     )
 
-    this.seriesList = this.selectedSeries1;
+    this.seriesList1 = this.selectedSeries1;
+    this.seriesValues1 = new FormControl(this.seriesList1);
 
-    this.seriesValues = new FormControl(this.seriesList);
+    this.seriesList2 = this.selectedSeries2;
+    this.seriesValues2 = new FormControl(this.seriesList2);
 
-    this.refresh(false);
+    this.seriesList3 = this.selectedSeries3;
+    this.seriesValues3 = new FormControl(this.seriesList3);
+
+    this.seriesList4 = this.selectedSeries4;
+    this.seriesValues4 = new FormControl(this.seriesList4);
+
+    this.xAxisLab1 = this.xAxisLabel1;
+    this.yAxisLab1 = this.yAxisLabel1;
+    this.xAxisLab2 = this.xAxisLabel2;
+    this.yAxisLab2 = this.yAxisLabel2;
+    this.xAxisLab3 = this.xAxisLabel3;
+    this.yAxisLab3 = this.yAxisLabel3;
+    this.xAxisLab4 = this.xAxisLabel4;
+    this.yAxisLab4 = this.yAxisLabel4;
+
+    this.chartTitle1 = this.chartTitle1+" - Data set: "+this.selectedQuery1;
+    this.chartTitle2 = this.chartTitle2+" - Data set: "+this.selectedQuery2;
+    this.chartTitle3 = this.chartTitle3+" - Data set: "+this.selectedQuery3;
+    this.chartTitle4 = this.chartTitle4+" - Data set: "+this.selectedQuery4;
+
+    console.log(this.selectedWidgets.length);
+
+    if (this.selectedWidgets.length==1) {
+      this.cols = "1";
+      this.rowHeight = "99%";
+      this.margin1 = "margin1";
+      this.filterbackground1 = "filter-background2";
+      this.view1 = [1400, 600];
+      this.widget1 = true;
+
+      this.refresh1(false);
+    }
+    if (this.selectedWidgets.length==2) {
+      this.cols = "2";
+      this.rowHeight = "99%";
+      this.margin1 = "margin2";
+      this.filterbackground1 = "filter-background2";
+      this.view1 = [770, 600];
+      this.margin2 = "margin2";
+      this.filterbackground2 = "filter-background2";
+      this.view2 = [770, 600];
+      this.widget1 = true;
+      this.refresh1(false);
+      this.widget2 = true;
+      this.refresh2(false);
+    }
+    if (this.selectedWidgets.length==3) {
+      this.cols = "2";
+      this.rowHeight = "49%";
+      this.margin1 = "margin3";
+      this.filterbackground1 = "filter-background1";
+      this.view1 = [770, 250];
+      this.margin2 = "margin3";
+      this.filterbackground2 = "filter-background1";
+      this.view2 = [770, 250];
+      this.margin3 = "margin3";
+      this.filterbackground3 = "filter-background1";
+      this.view3 = [770, 250];
+      this.widget1 = true;
+      this.refresh1(false);
+      this.widget2 = true;
+      this.refresh2(false);
+      this.widget3 = true;
+      this.refresh3(false);
+    }
+    if (this.selectedWidgets.length==4) {
+      this.cols = "2";
+      this.rowHeight = "49%";
+      this.margin1 = "margin3";
+      this.filterbackground1 = "filter-background1";
+      this.view1 = [770, 250];
+      this.margin2 = "margin3";
+      this.filterbackground2 = "filter-background1";
+      this.view2 = [770, 250];
+      this.margin3 = "margin3";
+      this.filterbackground3 = "filter-background1";
+      this.view3 = [770, 250];
+      this.margin4 = "margin3";
+      this.filterbackground4 = "filter-background1";
+      this.view4 = [770, 250];
+      this.widget1 = true;
+      this.refresh1(false);
+      this.widget2 = true;
+      this.refresh2(false);
+      this.widget3 = true;
+      this.refresh3(false);
+      this.widget4 = true;
+      this.refresh4(false);
+    }
 
   }
 
-  formatTooltipYAxis(val: number) {
-    if (this.logarithmic == true) {
+  formatTooltipYAxis1(val: number) {
+    if (this.logarithmic1 == true) {
+      val = Math.round((Math.pow(10, val) + Number.EPSILON) * 100) / 100;
+      return val.toLocaleString()
+    } else {
+      return Number(val).toLocaleString()
+    }
+  }
+  formatTooltipYAxis2(val: number) {
+    if (this.logarithmic2 == true) {
+      val = Math.round((Math.pow(10, val) + Number.EPSILON) * 100) / 100;
+      return val.toLocaleString()
+    } else {
+      return Number(val).toLocaleString()
+    }
+  }
+  formatTooltipYAxis3(val: number) {
+    if (this.logarithmic3 == true) {
+      val = Math.round((Math.pow(10, val) + Number.EPSILON) * 100) / 100;
+      return val.toLocaleString()
+    } else {
+      return Number(val).toLocaleString()
+    }
+  }
+  formatTooltipYAxis4(val: number) {
+    if (this.logarithmic4 == true) {
       val = Math.round((Math.pow(10, val) + Number.EPSILON) * 100) / 100;
       return val.toLocaleString()
     } else {
@@ -401,8 +723,29 @@ export class DashboardViewerComponent implements OnInit {
     }
   }
 
-  applyLogarithm(value: number) {
-    if (this.logarithmic == true) {
+  applyLogarithm1(value: number) {
+    if (this.logarithmic1 == true) {
+      return Math.log10(value)
+    } else {
+      return value
+    }
+  }
+  applyLogarithm2(value: number) {
+    if (this.logarithmic2 == true) {
+      return Math.log10(value)
+    } else {
+      return value
+    }
+  }
+  applyLogarithm3(value: number) {
+    if (this.logarithmic3 == true) {
+      return Math.log10(value)
+    } else {
+      return value
+    }
+  }
+  applyLogarithm4(value: number) {
+    if (this.logarithmic4 == true) {
       return Math.log10(value)
     } else {
       return value
@@ -420,20 +763,44 @@ export class DashboardViewerComponent implements OnInit {
     return val.toLocaleString();
   }
 
-  onSelectLine(data): void {
-    this.patientDialog(data.series, data.name);
+  onSelectLine1(data): void {
+    this.patientDialog(data.series, data.name, this.selectedCCGString1);
   }
 
-  onSelectBar(data): void {
-    this.patientDialog(this.chartName, data.name);
+  onSelectBar1(data): void {
+    this.patientDialog(this.selectedSeries1, data.name, this.selectedCCGString1);
   }
 
-  patientDialog(chartName: any, seriesName: any) {
+  onSelectLine2(data): void {
+    this.patientDialog(data.series, data.name, this.selectedCCGString2);
+  }
+
+  onSelectBar2(data): void {
+    this.patientDialog(this.selectedSeries2, data.name, this.selectedCCGString2);
+  }
+
+  onSelectLine3(data): void {
+    this.patientDialog(data.series, data.name, this.selectedCCGString3);
+  }
+
+  onSelectBar3(data): void {
+    this.patientDialog(this.selectedSeries3, data.name, this.selectedCCGString3);
+  }
+
+  onSelectLine4(data): void {
+    this.patientDialog(data.series, data.name, this.selectedCCGString4);
+  }
+
+  onSelectBar4(data): void {
+    this.patientDialog(this.selectedSeries4, data.name, this.selectedCCGString4);
+  }
+
+  patientDialog(chartName: any, seriesName: any, ccgs: any) {
     const dialogRef = this.dialog.open(PatientComponent, {
       height: '780px',
       width: '1600px',
 
-      data: {chartName: chartName, seriesName: seriesName, ccgs: this.selectedCCGString}
+      data: {chartName: chartName, seriesName: seriesName, ccgs: ccgs}
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -459,12 +826,48 @@ export class DashboardViewerComponent implements OnInit {
     return [year, month, day].join('-');
   }
 
-  download() {
+  download1() {
     var csvData = '';
-    if (this.multiChart)
-      csvData = this.ConvertToCSVMulti(this.chartResults);
+    if (this.showLineCharts1)
+      csvData = this.ConvertToCSVMulti(this.chartResults1);
     else
-      csvData = this.ConvertToCSVSingle(this.chartResultsSingle);
+      csvData = this.ConvertToCSVSingle(this.chartResultsSingle1);
+
+    let blob = new Blob([csvData], { type: 'text/csv' });
+    let url= window.URL.createObjectURL(blob);
+    window.open(url);
+  }
+
+  download2() {
+    var csvData = '';
+    if (this.showLineCharts2)
+      csvData = this.ConvertToCSVMulti(this.chartResults2);
+    else
+      csvData = this.ConvertToCSVSingle(this.chartResultsSingle2);
+
+    let blob = new Blob([csvData], { type: 'text/csv' });
+    let url= window.URL.createObjectURL(blob);
+    window.open(url);
+  }
+
+  download3() {
+    var csvData = '';
+    if (this.showLineCharts3)
+      csvData = this.ConvertToCSVMulti(this.chartResults3);
+    else
+      csvData = this.ConvertToCSVSingle(this.chartResultsSingle3);
+
+    let blob = new Blob([csvData], { type: 'text/csv' });
+    let url= window.URL.createObjectURL(blob);
+    window.open(url);
+  }
+
+  download4() {
+    var csvData = '';
+    if (this.showLineCharts4)
+      csvData = this.ConvertToCSVMulti(this.chartResults4);
+    else
+      csvData = this.ConvertToCSVSingle(this.chartResultsSingle4);
 
     let blob = new Blob([csvData], { type: 'text/csv' });
     let url= window.URL.createObjectURL(blob);
@@ -492,7 +895,6 @@ export class DashboardViewerComponent implements OnInit {
 
   ConvertToCSVSingle(objArray) {
     let array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
-    console.log(array);
     let csv = 'key,point,count\r\n';
     for (let key in array) {
       if (array.hasOwnProperty(key)) {

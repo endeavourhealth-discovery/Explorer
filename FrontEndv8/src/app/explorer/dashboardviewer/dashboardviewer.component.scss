@@ -7,7 +7,7 @@ mat-grid-tile {
  border: solid 1px #ccc;
 }
 
-.filter-background
+.filter-background1
 {
   background-color: transparent;
   font-size: 12px;
@@ -17,8 +17,30 @@ mat-grid-tile {
   margin-left: 5px;
 }
 
+.filter-background2
+{
+  background-color: transparent;
+  font-size: 12px;
+  position: absolute;
+  vertical-align: top;
+  margin-top: -700px;
+  margin-left: 5px;
+}
+
 .download {
   margin-left: 5px;
   font-size: 12px;
   padding: 0px;
+}
+
+.margin1 {
+  margin-top: 10%; position: center;
+}
+
+.margin2 {
+  margin-top: 15%; position: center;
+}
+
+.margin3 {
+  margin-top: 20%; position: center;
 }
