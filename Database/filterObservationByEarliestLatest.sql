@@ -51,15 +51,17 @@ BEGIN
           o2.result_value,
           o2.non_core_concept_id,
           c.value_set_code_type,
-          @currank := IF(@curpatient = o2.patient_id AND @curvaluesettype = c.value_set_code_type, @currank + 1, 1) AS rnk,
+          @currank := IF(@curpatient = BINARY o2.patient_id AND @curvaluesettype = BINARY c.value_set_code_type, @currank + 1, 1) AS rnk,
           @curpatient := o2.patient_id AS cur_patient,
-          @curvaluesettype := c.value_set_code_type AS cur_valuesetid
+          @curvaluesettype := c.value_set_code_type AS cur_valuesetcode
           FROM ',p_observationcohorttab,' o2 JOIN ',p_includeconcepttab,' c ON o2.non_core_concept_id = c.non_core_concept_id
                                  JOIN (SELECT @currank := 0, @curpatient := 0, @curvaluesettype := 0) r
           WHERE ',resultvaluestring,' AND ', p_timeperioddaterange, ' 
           ORDER BY o2.patient_id, c.value_set_code_type, o2.clinical_effective_date DESC, o2.id DESC 
           ) ob
     WHERE ob.rnk = 1');
+
+    select @sql;
 
     PREPARE stmt FROM @sql;
     EXECUTE stmt;
@@ -84,9 +86,9 @@ BEGIN
           o2.result_value,
           o2.non_core_concept_id,
           c.value_set_code_type,
-          @currank := IF(@curpatient = o2.patient_id AND @curvaluesettype = c.value_set_code_type, @currank + 1, 1) AS rnk,
+          @currank := IF(@curpatient = BINARY o2.patient_id AND @curvaluesettype = BINARY c.value_set_code_type, @currank + 1, 1) AS rnk,
           @curpatient := o2.patient_id AS cur_patient,
-          @curvaluesettype := c.value_set_code_type AS cur_valuesetid
+          @curvaluesettype := c.value_set_code_type AS cur_valuesetcode
           FROM ',p_observationcohorttab,' o2 JOIN ',p_includeconcepttab,' c ON o2.non_core_concept_id = c.non_core_concept_id
                                  JOIN (SELECT @currank := 0, @curpatient := 0, @curvaluesettype := 0) r
           WHERE ',resultvaluestring,' AND ', p_timeperioddaterange, ' 

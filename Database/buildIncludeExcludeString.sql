@@ -90,6 +90,9 @@ ELSEIF p_filtertype = 5 THEN
    FROM ', p_observationcohorttab,' o2 JOIN ', p_concepttab,' c2 ON o2.non_core_concept_id = c2.non_core_concept_id 
    WHERE ', p_timeperioddaterange,' GROUP BY o2.patient_id 
    HAVING COUNT(DISTINCT c2.non_core_concept_id) ', p_greaterless,' ', p_greaterlessvalue,') a');
+
+   select @sql;
+   
    PREPARE stmt FROM @sql;
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;

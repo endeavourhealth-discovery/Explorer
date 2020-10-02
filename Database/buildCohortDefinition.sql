@@ -19,7 +19,8 @@ CREATE PROCEDURE buildCohortDefinition(
      p_concepttab VARCHAR(64),
      p_cohorttab VARCHAR(64),
      p_observationtab VARCHAR(64),
-     p_schema VARCHAR(255)
+     p_schema VARCHAR(255),
+     p_storetab VARCHAR(64)
 )
 
 BEGIN
@@ -35,10 +36,10 @@ BEGIN
 -- provider and include orgs
   SET p_includedOrganisation = IF(p_includedOrganisation = '', NULL, p_includedOrganisation);  
   IF p_includedOrganisation IS NOT NULL THEN
-      CALL getOrgString(CONCAT(p_providerOrganisation,',',p_includedOrganisation), p_organisationtab, @Org);
+      CALL getOrgString(CONCAT(p_providerOrganisation,',',p_includedOrganisation), p_organisationtab, p_storetab, @Org);
       SET orgrange = @Org;
   ELSE
-      CALL getOrgString(p_providerOrganisation, p_organisationtab, @Org);
+      CALL getOrgString(p_providerOrganisation, p_organisationtab, p_storetab, @Org);
       SET orgrange = @Org;
   END IF;
 -- reg status
@@ -78,7 +79,7 @@ BEGIN
 -- cohort value set
   SET p_cohortValue = IF(p_cohortValue = '', NULL, p_cohortValue); 
   IF p_cohortValue IS NOT NULL THEN
-    CALL getValueSetString(p_cohortValue, @valueString);
+    CALL getValueSetString(p_cohortValue, p_storetab, @valueString);
     SET cohortvalueset = @valueString;
   ELSE  -- no limit
     SET cohortvalueset = '1';

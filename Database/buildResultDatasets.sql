@@ -15,7 +15,8 @@ CREATE PROCEDURE buildResultDatasets (
   p_datasetconcepttab VARCHAR(64),  
   p_dateFrom VARCHAR(20),
   p_dateTo VARCHAR(20),
-  p_schema VARCHAR(255)
+  p_schema VARCHAR(255),
+  p_storetab VARCHAR(64)
   )
 
 BEGIN
@@ -33,7 +34,7 @@ BEGIN
   -- dataset value set
   SET p_datasetValue = IF(p_datasetValue = '', NULL, p_datasetValue); 
   IF p_datasetValue IS NOT NULL THEN
-    CALL getValueSetString(p_datasetValue, @datasetValueString);
+    CALL getValueSetString(p_datasetValue, p_storetab, @datasetValueString);
     SET datasetValueString = @datasetValueString;
   ELSE  -- bring back everything
     SET datasetValueString = '1';

@@ -32,6 +32,7 @@ IN p_incoccurrencestab VARCHAR(64),
 IN p_greaterless VARCHAR(10), 
 IN p_greaterlessvalue VARCHAR(10), 
 IN p_schema VARCHAR(255),
+IN p_storetab VARCHAR(64),
 OUT p_includeExcludeString VARCHAR(1000)
 )
 BEGIN
@@ -59,7 +60,7 @@ SET p_includedEntryValue = IF(p_includedEntryValue = '', NULL, p_includedEntryVa
            p_includedAnyAll IS NOT NULL AND
            p_includedValueSet IS NOT NULL THEN
       
-      CALL getValueSetString(p_includedValueSet, @includedValueSetString);
+      CALL getValueSetString(p_includedValueSet, p_storetab, @includedValueSetString);
       SET includedValueSetString = @includedValueSetString;
       -- create includeexclude valueset
       CALL createValueSet(includedValueSetString, p_includeValuesettab);
@@ -85,7 +86,7 @@ SET p_includedEntryValue = IF(p_includedEntryValue = '', NULL, p_includedEntryVa
        p_includedOperator IS NOT NULL AND 
        p_includedEntryValue IS NOT NULL THEN
 
-      CALL getValueSetString(p_includedValueSet, @includedValueSetString);
+      CALL getValueSetString(p_includedValueSet, p_storetab, @includedValueSetString);
       SET includedValueSetString = @includedValueSetString;
 
       -- create includeexclude valueset
@@ -117,7 +118,7 @@ SET p_includedEntryValue = IF(p_includedEntryValue = '', NULL, p_includedEntryVa
        p_includedTestedValueSet IS NOT NULL THEN
       
       -- valueset
-      CALL getValueSetString(p_includedValueSet, @includedValueSetString);
+      CALL getValueSetString(p_includedValueSet, p_storetab, @includedValueSetString);
       SET includedValueSetString = @includedValueSetString;
 
       -- create includeexclude valueset
@@ -126,7 +127,7 @@ SET p_includedEntryValue = IF(p_includedEntryValue = '', NULL, p_includedEntryVa
       CALL createConcept(p_includeConcepttab, p_includeValuesettab, p_schema);
       
       -- tested valueset
-      CALL getValueSetString(p_includedTestedValueSet, @includedTestedValueSetString);
+      CALL getValueSetString(p_includedTestedValueSet, p_storetab, @includedTestedValueSetString);
       SET includedTestedValueSetString = @includedTestedValueSetString;
 
       -- create includeexclude valueset
@@ -155,7 +156,7 @@ SET p_includedEntryValue = IF(p_includedEntryValue = '', NULL, p_includedEntryVa
        p_includedFollowedByValueSet IS NOT NULL THEN
 
       -- valueset
-      CALL getValueSetString(p_includedValueSet, @includedValueSetString);
+      CALL getValueSetString(p_includedValueSet, p_storetab, @includedValueSetString);
       SET includedValueSetString = @includedValueSetString;
       -- create includeexclude valueset
       CALL createValueSet(includedValueSetString, p_includeValuesettab);
@@ -163,7 +164,7 @@ SET p_includedEntryValue = IF(p_includedEntryValue = '', NULL, p_includedEntryVa
       CALL createConcept(p_includeConcepttab, p_includeValuesettab, p_schema);
 
       -- followed by valueset
-      CALL getValueSetString(p_includedFollowedByValueSet, @includedFollowedByValueSetString);
+      CALL getValueSetString(p_includedFollowedByValueSet, p_storetab, @includedFollowedByValueSetString);
       SET includedFollowedByValueSetString = @includedFollowedByValueSetString;
       -- create includeexclude valueset
       CALL createValueSet(includedFollowedByValueSetString, p_includedFollowedByValuesettab);
@@ -188,7 +189,7 @@ SET p_includedEntryValue = IF(p_includedEntryValue = '', NULL, p_includedEntryVa
        p_greaterless IS NOT NULL AND 
        p_greaterlessvalue IS NOT NULL THEN
 
-      CALL getValueSetString(p_includedValueSet, @includedValueSetString);
+      CALL getValueSetString(p_includedValueSet, p_storetab, @includedValueSetString);
       SET includedValueSetString = @includedValueSetString;
       -- create includeexclude valueset
       CALL createValueSet(includedValueSetString, p_includeValuesettab);

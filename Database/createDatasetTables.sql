@@ -38,7 +38,7 @@ DROP TABLE IF EXISTS encounter_dataset;
 CREATE TABLE encounter_dataset (
   query_id INT(11) NOT NULL,
   encounter_id BIGINT(20) NOT NULL,
-  PRIMARY KEY (query_id, encounter_id)
+  PRIMARY KEY (query_id,encounter_id)
 ) ENGINE=InnoDB CHARSET=latin1;
 
 

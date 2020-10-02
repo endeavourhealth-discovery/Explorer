@@ -4,7 +4,8 @@ DROP PROCEDURE IF EXISTS storeString;
 
 DELIMITER //
 CREATE PROCEDURE storeString (
-    IN stringValue VARCHAR(10000)
+    IN stringValue VARCHAR(10000),
+    IN p_storetab VARCHAR(64)
 )
 
 BEGIN
@@ -13,12 +14,21 @@ BEGIN
    DECLARE frontlen    INT           DEFAULT NULL;
    DECLARE TempValue   VARCHAR(5000) DEFAULT NULL;
 
-   DROP TABLE IF EXISTS store;
-   CREATE TABLE store (id INT NOT NULL AUTO_INCREMENT,
-                       code VARCHAR(255), 
-                       PRIMARY KEY (id));
+   SET @sql = CONCAT('DROP TABLE IF EXISTS ', p_storetab);
+   PREPARE stmt FROM @sql;
+   EXECUTE stmt;
+   DEALLOCATE PREPARE stmt;
+
+   SET @sql = CONCAT('CREATE TABLE ', p_storetab,' (id INT NOT NULL AUTO_INCREMENT, 
+   code VARCHAR(255), PRIMARY KEY (id))');
+   PREPARE stmt FROM @sql;
+   EXECUTE stmt;
+   DEALLOCATE PREPARE stmt;
                                  
-   ALTER TABLE store ADD INDEX code_idx(code);
+   SET @sql = CONCAT('ALTER TABLE ', p_storetab,' ADD INDEX code_idx(code)');
+   PREPARE stmt FROM @sql;
+   EXECUTE stmt;
+   DEALLOCATE PREPARE stmt;
 
     processloop:
     LOOP  
@@ -30,18 +40,20 @@ BEGIN
     SET frontlen = LENGTH(front);
     SET TempValue = TRIM(front);
 
-       INSERT INTO store (code) 
-       SELECT TempValue; 
+       SET @sql = CONCAT('INSERT INTO ', p_storetab,' (code) SELECT ', QUOTE(TempValue) );
+       PREPARE stmt FROM @sql;
+       EXECUTE stmt;
+       DEALLOCATE PREPARE stmt;
 
     SET stringValue = INSERT(stringValue, 1, frontlen + 1, '');
     END LOOP;
 
     -- remove duplicates if exists
-    DELETE s1 FROM store s1
-    INNER JOIN store s2 
-    WHERE s1.id > s2.id 
-    AND s1.code = s2.code;
-
+    SET @sql = CONCAT('DELETE s1 FROM ', p_storetab,' s1 
+    INNER JOIN ', p_storetab,' s2 WHERE s1.id > s2.id AND s1.code = s2.code');
+    PREPARE stmt FROM @sql;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
 
 END//
 DELIMITER ;
