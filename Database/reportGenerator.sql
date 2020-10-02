@@ -145,7 +145,7 @@ DECLARE incTestedConcept3_tmp VARCHAR(64) DEFAULT NULL;
 DECLARE incValueSet4_tmp VARCHAR(64) DEFAULT NULL;
 DECLARE incConcept4_tmp VARCHAR(64) DEFAULT NULL;
 DECLARE incFollowedByValueSet4_tmp VARCHAR(64) DEFAULT NULL;
-DECLARE incFollowedByConcept4a_tmp VARCHAR(64) DEFAULT NULL;
+DECLARE incFollowedByConcept4_tmp VARCHAR(64) DEFAULT NULL;
 DECLARE incValueSet5_tmp VARCHAR(64) DEFAULT NULL;
 DECLARE incConcept5_tmp VARCHAR(64) DEFAULT NULL;
 DECLARE incOccurrences5_tmp VARCHAR(64) DEFAULT NULL;
@@ -255,7 +255,6 @@ SET includedDateTo5 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedDateTo5'));
 SET includedPeriodValue5 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodValue5')); 
 SET includedPeriodType5 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodType5')); 
 
-
 SET org_tmp  = CONCAT('org_tmp_',query_id);
 SET store_tmp  = CONCAT('store_tmp_',query_id);
 SET valueset_tmp  = CONCAT('valueset_tmp_',query_id);
@@ -283,7 +282,7 @@ SET incTestedConcept3_tmp  = CONCAT('incTestedConcept3_tmp_',query_id);
 SET incValueSet4_tmp  = CONCAT('incValueSet4_tmp_',query_id);
 SET incConcept4_tmp  = CONCAT('incConcept4_tmp_',query_id);
 SET incFollowedByValueSet4_tmp  = CONCAT('incFollowedByValueSet4_tmp_',query_id);
-SET incFollowedByConcept4a_tmp  = CONCAT('incFollowedByConcept4a_tmp_',query_id);
+SET incFollowedByConcept4_tmp  = CONCAT('incFollowedByConcept4_tmp_',query_id);
 SET incValueSet5_tmp  = CONCAT('incValueSet5_tmp_',query_id);
 SET incConcept5_tmp  = CONCAT('incConcept5_tmp_',query_id);
 SET incOccurrences5_tmp  = CONCAT('incOccurrences5_tmp_',query_id);
@@ -340,7 +339,7 @@ SET includeExclude3String = @includeExclude3String;
 CALL getIncludeExcludeString(includedExclude4,includedAnyAll4,
 includedValueSet4, includedDateFrom4, includedDateTo4, includedPeriodValue4, includedPeriodType4, incValueSet4_tmp, incConcept4_tmp, observation_tmp, 4, 
 NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, includedAreNot4, includedAnyAllFollowedBy4, includedFollowedByValueSet4, 
-incFollowedByValueSet4_tmp, incFollowedByConcept4a_tmp, NULL, NULL, NULL, sourceSchema , store_tmp, @includeExclude4String);
+incFollowedByValueSet4_tmp, incFollowedByConcept4_tmp, NULL, NULL, NULL, sourceSchema , store_tmp, @includeExclude4String);
 SET includeExclude4String = @includeExclude4String;
 
 -- 5 -- 
@@ -362,11 +361,10 @@ CALL buildResultDatasets(query_id, patient_cohort_tmp, eventType, active, datase
  incConcept1_tmp,',',incValueSet1a_tmp,',',incConcept1a_tmp,',',incValueSet1b_tmp,',',incConcept1b_tmp,',',incValueSet2_tmp,',',
  incConcept2_tmp,',',observation2_tmp,',',incValueSet2a_tmp,',',incConcept2a_tmp,',',observation2a_tmp,',',incValueSet3_tmp,',',
  incConcept3_tmp,',',observation3_tmp,',',incTestedValueSet3_tmp,',',incTestedConcept3_tmp,',',incValueSet4_tmp,',',
- incConcept4_tmp,',',incFollowedByValueSet4_tmp,',',incFollowedByConcept4a_tmp ,',',incValueSet5_tmp,',',
+ incConcept4_tmp,',',incFollowedByValueSet4_tmp,',',incFollowedByConcept4_tmp ,',',incValueSet5_tmp,',',
  incConcept5_tmp,',',incOccurrences5_tmp,',',datasetValue_tmp,',',datasetConcept_tmp,',',patient_cohort_tmp);
 
 CALL dropTempTables(tempTables);
-
 
 /*
 select registrationStatus; 
