@@ -42,20 +42,20 @@
         <ng-container matColumnDef="type">
           <th mat-header-cell *matHeaderCellDef>Type</th>
           <td style="cursor: pointer" mat-cell *matCellDef="let element"
-              [routerLink]="['/dashboard']"
+              [routerLink]="['/dashboardviewer']"
               [queryParams] = "{role: 'explorer', dashboardNumber: element.dashboardId}"> {{element.type}}
           </td>
         </ng-container>
         <ng-container matColumnDef="name">
           <th mat-header-cell *matHeaderCellDef>Dashboard</th>
           <td style="cursor: pointer" mat-cell *matCellDef="let element"
-              [routerLink]="['/dashboard']"
+              [routerLink]="['/dashboardviewer']"
               [queryParams] = "{role: 'explorer', dashboardNumber: element.dashboardId}"> {{element.name}} </td>
         </ng-container>
         <ng-container matColumnDef="updated">
           <th mat-header-cell *matHeaderCellDef>Last updated</th>
           <td style="cursor: pointer" mat-cell *matCellDef="let element"
-              [routerLink]="['/dashboardviewer']"
+              [routerLink]="['/dashboard']"
               [queryParams] = "{role: 'explorer', dashboardNumber: element.dashboardId}"> {{element.updated}} </td>
         </ng-container>
 

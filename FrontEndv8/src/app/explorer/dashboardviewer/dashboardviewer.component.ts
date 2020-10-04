@@ -14,31 +14,23 @@ interface widget {
 }
 
 interface dashboardQuery {
-  selectedQuery1: string;
+  selectedVisualisation1: string;
   selectedOutputField1: string;
-  selectedOutputType1: string;
-  selectedSchedule1: string;
   selectedSeries1: string[];
   xAxisLabel1: string;
   yAxisLabel1: string;
-  selectedQuery2: string;
+  selectedVisualisation2: string;
   selectedOutputField2: string;
-  selectedOutputType2: string;
-  selectedSchedule2: string;
   selectedSeries2: string[];
   xAxisLabel2: string;
   yAxisLabel2: string;
-  selectedQuery3: string;
+  selectedVisualisation3: string;
   selectedOutputField3: string;
-  selectedOutputType3: string;
-  selectedSchedule3: string;
   selectedSeries3: string[];
   xAxisLabel3: string;
   yAxisLabel3: string;
-  selectedQuery4: string;
+  selectedVisualisation4: string;
   selectedOutputField4: string;
-  selectedOutputType4: string;
-  selectedSchedule4: string;
   selectedSeries4: string[];
   xAxisLabel4: string;
   yAxisLabel4: string;
@@ -188,31 +180,23 @@ export class DashboardViewerComponent implements OnInit {
   filterbackground3 = "filter-background1";
   filterbackground4 = "filter-background1";
 
-  selectedQuery1: string;
+  selectedVisualisation1: string;
   selectedOutputField1: string;
-  selectedOutputType1: string;
-  selectedSchedule1: string;
   selectedSeries1: string[] = [''];
   xAxisLabel1: string;
   yAxisLabel1: string;
-  selectedQuery2: string;
+  selectedVisualisation2: string;
   selectedOutputField2: string;
-  selectedOutputType2: string;
-  selectedSchedule2: string;
   selectedSeries2: string[] = [''];
   xAxisLabel2: string;
   yAxisLabel2: string;
-  selectedQuery3: string;
+  selectedVisualisation3: string;
   selectedOutputField3: string;
-  selectedOutputType3: string;
-  selectedSchedule3: string;
   selectedSeries3: string[] = [''];
   xAxisLabel3: string;
   yAxisLabel3: string;
-  selectedQuery4: string;
+  selectedVisualisation4: string;
   selectedOutputField4: string;
-  selectedOutputType4: string;
-  selectedSchedule4: string;
   selectedSeries4: string[] = [''];
   xAxisLabel4: string;
   yAxisLabel4: string;
@@ -540,41 +524,28 @@ export class DashboardViewerComponent implements OnInit {
   parseDashboard (result: any) {
     result.results.map(
       e => {
-        this.chartTitle1 = e.name;
-        this.chartTitle2 = e.name;
-        this.chartTitle3 = e.name;
-        this.chartTitle4 = e.name;
-
         let query: dashboardQuery = JSON.parse(e.jsonQuery);
 
-        this.selectedQuery1 = query.selectedQuery1;
+        this.selectedVisualisation1 = query.selectedVisualisation1;
         this.selectedOutputField1 = query.selectedOutputField1;
-        this.selectedOutputType1 = query.selectedOutputType1;
-        this.selectedSchedule1 = query.selectedSchedule1;
         this.selectedSeries1 = query.selectedSeries1;
         this.xAxisLabel1 = query.xAxisLabel1;
         this.yAxisLabel1 = query.yAxisLabel1;
 
-        this.selectedQuery2 = query.selectedQuery2;
+        this.selectedVisualisation2 = query.selectedVisualisation2;
         this.selectedOutputField2 = query.selectedOutputField2;
-        this.selectedOutputType2 = query.selectedOutputType2;
-        this.selectedSchedule2 = query.selectedSchedule2;
         this.selectedSeries2 = query.selectedSeries2;
         this.xAxisLabel2 = query.xAxisLabel2;
         this.yAxisLabel2 = query.yAxisLabel2;
 
-        this.selectedQuery3 = query.selectedQuery3;
+        this.selectedVisualisation3 = query.selectedVisualisation3;
         this.selectedOutputField3 = query.selectedOutputField3;
-        this.selectedOutputType3 = query.selectedOutputType3;
-        this.selectedSchedule3 = query.selectedSchedule3;
         this.selectedSeries3 = query.selectedSeries3;
         this.xAxisLabel3 = query.xAxisLabel3;
         this.yAxisLabel3 = query.yAxisLabel3;
 
-        this.selectedQuery4 = query.selectedQuery4;
+        this.selectedVisualisation4 = query.selectedVisualisation4;
         this.selectedOutputField4 = query.selectedOutputField4;
-        this.selectedOutputType4 = query.selectedOutputType4;
-        this.selectedSchedule4 = query.selectedSchedule4;
         this.selectedSeries4 = query.selectedSeries4;
         this.xAxisLabel4 = query.xAxisLabel4;
         this.yAxisLabel4 = query.yAxisLabel4;
@@ -605,10 +576,10 @@ export class DashboardViewerComponent implements OnInit {
     this.xAxisLab4 = this.xAxisLabel4;
     this.yAxisLab4 = this.yAxisLabel4;
 
-    this.chartTitle1 = this.chartTitle1+" - Data set: "+this.selectedQuery1;
-    this.chartTitle2 = this.chartTitle2+" - Data set: "+this.selectedQuery2;
-    this.chartTitle3 = this.chartTitle3+" - Data set: "+this.selectedQuery3;
-    this.chartTitle4 = this.chartTitle4+" - Data set: "+this.selectedQuery4;
+    this.chartTitle1 = this.selectedVisualisation1;
+    this.chartTitle2 = this.selectedVisualisation2;
+    this.chartTitle3 = this.selectedVisualisation3;
+    this.chartTitle4 = this.selectedVisualisation4;
 
     console.log(this.selectedWidgets.length);
 
@@ -654,6 +625,7 @@ export class DashboardViewerComponent implements OnInit {
       this.refresh2(false);
       this.widget3 = true;
       this.refresh3(false);
+      this.timeline = false;
     }
     if (this.selectedWidgets.length==4) {
       this.cols = "2";
@@ -678,6 +650,7 @@ export class DashboardViewerComponent implements OnInit {
       this.refresh3(false);
       this.widget4 = true;
       this.refresh4(false);
+      this.timeline = false;
     }
 
   }
