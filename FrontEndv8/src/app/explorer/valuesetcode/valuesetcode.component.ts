@@ -25,7 +25,7 @@ export class ValueSetCodeComponent {
   events: any[] = [];
   dataSource: MatTableDataSource<any>;
   page: number = 0;
-  size: number = 12;
+  size: number = 11;
   value_set_id: string = "";
 
   displayedColumns: string[] = ['select', 'type', 'code', 'term', 'snomed', 'updated'];

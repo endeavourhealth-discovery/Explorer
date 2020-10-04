@@ -24,7 +24,7 @@ export class OrganisationGroupsComponent implements OnInit {
   events: any;
   dataSource: MatTableDataSource<any>;
   page: number = 0;
-  size: number = 12;
+  size: number = 11;
 
   displayedColumns: string[] = ['select', 'type', 'name', 'updated'];
 

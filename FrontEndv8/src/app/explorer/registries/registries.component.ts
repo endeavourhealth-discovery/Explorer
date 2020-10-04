@@ -23,7 +23,7 @@ export class RegistriesComponent implements OnInit {
   events: any;
   dataSource: MatTableDataSource<any>;
   page: number = 0;
-  size: number = 10;
+  size: number = 11;
 
   displayedColumns: string[] = ['select', 'ccg', 'practice', 'code', 'listSize', 'registry', 'registrySize', 'percentage', 'updated'];
   tiles: any[];

@@ -33,7 +33,7 @@ export class RegistryIndicatorsComponent implements OnInit {
   events: any;
   dataSource: MatTableDataSource<any>;
   page: number = 0;
-  size: number = 10;
+  size: number = 11;
 
   displayedColumns: string[] = ['select','listSize', 'registry', 'registrySize', 'percentage', 'updated'];
 

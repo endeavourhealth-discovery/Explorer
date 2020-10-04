@@ -67,7 +67,7 @@ export class DashboardLibraryComponent implements OnInit {
   events: any;
   dataSource: MatTableDataSource<any>;
   page: number = 0;
-  size: number = 12;
+  size: number = 11;
 
   displayedColumns: string[] = ['select', 'type', 'name', 'updated', 'expandArrow'];
   expandedElement: DashboardLibraryComponent | null;

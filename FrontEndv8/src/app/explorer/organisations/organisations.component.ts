@@ -25,7 +25,7 @@ export class OrganisationsComponent {
   events: any[] = [];
   dataSource: MatTableDataSource<any>;
   page: number = 0;
-  size: number = 12;
+  size: number = 11;
   organisation_group_id: string = "";
 
   displayedColumns: string[] = ['select', 'type', 'name', 'code', 'updated'];
