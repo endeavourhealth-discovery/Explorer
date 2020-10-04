@@ -32,14 +32,14 @@ SET p_includedAnyAllTested = UPPER(p_includedAnyAllTested);
 SET p_includedAnyAllFollowedBy = UPPER(p_includedAnyAllFollowedBy); 
 
 SET p_includedAreNot = UPPER(p_includedAreNot);
-SET p_includedAreNot = IF(p_includedAreNot = 'ARE',' ',IF(p_includedAreNot = 'ARE NOT','NOT',''));
+SET p_includedAreNot = IF(p_includedAreNot = 'ARE','EXISTS ',IF(p_includedAreNot = 'ARE NOT','NOT EXISTS',''));
 
 IF p_filtertype = 1 THEN 
 
 SET p_includeexcludestring = 
 CONCAT(p_includedExclude,' (SELECT 1 FROM ', p_observationcohorttab, ' o1 
 WHERE o1.non_core_concept_id = ', p_includedAnyAll,
-' (SELECT o2.non_core_concept_id FROM ', p_observationcohorttab,' o2 
+' (SELECT DISTINCT o2.non_core_concept_id FROM ', p_observationcohorttab,' o2 
 JOIN ', p_concepttab,' c ON o2.non_core_concept_id = c.non_core_concept_id 
 WHERE o2.patient_id = o1.patient_id AND ', p_timeperioddaterange,' ) 
 AND o.patient_id = o1.patient_id)');
@@ -49,7 +49,7 @@ ELSEIF p_filtertype = 2 THEN
 SET p_includeexcludestring = 
 CONCAT(p_includedExclude,' (SELECT 1 FROM ', p_observationcohorttab, ' o1 
 WHERE o1.non_core_concept_id = ', p_includedAnyAll,
-' (SELECT o2.non_core_concept_id FROM ', p_earliestlatestobservationtab,' o2 
+' (SELECT DISTINCT o2.non_core_concept_id FROM ', p_earliestlatestobservationtab,' o2 
 WHERE o2.patient_id = o1.patient_id ) 
 AND o.patient_id = o1.patient_id)');
 
@@ -58,9 +58,9 @@ ELSEIF p_filtertype = 3 THEN
 SET p_includeexcludestring = 
 CONCAT(p_includedExclude,' (SELECT 1 FROM ', p_observationcohorttab, ' o1 
 WHERE o1.non_core_concept_id = ', p_includedAnyAll,
-' (SELECT o2.non_core_concept_id FROM ',p_earliestlatestobservationtab,' o2 
+' (SELECT DISTINCT o2.non_core_concept_id FROM ',p_earliestlatestobservationtab,' o2 
 WHERE o2.patient_id = o1.patient_id 
-AND o2.non_core_concept_id = ', p_includedAnyAllTested,' (SELECT c.non_core_concept_id FROM ', p_includedAnyAllTestedConcepttab,' c )) 
+AND o2.non_core_concept_id = ', p_includedAnyAllTested,' (SELECT DISTINCT c.non_core_concept_id FROM ', p_includedAnyAllTestedConcepttab,' c )) 
 AND o.patient_id = o1.patient_id)'); 
 
 ELSEIF p_filtertype = 4 THEN 
@@ -68,14 +68,14 @@ ELSEIF p_filtertype = 4 THEN
 SET p_includeexcludestring = 
 CONCAT(p_includedExclude,' (SELECT 1 FROM ', p_observationcohorttab, ' o1 
 WHERE o1.non_core_concept_id = ', p_includedAnyAll,
-' (SELECT o3.non_core_concept_id FROM ', p_observationcohorttab,' o3 
+' (SELECT DISTINCT o3.non_core_concept_id FROM ', p_observationcohorttab,' o3 
 JOIN ', p_concepttab,' c ON o3.non_core_concept_id = c.non_core_concept_id 
 WHERE o3.patient_id = o1.patient_id 
-AND  ', p_includedAreNot,' o3.non_core_concept_id =  ', p_includedAnyAllFollowedBy,
-' (SELECT o2.non_core_concept_id 
+AND  ', p_includedAreNot,' (SELECT 1 FROM ', p_observationcohorttab, ' o4 
+WHERE o4.non_core_concept_id =  ', p_includedAnyAllFollowedBy, ' (SELECT DISTINCT o2.non_core_concept_id 
 FROM ', p_observationcohorttab,' o2 JOIN ', p_includedFollowedByConcepttab,' c2 ON o2.non_core_concept_id = c2.non_core_concept_id 
-WHERE o2.patient_id = o3.patient_id 
-AND ', p_timeperioddaterange,')) 
+WHERE o2.patient_id = o4.patient_id 
+AND ', p_timeperioddaterange,') AND o3.patient_id = o4.patient_id ) )  
 AND o.patient_id = o1.patient_id)');
 
 ELSEIF p_filtertype = 5 THEN
@@ -91,8 +91,6 @@ ELSEIF p_filtertype = 5 THEN
    WHERE ', p_timeperioddaterange,' GROUP BY o2.patient_id 
    HAVING COUNT(DISTINCT c2.non_core_concept_id) ', p_greaterless,' ', p_greaterlessvalue,') a');
 
-   select @sql;
-   
    PREPARE stmt FROM @sql;
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;
@@ -104,7 +102,7 @@ ELSEIF p_filtertype = 5 THEN
 
    SET p_includeexcludestring = 
    CONCAT(p_includedExclude,' (SELECT 1 FROM ', p_observationcohorttab, ' o1 
-   WHERE o1.non_core_concept_id = ',p_includedAnyAll ,' (SELECT o2.non_core_concept_id FROM ', 
+   WHERE o1.non_core_concept_id = ',p_includedAnyAll ,' (SELECT DISTINCT o2.non_core_concept_id FROM ', 
    p_observationcohorttab,' o2 JOIN ', p_concepttab,' c ON o2.non_core_concept_id = c.non_core_concept_id 
    WHERE o2.patient_id = o1.patient_id 
    AND EXISTS (SELECT 1 FROM ', p_incoccurrencestab,' oc WHERE oc.patient_id = o2.patient_id ) ) 

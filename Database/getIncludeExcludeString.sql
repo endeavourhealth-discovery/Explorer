@@ -133,7 +133,7 @@ SET p_includedEntryValue = IF(p_includedEntryValue = '', NULL, p_includedEntryVa
       -- create includeexclude valueset
       CALL createValueSet(includedTestedValueSetString, p_includeTestedValuesettab);
       -- create concept from includeexclude valueset
-      CALL createConcept(p_includeTestedConcepttab, p_includeTestedValuesettab);
+      CALL createConcept(p_includeTestedConcepttab, p_includeTestedValuesettab, p_schema);
 
       -- filter out earliest and latest observations
       CALL filterObservationByEarliestLatest(p_includeConcepttab, p_observationcohorttab, p_earliestLatestObservationtab, 
@@ -169,7 +169,7 @@ SET p_includedEntryValue = IF(p_includedEntryValue = '', NULL, p_includedEntryVa
       -- create includeexclude valueset
       CALL createValueSet(includedFollowedByValueSetString, p_includedFollowedByValuesettab);
       -- create concept from includeexclude valueset
-      CALL createConcept(p_includedFollowedByConcepttab, p_includedFollowedByValuesettab);
+      CALL createConcept(p_includedFollowedByConcepttab, p_includedFollowedByValuesettab, p_schema);
       -- get time period date range string
       SET timeperioddaterange = getTimePeriodDateRange(p_includedDateFrom, p_includedDateTo, p_includedPeriodValue, p_includedPeriodType);
       -- build include exclude string

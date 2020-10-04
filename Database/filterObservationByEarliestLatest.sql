@@ -61,8 +61,6 @@ BEGIN
           ) ob
     WHERE ob.rnk = 1');
 
-    select @sql;
-
     PREPARE stmt FROM @sql;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
