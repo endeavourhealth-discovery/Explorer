@@ -28,10 +28,10 @@ DECLARE datasetValue VARCHAR(1000) DEFAULT NULL;
 DECLARE dateFrom VARCHAR(20) DEFAULT NULL; 
 DECLARE dateTo VARCHAR(20) DEFAULT NULL; 
 
-DECLARE eventOutput VARCHAR(1000) DEFAULT NULL;
-DECLARE aggregateOutput VARCHAR(50) DEFAULT NULL;
-DECLARE schedule VARCHAR(50) DEFAULT NULL;
-DECLARE delivery VARCHAR(50) DEFAULT NULL;
+DECLARE outputField VARCHAR(1000) DEFAULT NULL;
+DECLARE outputType VARCHAR(100) DEFAULT NULL;
+DECLARE schedule VARCHAR(100) DEFAULT NULL;
+DECLARE delivery VARCHAR(100) DEFAULT NULL;
 
 DECLARE includedExclude1 VARCHAR(10) DEFAULT NULL; 
 DECLARE includedAnyAll1 VARCHAR(10) DEFAULT NULL; 
@@ -176,8 +176,8 @@ SET datasetValue = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.datasetValue'),
 SET dateFrom = JSON_UNQUOTE(JSON_EXTRACT(query,'$.dateFrom')); 
 SET dateTo = JSON_UNQUOTE(JSON_EXTRACT(query,'$.dateTo')); 
 
-SET eventOutput = JSON_UNQUOTE(JSON_EXTRACT(query,'$.eventOutput')); 
-SET aggregateOutput = JSON_UNQUOTE(JSON_EXTRACT(query,'$.aggregateOutput')); 
+SET outputField = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.outputField'),'[',''),']',''),'"',''); 
+SET outputType = JSON_UNQUOTE(JSON_EXTRACT(query,'$.outputType')); 
 SET schedule = JSON_UNQUOTE(JSON_EXTRACT(query,'$.schedule')); 
 SET delivery = JSON_UNQUOTE(JSON_EXTRACT(query,'$.delivery')); 
 
@@ -356,6 +356,9 @@ includeExclude2String, includeExclude2aString, includeExclude3String, includeExc
 -- build result datasets
 CALL buildResultDatasets(query_id, patient_cohort_tmp, eventType, active, datasetValue, datasetValue_tmp, datasetConcept_tmp, dateFrom, dateTo, sourceSchema, store_tmp);
 
+-- dataset output definition
+CALL buildDatasetOutputTables(outputField, outputType, eventType, store_tmp, sourceSchema, query_id);
+
 -- remove temp tables
  SET tempTables = CONCAT(org_tmp,',',store_tmp,',',valueset_tmp,',',concept_tmp ,',',cohort_tmp ,',',observation_tmp,',',incValueSet1_tmp,',',
  incConcept1_tmp,',',incValueSet1a_tmp,',',incConcept1a_tmp,',',incValueSet1b_tmp,',',incConcept1b_tmp,',',incValueSet2_tmp,',',
@@ -378,8 +381,8 @@ select active 	  ;
 select datasetValue  ;
 select dateFrom   ;
 select dateTo 	 ;
-select eventOutput ;
-select aggregateOutput ;
+select outputField ;
+select outputType ;
 select schedule  ;
 select delivery    ; 
 
@@ -475,8 +478,8 @@ call reportGenerator(14, '{"providerOrganisation":["NHS CITY AND HACKNEY CCG","N
  "datasetValue":["Diabetes","Asthma","COPD"],
  "dateFrom":"2020-08-01",
  "dateTo":"2020-08-31",
- "eventOutput":["Patient ID","Patient NHS number","Pseudo NHS number","Effective date","Concept name","Owning organisation","Numeric value","Post code","Age","Gender","Registered organisation","Death status"],
- "aggregateOutput":"",
+ "outputField":["Patient ID","Patient NHS number","Pseudo NHS number","Effective date","Concept name","Owning organisation","Numeric value","Post code","Age","Gender","Registered organisation","Death status"],
+ "outputType":"",
  "schedule":"Weekly",
  "delivery":"NHS email"}');  */
 
