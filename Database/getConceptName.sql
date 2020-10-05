@@ -1,10 +1,10 @@
 USE subscriber_pi_rv;
 
 -- function to retrieve the name field on the concept table based on the concept id
-DROP FUNCTION IF EXISTS get_concept_name;
+DROP FUNCTION IF EXISTS getConceptName;
 
 DELIMITER //
-CREATE FUNCTION get_concept_name(p_concept_id INT)
+CREATE FUNCTION getConceptName(p_concept_id INT)
 RETURNS VARCHAR(255)
 NOT DETERMINISTIC READS SQL DATA
 BEGIN
