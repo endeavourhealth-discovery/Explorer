@@ -61,7 +61,7 @@
 
         <ng-container matColumnDef="expandArrow">
           <th mat-header-cell *matHeaderCellDef></th>
-          <td style="cursor: pointer" mat-cell *matCellDef="let element" (click)="expandedElement = expandedElement === element ? null : element">
+          <td style="cursor: pointer" mat-cell *matCellDef="let element" (click)="expandedElement = expandedElement === element ? null : element; widgetsShown(element.jsonQuery)">
             <i [class]="element == expandedElement ? 'fas fa-chevron-down' : 'fas fa-chevron-right'"></i>
           </td>
         </ng-container>
@@ -71,21 +71,60 @@
             <div class="expanded-element-detail"
                  [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
               <div class="expanded-element-description">
-                <table class = "expanded-table">
+                <table class = "expanded-table" *ngIf="widget1">
                   <tr>
-                    <td><b>Query: </b>{{formatDetail(element.jsonQuery, 'selectedQuery')}}</td>
+                    <td><b>Visualisation title: </b>{{formatDetail(element.jsonQuery, 'selectedVisualisation1')}}</td>
                   </tr>
                   <tr>
-                    <td><b>Output field: </b>{{formatDetail(element.jsonQuery, 'selectedOutputField')}}</td>
+                    <td><b>Output fields: </b>{{formatDetail(element.jsonQuery, 'selectedOutputField1')}}</td>
                   </tr>
                   <tr>
-                    <td><b>Output type: </b>{{formatDetail(element.jsonQuery, 'selectedOutputType')}}</td>
+                    <td><b>Series: </b>{{formatDetail(element.jsonQuery, 'selectedSeries1')}}</td>
                   </tr>
                   <tr>
-                    <td><b>Schedule: </b>{{formatDetail(element.jsonQuery, 'selectedSchedule')}}</td>
+                    <td><b>Widgets: </b>{{formatDetail(element.jsonQuery, 'visualType1')}}</td>
+                  </tr>
+                </table>
+                <table class = "expanded-table" *ngIf="widget2">
+                  <tr>
+                    <td><b>Visualisation title: </b>{{formatDetail(element.jsonQuery, 'selectedVisualisation1')}}</td><td><b>Visualisation title: </b>{{formatDetail(element.jsonQuery, 'selectedVisualisation2')}}</td>
                   </tr>
                   <tr>
-                    <td><b>Series: </b>{{formatDetail(element.jsonQuery, 'selectedSeries')}}</td>
+                    <td><b>Output fields: </b>{{formatDetail(element.jsonQuery, 'selectedOutputField1')}}</td><td><b>Output fields: </b>{{formatDetail(element.jsonQuery, 'selectedOutputField2')}}</td>
+                  </tr>
+                  <tr>
+                    <td><b>Series: </b>{{formatDetail(element.jsonQuery, 'selectedSeries1')}}</td><td><b>Series: </b>{{formatDetail(element.jsonQuery, 'selectedSeries2')}}</td>
+                  </tr>
+                  <tr>
+                    <td><b>Widgets: </b>{{formatDetail(element.jsonQuery, 'visualType1')}}</td><td><b>Widgets: </b>{{formatDetail(element.jsonQuery, 'visualType2')}}</td>
+                  </tr>
+                </table>
+                <table class = "expanded-table" *ngIf="widget3">
+                  <tr>
+                    <td><b>Visualisation title: </b>{{formatDetail(element.jsonQuery, 'selectedVisualisation1')}}</td><td><b>Visualisation title: </b>{{formatDetail(element.jsonQuery, 'selectedVisualisation2')}}</td><td><b>Visualisation title: </b>{{formatDetail(element.jsonQuery, 'selectedVisualisation3')}}</td>
+                  </tr>
+                  <tr>
+                    <td><b>Output fields: </b>{{formatDetail(element.jsonQuery, 'selectedOutputField1')}}</td><td><b>Output fields: </b>{{formatDetail(element.jsonQuery, 'selectedOutputField2')}}</td><td><b>Output fields: </b>{{formatDetail(element.jsonQuery, 'selectedOutputField3')}}</td>
+                  </tr>
+                  <tr>
+                    <td><b>Series: </b>{{formatDetail(element.jsonQuery, 'selectedSeries1')}}</td><td><b>Series: </b>{{formatDetail(element.jsonQuery, 'selectedSeries2')}}</td><td><b>Series: </b>{{formatDetail(element.jsonQuery, 'selectedSeries3')}}</td>
+                  </tr>
+                  <tr>
+                    <td><b>Widgets: </b>{{formatDetail(element.jsonQuery, 'visualType1')}}</td><td><b>Widgets: </b>{{formatDetail(element.jsonQuery, 'visualType2')}}</td><td><b>Widgets: </b>{{formatDetail(element.jsonQuery, 'visualType3')}}</td>
+                  </tr>
+                </table>
+                <table class = "expanded-table" *ngIf="widget4">
+                  <tr>
+                    <td><b>Visualisation title: </b>{{formatDetail(element.jsonQuery, 'selectedVisualisation1')}}</td><td><b>Visualisation title: </b>{{formatDetail(element.jsonQuery, 'selectedVisualisation2')}}</td><td><b>Visualisation title: </b>{{formatDetail(element.jsonQuery, 'selectedVisualisation3')}}</td><td><b>Visualisation title: </b>{{formatDetail(element.jsonQuery, 'selectedVisualisation4')}}</td>
+                  </tr>
+                  <tr>
+                    <td><b>Output fields: </b>{{formatDetail(element.jsonQuery, 'selectedOutputField1')}}</td><td><b>Output fields: </b>{{formatDetail(element.jsonQuery, 'selectedOutputField2')}}</td><td><b>Output fields: </b>{{formatDetail(element.jsonQuery, 'selectedOutputField3')}}</td><td><b>Output fields: </b>{{formatDetail(element.jsonQuery, 'selectedOutputField4')}}</td>
+                  </tr>
+                  <tr>
+                    <td><b>Series: </b>{{formatDetail(element.jsonQuery, 'selectedSeries1')}}</td><td><b>Series: </b>{{formatDetail(element.jsonQuery, 'selectedSeries2')}}</td><td><b>Series: </b>{{formatDetail(element.jsonQuery, 'selectedSeries3')}}</td><td><b>Series: </b>{{formatDetail(element.jsonQuery, 'selectedSeries4')}}</td>
+                  </tr>
+                  <tr>
+                    <td><b>Widgets: </b>{{formatDetail(element.jsonQuery, 'visualType1')}}</td><td><b>Widgets: </b>{{formatDetail(element.jsonQuery, 'visualType2')}}</td><td><b>Widgets: </b>{{formatDetail(element.jsonQuery, 'visualType3')}}</td><td><b>Widgets: </b>{{formatDetail(element.jsonQuery, 'visualType4')}}</td>
                   </tr>
                 </table>
               </div>

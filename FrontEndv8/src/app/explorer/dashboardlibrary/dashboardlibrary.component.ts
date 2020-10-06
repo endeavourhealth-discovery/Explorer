@@ -18,6 +18,7 @@ interface widget {
 
 interface query {
   selectedQuery1: string;
+  selectedVisualisation1: string;
   selectedOutputField1: string;
   selectedOutputType1: string;
   selectedSchedule1: string;
@@ -25,6 +26,7 @@ interface query {
   xAxisLabel1: string;
   yAxisLabel1: string;
   selectedQuery2: string;
+  selectedVisualisation2: string;
   selectedOutputField2: string;
   selectedOutputType2: string;
   selectedSchedule2: string;
@@ -32,6 +34,7 @@ interface query {
   xAxisLabel2: string;
   yAxisLabel2: string;
   selectedQuery3: string;
+  selectedVisualisation3: string;
   selectedOutputField3: string;
   selectedOutputType3: string;
   selectedSchedule3: string;
@@ -39,6 +42,7 @@ interface query {
   xAxisLabel3: string;
   yAxisLabel3: string;
   selectedQuery4: string;
+  selectedVisualisation4: string;
   selectedOutputField4: string;
   selectedOutputType4: string;
   selectedSchedule4: string;
@@ -77,6 +81,11 @@ export class DashboardLibraryComponent implements OnInit {
   selectAll: boolean = true;
   typeList = [];
   typeValues = new FormControl(this.typeList);
+
+  widget1: boolean = false;
+  widget2: boolean = false;
+  widget3: boolean = false;
+  widget4: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -221,22 +230,115 @@ export class DashboardLibraryComponent implements OnInit {
 
   }
 
+  widgetsShown (jsonQuery) {
+    let query: query = JSON.parse(jsonQuery);
+    let details = '';
+
+    if (query.visualType.length == 1) {
+      this.widget1 = true;
+    } else if (query.visualType.length == 2) {
+      this.widget2 = true;
+    } else if (query.visualType.length == 3) {
+      this.widget3 = true;
+    } else if (query.visualType.length == 4) {
+      this.widget4 = true;
+    }
+  }
+
   formatDetail(jsonQuery, fieldName){
 
     if (jsonQuery != undefined) {
       let query: query = JSON.parse(jsonQuery);
       let details = '';
 
-      if (fieldName=='selectedQuery') {
-        details = query.selectedQuery1
-      } else if (fieldName=='selectedOutputField') {
-        details = query.selectedOutputField1
-      } else if (fieldName=='selectedOutputType') {
-        details = query.selectedOutputType1
-      } else if (fieldName=='selectedSchedule') {
-        details = query.selectedSchedule1
-      } else if (fieldName=='selectedSeries') {
-        details = query.selectedSeries1.toString()
+      if (this.widget1 == true) {
+        if (fieldName=='selectedVisualisation1') {
+          details = query.selectedVisualisation1;
+        } else if (fieldName=='selectedOutputField1') {
+          details = query.selectedOutputField1;
+        } else if (fieldName=='selectedSeries1') {
+          details = query.selectedSeries1.toString();
+        } else if (fieldName=='visualType1') {
+          details = query.visualType[0].name.toString();
+        }
+      } else if (this.widget2 == true) {
+        if (fieldName=='selectedVisualisation1') {
+          details = query.selectedVisualisation1;
+        } else if (fieldName=='selectedOutputField1') {
+          details = query.selectedOutputField1;
+        } else if (fieldName=='selectedSeries1') {
+          details = query.selectedSeries1.toString();
+        } else if (fieldName=='visualType1') {
+          details = query.visualType[0].name.toString();
+        } else if (fieldName=='selectedVisualisation2') {
+          details = query.selectedVisualisation2;
+        } else if (fieldName=='selectedOutputField2') {
+          details = query.selectedOutputField2;
+        } else if (fieldName=='selectedSeries2') {
+          details = query.selectedSeries2.toString();
+        } else if (fieldName=='visualType2') {
+          details = query.visualType[1].name.toString();
+        }
+      } else if (this.widget3 == true) {
+        if (fieldName=='selectedVisualisation1') {
+          details = query.selectedVisualisation1;
+        } else if (fieldName=='selectedOutputField1') {
+          details = query.selectedOutputField1;
+        } else if (fieldName=='selectedSeries1') {
+          details = query.selectedSeries1.toString();
+        } else if (fieldName=='visualType1') {
+          details = query.visualType[0].name.toString();
+        } else if (fieldName=='selectedVisualisation2') {
+          details = query.selectedVisualisation2;
+        } else if (fieldName=='selectedOutputField2') {
+          details = query.selectedOutputField2;
+        } else if (fieldName=='selectedSeries2') {
+          details = query.selectedSeries2.toString();
+        } else if (fieldName=='visualType2') {
+          details = query.visualType[1].name.toString();
+        } else if (fieldName=='selectedVisualisation3') {
+          details = query.selectedVisualisation3;
+        } else if (fieldName=='selectedOutputField3') {
+          details = query.selectedOutputField3;
+        } else if (fieldName=='selectedSeries3') {
+          details = query.selectedSeries3.toString();
+        } else if (fieldName=='visualType3') {
+          details = query.visualType[2].name.toString();
+        }
+      } else if (this.widget4 == true) {
+        if (fieldName=='selectedVisualisation1') {
+          details = query.selectedVisualisation1;
+        } else if (fieldName=='selectedOutputField1') {
+          details = query.selectedOutputField1;
+        } else if (fieldName=='selectedSeries1') {
+          details = query.selectedSeries1.toString();
+        } else if (fieldName=='visualType1') {
+          details = query.visualType[0].name.toString();
+        } else if (fieldName=='selectedVisualisation2') {
+          details = query.selectedVisualisation2;
+        } else if (fieldName=='selectedOutputField2') {
+          details = query.selectedOutputField2;
+        } else if (fieldName=='selectedSeries2') {
+          details = query.selectedSeries2.toString();
+        } else if (fieldName=='visualType2') {
+          details = query.visualType[1].name.toString();
+        } else if (fieldName=='selectedVisualisation3') {
+          details = query.selectedVisualisation3;
+        } else if (fieldName=='selectedOutputField3') {
+          details = query.selectedOutputField3;
+        } else if (fieldName=='selectedSeries3') {
+          details = query.selectedSeries3.toString();
+        } else if (fieldName=='visualType3') {
+          details = query.visualType[2].name.toString();
+        } else if (fieldName=='selectedVisualisation4') {
+          details = query.selectedVisualisation4;
+        } else if (fieldName=='selectedOutputField4') {
+          details = query.selectedOutputField4;
+        } else if (fieldName=='selectedSeries4') {
+          details = query.selectedSeries4.toString();
+        } else if (fieldName=='visualType4') {
+          details = query.visualType[3].name.toString();
+        }
       }
 
       return details;
