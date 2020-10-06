@@ -236,18 +236,25 @@ export class DashboardLibraryComponent implements OnInit {
 
       if (query.visualType.length == 1) {
         this.widget1 = true;
+        this.widget2 = false;
+        this.widget3 = false;
+        this.widget4 = false;
       } else if (query.visualType.length == 2) {
+        this.widget1 = false;
         this.widget2 = true;
+        this.widget3 = false;
+        this.widget4 = false;
       } else if (query.visualType.length == 3) {
+        this.widget1 = false;
+        this.widget2 = false;
         this.widget3 = true;
+        this.widget4 = false;
       } else if (query.visualType.length == 4) {
+        this.widget1 = false;
+        this.widget2 = false;
+        this.widget3 = false;
         this.widget4 = true;
       }
-
-      console.log(this.widget1);
-      console.log(this.widget2);
-      console.log(this.widget3);
-      console.log(this.widget4);
     }
   }
 
@@ -257,7 +264,7 @@ export class DashboardLibraryComponent implements OnInit {
       let query: query = JSON.parse(jsonQuery);
       let details = '';
 
-      if (this.widget1 == true) {
+      if (query.visualType.length == 1) {
         if (fieldName=='selectedVisualisation1') {
           details = query.selectedVisualisation1;
         } else if (fieldName=='selectedOutputField1') {
@@ -267,7 +274,7 @@ export class DashboardLibraryComponent implements OnInit {
         } else if (fieldName=='visualType1') {
           details = query.visualType[0].name.toString();
         }
-      } else if (this.widget2 == true) {
+      } else if (query.visualType.length == 2) {
         if (fieldName=='selectedVisualisation1') {
           details = query.selectedVisualisation1;
         } else if (fieldName=='selectedOutputField1') {
@@ -285,7 +292,7 @@ export class DashboardLibraryComponent implements OnInit {
         } else if (fieldName=='visualType2') {
           details = query.visualType[1].name.toString();
         }
-      } else if (this.widget3 == true) {
+      } else if (query.visualType.length == 3) {
         if (fieldName=='selectedVisualisation1') {
           details = query.selectedVisualisation1;
         } else if (fieldName=='selectedOutputField1') {
@@ -311,7 +318,7 @@ export class DashboardLibraryComponent implements OnInit {
         } else if (fieldName=='visualType3') {
           details = query.visualType[2].name.toString();
         }
-      } else if (this.widget4 == true) {
+      } else if (query.visualType.length == 4) {
         if (fieldName=='selectedVisualisation1') {
           details = query.selectedVisualisation1;
         } else if (fieldName=='selectedOutputField1') {
