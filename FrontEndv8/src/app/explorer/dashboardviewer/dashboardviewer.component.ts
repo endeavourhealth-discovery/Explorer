@@ -171,14 +171,6 @@ export class DashboardViewerComponent implements OnInit {
   };
   cols = "2";
   rowHeight = "49%";
-  margin1 = "margin1";
-  margin2 = "margin1";
-  margin3 = "margin1";
-  margin4 = "margin1";
-  filterbackground1 = "filter-background1";
-  filterbackground2 = "filter-background1";
-  filterbackground3 = "filter-background1";
-  filterbackground4 = "filter-background1";
 
   selectedVisualisation1: string;
   selectedOutputField1: string;
@@ -586,8 +578,6 @@ export class DashboardViewerComponent implements OnInit {
     if (this.selectedWidgets.length==1) {
       this.cols = "1";
       this.rowHeight = "99%";
-      this.margin1 = "margin1";
-      this.filterbackground1 = "filter-background0";
       this.view1 = [1300, 700];
       this.widget1 = true;
 
@@ -596,12 +586,8 @@ export class DashboardViewerComponent implements OnInit {
     if (this.selectedWidgets.length==2) {
       this.cols = "2";
       this.rowHeight = "99%";
-      this.margin1 = "margin2";
-      this.filterbackground1 = "filter-background2";
-      this.view1 = [770, 600];
-      this.margin2 = "margin2";
-      this.filterbackground2 = "filter-background2";
-      this.view2 = [770, 600];
+      this.view1 = [770, 700];
+      this.view2 = [770, 700];
       this.widget1 = true;
       this.refresh1(false);
       this.widget2 = true;
@@ -610,15 +596,9 @@ export class DashboardViewerComponent implements OnInit {
     if (this.selectedWidgets.length==3) {
       this.cols = "2";
       this.rowHeight = "49%";
-      this.margin1 = "margin3";
-      this.filterbackground1 = "filter-background1";
-      this.view1 = [770, 250];
-      this.margin2 = "margin3";
-      this.filterbackground2 = "filter-background1";
-      this.view2 = [770, 250];
-      this.margin3 = "margin3";
-      this.filterbackground3 = "filter-background1";
-      this.view3 = [770, 250];
+      this.view1 = [770, 270];
+      this.view2 = [770, 270];
+      this.view3 = [770, 270];
       this.widget1 = true;
       this.refresh1(false);
       this.widget2 = true;
@@ -630,18 +610,10 @@ export class DashboardViewerComponent implements OnInit {
     if (this.selectedWidgets.length==4) {
       this.cols = "2";
       this.rowHeight = "49%";
-      this.margin1 = "margin3";
-      this.filterbackground1 = "filter-background1";
-      this.view1 = [770, 250];
-      this.margin2 = "margin3";
-      this.filterbackground2 = "filter-background1";
-      this.view2 = [770, 250];
-      this.margin3 = "margin3";
-      this.filterbackground3 = "filter-background1";
-      this.view3 = [770, 250];
-      this.margin4 = "margin3";
-      this.filterbackground4 = "filter-background1";
-      this.view4 = [770, 250];
+      this.view1 = [770, 270];
+      this.view2 = [770, 270];
+      this.view3 = [770, 270];
+      this.view4 = [770, 270];
       this.widget1 = true;
       this.refresh1(false);
       this.widget2 = true;

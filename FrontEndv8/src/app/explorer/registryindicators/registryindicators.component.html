@@ -92,7 +92,7 @@
           <td mat-cell *matCellDef="let element" [ngClass]="{ 'poor': toPercent(element.registrySize,element.listSize)<80, 'ok': toPercent(element.registrySize,element.listSize)>79&&toPercent(element.registrySize,element.listSize)<90, 'good': toPercent(element.registrySize,element.listSize)>89}"> {{toPercent(element.registrySize,element.listSize)}}% </td>
         </ng-container>
         <ng-container matColumnDef="updated">
-          <th mat-header-cell *matHeaderCellDef>Last updated</th>
+          <th mat-header-cell *matHeaderCellDef style="width:100px">Last updated</th>
           <td mat-cell *matCellDef="let element"> {{element.updated}} </td>
         </ng-container>
 
