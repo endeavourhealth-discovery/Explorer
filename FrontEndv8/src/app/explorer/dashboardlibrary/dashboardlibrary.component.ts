@@ -231,17 +231,23 @@ export class DashboardLibraryComponent implements OnInit {
   }
 
   widgetsShown (jsonQuery) {
-    let query: query = JSON.parse(jsonQuery);
-    let details = '';
+    if (jsonQuery != undefined) {
+      let query: query = JSON.parse(jsonQuery);
 
-    if (query.visualType.length == 1) {
-      this.widget1 = true;
-    } else if (query.visualType.length == 2) {
-      this.widget2 = true;
-    } else if (query.visualType.length == 3) {
-      this.widget3 = true;
-    } else if (query.visualType.length == 4) {
-      this.widget4 = true;
+      if (query.visualType.length == 1) {
+        this.widget1 = true;
+      } else if (query.visualType.length == 2) {
+        this.widget2 = true;
+      } else if (query.visualType.length == 3) {
+        this.widget3 = true;
+      } else if (query.visualType.length == 4) {
+        this.widget4 = true;
+      }
+
+      console.log(this.widget1);
+      console.log(this.widget2);
+      console.log(this.widget3);
+      console.log(this.widget4);
     }
   }
 
