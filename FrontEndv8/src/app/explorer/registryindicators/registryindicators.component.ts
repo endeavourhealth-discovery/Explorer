@@ -59,7 +59,7 @@ export class RegistryIndicatorsComponent implements OnInit {
       });
 
     this.events = null;
-    this.explorerService.getRegistries(this.page, this.size, "", "", this.odscode, this.registry, this.practice)
+    this.explorerService.getRegistries(this.page, this.size)
       .subscribe(
         (result) => this.displayEvents(result),
         (error) => this.log.error(error)

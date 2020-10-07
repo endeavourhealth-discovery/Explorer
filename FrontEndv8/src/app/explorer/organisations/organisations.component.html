@@ -5,7 +5,7 @@
  <div mat-dialog-content class="flex" fxLayout="row wrap" fxLayoutAlign="start">
    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 mat-table-compact" fxFlex="100" fxFill>
      <ng-container matColumnDef="select">
-       <th mat-header-cell *matHeaderCellDef style="width: 200px">
+       <th mat-header-cell *matHeaderCellDef>
          <mat-checkbox (change)="$event ? masterToggle() : null"
                        [checked]="selection.hasValue() && isAllSelected()"
                        [indeterminate]="selection.hasValue() && !isAllSelected()"

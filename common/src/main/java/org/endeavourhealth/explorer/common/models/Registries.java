@@ -11,36 +11,9 @@ import java.util.Date;
 public class Registries {
     private static final Logger LOG = LoggerFactory.getLogger(Registries.class);
 
-    private Integer id;
-    private String registry;
     private String ccg;
-    private String practice;
-    private String code;
     private Integer listSize;
-    private Integer registrySize;
-    private String updated;
-    private String parentRegistry;
-    private String name;
-    private String query;
-
-
-    public Integer getId() {
-        return id;
-    }
-
-    public Registries setId(Integer id) {
-        this.id = id;
-        return this;
-    }
-
-    public String getRegistry() {
-        return registry;
-    }
-
-    public Registries setRegistry(String registry) {
-        this.registry = registry;
-        return this;
-    }
+    private String allColumns;
 
     public String getCcg() {
         return ccg;
@@ -48,24 +21,6 @@ public class Registries {
 
     public Registries setCcg(String ccg) {
         this.ccg = ccg;
-        return this;
-    }
-
-    public String getPractice() {
-        return practice;
-    }
-
-    public Registries setPractice(String practice) {
-        this.practice = practice;
-        return this;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public Registries setCode(String code) {
-        this.code = code;
         return this;
     }
 
@@ -78,56 +33,12 @@ public class Registries {
         return this;
     }
 
-    public Integer getRegistrySize() {
-        return registrySize;
+    public String getAllColumns() {
+        return allColumns;
     }
 
-    public Registries setRegistrySize(Integer registrySize) {
-        this.registrySize = registrySize;
-        return this;
-    }
-
-    public String getUpdated() {
-        return updated;
-    }
-
-    public Registries setUpdated(Date updated) {
-        try {
-            String pattern = "dd-MMM-yyyy";
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-
-            this.updated = simpleDateFormat.format(updated);
-        }
-        catch (Exception e) {
-            LOG.error(e.getMessage());
-        }
-        return this;
-    }
-
-    public String getParentRegistry() {
-        return parentRegistry;
-    }
-
-    public Registries setParentRegistry(String parentRegistry) {
-        this.parentRegistry = parentRegistry;
-        return this;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Registries setName(String name) {
-        this.name = name;
-        return this;
-    }
-
-    public String getQuery() {
-        return query;
-    }
-
-    public Registries setQuery(String query) {
-        this.query = query;
+    public Registries setAllColumns(String allColumns) {
+        this.allColumns = allColumns;
         return this;
     }
 

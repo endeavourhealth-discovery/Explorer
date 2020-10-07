@@ -890,97 +890,17 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         return patientSummary;
     }
 
-    public RegistriesResult getRegistries(Integer page, Integer size, String selectedCCGString, String selectedRegistryString, String odsCode, String parentRegistry, String practice) throws Exception {
+    public RegistriesResult getRegistries(Integer page, Integer size) throws Exception {
         RegistriesResult result = new RegistriesResult();
-
-        selectedCCGString = selectedCCGString.replaceAll(",","','");
-        selectedCCGString = "'" + selectedCCGString + "'";
-        selectedCCGString = "WHERE ccg in ("+selectedCCGString+")";
-
-        selectedRegistryString = selectedRegistryString.replaceAll(",","','");
-        selectedRegistryString = "'" + selectedRegistryString + "'";
-        selectedRegistryString = " and registry in ("+selectedRegistryString+")";
 
         String sql = "";
         String sqlCount = "";
 
-        if (parentRegistry.equals("") && practice.equals("")) {
-            sql = "SELECT id, registry as name, query, registry, ccg, practice_name, ods_code, list_size, registry_size, updated, parent_registry " +
-                    "FROM dashboards.registries " +
-                    selectedCCGString+selectedRegistryString+
-                    " AND parent_registry = '' order by ccg, practice_name,registry LIMIT ?,?";
+        sql = "call dashboards.getRegistries('1')";
 
-            sqlCount = "SELECT count(1) " +
-                    "FROM dashboards.registries " +
-                    selectedCCGString+selectedRegistryString+" AND parent_registry = ''";
-
-            try (PreparedStatement statement = conn.prepareStatement(sql)) {
-                statement.setInt(1, page*size);
-                statement.setInt(2, size);
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    result.setResults(getRegistriesList(resultSet));
-                }
-            }
-
-            try (PreparedStatement statement = conn.prepareStatement(sqlCount)) {
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    resultSet.next();
-                    result.setLength(resultSet.getInt(1));
-                }
-            }
-        }
-        else if (parentRegistry.equals("") && !practice.equals("")) {
-            sql = "SELECT id, registry as name, query, registry, ccg, practice_name, ods_code, list_size, registry_size, updated, parent_registry " +
-                    "FROM dashboards.registries " +
-                    " WHERE parent_registry = '' AND practice_name like ? "+selectedRegistryString+" order by ccg, practice_name,registry LIMIT ?,?";
-
-            sqlCount = "SELECT count(1) " +
-                    "FROM dashboards.registries " +
-                    " WHERE parent_registry = '' AND practice_name like ? "+selectedRegistryString;
-
-            try (PreparedStatement statement = conn.prepareStatement(sql)) {
-                statement.setString(1, "%"+practice+"%");
-                statement.setInt(2, page*size);
-                statement.setInt(3, size);
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    result.setResults(getRegistriesList(resultSet));
-                }
-            }
-
-            try (PreparedStatement statement = conn.prepareStatement(sqlCount)) {
-                statement.setString(1, "%"+practice+"%");
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    resultSet.next();
-                    result.setLength(resultSet.getInt(1));
-                }
-            }
-        }
-        else {
-            sql = "SELECT id, registry as name, query, registry, ccg, practice_name, ods_code, list_size, registry_size, updated, parent_registry " +
-                    "FROM dashboards.registries "+
-                    " WHERE ods_code = ? and parent_registry = ? order by ccg, practice_name,registry LIMIT ?,?";
-
-            sqlCount = "SELECT count(1) " +
-                    "FROM dashboards.registries " +
-                    " WHERE ods_code = ? and parent_registry = ?";
-
-            try (PreparedStatement statement = conn.prepareStatement(sql)) {
-                statement.setString(1, odsCode);
-                statement.setString(2, parentRegistry);
-                statement.setInt(3, page*size);
-                statement.setInt(4, size);
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    result.setResults(getRegistriesList(resultSet));
-                }
-            }
-
-            try (PreparedStatement statement = conn.prepareStatement(sqlCount)) {
-                statement.setString(1, odsCode);
-                statement.setString(2, parentRegistry);
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    resultSet.next();
-                    result.setLength(resultSet.getInt(1));
-                }
+        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                result.setResults(getRegistriesList(resultSet));
             }
         }
 
@@ -1000,17 +920,9 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         Registries registries = new Registries();
 
         registries
-                .setId(resultSet.getInt("id"))
-                .setRegistry(resultSet.getString("registry"))
-                .setName(resultSet.getString("name"))
-                .setQuery(resultSet.getString("query"))
                 .setCcg(resultSet.getString("ccg"))
-                .setPractice(resultSet.getString("practice_name"))
-                .setCode(resultSet.getString("ods_code"))
                 .setListSize(resultSet.getInt("list_size"))
-                .setRegistrySize(resultSet.getInt("registry_size"))
-                .setUpdated(resultSet.getDate("updated"))
-                .setParentRegistry(resultSet.getString("parent_registry"));
+                .setAllColumns(resultSet.getString("all_columns"));
         return registries;
     }
 
