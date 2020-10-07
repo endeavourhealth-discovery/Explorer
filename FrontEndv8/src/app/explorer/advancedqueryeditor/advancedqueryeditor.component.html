@@ -11,8 +11,8 @@
         <div class="summary-column">
           <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
             <mat-form-field appearance="outline" style="margin-left: 25px; width: 400px">
-              <mat-label>Query category</mat-label>
-              <input required matInput placeholder="Category" [(ngModel)]="type" formControlName="control1" (ngModelChange)="formChanged()" (keydown.enter)="stepper.next()">
+              <mat-label>Query folder</mat-label>
+              <input required matInput placeholder="Folder" [(ngModel)]="type" formControlName="control1" (ngModelChange)="formChanged()" (keydown.enter)="stepper.next()">
             </mat-form-field>
           </div>
           <br/>
@@ -27,7 +27,7 @@
         </div>
         <div class="summary-column">
           <div style="margin-top: 7px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            <p>Category of query for grouping in the library.</p>
+            <p>Folder for grouping query in the library.</p>
           </div>
           <div style="margin-top: 30px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
             <p>Name of query.</p>

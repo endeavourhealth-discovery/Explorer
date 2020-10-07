@@ -40,7 +40,7 @@
           </td>
         </ng-container>
         <ng-container matColumnDef="type">
-          <th mat-header-cell *matHeaderCellDef>Type</th>
+          <th mat-header-cell *matHeaderCellDef>Folder</th>
           <td style="cursor: pointer" mat-cell *matCellDef="let element"
               [routerLink]="['/dashboardviewer']"
               [queryParams] = "{role: 'explorer', dashboardNumber: element.dashboardId}"> {{element.type}}

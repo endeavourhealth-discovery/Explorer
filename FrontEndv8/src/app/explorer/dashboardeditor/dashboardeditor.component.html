@@ -10,8 +10,8 @@
       <div class="summary-column">
         <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
           <mat-form-field appearance="outline" style="margin-left: 25px; width: 600px">
-            <mat-label>Dashboard type</mat-label>
-            <input matInput placeholder="Type" [(ngModel)]="type" formControlName="control1" (ngModelChange)="formChanged()" required>
+            <mat-label>Dashboard folder</mat-label>
+            <input matInput placeholder="Folder" [(ngModel)]="type" formControlName="control1" (ngModelChange)="formChanged()" required>
           </mat-form-field>
         </div>
         <br/>
@@ -27,7 +27,7 @@
 
       <div class="summary-column">
         <div style="margin-top: 10px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-          <p>Type of dashboard for grouping in the library.</p>
+          <p>Folder for grouping dashboard in the library.</p>
         </div>
 
         <div style="margin-top: 27px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
