@@ -359,6 +359,9 @@ CALL buildResultDatasets(query_id, patient_cohort_tmp, eventType, active, datase
 -- dataset output definition
 CALL buildDatasetOutputTables(outputField, outputType, eventType, store_tmp, sourceSchema, query_id);
 
+-- update queue for next run date
+CALL updateQueue(query_id, schedule);
+
 -- remove temp tables
  SET tempTables = CONCAT(org_tmp,',',store_tmp,',',valueset_tmp,',',concept_tmp ,',',cohort_tmp ,',',observation_tmp,',',incValueSet1_tmp,',',
  incConcept1_tmp,',',incValueSet1a_tmp,',',incConcept1a_tmp,',',incValueSet1b_tmp,',',incConcept1b_tmp,',',incValueSet2_tmp,',',
