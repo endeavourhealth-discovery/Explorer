@@ -16,7 +16,7 @@ query_id            INT,
 query               TEXT,
 query_last_updated  DATETIME,
 next_run_date       DATE DEFAULT NULL,
-status              VARCHAR(10) DEFAULT 'N', -- A active, N not processed
+status              VARCHAR(10) DEFAULT 'N', -- A active i.e. processing, N not processed
 timesubmit          DATETIME DEFAULT NULL,
 timefinish          DATETIME DEFAULT NULL,
 timeexecute         VARCHAR(100) DEFAULT NULL, 
