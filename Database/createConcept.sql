@@ -19,17 +19,17 @@ BEGIN
           cpt.dbid,
           cptm.legacy AS non_core_concept_id
    FROM ",p_valuesettab," vc JOIN ", p_schema,".concept cpt ON cpt.id = CONCAT('SN_', vc.snomed_id) 
-   JOIN ", p_schema,".concept_map cptm ON cptm.core = cpt.dbid
-   WHERE vc.snomed_id <> '0'
-   UNION
+   JOIN ", p_schema,".concept_map cptm ON cptm.core = cpt.dbid 
+   WHERE vc.snomed_id <> '0' 
+   UNION 
    SELECT vc.value_set_code_type, 
           cpt.code AS original_code, 
           cpt.name AS original_term, 
           vc.snomed_id,
           cpt.dbid,
-          cpt.dbid AS non_core_concept_id  -- treating core as non core for cases where core concepts are populated in the non core column e.g. medication_statement
+          cpt.dbid AS non_core_concept_id  -- treating core as non core for cases where core concepts are populated in the non core column e.g. medication_statement 
    FROM ", p_valuesettab," vc JOIN ", p_schema,".concept cpt ON cpt.id = CONCAT('SN_', vc.snomed_id) 
-   WHERE vc.snomed_id <> '0'
+   WHERE vc.snomed_id <> '0' 
    UNION 
    SELECT vc.value_set_code_type, 
           cpt.code AS original_code,  
@@ -49,7 +49,7 @@ BEGIN
           cpt.dbid AS non_core_concept_id
    FROM ", p_valuesettab," vc JOIN ", p_schema,".concept cpt ON cpt.id = CONCAT('FHIR_EC_', vc.original_code) 
    WHERE vc.snomed_id = '0' 
-   AND vc.original_code REGEXP '[A-Z]'
+   AND vc.original_code REGEXP '[A-Z]' 
    UNION 
    SELECT vc.value_set_code_type, 
           cpt.code AS original_code,  
@@ -57,9 +57,9 @@ BEGIN
           vc.snomed_id,
           cpt.dbid,
           cpt.dbid AS non_core_concept_id
-   FROM ", p_valuesettab," vc JOIN ", p_schema,".concept cpt ON cpt.id = vc.original_code
+   FROM ", p_valuesettab," vc JOIN ", p_schema,".concept cpt ON cpt.id = vc.original_code 
    WHERE vc.snomed_id = '0' 
-   AND vc.original_code LIKE 'LE\_%'
+   AND vc.original_code LIKE 'LE\_%' 
    UNION 
    SELECT vc.value_set_code_type, 
           cpt.code AS original_code,  
@@ -67,9 +67,9 @@ BEGIN
           vc.snomed_id,
           cpt.dbid,
           cpt.dbid AS non_core_concept_id
-   FROM ", p_valuesettab," vc JOIN ", p_schema,".concept cpt ON cpt.id = vc.original_code
+   FROM ", p_valuesettab," vc JOIN ", p_schema,".concept cpt ON cpt.id = vc.original_code 
    WHERE vc.snomed_id = '0' 
-   AND vc.original_code LIKE 'CM\_%'
+   AND vc.original_code LIKE 'CM\_%' 
    UNION 
    SELECT vc.value_set_code_type, 
           cpt.code AS original_code, 
@@ -77,9 +77,9 @@ BEGIN
           vc.snomed_id,
           cpt.dbid,
           cpt.dbid AS non_core_concept_id
-   FROM ", p_valuesettab," vc JOIN ", p_schema,".concept cpt ON cpt.id = vc.original_code
+   FROM ", p_valuesettab," vc JOIN ", p_schema,".concept cpt ON cpt.id = vc.original_code 
    WHERE vc.snomed_id = '0' 
-   AND vc.original_code LIKE 'DC\_%'
+   AND vc.original_code LIKE 'DC\_%' 
    UNION 
    SELECT vc.value_set_code_type, 
           cpt.code AS original_code,  
@@ -87,9 +87,9 @@ BEGIN
           vc.snomed_id,
           cpt.dbid,
           cpt.dbid AS non_core_concept_id
-   FROM ", p_valuesettab," vc JOIN ", p_schema,".concept cpt ON cpt.id = CONCAT('R2_',vc.original_code)
+   FROM ", p_valuesettab," vc JOIN ", p_schema,".concept cpt ON cpt.id = CONCAT('R2_',vc.original_code) 
    WHERE vc.snomed_id = '0' 
-   AND vc.value_set_code_type = 'Blood Pressure'
+   AND vc.value_set_code_type = 'Blood Pressure' 
    UNION 
    SELECT vc.value_set_code_type, 
           cpt.code AS original_code,  
@@ -97,7 +97,7 @@ BEGIN
           vc.snomed_id,
           cpt.dbid,
           cpt.dbid AS non_core_concept_id
-   FROM ", p_valuesettab," vc JOIN ", p_schema,".concept cpt ON cpt.id = CONCAT('R3_',vc.original_code)
+   FROM ", p_valuesettab," vc JOIN ", p_schema,".concept cpt ON cpt.id = CONCAT('R3_',vc.original_code) 
    WHERE vc.snomed_id = '0' 
    AND vc.value_set_code_type = 'Blood Pressure'");
    PREPARE stmt FROM @sql;
