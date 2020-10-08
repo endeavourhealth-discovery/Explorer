@@ -822,7 +822,7 @@ export class DashboardViewerComponent implements OnInit {
 
   ConvertToCSVMulti(objArray) {
     let array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
-    let csv = 'key,point,count\r\n';
+    let csv = 'group,key,point,count\r\n';
     for (let key in array) {
       if (array.hasOwnProperty(key)) {
         for (let key2 in array[key].series) {
@@ -841,7 +841,7 @@ export class DashboardViewerComponent implements OnInit {
 
   ConvertToCSVSingle(objArray) {
     let array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
-    let csv = 'key,point,count\r\n';
+    let csv = 'group,key,point,count\r\n';
     for (let key in array) {
       if (array.hasOwnProperty(key)) {
         let point = array[key].name;
