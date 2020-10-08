@@ -10,7 +10,7 @@ BEGIN
 DECLARE queryid INT;
 DECLARE query TEXT;
 
--- update queue if existing queries been updated - run report again by setting the next run date to today's date
+-- update queue if any existing query been updated
 UPDATE queue q JOIN query_library l ON q.query_id = l.id 
 SET q.query = l.query, 
 q.query_last_updated = l.updated, 
@@ -20,13 +20,18 @@ timesubmit = NULL,
 timefinish = NULL,
 timeexecute = NULL
 WHERE q.query_last_updated <> l.updated
-AND q.status <> 'A';
+AND q.status <> 'A';  -- i.e. not already processing
 
--- add to queue if any new query exists and set the next run date as today's date
+-- add to queue if any new query exists
 INSERT INTO queue(query_id, query, query_last_updated, next_run_date)
 SELECT l.id, l.query, l.updated, CURDATE()
 FROM query_library l
 WHERE l.id NOT IN (SELECT q.query_id FROM queue q);
+
+-- remove from queue if any query been removed
+DELETE FROM queue q 
+WHERE q.query_id NOT IN (SELECT l.id FROM query_library l)
+AND q.status <> 'A'; -- i.e. not already processing
 
 START TRANSACTION;
 
@@ -44,7 +49,7 @@ IF queryid IS NOT NULL THEN
  WHERE query_id = queryid;
 END IF;
 
--- and add one here to make 3 query ids allowed to process if run concurrently
+-- allowing 3 query ids to process if run concurrently
 
 COMMIT;
 

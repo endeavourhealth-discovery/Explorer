@@ -23,6 +23,7 @@ timeexecute         VARCHAR(100) DEFAULT NULL,
 primary key (id)
 )ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
 
+ALTER TABLE queue ADD INDEX qry_idx(query_id);
 
 END //
 DELIMITER ;
