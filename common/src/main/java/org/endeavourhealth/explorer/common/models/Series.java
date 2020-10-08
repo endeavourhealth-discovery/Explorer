@@ -13,7 +13,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
     "name",
-    "value"
+    "value",
+    "grouping"
 })
 public class Series {
 
@@ -21,6 +22,8 @@ public class Series {
     private String name;
     @JsonProperty("value")
     private String value;
+    @JsonProperty("grouping")
+    private String grouping;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -42,6 +45,16 @@ public class Series {
     @JsonProperty("value")
     public void setValue(String value) {
         this.value = value;
+    }
+
+    @JsonProperty("grouping")
+    public String getGrouping() {
+        return grouping;
+    }
+
+    @JsonProperty("grouping")
+    public void setGrouping(String grouping) {
+        this.grouping = grouping;
     }
 
     @JsonAnyGetter
