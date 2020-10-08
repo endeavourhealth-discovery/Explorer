@@ -822,7 +822,8 @@ export class DashboardViewerComponent implements OnInit {
 
   ConvertToCSVMulti(objArray) {
     let array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
-    let csv = 'group,key,point,count\r\n';
+//    let csv = 'group,key,point,count\r\n';
+    let csv = 'key,point,count\r\n';
     for (let key in array) {
       if (array.hasOwnProperty(key)) {
         for (let key2 in array[key].series) {
@@ -831,7 +832,8 @@ export class DashboardViewerComponent implements OnInit {
             if (point.toString().indexOf("GMT") > -1) { // date type of series
               point = this.formatDate(point);
             }
-            csv += array[key].grouping+ ',' + array[key].name+ ',' + point + ',' + array[key].series[key2].value + '\r\n';
+            //csv += array[key].grouping+ ',' + array[key].name+ ',' + point + ',' + array[key].series[key2].value + '\r\n';
+            csv += array[key].name+ ',' + point + ',' + array[key].series[key2].value + '\r\n';
           }
         }
       }
@@ -842,13 +844,15 @@ export class DashboardViewerComponent implements OnInit {
   ConvertToCSVSingle(objArray) {
     let array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
     let csv = 'group,key,point,count\r\n';
+    //let csv = 'group,key,point,count\r\n';
     for (let key in array) {
       if (array.hasOwnProperty(key)) {
         let point = array[key].name;
         if (point.toString().indexOf("GMT") > -1) { // date type of series
           point = this.formatDate(point);
         }
-        csv += array[key].grouping+ ',' + this.chartName+ ',' + point + ',' + array[key].value + '\r\n';
+        //csv += array[key].grouping+ ',' + this.chartName+ ',' + point + ',' + array[key].value + '\r\n';
+        csv += this.chartName+ ',' + point + ',' + array[key].value + '\r\n';
       }
     }
     return csv;
