@@ -16,8 +16,8 @@ CREATE PROCEDURE buildIncludeExcludeString(
   IN p_includedAnyAllFollowedBy VARCHAR(10), 
   IN p_includedFollowedByConcepttab VARCHAR(64),
   IN p_incoccurrencestab VARCHAR(64), 
-  IN p_greaterless VARCHAR(10), 
-  IN p_greaterlessvalue VARCHAR(10), 
+  IN p_greaterless VARCHAR(50), 
+  IN p_greaterlessvalue VARCHAR(20), 
   IN p_filtertype INT,
   OUT p_includeexcludestring VARCHAR(1000)
 )
@@ -33,6 +33,8 @@ SET p_includedAnyAllFollowedBy = UPPER(p_includedAnyAllFollowedBy);
 
 SET p_includedAreNot = UPPER(p_includedAreNot);
 SET p_includedAreNot = IF(p_includedAreNot = 'ARE','EXISTS ',IF(p_includedAreNot = 'ARE NOT','NOT EXISTS',''));
+
+SET p_greaterless = IF(p_greaterless = 'Greater than',' > ',' < '); 
 
 IF p_filtertype = 1 THEN 
 
