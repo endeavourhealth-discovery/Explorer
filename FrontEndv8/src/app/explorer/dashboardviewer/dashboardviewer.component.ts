@@ -775,9 +775,9 @@ export class DashboardViewerComponent implements OnInit {
   download1() {
     var csvData = '';
     if (this.showLineCharts1)
-      csvData = this.ConvertToCSVMulti(this.chartResults1);
+      csvData = this.ConvertToCSVMulti(this.chartResults1,this.selectedCCGString1);
     else
-      csvData = this.ConvertToCSVSingle(this.chartResultsSingle1);
+      csvData = this.ConvertToCSVSingle(this.chartResultsSingle1,this.selectedCCGString1,this.selectedSeries1);
 
     let blob = new Blob([csvData], { type: 'text/csv' });
     let url= window.URL.createObjectURL(blob);
@@ -787,9 +787,9 @@ export class DashboardViewerComponent implements OnInit {
   download2() {
     var csvData = '';
     if (this.showLineCharts2)
-      csvData = this.ConvertToCSVMulti(this.chartResults2);
+      csvData = this.ConvertToCSVMulti(this.chartResults2,this.selectedCCGString2);
     else
-      csvData = this.ConvertToCSVSingle(this.chartResultsSingle2);
+      csvData = this.ConvertToCSVSingle(this.chartResultsSingle2,this.selectedCCGString2,this.selectedSeries2);
 
     let blob = new Blob([csvData], { type: 'text/csv' });
     let url= window.URL.createObjectURL(blob);
@@ -799,9 +799,9 @@ export class DashboardViewerComponent implements OnInit {
   download3() {
     var csvData = '';
     if (this.showLineCharts3)
-      csvData = this.ConvertToCSVMulti(this.chartResults3);
+      csvData = this.ConvertToCSVMulti(this.chartResults3,this.selectedCCGString3);
     else
-      csvData = this.ConvertToCSVSingle(this.chartResultsSingle3);
+      csvData = this.ConvertToCSVSingle(this.chartResultsSingle3,this.selectedCCGString3,this.selectedSeries3);
 
     let blob = new Blob([csvData], { type: 'text/csv' });
     let url= window.URL.createObjectURL(blob);
@@ -811,19 +811,18 @@ export class DashboardViewerComponent implements OnInit {
   download4() {
     var csvData = '';
     if (this.showLineCharts4)
-      csvData = this.ConvertToCSVMulti(this.chartResults4);
+      csvData = this.ConvertToCSVMulti(this.chartResults4,this.selectedCCGString4);
     else
-      csvData = this.ConvertToCSVSingle(this.chartResultsSingle4);
+      csvData = this.ConvertToCSVSingle(this.chartResultsSingle4,this.selectedCCGString4,this.selectedSeries4);
 
     let blob = new Blob([csvData], { type: 'text/csv' });
     let url= window.URL.createObjectURL(blob);
     window.open(url);
   }
 
-  ConvertToCSVMulti(objArray) {
+  ConvertToCSVMulti(objArray, group) {
     let array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
-//    let csv = 'group,key,point,count\r\n';
-    let csv = 'key,point,count\r\n';
+    let csv = 'group,key,point,count\r\n';
     for (let key in array) {
       if (array.hasOwnProperty(key)) {
         for (let key2 in array[key].series) {
@@ -832,8 +831,7 @@ export class DashboardViewerComponent implements OnInit {
             if (point.toString().indexOf("GMT") > -1) { // date type of series
               point = this.formatDate(point);
             }
-            //csv += array[key].grouping+ ',' + array[key].name+ ',' + point + ',' + array[key].series[key2].value + '\r\n';
-            csv += array[key].name+ ',' + point + ',' + array[key].series[key2].value + '\r\n';
+            csv += group.replaceAll(',','|')+ ',' + array[key].name+ ',' + point + ',' + array[key].series[key2].value + '\r\n';
           }
         }
       }
@@ -841,18 +839,17 @@ export class DashboardViewerComponent implements OnInit {
     return csv;
   }
 
-  ConvertToCSVSingle(objArray) {
+  ConvertToCSVSingle(objArray, group, series) {
+    console.log(objArray);
     let array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
     let csv = 'group,key,point,count\r\n';
-    //let csv = 'group,key,point,count\r\n';
     for (let key in array) {
       if (array.hasOwnProperty(key)) {
         let point = array[key].name;
         if (point.toString().indexOf("GMT") > -1) { // date type of series
           point = this.formatDate(point);
         }
-        //csv += array[key].grouping+ ',' + this.chartName+ ',' + point + ',' + array[key].value + '\r\n';
-        csv += this.chartName+ ',' + point + ',' + array[key].value + '\r\n';
+        csv += group.replaceAll(',','|')+ ',' +series+ ',' + point + ',' + array[key].value + '\r\n';
       }
     }
     return csv;

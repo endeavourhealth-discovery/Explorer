@@ -30,9 +30,9 @@
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="ccg">
+        <ng-container matColumnDef="org">
           <th mat-header-cell *matHeaderCellDef style="width: 250px">All registries per CCG</th>
-          <td mat-cell *matCellDef="let element"> {{element.ccg}} </td>
+          <td mat-cell *matCellDef="let element" (click)="getOrgs(element.org)"> {{element.org}} </td>
         </ng-container>
         <ng-container matColumnDef="listSize">
           <th mat-header-cell *matHeaderCellDef style="width: 150px;text-align: right">List size</th>
@@ -50,7 +50,7 @@
             </table>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr style="cursor:pointer" mat-row *matRowDef="let row; columns: displayedColumns;" class="expanded-element-row" [routerLink]="['/registryindicators']" [queryParams] = "{role: 'explorer', registry: row.registry, odscode: row.code, registrySize: row.registrySize, practice: row.practice, ccg: row.ccg, practiceTitle: row.ccg+' - '+row.practice+' ('+row.code+')'}"></tr>
+        <tr style="cursor:pointer" mat-row *matRowDef="let row; columns: displayedColumns;" class="expanded-element-row" ></tr>
       </table>
     </div>
 

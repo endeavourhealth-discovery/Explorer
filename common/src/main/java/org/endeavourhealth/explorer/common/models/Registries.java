@@ -11,16 +11,16 @@ import java.util.Date;
 public class Registries {
     private static final Logger LOG = LoggerFactory.getLogger(Registries.class);
 
-    private String ccg;
+    private String org;
     private Integer listSize;
     private String allColumns;
 
-    public String getCcg() {
-        return ccg;
+    public String getOrg() {
+        return org;
     }
 
-    public Registries setCcg(String ccg) {
-        this.ccg = ccg;
+    public Registries setOrg(String org) {
+        this.org = org;
         return this;
     }
 

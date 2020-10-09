@@ -358,11 +358,12 @@ public class DashboardEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getRegistries(@Context SecurityContext sc,
                                     @QueryParam("page") Integer page,
-                                    @QueryParam("size") Integer size) throws Exception {
+                                    @QueryParam("size") Integer size,
+                                    @QueryParam("org") String org) throws Exception {
         LOG.debug("getRegistries");
 
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
-            RegistriesResult result = viewerDAL.getRegistries(page, size);
+            RegistriesResult result = viewerDAL.getRegistries(page, size , org);
 
             return Response
                     .ok()

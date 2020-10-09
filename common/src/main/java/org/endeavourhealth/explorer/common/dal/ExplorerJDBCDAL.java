@@ -601,8 +601,6 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                             " GROUP BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) " +
                             "ORDER BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7))";
                 } else {
-//                    sql = "SELECT `grouping`, series_name,sum(series_value) as series_value from dashboards.dashboard_results where name = ? "+
-//                            "and series_name between ? and ? "+grouping+" group by `grouping`, series_name order by series_name";
                     sql = "SELECT series_name,sum(series_value) as series_value from dashboards.dashboard_results where name = ? "+
                             "and series_name between ? and ? "+grouping+" group by series_name order by series_name";
                 }
@@ -634,9 +632,6 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         Chart chartItem = new Chart();
         chartItem.setName(chartName);
 
-        //String sql = "SELECT `grouping`, series_name,sum(series_value) as series_value from dashboards.dashboard_results where name = ? "+
-          //          "and series_name between ? and ? "+grouping+" group by `grouping`, series_name order by series_name";
-
         String sql = "SELECT series_name,sum(series_value) as series_value from dashboards.dashboard_results where name = ? "+
                 "and series_name between ? and ? "+grouping+" group by series_name order by series_name";
 
@@ -660,9 +655,6 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
         Chart chartItem = new Chart();
         chartItem.setName(chartName);
-
-//        String sql = "SELECT `grouping`, series_name,sum(series_value) as series_value from dashboards.dashboard_results where name = ? "+grouping+
-  //              " group by `grouping`, series_name order by series_name";
 
         String sql = "SELECT series_name,sum(series_value) as series_value from dashboards.dashboard_results where name = ? "+grouping+
                 " group by series_name order by series_name";
@@ -690,7 +682,6 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         Series series = new Series();
         series.setName(resultSet.getString("series_name"));
         series.setValue(resultSet.getString("series_value"));
-        //series.setGrouping(resultSet.getString("grouping"));
         return series;
     }
 
@@ -897,15 +888,15 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         return patientSummary;
     }
 
-    public RegistriesResult getRegistries(Integer page, Integer size) throws Exception {
+    public RegistriesResult getRegistries(Integer page, Integer size, String ccg) throws Exception {
         RegistriesResult result = new RegistriesResult();
 
         String sql = "";
-        String sqlCount = "";
 
-        sql = "call dashboards.getRegistries('1')";
+        sql = "call dashboards.getRegistries(?)";
 
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            statement.setString(1, ccg);
             try (ResultSet resultSet = statement.executeQuery()) {
                 result.setResults(getRegistriesList(resultSet));
             }
@@ -927,7 +918,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         Registries registries = new Registries();
 
         registries
-                .setCcg(resultSet.getString("ccg"))
+                .setOrg(resultSet.getString("org"))
                 .setListSize(resultSet.getInt("list_size"))
                 .setAllColumns(resultSet.getString("all_columns"));
         return registries;

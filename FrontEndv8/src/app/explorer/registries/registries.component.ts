@@ -25,7 +25,7 @@ export class RegistriesComponent implements OnInit {
   page: number = 0;
   size: number = 100;
 
-  displayedColumns: string[] = ['select', 'ccg', 'listSize', 'allColumns'];
+  displayedColumns: string[] = ['select', 'org', 'listSize', 'allColumns'];
 
   constructor(
     private route: ActivatedRoute,
@@ -34,12 +34,12 @@ export class RegistriesComponent implements OnInit {
     private log: LoggerService) { }
 
   ngOnInit() {
-    this.loadEvents();
+    this.loadEvents('');
   }
 
-  loadEvents() {
+  loadEvents(org: any) {
     this.events = null;
-    this.explorerService.getRegistries(this.page, this.size)
+    this.explorerService.getRegistries(this.page, this.size, org)
       .subscribe(
         (result) => this.displayEvents(result),
         (error) => this.log.error(error)
@@ -51,10 +51,14 @@ export class RegistriesComponent implements OnInit {
     this.dataSource = new MatTableDataSource(events.results);
   }
 
+  getOrgs(ccg: any) {
+    this.loadEvents(ccg);
+  }
+
   onPage(event: PageEvent) {
     this.page = event.pageIndex;
     this.size = event.pageSize;
-    this.loadEvents();
+    this.loadEvents('');
   }
 
   toPercent(registrysize: any, listsize: any) {
