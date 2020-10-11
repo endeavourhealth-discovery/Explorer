@@ -42,8 +42,8 @@ $dark-theme:   mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
 }
 
 // Teal theme
-$teal-primary: mat-palette($mat-teal);
-$teal-accent: mat-palette($mat-pink, A200, A100, A400);
+$teal-primary: mat-palette($mat-light-blue);
+$teal-accent: mat-palette($mat-blue-gray, A200, A100, A400);
 $teal-warn: mat-palette($mat-red);
 
 $teal-theme: mat-light-theme($teal-primary, $teal-accent, $teal-warn);
@@ -51,44 +51,6 @@ $teal-theme: mat-light-theme($teal-primary, $teal-accent, $teal-warn);
 .teal-theme {
   @include angular-material-theme($teal-theme);
   @include theme-layout($teal-theme);
-}
-
-
-/*
-concept-definition {
-  background-color: aquamarine;
-}
-
-concept-expression {
-  background-color: lightgreen;
-}
-
-role-group {
-  background-color: lightcoral;
-}
-*/
-
-.header1 {
-   background-color: lightgray !important;
-   font-size: larger !important;
-}
-
-.header2 {
-  background-color: whitesmoke !important;
-}
-
-.header3 {
-  background-color: #D6EAF2 !important;
-}
-
-.patient-row
-{
-}
-
-.patient-column
-{
-  display: table-cell;
-  padding-right: 50px;
 }
 
 .summary-column
@@ -105,10 +67,6 @@ role-group {
   padding: 10px;
   background-color: transparent;
 
-}
-.mat-card-content, .mat-paginator
-{
-  background-color: white !important;
 }
 
 th {

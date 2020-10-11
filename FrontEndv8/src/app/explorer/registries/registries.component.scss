@@ -10,16 +10,21 @@
   color: orange;
 }
 
+.normal{
+  color: black;
+}
+
 tr.expanded-detail-row {
   height: 0;
 }
 
 tr.expanded-element-row:not(.expanded-expanded-row):hover {
-  background: whitesmoke;
+  background: lightgray;
 }
 
 tr.expanded-element-row:not(.expanded-expanded-row):active {
   background: #efefef;
 }
 
-tr:last-child { font-weight: bold; }
+tr:last-child { font-weight: bold }
+tr:first-child { font-weight: bold }

@@ -173,12 +173,11 @@ export class ExplorerService {
     return this.http.get('api/events/valuesetcodedelete', {params});
   }
 
-  getRegistries(page: number, size: number, org: string): Observable<any> {
+  getRegistries(org: string, registry: string): Observable<any> {
 
     let params = new HttpParams();
-    params = params.append('page', page.toString());
-    params = params.append('size', size.toString());
     params = params.append('org', org.toString());
+    params = params.append('registry', registry.toString());
 
     return this.http.get('api/events/registries', {params});
   }

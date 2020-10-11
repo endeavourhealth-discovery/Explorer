@@ -22,10 +22,9 @@ export class RegistriesComponent implements OnInit {
 
   events: any;
   dataSource: MatTableDataSource<any>;
-  page: number = 0;
-  size: number = 100;
+  currentCCG: string = '';
 
-  displayedColumns: string[] = ['select', 'org', 'listSize', 'allColumns'];
+  displayedColumns: string[] = ['select', 'org', 'listSize', 'registrySize', 'allColumns'];
 
   constructor(
     private route: ActivatedRoute,
@@ -34,12 +33,12 @@ export class RegistriesComponent implements OnInit {
     private log: LoggerService) { }
 
   ngOnInit() {
-    this.loadEvents('');
+    this.loadEvents('', '');
   }
 
-  loadEvents(org: any) {
+  loadEvents(org: any, registry: any) {
     this.events = null;
-    this.explorerService.getRegistries(this.page, this.size, org)
+    this.explorerService.getRegistries(org, registry)
       .subscribe(
         (result) => this.displayEvents(result),
         (error) => this.log.error(error)
@@ -48,17 +47,38 @@ export class RegistriesComponent implements OnInit {
 
   displayEvents(events: any) {
     this.events = events;
+
+    if (events.results[0].registrySize=='')
+      this.displayedColumns = ['select', 'org', 'listSize', 'allColumns'];
+    else
+      this.displayedColumns = ['select', 'org', 'listSize', 'registrySize', 'allColumns'];
+
     this.dataSource = new MatTableDataSource(events.results);
   }
 
-  getOrgs(ccg: any) {
-    this.loadEvents(ccg);
+  getSize(index, registrySize) {
+
+    if (index>0) {
+      if (registrySize=='-1')
+        return (index*1).toLocaleString();
+      else {
+        return (index*1).toLocaleString()+ ' (' + this.toPercent((index*1),(registrySize*1)) + '%)';
+      }
+    } else {
+      return index
+    }
   }
 
-  onPage(event: PageEvent) {
-    this.page = event.pageIndex;
-    this.size = event.pageSize;
-    this.loadEvents('');
+  getOrgs(ccg: any,registry: any) {
+
+    if (ccg=="Indicator")
+      ccg = this.currentCCG;
+    else if (ccg=='Back to Clinical Commissioning Groups')
+      ccg = '';
+
+    this.currentCCG = ccg;
+
+    this.loadEvents(ccg, registry);
   }
 
   toPercent(registrysize: any, listsize: any) {

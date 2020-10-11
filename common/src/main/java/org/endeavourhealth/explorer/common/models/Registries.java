@@ -14,6 +14,7 @@ public class Registries {
     private String org;
     private Integer listSize;
     private String allColumns;
+    private String registrySize;
 
     public String getOrg() {
         return org;
@@ -42,6 +43,13 @@ public class Registries {
         return this;
     }
 
+    public String getRegistrySize() {
+        return registrySize;
+    }
 
+    public Registries setRegistrySize(String registrySize) {
+        this.registrySize = registrySize;
+        return this;
+    }
 
 }

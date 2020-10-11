@@ -888,15 +888,16 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         return patientSummary;
     }
 
-    public RegistriesResult getRegistries(Integer page, Integer size, String ccg) throws Exception {
+    public RegistriesResult getRegistries(String ccg, String registry) throws Exception {
         RegistriesResult result = new RegistriesResult();
 
         String sql = "";
 
-        sql = "call dashboards.getRegistries(?)";
+        sql = "call dashboards.getRegistries(?,?)";
 
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
             statement.setString(1, ccg);
+            statement.setString(2, registry);
             try (ResultSet resultSet = statement.executeQuery()) {
                 result.setResults(getRegistriesList(resultSet));
             }
@@ -920,7 +921,8 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         registries
                 .setOrg(resultSet.getString("org"))
                 .setListSize(resultSet.getInt("list_size"))
-                .setAllColumns(resultSet.getString("all_columns"));
+                .setAllColumns(resultSet.getString("all_columns"))
+                .setRegistrySize(resultSet.getString("registry_size"));
         return registries;
     }
 
