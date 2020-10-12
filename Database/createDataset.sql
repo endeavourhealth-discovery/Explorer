@@ -18,6 +18,22 @@ CREATE PROCEDURE createDataset (
 
 BEGIN
 
+CREATE TABLE IF NOT EXISTS person_dataset (
+  query_id INT(11) NOT NULL, patient_id BIGINT(20) NOT NULL,
+  PRIMARY KEY (query_id, patient_id) ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE IF NOT EXISTS observation_dataset (
+  query_id INT(11) NOT NULL, observation_id BIGINT(20) NOT NULL,
+  PRIMARY KEY (query_id, observation_id) ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE IF NOT EXISTS medication_dataset (
+  query_id INT(11) NOT NULL, medication_id BIGINT(20) NOT NULL,
+  PRIMARY KEY (query_id, medication_id) ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE IF NOT EXISTS encounter_dataset (
+  query_id INT(11) NOT NULL, encounter_id BIGINT(20) NOT NULL, 
+  PRIMARY KEY (query_id, encounter_id) ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
     IF p_datasetconcepttab IS NOT NULL THEN
 
        SET @sql = CONCAT('INSERT INTO ', p_datasettab,'  
@@ -25,10 +41,9 @@ BEGIN
               p.query_id, 
               o.id
        FROM ', p_sourcetab,' o JOIN ', p_patientcohorttab,' p ON ', p_col,' = p.patient_id 
-                               JOIN ', p_datasetconcepttab,' c ON o.non_core_concept_id = c.non_core_concept_id 
+       JOIN ', p_datasetconcepttab,' c ON o.non_core_concept_id = c.non_core_concept_id 
        WHERE o.non_core_concept_id IS NOT NULL 
-         AND ', p_daterange,
-       ' AND ', p_activeString);
+       AND ', p_daterange,' AND ', p_activeString);
 
     ELSE
 
@@ -37,8 +52,7 @@ BEGIN
               p.query_id, 
               o.id
        FROM ', p_sourcetab,' o JOIN ', p_patientcohorttab,' p ON ', p_col,' = p.patient_id 
-       WHERE ', p_daterange,
-       ' AND ', p_activeString);
+       WHERE ', p_daterange,' AND ', p_activeString);
 
     END IF;
 

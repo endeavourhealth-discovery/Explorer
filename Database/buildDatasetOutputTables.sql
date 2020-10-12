@@ -96,8 +96,8 @@ BEGIN
       -- create output table for the selected output fields
       IF LENGTH(@sql)>0 THEN
          SET @sql = CONCAT('CREATE TABLE ', output_table ,' AS 
-         SELECT DISTINCT ', BINARY @sql ,' FROM ', p_schema ,'.', event_table,' t JOIN ', result_dataset,' r ON t.id = r.', event_table,'_id');
-         
+         SELECT DISTINCT ', BINARY @sql ,' FROM ', p_schema,'.', event_table,' t JOIN ', result_dataset,' r ON t.id = r.', event_table,'_id 
+         WHERE r.query_id = ', p_query_id);
          PREPARE stmt FROM @sql;
          EXECUTE stmt;
          DEALLOCATE PREPARE stmt;

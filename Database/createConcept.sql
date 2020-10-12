@@ -11,25 +11,16 @@ BEGIN
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;
 
-   SET @sql = CONCAT("CREATE TABLE ",p_concepttab , " AS 
+   SET @sql = CONCAT("CREATE TABLE ", p_concepttab, " AS 
    SELECT vc.value_set_code_type, 
           cpt.code AS original_code, 
           cpt.name AS original_term, 
           vc.snomed_id,
           cpt.dbid,
           cptm.legacy AS non_core_concept_id
-   FROM ",p_valuesettab," vc JOIN ", p_schema,".concept cpt ON cpt.id = CONCAT('SN_', vc.snomed_id) 
+   FROM ",p_valuesettab," vc JOIN ", p_schema,".concept cpt ON cpt.id = vc.original_code
    JOIN ", p_schema,".concept_map cptm ON cptm.core = cpt.dbid 
-   WHERE vc.snomed_id <> '0' 
-   UNION 
-   SELECT vc.value_set_code_type, 
-          cpt.code AS original_code, 
-          cpt.name AS original_term, 
-          vc.snomed_id,
-          cpt.dbid,
-          cpt.dbid AS non_core_concept_id  -- treating core as non core for cases where core concepts are populated in the non core column e.g. medication_statement 
-   FROM ", p_valuesettab," vc JOIN ", p_schema,".concept cpt ON cpt.id = CONCAT('SN_', vc.snomed_id) 
-   WHERE vc.snomed_id <> '0' 
+   WHERE vc.original_code LIKE 'SN\_%'
    UNION 
    SELECT vc.value_set_code_type, 
           cpt.code AS original_code,  
@@ -37,49 +28,7 @@ BEGIN
           vc.snomed_id,
           cpt.dbid,
           cpt.dbid AS non_core_concept_id
-   FROM ", p_valuesettab," vc JOIN ", p_schema,".concept cpt ON cpt.id = CONCAT('EMLOC_', vc.original_code) 
-   WHERE vc.snomed_id = '0' 
-   AND LEFT(vc.original_code, 5) = '^ESCT' 
-   UNION 
-   SELECT vc.value_set_code_type, 
-          cpt.code AS original_code,  
-          cpt.name AS original_term, 
-          vc.snomed_id,
-          cpt.dbid,
-          cpt.dbid AS non_core_concept_id
-   FROM ", p_valuesettab," vc JOIN ", p_schema,".concept cpt ON cpt.id = CONCAT('FHIR_EC_', vc.original_code) 
-   WHERE vc.snomed_id = '0' 
-   AND vc.original_code REGEXP '[A-Z]' 
-   UNION 
-   SELECT vc.value_set_code_type, 
-          cpt.code AS original_code,  
-          cpt.name AS original_term, 
-          vc.snomed_id,
-          cpt.dbid,
-          cpt.dbid AS non_core_concept_id
-   FROM ", p_valuesettab," vc JOIN ", p_schema,".concept cpt ON cpt.id = vc.original_code 
-   WHERE vc.snomed_id = '0' 
-   AND vc.original_code LIKE 'LE\_%' 
-   UNION 
-   SELECT vc.value_set_code_type, 
-          cpt.code AS original_code,  
-          cpt.name AS original_term,
-          vc.snomed_id,
-          cpt.dbid,
-          cpt.dbid AS non_core_concept_id
-   FROM ", p_valuesettab," vc JOIN ", p_schema,".concept cpt ON cpt.id = vc.original_code 
-   WHERE vc.snomed_id = '0' 
-   AND vc.original_code LIKE 'CM\_%' 
-   UNION 
-   SELECT vc.value_set_code_type, 
-          cpt.code AS original_code, 
-          cpt.name AS original_term, 
-          vc.snomed_id,
-          cpt.dbid,
-          cpt.dbid AS non_core_concept_id
-   FROM ", p_valuesettab," vc JOIN ", p_schema,".concept cpt ON cpt.id = vc.original_code 
-   WHERE vc.snomed_id = '0' 
-   AND vc.original_code LIKE 'DC\_%' 
+   FROM ", p_valuesettab," vc JOIN ", p_schema,".concept cpt ON cpt.id = vc.original_code
    UNION 
    SELECT vc.value_set_code_type, 
           cpt.code AS original_code,  
@@ -88,8 +37,7 @@ BEGIN
           cpt.dbid,
           cpt.dbid AS non_core_concept_id
    FROM ", p_valuesettab," vc JOIN ", p_schema,".concept cpt ON cpt.id = CONCAT('R2_',vc.original_code) 
-   WHERE vc.snomed_id = '0' 
-   AND vc.value_set_code_type = 'Blood Pressure' 
+   WHERE vc.snomed_id = '0' AND vc.value_set_code_type = 'Blood Pressure' 
    UNION 
    SELECT vc.value_set_code_type, 
           cpt.code AS original_code,  
@@ -98,13 +46,12 @@ BEGIN
           cpt.dbid,
           cpt.dbid AS non_core_concept_id
    FROM ", p_valuesettab," vc JOIN ", p_schema,".concept cpt ON cpt.id = CONCAT('R3_',vc.original_code) 
-   WHERE vc.snomed_id = '0' 
-   AND vc.value_set_code_type = 'Blood Pressure'");
+   WHERE vc.snomed_id = '0' AND vc.value_set_code_type = 'Blood Pressure'");
    PREPARE stmt FROM @sql;
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;
 
-   SET @sql = CONCAT('ALTER TABLE ', p_concepttab, ' ADD INDEX n_cpt_idx(non_core_concept_id)');
+   SET @sql = CONCAT('ALTER TABLE ', p_concepttab, ' ADD INDEX non_cpt_idx(non_core_concept_id)');
    PREPARE stmt FROM @sql;
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;
