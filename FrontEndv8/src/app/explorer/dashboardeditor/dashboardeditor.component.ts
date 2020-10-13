@@ -18,6 +18,12 @@ interface widget {
   name: string;
 }
 
+interface query {
+  outputType: string;
+  outputField: string;
+  schedule: string;
+}
+
 interface savedDashboard {
   selectedVisualisation1: string;
   selectedOutputField1: string;
@@ -269,6 +275,78 @@ export class DashboardEditorComponent {
       {icon: "fad fa-flag", name: 'Indicator'},
       {icon: "fad fa-globe-africa", name: 'Map'}
     ];
+  }
+
+  querySelected1() {
+    this.explorerService.getQuery(this.selectedSeries1)
+      .subscribe(
+        (result) => this.loadQuery1(result),
+        (error) => this.log.error(error)
+      );
+
+  }
+
+  loadQuery1(result: any) {
+    result.results.map(
+      e => {
+        let query: query = JSON.parse(e.jsonQuery);
+        this.selectedOutputField1 =  query.outputField;
+      }
+    )
+  }
+
+  querySelected2() {
+    this.explorerService.getQuery(this.selectedSeries2)
+      .subscribe(
+        (result) => this.loadQuery2(result),
+        (error) => this.log.error(error)
+      );
+
+  }
+
+  loadQuery2(result: any) {
+    result.results.map(
+      e => {
+        let query: query = JSON.parse(e.jsonQuery);
+        this.selectedOutputField2 =  query.outputField;
+      }
+    )
+  }
+
+  querySelected3() {
+    this.explorerService.getQuery(this.selectedSeries3)
+      .subscribe(
+        (result) => this.loadQuery3(result),
+        (error) => this.log.error(error)
+      );
+
+  }
+
+  loadQuery3(result: any) {
+    result.results.map(
+      e => {
+        let query: query = JSON.parse(e.jsonQuery);
+        this.selectedOutputField3 =  query.outputField;
+      }
+    )
+  }
+
+  querySelected4() {
+    this.explorerService.getQuery(this.selectedSeries4)
+      .subscribe(
+        (result) => this.loadQuery4(result),
+        (error) => this.log.error(error)
+      );
+
+  }
+
+  loadQuery4(result: any) {
+    result.results.map(
+      e => {
+        let query: query = JSON.parse(e.jsonQuery);
+        this.selectedOutputField4 =  query.outputField;
+      }
+    )
   }
 
 }

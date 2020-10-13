@@ -58,21 +58,21 @@
             </div>
             <br/>
             <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-              <mat-form-field appearance="outline" style="margin-left: 25px">
-                <mat-label>Output fields</mat-label>
-                <mat-select multiple [(ngModel)]="selectedOutputField1" formControlName="control4a" (ngModelChange)="formChanged()">
-                  <mat-option *ngFor="let field of outputFields" [value]="field.outputField">
-                    {{field.outputField}}
-                  </mat-option>
+              <mat-form-field appearance="outline" style="margin-left: 25px; width: 300px">
+                <mat-label>Query/Dataset/Series</mat-label>
+                <mat-select multiple [(ngModel)]="selectedSeries1" formControlName="control7a" (ngModelChange)="formChanged()" required>
+                  <mat-option *ngFor="let series of seriesList" [value]="series" (click)="querySelected1()">{{series}}</mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
             <br/>
             <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-              <mat-form-field appearance="outline" style="margin-left: 25px; width: 300px">
-                <mat-label>Series</mat-label>
-                <mat-select multiple [(ngModel)]="selectedSeries1" formControlName="control7a" (ngModelChange)="formChanged()" required>
-                  <mat-option *ngFor="let series of seriesList" [value]="series">{{series}}</mat-option>
+              <mat-form-field appearance="outline" style="margin-left: 25px">
+                <mat-label>Table fields</mat-label>
+                <mat-select multiple [(ngModel)]="selectedOutputField1" formControlName="control4a" (ngModelChange)="formChanged()">
+                  <mat-option *ngFor="let field of outputFields" [value]="field.outputField">
+                    {{field.outputField}}
+                  </mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
@@ -98,12 +98,12 @@
               <p>The visualisation title.</p>
             </div>
             <br/>
-            <div style="margin-top: 8px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-              <p>Output fields. Fields for comparing/aggregating/grouping in dashboards or fields to be output as rows in tables.</p>
+            <div style="margin-top: 15px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <p>Select the query dataset or series points for the tables and charts.</p>
             </div>
             <br/>
-            <div style="margin-top: 10px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-              <p>Select the series data items for charts.</p>
+            <div style="margin-top: 8px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <p>Fields to be output as rows in tables.</p>
             </div>
             <br/>
             <div style="margin-top: 15px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
@@ -126,21 +126,21 @@
             </div>
             <br/>
             <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-              <mat-form-field appearance="outline" style="margin-left: 25px">
-                <mat-label>Output fields</mat-label>
-                <mat-select multiple [(ngModel)]="selectedOutputField2" formControlName="control4b" (ngModelChange)="formChanged()">
-                  <mat-option *ngFor="let field of outputFields" [value]="field.outputField">
-                    {{field.outputField}}
-                  </mat-option>
+              <mat-form-field appearance="outline" style="margin-left: 25px; width: 300px">
+                <mat-label>Query/Dataset/Series</mat-label>
+                <mat-select multiple [(ngModel)]="selectedSeries2" formControlName="control7b" (ngModelChange)="formChanged()" >
+                  <mat-option *ngFor="let series of seriesList" [value]="series"  (click)="querySelected2()">{{series}}</mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
             <br/>
             <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-              <mat-form-field appearance="outline" style="margin-left: 25px; width: 300px">
-                <mat-label>Series</mat-label>
-                <mat-select multiple [(ngModel)]="selectedSeries2" formControlName="control7b" (ngModelChange)="formChanged()" >
-                  <mat-option *ngFor="let series of seriesList" [value]="series">{{series}}</mat-option>
+              <mat-form-field appearance="outline" style="margin-left: 25px">
+                <mat-label>Table fields</mat-label>
+                <mat-select multiple [(ngModel)]="selectedOutputField2" formControlName="control4b" (ngModelChange)="formChanged()">
+                  <mat-option *ngFor="let field of outputFields" [value]="field.outputField">
+                    {{field.outputField}}
+                  </mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
@@ -166,12 +166,12 @@
               <p>The visualisation title.</p>
             </div>
             <br/>
-            <div style="margin-top: 8px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-              <p>Output fields. Fields for comparing/aggregating/grouping in dashboards or fields to be output as rows in tables.</p>
+            <div style="margin-top: 15px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <p>Select the query dataset or series points for the tables and charts.</p>
             </div>
             <br/>
-            <div style="margin-top: 10px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-              <p>Select the series data items for charts.</p>
+            <div style="margin-top: 8px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <p>Fields to be output as rows in tables.</p>
             </div>
             <br/>
             <div style="margin-top: 15px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
@@ -194,21 +194,21 @@
             </div>
             <br/>
             <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-              <mat-form-field appearance="outline" style="margin-left: 25px">
-                <mat-label>Output fields</mat-label>
-                <mat-select multiple [(ngModel)]="selectedOutputField3" formControlName="control4c" (ngModelChange)="formChanged()">
-                  <mat-option *ngFor="let field of outputFields" [value]="field.outputField">
-                    {{field.outputField}}
-                  </mat-option>
+              <mat-form-field appearance="outline" style="margin-left: 25px; width: 300px">
+                <mat-label>Query/Dataset/Series</mat-label>
+                <mat-select multiple [(ngModel)]="selectedSeries3" formControlName="control7c" (ngModelChange)="formChanged()" >
+                  <mat-option *ngFor="let series of seriesList" [value]="series"  (click)="querySelected3()">{{series}}</mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
             <br/>
             <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-              <mat-form-field appearance="outline" style="margin-left: 25px; width: 300px">
-                <mat-label>Series</mat-label>
-                <mat-select multiple [(ngModel)]="selectedSeries3" formControlName="control7c" (ngModelChange)="formChanged()" >
-                  <mat-option *ngFor="let series of seriesList" [value]="series">{{series}}</mat-option>
+              <mat-form-field appearance="outline" style="margin-left: 25px">
+                <mat-label>Table fields</mat-label>
+                <mat-select multiple [(ngModel)]="selectedOutputField3" formControlName="control4c" (ngModelChange)="formChanged()">
+                  <mat-option *ngFor="let field of outputFields" [value]="field.outputField">
+                    {{field.outputField}}
+                  </mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
@@ -234,12 +234,12 @@
               <p>The visualisation title.</p>
             </div>
             <br/>
-            <div style="margin-top: 8px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-              <p>Output fields. Fields for comparing/aggregating/grouping in dashboards or fields to be output as rows in tables.</p>
+            <div style="margin-top: 15px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <p>Select the query dataset or series points for the tables and charts.</p>
             </div>
             <br/>
-            <div style="margin-top: 10px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-              <p>Select the series data items for charts.</p>
+            <div style="margin-top: 8px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <p>Fields to be output as rows in tables.</p>
             </div>
             <br/>
             <div style="margin-top: 15px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
@@ -262,21 +262,21 @@
             </div>
             <br/>
             <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-              <mat-form-field appearance="outline" style="margin-left: 25px">
-                <mat-label>Output fields</mat-label>
-                <mat-select multiple [(ngModel)]="selectedOutputField4" formControlName="control4d" (ngModelChange)="formChanged()">
-                  <mat-option *ngFor="let field of outputFields" [value]="field.outputField">
-                    {{field.outputField}}
-                  </mat-option>
+              <mat-form-field appearance="outline" style="margin-left: 25px; width: 300px">
+                <mat-label>Query/Dataset/Series</mat-label>
+                <mat-select multiple [(ngModel)]="selectedSeries4" formControlName="control7d" (ngModelChange)="formChanged()" >
+                  <mat-option *ngFor="let series of seriesList" [value]="series"  (click)="querySelected4()">{{series}}</mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
             <br/>
             <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-              <mat-form-field appearance="outline" style="margin-left: 25px; width: 300px">
-                <mat-label>Series</mat-label>
-                <mat-select multiple [(ngModel)]="selectedSeries4" formControlName="control7d" (ngModelChange)="formChanged()" >
-                  <mat-option *ngFor="let series of seriesList" [value]="series">{{series}}</mat-option>
+              <mat-form-field appearance="outline" style="margin-left: 25px">
+                <mat-label>Table fields</mat-label>
+                <mat-select multiple [(ngModel)]="selectedOutputField4" formControlName="control4d" (ngModelChange)="formChanged()">
+                  <mat-option *ngFor="let field of outputFields" [value]="field.outputField">
+                    {{field.outputField}}
+                  </mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
@@ -302,12 +302,12 @@
               <p>The visualisation title.</p>
             </div>
             <br/>
-            <div style="margin-top: 8px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-              <p>Output fields. Fields for comparing/aggregating/grouping in dashboards or fields to be output as rows in tables.</p>
+            <div style="margin-top: 15px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <p>Select the query dataset or series points for the tables and charts.</p>
             </div>
             <br/>
-            <div style="margin-top: 10px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-              <p>Select the series data items for charts.</p>
+            <div style="margin-top: 8px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <p>Fields to be output as rows in tables.</p>
             </div>
             <br/>
             <div style="margin-top: 15px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">

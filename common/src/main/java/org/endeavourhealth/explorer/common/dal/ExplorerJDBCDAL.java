@@ -299,7 +299,9 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
             case "12":
                 sql = "SELECT distinct(name) as type " +
                         "FROM dashboards.dashboard_results " +
-                        " order by name";
+                        "UNION select distinct(name) as type "+
+                        "FROM dashboards.query_library " +
+                        " order by type";
 
                 sqlCount = "SELECT count(distinct(name)) " +
                         " FROM dashboards.dashboard_results";
@@ -573,9 +575,11 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
         List<String> charts = Arrays.asList(chartName.split("\\s*,\\s*"));
 
-        grouping = grouping.replaceAll(",","','");
-        grouping = "'" + grouping + "'";
-        grouping = " and `grouping` in ("+grouping+")";
+        if (!grouping.isEmpty()) {
+            grouping = grouping.replaceAll(",","','");
+            grouping = "'" + grouping + "'";
+            grouping = " and `grouping` in ("+grouping+")";
+        }
 
         ChartResult result = new ChartResult();
         String sql = "";
@@ -584,6 +588,112 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         Chart chartItem = null;
 
         for (String chart_name : charts) {
+
+            chartItem = new Chart();
+            chartItem.setName(chart_name);
+
+            if (cumulative.equals("1")) {
+                sql = "SELECT t.series_name," +
+                        "@running_total:=@running_total + t.series_value as series_value " +
+                        "FROM " +
+                        "( SELECT name,series_name,sum(series_value) as series_value "+
+                        "FROM dashboards.dashboard_results " +
+                        "where name = ? and series_name between ? and ? "+grouping+" group by series_name) t " +
+                        "JOIN (SELECT @running_total:=0) r " +
+                        "ORDER BY t.series_name";
+            } else {
+                if (weekly.equals("1")) {
+                    sql = "SELECT FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) AS series_name, " +
+                            "SUM(series_value) AS series_value " +
+                            "from dashboards.dashboard_results where name = ? " +
+                            "and series_name between ? and ? "+grouping+
+                            " GROUP BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) " +
+                            "ORDER BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7))";
+                } else {
+                    sql = "SELECT series_name,sum(series_value) as series_value from dashboards.dashboard_results where name = ? "+
+                            "and series_name between ? and ? "+grouping+" group by series_name order by series_name";
+                }
+
+            }
+            try (PreparedStatement statement = conn.prepareStatement(sql)) {
+                statement.setString(1, chart_name);
+                statement.setString(2, dateFrom);
+                statement.setString(3, dateTo);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    chartItem.setSeries(getSeriesFromResultSet(resultSet));
+                }
+            }
+
+            chart.add(chartItem);
+        }
+
+        result.setResults(chart);
+
+        return result;
+    }
+
+    public ChartResult getDashboard2(String chartName, String dateFrom, String dateTo, String cumulative, String grouping, String weekly) throws Exception {
+
+        List<String> charts = Arrays.asList(chartName.split("\\s*,\\s*"));
+
+        if (!grouping.isEmpty()) {
+            grouping = grouping.replaceAll(",","','");
+            grouping = "'" + grouping + "'";
+            grouping = " and `grouping` in ("+grouping+")";
+        }
+
+        ChartResult result = new ChartResult();
+        String sql = "";
+
+        List<Chart> chart = new ArrayList<>();
+        Chart chartItem = null;
+
+        for (String chart_name : charts) {
+
+            chart_name += " - Diabetes - BP 140/80 or less";
+
+            chartItem = new Chart();
+            chartItem.setName(chart_name);
+
+            if (cumulative.equals("1")) {
+                sql = "SELECT t.series_name," +
+                        "@running_total:=@running_total + t.series_value as series_value " +
+                        "FROM " +
+                        "( SELECT name,series_name,sum(series_value) as series_value "+
+                        "FROM dashboards.dashboard_results " +
+                        "where name = ? and series_name between ? and ? "+grouping+" group by series_name) t " +
+                        "JOIN (SELECT @running_total:=0) r " +
+                        "ORDER BY t.series_name";
+            } else {
+                if (weekly.equals("1")) {
+                    sql = "SELECT FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) AS series_name, " +
+                            "SUM(series_value) AS series_value " +
+                            "from dashboards.dashboard_results where name = ? " +
+                            "and series_name between ? and ? "+grouping+
+                            " GROUP BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) " +
+                            "ORDER BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7))";
+                } else {
+                    sql = "SELECT series_name,sum(series_value) as series_value from dashboards.dashboard_results where name = ? "+
+                            "and series_name between ? and ? "+grouping+" group by series_name order by series_name";
+                }
+
+            }
+            try (PreparedStatement statement = conn.prepareStatement(sql)) {
+                statement.setString(1, chart_name);
+                statement.setString(2, dateFrom);
+                statement.setString(3, dateTo);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    chartItem.setSeries(getSeriesFromResultSet(resultSet));
+                }
+            }
+
+            chart.add(chartItem);
+        }
+
+        for (String chart_name : charts) {
+
+            chart_name += " - Diabetes - Foot examination";
+
             chartItem = new Chart();
             chartItem.setName(chart_name);
 
@@ -1240,13 +1350,18 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                         String ods_code = resultSet.getString("ods_code");
 
                         sql = "INSERT INTO dashboards.registries (registry, query, ccg, practice_name, ods_code) " +
-                                "VALUES (?, ?, ?, ?, ?)";
+                                "SELECT * FROM (SELECT ? as '1', ? as '2', ? as '3', ? as '4', ? as '5') AS tmp "+
+                                "WHERE NOT EXISTS (SELECT * FROM dashboards.registries " +
+                                "WHERE registry = ? and ods_code = ?)  LIMIT 1";
+
                         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
                             stmt.setString(1, name);
                             stmt.setString(2, query);
                             stmt.setString(3, group);
                             stmt.setString(4, org);
                             stmt.setString(5, ods_code);
+                            stmt.setString(6, name);
+                            stmt.setString(7, ods_code);
                             stmt.executeUpdate();
                         }
                     }
@@ -1326,34 +1441,27 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         }
     }
 
-    public void saveRegistryIndicator(String query, String name, String indicator, String ccg, String practice, String code, String id) throws Exception {
+    public void saveRegistryIndicator(String query, String name, String indicator) throws Exception {
 
         String sql = "";
+        sql = "INSERT INTO dashboards.registries (registry, query, parent_registry) " +
+                "VALUES (?, ?, ?)";
 
-        if (id.equals("")) {
-            sql = "INSERT INTO dashboards.registries (registry, query, ccg, practice_name, ods_code, parent_registry) " +
-                    "VALUES (?, ?, ?, ?, ?, ?)";
-            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-                stmt.setString(1, indicator);
-                stmt.setString(2, query);
-                stmt.setString(3, ccg);
-                stmt.setString(4, practice);
-                stmt.setString(5, code);
-                stmt.setString(6, name);
-                stmt.executeUpdate();
-            }
-        } else // edit
-        {
-            sql = "UPDATE dashboards.registries SET registry = ?, query = ?, parent_registry = ? " +
-                    "WHERE id = ?";
+        sql = "INSERT INTO dashboards.registries " +
+                "(registry,query,ccg,practice_name,ods_code,parent_registry) " +
+                "SELECT distinct ?,?,ccg,practice_name,ods_code,? " +
+                "FROM dashboards.registries " +
+                "where registry = ? "+
+                "and NOT EXISTS (SELECT * FROM dashboards.registries WHERE registry = ? and parent_registry = ? LIMIT 1);";
 
-            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-                stmt.setString(1, indicator);
-                stmt.setString(2, query);
-                stmt.setString(3, name);
-                stmt.setString(4, id);
-                stmt.executeUpdate();
-            }
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, indicator);
+            stmt.setString(2, query);
+            stmt.setString(3, name);
+            stmt.setString(4, name);
+            stmt.setString(5, indicator);
+            stmt.setString(6, name);
+            stmt.executeUpdate();
         }
     }
 

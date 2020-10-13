@@ -79,6 +79,29 @@ public class DashboardEndpoint {
     }
 
     @GET
+    @Path("/dashboard2")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getDashboard2(@Context SecurityContext sc,
+                                 @QueryParam("chartName") String chartName,
+                                 @QueryParam("dateFrom") String dateFrom,
+                                 @QueryParam("dateTo") String dateTo,
+                                 @QueryParam("cumulative") String cumulative,
+                                 @QueryParam("grouping") String grouping,
+                                 @QueryParam("weekly") String weekly) throws Exception {
+        LOG.debug("getDashboard2");
+
+        try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
+            ChartResult result = viewerDAL.getDashboard2(chartName,dateFrom,dateTo, cumulative, grouping,weekly);
+
+            return Response
+                    .ok()
+                    .entity(result)
+                    .build();
+        }
+    }
+
+    @GET
     @Path("/dashboardsingle")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -619,15 +642,11 @@ public class DashboardEndpoint {
     public Response saveRegistryIndicator(@Context SecurityContext sc,
                                  @QueryParam("query") String query,
                                  @QueryParam("name") String name,
-                                 @QueryParam("indicator") String indicator,
-                                  @QueryParam("ccg") String ccg,
-                                  @QueryParam("practice") String practice,
-                                  @QueryParam("code") String code,
-                                 @QueryParam("id") String id) throws Exception {
+                                 @QueryParam("indicator") String indicator) throws Exception {
         LOG.debug("saveRegistryIndicator");
 
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
-            viewerDAL.saveRegistryIndicator(query, name, indicator, ccg, practice, code, id);
+            viewerDAL.saveRegistryIndicator(query, name, indicator);
 
             return Response
                     .ok()

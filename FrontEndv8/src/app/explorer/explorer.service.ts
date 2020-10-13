@@ -32,6 +32,19 @@ export class ExplorerService {
     return this.http.get('api/events/dashboard', {params});
   }
 
+  getDashboard2(charts: string, dateFrom: string, dateTo: string, cumulative: string, grouping: string, weekly: string): Observable<any> {
+    let params = new HttpParams();
+
+    params = params.append('chartName', charts);
+    params = params.append('dateFrom', dateFrom);
+    params = params.append('dateTo', dateTo);
+    params = params.append('cumulative', cumulative);
+    params = params.append('grouping', grouping);
+    params = params.append('weekly', weekly);
+
+    return this.http.get('api/events/dashboard2', {params});
+  }
+
   getDashboardSingle(chart: string, dateFrom: string, dateTo: string, ignoreDateRange: number, grouping: string): Observable<any> {
     let params = new HttpParams();
 
@@ -275,15 +288,11 @@ export class ExplorerService {
     return this.http.get('api/events/registryindicatorduplicate', {params});
   }
 
-  saveRegistryIndicator(query?: string, name?: string, indicator?: string, ccg?: string, practice?: string, code?: string, id?: string): Observable<any> {
+  saveRegistryIndicator(query?: string, name?: string, indicator?: string): Observable<any> {
     let params = new HttpParams();
     params = params.append('query', query);
     params = params.append('name', name);
     params = params.append('indicator', indicator);
-    params = params.append('ccg', ccg);
-    params = params.append('practice', practice);
-    params = params.append('code', code);
-    params = params.append('id', id);
 
     return this.http.get('api/events/registryindicatoreditor', {params});
   }
@@ -321,5 +330,6 @@ export class ExplorerService {
     params = params.append('date', date);
     return this.http.get('api/events/covidMaps', {params});
   }
+
 
 }

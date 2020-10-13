@@ -1,8 +1,9 @@
 import {Component, Inject} from '@angular/core';
-import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {MatDialogRef, MAT_DIALOG_DATA, MatDialog} from '@angular/material/dialog';
 import {ExplorerService} from '../explorer.service';
 import {LoggerService} from 'dds-angular8';
 import {FormGroup} from "@angular/forms";
+import {RegistryIndicatorEditorComponent} from "../registryindicatoreditor/registryindicatoreditor.component";
 
 export interface DialogData {
   id: string;
@@ -32,6 +33,7 @@ export class RegistryEditorComponent {
   constructor(
     public dialogRef: MatDialogRef<RegistryEditorComponent>,
     private explorerService: ExplorerService,
+    private dialog: MatDialog,
     private log: LoggerService,
     @Inject(MAT_DIALOG_DATA) public data: DialogData) {
     this.disableForm = true;
@@ -57,14 +59,25 @@ export class RegistryEditorComponent {
     )
   }
 
-
   saveRegistry() {
     this.explorerService.saveRegistry(this.query, this.name, this.id, this.providerOrganisation)
       .subscribe(saved => {
-          this.dialogRef.close(true);
+          this.addIndicator(this.name);
         },
         error => this.log.error('This registry could not be saved.')
       );
+  }
+
+  addIndicator(registry) {
+    const dialogRef = this.dialog.open(RegistryIndicatorEditorComponent, {
+      height: '400px',
+      width: '600px',
+      data: {id: "", name: registry, query: "", indicator: ""}
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result)
+        this.dialogRef.close(true);
+    });
   }
 
   registryEntered(event) {

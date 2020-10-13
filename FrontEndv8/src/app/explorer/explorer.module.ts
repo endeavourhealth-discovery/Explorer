@@ -58,6 +58,7 @@ import {RegistryEditorComponent} from "./registryeditor/registryeditor.component
 import {RegistryIndicatorEditorComponent} from "./registryindicatoreditor/registryindicatoreditor.component";
 import {MapComponent} from './map/map.component';
 import {MatSliderModule} from "@angular/material/slider";
+import {TrendComponent} from "./trend/trend.component";
 
 @NgModule({
   declarations: [
@@ -82,7 +83,8 @@ import {MatSliderModule} from "@angular/material/slider";
     DashboardViewerComponent,
     RegistryEditorComponent,
     RegistryIndicatorEditorComponent,
-    MapComponent
+    MapComponent,
+    TrendComponent
   ],
     imports: [
         BrowserModule,
@@ -138,7 +140,8 @@ import {MatSliderModule} from "@angular/material/slider";
     OrganisationGroupsEditorComponent,
     OrganisationsEditorComponent,
     RegistryEditorComponent,
-    RegistryIndicatorEditorComponent
+    RegistryIndicatorEditorComponent,
+    TrendComponent
   ],
   providers: [ Globals ]
 })
