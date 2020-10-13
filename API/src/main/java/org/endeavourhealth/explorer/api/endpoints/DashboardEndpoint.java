@@ -676,7 +676,7 @@ public class DashboardEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getCovidMaps(@Context SecurityContext sc,
                                  @QueryParam("date") String date) throws Exception {
-        LOG.debug("getCovidMaps");
+        LOG.debug("getCovidMaps date:" + date);
 
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
             MapResult result = viewerDAL.getCovidMaps(date);

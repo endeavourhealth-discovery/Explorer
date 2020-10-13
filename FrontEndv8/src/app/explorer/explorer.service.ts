@@ -319,6 +319,7 @@ export class ExplorerService {
   getCovidMaps(date: string): Observable<any> {
     let params = new HttpParams();
     params = params.append('date', date);
+    alert(date);
     return this.http.get('api/events/covidMaps', {params});
   }
 
