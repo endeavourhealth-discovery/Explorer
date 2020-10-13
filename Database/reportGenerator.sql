@@ -296,71 +296,71 @@ CALL buildCohortDefinition(providerOrganisation, includedOrganisation, registrat
 valueDateFrom, valueDateTo, cohortValue, org_tmp, valueset_tmp, concept_tmp, cohort_tmp, observation_tmp, sourceSchema, store_tmp);
 
 -- build advance criteria --
--- 1 --
+
+-- rule 1 --
 CALL getIncludeExcludeString(includedExclude1,includedAnyAll1,
 includedValueSet1, includedDateFrom1, includedDateTo1, includedPeriodValue1,includedPeriodType1,
 incValueSet1_tmp, incConcept1_tmp, observation_tmp, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
 NULL, NULL, NULL, NULL, NULL, NULL, NULL, sourceSchema , store_tmp, @includeExclude1String);
 SET includeExclude1String = @includeExclude1String;
--- 1a --
+-- rule 1a 
 CALL getIncludeExcludeString(includedExclude1a,includedAnyAll1a,
 includedValueSet1a, includedDateFrom1a, includedDateTo1a, includedPeriodValue1a,includedPeriodType1a,
 incValueSet1a_tmp, incConcept1a_tmp, observation_tmp, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
 NULL, NULL, NULL, NULL, NULL, NULL, NULL, sourceSchema , store_tmp, @includeExclude1aString);
 SET includeExclude1aString = @includeExclude1aString;
--- 1b --
+-- rule 1b 
 CALL getIncludeExcludeString(includedExclude1b,includedAnyAll1b,
 includedValueSet1b, includedDateFrom1b, includedDateTo1b, includedPeriodValue1b,includedPeriodType1b, 
 incValueSet1b_tmp, incConcept1b_tmp, observation_tmp, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
 NULL, NULL, NULL, NULL, NULL, NULL, NULL, sourceSchema , store_tmp, @includeExclude1bString);
 SET includeExclude1bString = @includeExclude1bString;
-
--- 2 -- 
+-- rule 2  
 CALL getIncludeExcludeString(includedExclude2,includedAnyAll2,
 includedValueSet2, includedDateFrom2, includedDateTo2, includedPeriodValue2,includedPeriodType2, 
 incValueSet2_tmp, incConcept2_tmp, observation_tmp, 2, includedEarliestLatest2, includedOperator2, includedEntryValue2, 
 observation2_tmp,  NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, sourceSchema , store_tmp, @includeExclude2String);
 SET includeExclude2String = @includeExclude2String;
--- 2a --
+-- rule 2a 
 CALL getIncludeExcludeString(includedExclude2a,includedAnyAll2a,
 includedValueSet2a, includedDateFrom2a, includedDateTo2a, includedPeriodValue2a,includedPeriodType2a, 
 incValueSet2a_tmp, incConcept2a_tmp, observation_tmp, 2, includedEarliestLatest2a, includedOperator2a, includedEntryValue2a, 
 observation2a_tmp, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, sourceSchema , store_tmp, @includeExclude2aString);
 SET includeExclude2aString = @includeExclude2aString;
-
--- 3 --
+-- rule 3 
 CALL getIncludeExcludeString(includedExclude3,includedAnyAll3,
 includedValueSet3, NULL, NULL, NULL, NULL, incValueSet3_tmp, incConcept3_tmp, observation_tmp, 3, includedEarliestLatest3, NULL, NULL, 
 observation3_tmp, includedAnyAllTested3, includedTestedValueSet3, incTestedValueset3_tmp, incTestedConcept3_tmp, NULL, NULL, 
 NULL, NULL, NULL, NULL, NULL, NULL, sourceSchema , store_tmp, @includeExclude3String);
 SET includeExclude3String = @includeExclude3String;
-
--- 4 -- 
+-- rule 4  
 CALL getIncludeExcludeString(includedExclude4,includedAnyAll4,
 includedValueSet4, includedDateFrom4, includedDateTo4, includedPeriodValue4, includedPeriodType4, incValueSet4_tmp, incConcept4_tmp, observation_tmp, 4, 
 NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, includedAreNot4, includedAnyAllFollowedBy4, includedFollowedByValueSet4, 
 incFollowedByValueSet4_tmp, incFollowedByConcept4_tmp, NULL, NULL, NULL, sourceSchema , store_tmp, @includeExclude4String);
 SET includeExclude4String = @includeExclude4String;
-
--- 5 -- 
+-- rule 5 
 CALL getIncludeExcludeString(includedExclude5,includedAnyAll5,
 includedValueSet5, includedDateFrom5, includedDateTo5, includedPeriodValue5, includedPeriodType5, incValueSet5_tmp, incConcept5_tmp, 
 observation_tmp, 5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, incOccurrences5_tmp, 
 includedOperator5, includedEntryValue5, sourceSchema , store_tmp, @includeExclude5String);
 SET includeExclude5String = @includeExclude5String;
 
--- build final patient cohort based on advance criteria -- 
+-- build final patient cohort based on advance criteria 
 CALL buildFinalPatientCohort(query_id, patient_cohort_tmp, observation_tmp, includeExclude1String, includeExclude1aString, includeExclude1bString, 
 includeExclude2String, includeExclude2aString, includeExclude3String, includeExclude4String, includeExclude5String);
 
 -- build result datasets
 CALL buildResultDatasets(query_id, patient_cohort_tmp, eventType, active, datasetValue, datasetValue_tmp, datasetConcept_tmp, dateFrom, dateTo, sourceSchema, store_tmp);
 
--- dataset output definition
+-- dataset output definition --
+
 CALL buildDatasetOutputTables(outputField, outputType, eventType, store_tmp, sourceSchema, query_id);
 
 -- update queue for next run date
 CALL updateQueue(query_id, schedule);
+
+-- clean up --
 
 -- remove temp tables
  SET tempTables = CONCAT(org_tmp,',',store_tmp,',',valueset_tmp,',',concept_tmp ,',',cohort_tmp ,',',observation_tmp,',',incValueSet1_tmp,',',
@@ -371,120 +371,6 @@ CALL updateQueue(query_id, schedule);
  incConcept5_tmp,',',incOccurrences5_tmp,',',datasetValue_tmp,',',datasetConcept_tmp,',',patient_cohort_tmp);
 
 CALL dropTempTables(tempTables);
-
-/*
-select registrationStatus; 
-
-select cohortValue;
-select ageFrom ;
-select ageTo ;
-select postcode ;
-select eventType  ;
-select active 	  ;
-select datasetValue  ;
-select dateFrom   ;
-select dateTo 	 ;
-select outputField ;
-select outputType ;
-select schedule  ;
-select delivery    ; 
-
-select includedExclude1;
-select includedAnyAll1 ;
-select includedValueSet1 ;
-select includedDateFrom1;
-select includedDateTo1;
-select includedPeriodValue1;
-select includedPeriodType1;
-
-select includedExclude1a;
-select includedAnyAll1a ;
-select includedValueSet1a ;
-select includedDateFrom1a ;
-select includedDateTo1a;
-select includedPeriodValue1a ;
-select includedPeriodType1a ;
-
-select includedExclude1b ;
-select includedAnyAll1b ;
-select includedValueSet1b ;
-select includedDateFrom1b ;
-select includedDateTo1b ;
-select includedPeriodValue1b;
-select includedPeriodType1b ;
-
-
-select includedExclude2;
-select includedAnyAll2 ; 
-select includedValueSet2;  
-select includedEarliestLatest2;  
-select includedOperator2; 
-select includedEntryValue2; 
-select includedDateFrom2; 
-select includedDateTo2; 
-select includedPeriodValue2; 
-select includedPeriodType2;  
-
-select includedExclude2a; 
-select includedAnyAll2a;
-select includedValueSet2a;
-select includedEarliestLatest2a;
-select includedOperator2a;
-select includedEntryValue2a; 
-select includedDateFrom2a;
-select includedDateTo2a; 
-select includedPeriodValue2a;
-select includedPeriodType2a;
-
-select includedExclude3; 
-select  includedAnyAll3;
-select  includedValueSet3;
-select  includedEarliestLatest3;
-select  includedAnyAllTested3;
-select  includedTestedValueSet3;
-
-select  includedExclude4; 
-select  includedAnyAll4 ;
-select  includedValueSet4;
-select  includedAreNot4;
-select  includedAnyAllFollowedBy4;
-select  includedFollowedByValueSet4;
-select  includedDateFrom4; 
-select  includedDateTo4 ; 
-select  includedPeriodValue4; 
-select  includedPeriodType4; 
-
-select  includedExclude5; 
-select  includedAnyAll5;
-select  includedValueSet5;
-select  includedOperator5;
-select  includedEntryValue5 ; 
-select  includedDateFrom5 ; 
-select  includedDateTo5 ; 
-select  includedPeriodValue5 ; 
-select  includedPeriodType5 ; 
-
-*/
-
-/* usuage: 
-
-call reportGenerator(14, '{"providerOrganisation":["NHS CITY AND HACKNEY CCG","NHS Newham CCG","NHS TOWER HAMLETS CCG","NHS WALTHAM FOREST CCG"],
- "includedOrganisation":["BARTS HEALTH NHS TRUST","HOMERTON UNIVERSITY HOSPITAL NHS FOUNDATION TRUST"],
- "registrationStatus":"All patients included left and deads",
- "cohortValue":["Diabetes","Asthma","COPD"],
- "ageFrom":"60",
- "ageTo":"80",
- "gender":"All",
- "postcode":"WF2 6NL",
- "eventType":["Person","Clinical events","Medication"],
- "active":false,
- "datasetValue":["Diabetes","Asthma","COPD"],
- "dateFrom":"2020-08-01",
- "dateTo":"2020-08-31",
- "outputField":["Patient ID","Patient NHS number","Pseudo NHS number","Effective date","Concept name","Owning organisation","Numeric value","Post code","Age","Gender","Registered organisation","Death status"],
- "outputType":"",
- "schedule":"Weekly",
- "delivery":"NHS email"}');  */
 
 
 END//

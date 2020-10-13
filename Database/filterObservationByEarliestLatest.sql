@@ -34,8 +34,17 @@ BEGIN
 
   IF p_includedEarliestLatest = 'Latest' THEN
 
-   SET @sql = CONCAT('CREATE TABLE ', p_earliestlatestobservationtab,' AS 
-   SELECT 
+     DROP TEMPORARY TABLE IF EXISTS qry_tmp;
+     SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp AS 
+     SELECT o2.id, o2.patient_id, o2.clinical_effective_date, o2.result_value, o2.non_core_concept_id, c.value_set_code_type 
+     FROM ', p_observationcohorttab,' o2 JOIN ', p_includeconcepttab,' c ON o2.non_core_concept_id = c.non_core_concept_id 
+     WHERE ', resultvaluestring,' AND ', p_timeperioddaterange);
+     PREPARE stmt FROM @sql;
+     EXECUTE stmt;
+     DEALLOCATE PREPARE stmt;
+
+     SET @sql = CONCAT('CREATE TABLE ', p_earliestlatestobservationtab,' AS 
+     SELECT 
           ob.id,
           ob.patient_id,
           ob.clinical_effective_date,
@@ -43,32 +52,38 @@ BEGIN
           ob.non_core_concept_id,
           ob.value_set_code_type,
           ob.rnk
-    FROM (
+     FROM (
       SELECT 
           o2.id,
           o2.patient_id,
           o2.clinical_effective_date,
           o2.result_value,
           o2.non_core_concept_id,
-          c.value_set_code_type,
-          @currank := IF(@curpatient = BINARY o2.patient_id AND @curvaluesettype = BINARY c.value_set_code_type, @currank + 1, 1) AS rnk,
+          o2.value_set_code_type,
+          @currank := IF(@curpatient = BINARY o2.patient_id AND @curvaluesettype = BINARY o2.value_set_code_type, @currank + 1, 1) AS rnk,
           @curpatient := o2.patient_id AS cur_patient,
-          @curvaluesettype := c.value_set_code_type AS cur_valuesetcode
-          FROM ',p_observationcohorttab,' o2 JOIN ',p_includeconcepttab,' c ON o2.non_core_concept_id = c.non_core_concept_id
-                                 JOIN (SELECT @currank := 0, @curpatient := 0, @curvaluesettype := 0) r
-          WHERE ',resultvaluestring,' AND ', p_timeperioddaterange, ' 
-          ORDER BY o2.patient_id, c.value_set_code_type, o2.clinical_effective_date DESC, o2.id DESC 
-          ) ob
-    WHERE ob.rnk = 1');
-
-    PREPARE stmt FROM @sql;
-    EXECUTE stmt;
-    DEALLOCATE PREPARE stmt;
+          @curvaluesettype := o2.value_set_code_type AS cur_valuesetcode
+          FROM qry_tmp o2 JOIN (SELECT @currank := 0, @curpatient := 0, @curvaluesettype := 0) r 
+          ORDER BY o2.patient_id, o2.value_set_code_type, o2.clinical_effective_date DESC, o2.id DESC 
+          ) ob 
+     WHERE ob.rnk = 1');
+     PREPARE stmt FROM @sql;
+     EXECUTE stmt;
+     DEALLOCATE PREPARE stmt;
   
   ELSEIF p_includedEarliestLatest = 'Earliest' THEN
-  
-   SET @sql = CONCAT('CREATE TABLE ', p_earliestlatestobservationtab,' AS 
-   SELECT 
+
+     DROP TEMPORARY TABLE IF EXISTS qry_tmp;
+     SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp AS 
+     SELECT o2.id, o2.patient_id, o2.clinical_effective_date, o2.result_value, o2.non_core_concept_id, c.value_set_code_type 
+     FROM ', p_observationcohorttab,' o2 JOIN ', p_includeconcepttab,' c ON o2.non_core_concept_id = c.non_core_concept_id 
+     WHERE ', resultvaluestring,' AND ', p_timeperioddaterange);
+     PREPARE stmt FROM @sql;
+     EXECUTE stmt;
+     DEALLOCATE PREPARE stmt;
+
+     SET @sql = CONCAT('CREATE TABLE ', p_earliestlatestobservationtab,' AS 
+     SELECT 
           ob.id,
           ob.patient_id,
           ob.clinical_effective_date,
@@ -76,34 +91,31 @@ BEGIN
           ob.non_core_concept_id,
           ob.value_set_code_type,
           ob.rnk
-    FROM (
+     FROM (
       SELECT 
           o2.id,
           o2.patient_id,
           o2.clinical_effective_date,
           o2.result_value,
           o2.non_core_concept_id,
-          c.value_set_code_type,
-          @currank := IF(@curpatient = BINARY o2.patient_id AND @curvaluesettype = BINARY c.value_set_code_type, @currank + 1, 1) AS rnk,
+          o2.value_set_code_type,
+          @currank := IF(@curpatient = BINARY o2.patient_id AND @curvaluesettype = BINARY o2.value_set_code_type, @currank + 1, 1) AS rnk,
           @curpatient := o2.patient_id AS cur_patient,
-          @curvaluesettype := c.value_set_code_type AS cur_valuesetcode
-          FROM ',p_observationcohorttab,' o2 JOIN ',p_includeconcepttab,' c ON o2.non_core_concept_id = c.non_core_concept_id
-                                 JOIN (SELECT @currank := 0, @curpatient := 0, @curvaluesettype := 0) r
-          WHERE ',resultvaluestring,' AND ', p_timeperioddaterange, ' 
-          ORDER BY o2.patient_id, c.value_set_code_type, o2.clinical_effective_date ASC, o2.id ASC 
-          ) ob
-    WHERE ob.rnk = 1');
-
-    PREPARE stmt FROM @sql;
-    EXECUTE stmt;
-    DEALLOCATE PREPARE stmt;
+          @curvaluesettype := o2.value_set_code_type AS cur_valuesetcode
+          FROM qry_tmp o2 JOIN (SELECT @currank := 0, @curpatient := 0, @curvaluesettype := 0) r 
+          ORDER BY o2.patient_id, o2.value_set_code_type, o2.clinical_effective_date ASC, o2.id ASC 
+          ) ob 
+     WHERE ob.rnk = 1');
+     PREPARE stmt FROM @sql;
+     EXECUTE stmt;
+     DEALLOCATE PREPARE stmt;
 
   END IF;
 
-    SET @sql = CONCAT('ALTER TABLE ', p_earliestlatestobservationtab,' ADD INDEX pat_idx(patient_id)');
-    PREPARE stmt FROM @sql;
-    EXECUTE stmt;
-    DEALLOCATE PREPARE stmt;
+     SET @sql = CONCAT('ALTER TABLE ', p_earliestlatestobservationtab,' ADD INDEX pat_idx(patient_id)');
+     PREPARE stmt FROM @sql;
+     EXECUTE stmt;
+     DEALLOCATE PREPARE stmt;
 
 
 END//

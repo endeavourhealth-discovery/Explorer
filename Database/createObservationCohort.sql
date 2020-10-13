@@ -20,24 +20,13 @@ BEGIN
    SET @sql = CONCAT('CREATE TABLE ', p_observationtab, ' AS 
       SELECT DISTINCT
           o.id,
-          c.patient_id,
-          c.person_id,
-          c.nhs_number,
-          c.date_of_birth,
-          c.date_of_death,
-          c.age,
-          c.gender,
-          c.organization_name,
-          c.organization_id,
-          c.ods_code,
-          c.postcode,
+          o.patient_id,
           o.clinical_effective_date,
-          ct.original_code,
-          ct.original_term,
           o.result_value,
           o.result_value_units,
           o.non_core_concept_id
-      FROM ',p_cohorttab ,' c JOIN ',p_schema ,'.observation o ON c.patient_id = o.patient_id AND c.organization_id = o.organization_id AND c.person_id = o.person_id
+      FROM ',p_cohorttab ,' c JOIN ',p_schema ,'.observation o 
+      ON c.patient_id = o.patient_id AND c.organization_id = o.organization_id AND c.person_id = o.person_id
       JOIN ',p_concepttab ,' ct ON ct.non_core_concept_id = o.non_core_concept_id
       WHERE ',p_daterange);
 
