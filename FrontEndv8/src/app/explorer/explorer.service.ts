@@ -87,11 +87,9 @@ export class ExplorerService {
     return this.http.get('api/events/valuesetcode', {params});
   }
 
-  getQueryLibrary(page?: number, size?: number, selectedTypeString?: string): Observable<any> {
+  getQueryLibrary(selectedTypeString?: string): Observable<any> {
 
     let params = new HttpParams();
-    params = params.append('page', page.toString());
-    params = params.append('size', size.toString());
     params = params.append('selectedTypeString', selectedTypeString);
 
     return this.http.get('api/events/querylibrary', {params});

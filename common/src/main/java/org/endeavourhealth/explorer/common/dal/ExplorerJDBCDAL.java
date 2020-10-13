@@ -335,7 +335,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         return lookupList;
     }
 
-    public QueryLibraryResult getQueryLibrary(Integer page, Integer size, String selectedTypeString) throws Exception {
+    public QueryLibraryResult getQueryLibrary(String selectedTypeString) throws Exception {
         QueryLibraryResult result = new QueryLibraryResult();
 
         selectedTypeString = selectedTypeString.replaceAll(",","','");
@@ -348,15 +348,13 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         sql = "SELECT id, type, name, updated, query " +
                 "FROM dashboards.query_library " +
                  selectedTypeString+
-                "order by type,name LIMIT ?,?";
+                "order by type,name";
 
         sqlCount = "SELECT count(1) " +
                 "FROM dashboards.query_library " +
                  selectedTypeString;
 
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
-            statement.setInt(1, page*size);
-            statement.setInt(2, size);
             try (ResultSet resultSet = statement.executeQuery()) {
                 result.setResults(getQueryLibraryList(resultSet));
             }

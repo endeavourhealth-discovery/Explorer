@@ -1,8 +1,8 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from '@angular/material';
 import {ExplorerService} from '../explorer.service';
 import {LoggerService} from 'dds-angular8';
-import {PageEvent} from '@angular/material/paginator';
+import {MatPaginator} from '@angular/material/paginator';
 import {ActivatedRoute} from "@angular/router";
 import {FormControl} from "@angular/forms";
 import {SelectionModel} from "@angular/cdk/collections";
@@ -10,6 +10,7 @@ import {MessageBoxDialogComponent} from "../message-box-dialog/message-box-dialo
 import {MatDialog} from "@angular/material/dialog";
 import {AdvancedQueryEditorComponent} from "../advancedqueryeditor/advancedqueryeditor.component";
 import {animate, state, style, transition, trigger} from "@angular/animations";
+import {MatSort} from "@angular/material/sort";
 
 interface query {
   outputField: string;
@@ -48,11 +49,10 @@ interface query {
 export class QueryLibraryComponent implements OnInit {
 
   selection = new SelectionModel<any>(true, []);
-
   events: any;
   dataSource: MatTableDataSource<any>;
-  page: number = 0;
-  size: number = 11;
+  @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
+  @ViewChild(MatSort, {static: false}) sort: MatSort;
 
   displayedColumns: string[] = ['select', 'type', 'name', 'updated', 'expandArrow'];
   expandedElement: QueryLibraryComponent | null;
@@ -67,7 +67,7 @@ export class QueryLibraryComponent implements OnInit {
     private route: ActivatedRoute,
     private explorerService: ExplorerService,
     private log: LoggerService,
-    private dialog: MatDialog) { }
+    private dialog: MatDialog) {}
 
   ngOnInit() {
     this.explorerService.getLookupLists('2')
@@ -103,7 +103,7 @@ export class QueryLibraryComponent implements OnInit {
 
   loadEvents() {
     this.events = null;
-    this.explorerService.getQueryLibrary(this.page, this.size, this.selectedTypeString)
+    this.explorerService.getQueryLibrary(this.selectedTypeString)
       .subscribe(
         (result) => this.displayEvents(result),
         (error) => this.log.error(error)
@@ -122,18 +122,13 @@ export class QueryLibraryComponent implements OnInit {
     )
     this.typeValues = new FormControl(this.typeList);
     this.refresh(false);
-
   }
 
   displayEvents(events: any) {
     this.events = events;
     this.dataSource = new MatTableDataSource(events.results);
-  }
-
-  onPage(event: PageEvent) {
-    this.page = event.pageIndex;
-    this.size = event.pageSize;
-    this.loadEvents();
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   isAllSelected() {
@@ -253,6 +248,15 @@ export class QueryLibraryComponent implements OnInit {
     }
 
       return details;
+    }
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
     }
   }
 }
