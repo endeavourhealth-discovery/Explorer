@@ -11,6 +11,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+import java.util.ArrayList;
 
 @Path("events")
 public class DashboardEndpoint {
@@ -647,6 +648,44 @@ public class DashboardEndpoint {
 
             return Response
                     .ok()
+                    .build();
+        }
+    }
+
+    @GET
+    @Path("/covidDates")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getCovidDates(@Context SecurityContext sc) throws Exception {
+
+        LOG.debug("getCovidDates");
+
+        try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
+            ArrayList<String> result = viewerDAL.getCovidDates();
+
+            return Response
+                    .ok()
+                    .entity(result)
+                    .build();
+        }
+    }
+
+    @GET
+    @Path("/covidMaps")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getCovidMaps(@Context SecurityContext sc,
+                                 @QueryParam("date") String date) throws Exception {
+        LOG.debug("getCovidMaps");
+
+        try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
+            MapResult result = viewerDAL.getCovidMaps(date);
+
+            LOG.debug("map generated.");
+
+            return Response
+                    .ok()
+                    .entity(result)
                     .build();
         }
     }

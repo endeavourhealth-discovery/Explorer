@@ -1,9 +1,15 @@
 package org.endeavourhealth.explorer.common.dal;
 
+import com.amazonaws.util.StringUtils;
 import org.endeavourhealth.explorer.common.models.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.math.BigDecimal;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.rmi.registry.Registry;
 import java.sql.*;
 import java.util.*;
@@ -1372,4 +1378,189 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         }
     }
 
+    public ArrayList<String> getCovidDates() throws Exception {
+
+        //updateMaps();
+
+        ArrayList<String> list = new ArrayList();
+        String sql = "select distinct date_format(covid_date, '%Y-%m-%d') as covid_date " +
+                "from dashboards.lsoa_covid order by covid_date";
+        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    String date = resultSet.getString("covid_date");
+                    list.add(date);
+                }
+            }
+        }
+        return list;
+    }
+
+    public MapResult getCovidMaps(String date) throws Exception {
+
+        ArrayList<String> ids = new ArrayList<String>();
+        HashMap<String, List<MapLayer>> layers = new HashMap();
+
+        String sql = "select * from dashboards.maps WHERE parent_area_code = 'nel_ccg'";
+        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                ArrayList<MapLayer> list = new ArrayList();
+                while (resultSet.next()) {
+                    MapLayer layer = new MapLayer();
+                    layer.setAreaCode(resultSet.getString("area_code"));
+                    layer.setDescription(resultSet.getString("description"));
+                    layer.setGeoJson(resultSet.getString("geo_json"));
+                    layer.setColor("BLUE");
+                    list.add(layer);
+                }
+                ids.add("All levels");
+                layers.put("All levels", list);
+            }
+        }
+
+        String minDate = "";
+        sql = "select min(date_format(covid_date, '%Y-%m-%d')) as min_date from dashboards.lsoa_covid";
+        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    minDate = resultSet.getString("min_date");
+                }
+            }
+        }
+
+        ArrayList<MapLayer> layer1 = new ArrayList();
+        ArrayList<MapLayer> layer2 = new ArrayList();
+        ArrayList<MapLayer> layer3 = new ArrayList();
+        ArrayList<MapLayer> layer4 = new ArrayList();
+        ArrayList<MapLayer> layer5 = new ArrayList();
+
+        sql = "SELECT COUNT(COVID.lsoa_code) AS covid_patients, " +
+                "REGS.reg_count AS reg_patients, " +
+                "ROUND(((COUNT(covid.lsoa_code) * 1000) / REGS.reg_count),1) AS ratio, " +
+                "COVID.lsoa_code AS lsoa_code, " +
+                "MAP.geo_json " +
+                "FROM dashboards.lsoa_covid COVID, " +
+                "( SELECT reg.lsoa_code, sum(reg.count) reg_count " +
+                "  FROM dashboards.lsoa_registrations reg " +
+                "  WHERE reg.lsoa_code IS NOT NULL " +
+                "  GROUP BY reg.lsoa_code " +
+                ") REGS, dashboards.maps MAP " +
+                "WHERE COVID.lsoa_code = REGS.lsoa_code " +
+                "AND COVID.lsoa_code = MAP.area_code " +
+                "AND COVID.covid_date >= '" + minDate + "' " +
+                "AND COVID.covid_date <= '" + date + "' " +
+                "GROUP BY covid.lsoa_code " +
+                "ORDER BY covid.lsoa_code ";
+        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    MapLayer layer = new MapLayer();
+                    BigDecimal ratio = resultSet.getBigDecimal("ratio");
+                    float ratioFloat = ratio.floatValue();
+                    String description = "";
+
+                    layer.setAreaCode(resultSet.getString("lsoa_code"));
+                    description = layer.getAreaCode() + ": " +
+                            resultSet.getInt("covid_patients") + " of " +
+                            resultSet.getInt("reg_patients");
+                    layer.setDescription(description);
+                    layer.setGeoJson(resultSet.getString("geo_json"));
+
+                    if (ratioFloat >= 0.1 && ratioFloat <= 0.3) {
+                        layer.setColor("#FFFEC3");
+                        layer1.add(layer);
+                    } else if (ratioFloat >= 0.4 && ratioFloat <= 0.5) {
+                        layer.setColor("#FDDB89");
+                        layer2.add(layer);
+                    } else if (ratioFloat >= 0.6 && ratioFloat <= 0.8) {
+                        layer.setColor("#FEAD75");
+                        layer3.add(layer);
+                    } else if (ratioFloat >= 0.9 && ratioFloat <= 1.1) {
+                        layer.setColor("#F4735E");
+                        layer4.add(layer);
+                    } else if (ratioFloat >= 1.2 && ratioFloat <= 4.0) {
+                        layer.setColor("#CB4B64");
+                        layer5.add(layer);
+                    }
+                }
+            }
+        }
+
+        ids.add("Level 1");
+        layers.put("Level 1", layer1);
+        ids.add("Level 2");
+        layers.put("Level 2", layer2);
+        ids.add("Level 3");
+        layers.put("Level 3", layer3);
+        ids.add("Level 4");
+        layers.put("Level 4", layer4);
+        ids.add("Level 5");
+        layers.put("Level 5", layer5);
+
+        MapResult result = new MapResult();
+        result.setIds(ids);
+        result.setLayers(layers);
+
+        return result;
+    }
+
+    private void updateMaps() throws Exception {
+
+        Set<String> missingLsoaValues = new HashSet<>();
+        String sql = "SELECT DISTINCT(A.lsoa_code) FROM dashboards.lsoa_registrations A WHERE lsoa_code NOT IN(SELECT area_code FROM dashboards.maps)";
+        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    missingLsoaValues.add(resultSet.getString("lsoa_code"));
+                }
+            }
+        }
+        insertMissingLsoaCodes(missingLsoaValues);
+    }
+
+    private void insertMissingLsoaCodes(Set<String> missingLsoaValues) throws  Exception {
+        Statement batch = conn.createStatement(
+                ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+        int i = 0;
+        for (String lsoaCode : missingLsoaValues) {
+            String geoJson = getGeoJson(lsoaCode);
+            if (!StringUtils.isNullOrEmpty(geoJson)) {
+                i++;
+                String sql = "INSERT INTO dashboards.maps (area_code, description, geo_json) " +
+                        "VALUES ('" + lsoaCode + "','" + lsoaCode + "','" + geoJson +"')";
+                batch.addBatch(sql);
+                if(i % 1000 == 0) {
+                    try {
+                        int[] executed = batch.executeBatch();
+                        LOG.info("Executed statements:" + executed.length);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        throw e;
+                    }
+                }
+            }
+        }
+        int[] executed = batch.executeBatch();
+        LOG.info("Executed statements:" + executed.length);
+    }
+
+    private String getGeoJson(String lsoaCode) throws Exception {
+        URL url = new URL("https://raw.githubusercontent.com/martinjc/UK-GeoJSON/master/json/statistical/eng/oa_by_lsoa/"+lsoaCode+".json");
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("GET");
+        conn.setRequestProperty("Accept", "application/text");
+        if (conn.getResponseCode() != 200) {
+            LOG.error("Failed : HTTP error code : " + conn.getResponseCode());
+            LOG.info("GeoJSON for:" + lsoaCode + " not found.");
+            return null;
+        }
+        BufferedReader br = new BufferedReader(new InputStreamReader( (conn.getInputStream())));
+        String readAPIResponse = " ";
+        StringBuilder output = new StringBuilder();
+        while ((readAPIResponse = br.readLine()) != null) {
+            output.append(readAPIResponse);
+        }
+        LOG.info("Found GeoJSON for:" + lsoaCode);
+        return output.toString();
+    }
 }

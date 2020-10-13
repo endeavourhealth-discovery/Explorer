@@ -311,4 +311,15 @@ export class ExplorerService {
     return this.http.get('api/events/dashboardview', {params});
   }
 
+  getCovidDates(): Observable<any> {
+    let params = new HttpParams();
+    return this.http.get('api/events/covidDates', {params});
+  }
+
+  getCovidMaps(date: string): Observable<any> {
+    let params = new HttpParams();
+    params = params.append('date', date);
+    return this.http.get('api/events/covidMaps', {params});
+  }
+
 }
