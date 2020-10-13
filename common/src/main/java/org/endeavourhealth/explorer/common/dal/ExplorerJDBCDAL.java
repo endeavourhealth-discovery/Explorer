@@ -1434,21 +1434,21 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         ArrayList<MapLayer> layer4 = new ArrayList();
         ArrayList<MapLayer> layer5 = new ArrayList();
 
-        sql = "SELECT COUNT(COVID.lsoa_code) AS covid_patients, " +
-                "REGS.reg_count AS reg_patients, " +
-                "ROUND(((COUNT(covid.lsoa_code) * 1000) / REGS.reg_count),1) AS ratio, " +
-                "COVID.lsoa_code AS lsoa_code, " +
-                "MAP.geo_json " +
-                "FROM dashboards.lsoa_covid COVID, " +
+        sql = "SELECT COUNT(covid.lsoa_code) AS covid_patients, " +
+                "regs.reg_count AS reg_patients, " +
+                "ROUND(((COUNT(covid.lsoa_code) * 1000) / regs.reg_count),1) AS ratio, " +
+                "covid.lsoa_code AS lsoa_code, " +
+                "map.geo_json " +
+                "FROM dashboards.lsoa_covid covid, " +
                 "( SELECT reg.lsoa_code, sum(reg.count) reg_count " +
                 "  FROM dashboards.lsoa_registrations reg " +
                 "  WHERE reg.lsoa_code IS NOT NULL " +
                 "  GROUP BY reg.lsoa_code " +
-                ") REGS, dashboards.maps MAP " +
-                "WHERE COVID.lsoa_code = REGS.lsoa_code " +
-                "AND COVID.lsoa_code = MAP.area_code " +
-                "AND COVID.covid_date >= '" + minDate + "' " +
-                "AND COVID.covid_date <= '" + date + "' " +
+                ") regs, dashboards.maps map " +
+                "WHERE covid.lsoa_code = regs.lsoa_code " +
+                "AND covid.lsoa_code = map.area_code " +
+                "AND covid.covid_date >= '" + minDate + "' " +
+                "AND covid.covid_date <= '" + date + "' " +
                 "GROUP BY covid.lsoa_code " +
                 "ORDER BY covid.lsoa_code ";
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
