@@ -56,6 +56,9 @@ import {MatSelectSearchModule } from './mat-select-search/mat-select-search.modu
 import {DashboardViewerComponent} from "./dashboardviewer/dashboardviewer.component";
 import {RegistryEditorComponent} from "./registryeditor/registryeditor.component";
 import {RegistryIndicatorEditorComponent} from "./registryindicatoreditor/registryindicatoreditor.component";
+import {MapComponent} from './map/map.component';
+import {MatSliderModule} from "@angular/material/slider";
+import {TrendComponent} from "./trend/trend.component";
 
 @NgModule({
   declarations: [
@@ -79,48 +82,51 @@ import {RegistryIndicatorEditorComponent} from "./registryindicatoreditor/regist
     OrganisationsEditorComponent,
     DashboardViewerComponent,
     RegistryEditorComponent,
-    RegistryIndicatorEditorComponent
+    RegistryIndicatorEditorComponent,
+    MapComponent,
+    TrendComponent
   ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    MatCardModule,
-    MatTableModule,
-    MatSortModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatIconModule,
-    FormsModule,
-    MatPaginatorModule,
-    MatProgressSpinnerModule,
-    RouterModule,
-    FlexModule,
-    MatSelectModule,
-    MatSnackBarModule,
-    MatCheckboxModule,
-    MatMenuModule,
-    MatDialogModule,
-    CoreModule,
-    MatButtonModule,
-    MatTreeModule,
-    MatProgressBarModule,
-    MatGridListModule,
-    MatNativeDateModule,
-    MatDatepickerModule,
-    BarChartModule,
-    LineChartModule,
-    AreaChartModule,
-    ReactiveFormsModule,
-    GaugeModule,
-    MatStepperModule,
-    MatDividerModule,
-    MatRadioModule,
-    MatTooltipModule,
-    MatTooltipModule,
-    DragDropModule,
-    MatTabsModule,
-    MatSelectSearchModule
-  ],
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        MatCardModule,
+        MatTableModule,
+        MatSortModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatIconModule,
+        FormsModule,
+        MatPaginatorModule,
+        MatProgressSpinnerModule,
+        RouterModule,
+        FlexModule,
+        MatSelectModule,
+        MatSnackBarModule,
+        MatCheckboxModule,
+        MatMenuModule,
+        MatDialogModule,
+        CoreModule,
+        MatButtonModule,
+        MatTreeModule,
+        MatProgressBarModule,
+        MatGridListModule,
+        MatNativeDateModule,
+        MatDatepickerModule,
+        BarChartModule,
+        LineChartModule,
+        AreaChartModule,
+        ReactiveFormsModule,
+        GaugeModule,
+        MatStepperModule,
+        MatDividerModule,
+        MatRadioModule,
+        MatTooltipModule,
+        MatTooltipModule,
+        DragDropModule,
+        MatTabsModule,
+        MatSelectSearchModule,
+        MatSliderModule
+    ],
 
   entryComponents: [
     PatientComponent,
@@ -134,7 +140,8 @@ import {RegistryIndicatorEditorComponent} from "./registryindicatoreditor/regist
     OrganisationGroupsEditorComponent,
     OrganisationsEditorComponent,
     RegistryEditorComponent,
-    RegistryIndicatorEditorComponent
+    RegistryIndicatorEditorComponent,
+    TrendComponent
   ],
   providers: [ Globals ]
 })

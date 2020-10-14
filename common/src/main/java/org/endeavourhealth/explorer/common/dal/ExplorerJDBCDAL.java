@@ -1,9 +1,15 @@
 package org.endeavourhealth.explorer.common.dal;
 
+import com.amazonaws.util.StringUtils;
 import org.endeavourhealth.explorer.common.models.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.math.BigDecimal;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.rmi.registry.Registry;
 import java.sql.*;
 import java.util.*;
@@ -293,7 +299,9 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
             case "12":
                 sql = "SELECT distinct(name) as type " +
                         "FROM dashboards.dashboard_results " +
-                        " order by name";
+                        "UNION select distinct(name) as type "+
+                        "FROM dashboards.query_library " +
+                        " order by type";
 
                 sqlCount = "SELECT count(distinct(name)) " +
                         " FROM dashboards.dashboard_results";
@@ -561,9 +569,11 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
         List<String> charts = Arrays.asList(chartName.split("\\s*,\\s*"));
 
-        grouping = grouping.replaceAll(",","','");
-        grouping = "'" + grouping + "'";
-        grouping = " and `grouping` in ("+grouping+")";
+        if (!grouping.isEmpty()) {
+            grouping = grouping.replaceAll(",","','");
+            grouping = "'" + grouping + "'";
+            grouping = " and `grouping` in ("+grouping+")";
+        }
 
         ChartResult result = new ChartResult();
         String sql = "";
@@ -572,6 +582,112 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         Chart chartItem = null;
 
         for (String chart_name : charts) {
+
+            chartItem = new Chart();
+            chartItem.setName(chart_name);
+
+            if (cumulative.equals("1")) {
+                sql = "SELECT t.series_name," +
+                        "@running_total:=@running_total + t.series_value as series_value " +
+                        "FROM " +
+                        "( SELECT name,series_name,sum(series_value) as series_value "+
+                        "FROM dashboards.dashboard_results " +
+                        "where name = ? and series_name between ? and ? "+grouping+" group by series_name) t " +
+                        "JOIN (SELECT @running_total:=0) r " +
+                        "ORDER BY t.series_name";
+            } else {
+                if (weekly.equals("1")) {
+                    sql = "SELECT FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) AS series_name, " +
+                            "SUM(series_value) AS series_value " +
+                            "from dashboards.dashboard_results where name = ? " +
+                            "and series_name between ? and ? "+grouping+
+                            " GROUP BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) " +
+                            "ORDER BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7))";
+                } else {
+                    sql = "SELECT series_name,sum(series_value) as series_value from dashboards.dashboard_results where name = ? "+
+                            "and series_name between ? and ? "+grouping+" group by series_name order by series_name";
+                }
+
+            }
+            try (PreparedStatement statement = conn.prepareStatement(sql)) {
+                statement.setString(1, chart_name);
+                statement.setString(2, dateFrom);
+                statement.setString(3, dateTo);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    chartItem.setSeries(getSeriesFromResultSet(resultSet));
+                }
+            }
+
+            chart.add(chartItem);
+        }
+
+        result.setResults(chart);
+
+        return result;
+    }
+
+    public ChartResult getDashboard2(String chartName, String dateFrom, String dateTo, String cumulative, String grouping, String weekly) throws Exception {
+
+        List<String> charts = Arrays.asList(chartName.split("\\s*,\\s*"));
+
+        if (!grouping.isEmpty()) {
+            grouping = grouping.replaceAll(",","','");
+            grouping = "'" + grouping + "'";
+            grouping = " and `grouping` in ("+grouping+")";
+        }
+
+        ChartResult result = new ChartResult();
+        String sql = "";
+
+        List<Chart> chart = new ArrayList<>();
+        Chart chartItem = null;
+
+        for (String chart_name : charts) {
+
+            chart_name += " - Diabetes - BP 140/80 or less";
+
+            chartItem = new Chart();
+            chartItem.setName(chart_name);
+
+            if (cumulative.equals("1")) {
+                sql = "SELECT t.series_name," +
+                        "@running_total:=@running_total + t.series_value as series_value " +
+                        "FROM " +
+                        "( SELECT name,series_name,sum(series_value) as series_value "+
+                        "FROM dashboards.dashboard_results " +
+                        "where name = ? and series_name between ? and ? "+grouping+" group by series_name) t " +
+                        "JOIN (SELECT @running_total:=0) r " +
+                        "ORDER BY t.series_name";
+            } else {
+                if (weekly.equals("1")) {
+                    sql = "SELECT FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) AS series_name, " +
+                            "SUM(series_value) AS series_value " +
+                            "from dashboards.dashboard_results where name = ? " +
+                            "and series_name between ? and ? "+grouping+
+                            " GROUP BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) " +
+                            "ORDER BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7))";
+                } else {
+                    sql = "SELECT series_name,sum(series_value) as series_value from dashboards.dashboard_results where name = ? "+
+                            "and series_name between ? and ? "+grouping+" group by series_name order by series_name";
+                }
+
+            }
+            try (PreparedStatement statement = conn.prepareStatement(sql)) {
+                statement.setString(1, chart_name);
+                statement.setString(2, dateFrom);
+                statement.setString(3, dateTo);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    chartItem.setSeries(getSeriesFromResultSet(resultSet));
+                }
+            }
+
+            chart.add(chartItem);
+        }
+
+        for (String chart_name : charts) {
+
+            chart_name += " - Diabetes - Foot examination";
+
             chartItem = new Chart();
             chartItem.setName(chart_name);
 
@@ -1224,13 +1340,18 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                         String ods_code = resultSet.getString("ods_code");
 
                         sql = "INSERT INTO dashboards.registries (registry, query, ccg, practice_name, ods_code) " +
-                                "VALUES (?, ?, ?, ?, ?)";
+                                "SELECT * FROM (SELECT ? as '1', ? as '2', ? as '3', ? as '4', ? as '5') AS tmp "+
+                                "WHERE NOT EXISTS (SELECT * FROM dashboards.registries " +
+                                "WHERE registry = ? and ods_code = ?)  LIMIT 1";
+
                         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
                             stmt.setString(1, name);
                             stmt.setString(2, query);
                             stmt.setString(3, group);
                             stmt.setString(4, org);
                             stmt.setString(5, ods_code);
+                            stmt.setString(6, name);
+                            stmt.setString(7, ods_code);
                             stmt.executeUpdate();
                         }
                     }
@@ -1310,34 +1431,27 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         }
     }
 
-    public void saveRegistryIndicator(String query, String name, String indicator, String ccg, String practice, String code, String id) throws Exception {
+    public void saveRegistryIndicator(String query, String name, String indicator) throws Exception {
 
         String sql = "";
+        sql = "INSERT INTO dashboards.registries (registry, query, parent_registry) " +
+                "VALUES (?, ?, ?)";
 
-        if (id.equals("")) {
-            sql = "INSERT INTO dashboards.registries (registry, query, ccg, practice_name, ods_code, parent_registry) " +
-                    "VALUES (?, ?, ?, ?, ?, ?)";
-            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-                stmt.setString(1, indicator);
-                stmt.setString(2, query);
-                stmt.setString(3, ccg);
-                stmt.setString(4, practice);
-                stmt.setString(5, code);
-                stmt.setString(6, name);
-                stmt.executeUpdate();
-            }
-        } else // edit
-        {
-            sql = "UPDATE dashboards.registries SET registry = ?, query = ?, parent_registry = ? " +
-                    "WHERE id = ?";
+        sql = "INSERT INTO dashboards.registries " +
+                "(registry,query,ccg,practice_name,ods_code,parent_registry) " +
+                "SELECT distinct ?,?,ccg,practice_name,ods_code,? " +
+                "FROM dashboards.registries " +
+                "where registry = ? "+
+                "and NOT EXISTS (SELECT * FROM dashboards.registries WHERE registry = ? and parent_registry = ? LIMIT 1);";
 
-            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-                stmt.setString(1, indicator);
-                stmt.setString(2, query);
-                stmt.setString(3, name);
-                stmt.setString(4, id);
-                stmt.executeUpdate();
-            }
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, indicator);
+            stmt.setString(2, query);
+            stmt.setString(3, name);
+            stmt.setString(4, name);
+            stmt.setString(5, indicator);
+            stmt.setString(6, name);
+            stmt.executeUpdate();
         }
     }
 
@@ -1362,4 +1476,127 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         }
     }
 
+    public ArrayList<String> getCovidDates() throws Exception {
+
+        ArrayList<String> list = new ArrayList();
+        String sql = "select distinct date_format(covid_date, '%Y-%m-%d') as covid_date " +
+                "from dashboards.lsoa_covid order by covid_date";
+        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    String date = resultSet.getString("covid_date");
+                    list.add(date);
+                }
+            }
+        }
+        return list;
+    }
+
+    public MapResult getCovidMaps(String date) throws Exception {
+
+        ArrayList<String> ids = new ArrayList<String>();
+        HashMap<String, List<MapLayer>> layers = new HashMap();
+
+        String sql = "select * from dashboards.maps WHERE parent_area_code = 'nel_ccg'";
+        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                ArrayList<MapLayer> list = new ArrayList();
+                while (resultSet.next()) {
+                    MapLayer layer = new MapLayer();
+                    layer.setAreaCode(resultSet.getString("area_code"));
+                    layer.setDescription(resultSet.getString("description"));
+                    layer.setGeoJson(resultSet.getString("geo_json"));
+                    layer.setColor("BLUE");
+                    list.add(layer);
+                }
+                ids.add("All levels");
+                layers.put("All levels", list);
+            }
+        }
+
+        String minDate = "";
+        sql = "select min(date_format(covid_date, '%Y-%m-%d')) as min_date from dashboards.lsoa_covid";
+        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    minDate = resultSet.getString("min_date");
+                }
+            }
+        }
+
+        ArrayList<MapLayer> layer1 = new ArrayList();
+        ArrayList<MapLayer> layer2 = new ArrayList();
+        ArrayList<MapLayer> layer3 = new ArrayList();
+        ArrayList<MapLayer> layer4 = new ArrayList();
+        ArrayList<MapLayer> layer5 = new ArrayList();
+
+        sql = "SELECT COUNT(covid.lsoa_code) AS covid_patients, " +
+                "regs.reg_count AS reg_patients, " +
+                "ROUND(((COUNT(covid.lsoa_code) * 1000) / regs.reg_count),1) AS ratio, " +
+                "covid.lsoa_code AS lsoa_code, " +
+                "map.geo_json " +
+                "FROM dashboards.lsoa_covid covid, " +
+                "( SELECT reg.lsoa_code, sum(reg.count) reg_count " +
+                "  FROM dashboards.lsoa_registrations reg " +
+                "  WHERE reg.lsoa_code IS NOT NULL " +
+                "  GROUP BY reg.lsoa_code " +
+                ") regs, dashboards.maps map " +
+                "WHERE covid.lsoa_code = regs.lsoa_code " +
+                "AND covid.lsoa_code = map.area_code " +
+                "AND covid.covid_date >= '" + minDate + "' " +
+                "AND covid.covid_date <= '" + date + "' " +
+                "GROUP BY covid.lsoa_code " +
+                "ORDER BY covid.lsoa_code ";
+        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    MapLayer layer = new MapLayer();
+                    BigDecimal ratio = resultSet.getBigDecimal("ratio");
+                    float ratioFloat = ratio.floatValue();
+                    String description = "";
+
+                    layer.setAreaCode(resultSet.getString("lsoa_code"));
+                    description = layer.getAreaCode() + ": " +
+                            resultSet.getInt("covid_patients") + " of " +
+                            resultSet.getInt("reg_patients");
+                    layer.setDescription(description);
+                    layer.setGeoJson(resultSet.getString("geo_json"));
+
+                    if (ratioFloat >= 0.1f && ratioFloat <= 0.3f) {
+                        layer.setColor("#FFFEC3");
+                        layer1.add(layer);
+                    } else if (ratioFloat >= 0.4f && ratioFloat <= 0.5f) {
+                        layer.setColor("#FDDB89");
+                        layer2.add(layer);
+                    } else if (ratioFloat >= 0.6f && ratioFloat <= 0.8f) {
+                        layer.setColor("#FEAD75");
+                        layer3.add(layer);
+                    } else if (ratioFloat >= 0.9f && ratioFloat <= 1.1f) {
+                        layer.setColor("#F4735E");
+                        layer4.add(layer);
+                    } else if (ratioFloat >= 1.2f) {
+                        layer.setColor("#CB4B64");
+                        layer5.add(layer);
+                    }
+                }
+            }
+        }
+
+        ids.add("Level 1");
+        layers.put("Level 1", layer1);
+        ids.add("Level 2");
+        layers.put("Level 2", layer2);
+        ids.add("Level 3");
+        layers.put("Level 3", layer3);
+        ids.add("Level 4");
+        layers.put("Level 4", layer4);
+        ids.add("Level 5");
+        layers.put("Level 5", layer5);
+
+        MapResult result = new MapResult();
+        result.setIds(ids);
+        result.setLayers(layers);
+
+        return result;
+    }
 }

@@ -62,7 +62,6 @@ BEGIN
 
       -- drop output table if exists
       SET @sql = CONCAT('DROP TABLE IF EXISTS ', output_table); 
-
       PREPARE stmt FROM @sql;
       EXECUTE stmt;
       DEALLOCATE PREPARE stmt;
@@ -73,7 +72,6 @@ BEGIN
       'CREATE TEMPORARY TABLE qry_tmp (column_name VARCHAR(300), field_name VARCHAR(300)) 
       AS SELECT table_name, column_name, field_name FROM dataset_tables dt JOIN ', p_storetab,' s 
       ON s.code =  dt.field_name WHERE dt.table_name = ', QUOTE(event_table),' ORDER BY dt.id');
-
       PREPARE stmt FROM @sql;
       EXECUTE stmt;
       DEALLOCATE PREPARE stmt;
@@ -90,11 +88,10 @@ BEGIN
         SET i = i + 1;
       END WHILE;
 
-      -- remove the last comma in string
-      SET @sql = SUBSTRING(@sql, 1, LENGTH(@sql)-1);
-
-      -- create output table for the selected output fields
       IF LENGTH(@sql)>0 THEN
+      -- remove the last comma in string
+         SET @sql = SUBSTRING(@sql, 1, LENGTH(@sql)-1);
+      -- create output table for the selected output fields
          SET @sql = CONCAT('CREATE TABLE ', output_table ,' AS 
          SELECT DISTINCT ', BINARY @sql ,' FROM ', p_schema,'.', event_table,' t JOIN ', result_dataset,' r ON t.id = r.', event_table,'_id 
          WHERE r.query_id = ', p_query_id);

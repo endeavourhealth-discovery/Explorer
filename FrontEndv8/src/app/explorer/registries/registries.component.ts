@@ -10,6 +10,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {SelectionModel} from "@angular/cdk/collections";
 import {MessageBoxDialogComponent} from "../message-box-dialog/message-box-dialog.component";
 import {RegistryEditorComponent} from "../registryeditor/registryeditor.component";
+import {TrendComponent} from "../trend/trend.component";
 
 @Component({
   selector: 'app-registries',
@@ -57,21 +58,21 @@ export class RegistriesComponent implements OnInit {
   }
 
   getSize(index, registrySize) {
+    if (index==0)
+      return "";
 
     if (index>0) {
-      if (registrySize=='-1')
-        return (index*1).toLocaleString();
-      else {
-        return (index*1).toLocaleString()+ ' (' + this.toPercent((index*1),(registrySize*1)) + '%)';
-      }
+      return (index*1).toLocaleString();
     } else {
       return index
     }
   }
 
   getOrgs(ccg: any,registry: any) {
+   if (this.selection.selected.length > 0)
+     return;
 
-    if (ccg=="Indicator")
+   if (ccg=="Indicator")
       ccg = this.currentCCG;
     else if (ccg=='Back to Clinical Commissioning Groups')
       ccg = '';
@@ -205,6 +206,49 @@ export class RegistriesComponent implements OnInit {
             );
         }
       });
+  }
+
+  showTrend(org: string) {
+    var orgs = "";
+
+    for (let s of this.selection.selected) {
+      orgs = orgs + s.org + ",";
+    }
+
+    if (orgs != "")
+    {
+      orgs = orgs.replace(/,\s*$/, "");
+    }
+
+    orgs = orgs +",CCG AVERAGE";
+
+    const dialogRef = this.dialog.open(TrendComponent, {
+      height: '850px',
+      width: '1600px',
+      data: {orgs: orgs}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+
+    });
+  }
+
+  gaugeLabel(value: number) {
+    return value+" %";
+  }
+
+  valueDialClass(percentage) {
+    if (percentage>=65)
+      return "good";
+    else if (percentage<65)
+      return "poor";
+  }
+
+  valueClass(percentage) {
+    if (percentage>=65)
+      return "goodValue";
+    else if (percentage<65)
+      return "poorValue";
   }
 
 }

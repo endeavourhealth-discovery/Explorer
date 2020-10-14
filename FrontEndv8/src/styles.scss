@@ -116,47 +116,47 @@ th {
 }
 
 mwl-gauge {
-  width: 150px;
-  height: 150px;
+  width: 60px;
+  height: 60px;
   display: block;
-  padding: 10px;
+  padding: 0px;
 }
 mwl-gauge > .gauge > .dial {
-  stroke: #eee;
+  stroke: lightgray;
   stroke-width: 6;
   fill: rgba(0,0,0,0);
 }
 mwl-gauge > .gauge > .value {
   stroke: red;
-  stroke-width: 4;
+  stroke-width: 6;
   fill: rgba(0,0,0,0);
 }
 mwl-gauge > .gauge > .value-text {
   fill: gray;
   font-family: sans-serif;
   font-weight: bold;
-  font-size: 1em;
+  font-size: 18px;
 }
 
 mwl-gauge > .gauge > .goodValue {
   fill: green;
   font-family: sans-serif;
   font-weight: bold;
-  font-size: 1em;
+  font-size: 18px;
 }
 
 mwl-gauge > .gauge > .okValue {
   fill: orange;
   font-family: sans-serif;
   font-weight: bold;
-  font-size: 1em;
+  font-size: 18px;
 }
 
 mwl-gauge > .gauge > .poorValue {
   fill: red;
   font-family: sans-serif;
   font-weight: bold;
-  font-size: 1em;
+  font-size: 18px;
 }
 
 mwl-gauge > .gauge > .good {

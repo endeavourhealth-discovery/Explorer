@@ -8,9 +8,6 @@ export interface DialogData {
   name: string;
   query: string;
   indicator: string;
-  ccg: string;
-  practice: string;
-  code: string;
 }
 
 @Component({
@@ -23,9 +20,6 @@ export class RegistryIndicatorEditorComponent {
   query: string;
   name: string;
   indicator: string;
-  ccg: string;
-  practice: string;
-  code: string;
   disableForm: boolean;
   id: string;
   queryList = [];
@@ -40,9 +34,6 @@ export class RegistryIndicatorEditorComponent {
     this.name = data.name;
     this.query = data.query;
     this.indicator = data.indicator;
-    this.ccg = data.ccg;
-    this.practice = data.practice;
-    this.code = data.code;
   }
 
   ngOnInit() {
@@ -62,7 +53,7 @@ export class RegistryIndicatorEditorComponent {
   }
 
   saveRegistry() {
-    this.explorerService.saveRegistryIndicator(this.query, this.name, this.indicator, this.ccg, this.practice, this.code, this.id)
+    this.explorerService.saveRegistryIndicator(this.query, this.name, this.indicator)
       .subscribe(saved => {
           this.dialogRef.close(true);
         },

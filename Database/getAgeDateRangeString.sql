@@ -11,7 +11,7 @@ BEGIN
 DECLARE ageDateString VARCHAR(255);
 
 IF p_type = 1 THEN
-  SET ageDateString = CONCAT('FLOOR(DATEDIFF(NOW(), p.date_of_birth) / 365.25) BETWEEN ', p_from, ' AND ', p_to);
+  SET ageDateString = CONCAT('FLOOR(DATEDIFF(IF(p.date_of_death IS NULL, NOW(), p.date_of_death), p.date_of_birth) / 365.25) BETWEEN ', p_from, ' AND ', p_to);
 ELSEIF p_type = 2 THEN
   SET ageDateString = CONCAT('o.clinical_effective_date BETWEEN ', QUOTE(p_from),' AND ', QUOTE(p_to));
 END IF;

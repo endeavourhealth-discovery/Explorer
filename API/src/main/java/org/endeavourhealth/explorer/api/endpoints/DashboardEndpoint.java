@@ -11,6 +11,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+import java.util.ArrayList;
 
 @Path("events")
 public class DashboardEndpoint {
@@ -69,6 +70,29 @@ public class DashboardEndpoint {
 
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
             ChartResult result = viewerDAL.getDashboard(chartName,dateFrom,dateTo, cumulative, grouping,weekly);
+
+            return Response
+                    .ok()
+                    .entity(result)
+                    .build();
+        }
+    }
+
+    @GET
+    @Path("/dashboard2")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getDashboard2(@Context SecurityContext sc,
+                                 @QueryParam("chartName") String chartName,
+                                 @QueryParam("dateFrom") String dateFrom,
+                                 @QueryParam("dateTo") String dateTo,
+                                 @QueryParam("cumulative") String cumulative,
+                                 @QueryParam("grouping") String grouping,
+                                 @QueryParam("weekly") String weekly) throws Exception {
+        LOG.debug("getDashboard2");
+
+        try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
+            ChartResult result = viewerDAL.getDashboard2(chartName,dateFrom,dateTo, cumulative, grouping,weekly);
 
             return Response
                     .ok()
@@ -618,15 +642,11 @@ public class DashboardEndpoint {
     public Response saveRegistryIndicator(@Context SecurityContext sc,
                                  @QueryParam("query") String query,
                                  @QueryParam("name") String name,
-                                 @QueryParam("indicator") String indicator,
-                                  @QueryParam("ccg") String ccg,
-                                  @QueryParam("practice") String practice,
-                                  @QueryParam("code") String code,
-                                 @QueryParam("id") String id) throws Exception {
+                                 @QueryParam("indicator") String indicator) throws Exception {
         LOG.debug("saveRegistryIndicator");
 
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
-            viewerDAL.saveRegistryIndicator(query, name, indicator, ccg, practice, code, id);
+            viewerDAL.saveRegistryIndicator(query, name, indicator);
 
             return Response
                     .ok()
@@ -647,6 +667,44 @@ public class DashboardEndpoint {
 
             return Response
                     .ok()
+                    .build();
+        }
+    }
+
+    @GET
+    @Path("/covidDates")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getCovidDates(@Context SecurityContext sc) throws Exception {
+
+        LOG.debug("getCovidDates");
+
+        try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
+            ArrayList<String> result = viewerDAL.getCovidDates();
+
+            return Response
+                    .ok()
+                    .entity(result)
+                    .build();
+        }
+    }
+
+    @GET
+    @Path("/covidMaps")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getCovidMaps(@Context SecurityContext sc,
+                                 @QueryParam("date") String date) throws Exception {
+        LOG.debug("getCovidMaps date:" + date);
+
+        try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
+            MapResult result = viewerDAL.getCovidMaps(date);
+
+            LOG.debug("map generated.");
+
+            return Response
+                    .ok()
+                    .entity(result)
                     .build();
         }
     }
