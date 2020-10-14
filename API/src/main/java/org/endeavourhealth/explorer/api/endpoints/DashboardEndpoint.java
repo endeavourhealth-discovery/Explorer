@@ -40,13 +40,11 @@ public class DashboardEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getDashboardLibrary(@Context SecurityContext sc,
-                                        @QueryParam("page") Integer page,
-                                        @QueryParam("size") Integer size,
                                         @QueryParam("selectedTypeString") String selectedTypeString) throws Exception {
         LOG.debug("getDashboardLibrary");
 
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
-            DashboardLibraryResult result = viewerDAL.getDashboardLibrary(page, size, selectedTypeString);
+            DashboardLibraryResult result = viewerDAL.getDashboardLibrary(selectedTypeString);
 
             return Response
                     .ok()
@@ -155,13 +153,11 @@ public class DashboardEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getValueSetLibrary(@Context SecurityContext sc,
-                                        @QueryParam("page") Integer page,
-                                        @QueryParam("size") Integer size,
                                         @QueryParam("selectedTypeString") String selectedTypeString) throws Exception {
         LOG.debug("getValueSetLibrary");
 
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
-            ValueSetLibraryResult result = viewerDAL.getValueSetLibrary(page, size, selectedTypeString);
+            ValueSetLibraryResult result = viewerDAL.getValueSetLibrary(selectedTypeString);
 
             return Response
                     .ok()
@@ -175,13 +171,11 @@ public class DashboardEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getValueSetCodes(@Context SecurityContext sc,
-                                       @QueryParam("page") Integer page,
-                                       @QueryParam("size") Integer size,
                                        @QueryParam("value_set_id") String value_set_id) throws Exception {
         LOG.debug("getValueSetCodes");
 
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
-            ValueSetCodeResult result = viewerDAL.getValueSetCodes(page, size, value_set_id);
+            ValueSetCodeResult result = viewerDAL.getValueSetCodes(value_set_id);
 
             return Response
                     .ok()
@@ -398,13 +392,11 @@ public class DashboardEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getOrganisationGroups(@Context SecurityContext sc,
-                                       @QueryParam("page") Integer page,
-                                       @QueryParam("size") Integer size,
                                        @QueryParam("selectedTypeString") String selectedTypeString) throws Exception {
         LOG.debug("getOrganisationGroups");
 
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
-            OrganisationGroupsResult result = viewerDAL.getOrganisationGroups(page, size, selectedTypeString);
+            OrganisationGroupsResult result = viewerDAL.getOrganisationGroups(selectedTypeString);
 
             return Response
                     .ok()
@@ -418,13 +410,11 @@ public class DashboardEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getOrganisations(@Context SecurityContext sc,
-                                     @QueryParam("page") Integer page,
-                                     @QueryParam("size") Integer size,
                                      @QueryParam("organisation_group_id") String organisation_group_id) throws Exception {
         LOG.debug("getOrganisations");
 
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
-            OrganisationsResult result = viewerDAL.getOrganisations(page, size, organisation_group_id);
+            OrganisationsResult result = viewerDAL.getOrganisations(organisation_group_id);
 
             return Response
                     .ok()
