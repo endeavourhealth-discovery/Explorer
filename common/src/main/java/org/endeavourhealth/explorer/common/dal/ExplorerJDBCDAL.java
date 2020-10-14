@@ -1562,19 +1562,19 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                     layer.setDescription(description);
                     layer.setGeoJson(resultSet.getString("geo_json"));
 
-                    if (ratioFloat >= 0.1f && ratioFloat <= 0.3f) {
+                    if (ratioFloat >= 0.1f && ratioFloat <= 0.4f) {
                         layer.setColor("#FFFEC3");
                         layer1.add(layer);
                     } else if (ratioFloat >= 0.4f && ratioFloat <= 0.5f) {
                         layer.setColor("#FDDB89");
                         layer2.add(layer);
-                    } else if (ratioFloat >= 0.6f && ratioFloat <= 0.8f) {
+                    } else if (ratioFloat >= 0.5f && ratioFloat <= 0.7f) {
                         layer.setColor("#FEAD75");
                         layer3.add(layer);
-                    } else if (ratioFloat >= 0.9f && ratioFloat <= 1.1f) {
+                    } else if (ratioFloat >= 0.7f && ratioFloat <= 1.1f) {
                         layer.setColor("#F4735E");
                         layer4.add(layer);
-                    } else if (ratioFloat >= 1.2f) {
+                    } else if (ratioFloat >= 1.2f && ratioFloat <= 4f) {
                         layer.setColor("#CB4B64");
                         layer5.add(layer);
                     }

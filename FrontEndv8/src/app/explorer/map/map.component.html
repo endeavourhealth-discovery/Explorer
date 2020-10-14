@@ -8,17 +8,11 @@
   </mat-card-header>
   <mat-card-content style="text-align: center;">
     <mat-label style="font-size:25px;" ><b>{{ display }}</b></mat-label><br>
-    <mat-slider min="0" max="28" step="1" (change)="updateDate($event)" [tickInterval]="1"></mat-slider>
+    <mat-slider (input)="onInputChange($event)" min="1" max="{{max}}" step="1" (change)="updateDate($event)" [tickInterval]="1"></mat-slider>
     <div layout="row" flex>
       <div id="map"></div>
-      <!--div layout="row" *ngFor=" let item of levels" style="text-align: left;">
-        <button mat-button (click)="refreshLayer(item.content.value)">
-          <mat-icon [ngStyle]="{'color': item.content.color}">label</mat-icon>
-          {{item.content.label}}
-        </button>
-      </div-->
       <div layout="row">
-        <button mat-button *ngFor=" let item of levels" (click)="refreshLayer(item.content.value)">
+        <button mat-button *ngFor="let item of levels" (click)="refreshLayer(item.content.value)">
           <mat-icon [ngStyle]="{'color': item.content.color}">label</mat-icon>
           {{item.content.label}}
         </button>

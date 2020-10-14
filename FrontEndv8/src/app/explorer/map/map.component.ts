@@ -4,6 +4,7 @@ import {ExplorerService} from "../explorer.service";
 import {LoggerService} from "dds-angular8";
 import {MapResult} from "./model/MapResult";
 import {MapLayer} from "./model/MapLayer";
+import {MatSliderChange} from "@angular/material/slider";
 
 @Component({
   selector: 'app-map',
@@ -21,6 +22,7 @@ export class MapComponent implements OnInit {
   selectedLayer: string;
   map: L.map = null;
   url: string = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+  attribution: string = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
 
   mapResults: MapResult;
   layers: MapLayer[];
@@ -30,7 +32,7 @@ export class MapComponent implements OnInit {
   levels = [
     {
       content: {
-        label: '0.1 - 0.3',
+        label: '0.1 - 0.4',
         color: '#FFFEC3',
         value: 'Level 1'
       }
@@ -44,21 +46,21 @@ export class MapComponent implements OnInit {
     },
     {
       content: {
-        label: '0.6 - 0.8',
+        label: '0.5 - 0.7',
         color: '#FEAD75',
         value: 'Level 3'
       }
     },
     {
       content: {
-        label: '0.9 - 1.1',
+        label: '0.7 - 1.1',
         color: '#F4735E',
         value: 'Level 4'
       }
     },
     {
       content: {
-        label: '1.2 - above',
+        label: '1.1 - 4',
         color: '#CB4B64',
         value: 'Level 5'
       }
@@ -195,7 +197,7 @@ export class MapComponent implements OnInit {
       count++;
     });
 
-    L.tileLayer(this.url, { maxZoom: 18, attribution: '', id: 'mapbox/streets-v11', tileSize: 512, zoomOffset: -1 }).addTo(this.map);
+    L.tileLayer(this.url, { maxZoom: 18, attribution: this.attribution, id: 'mapbox/streets-v11', tileSize: 512, zoomOffset: -1 }).addTo(this.map);
     this.display = this.selectedDate;
   }
 
@@ -245,12 +247,16 @@ export class MapComponent implements OnInit {
         count++;
       });
     }
-    L.tileLayer(this.url, { maxZoom: 18, attribution: '', id: 'mapbox/streets-v11', tileSize: 512, zoomOffset: -1 }).addTo(this.map);
+    L.tileLayer(this.url, { maxZoom: 18, attribution: this.attribution, id: 'mapbox/streets-v11', tileSize: 512, zoomOffset: -1 }).addTo(this.map);
   }
 
   updateDate(event) {
     this.display = this.generating;
-    this.selectedDate = this.dates[event.value];
+    this.selectedDate = this.dates[event.value-1];
     this.refreshMap();
+  }
+
+  onInputChange(event: MatSliderChange) {
+    this.display = this.dates[event.value-1];
   }
 }
