@@ -57,31 +57,25 @@ export class ExplorerService {
     return this.http.get('api/events/patients', {params});
   }
 
-  getDashboardLibrary(page?: number, size?: number, selectedTypeString?: string): Observable<any> {
+  getDashboardLibrary(selectedTypeString?: string): Observable<any> {
 
     let params = new HttpParams();
-    params = params.append('page', page.toString());
-    params = params.append('size', size.toString());
     params = params.append('selectedTypeString', selectedTypeString);
 
     return this.http.get('api/events/dashboardlibrary', {params});
   }
 
-  getValueSetLibrary(page?: number, size?: number, selectedTypeString?: string): Observable<any> {
+  getValueSetLibrary(selectedTypeString?: string): Observable<any> {
 
     let params = new HttpParams();
-    params = params.append('page', page.toString());
-    params = params.append('size', size.toString());
     params = params.append('selectedTypeString', selectedTypeString);
 
     return this.http.get('api/events/valuesetlibrary', {params});
   }
 
-  getValueSetCodes(page?: number, size?: number, value_set_id?: string): Observable<any> {
+  getValueSetCodes(value_set_id?: string): Observable<any> {
 
     let params = new HttpParams();
-    params = params.append('page', page.toString());
-    params = params.append('size', size.toString());
     params = params.append('value_set_id', value_set_id);
 
     return this.http.get('api/events/valuesetcode', {params});
@@ -180,21 +174,17 @@ export class ExplorerService {
     return this.http.get('api/events/registries', {params});
   }
 
-  getOrganisationGroups(page?: number, size?: number, selectedTypeString?: string): Observable<any> {
+  getOrganisationGroups(selectedTypeString?: string): Observable<any> {
 
     let params = new HttpParams();
-    params = params.append('page', page.toString());
-    params = params.append('size', size.toString());
     params = params.append('selectedTypeString', selectedTypeString);
 
     return this.http.get('api/events/organisationgroups', {params});
   }
 
-  getOrganisations(page?: number, size?: number, organisation_group_id?: string): Observable<any> {
+  getOrganisations(organisation_group_id?: string): Observable<any> {
 
     let params = new HttpParams();
-    params = params.append('page', page.toString());
-    params = params.append('size', size.toString());
     params = params.append('organisation_group_id', organisation_group_id);
 
     return this.http.get('api/events/organisations', {params});

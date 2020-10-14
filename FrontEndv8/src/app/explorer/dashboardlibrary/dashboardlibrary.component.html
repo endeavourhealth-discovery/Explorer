@@ -16,10 +16,15 @@
           <mat-option (click)="refresh(true)" *ngFor="let result of typeList" [value]="result">{{result}}</mat-option>
         </mat-select>
       </mat-form-field>
+
+      <mat-form-field style="width:300px; margin-left: 10px" class="expanded-full-width" appearance="outline">
+        <mat-label>Filter</mat-label>
+        <input matInput (keyup)="applyFilter($event)" placeholder="Filter" #input>
+      </mat-form-field>
     </div>
 
-    <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" fxFlex="100" fxFill multiTemplateDataRows>
+    <div fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+      <table mat-table class="mat-elevation-z8" [dataSource]="dataSource" fxFlex="100" fxFill multiTemplateDataRows matSort>
         <ng-container matColumnDef="select">
           <th mat-header-cell *matHeaderCellDef>
             <mat-checkbox (change)="$event ? masterToggle() : null"
@@ -40,20 +45,20 @@
           </td>
         </ng-container>
         <ng-container matColumnDef="type">
-          <th mat-header-cell *matHeaderCellDef>Folder</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Folder</th>
           <td style="cursor: pointer" mat-cell *matCellDef="let element"
               [routerLink]="['/dashboardviewer']"
               [queryParams] = "{role: 'explorer', dashboardNumber: element.dashboardId}"> {{element.type}}
           </td>
         </ng-container>
         <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef>Dashboard</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Dashboard</th>
           <td style="cursor: pointer" mat-cell *matCellDef="let element"
               [routerLink]="['/dashboardviewer']"
               [queryParams] = "{role: 'explorer', dashboardNumber: element.dashboardId}"> {{element.name}} </td>
         </ng-container>
         <ng-container matColumnDef="updated">
-          <th mat-header-cell *matHeaderCellDef>Last updated</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Last updated</th>
           <td style="cursor: pointer" mat-cell *matCellDef="let element"
               [routerLink]="['/dashboard']"
               [queryParams] = "{role: 'explorer', dashboardNumber: element.dashboardId}"> {{element.updated}} </td>
@@ -139,19 +144,8 @@
             >
         </tr>
         <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="expanded-detail-row"></tr>
-
-
       </table>
-    <div>
-    </div>
-      <mat-paginator [length]="events?.length"
-                     [pageSize]="size"
-                     [pageIndex]="page"
-                     [showFirstLastButtons]="true"
-                     (page)="onPage($event)"
-                     fxFlex="100"
-                     fxFill>
-      </mat-paginator>
+      <mat-paginator [pageSizeOptions]="[10, 25, 50, 100]"></mat-paginator>
     </div>
   </mat-card-content>
 </mat-card>

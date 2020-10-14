@@ -35,3 +35,11 @@ tr.expanded-element-row:not(.expanded-expanded-row):active {
   border-collapse: separate;
   border-spacing: 100px 5px;
 }
+
+::ng-deep .mat-sort-header-arrow {
+  color: white;
+}
+
+mat-paginator {
+  width: 100%;
+}

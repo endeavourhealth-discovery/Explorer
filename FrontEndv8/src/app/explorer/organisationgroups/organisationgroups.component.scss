@@ -9,3 +9,11 @@ tr.expanded-element-row:not(.expanded-expanded-row):hover {
 tr.expanded-element-row:not(.expanded-expanded-row):active {
   background: #efefef;
 }
+
+::ng-deep .mat-sort-header-arrow {
+  color: white;
+}
+
+mat-paginator {
+  width: 100%;
+}

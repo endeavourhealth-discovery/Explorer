@@ -1,8 +1,8 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from '@angular/material';
 import {ExplorerService} from '../explorer.service';
 import {LoggerService} from 'dds-angular8';
-import {PageEvent} from '@angular/material/paginator';
+import {MatPaginator, PageEvent} from '@angular/material/paginator';
 import {ActivatedRoute} from "@angular/router";
 import {MatDialog} from "@angular/material/dialog";
 import {ValueSetEditorComponent} from "../valueseteditor/valueseteditor.component";
@@ -10,6 +10,7 @@ import {SelectionModel} from '@angular/cdk/collections';
 import {MessageBoxDialogComponent} from "../message-box-dialog/message-box-dialog.component";
 import {FormControl} from "@angular/forms";
 import {ValueSetCodeComponent} from "../valuesetcode/valuesetcode.component";
+import {MatSort} from "@angular/material/sort";
 
 @Component({
   selector: 'app-valuesetlibrary',
@@ -23,8 +24,8 @@ export class ValueSetLibraryComponent implements OnInit {
 
   events: any;
   dataSource: MatTableDataSource<any>;
-  page: number = 0;
-  size: number = 11;
+  @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
+  @ViewChild(MatSort, {static: false}) sort: MatSort;
 
   displayedColumns: string[] = ['select', 'type', 'name', 'updated'];
 
@@ -75,7 +76,7 @@ export class ValueSetLibraryComponent implements OnInit {
 
   loadEvents() {
     this.events = null;
-    this.explorerService.getValueSetLibrary(this.page, this.size, this.selectedTypeString)
+    this.explorerService.getValueSetLibrary(this.selectedTypeString)
       .subscribe(
         (result) => this.displayEvents(result),
         (error) => this.log.error(error)
@@ -100,12 +101,8 @@ export class ValueSetLibraryComponent implements OnInit {
   displayEvents(events: any) {
     this.events = events;
     this.dataSource = new MatTableDataSource(events.results);
-  }
-
-  onPage(event: PageEvent) {
-    this.page = event.pageIndex;
-    this.size = event.pageSize;
-    this.loadEvents();
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   isAllSelected() {
@@ -199,4 +196,12 @@ export class ValueSetLibraryComponent implements OnInit {
       });
   }
 
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
 }

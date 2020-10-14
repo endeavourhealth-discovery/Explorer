@@ -1,12 +1,13 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {MatDialogRef, MAT_DIALOG_DATA, MatDialog} from '@angular/material/dialog';
 import {ExplorerService} from '../explorer.service';
 import {LoggerService} from 'dds-angular8';
 import {MatTableDataSource} from "@angular/material/table";
-import {PageEvent} from "@angular/material/paginator";
+import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {MessageBoxDialogComponent} from "../message-box-dialog/message-box-dialog.component";
 import {SelectionModel} from "@angular/cdk/collections";
 import {OrganisationsEditorComponent} from "../organisationseditor/organisationseditor.component";
+import {MatSort} from "@angular/material/sort";
 
 export interface DialogData {
   organisation_group_id: string;
@@ -24,8 +25,8 @@ export class OrganisationsComponent {
 
   events: any[] = [];
   dataSource: MatTableDataSource<any>;
-  page: number = 0;
-  size: number = 11;
+  @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
+  @ViewChild(MatSort, {static: false}) sort: MatSort;
   organisation_group_id: string = "";
 
   displayedColumns: string[] = ['select', 'type', 'name', 'code', 'updated'];
@@ -42,7 +43,7 @@ export class OrganisationsComponent {
 
   loadEvents() {
     this.events = null;
-    this.explorerService.getOrganisations(this.page, this.size, this.organisation_group_id)
+    this.explorerService.getOrganisations(this.organisation_group_id)
       .subscribe(
         (result) => this.displayEvents(result),
         (error) => this.log.error(error)
@@ -51,15 +52,10 @@ export class OrganisationsComponent {
   }
 
   displayEvents(events: any) {
-    console.log(events);
     this.events = events;
     this.dataSource = new MatTableDataSource(events.results);
-  }
-
-  onPage(event: PageEvent) {
-    this.page = event.pageIndex;
-    this.size = event.pageSize;
-    this.loadEvents();
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   onCancelClick(): void {
@@ -136,4 +132,12 @@ export class OrganisationsComponent {
     });
   }
 
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
 }

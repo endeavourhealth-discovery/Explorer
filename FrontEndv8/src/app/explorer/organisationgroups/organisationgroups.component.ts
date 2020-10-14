@@ -1,8 +1,8 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from '@angular/material';
 import {ExplorerService} from '../explorer.service';
 import {LoggerService} from 'dds-angular8';
-import {PageEvent} from '@angular/material/paginator';
+import {MatPaginator, PageEvent} from '@angular/material/paginator';
 import {ActivatedRoute} from "@angular/router";
 import {MatDialog} from "@angular/material/dialog";
 import {SelectionModel} from '@angular/cdk/collections';
@@ -10,6 +10,7 @@ import {MessageBoxDialogComponent} from "../message-box-dialog/message-box-dialo
 import {FormControl} from "@angular/forms";
 import {OrganisationsComponent} from "../organisations/organisations.component";
 import {OrganisationGroupsEditorComponent} from "../organisationgroupseditor/organisationgroupseditor.component";
+import {MatSort} from "@angular/material/sort";
 
 @Component({
   selector: 'app-organisationgroups',
@@ -23,11 +24,10 @@ export class OrganisationGroupsComponent implements OnInit {
 
   events: any;
   dataSource: MatTableDataSource<any>;
-  page: number = 0;
-  size: number = 11;
+  @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
+  @ViewChild(MatSort, {static: false}) sort: MatSort;
 
   displayedColumns: string[] = ['select', 'type', 'name', 'updated'];
-
   selectedType: string = '';
   selectedTypeString: string = '';
   selectAll: boolean = true;
@@ -75,7 +75,7 @@ export class OrganisationGroupsComponent implements OnInit {
 
   loadEvents() {
     this.events = null;
-    this.explorerService.getOrganisationGroups(this.page, this.size, this.selectedTypeString)
+    this.explorerService.getOrganisationGroups(this.selectedTypeString)
       .subscribe(
         (result) => this.displayEvents(result),
         (error) => this.log.error(error)
@@ -100,12 +100,8 @@ export class OrganisationGroupsComponent implements OnInit {
   displayEvents(events: any) {
     this.events = events;
     this.dataSource = new MatTableDataSource(events.results);
-  }
-
-  onPage(event: PageEvent) {
-    this.page = event.pageIndex;
-    this.size = event.pageSize;
-    this.loadEvents();
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   isAllSelected() {
@@ -196,6 +192,15 @@ export class OrganisationGroupsComponent implements OnInit {
             );
         }
       });
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 
 }

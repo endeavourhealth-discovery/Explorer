@@ -23,8 +23,8 @@
       </mat-form-field>
     </div>
 
-    <div class="mat-elevation-z8" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-      <table mat-table [dataSource]="dataSource" fxFlex="100" fxFill multiTemplateDataRows matSort>
+    <div fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+      <table mat-table class="mat-elevation-z8" [dataSource]="dataSource" fxFlex="100" fxFill multiTemplateDataRows matSort>
         <ng-container matColumnDef="select">
           <th mat-header-cell *matHeaderCellDef style="width: 200px">
             <mat-checkbox (change)="$event ? masterToggle() : null"
@@ -116,7 +116,7 @@
             [class.expanded-expanded-row]="expandedElement === element"></tr>
         <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="expanded-detail-row"></tr>
       </table>
-      <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+      <mat-paginator [pageSizeOptions]="[10, 25, 50, 100]"></mat-paginator>
     </div>
 
   </mat-card-content>

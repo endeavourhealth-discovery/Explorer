@@ -1,8 +1,7 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from '@angular/material';
 import {ExplorerService} from '../explorer.service';
 import {LoggerService} from 'dds-angular8';
-import {PageEvent} from '@angular/material/paginator';
 import {ActivatedRoute, Router} from "@angular/router";
 import {FormControl} from "@angular/forms";
 import {SelectionModel} from "@angular/cdk/collections";
@@ -10,6 +9,8 @@ import {MatDialog} from "@angular/material/dialog";
 import {MessageBoxDialogComponent} from "../message-box-dialog/message-box-dialog.component";
 import {DashboardEditorComponent} from "../dashboardeditor/dashboardeditor.component";
 import {animate, state, style, transition, trigger} from '@angular/animations';
+import {MatPaginator} from "@angular/material/paginator";
+import {MatSort} from "@angular/material/sort";
 
 interface widget {
   icon: string;
@@ -70,8 +71,9 @@ export class DashboardLibraryComponent implements OnInit {
   selection = new SelectionModel<any>(true, []);
   events: any;
   dataSource: MatTableDataSource<any>;
-  page: number = 0;
-  size: number = 11;
+  @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
+  @ViewChild(MatSort, {static: false}) sort: MatSort;
+
 
   displayedColumns: string[] = ['select', 'type', 'name', 'updated', 'expandArrow'];
   expandedElement: DashboardLibraryComponent | null;
@@ -128,7 +130,7 @@ export class DashboardLibraryComponent implements OnInit {
 
   loadEvents() {
     this.events = null;
-    this.explorerService.getDashboardLibrary(this.page, this.size, this.selectedTypeString)
+    this.explorerService.getDashboardLibrary(this.selectedTypeString)
       .subscribe(
         (result) => this.displayEvents(result),
         (error) => this.log.error(error)
@@ -152,12 +154,8 @@ export class DashboardLibraryComponent implements OnInit {
   displayEvents(events: any) {
     this.events = events;
     this.dataSource = new MatTableDataSource(events.results);
-  }
-
-  onPage(event: PageEvent) {
-    this.page = event.pageIndex;
-    this.size = event.pageSize;
-    this.loadEvents();
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   isAllSelected() {
@@ -358,4 +356,12 @@ export class DashboardLibraryComponent implements OnInit {
     }
   }
 
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
 }

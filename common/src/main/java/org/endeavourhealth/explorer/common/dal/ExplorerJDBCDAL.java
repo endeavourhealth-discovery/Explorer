@@ -391,7 +391,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         return querylibrary;
     }
 
-    public ValueSetCodeResult getValueSetCodes(Integer page, Integer size, String value_set_id) throws Exception {
+    public ValueSetCodeResult getValueSetCodes(String value_set_id) throws Exception {
         ValueSetCodeResult result = new ValueSetCodeResult();
 
         String sql = "";
@@ -400,7 +400,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         sql = "SELECT type, original_code, original_term, snomed_id, updated, id " +
                 "FROM dashboards.value_set_codes " +
                 "WHERE value_set_id = ? " +
-                "order by type, original_term LIMIT ?,?";
+                "order by type, original_term";
 
         sqlCount = "SELECT count(1) " +
                 "FROM dashboards.value_set_codes " +
@@ -408,8 +408,6 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
             statement.setString(1, value_set_id);
-            statement.setInt(2, page*size);
-            statement.setInt(3, size);
             try (ResultSet resultSet = statement.executeQuery()) {
                 result.setResults(getValueSetList(resultSet));
             }
@@ -448,7 +446,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         return valueset;
     }
 
-    public ValueSetLibraryResult getValueSetLibrary(Integer page, Integer size, String selectedTypeString) throws Exception {
+    public ValueSetLibraryResult getValueSetLibrary(String selectedTypeString) throws Exception {
         ValueSetLibraryResult result = new ValueSetLibraryResult();
 
         selectedTypeString = selectedTypeString.replaceAll(",","','");
@@ -461,15 +459,13 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         sql = "SELECT id, type, name, updated " +
                 "FROM dashboards.value_sets " +
                 selectedTypeString+
-                "order by type,name LIMIT ?,?";
+                "order by type,name";
 
         sqlCount = "SELECT count(1) " +
                 "FROM dashboards.value_sets " +
                 selectedTypeString;
 
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
-            statement.setInt(1, page*size);
-            statement.setInt(2, size);
             try (ResultSet resultSet = statement.executeQuery()) {
                 result.setResults(getValueSetLibraryList(resultSet));
             }
@@ -505,7 +501,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         return valuesetlibrary;
     }
 
-    public DashboardLibraryResult getDashboardLibrary(Integer page, Integer size, String selectedTypeString) throws Exception {
+    public DashboardLibraryResult getDashboardLibrary(String selectedTypeString) throws Exception {
         DashboardLibraryResult result = new DashboardLibraryResult();
 
         selectedTypeString = selectedTypeString.replaceAll(",","','");
@@ -518,15 +514,13 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         sql = "SELECT dashboard_id, name, updated, type, query " +
                 "FROM dashboards.dashboard_library " +
                  selectedTypeString+
-                " order by type,name LIMIT ?,?";
+                " order by type,name";
 
         sqlCount = "SELECT count(1) " +
                 " FROM dashboards.dashboard_library "+
                  selectedTypeString;
 
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
-            statement.setInt(1, page*size);
-            statement.setInt(2, size);
             try (ResultSet resultSet = statement.executeQuery()) {
                 result.setResults(getDashboardList(resultSet));
             }
@@ -924,7 +918,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         return registries;
     }
 
-    public OrganisationGroupsResult getOrganisationGroups(Integer page, Integer size, String selectedTypeString) throws Exception {
+    public OrganisationGroupsResult getOrganisationGroups(String selectedTypeString) throws Exception {
         OrganisationGroupsResult result = new OrganisationGroupsResult();
 
         selectedTypeString = selectedTypeString.replaceAll(",","','");
@@ -937,15 +931,13 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         sql = "SELECT id, type, name, updated " +
                 "FROM dashboards.organisation_groups " +
                 selectedTypeString+
-                "order by type,name LIMIT ?,?";
+                "order by type,name";
 
         sqlCount = "SELECT count(1) " +
                 "FROM dashboards.organisation_groups " +
                 selectedTypeString;
 
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
-            statement.setInt(1, page*size);
-            statement.setInt(2, size);
             try (ResultSet resultSet = statement.executeQuery()) {
                 result.setResults(getOrganisationGroupsList(resultSet));
             }
@@ -981,7 +973,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         return organisationgroups;
     }
 
-    public OrganisationsResult getOrganisations(Integer page, Integer size, String organisation_group_id) throws Exception {
+    public OrganisationsResult getOrganisations(String organisation_group_id) throws Exception {
         OrganisationsResult result = new OrganisationsResult();
 
         String sql = "";
@@ -990,7 +982,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         sql = "SELECT type, name, ods_code, updated, id " +
                 "FROM dashboards.organisations " +
                 "WHERE organisation_group_id = ? " +
-                "order by type, name LIMIT ?,?";
+                "order by type, name";
 
         sqlCount = "SELECT count(1) " +
                 "FROM dashboards.organisations " +
@@ -998,8 +990,6 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
             statement.setString(1, organisation_group_id);
-            statement.setInt(2, page*size);
-            statement.setInt(3, size);
             try (ResultSet resultSet = statement.executeQuery()) {
                 result.setResults(getOrganisationsList(resultSet));
             }
