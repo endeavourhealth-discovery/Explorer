@@ -252,11 +252,11 @@ export class MapComponent implements OnInit {
 
   updateDate(event) {
     this.display = this.generating;
-    this.selectedDate = this.dates[event.value-1];
+    this.selectedDate = this.dates[event.value];
     this.refreshMap();
   }
 
   onInputChange(event: MatSliderChange) {
-    this.display = this.dates[event.value-1];
+    this.display = this.dates[event.value];
   }
 }

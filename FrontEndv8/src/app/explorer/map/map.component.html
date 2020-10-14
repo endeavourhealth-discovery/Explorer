@@ -8,7 +8,7 @@
   </mat-card-header>
   <mat-card-content style="text-align: center;">
     <mat-label style="font-size:25px;" ><b>{{ display }}</b></mat-label><br>
-    <mat-slider (input)="onInputChange($event)" min="1" max="{{max}}" step="1" (change)="updateDate($event)" [tickInterval]="1"></mat-slider>
+    <mat-slider (input)="onInputChange($event)" min="0" max="{{max-1}}" step="1" (change)="updateDate($event)" [tickInterval]="1"></mat-slider>
     <div layout="row" flex>
       <div id="map"></div>
       <div layout="row">
