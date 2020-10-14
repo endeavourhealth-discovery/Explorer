@@ -1488,8 +1488,6 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
     public ArrayList<String> getCovidDates() throws Exception {
 
-        //updateMaps();
-
         ArrayList<String> list = new ArrayList();
         String sql = "select distinct date_format(covid_date, '%Y-%m-%d') as covid_date " +
                 "from dashboards.lsoa_covid order by covid_date";
@@ -1574,19 +1572,19 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                     layer.setDescription(description);
                     layer.setGeoJson(resultSet.getString("geo_json"));
 
-                    if (ratioFloat >= 0.1 && ratioFloat <= 0.3) {
+                    if (ratioFloat >= 0.1f && ratioFloat <= 0.3f) {
                         layer.setColor("#FFFEC3");
                         layer1.add(layer);
-                    } else if (ratioFloat >= 0.4 && ratioFloat <= 0.5) {
+                    } else if (ratioFloat >= 0.4f && ratioFloat <= 0.5f) {
                         layer.setColor("#FDDB89");
                         layer2.add(layer);
-                    } else if (ratioFloat >= 0.6 && ratioFloat <= 0.8) {
+                    } else if (ratioFloat >= 0.6f && ratioFloat <= 0.8f) {
                         layer.setColor("#FEAD75");
                         layer3.add(layer);
-                    } else if (ratioFloat >= 0.9 && ratioFloat <= 1.1) {
+                    } else if (ratioFloat >= 0.9f && ratioFloat <= 1.1f) {
                         layer.setColor("#F4735E");
                         layer4.add(layer);
-                    } else if (ratioFloat >= 1.2 && ratioFloat <= 4.0) {
+                    } else if (ratioFloat >= 1.2f) {
                         layer.setColor("#CB4B64");
                         layer5.add(layer);
                     }
@@ -1610,65 +1608,5 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         result.setLayers(layers);
 
         return result;
-    }
-
-    private void updateMaps() throws Exception {
-
-        Set<String> missingLsoaValues = new HashSet<>();
-        String sql = "SELECT DISTINCT(A.lsoa_code) FROM dashboards.lsoa_registrations A WHERE lsoa_code NOT IN(SELECT area_code FROM dashboards.maps)";
-        try (PreparedStatement statement = conn.prepareStatement(sql)) {
-            try (ResultSet resultSet = statement.executeQuery()) {
-                while (resultSet.next()) {
-                    missingLsoaValues.add(resultSet.getString("lsoa_code"));
-                }
-            }
-        }
-        insertMissingLsoaCodes(missingLsoaValues);
-    }
-
-    private void insertMissingLsoaCodes(Set<String> missingLsoaValues) throws  Exception {
-        Statement batch = conn.createStatement(
-                ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-        int i = 0;
-        for (String lsoaCode : missingLsoaValues) {
-            String geoJson = getGeoJson(lsoaCode);
-            if (!StringUtils.isNullOrEmpty(geoJson)) {
-                i++;
-                String sql = "INSERT INTO dashboards.maps (area_code, description, geo_json) " +
-                        "VALUES ('" + lsoaCode + "','" + lsoaCode + "','" + geoJson +"')";
-                batch.addBatch(sql);
-                if(i % 1000 == 0) {
-                    try {
-                        int[] executed = batch.executeBatch();
-                        LOG.info("Executed statements:" + executed.length);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        throw e;
-                    }
-                }
-            }
-        }
-        int[] executed = batch.executeBatch();
-        LOG.info("Executed statements:" + executed.length);
-    }
-
-    private String getGeoJson(String lsoaCode) throws Exception {
-        URL url = new URL("https://raw.githubusercontent.com/martinjc/UK-GeoJSON/master/json/statistical/eng/oa_by_lsoa/"+lsoaCode+".json");
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestMethod("GET");
-        conn.setRequestProperty("Accept", "application/text");
-        if (conn.getResponseCode() != 200) {
-            LOG.error("Failed : HTTP error code : " + conn.getResponseCode());
-            LOG.info("GeoJSON for:" + lsoaCode + " not found.");
-            return null;
-        }
-        BufferedReader br = new BufferedReader(new InputStreamReader( (conn.getInputStream())));
-        String readAPIResponse = " ";
-        StringBuilder output = new StringBuilder();
-        while ((readAPIResponse = br.readLine()) != null) {
-            output.append(readAPIResponse);
-        }
-        LOG.info("Found GeoJSON for:" + lsoaCode);
-        return output.toString();
     }
 }
