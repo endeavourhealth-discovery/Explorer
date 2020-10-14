@@ -20,7 +20,7 @@ export class MapComponent implements OnInit {
   layerIds: string[];
   selectedLayer: string;
   map: L.map = null;
-  url: string = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw';
+  url: string = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 
   mapResults: MapResult;
   layers: MapLayer[];
@@ -58,7 +58,7 @@ export class MapComponent implements OnInit {
     },
     {
       content: {
-        label: '1.2 - 4',
+        label: '1.2 - above',
         color: '#CB4B64',
         value: 'Level 5'
       }
@@ -98,7 +98,7 @@ export class MapComponent implements OnInit {
                 this.layers.forEach( (item, index) => {
                   layer[index] = L.geoJSON([JSON.parse(item.geoJson)], {
                     style: function (feature) {
-                      return { color: item.color, fill: false, weight: 1.5 };
+                      return { color: item.color, fill: false, weight: 3 };
                     }
                   });
                   layer[index].addTo(this.buildingLayers);
@@ -120,6 +120,7 @@ export class MapComponent implements OnInit {
       for(let i=0;  i<this.layersToRemove.length; i++){
         this.map.removeLayer(this.layersToRemove[i]);
       }
+      this.layersToRemove = [];
     }
 
     let layer = L.geoJSON();
@@ -128,7 +129,7 @@ export class MapComponent implements OnInit {
     this.layers.forEach( (item, index) => {
       layer = L.geoJSON([JSON.parse(item.geoJson)], {
         style: function (feature) {
-          return { color: item.color, fillOpacity: 1, weight: 1.5 };
+          return { color: 'black', fillColor: item.color, fillOpacity: 1, weight: 1.5 };
         }
       }).bindPopup(function (layer) {
         return item.description;
@@ -142,7 +143,7 @@ export class MapComponent implements OnInit {
     this.layers.forEach( (item, index) => {
       layer = L.geoJSON([JSON.parse(item.geoJson)], {
         style: function (feature) {
-          return { color: item.color, fillOpacity: 1, weight: 1.5 };
+          return { color: 'black', fillColor: item.color, fillOpacity: 1, weight: 1.5 };
         }
       }).bindPopup(function (layer) {
         return item.description;
@@ -156,7 +157,7 @@ export class MapComponent implements OnInit {
     this.layers.forEach( (item, index) => {
       layer = L.geoJSON([JSON.parse(item.geoJson)], {
         style: function (feature) {
-          return { color: item.color, fillOpacity: 1, weight: 1.5 };
+          return { color: 'black', fillColor: item.color, fillOpacity: 1, weight: 1.5 };
         }
       }).bindPopup(function (layer) {
         return item.description;
@@ -170,7 +171,7 @@ export class MapComponent implements OnInit {
     this.layers.forEach( (item, index) => {
       layer = L.geoJSON([JSON.parse(item.geoJson)], {
         style: function (feature) {
-          return { color: item.color, fillOpacity: 1, weight: 1.5 };
+          return { color: 'black', fillColor: item.color, fillOpacity: 1, weight: 1.5 };
         }
       }).bindPopup(function (layer) {
         return item.description;
@@ -184,7 +185,7 @@ export class MapComponent implements OnInit {
     this.layers.forEach( (item, index) => {
       layer = L.geoJSON([JSON.parse(item.geoJson)], {
         style: function (feature) {
-          return { color: item.color, fillOpacity: 1, weight: 1.5 };
+          return { color: 'black', fillColor: item.color, fillOpacity: 1, weight: 1.5 };
         }
       }).bindPopup(function (layer) {
         return item.description;
@@ -225,6 +226,7 @@ export class MapComponent implements OnInit {
         for(let i=0;  i<this.layersToRemove.length; i++){
           this.map.removeLayer(this.layersToRemove[i]);
         }
+        this.layersToRemove = [];
       }
 
       let layer = L.geoJSON();
@@ -233,7 +235,7 @@ export class MapComponent implements OnInit {
       this.layers.forEach( (item, index) => {
         layer = L.geoJSON([JSON.parse(item.geoJson)], {
           style: function (feature) {
-            return { color: item.color, fillOpacity: 1, weight: 1.5 };
+            return { color: 'black', fillColor: item.color, fillOpacity: 1, weight: 1 };
           }
         }).bindPopup(function (layer) {
           return item.description;
