@@ -51,8 +51,8 @@ BEGIN
           ob.result_value,
           ob.non_core_concept_id,
           ob.value_set_code_type,
-          ob.rnk
-     FROM (
+          ob.rnk 
+     FROM ( 
       SELECT 
           o2.id,
           o2.patient_id,
@@ -62,7 +62,7 @@ BEGIN
           o2.value_set_code_type,
           @currank := IF(@curpatient = BINARY o2.patient_id AND @curvaluesettype = BINARY o2.value_set_code_type, @currank + 1, 1) AS rnk,
           @curpatient := o2.patient_id AS cur_patient,
-          @curvaluesettype := o2.value_set_code_type AS cur_valuesetcode
+          @curvaluesettype := o2.value_set_code_type AS cur_valuesetcode 
           FROM qry_tmp o2 JOIN (SELECT @currank := 0, @curpatient := 0, @curvaluesettype := 0) r 
           ORDER BY o2.patient_id, o2.value_set_code_type, o2.clinical_effective_date DESC, o2.id DESC 
           ) ob 
@@ -90,7 +90,7 @@ BEGIN
           ob.result_value,
           ob.non_core_concept_id,
           ob.value_set_code_type,
-          ob.rnk
+          ob.rnk  
      FROM (
       SELECT 
           o2.id,
@@ -101,7 +101,7 @@ BEGIN
           o2.value_set_code_type,
           @currank := IF(@curpatient = BINARY o2.patient_id AND @curvaluesettype = BINARY o2.value_set_code_type, @currank + 1, 1) AS rnk,
           @curpatient := o2.patient_id AS cur_patient,
-          @curvaluesettype := o2.value_set_code_type AS cur_valuesetcode
+          @curvaluesettype := o2.value_set_code_type AS cur_valuesetcode 
           FROM qry_tmp o2 JOIN (SELECT @currank := 0, @curpatient := 0, @curvaluesettype := 0) r 
           ORDER BY o2.patient_id, o2.value_set_code_type, o2.clinical_effective_date ASC, o2.id ASC 
           ) ob 

@@ -13,22 +13,22 @@ BEGIN
 
    SET @sql = CONCAT("CREATE TABLE ", p_concepttab, " AS 
    SELECT vc.value_set_code_type, 
-          cptm.legacy AS non_core_concept_id
-   FROM ",p_valuesettab," vc JOIN ", p_schema,".concept cpt ON cpt.id = vc.original_code
+          cptm.legacy AS non_core_concept_id 
+   FROM ",p_valuesettab," vc JOIN ", p_schema,".concept cpt ON cpt.id = vc.original_code 
    JOIN ", p_schema,".concept_map cptm ON cptm.core = cpt.dbid 
-   WHERE vc.original_code LIKE 'SN\_%'
+   WHERE vc.original_code LIKE 'SN\_%' 
    UNION 
    SELECT vc.value_set_code_type, 
-          cpt.dbid AS non_core_concept_id
-   FROM ", p_valuesettab," vc JOIN ", p_schema,".concept cpt ON cpt.id = vc.original_code
+          cpt.dbid AS non_core_concept_id 
+   FROM ", p_valuesettab," vc JOIN ", p_schema,".concept cpt ON cpt.id = vc.original_code 
    UNION 
    SELECT vc.value_set_code_type, 
-          cpt.dbid AS non_core_concept_id
+          cpt.dbid AS non_core_concept_id 
    FROM ", p_valuesettab," vc JOIN ", p_schema,".concept cpt ON cpt.id = CONCAT('R2_',vc.original_code) 
    WHERE vc.snomed_id = '0' AND vc.value_set_code_type = 'Blood Pressure' 
    UNION 
    SELECT vc.value_set_code_type, 
-          cpt.dbid AS non_core_concept_id
+          cpt.dbid AS non_core_concept_id 
    FROM ", p_valuesettab," vc JOIN ", p_schema,".concept cpt ON cpt.id = CONCAT('R3_',vc.original_code) 
    WHERE vc.snomed_id = '0' AND vc.value_set_code_type = 'Blood Pressure'");
    PREPARE stmt FROM @sql;
