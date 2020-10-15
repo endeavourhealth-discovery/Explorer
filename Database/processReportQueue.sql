@@ -13,33 +13,33 @@ DECLARE query TEXT;
 -- update queue if any existing query been updated
 UPDATE queue q JOIN query_library l ON q.query_id = l.id 
 SET q.query = l.query, 
-q.query_last_updated = l.updated, 
-next_run_date = CURDATE(),
-status = 'N',
-timesubmit = NULL,
-timefinish = NULL,
-timeexecute = NULL
+    q.query_last_updated = l.updated, 
+    q.next_run_date = CURDATE(),
+    q.status = 'N',
+    q.timesubmit = NULL,
+    q.timefinish = NULL,
+    q.timeexecute = NULL
 WHERE q.query_last_updated <> l.updated
 AND q.status <> 'A';  -- i.e. not already processing
 
 -- add to queue if any new query exists
 INSERT INTO queue(query_id, query, query_last_updated, next_run_date)
-SELECT l.id, l.query, l.updated, CURDATE()
-FROM query_library l
-WHERE l.id NOT IN (SELECT q.query_id FROM queue q);
+SELECT id, query, updated, CURDATE() 
+FROM query_library 
+WHERE id NOT IN (SELECT query_id FROM queue);  
 
 -- remove from queue if any query been removed
-DELETE FROM queue q 
-WHERE q.query_id NOT IN (SELECT l.id FROM query_library l)
-AND q.status <> 'A'; -- i.e. not already processing
+DELETE FROM queue 
+WHERE query_id NOT IN (SELECT id FROM query_library)
+AND status <> 'A'; -- i.e. not already processing
 
 START TRANSACTION;
 
-SELECT q.query_id, q.query INTO queryid, query
-FROM queue q
-WHERE q.status = 'N' 
-AND q.next_run_date = CURDATE()
-AND EXISTS (SELECT COUNT(*) FROM queue q WHERE q.status = 'A' HAVING COUNT(*) < 3)  -- less than 3 query ids to process
+SELECT query_id, query INTO queryid, query
+FROM queue 
+WHERE status = 'N' 
+AND next_run_date = CURDATE()
+AND EXISTS (SELECT COUNT(*) FROM queue WHERE status = 'A' HAVING COUNT(*) < 3)  -- less than 3 query ids to process
 LIMIT 1 FOR UPDATE;
 
 -- set status to active i.e. processing and commit record
