@@ -61,7 +61,10 @@
               <mat-form-field appearance="outline" style="margin-left: 25px; width: 300px">
                 <mat-label>Query/Dataset/Series</mat-label>
                 <mat-select multiple [(ngModel)]="selectedSeries1" formControlName="control7a" (ngModelChange)="formChanged()" required>
-                  <mat-option *ngFor="let series of seriesList" [value]="series" (click)="querySelected1()">{{series}}</mat-option>
+                  <mat-select-search [formControl]="filterCtrl"></mat-select-search>
+                  <mat-option *ngFor="let result of filteredValueset | async" [value]="result" (click)="querySelected1()" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
+                    {{result}}
+                  </mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
@@ -129,7 +132,10 @@
               <mat-form-field appearance="outline" style="margin-left: 25px; width: 300px">
                 <mat-label>Query/Dataset/Series</mat-label>
                 <mat-select multiple [(ngModel)]="selectedSeries2" formControlName="control7b" (ngModelChange)="formChanged()" >
-                  <mat-option *ngFor="let series of seriesList" [value]="series"  (click)="querySelected2()">{{series}}</mat-option>
+                  <mat-select-search [formControl]="filterCtrl"></mat-select-search>
+                  <mat-option *ngFor="let result of filteredValueset | async" [value]="result" (click)="querySelected2()" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
+                    {{result}}
+                  </mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
@@ -197,7 +203,10 @@
               <mat-form-field appearance="outline" style="margin-left: 25px; width: 300px">
                 <mat-label>Query/Dataset/Series</mat-label>
                 <mat-select multiple [(ngModel)]="selectedSeries3" formControlName="control7c" (ngModelChange)="formChanged()" >
-                  <mat-option *ngFor="let series of seriesList" [value]="series"  (click)="querySelected3()">{{series}}</mat-option>
+                  <mat-select-search [formControl]="filterCtrl"></mat-select-search>
+                  <mat-option *ngFor="let result of filteredValueset | async" [value]="result" (click)="querySelected3()" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
+                    {{result}}
+                  </mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
@@ -265,7 +274,10 @@
               <mat-form-field appearance="outline" style="margin-left: 25px; width: 300px">
                 <mat-label>Query/Dataset/Series</mat-label>
                 <mat-select multiple [(ngModel)]="selectedSeries4" formControlName="control7d" (ngModelChange)="formChanged()" >
-                  <mat-option *ngFor="let series of seriesList" [value]="series"  (click)="querySelected4()">{{series}}</mat-option>
+                  <mat-select-search [formControl]="filterCtrl"></mat-select-search>
+                  <mat-option *ngFor="let result of filteredValueset | async" [value]="result" (click)="querySelected4()" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
+                    {{result}}
+                  </mat-option>
                 </mat-select>
               </mat-form-field>
             </div>

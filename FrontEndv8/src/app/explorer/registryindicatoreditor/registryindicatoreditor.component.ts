@@ -2,12 +2,19 @@ import {Component, Inject} from '@angular/core';
 import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {ExplorerService} from '../explorer.service';
 import {LoggerService} from 'dds-angular8';
+import {FormControl} from "@angular/forms";
+import {ReplaySubject, Subject} from "rxjs";
+import {takeUntil} from "rxjs/operators";
 
 export interface DialogData {
   id: string;
   name: string;
   query: string;
   indicator: string;
+}
+
+interface queryList {
+  value: string;
 }
 
 @Component({
@@ -17,12 +24,15 @@ export interface DialogData {
 })
 
 export class RegistryIndicatorEditorComponent {
+  filterCtrl: FormControl = new FormControl();
+
   query: string;
   name: string;
   indicator: string;
   disableForm: boolean;
   id: string;
   queryList = [];
+  filteredValueset: ReplaySubject<queryList[]> = new ReplaySubject<queryList[]>(1);
 
   constructor(
     public dialogRef: MatDialogRef<RegistryIndicatorEditorComponent>,
@@ -35,6 +45,8 @@ export class RegistryIndicatorEditorComponent {
     this.query = data.query;
     this.indicator = data.indicator;
   }
+
+  private _onDestroy = new Subject<void>();
 
   ngOnInit() {
     this.explorerService.getLookupLists('11')
@@ -50,6 +62,29 @@ export class RegistryIndicatorEditorComponent {
         this.queryList.push(e.type);
       }
     )
+    this.filteredValueset.next(this.queryList.slice());
+
+    this.filterCtrl.valueChanges
+      .pipe(takeUntil(this._onDestroy))
+      .subscribe(() => {
+        this.filterValueset();
+      });
+
+  }
+
+  filterValueset() {
+    let search = this.filterCtrl.value;
+
+    if (!search) {
+      this.filteredValueset.next(this.queryList.slice());
+      return;
+    } else {
+      search = search.toLowerCase();
+    }
+
+    this.filteredValueset.next(
+      this.queryList.filter(value => value.toLowerCase().indexOf(search) > -1)
+    );
   }
 
   saveRegistry() {

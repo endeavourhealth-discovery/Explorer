@@ -11,7 +11,10 @@
       <mat-form-field appearance="outline" style="width: 500px">
         <mat-label>Registry indicator query</mat-label>
         <mat-select [(ngModel)]="query" (ngModelChange)="formChanged()" required>
-          <mat-option *ngFor="let result of queryList" [value]="result" (click)="querySelected()">{{result}}</mat-option>
+          <mat-select-search [formControl]="filterCtrl"></mat-select-search>
+          <mat-option *ngFor="let result of filteredValueset | async" [value]="result" (click)="querySelected()" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
+            {{result}}
+          </mat-option>
         </mat-select>
       </mat-form-field>
       <br/>

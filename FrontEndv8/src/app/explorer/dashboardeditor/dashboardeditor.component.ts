@@ -2,9 +2,11 @@ import {Component, Inject} from '@angular/core';
 import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {ExplorerService} from '../explorer.service';
 import {LoggerService} from 'dds-angular8';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {STEPPER_GLOBAL_OPTIONS} from "@angular/cdk/stepper";
 import {CdkDragDrop, transferArrayItem} from "@angular/cdk/drag-drop";
+import {ReplaySubject, Subject} from "rxjs";
+import {takeUntil} from "rxjs/operators";
 
 export interface DialogData {
   dashboardId: string;
@@ -56,6 +58,10 @@ interface outputField {
   outputField: string;
 }
 
+interface seriesList {
+  value: string;
+}
+
 @Component({
   selector: 'app-dashboardeditor',
   templateUrl: './dashboardeditor.component.html',
@@ -66,9 +72,12 @@ interface outputField {
 })
 
 export class DashboardEditorComponent {
+  filterCtrl: FormControl = new FormControl();
+
   type: string;
   name: string;
   seriesList = [];
+  filteredValueset: ReplaySubject<seriesList[]> = new ReplaySubject<seriesList[]>(1);
 
   selectedVisualisation1: string = '';
   selectedOutputField1: string = '';
@@ -225,6 +234,8 @@ export class DashboardEditorComponent {
     this.disableForm = this.type=='' || this.type==undefined || this.name=='' || this.name==undefined || this.selectedVisualisation1=='' || this.selectedVisualisation1==undefined;
   }
 
+  private _onDestroy = new Subject<void>();
+
   ngOnInit() {
     this.explorerService.getLookupLists('12')
       .subscribe(
@@ -239,6 +250,29 @@ export class DashboardEditorComponent {
         this.seriesList.push(e.type);
       }
     )
+
+    this.filteredValueset.next(this.seriesList.slice());
+
+    this.filterCtrl.valueChanges
+      .pipe(takeUntil(this._onDestroy))
+      .subscribe(() => {
+        this.filterValueset();
+      });
+  }
+
+  filterValueset() {
+    let search = this.filterCtrl.value;
+
+    if (!search) {
+      this.filteredValueset.next(this.seriesList.slice());
+      return;
+    } else {
+      search = search.toLowerCase();
+    }
+
+    this.filteredValueset.next(
+      this.seriesList.filter(value => value.toLowerCase().indexOf(search) > -1)
+    );
   }
 
   getSelectedVisualisation(i) {

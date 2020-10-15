@@ -2,8 +2,10 @@ import {Component, Inject} from '@angular/core';
 import {MatDialogRef, MAT_DIALOG_DATA, MatDialog} from '@angular/material/dialog';
 import {ExplorerService} from '../explorer.service';
 import {LoggerService} from 'dds-angular8';
-import {FormGroup} from "@angular/forms";
+import {FormControl, FormGroup} from "@angular/forms";
 import {RegistryIndicatorEditorComponent} from "../registryindicatoreditor/registryindicatoreditor.component";
+import {ReplaySubject, Subject} from "rxjs";
+import {takeUntil} from "rxjs/operators";
 
 export interface DialogData {
   id: string;
@@ -16,6 +18,10 @@ interface query {
   providerOrganisation: string;
 }
 
+interface queryList {
+  value: string;
+}
+
 @Component({
   selector: 'app-registryeditor',
   templateUrl: './registryeditor.component.html',
@@ -23,12 +29,15 @@ interface query {
 })
 
 export class RegistryEditorComponent {
+  filterCtrl: FormControl = new FormControl();
+
   providerOrganisation: string;
   query: string;
   name: string;
   disableForm: boolean;
   id: string;
   queryList = [];
+  filteredValueset: ReplaySubject<queryList[]> = new ReplaySubject<queryList[]>(1);
 
   constructor(
     public dialogRef: MatDialogRef<RegistryEditorComponent>,
@@ -42,6 +51,8 @@ export class RegistryEditorComponent {
     this.query = data.query;
     this.providerOrganisation = data.ccg;
   }
+
+  private _onDestroy = new Subject<void>();
 
   ngOnInit() {
     this.explorerService.getLookupLists('11')
@@ -57,6 +68,29 @@ export class RegistryEditorComponent {
         this.queryList.push(e.type);
       }
     )
+
+    this.filteredValueset.next(this.queryList.slice());
+
+    this.filterCtrl.valueChanges
+      .pipe(takeUntil(this._onDestroy))
+      .subscribe(() => {
+        this.filterValueset();
+      });
+  }
+
+  filterValueset() {
+    let search = this.filterCtrl.value;
+
+    if (!search) {
+      this.filteredValueset.next(this.queryList.slice());
+      return;
+    } else {
+      search = search.toLowerCase();
+    }
+
+    this.filteredValueset.next(
+      this.queryList.filter(value => value.toLowerCase().indexOf(search) > -1)
+    );
   }
 
   saveRegistry() {
