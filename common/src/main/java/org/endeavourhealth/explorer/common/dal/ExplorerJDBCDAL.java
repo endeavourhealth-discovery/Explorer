@@ -1492,7 +1492,11 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         return list;
     }
 
-    public MapResult getCovidMaps(String date) throws Exception {
+    public MapResult getCovidMaps(String date,
+                                  List<String> lowerLimits,
+                                  List<String> upperLimits,
+                                  List<String> colors,
+                                  List<String> descriptions) throws Exception {
 
         ArrayList<String> ids = new ArrayList<String>();
         HashMap<String, List<MapLayer>> layers = new HashMap();
@@ -1562,36 +1566,37 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                     layer.setDescription(description);
                     layer.setGeoJson(resultSet.getString("geo_json"));
 
-                    if (ratioFloat >= 0.1f && ratioFloat <= 0.4f) {
-                        layer.setColor("#FFFEC3");
-                        layer1.add(layer);
-                    } else if (ratioFloat >= 0.4f && ratioFloat <= 0.5f) {
-                        layer.setColor("#FDDB89");
-                        layer2.add(layer);
-                    } else if (ratioFloat >= 0.5f && ratioFloat <= 0.7f) {
-                        layer.setColor("#FEAD75");
-                        layer3.add(layer);
-                    } else if (ratioFloat >= 0.7f && ratioFloat <= 1.1f) {
-                        layer.setColor("#F4735E");
-                        layer4.add(layer);
-                    } else if (ratioFloat >= 1.2f && ratioFloat <= 4f) {
-                        layer.setColor("#CB4B64");
-                        layer5.add(layer);
+                    for (int i=0; i<5; i++) {
+                        if (ratioFloat >= Float.valueOf(lowerLimits.get(i)) &&
+                                ratioFloat <= Float.valueOf(upperLimits.get(i))) {
+                            layer.setColor(colors.get(i));
+                            if (i==0) {
+                                layer1.add(layer);
+                            } else if (i==1) {
+                                layer2.add(layer);
+                            } else if (i==2) {
+                                layer3.add(layer);
+                            } else if (i==3) {
+                                layer4.add(layer);
+                            } else if (i==4) {
+                                layer5.add(layer);
+                            }
+                        }
                     }
                 }
             }
         }
 
-        ids.add("Level 1");
-        layers.put("Level 1", layer1);
-        ids.add("Level 2");
-        layers.put("Level 2", layer2);
-        ids.add("Level 3");
-        layers.put("Level 3", layer3);
-        ids.add("Level 4");
-        layers.put("Level 4", layer4);
-        ids.add("Level 5");
-        layers.put("Level 5", layer5);
+        ids.add(descriptions.get(0));
+        layers.put(descriptions.get(0), layer1);
+        ids.add(descriptions.get(1));
+        layers.put(descriptions.get(1), layer2);
+        ids.add(descriptions.get(2));
+        layers.put(descriptions.get(2), layer3);
+        ids.add(descriptions.get(3));
+        layers.put(descriptions.get(3), layer4);
+        ids.add(descriptions.get(4));
+        layers.put(descriptions.get(4), layer5);
 
         MapResult result = new MapResult();
         result.setIds(ids);

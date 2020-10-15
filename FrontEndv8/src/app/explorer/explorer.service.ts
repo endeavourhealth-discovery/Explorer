@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {of} from "rxjs";
+import {Level} from "./map/model/Level";
 
 @Injectable({
   providedIn: 'root'
@@ -315,9 +316,15 @@ export class ExplorerService {
     return this.http.get('api/events/covidDates', {params});
   }
 
-  getCovidMaps(date: string): Observable<any> {
+  getCovidMaps(date: string, levels: Level[]): Observable<any> {
     let params = new HttpParams();
     params = params.append('date', date);
+    for (let level in levels) {
+      params = params.append('lower_limits', levels[level].lowerLimit);
+      params = params.append('upper_limits', levels[level].upperLimit);
+      params = params.append('colors', levels[level].color);
+      params = params.append('descriptions', levels[level].description);
+    }
     return this.http.get('api/events/covidMaps', {params});
   }
 

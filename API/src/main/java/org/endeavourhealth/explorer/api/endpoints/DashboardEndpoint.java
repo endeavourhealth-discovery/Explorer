@@ -12,6 +12,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import java.util.ArrayList;
+import java.util.List;
 
 @Path("events")
 public class DashboardEndpoint {
@@ -684,11 +685,20 @@ public class DashboardEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getCovidMaps(@Context SecurityContext sc,
-                                 @QueryParam("date") String date) throws Exception {
-        LOG.debug("getCovidMaps date:" + date);
+                                 @QueryParam("date") String date,
+                                 @QueryParam("lower_limits") List<String> lowerLimits,
+                                 @QueryParam("upper_limits") List<String> upperLimits,
+                                 @QueryParam("colors") List<String> colors,
+                                 @QueryParam("descriptions") List<String> descriptions) throws Exception {
+
+        LOG.debug("getCovidMaps");
 
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
-            MapResult result = viewerDAL.getCovidMaps(date);
+            MapResult result = viewerDAL.getCovidMaps(date, lowerLimits, upperLimits, colors, descriptions);
+            result.setLowerLimits(new ArrayList(lowerLimits));
+            result.setUpperLimits(new ArrayList(upperLimits));
+            result.setColors(new ArrayList(colors));
+            result.setDescriptions(new ArrayList(descriptions));
 
             LOG.debug("map generated.");
 

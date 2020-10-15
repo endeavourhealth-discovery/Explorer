@@ -5,6 +5,7 @@ import {LoggerService} from "dds-angular8";
 import {MapResult} from "./model/MapResult";
 import {MapLayer} from "./model/MapLayer";
 import {MatSliderChange} from "@angular/material/slider";
+import {Level} from "./model/Level";
 
 @Component({
   selector: 'app-map',
@@ -29,55 +30,50 @@ export class MapComponent implements OnInit {
   layersToRemove: MapLayer[];
   buildingLayers: any;
 
-  levels = [
-    {
-      content: {
-        label: '0.1 - 0.4',
-        color: '#FFFEC3',
-        value: 'Level 1'
-      }
-    },
-    {
-      content: {
-        label: '0.4 - 0.5',
-        color: '#FDDB89',
-        value: 'Level 2'
-      }
-    },
-    {
-      content: {
-        label: '0.5 - 0.7',
-        color: '#FEAD75',
-        value: 'Level 3'
-      }
-    },
-    {
-      content: {
-        label: '0.7 - 1.1',
-        color: '#F4735E',
-        value: 'Level 4'
-      }
-    },
-    {
-      content: {
-        label: '1.1 - 4',
-        color: '#CB4B64',
-        value: 'Level 5'
-      }
-    },
-    {
-      content: {
-        label: 'All',
-        color: 'blue',
-        value: 'All levels'
-      }
-    }
-  ];
+  levels: Level[];
 
   constructor(private explorerService: ExplorerService,
               private log: LoggerService) { }
 
   ngOnInit() {
+
+    this.levels = [];
+    let level = new Level();
+    level.lowerLimit = '0.1';
+    level.upperLimit = '0.4';
+    level.description = 'Level 1';
+    level.color = "#FFFEC3";
+    this.levels.push(level);
+
+    level = new Level();
+    level.lowerLimit = '0.4';
+    level.upperLimit = '0.5';
+    level.description = 'Level 2';
+    level.color = "#FDDB89";
+    this.levels.push(level);
+
+    level = new Level();
+    level.lowerLimit = '0.5';
+    level.upperLimit = '0.7';
+    level.description = 'Level 3';
+    level.color = "#FEAD75";
+    this.levels.push(level);
+
+    level = new Level();
+    level.lowerLimit = '0.7';
+    level.upperLimit = '1.1';
+    level.description = 'Level 4';
+    level.color = "#F4735E";
+    this.levels.push(level);
+
+    level = new Level();
+    level.lowerLimit = '1.1';
+    level.upperLimit = '4';
+    level.description = 'Level 5';
+    level.color = "#CB4B64";
+    this.levels.push(level);
+    console.log(this.levels);
+
     this.generating = "Generating map...";
     this.display = this.generating;
     this.layersToRemove = [];
@@ -87,7 +83,7 @@ export class MapComponent implements OnInit {
           this.dates = result;
           this.selectedDate = this.dates[0];
           this.max = this.dates.length;
-          this.explorerService.getCovidMaps(this.selectedDate)
+          this.explorerService.getCovidMaps(this.selectedDate, this.levels)
             .subscribe(
               (result) =>{
                 this.mapResults = result;
@@ -202,7 +198,7 @@ export class MapComponent implements OnInit {
   }
 
   refreshMap() {
-    this.explorerService.getCovidMaps(this.selectedDate)
+    this.explorerService.getCovidMaps(this.selectedDate, this.levels)
       .subscribe(
         (result) =>{
           this.mapResults = result;
@@ -258,5 +254,10 @@ export class MapComponent implements OnInit {
 
   onInputChange(event: MatSliderChange) {
     this.display = this.dates[event.value];
+  }
+
+  recompute() {
+    this.display = this.generating;
+    this.refreshMap();
   }
 }
