@@ -20,7 +20,7 @@
           <div style="text-align: center">
             &nbsp;
           </div>
-          <div class="flex" fxLayout="row nowrap" fxLayout.xs="column" fxLayoutGap="16px grid" fxLayoutAlign="start" *ngFor="let level of levels; let i = index">
+          <div class="flex" fxLayout="row nowrap" fxLayout.xs="column" fxLayoutGap="5px grid" fxLayoutAlign="start" *ngFor="let level of levels; let i = index">
             <button mat-button disabled="true" fxFlex="20">
               <mat-icon [ngStyle]="{'color': level.color}">label</mat-icon>
             </button>
@@ -28,7 +28,7 @@
               <mat-label>Lower limit</mat-label>
               <input type="number" step="0.1" matInput required placeholder="Lower limit" name="lower_limit_{{i}}" [(ngModel)]="level.lowerLimit">
             </mat-form-field>
-            <mat-form-field appearance="outline" style="width:50vw" fxFlex="40">
+            <mat-form-field appearance="outline" style="width:50vw" fxFlex="40" *ngIf="i!=4">
               <mat-label>Upper limit</mat-label>
               <input type="number" step="0.1" matInput required placeholder="Upper limit" name="upper_limit_{{i}}" [(ngModel)]="level.upperLimit">
             </mat-form-field>
@@ -51,9 +51,15 @@
             &nbsp;
           </div>
           <div layout="row" *ngFor="let item of levels;  let i = index">
-            <button mat-button (click)="refreshLayer(mapResults.descriptions[i])" *ngIf="mapResults">
+            <button mat-button (click)="refreshLayer(mapResults.descriptions[i])" *ngIf="mapResults && i!=4" >
               <mat-icon [ngStyle]="{'color': mapResults.colors[i]}">label</mat-icon>
               {{mapResults.lowerLimits[i]}} - {{mapResults.upperLimits[i]}}
+            </button>
+          </div>
+          <div layout="row">
+            <button mat-button (click)="refreshLayer(mapResults.descriptions[4])" *ngIf="mapResults" >
+              <mat-icon [ngStyle]="{'color': mapResults.colors[4]}">label</mat-icon>
+              {{mapResults.lowerLimits[4]}} and above
             </button>
           </div>
           <div layout="row">
