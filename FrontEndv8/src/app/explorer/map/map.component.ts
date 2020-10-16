@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import * as L from 'leaflet';
 import {ExplorerService} from "../explorer.service";
-import {LoggerService} from "dds-angular8";
+import {LoggerService, UserManagerService} from "dds-angular8";
 import {MapResult} from "./model/MapResult";
 import {MapLayer} from "./model/MapLayer";
 import {MatSliderChange} from "@angular/material/slider";
 import {Level} from "./model/Level";
+import {CookieService} from "ngx-cookie-service";
+import {UserProfile} from "dds-angular8/lib/user-manager/models/UserProfile";
 
 @Component({
   selector: 'app-map',
@@ -31,47 +33,33 @@ export class MapComponent implements OnInit {
   buildingLayers: any;
 
   levels: Level[];
+  user: UserProfile;
 
   constructor(private explorerService: ExplorerService,
-              private log: LoggerService) { }
+              private log: LoggerService,
+              private cookieService: CookieService,
+              private userService: UserManagerService) {
+
+  }
 
   ngOnInit() {
+    this.userService.getUserProfile(true).then(
+      result => {
+        this.user = result;
+        this.init();
+      }
+    );
+  }
 
-    this.levels = [];
-    let level = new Level();
-    level.lowerLimit = '0.1';
-    level.upperLimit = '0.4';
-    level.description = 'Level 1';
-    level.color = "#FFFEC3";
-    this.levels.push(level);
+  init() {
 
-    level = new Level();
-    level.lowerLimit = '0.4';
-    level.upperLimit = '0.5';
-    level.description = 'Level 2';
-    level.color = "#FDDB89";
-    this.levels.push(level);
-
-    level = new Level();
-    level.lowerLimit = '0.5';
-    level.upperLimit = '0.7';
-    level.description = 'Level 3';
-    level.color = "#FEAD75";
-    this.levels.push(level);
-
-    level = new Level();
-    level.lowerLimit = '0.7';
-    level.upperLimit = '1.1';
-    level.description = 'Level 4';
-    level.color = "#F4735E";
-    this.levels.push(level);
-
-    level = new Level();
-    level.lowerLimit = '1.1';
-    level.upperLimit = '4';
-    level.description = 'Level 5';
-    level.color = "#CB4B64";
-    this.levels.push(level);
+    let cookieLevel = this.cookieService.get(this.user.uuid + "_custom_levels");
+    if (cookieLevel) {
+      let values = cookieLevel.split(",",10);
+      this.createCookieLevels(values);
+    } else {
+      this.defaultLevels();
+    }
 
     this.generating = "Generating map...";
     this.display = this.generating;
@@ -108,6 +96,84 @@ export class MapComponent implements OnInit {
         },
         (error) => this.log.error(error)
       );
+  }
+
+  createCookieLevels(values) {
+    this.levels = [];
+    let level = new Level();
+    level.lowerLimit = values[0];
+    level.upperLimit = values[1];
+    level.description = 'Level 1';
+    level.color = "#FFFEC3";
+    this.levels.push(level);
+
+    level = new Level();
+    level.lowerLimit = values[2];
+    level.upperLimit = values[3];
+    level.description = 'Level 2';
+    level.color = "#FDDB89";
+    this.levels.push(level);
+
+    level = new Level();
+    level.lowerLimit = values[4];
+    level.upperLimit = values[5];
+    level.description = 'Level 3';
+    level.color = "#FEAD75";
+    this.levels.push(level);
+
+    level = new Level();
+    level.lowerLimit = values[6];
+    level.upperLimit = values[7];
+    level.description = 'Level 4';
+    level.color = "#F4735E";
+    this.levels.push(level);
+
+    level = new Level();
+    level.lowerLimit = values[8];
+    level.upperLimit = values[9];
+    level.description = 'Level 5';
+    level.color = "#CB4B64";
+    this.levels.push(level);
+  }
+
+  defaultLevels() {
+
+    this.levels = [];
+
+    let level = new Level();
+    level.lowerLimit = '0.1';
+    level.upperLimit = '0.4';
+    level.description = 'Level 1';
+    level.color = "#FFFEC3";
+    this.levels.push(level);
+
+    level = new Level();
+    level.lowerLimit = '0.4';
+    level.upperLimit = '0.5';
+    level.description = 'Level 2';
+    level.color = "#FDDB89";
+    this.levels.push(level);
+
+    level = new Level();
+    level.lowerLimit = '0.5';
+    level.upperLimit = '0.7';
+    level.description = 'Level 3';
+    level.color = "#FEAD75";
+    this.levels.push(level);
+
+    level = new Level();
+    level.lowerLimit = '0.7';
+    level.upperLimit = '1.1';
+    level.description = 'Level 4';
+    level.color = "#F4735E";
+    this.levels.push(level);
+
+    level = new Level();
+    level.lowerLimit = '1.1';
+    level.upperLimit = '4';
+    level.description = 'Level 5';
+    level.color = "#CB4B64";
+    this.levels.push(level);
   }
 
   createMap() {
@@ -203,6 +269,17 @@ export class MapComponent implements OnInit {
           this.mapResults = result;
           this.layerIds = this.mapResults.ids;
           this.selectedLayer = this.layerIds[0];
+          let cookieString =  this.mapResults.lowerLimits[0] + ',' +
+            this.mapResults.upperLimits[0] + ',' +
+            this.mapResults.lowerLimits[1] + ',' +
+            this.mapResults.upperLimits[1] + ',' +
+            this.mapResults.lowerLimits[2] + ',' +
+            this.mapResults.upperLimits[2] + ',' +
+            this.mapResults.lowerLimits[3] + ',' +
+            this.mapResults.upperLimits[3] + ',' +
+            this.mapResults.lowerLimits[4] + ',' +
+            this.mapResults.upperLimits[4];
+          this.cookieService.set(this.user.uuid + "_custom_levels", cookieString);
           this.createMap();
         },
         (error) => this.log.error(error)
