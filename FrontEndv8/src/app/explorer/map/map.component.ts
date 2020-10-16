@@ -72,7 +72,6 @@ export class MapComponent implements OnInit {
     level.description = 'Level 5';
     level.color = "#CB4B64";
     this.levels.push(level);
-    console.log(this.levels);
 
     this.generating = "Generating map...";
     this.display = this.generating;

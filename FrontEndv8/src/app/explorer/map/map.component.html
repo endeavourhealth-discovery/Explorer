@@ -13,14 +13,14 @@
         <mat-slider [disabled]="form.invalid" (input)="onInputChange($event)" min="0" max="{{max-1}}" step="1" (change)="updateDate($event)" [tickInterval]="1"></mat-slider>
       </div>
       <div class="flex" fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="16px grid" fxLayoutAlign="start">
-        <div fxFlex="20" fxFill>
+        <div fxFlex="15" fxFill>
           <div style="text-align: center">
             <b>Levels</b>
           </div>
           <div style="text-align: center">
             &nbsp;
           </div>
-          <div class="flex" fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="16px grid" fxLayoutAlign="start" *ngFor="let level of levels; let i = index">
+          <div class="flex" fxLayout="row nowrap" fxLayout.xs="column" fxLayoutGap="16px grid" fxLayoutAlign="start" *ngFor="let level of levels; let i = index">
             <button mat-button disabled="true" fxFlex="20">
               <mat-icon [ngStyle]="{'color': level.color}">label</mat-icon>
             </button>
@@ -40,10 +40,10 @@
             <button [disabled]="form.invalid" mat-flat-button color="accent" (click)="recompute()">Recompute</button>
           </div>
         </div>
-        <div fxFlex="60" fxFill>
+        <div fxFlex="70" fxFill>
           <div id="map"></div>
         </div>
-        <div fxFlex="20" fxFill style="text-align: left">
+        <div fxFlex="15" fxFill style="text-align: left">
           <div>
             <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Legend</b>
           </div>
@@ -51,7 +51,7 @@
             &nbsp;
           </div>
           <div layout="row" *ngFor="let item of levels;  let i = index">
-            <button mat-button (click)="refreshLayer(mapResults.descriptions[i])">
+            <button mat-button (click)="refreshLayer(mapResults.descriptions[i])" *ngIf="mapResults">
               <mat-icon [ngStyle]="{'color': mapResults.colors[i]}">label</mat-icon>
               {{mapResults.lowerLimits[i]}} - {{mapResults.upperLimits[i]}}
             </button>
