@@ -1567,18 +1567,21 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                     layer.setGeoJson(resultSet.getString("geo_json"));
 
                     for (int i=0; i<5; i++) {
-                        if (ratioFloat >= Float.valueOf(lowerLimits.get(i)) &&
+                        if (i < 4 && ratioFloat >= Float.valueOf(lowerLimits.get(i)) &&
                                 ratioFloat <= Float.valueOf(upperLimits.get(i))) {
                             layer.setColor(colors.get(i));
-                            if (i==0) {
+                            if (i == 0) {
                                 layer1.add(layer);
-                            } else if (i==1) {
+                            } else if (i == 1) {
                                 layer2.add(layer);
-                            } else if (i==2) {
+                            } else if (i == 2) {
                                 layer3.add(layer);
-                            } else if (i==3) {
+                            } else if (i == 3) {
                                 layer4.add(layer);
-                            } else if (i==4) {
+                            }
+                        } else {
+                            if (i == 4 && ratioFloat >= Float.valueOf(lowerLimits.get(i))) {
+                                layer.setColor(colors.get(i));
                                 layer5.add(layer);
                             }
                         }
