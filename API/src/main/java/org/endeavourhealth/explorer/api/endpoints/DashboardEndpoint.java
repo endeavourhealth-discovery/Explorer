@@ -516,6 +516,40 @@ public class DashboardEndpoint {
     }
 
     @GET
+    @Path("/dashboardduplicate")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response duplicateDashboard(@Context SecurityContext sc,
+                                               @QueryParam("id") String id) throws Exception {
+        LOG.debug("duplicateDashboard");
+
+        try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
+            viewerDAL.duplicateDashboard(id);
+
+            return Response
+                    .ok()
+                    .build();
+        }
+    }
+
+    @GET
+    @Path("/queryduplicate")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response duplicateQuery(@Context SecurityContext sc,
+                                               @QueryParam("id") String id) throws Exception {
+        LOG.debug("duplicateQuery");
+
+        try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
+            viewerDAL.duplicateQuery(id);
+
+            return Response
+                    .ok()
+                    .build();
+        }
+    }
+
+    @GET
     @Path("/query")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)

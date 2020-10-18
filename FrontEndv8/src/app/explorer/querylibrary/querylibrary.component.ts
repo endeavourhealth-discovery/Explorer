@@ -186,6 +186,21 @@ export class QueryLibraryComponent implements OnInit {
       });
   }
 
+  duplicate() {
+    MessageBoxDialogComponent.open(this.dialog, 'Duplicate query?', 'Are you sure you want to duplicate this query?', 'Duplicate', 'Cancel')
+      .subscribe(result => {
+        if (result) {
+
+          this.explorerService.duplicateQuery(this.selection.selected[0].id.toString())
+            .subscribe(saved => {
+                this.ngOnInit();
+              },
+              error => this.log.error('This query could not be duplicated.')
+            );
+        }
+      });
+  }
+
   edit() {
       const dialogRef = this.dialog.open(AdvancedQueryEditorComponent, {
         height: '810px',

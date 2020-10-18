@@ -228,6 +228,21 @@ export class DashboardLibraryComponent implements OnInit {
 
   }
 
+  duplicate() {
+    MessageBoxDialogComponent.open(this.dialog, 'Duplicate dashboard?', 'Are you sure you want to duplicate this dashboard?', 'Duplicate', 'Cancel')
+      .subscribe(result => {
+        if (result) {
+
+          this.explorerService.duplicateDashboard(this.selection.selected[0].dashboardId.toString())
+            .subscribe(saved => {
+                this.ngOnInit();
+              },
+              error => this.log.error('This dashboard could not be duplicated.')
+            );
+        }
+      });
+  }
+
   widgetsShown (jsonQuery) {
     if (jsonQuery != undefined) {
       let query: query = JSON.parse(jsonQuery);

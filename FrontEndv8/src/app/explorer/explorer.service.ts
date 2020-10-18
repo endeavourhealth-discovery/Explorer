@@ -245,6 +245,20 @@ export class ExplorerService {
     return this.http.get('api/events/organisationgroupduplicate', {params});
   }
 
+  duplicateDashboard(id?: string): Observable<any> {
+    let params = new HttpParams();
+    params = params.append('id', id);
+
+    return this.http.get('api/events/dashboardduplicate', {params});
+  }
+
+  duplicateQuery(id?: string): Observable<any> {
+    let params = new HttpParams();
+    params = params.append('id', id);
+
+    return this.http.get('api/events/queryduplicate', {params});
+  }
+
   duplicateRegistry(id?: string, name?: string): Observable<any> {
     let params = new HttpParams();
     params = params.append('id', id);

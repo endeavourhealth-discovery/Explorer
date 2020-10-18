@@ -63,7 +63,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
     public void duplicateValueSet(String id) throws Exception {
 
         String sql = "insert into dashboards.value_sets (type, name) " +
-                "select type, name from dashboards.value_sets where id = ?";
+                "select type, concat('Copy of ',name) from dashboards.value_sets where id = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, id);
@@ -120,6 +120,17 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         }
     }
 
+    public void duplicateDashboard(String id) throws Exception {
+
+        String sql = "insert into dashboards.dashboard_library (type, name, query) " +
+                "select type, concat('Copy of ',name), query from dashboards.dashboard_library where dashboard_id = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, id);
+            stmt.executeUpdate();
+        }
+    }
+
     public void deleteQuery(String id) throws Exception {
 
         id = "WHERE id in ("+id+")";
@@ -156,6 +167,17 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                 stmt.setString(4, id);
                 stmt.executeUpdate();
             }
+        }
+    }
+
+    public void duplicateQuery(String id) throws Exception {
+
+        String sql = "insert into dashboards.query_library (type, name, query) " +
+                "select type, concat('Copy of ',name), query from dashboards.query_library where id = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, id);
+            stmt.executeUpdate();
         }
     }
 
@@ -1188,7 +1210,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
     public void duplicateOrganisationGroup(String id) throws Exception {
 
         String sql = "insert into dashboards.organisation_groups (type, name) " +
-                "select type, name from dashboards.organisation_groups where id = ?";
+                "select type, concat('Copy of ',name) from dashboards.organisation_groups where id = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, id);
