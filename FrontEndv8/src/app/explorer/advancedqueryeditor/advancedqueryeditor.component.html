@@ -33,7 +33,7 @@
             <p>Name of query.</p>
           </div>
         </div>
-        <div style="margin-top: 375px" mat-dialog-actions align="end">
+        <div style="margin-top: 380px" mat-dialog-actions align="end">
           <button style="margin-right: 15px" mat-button color="accent" (click)="onCancelClick()">Cancel</button>
           <button style="margin-right: 15px" mat-flat-button color="accent" (click)="stepper.next()">Next</button>
         </div>
@@ -169,7 +169,7 @@
           </div>
         </div>
 
-        <div mat-dialog-actions align="end">
+        <div style="margin-top: 20px" mat-dialog-actions align="end">
           <button style="margin-right: 15px" mat-button color="accent" (click)="onCancelClick()">Cancel</button>
           <button style="margin-right: 15px" mat-button color="accent" matStepperPrevious>Back</button>
           <button style="margin-right: 15px" mat-flat-button color="accent" (click)="stepper.next()">Next</button>
@@ -179,8 +179,8 @@
 
     <mat-step [stepControl]="thirdFormGroup" errorMessage="Step not completed.">
       <form [formGroup]="thirdFormGroup">
-        <ng-template matStepLabel>Advanced criteria</ng-template>
-        <p style="font-weight: 500">Specify one or more of the following (optional) advanced criteria rules</p>
+        <ng-template matStepLabel>Advanced cohort criteria</ng-template>
+        <p style="font-weight: 500">Specify one or more of the following (optional) advanced criteria rules for identifying the patient cohort. These rules will be added to the cohort definition rules in step 2.</p>
         <mat-divider></mat-divider>
         <br/>
         <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
@@ -852,75 +852,210 @@
     <mat-step [stepControl]="fourthFormGroup" errorMessage="Step not completed.">
       <form [formGroup]="fourthFormGroup">
         <ng-template matStepLabel>Data set criteria</ng-template>
+        <p>Once a patient cohort has been identified, these are the criteria choices for defining the data set (output tables).
+        The data set output will apply to each patient identified in the cohort.
+        The data set can either be delivered as CSV files to a secure location, or as visualisation tables in the dashboard library.
+        </p>
         <br/>
+        <table>
+          <tr class="table-header">
+            <td style="width: 100px">Output types</td>
+            <td>Date range</td>
+            <td>Output fields</td>
+            <td>Clinical types</td>
+            <td>Output value set</td>
+          </tr>
+          <tr>
+            <td>
+              <mat-checkbox class="checkbox" [(ngModel)]="demographics" formControlName="control65a">Demographics</mat-checkbox>
+            </td>
+            <td style="padding-top: 20px">
+              <mat-form-field class="example-full-width" appearance="outline" style="width: 130px">
+                <mat-label>Date from</mat-label>
+                <input matInput [matDatepicker]="picker65c" placeholder="Date from" [(ngModel)]="dateFromDemographics" formControlName="control65c">
+                <mat-datepicker-toggle matSuffix [for]="picker65c">
+                  <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+                </mat-datepicker-toggle>
+                <mat-datepicker #picker65c></mat-datepicker>
+              </mat-form-field>
 
-        <div class="summary-column">
-          <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            <mat-form-field appearance="outline" style="margin-left: 25px; width: 500px">
-              <mat-label>Included event types</mat-label>
-              <mat-select multiple [(ngModel)]="selectedEventType" formControlName="control10" (ngModelChange)="formChanged()" required>
-                <mat-option *ngFor="let eventType of eventTypes" [value]="eventType.value">
-                  {{eventType.value}}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
+              <mat-form-field class="example-full-width" appearance="outline" style="width: 130px; margin-left: 10px">
+                <mat-label>Date to</mat-label>
+                <input matInput [matDatepicker]="control65d" placeholder="Date to" [(ngModel)]="dateToDemographics" formControlName="control65d">
+                <mat-datepicker-toggle matSuffix [for]="control65d">
+                  <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+                </mat-datepicker-toggle>
+                <mat-datepicker #control65d></mat-datepicker>
+              </mat-form-field>
+            </td>
+            <td style="padding-top: 20px">
+              <mat-form-field appearance="outline" style="width: 200px">
+                <mat-label>Demographic fields</mat-label>
+                <mat-select multiple [(ngModel)]="selectedDemographicFields" formControlName="control65e" (ngModelChange)="formChanged()">
+                  <mat-option *ngFor="let field of demographicsFieldList" [value]="field">
+                    {{field}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>
+              <mat-checkbox class="checkbox" [(ngModel)]="encounters" formControlName="control66a">Encounters</mat-checkbox>
+            </td>
+            <td style="padding-top: 20px">
+              <mat-form-field class="example-full-width" appearance="outline" style="width: 130px">
+                <mat-label>Date from</mat-label>
+                <input matInput [matDatepicker]="picker66c" placeholder="Date from" [(ngModel)]="dateFromEncounters" formControlName="control66c">
+                <mat-datepicker-toggle matSuffix [for]="picker66c">
+                  <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+                </mat-datepicker-toggle>
+                <mat-datepicker #picker66c></mat-datepicker>
+              </mat-form-field>
 
-            <div style="margin-left: 25px; width: 235px">
-              <br/>
-              <mat-checkbox class="checkbox" [(ngModel)]="active" formControlName="control13">Active items only</mat-checkbox>
-            </div>
-          </div>
-          <br/>
-          <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            <mat-form-field appearance="outline" style="margin-left: 25px; width: 500px">
-              <mat-label>Dataset value set</mat-label>
-              <mat-select multiple [(ngModel)]="selectedDatasetValueSet" formControlName="control16" (ngModelChange)="formChanged()">
-                <mat-select-search [formControl]="filterCtrl"></mat-select-search>
-                <mat-option *ngFor="let result of filteredValueset | async" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
-                  {{result}}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-          <br/>
-          <div class="flex" fxLayout.xs="column"  fxLayoutAlign="start">
-            <mat-form-field class="example-full-width" appearance="outline" style="margin-left: 25px">
-              <mat-label>Date range from</mat-label>
-              <input matInput [matDatepicker]="picker1" placeholder="Date from" [(ngModel)]="dateFrom" formControlName="control11">
-              <mat-datepicker-toggle matSuffix [for]="picker1">
-                <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
-              </mat-datepicker-toggle>
-              <mat-datepicker #picker1></mat-datepicker>
-            </mat-form-field>
+              <mat-form-field class="example-full-width" appearance="outline" style="width: 130px; margin-left: 10px">
+                <mat-label>Date to</mat-label>
+                <input matInput [matDatepicker]="control66d" placeholder="Date to" [(ngModel)]="dateToEncounters" formControlName="control66d">
+                <mat-datepicker-toggle matSuffix [for]="control66d">
+                  <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+                </mat-datepicker-toggle>
+                <mat-datepicker #control66d></mat-datepicker>
+              </mat-form-field>
+            </td>
+            <td style="padding-top: 20px">
+              <mat-form-field appearance="outline" style="width: 200px">
+                <mat-label>Encounter fields</mat-label>
+                <mat-select multiple [(ngModel)]="selectedEncounterFields" formControlName="control66e" (ngModelChange)="formChanged()">
+                  <mat-option *ngFor="let field of encounterFieldList" [value]="field">
+                    {{field}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
 
-            <mat-form-field class="example-full-width" appearance="outline" style="margin-left: 25px">
-              <mat-label>Date range to</mat-label>
-              <input matInput [matDatepicker]="picker2" placeholder="Date to" [(ngModel)]="dateTo" formControlName="control12">
-              <mat-datepicker-toggle matSuffix [for]="picker2">
-                <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
-              </mat-datepicker-toggle>
-              <mat-datepicker #picker2></mat-datepicker>
-            </mat-form-field>
-          </div>
-          <br/>
-          <span style="margin-left: 30px">*Required</span>
-        </div>
+            </td>
+            <td></td>
+            <td style="padding-top: 20px">
+              <mat-form-field appearance="outline" style="width: 200px">
+                <mat-label>Encounter value set</mat-label>
+                <mat-select multiple [(ngModel)]="selectedEncounterValueSet" formControlName="control66g" (ngModelChange)="formChanged()">
+                  <mat-select-search [formControl]="filterCtrl"></mat-select-search>
+                  <mat-option *ngFor="let result of filteredValueset | async" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
+                    {{result}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <mat-checkbox class="checkbox" [(ngModel)]="medication" formControlName="control67a">Medication</mat-checkbox>
+              <mat-checkbox class="checkbox" [(ngModel)]="currentMedication" formControlName="control67b">Current medication only</mat-checkbox>
+            </td>
+            <td style="padding-top: 20px">
+              <mat-form-field class="example-full-width" appearance="outline" style="width: 130px">
+                <mat-label>Date from</mat-label>
+                <input matInput [matDatepicker]="picker67c" placeholder="Date from" [(ngModel)]="dateFromMedication" formControlName="control67c">
+                <mat-datepicker-toggle matSuffix [for]="picker67c">
+                  <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+                </mat-datepicker-toggle>
+                <mat-datepicker #picker67c></mat-datepicker>
+              </mat-form-field>
 
-        <div class="summary-column">
-          <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start" style="margin-top: -8px">
-            <p>Clinical events include conditions, values, procedures, immunisations, family history, referrals, and allergies. Encounters include consultations, admissions, discharges, and outpatient attendances.</p>
-          </div>
+              <mat-form-field class="example-full-width" appearance="outline" style="width: 130px; margin-left: 10px">
+                <mat-label>Date to</mat-label>
+                <input matInput [matDatepicker]="control67d" placeholder="Date to" [(ngModel)]="dateToMedication" formControlName="control67d">
+                <mat-datepicker-toggle matSuffix [for]="control67d">
+                  <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+                </mat-datepicker-toggle>
+                <mat-datepicker #control67d></mat-datepicker>
+              </mat-form-field>
+            </td>
+            <td style="padding-top: 20px">
+              <mat-form-field appearance="outline" style="width: 200px">
+                <mat-label>Medication fields</mat-label>
+                <mat-select multiple [(ngModel)]="selectedMedicationFields" formControlName="control67e" (ngModelChange)="formChanged()">
+                  <mat-option *ngFor="let field of medicationFieldList" [value]="field">
+                    {{field}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </td>
+            <td></td>
+            <td style="padding-top: 20px">
+              <mat-form-field appearance="outline" style="width: 200px">
+                <mat-label>Medication value set</mat-label>
+                <mat-select multiple [(ngModel)]="selectedMedicationValueSet" formControlName="control67g" (ngModelChange)="formChanged()">
+                  <mat-select-search [formControl]="filterCtrl"></mat-select-search>
+                  <mat-option *ngFor="let result of filteredValueset | async" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
+                    {{result}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <mat-checkbox class="checkbox" [(ngModel)]="clinicalEvents" formControlName="control68a">Clinical events</mat-checkbox>
+              <mat-checkbox class="checkbox" [(ngModel)]="activeProblems" formControlName="control68b">Active problems only</mat-checkbox>
+            </td>
+            <td style="padding-top: 20px">
+              <mat-form-field class="example-full-width" appearance="outline" style="width: 130px">
+                <mat-label>Date from</mat-label>
+                <input matInput [matDatepicker]="picker68c" placeholder="Date from" [(ngModel)]="dateFromClinicalEvents" formControlName="control68c">
+                <mat-datepicker-toggle matSuffix [for]="picker68c">
+                  <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+                </mat-datepicker-toggle>
+                <mat-datepicker #picker68c></mat-datepicker>
+              </mat-form-field>
 
-          <div style="margin-top: 53px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            <p>Filter data set by the selected value sets.</p>
-          </div>
+              <mat-form-field class="example-full-width" appearance="outline" style="width: 130px; margin-left: 10px">
+                <mat-label>Date to</mat-label>
+                <input matInput [matDatepicker]="control68d" placeholder="Date to" [(ngModel)]="dateToClinicalEvents" formControlName="control68d">
+                <mat-datepicker-toggle matSuffix [for]="control68d">
+                  <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+                </mat-datepicker-toggle>
+                <mat-datepicker #control68d></mat-datepicker>
+              </mat-form-field>
+            </td>
+            <td style="padding-top: 20px">
+              <mat-form-field appearance="outline" style="width: 200px">
+                <mat-label>Clinical event fields</mat-label>
+                <mat-select multiple [(ngModel)]="selectedClinicalEventFields" formControlName="control68e" (ngModelChange)="formChanged()">
+                  <mat-option *ngFor="let field of clinicalEventFieldList" [value]="field">
+                    {{field}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
 
-          <div style="margin-top: 30px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            <p>Filter the data set by date range.</p>
-          </div>
-        </div>
+            </td>
+            <td style="padding-top: 20px">
+              <mat-form-field appearance="outline" style="width: 200px">
+                <mat-label>Clinical types</mat-label>
+                <mat-select multiple [(ngModel)]="selectedClinicalTypes" formControlName="control68f" (ngModelChange)="formChanged()">
+                  <mat-option *ngFor="let field of clinicalTypeList" [value]="field.clinicalType">
+                    {{field.clinicalType}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </td>
+            <td style="padding-top: 20px">
+              <mat-form-field appearance="outline" style="width: 200px">
+                <mat-label>Clinical event value set</mat-label>
+                <mat-select multiple [(ngModel)]="selectedClinicalEventValueSet" formControlName="control68g" (ngModelChange)="formChanged()">
+                  <mat-select-search [formControl]="filterCtrl"></mat-select-search>
+                  <mat-option *ngFor="let result of filteredValueset | async" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
+                    {{result}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
 
-        <div style="margin-top: 300px" mat-dialog-actions align="end">
+            </td>
+          </tr>
+        </table>
+
+        <div style="margin-top: 50px" mat-dialog-actions align="end">
           <button style="margin-right: 15px" mat-button color="accent" (click)="onCancelClick()">Cancel</button>
           <button style="margin-right: 15px" mat-button color="accent" matStepperPrevious>Back</button>
           <button style="margin-right: 15px" mat-flat-button color="accent" (click)="stepper.next()">Next</button>
@@ -934,28 +1069,6 @@
         <br/>
 
         <div class="summary-column">
-          <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            <mat-form-field appearance="outline" style="margin-left: 25px">
-              <mat-label>Output fields</mat-label>
-              <mat-select multiple [(ngModel)]="selectedOutputField" formControlName="control14" (ngModelChange)="formChanged()">
-                <mat-option *ngFor="let field of outputFields" [value]="field.outputField">
-                  {{field.outputField}}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-          <br/>
-          <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            <mat-form-field appearance="outline" style="margin-left: 25px">
-              <mat-label>Output type</mat-label>
-              <mat-select [(ngModel)]="selectedOutputType" formControlName="control15" (ngModelChange)="formChanged()" required>
-                <mat-option *ngFor="let outputType of outputTypes" [value]="outputType.outputType">
-                  {{outputType.outputType}}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-          <br/>
           <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
             <mat-form-field appearance="outline" style="margin-left: 25px">
               <mat-label>Refresh schedule</mat-label>
@@ -982,13 +1095,7 @@
         </div>
 
         <div class="summary-column">
-          <div style="margin-top: 8px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            <p>Output fields. Fields for comparing/aggregating/grouping in dashboards or fields to be output as rows in tables.</p>
-          </div>
-          <div style="margin-top: 29px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            <p>Output type for visualisations or exporting to files.</p>
-          </div>
-          <div style="margin-top: 30px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+          <div style="margin-top: 7px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
             <p>How often should this data set be refreshed.</p>
           </div>
           <div style="margin-top: 30px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
@@ -996,7 +1103,7 @@
           </div>
         </div>
 
-        <div style="margin-top: 225px" mat-dialog-actions align="end">
+        <div style="margin-top: 380px" mat-dialog-actions align="end">
           <button style="margin-right: 15px" mat-button color="accent" (click)="onCancelClick()">Cancel</button>
           <button style="margin-right: 15px" mat-button color="accent" matStepperPrevious>Back</button>
           <button style="margin-right: 15px" mat-flat-button color="accent" [disabled]="disableForm" (click)="saveQuery()">Save</button>

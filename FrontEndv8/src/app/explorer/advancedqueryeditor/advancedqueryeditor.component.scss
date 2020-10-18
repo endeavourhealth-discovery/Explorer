@@ -1,0 +1,16 @@
+table {
+  width:100%;
+  border-collapse: collapse;
+}
+
+.table-header {
+  font-weight: bold;
+  background-color: lightslategrey;
+  color: white;
+}
+
+td {
+  border:1px solid lightgray;
+  padding: 5px;
+  vertical-align: center;
+}

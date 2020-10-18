@@ -328,6 +328,38 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                 sqlCount = "SELECT count(distinct(name)) " +
                         " FROM dashboards.dashboard_results";
                 break;
+            case "13":
+                sql = "SELECT distinct(field_name) as type " +
+                        "FROM dashboards.dataset_tables where table_name = 'patient' " +
+                        " order by field_name";
+
+                sqlCount = "SELECT count(distinct(field_name)) " +
+                        " FROM dashboards.dataset_tables where table_name = 'patient'";
+                break;
+            case "14":
+                sql = "SELECT distinct(field_name) as type " +
+                        "FROM dashboards.dataset_tables where table_name = 'observation' " +
+                        " order by field_name";
+
+                sqlCount = "SELECT count(distinct(field_name)) " +
+                        " FROM dashboards.dataset_tables where table_name = 'observation'";
+                break;
+            case "15":
+                sql = "SELECT distinct(field_name) as type " +
+                        "FROM dashboards.dataset_tables where table_name = 'medication_statement' " +
+                        " order by field_name";
+
+                sqlCount = "SELECT count(distinct(field_name)) " +
+                        " FROM dashboards.dataset_tables where table_name = 'medication_statement'";
+                break;
+            case "16":
+                sql = "SELECT distinct(field_name) as type " +
+                        "FROM dashboards.dataset_tables where table_name = 'encounter' " +
+                        " order by field_name";
+
+                sqlCount = "SELECT count(distinct(field_name)) " +
+                        " FROM dashboards.dataset_tables where table_name = 'encounter'";
+                break;
             default:
                 break;
         }

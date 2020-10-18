@@ -62,19 +62,8 @@
                 <mat-label>Query/Dataset/Series</mat-label>
                 <mat-select multiple [(ngModel)]="selectedSeries1" formControlName="control7a" (ngModelChange)="formChanged()" required>
                   <mat-select-search [formControl]="filterCtrl"></mat-select-search>
-                  <mat-option *ngFor="let result of filteredValueset | async" [value]="result" (click)="querySelected1()" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
+                  <mat-option *ngFor="let result of filteredValueset | async" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
                     {{result}}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
-            <br/>
-            <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-              <mat-form-field appearance="outline" style="margin-left: 25px">
-                <mat-label>Table fields</mat-label>
-                <mat-select multiple [(ngModel)]="selectedOutputField1" formControlName="control4a" (ngModelChange)="formChanged()">
-                  <mat-option *ngFor="let field of outputFields" [value]="field.outputField">
-                    {{field.outputField}}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -105,10 +94,6 @@
               <p>Select the query dataset or series points for the tables and charts.</p>
             </div>
             <br/>
-            <div style="margin-top: 8px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-              <p>Fields to be output as rows in tables.</p>
-            </div>
-            <br/>
             <div style="margin-top: 15px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
               <p>The title of the chart X-Axis.</p>
             </div>
@@ -133,19 +118,8 @@
                 <mat-label>Query/Dataset/Series</mat-label>
                 <mat-select multiple [(ngModel)]="selectedSeries2" formControlName="control7b" (ngModelChange)="formChanged()" >
                   <mat-select-search [formControl]="filterCtrl"></mat-select-search>
-                  <mat-option *ngFor="let result of filteredValueset | async" [value]="result" (click)="querySelected2()" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
+                  <mat-option *ngFor="let result of filteredValueset | async" [value]="result"  matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
                     {{result}}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
-            <br/>
-            <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-              <mat-form-field appearance="outline" style="margin-left: 25px">
-                <mat-label>Table fields</mat-label>
-                <mat-select multiple [(ngModel)]="selectedOutputField2" formControlName="control4b" (ngModelChange)="formChanged()">
-                  <mat-option *ngFor="let field of outputFields" [value]="field.outputField">
-                    {{field.outputField}}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -176,10 +150,6 @@
               <p>Select the query dataset or series points for the tables and charts.</p>
             </div>
             <br/>
-            <div style="margin-top: 8px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-              <p>Fields to be output as rows in tables.</p>
-            </div>
-            <br/>
             <div style="margin-top: 15px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
               <p>The title of the chart X-Axis.</p>
             </div>
@@ -204,19 +174,8 @@
                 <mat-label>Query/Dataset/Series</mat-label>
                 <mat-select multiple [(ngModel)]="selectedSeries3" formControlName="control7c" (ngModelChange)="formChanged()" >
                   <mat-select-search [formControl]="filterCtrl"></mat-select-search>
-                  <mat-option *ngFor="let result of filteredValueset | async" [value]="result" (click)="querySelected3()" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
+                  <mat-option *ngFor="let result of filteredValueset | async" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
                     {{result}}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
-            <br/>
-            <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-              <mat-form-field appearance="outline" style="margin-left: 25px">
-                <mat-label>Table fields</mat-label>
-                <mat-select multiple [(ngModel)]="selectedOutputField3" formControlName="control4c" (ngModelChange)="formChanged()">
-                  <mat-option *ngFor="let field of outputFields" [value]="field.outputField">
-                    {{field.outputField}}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -247,10 +206,6 @@
               <p>Select the query dataset or series points for the tables and charts.</p>
             </div>
             <br/>
-            <div style="margin-top: 8px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-              <p>Fields to be output as rows in tables.</p>
-            </div>
-            <br/>
             <div style="margin-top: 15px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
               <p>The title of the chart X-Axis.</p>
             </div>
@@ -275,19 +230,8 @@
                 <mat-label>Query/Dataset/Series</mat-label>
                 <mat-select multiple [(ngModel)]="selectedSeries4" formControlName="control7d" (ngModelChange)="formChanged()" >
                   <mat-select-search [formControl]="filterCtrl"></mat-select-search>
-                  <mat-option *ngFor="let result of filteredValueset | async" [value]="result" (click)="querySelected4()" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
+                  <mat-option *ngFor="let result of filteredValueset | async" [value]="result"  matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
                     {{result}}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
-            <br/>
-            <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-              <mat-form-field appearance="outline" style="margin-left: 25px">
-                <mat-label>Table fields</mat-label>
-                <mat-select multiple [(ngModel)]="selectedOutputField4" formControlName="control4d" (ngModelChange)="formChanged()">
-                  <mat-option *ngFor="let field of outputFields" [value]="field.outputField">
-                    {{field.outputField}}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -318,10 +262,6 @@
               <p>Select the query dataset or series points for the tables and charts.</p>
             </div>
             <br/>
-            <div style="margin-top: 8px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-              <p>Fields to be output as rows in tables.</p>
-            </div>
-            <br/>
             <div style="margin-top: 15px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
               <p>The title of the chart X-Axis.</p>
             </div>
@@ -333,7 +273,7 @@
         </mat-tab>
       </mat-tab-group>
 
-      <div mat-dialog-actions align="end">
+      <div style="margin-top: 70px" mat-dialog-actions align="end">
         <button style="margin-right: 15px" mat-button color="accent" (click)="onCancelClick()">Cancel</button>
         <button style="margin-right: 15px" mat-button color="accent" matStepperPrevious>Back</button>
         <button style="margin-right: 15px" mat-flat-button color="accent" (click)="stepper.next()">Next</button>

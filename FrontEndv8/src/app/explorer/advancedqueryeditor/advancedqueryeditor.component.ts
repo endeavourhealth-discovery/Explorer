@@ -25,13 +25,7 @@ interface savedQuery {
   cohortValue: string;
   valueDateFrom: string;
   valueDateTo: string;
-  datasetValue: string;
-  eventType: string;
-  active: boolean;
-  dateFrom: string;
-  dateTo: string;
-  outputType: string;
-  outputField: string;
+
   schedule: string;
   delivery: string;
 
@@ -101,10 +95,29 @@ interface savedQuery {
   includedPeriodValue5: string;
   includedPeriodType5: string;
   includedAnyAll5: string;
-}
 
-interface eventType {
-  value: string;
+  demographics: boolean;
+  encounters: boolean;
+  medication: boolean;
+  currentMedication: boolean;
+  clinicalEvents: boolean;
+  activeProblems: boolean;
+  dateFromDemographics: string;
+  dateToDemographics: string;
+  dateFromEncounters: string;
+  dateToEncounters: string;
+  dateFromMedication: string;
+  dateToMedication: string;
+  dateFromClinicalEvents: string;
+  dateToClinicalEvents: string;
+  selectedDemographicFields: string;
+  selectedEncounterFields: string;
+  selectedMedicationFields: string;
+  selectedClinicalEventFields: string;
+  selectedClinicalTypes: string;
+  selectedEncounterValueSet: string;
+  selectedMedicationValueSet: string;
+  selectedClinicalEventValueSet: string;
 }
 
 interface registration {
@@ -123,12 +136,8 @@ interface delivery {
   deliveryValue: string;
 }
 
-interface outputType {
-  outputType: string;
-}
-
-interface outputField {
-  outputField: string;
+interface clinicalType {
+  clinicalType: string;
 }
 
 interface exclude {
@@ -173,25 +182,17 @@ export class AdvancedQueryEditorComponent implements OnInit {
 
   type: string = '';
   name: string = '';
-  selectedEventType: string = '';
-  active: boolean = true;
+
+  selectedOrganisation: string = '';
+  selectedIncludedOrganisation: string = '';
+  selectedRegistration: string = '';
   selectedCohortValueSet: string = '';
   valueDateFrom: string = this.formatDate(new Date());
   valueDateTo: string = this.formatDate(new Date());
-  selectedDatasetValueSet: string = '';
-  dateFrom: string = this.formatDate(new Date());
-  dateTo: string = this.formatDate(new Date());
-  selectedRegistration: string = '';
   ageFrom: string = '';
   ageTo: string = '';
   selectedGender: string = '';
   postcode: string = '';
-  selectedOutputType: string = '';
-  selectedDelivery: string = '';
-  selectedSchedule: string = '';
-  selectedOutputField: string = '';
-  selectedOrganisation: string = '';
-  selectedIncludedOrganisation: string = '';
 
   includedExclude1: string = '';
   includedValueSet1: string = '';
@@ -260,6 +261,59 @@ export class AdvancedQueryEditorComponent implements OnInit {
   includedPeriodType5: string = '';
   includedAnyAll5: string = '';
 
+  demographics: boolean = false;
+  encounters: boolean = false;
+  medication: boolean = false;
+  currentMedication: boolean = false;
+  clinicalEvents: boolean = false;
+  activeProblems: boolean = false;
+  dateFromDemographics: string = this.formatDate(new Date());
+  dateToDemographics: string = this.formatDate(new Date());
+  dateFromEncounters: string = this.formatDate(new Date());
+  dateToEncounters: string = this.formatDate(new Date());
+  dateFromMedication: string = this.formatDate(new Date());
+  dateToMedication: string = this.formatDate(new Date());
+  dateFromClinicalEvents: string = this.formatDate(new Date());
+  dateToClinicalEvents: string = this.formatDate(new Date());
+  demographicsFieldList = [];
+  clinicalEventFieldList = [];
+  encounterFieldList = [];
+  medicationFieldList = [];
+  selectedDemographicFields: string = '';
+  selectedEncounterFields: string = '';
+  selectedMedicationFields: string = '';
+  selectedClinicalEventFields: string = '';
+  selectedClinicalTypes: string = '';
+  clinicalTypeList: clinicalType[] = [
+    {clinicalType: 'Conditions/diseases'},
+    {clinicalType: 'Allergies'},
+    {clinicalType: 'Warnings'},
+    {clinicalType: 'Observations'},
+    {clinicalType: 'Diagnostic orders'},
+    {clinicalType: 'Diagnostic results'},
+    {clinicalType: 'Procedure requests'},
+    {clinicalType: 'Procedures'},
+    {clinicalType: 'Referral requests'},
+    {clinicalType: 'Family history'},
+    {clinicalType: 'Immunisations'},
+    {clinicalType: 'Biochemistry'},
+    {clinicalType: 'Biological values'},
+    {clinicalType: 'Cytology/histology'},
+    {clinicalType: 'Haematology'},
+    {clinicalType: 'Immunology'},
+    {clinicalType: 'Microbiology'},
+    {clinicalType: 'Obstetrics/birth'},
+    {clinicalType: 'Pathology'},
+    {clinicalType: 'Personal health/social'},
+    {clinicalType: 'Radiology'}
+  ];
+  selectedEncounterValueSet: string = '';
+  selectedMedicationValueSet: string = '';
+  selectedClinicalEventValueSet: string = '';
+
+  selectedDelivery: string = '';
+  selectedSchedule: string = '';
+
   disableForm: boolean;
   id: string;
   firstFormGroup: FormGroup;
@@ -283,12 +337,6 @@ export class AdvancedQueryEditorComponent implements OnInit {
   select2a: boolean = false;
   addQuery2: boolean = true;
 
-  eventTypes: eventType[] = [
-    {value: 'Person'},
-    {value: 'Clinical events'},
-    {value: 'Medication'},
-    {value: 'Encounters'}
-  ];
   registrations: registration[] = [
     {regValue: 'Currently registered patients'},
     {regValue: 'All patients included left and deads'}
@@ -299,19 +347,9 @@ export class AdvancedQueryEditorComponent implements OnInit {
     {genValue: 'Female'},
     {genValue: 'Other'}
   ];
-  outputTypes: outputType[] = [
-    {outputType: 'Rows in tables'},
-    {outputType: 'Organisational grouping'},
-    {outputType: 'Timeline'},
-    {outputType: 'Geospatial grouping'},
-    {outputType: 'Age bands'},
-    {outputType: 'Ethnic grouping'}
-  ];
   deliveries: delivery[] = [
     {deliveryValue: 'Dashboard'},
-    {deliveryValue: 'NHS email'},
-    {deliveryValue: 'Encrypted cloud drive'},
-    {deliveryValue: 'Secure ftp'}
+    {deliveryValue: 'CSV files'}
   ];
   schedules: schedule[] = [
     {scheduleValue: 'Daily'},
@@ -319,20 +357,6 @@ export class AdvancedQueryEditorComponent implements OnInit {
     {scheduleValue: 'Monthly'},
     {scheduleValue: 'Quarterly'},
     {scheduleValue: 'One-off'}
-  ];
-  outputFields: outputField[] = [
-    {outputField: 'Patient ID'},
-    {outputField: 'Patient NHS number'},
-    {outputField: 'Pseudo NHS number'},
-    {outputField: 'Effective date'},
-    {outputField: 'Concept name'},
-    {outputField: 'Owning organisation'},
-    {outputField: 'Numeric value'},
-    {outputField: 'Post code'},
-    {outputField: 'Age'},
-    {outputField: 'Gender'},
-    {outputField: 'Registered organisation'},
-    {outputField: 'Death status'}
   ];
   exclude: exclude[] = [
     {exclude: 'Include'},
@@ -384,13 +408,6 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.selectedCohortValueSet = query.cohortValue;
       this.valueDateFrom = query.valueDateFrom;
       this.valueDateTo = query.valueDateTo;
-      this.selectedDatasetValueSet = query.datasetValue;
-      this.selectedEventType = query.eventType;
-      this.active = query.active;
-      this.dateFrom = query.dateFrom;
-      this.dateTo = query.dateTo;
-      this.selectedOutputType = query.outputType;
-      this.selectedOutputField = query.outputField;
       this.selectedSchedule = query.schedule;
       this.selectedDelivery = query.delivery;
       this.includedExclude1 = query.includedExclude1;
@@ -460,6 +477,29 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.includedPeriodType5 = query.includedPeriodType5;
       this.includedAnyAll5 = query.includedAnyAll5;
 
+      this.demographics = query.demographics;
+      this.encounters = query.encounters;
+      this.medication = query.medication;
+      this.currentMedication = query.currentMedication;
+      this.clinicalEvents = query.clinicalEvents;
+      this.activeProblems = query.activeProblems;
+      this.dateFromDemographics = query.dateFromDemographics;
+      this.dateToDemographics = query.dateToDemographics;
+      this.dateFromEncounters = query.dateFromEncounters;
+      this.dateToEncounters = query.dateToEncounters;
+      this.dateFromMedication = query.dateFromMedication;
+      this.dateToMedication = query.dateToMedication;
+      this.dateFromClinicalEvents = query.dateFromClinicalEvents;
+      this.dateToClinicalEvents = query.dateToClinicalEvents;
+      this.selectedDemographicFields = query.selectedDemographicFields;
+      this.selectedEncounterFields = query.selectedEncounterFields;
+      this.selectedMedicationFields = query.selectedMedicationFields;
+      this.selectedClinicalEventFields = query.selectedClinicalEventFields;
+      this.selectedClinicalTypes = query.selectedClinicalTypes;
+      this.selectedEncounterValueSet = query.selectedEncounterValueSet;
+      this.selectedMedicationValueSet = query.selectedMedicationValueSet;
+      this.selectedClinicalEventValueSet = query.selectedClinicalEventValueSet;
+
       if (this.includedExclude1a != "") {
         this.select1a = true;
         this.addQuery1 = false;
@@ -502,10 +542,11 @@ export class AdvancedQueryEditorComponent implements OnInit {
       control61a: [''], control62a: [''], control63a: [''], control64a: ['']
     });
     this.fourthFormGroup = this._formBuilder.group({
-      control10: ['', Validators.required], control11: [''], control12: [''], control13: [''], control16: ['']
+      control65a: [''], control65c: [''], control65d: [''], control65e: [''], control66a: [''], control66c: [''], control66d: [''], control66e: [''], control66g: [''], control67a: [''],
+      control67b: [''], control67c: [''], control67d: [''], control67e: [''], control67g: [''], control68a: [''], control68b: [''], control68c: [''], control68d: [''], control68e: [''], control68f: [''], control68g: ['']
     });
     this.fifthFormGroup = this._formBuilder.group({
-      control14: [''], control15: [''], control18: ['', Validators.required], control19: ['', Validators.required]
+      control15: [''], control18: ['', Validators.required], control19: ['', Validators.required]
     });
   }
 
@@ -552,6 +593,65 @@ export class AdvancedQueryEditorComponent implements OnInit {
       .subscribe(() => {
         this.filterValueset();
       });
+
+    this.explorerService.getLookupLists('13')
+      .subscribe(
+        (result) => this.loadDemographicSet(result),
+        (error) => this.log.error(error)
+      );
+  }
+
+  loadDemographicSet(lists: any) {
+    lists.results.map(
+      e => {
+        this.demographicsFieldList.push(e.type);
+      }
+    )
+
+    this.explorerService.getLookupLists('14')
+      .subscribe(
+        (result) => this.loadClinicalEventSet(result),
+        (error) => this.log.error(error)
+      );
+
+  }
+
+  loadClinicalEventSet(lists: any) {
+    lists.results.map(
+      e => {
+        this.clinicalEventFieldList.push(e.type);
+      }
+    )
+
+    this.explorerService.getLookupLists('15')
+      .subscribe(
+        (result) => this.loadMedicationSet(result),
+        (error) => this.log.error(error)
+      );
+
+  }
+
+  loadMedicationSet(lists: any) {
+    lists.results.map(
+      e => {
+        this.medicationFieldList.push(e.type);
+      }
+    )
+
+    this.explorerService.getLookupLists('16')
+      .subscribe(
+        (result) => this.loadEncounterSet(result),
+        (error) => this.log.error(error)
+      );
+
+  }
+
+  loadEncounterSet(lists: any) {
+    lists.results.map(
+      e => {
+        this.encounterFieldList.push(e.type);
+      }
+    )
 
   }
 
@@ -649,13 +749,28 @@ export class AdvancedQueryEditorComponent implements OnInit {
       includedDateTo5: this.formatDate(this.includedDateTo5),
       includedPeriodValue5: this.includedPeriodValue5,
       includedPeriodType5: this.includedPeriodType5,
-      eventType: this.selectedEventType,
-      active: this.active,
-      datasetValue: this.selectedDatasetValueSet,
-      dateFrom: this.formatDate(this.dateFrom),
-      dateTo: this.formatDate(this.dateTo),
-      outputField: this.selectedOutputField,
-      outputType: this.selectedOutputType,
+      demographics: this.demographics,
+      encounters: this.encounters,
+      medication: this.medication,
+      currentMedication: this.currentMedication,
+      clinicalEvents: this.clinicalEvents,
+      activeProblems: this.activeProblems,
+      dateFromDemographics: this.dateFromDemographics,
+      dateToDemographics: this.dateToDemographics,
+      dateFromEncounters: this.dateFromEncounters,
+      dateToEncounters: this.dateToEncounters,
+      dateFromMedication: this.dateFromMedication,
+      dateToMedication: this.dateToMedication,
+      dateFromClinicalEvents: this.dateFromClinicalEvents,
+      dateToClinicalEvents: this.dateToClinicalEvents,
+      selectedDemographicFields: this.selectedDemographicFields,
+      selectedEncounterFields: this.selectedEncounterFields,
+      selectedMedicationFields: this.selectedMedicationFields,
+      selectedClinicalEventFields: this.selectedClinicalEventFields,
+      selectedClinicalTypes: this.selectedClinicalTypes,
+      selectedEncounterValueSet: this.selectedEncounterValueSet,
+      selectedMedicationValueSet: this.selectedMedicationValueSet,
+      selectedClinicalEventValueSet: this.selectedClinicalEventValueSet,
       schedule: this.selectedSchedule,
       delivery: this.selectedDelivery
     };
@@ -699,9 +814,9 @@ export class AdvancedQueryEditorComponent implements OnInit {
 
   formChanged() {
     this.disableForm = this.type=='' || this.type==undefined || this.name=='' || this.name==undefined || this.selectedOrganisation=='' || this.selectedOrganisation==undefined ||
-      this.selectedRegistration=='' || this.selectedRegistration==undefined || this.selectedEventType=='' || this.selectedEventType==undefined
-    || this.selectedDelivery=='' || this.selectedDelivery==undefined || this.selectedSchedule=='' || this.selectedSchedule==undefined ||
-      ( (this.selectedOutputField=='' || this.selectedOutputField==undefined) &&  (this.selectedOutputType=='' || this.selectedOutputType==undefined) );
+      this.selectedRegistration=='' || this.selectedRegistration==undefined
+    || this.selectedDelivery=='' || this.selectedDelivery==undefined || this.selectedSchedule=='' || this.selectedSchedule==undefined
+        ;
   }
 
   addSameRule1() {
