@@ -1,13 +1,11 @@
 import {Injectable} from '@angular/core';
 import {Routes} from '@angular/router';
 import {AbstractMenuProvider, MenuOption} from 'dds-angular8';
-import {DashboardComponent} from "./explorer/dashboard/dashboard.component";
 import {DashboardLibraryComponent} from "./explorer/dashboardlibrary/dashboardlibrary.component";
 import {QueryLibraryComponent} from "./explorer/querylibrary/querylibrary.component";
 import {ValueSetLibraryComponent} from "./explorer/valuesetlibrary/valuesetlibrary.component";
 import {TutorialsComponent} from "./explorer/tutorials/tutorials.component";
 import {RegistriesComponent} from "./explorer/registries/registries.component";
-import {RegistryIndicatorsComponent} from "./explorer/registryindicators/registryindicators.component";
 import {OrganisationGroupsComponent} from "./explorer/organisationgroups/organisationgroups.component";
 import {DashboardViewerComponent} from "./explorer/dashboardviewer/dashboardviewer.component";
 import {MapComponent} from "./explorer/map/map.component";
@@ -17,9 +15,7 @@ export class AppMenuService implements  AbstractMenuProvider {
   static getRoutes(): Routes {
     return [
       {path: '', redirectTo: '/dashboardlibrary', pathMatch: 'full'},
-      {path: 'dashboard', component: DashboardComponent, data: {role: 'explorer'}},
       {path: 'dashboardviewer', component: DashboardViewerComponent, data: {role: 'explorer'}},
-      {path: 'registryindicators', component: RegistryIndicatorsComponent, data: {role: 'explorer'}},
       {path: 'registries', component: RegistriesComponent, data: {role: 'explorer'}},
       {path: 'dashboardlibrary', component: DashboardLibraryComponent, data: {role: 'explorer'}},
       {path: 'querylibrary', component: QueryLibraryComponent, data: {role: 'explorer'}},

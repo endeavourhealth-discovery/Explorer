@@ -60,9 +60,7 @@
         </ng-container>
         <ng-container matColumnDef="updated">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Last updated</th>
-          <td style="cursor: pointer" mat-cell *matCellDef="let element"
-              [routerLink]="['/dashboard']"
-              [queryParams] = "{role: 'explorer', dashboardNumber: element.dashboardId}"> {{element.updated}} </td>
+          <td style="cursor: pointer" mat-cell *matCellDef="let element"> {{element.updated}} </td>
         </ng-container>
 
         <ng-container matColumnDef="expandArrow">

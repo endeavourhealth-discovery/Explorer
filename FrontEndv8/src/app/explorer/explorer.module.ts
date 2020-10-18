@@ -27,7 +27,6 @@ import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MatNativeDateModule} from "@angular/material/core";
 import {BarChartModule, LineChartModule, AreaChartModule} from "@swimlane/ngx-charts";
 import {Globals} from "./globals";
-import {DashboardComponent} from "./dashboard/dashboard.component";
 import {PatientComponent} from "./patient/patient.component";
 import {DashboardLibraryComponent} from "./dashboardlibrary/dashboardlibrary.component";
 import {QueryLibraryComponent} from "./querylibrary/querylibrary.component";
@@ -39,7 +38,6 @@ import {MessageBoxDialogComponent} from "./message-box-dialog/message-box-dialog
 import {DashboardEditorComponent} from "./dashboardeditor/dashboardeditor.component";
 import {ValueSetCodeEditorComponent} from "./valuesetcodeeditor/valuesetcodeeditor.component";
 import {RegistriesComponent} from "./registries/registries.component";
-import {RegistryIndicatorsComponent} from "./registryindicators/registryindicators.component";
 import {GaugeModule} from "angular-gauge";
 import {MatStepperModule} from "@angular/material/stepper";
 import {AdvancedQueryEditorComponent} from "./advancedqueryeditor/advancedqueryeditor.component";
@@ -62,7 +60,6 @@ import {TrendComponent} from "./trend/trend.component";
 
 @NgModule({
   declarations: [
-    DashboardComponent,
     PatientComponent,
     DashboardLibraryComponent,
     QueryLibraryComponent,
@@ -74,7 +71,6 @@ import {TrendComponent} from "./trend/trend.component";
     DashboardEditorComponent,
     ValueSetCodeEditorComponent,
     RegistriesComponent,
-    RegistryIndicatorsComponent,
     AdvancedQueryEditorComponent,
     OrganisationGroupsComponent,
     OrganisationsComponent,
