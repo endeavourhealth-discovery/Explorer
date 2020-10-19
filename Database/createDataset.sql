@@ -10,7 +10,9 @@ CREATE PROCEDURE createDataset (
   p_patientcohorttab VARCHAR(64), 
   p_sourcetab VARCHAR(255), 
   p_col VARCHAR(64),
+  p_event_type VARCHAR(50),
   p_datasetconcepttab VARCHAR(64), 
+  p_codetypestab VARCHAR(64), 
   p_daterange VARCHAR(255), 
   p_activeString VARCHAR(255), 
   p_datasettab VARCHAR(64)
@@ -34,25 +36,32 @@ CREATE TABLE IF NOT EXISTS encounter_dataset (
   query_id INT(11) NOT NULL, encounter_id BIGINT(20) NOT NULL, 
   PRIMARY KEY (query_id, encounter_id) ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-    IF p_datasetconcepttab IS NOT NULL THEN
-
+    IF p_event_type = 'DEMOGRAPHICS' THEN
        SET @sql = CONCAT('INSERT INTO ', p_datasettab,'  
-       SELECT DISTINCT 
-              p.query_id, 
-              o.id 
+       SELECT DISTINCT p.query_id, o.id 
+       FROM ', p_sourcetab,' o JOIN ', p_patientcohorttab,' p ON ', p_col,' = p.patient_id');
+    END IF;
+
+    IF p_event_type IN ('MEDICATION', 'ENCOUNTERS') THEN
+    
+       SET @sql = CONCAT('INSERT INTO ', p_datasettab,'  
+       SELECT DISTINCT p.query_id, o.id 
        FROM ', p_sourcetab,' o JOIN ', p_patientcohorttab,' p ON ', p_col,' = p.patient_id 
        JOIN ', p_datasetconcepttab,' c ON o.non_core_concept_id = c.non_core_concept_id 
        WHERE o.non_core_concept_id IS NOT NULL 
        AND ', p_daterange,' AND ', p_activeString);
 
-    ELSE
+    END IF;
+    
+    IF p_event_type = 'CLINICALEVENTS' THEN
 
        SET @sql = CONCAT('INSERT INTO ', p_datasettab,'  
-       SELECT DISTINCT 
-              p.query_id, 
-              o.id 
+       SELECT DISTINCT p.query_id, o.id 
        FROM ', p_sourcetab,' o JOIN ', p_patientcohorttab,' p ON ', p_col,' = p.patient_id 
-       WHERE ', p_daterange,' AND ', p_activeString);
+       JOIN ', p_datasetconcepttab,' c ON o.non_core_concept_id = c.non_core_concept_id  
+       JOIN ', p_codetypestab,' ct ON o.non_core_concept_id = ct.non_core_concept_id 
+       WHERE o.non_core_concept_id IS NOT NULL 
+       AND ', p_daterange,' AND ', p_activeString);
 
     END IF;
 

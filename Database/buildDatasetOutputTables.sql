@@ -42,11 +42,11 @@ BEGIN
       SET frontlen = LENGTH(front);
       SET TempValue = TRIM(front);
 
-      IF TempValue = 'PERSON'THEN
+      IF TempValue = 'DEMOGRAPHICS'THEN
          SET event_table = 'patient';
          SET result_dataset = 'person_dataset';
          SET output_table = CONCAT('person_output_',p_query_id);
-      ELSEIF TempValue = 'CLINICAL EVENTS' THEN
+      ELSEIF TempValue = 'CLINICALEVENTS' THEN
          SET event_table = 'observation';
          SET result_dataset = 'observation_dataset';
          SET output_table = CONCAT('observation_output_',p_query_id);

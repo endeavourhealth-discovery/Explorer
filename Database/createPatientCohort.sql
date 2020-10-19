@@ -9,6 +9,8 @@ CREATE PROCEDURE createPatientCohort(
      p_agerange VARCHAR(255),
      p_genderrange VARCHAR(255),
      p_postcoderange VARCHAR(255),
+     p_daterange VARCHAR(255), 
+     p_concepttab VARCHAR(64),
      p_cohorttab VARCHAR(64),
      p_schema VARCHAR(255)
 )
@@ -23,13 +25,10 @@ BEGIN
     SET p_death = '1';
    END IF;
 
-   SET @sql = CONCAT('DROP TABLE IF EXISTS ',p_cohorttab);
-   PREPARE stmt FROM @sql;
-   EXECUTE stmt;
-   DEALLOCATE PREPARE stmt;
+   DROP TEMPORARY TABLE IF EXISTS qry_tmp;
 
-   SET @sql = CONCAT('CREATE TABLE ',p_cohorttab, 
-   ' AS SELECT DISTINCT 
+   SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp 
+    AS SELECT DISTINCT 
           e.person_id, 
           e.patient_id, 
           e.date_registered, 
@@ -66,12 +65,27 @@ BEGIN
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;
 
-   SET @sql = CONCAT('ALTER TABLE ',p_cohorttab, ' ADD INDEX pat_idx(patient_id)');
+   ALTER TABLE qry_tmp ADD INDEX pat_idx(patient_id);
+   ALTER TABLE qry_tmp ADD INDEX org_idx(organization_id);
+
+   SET @sql = CONCAT('DROP TABLE IF EXISTS ', p_cohorttab);
    PREPARE stmt FROM @sql;
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;
 
-   SET @sql = CONCAT('ALTER TABLE ',p_cohorttab, ' ADD INDEX org_idx(organization_id)');
+   -- filter patients by observations to create the patient cohort
+   SET @sql = CONCAT('CREATE TABLE ', p_cohorttab, ' AS 
+      SELECT DISTINCT o.person_id, o.patient_id, o.organization_id 
+      FROM qry_tmp c JOIN ',p_schema ,'.observation o 
+      ON c.patient_id = o.patient_id AND c.organization_id = o.organization_id AND c.person_id = o.person_id 
+      JOIN ',p_concepttab ,' ct ON ct.non_core_concept_id = o.non_core_concept_id 
+      WHERE ',p_daterange);
+
+   PREPARE stmt FROM @sql;
+   EXECUTE stmt;
+   DEALLOCATE PREPARE stmt;
+
+   SET @sql = CONCAT('ALTER TABLE ', p_cohorttab, ' ADD INDEX pat_idx(patient_id)');
    PREPARE stmt FROM @sql;
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;

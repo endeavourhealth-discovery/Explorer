@@ -48,10 +48,10 @@ BEGIN
     SET regstatus = getRegStatusString(p_registrationStatus);
   END IF;
 -- age range
-  SET p_ageFrom = IF(p_ageFrom = 'NaN-NaN-NaN',NULL, IF(p_ageFrom = '', NULL, p_ageFrom));
-  SET p_ageTo = IF(p_ageTo = 'NaN-NaN-NaN',NULL, IF(p_ageTo = '', NULL, p_ageTo));
+  SET p_ageFrom = IF(p_ageFrom = 'NaN-NaN-NaN', NULL, IF(p_ageFrom = '', NULL, p_ageFrom));
+  SET p_ageTo = IF(p_ageTo = 'NaN-NaN-NaN', NULL, IF(p_ageTo = '', NULL, p_ageTo));
 
-  IF (p_ageFrom IS NOT NULL) AND (p_ageTo IS NOT NULL) THEN
+  IF (p_ageFrom IS NOT NULL) OR (p_ageTo IS NOT NULL) THEN
     SET agerange = getAgeDateRangeString(p_ageFrom, p_ageTo, 1);
   ELSE
     SET agerange = '1';
@@ -91,11 +91,10 @@ BEGIN
   CALL createValueSet(cohortvalueset, p_valuesettab);
 -- create concept cohort from the valueset
   CALL createConcept(p_concepttab, p_valuesettab, p_schema);
--- create patient cohort
-  CALL createPatientCohort(orgrange, regstatus, agerange, genderrange, postcoderange, p_cohorttab, p_schema);
--- create observation patient cohort
-  CALL createObservationCohort(daterange, p_observationtab, p_cohorttab, p_concepttab, p_schema);
-
+-- create the patient cohort
+  CALL createPatientCohort(orgrange, regstatus, agerange, genderrange, postcoderange, daterange, p_concepttab, p_cohorttab, p_schema);
+-- create observation cohort from the patient cohort
+  CALL createObservationCohort(p_observationtab, p_cohorttab, p_schema);
 
 END//
 DELIMITER ;

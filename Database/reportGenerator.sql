@@ -21,15 +21,39 @@ DECLARE ageFrom VARCHAR(20) DEFAULT NULL;
 DECLARE ageTo VARCHAR(20) DEFAULT NULL;  
 DECLARE postcode VARCHAR(20) DEFAULT NULL; 
 DECLARE gender VARCHAR(20) DEFAULT NULL;  
-DECLARE eventType VARCHAR(255) DEFAULT NULL; 
-DECLARE active VARCHAR(10) DEFAULT NULL;
+DECLARE eventTypes VARCHAR(255) DEFAULT NULL; 
 
-DECLARE datasetValue VARCHAR(1000) DEFAULT NULL;
-DECLARE dateFrom VARCHAR(20) DEFAULT NULL; 
-DECLARE dateTo VARCHAR(20) DEFAULT NULL; 
+DECLARE demographics VARCHAR(10) DEFAULT NULL;
+DECLARE encounters VARCHAR(10) DEFAULT NULL;
+DECLARE medication VARCHAR(10) DEFAULT NULL;
+DECLARE currentMedication VARCHAR(10) DEFAULT NULL;
+DECLARE clinicalEvents VARCHAR(10) DEFAULT NULL;
+DECLARE activeProblems VARCHAR(10) DEFAULT NULL;
 
-DECLARE outputField VARCHAR(1000) DEFAULT NULL;
-DECLARE outputType VARCHAR(100) DEFAULT NULL;
+DECLARE dateFromEncounters VARCHAR(50) DEFAULT NULL; 
+DECLARE dateToEncounters VARCHAR(50) DEFAULT NULL; 
+DECLARE dateFromMedication VARCHAR(50) DEFAULT NULL; 
+DECLARE dateToMedication VARCHAR(50) DEFAULT NULL; 
+DECLARE dateFromClinicalEvents VARCHAR(50) DEFAULT NULL; 
+DECLARE dateToClinicalEvents VARCHAR(50) DEFAULT NULL; 
+
+DECLARE selectedDemographicFields VARCHAR(1000) DEFAULT NULL;
+DECLARE selectedEncounterFields VARCHAR(1000) DEFAULT NULL;
+DECLARE selectedMedicationFields VARCHAR(1000) DEFAULT NULL;
+DECLARE selectedClinicalEventFields VARCHAR(1000) DEFAULT NULL;
+DECLARE selectedClinicalTypes VARCHAR(1000) DEFAULT NULL;
+
+DECLARE selectedEncounterValueSet VARCHAR(1000) DEFAULT NULL;
+DECLARE selectedMedicationValueSet VARCHAR(1000) DEFAULT NULL;
+DECLARE selectedClinicalEventValueSet VARCHAR(1000) DEFAULT NULL;
+
+-- DECLARE active VARCHAR(10) DEFAULT NULL;
+-- DECLARE datasetValue VARCHAR(1000) DEFAULT NULL;
+-- DECLARE dateFrom VARCHAR(20) DEFAULT NULL; 
+-- DECLARE dateTo VARCHAR(20) DEFAULT NULL; 
+-- DECLARE outputField VARCHAR(1000) DEFAULT NULL;
+-- DECLARE outputType VARCHAR(100) DEFAULT NULL;
+
 DECLARE schedule VARCHAR(100) DEFAULT NULL;
 DECLARE delivery VARCHAR(100) DEFAULT NULL;
 
@@ -149,8 +173,20 @@ DECLARE incFollowedByConcept4_tmp VARCHAR(64) DEFAULT NULL;
 DECLARE incValueSet5_tmp VARCHAR(64) DEFAULT NULL;
 DECLARE incConcept5_tmp VARCHAR(64) DEFAULT NULL;
 DECLARE incOccurrences5_tmp VARCHAR(64) DEFAULT NULL;
-DECLARE datasetValue_tmp VARCHAR(64) DEFAULT NULL;
-DECLARE datasetConcept_tmp VARCHAR(64) DEFAULT NULL;
+
+DECLARE encounterValueSet_tmp VARCHAR(64) DEFAULT NULL;
+DECLARE medicationValueSet_tmp VARCHAR(64) DEFAULT NULL;
+DECLARE clinicalEventValueSet_tmp VARCHAR(64) DEFAULT NULL;
+DECLARE clinicalTypes_tmp VARCHAR(64) DEFAULT NULL; 
+
+DECLARE encounterConcept_tmp VARCHAR(64) DEFAULT NULL;
+DECLARE medicationConcept_tmp VARCHAR(64) DEFAULT NULL;
+DECLARE clinicalEventConcept_tmp VARCHAR(64) DEFAULT NULL;
+DECLARE clinicalTypesConcept_tmp VARCHAR(64) DEFAULT NULL; 
+
+-- DECLARE datasetValue_tmp VARCHAR(64) DEFAULT NULL;
+-- DECLARE datasetConcept_tmp VARCHAR(64) DEFAULT NULL;
+
 DECLARE patient_cohort_tmp VARCHAR(64) DEFAULT NULL;
 
 DECLARE tempTables VARCHAR(5000);
@@ -169,15 +205,40 @@ SET ageFrom = JSON_UNQUOTE(JSON_EXTRACT(query,'$.ageFrom'));
 SET ageTo = JSON_UNQUOTE(JSON_EXTRACT(query,'$.ageTo'));  
 SET gender = LOWER(JSON_UNQUOTE(JSON_EXTRACT(query,'$.gender'))); 
 SET postcode = JSON_UNQUOTE(JSON_EXTRACT(query,'$.postcode'));
-SET eventType = UPPER(REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.eventType'),'[',''),']',''),'"',''));
-SET active = UPPER(JSON_EXTRACT(query,'$.active'));
 
-SET datasetValue = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.datasetValue'),'[',''),']',''),'"','');
-SET dateFrom = JSON_UNQUOTE(JSON_EXTRACT(query,'$.dateFrom')); 
-SET dateTo = JSON_UNQUOTE(JSON_EXTRACT(query,'$.dateTo')); 
+-- SET eventType = UPPER(REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.eventType'),'[',''),']',''),'"',''));
+-- SET active = UPPER(JSON_EXTRACT(query,'$.active'));
+-- SET datasetValue = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.datasetValue'),'[',''),']',''),'"','');
+-- SET dateFrom = JSON_UNQUOTE(JSON_EXTRACT(query,'$.dateFrom')); 
+-- SET dateTo = JSON_UNQUOTE(JSON_EXTRACT(query,'$.dateTo')); 
+-- SET outputField = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.outputField'),'[',''),']',''),'"',''); 
+-- SET outputType = JSON_UNQUOTE(JSON_EXTRACT(query,'$.outputType')); 
 
-SET outputField = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.outputField'),'[',''),']',''),'"',''); 
-SET outputType = JSON_UNQUOTE(JSON_EXTRACT(query,'$.outputType')); 
+SET demographics = UPPER(JSON_EXTRACT(query,'$.demographics')); 
+SET encounters = UPPER(JSON_EXTRACT(query,'$.encounters')); 
+SET medication = UPPER(JSON_EXTRACT(query,'$.medication')); 
+SET currentMedication = UPPER(JSON_EXTRACT(query,'$.currentMedication')); 
+SET clinicalEvents = UPPER(JSON_EXTRACT(query,'$.clinicalEvents')); 
+SET activeProblems = UPPER(JSON_EXTRACT(query,'$.activeProblems')); 
+
+SET dateFromEncounters = JSON_UNQUOTE(JSON_EXTRACT(query,'$.dateFromEncounters'));   
+SET dateToEncounters = JSON_UNQUOTE(JSON_EXTRACT(query,'$.dateToEncounters'));   
+SET dateFromMedication = JSON_UNQUOTE(JSON_EXTRACT(query,'$.dateFromMedication'));   
+SET dateToMedication = JSON_UNQUOTE(JSON_EXTRACT(query,'$.dateToMedication'));   
+SET dateFromClinicalEvents = JSON_UNQUOTE(JSON_EXTRACT(query,'$.dateFromClinicalEvents'));   
+SET dateToClinicalEvents = JSON_UNQUOTE(JSON_EXTRACT(query,'$.dateToClinicalEvents'));   
+
+SET selectedDemographicFields = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.selectedDemographicFields'),'[',''),']',''),'"',''); 
+SET selectedEncounterFields = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.selectedEncounterFields'),'[',''),']',''),'"','');  
+SET selectedMedicationFields = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.selectedMedicationFields'),'[',''),']',''),'"','');  
+SET selectedClinicalEventFields = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.selectedClinicalEventFields'),'[',''),']',''),'"','');  
+
+SET selectedClinicalTypes = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.selectedClinicalTypes'),'[',''),']',''),'"','');  
+
+SET selectedEncounterValueSet = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.selectedEncounterValueSet'),'[',''),']',''),'"','');
+SET selectedMedicationValueSet = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.selectedMedicationValueSet'),'[',''),']',''),'"','');
+SET selectedClinicalEventValueSet = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.selectedClinicalEventValueSet'),'[',''),']',''),'"','');
+
 SET schedule = JSON_UNQUOTE(JSON_EXTRACT(query,'$.schedule')); 
 SET delivery = JSON_UNQUOTE(JSON_EXTRACT(query,'$.delivery')); 
 
@@ -286,17 +347,26 @@ SET incFollowedByConcept4_tmp  = CONCAT('incFollowedByConcept4_tmp_',query_id);
 SET incValueSet5_tmp  = CONCAT('incValueSet5_tmp_',query_id);
 SET incConcept5_tmp  = CONCAT('incConcept5_tmp_',query_id);
 SET incOccurrences5_tmp  = CONCAT('incOccurrences5_tmp_',query_id);
-SET datasetValue_tmp  = CONCAT('datasetValue_tmp_',query_id);
-SET datasetConcept_tmp  = CONCAT('datasetConcept_tmp_',query_id);
+
+SET encounterValueSet_tmp  = CONCAT('encounterValueSet_tmp_',query_id);
+SET medicationValueSet_tmp  = CONCAT('medicationValueSet_tmp_',query_id);
+SET clinicalEventValueSet_tmp  = CONCAT('clinicalEventValueSet_tmp_',query_id);
+SET clinicalTypes_tmp  = CONCAT('clinicalTypes_tmp_',query_id);
+
+SET encounterConcept_tmp  = CONCAT('encounterConcept_tmp_',query_id);
+SET medicationConcept_tmp  = CONCAT('medicationConcept_tmp_',query_id);
+SET clinicalEventConcept_tmp  = CONCAT('clinicalEventConcept_tmp_',query_id);
+SET clinicalTypesConcept_tmp  = CONCAT('clinicalTypesConcept_tmp_',query_id);
+
+-- SET datasetValue_tmp  = CONCAT('datasetValue_tmp_',query_id);
+-- SET datasetConcept_tmp  = CONCAT('datasetConcept_tmp_',query_id);
 SET patient_cohort_tmp  = CONCAT('patient_cohort_tmp_',query_id);
 
 -- build cohort definition --
-
 CALL buildCohortDefinition(providerOrganisation, includedOrganisation, registrationStatus, ageFrom, ageTo, gender, postcode, 
 valueDateFrom, valueDateTo, cohortValue, org_tmp, valueset_tmp, concept_tmp, cohort_tmp, observation_tmp, sourceSchema, store_tmp);
 
 -- build advance criteria --
-
 -- rule 1 --
 CALL getIncludeExcludeString(includedExclude1,includedAnyAll1,
 includedValueSet1, includedDateFrom1, includedDateTo1, includedPeriodValue1,includedPeriodType1,
@@ -351,11 +421,14 @@ CALL buildFinalPatientCohort(query_id, patient_cohort_tmp, observation_tmp, incl
 includeExclude2String, includeExclude2aString, includeExclude3String, includeExclude4String, includeExclude5String);
 
 -- build result datasets
-CALL buildResultDatasets(query_id, patient_cohort_tmp, eventType, active, datasetValue, datasetValue_tmp, datasetConcept_tmp, dateFrom, dateTo, sourceSchema, store_tmp);
+CALL buildResultDatasets(query_id, patient_cohort_tmp, demographics, encounters, medication, currentMedication, clinicalEvents, activeProblems, 
+dateFromEncounters, dateToEncounters, dateFromMedication, dateToMedication, dateFromClinicalEvents, dateToClinicalEvents, selectedClinicalTypes, 
+selectedEncounterValueSet, selectedMedicationValueSet, selectedClinicalEventValueSet, clinicalTypes_tmp,  clinicalTypesConcept_tmp, encounterValueSet_tmp, 
+encounterConcept_tmp, medicationValueSet_tmp, medicationConcept_tmp, clinicalEventValueSet_tmp, clinicalEventConcept_tmp, sourceSchema, store_tmp, @eventTypes);
+SET eventTypes = @eventTypes;
 
 -- dataset output definition --
-
-CALL buildDatasetOutputTables(outputField, outputType, eventType, store_tmp, sourceSchema, query_id);
+CALL buildDatasetOutputTables(outputField, outputType, eventTypes, store_tmp, sourceSchema, query_id);
 
 -- update queue for next run date
 CALL updateQueue(query_id, schedule);
@@ -368,7 +441,8 @@ CALL updateQueue(query_id, schedule);
  incConcept2_tmp,',',observation2_tmp,',',incValueSet2a_tmp,',',incConcept2a_tmp,',',observation2a_tmp,',',incValueSet3_tmp,',',
  incConcept3_tmp,',',observation3_tmp,',',incTestedValueSet3_tmp,',',incTestedConcept3_tmp,',',incValueSet4_tmp,',',
  incConcept4_tmp,',',incFollowedByValueSet4_tmp,',',incFollowedByConcept4_tmp ,',',incValueSet5_tmp,',',
- incConcept5_tmp,',',incOccurrences5_tmp,',',datasetValue_tmp,',',datasetConcept_tmp,',',patient_cohort_tmp);
+ incConcept5_tmp,',',incOccurrences5_tmp,',',clinicalTypes_tmp,',',clinicalTypesConcept_tmp,',',encounterValueSet_tmp,',',encounterConcept_tmp,',',
+ medicationValueSet_tmp,',',medicationConcept_tmp,',',clinicalEventValueSet_tmp,',',clinicalEventConcept_tmp,',',patient_cohort_tmp);
 
 CALL dropTempTables(tempTables);
 
