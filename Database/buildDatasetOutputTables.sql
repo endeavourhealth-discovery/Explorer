@@ -89,9 +89,16 @@ BEGIN
         SET i = i + 1;
       END WHILE;
 
-      IF LENGTH(@sql)>0 THEN  -- continues if output fields exist
-      -- remove the last comma in string
+      IF LENGTH(@sql)>0 THEN  -- continues if output field exists
+
+      -- check for current address -- if found add postcode as a separate field
+         IF LOCATE('Current Address', @sql) > 0 THEN
+            SET @sql = INSERT (@sql,LOCATE('Current Address', @sql)+16,0,CONCAT(',', p_schema,".getCurrentAddressPostcode(t.current_address_id) AS 'Postcode'"));
+         END IF;
+
+      -- remove the last comma in the string
          SET @sql = SUBSTRING(@sql, 1, LENGTH(@sql)-1);
+
       -- create output table for the selected output fields
          SET @sql = CONCAT('CREATE TABLE ', output_table ,' AS 
          SELECT DISTINCT ', BINARY @sql ,' FROM ', p_schema,'.', event_table,' t JOIN ', result_dataset,' r ON t.id = r.', event_table,'_id 
@@ -99,6 +106,7 @@ BEGIN
          PREPARE stmt FROM @sql;
          EXECUTE stmt;
          DEALLOCATE PREPARE stmt;
+
       END IF;
 
       SET p_event_type = INSERT(p_event_type, 1, frontlen + 1, '');

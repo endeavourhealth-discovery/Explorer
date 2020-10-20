@@ -25,21 +25,16 @@ ALTER TABLE dataset_tables ADD INDEX field_idx(field_name);
 
 INSERT INTO dataset_tables (table_name, column_name, field_name)
 VALUES
-('patient', 'id', 'Patient ID'),
-('patient', 'organization_id', 'Oraganization ID'),
-('patient', 'person_id', 'Person ID'),
+('patient', 'getOrganizationName(registered_practice_organization_id)', 'Registered Practice'),
 ('patient', 'title', 'Title'),
 ('patient', 'first_names', 'First Names'),
 ('patient', 'last_name', 'Last Name'),
-('patient', 'gender_concept_id', 'Gender Concept Code'),
-('patient', 'getConceptName(gender_concept_id)', 'Gender Concept Name'),
+('patient', 'getConceptName(gender_concept_id)', 'Gender'),
 ('patient', 'nhs_number', 'NHS Number'),
 ('patient', 'date_of_birth', 'Date Of Birth'),
 ('patient', 'date_of_death', 'Date Of Death'),
-('patient', 'current_address_id', 'Current Address'),
-('patient', 'ethnic_code_concept_id', 'Ethnic Concept Code'),
-('patient', 'getConceptName(ethnic_code_concept_id)', 'Ethnic Concept Name'),
-('patient', 'registered_practice_organization_id', 'Registered Practice'),
+('patient', 'getCurrentAddress(current_address_id)', 'Current Address'),
+('patient', 'getConceptName(ethnic_code_concept_id)', 'Ethnicity'),
 ('observation','id','Observation ID'), 
 ('observation','organization_id', 'Organization ID'),
 ('observation','patient_id', 'Patient ID'),
@@ -109,8 +104,7 @@ VALUES
 ('encounter','sub_type', 'Sub Type'),
 ('encounter','admission_method', 'Admission Method'),
 ('encounter','end_date', 'End Date'),
-('encounter','institution_location_id', 'Institution Location ID')
-;
+('encounter','institution_location_id', 'Institution Location ID');
 
 END //
 DELIMITER ;
