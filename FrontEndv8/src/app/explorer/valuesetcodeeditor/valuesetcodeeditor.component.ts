@@ -62,6 +62,12 @@ export class ValueSetCodeEditorComponent {
     this.dialogRef.close();
   }
 
+  snomedBrowser(): void {
+    let url = 'https://termbrowser.nhs.uk/?perspective=full&conceptId1=404684003&edition=uk-edition&release=v20200930&server=https://termbrowser.nhs.uk/sct-browser-api/snomed&langRefset=999001261000000100,999000691000001104';
+
+    window.open(url);
+  }
+
   formChanged() {
     this.disableForm = this.type=='' || this.type==undefined || this.code=='' || this.code==undefined || this.term=='' || this.term==undefined || this.snomed=='' || this.snomed==undefined;
   }
