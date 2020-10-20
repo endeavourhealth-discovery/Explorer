@@ -17,7 +17,7 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatMenuModule} from '@angular/material/menu';
-import {CoreModule} from 'dds-angular8';
+import {CoreModule, GenericTableModule} from 'dds-angular8';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatButtonModule} from '@angular/material/button';
 import {MatTreeModule} from '@angular/material/tree';
@@ -121,7 +121,8 @@ import {TrendComponent} from "./trend/trend.component";
         DragDropModule,
         MatTabsModule,
         MatSelectSearchModule,
-        MatSliderModule
+        MatSliderModule,
+        GenericTableModule
     ],
 
   entryComponents: [

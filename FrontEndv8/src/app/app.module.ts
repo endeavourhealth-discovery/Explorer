@@ -4,7 +4,7 @@ import { AppMenuService } from './app-menu.service';
 import { RouterModule } from '@angular/router';
 import { ExplorerModule } from './explorer/explorer.module';
 import { HttpClientModule } from '@angular/common/http';
-import { AbstractMenuProvider, LayoutComponent, LayoutModule, LoggerModule, SecurityModule, UserManagerModule } from 'dds-angular8';
+import { AbstractMenuProvider, LayoutComponent, LayoutModule, LoggerModule, SecurityModule, UserManagerModule, GenericTableModule } from 'dds-angular8';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { MAT_DATE_LOCALE } from "@angular/material/core";
 import { GaugeModule } from 'angular-gauge';
@@ -20,6 +20,7 @@ const keycloakService = new KeycloakService();
     SecurityModule,
     LoggerModule,
     UserManagerModule,
+    GenericTableModule,
     ExplorerModule,
     NgxChartsModule,
     GaugeModule.forRoot(),

@@ -7,6 +7,7 @@ import {FormControl} from '@angular/forms';
 import {MatDialog} from "@angular/material/dialog";
 import {PatientComponent} from "../patient/patient.component";
 import {Globals} from '../globals'
+import {TableData} from "./model/TableData";
 
 interface widget {
   icon: string;
@@ -79,6 +80,10 @@ export class DashboardViewerComponent implements OnInit {
   showBarCharts2: boolean = false;
   showBarCharts3: boolean = false;
   showBarCharts4: boolean = false;
+  showTables1: boolean = false;
+  showTables2: boolean = false;
+  showTables3: boolean = false;
+  showTables4: boolean = false;
   seriesValues1 = new FormControl();
   seriesValues2 = new FormControl();
   seriesValues3 = new FormControl();
@@ -195,6 +200,51 @@ export class DashboardViewerComponent implements OnInit {
   selectedWidgets : widget[] = [
   ];
 
+  tableData1: TableData = null;
+  tableData2: TableData = null;
+  tableData3: TableData = null;
+  tableData4: TableData = null;
+
+  loadingComplete1: boolean = false;
+  loadingComplete2: boolean = false;
+  loadingComplete3: boolean = false;
+  loadingComplete4: boolean = false;
+
+  tableSeries1: string = "";
+  tableSeries2: string = "";
+  tableSeries3: string = "";
+  tableSeries4: string = "";
+
+  searchData1: string = "";
+  searchData2: string = "";
+  searchData3: string = "";
+  searchData4: string = "";
+
+  totalItems1: number = 0;
+  totalItems2: number = 0;
+  totalItems3: number = 0;
+  totalItems4: number = 0;
+
+  pageNumber1: number = 1;
+  pageNumber2: number = 1;
+  pageNumber3: number = 1;
+  pageNumber4: number = 1;
+
+  pageSize1: number = 3;
+  pageSize2: number = 3;
+  pageSize3: number = 3;
+  pageSize4: number = 3;
+
+  orderColumn1 = 'firstnames';
+  orderColumn2 = 'firstnames';
+  orderColumn3 = 'firstnames';
+  orderColumn4 = 'firstnames';
+
+  descending1 = false;
+  descending2 = false;
+  descending3 = false;
+  descending4 = false;
+
   constructor(
     private route: ActivatedRoute,
     private explorerService: ExplorerService,
@@ -271,6 +321,7 @@ export class DashboardViewerComponent implements OnInit {
 
     this.showLineCharts1 = this.selectedWidgets[0].name=='Line chart';
     this.showBarCharts1 = this.selectedWidgets[0].name=='Bar chart';
+    this.showTables1 = this.selectedWidgets[0].name=='Table';
 
     if (this.showLineCharts1) {
       let cumulative = "0";
@@ -312,6 +363,11 @@ export class DashboardViewerComponent implements OnInit {
         });
     }
 
+    if (this.showTables1) {
+      this.tableSeries1 = this.selectedSeries1[0];
+      this.search1();
+      this.getTotalTableData1();
+    }
   }
 
   refresh2(override) {
@@ -329,6 +385,7 @@ export class DashboardViewerComponent implements OnInit {
 
     this.showLineCharts2 = this.selectedWidgets[1].name=='Line chart';
     this.showBarCharts2 = this.selectedWidgets[1].name=='Bar chart';
+    this.showTables2 = this.selectedWidgets[1].name=='Table';
 
     if (this.showLineCharts2) {
       let cumulative = "0";
@@ -370,6 +427,11 @@ export class DashboardViewerComponent implements OnInit {
         });
     }
 
+    if (this.showTables2) {
+      this.tableSeries2 = this.selectedSeries2[0];
+      this.search2();
+      this.getTotalTableData2();
+    }
   }
 
   refresh3(override) {
@@ -387,6 +449,7 @@ export class DashboardViewerComponent implements OnInit {
 
     this.showLineCharts3 = this.selectedWidgets[2].name=='Line chart';
     this.showBarCharts3 = this.selectedWidgets[2].name=='Bar chart';
+    this.showTables3 = this.selectedWidgets[2].name=='Table';
 
     if (this.showLineCharts3) {
       let cumulative = "0";
@@ -428,6 +491,11 @@ export class DashboardViewerComponent implements OnInit {
         });
     }
 
+    if (this.showTables3) {
+      this.tableSeries3 = this.selectedSeries3[0];
+      this.search3();
+      this.getTotalTableData3();
+    }
   }
 
   refresh4(override) {
@@ -445,6 +513,7 @@ export class DashboardViewerComponent implements OnInit {
 
     this.showLineCharts4 = this.selectedWidgets[3].name=='Line chart';
     this.showBarCharts4 = this.selectedWidgets[3].name=='Bar chart';
+    this.showTables4 = this.selectedWidgets[3].name=='Table';
 
     if (this.showLineCharts4) {
       let cumulative = "0";
@@ -484,6 +553,12 @@ export class DashboardViewerComponent implements OnInit {
         .subscribe(result => {
           this.chartResultsSingle4 = result.series;
         });
+    }
+
+    if (this.showTables4) {
+      this.tableSeries4 = this.selectedSeries4[0];
+      this.search4();
+      this.getTotalTableData4();
     }
   }
 
@@ -574,6 +649,22 @@ export class DashboardViewerComponent implements OnInit {
     this.chartTitle4 = this.selectedVisualisation4;
 
     console.log(this.selectedWidgets.length);
+    if (this.selectedWidgets.length == 1) {
+      this.pageSize1 = 15;
+      this.pageSize2 = 15;
+      this.pageSize3 = 15;
+      this.pageSize4 = 15;
+    } else if (this.selectedWidgets.length == 2) {
+      this.pageSize1 = 15;
+      this.pageSize2 = 15;
+      this.pageSize3 = 15;
+      this.pageSize4 = 15;
+    }  else {
+      this.pageSize1 = 5;
+      this.pageSize2 = 5;
+      this.pageSize3 = 5;
+      this.pageSize4 = 5;
+    }
 
     if (this.selectedWidgets.length==1) {
       this.cols = "1";
@@ -855,4 +946,179 @@ export class DashboardViewerComponent implements OnInit {
     return csv;
   }
 
+  onSearch1($event) {
+    this.searchData1 = $event;
+    this.pageNumber1 = 1;
+    this.tableData1 = null;
+    this.search1();
+    this.getTotalTableData1();
+  }
+
+  getTotalTableData1() {
+    this.explorerService.getTotalCount(this.tableSeries1, this.searchData1)
+      .subscribe(
+        (result) => {
+          this.totalItems1 = result;
+        },
+        (error) => console.log(error)
+      );
+  }
+
+  private search1() {
+    this.loadingComplete1 = false;
+    this.explorerService.tableSearch(this.tableSeries1, this.searchData1, this.pageNumber1, this.pageSize1, this.orderColumn1, this.descending1)
+      .subscribe(result => {
+          this.tableData1 = result;
+          this.loadingComplete1 = true;
+        },
+        error => {
+          this.log.error('Table data could not be loaded. Please try again.');
+          this.loadingComplete1 = true;
+        }
+      );
+  }
+
+  pageChange1($event) {
+    this.pageNumber1 = $event.pageIndex + 1;
+    this.pageSize1 = $event.pageSize;
+    this.search1();
+  }
+
+  onOrderChange1($event) {
+    this.orderColumn1 = $event.active;
+    this.descending1 = $event.direction1 == 'desc' ? true : false;
+    this.search1();
+  }
+
+  onSearch2($event) {
+    this.searchData2 = $event;
+    this.pageNumber2 = 1;
+    this.tableData2 = null;
+    this.search2();
+    this.getTotalTableData2();
+  }
+
+  getTotalTableData2() {
+    this.explorerService.getTotalCount(this.tableSeries2, this.searchData2)
+      .subscribe(
+        (result) => {
+          this.totalItems2 = result;
+        },
+        (error) => console.log(error)
+      );
+  }
+
+  private search2() {
+    this.loadingComplete2 = false;
+    this.explorerService.tableSearch(this.tableSeries2, this.searchData2, this.pageNumber2, this.pageSize2, this.orderColumn2, this.descending2)
+      .subscribe(result => {
+          this.tableData2 = result;
+          this.loadingComplete2 = true;
+        },
+        error => {
+          this.log.error('Table data could not be loaded. Please try again.');
+          this.loadingComplete2 = true;
+        }
+      );
+  }
+
+  pageChange2($event) {
+    this.pageNumber2 = $event.pageIndex + 1;
+    this.pageSize2 = $event.pageSize;
+    this.search2();
+  }
+
+  onOrderChange2($event) {
+    this.orderColumn2 = $event.active;
+    this.descending2 = $event.direction2 == 'desc' ? true : false;
+    this.search2();
+  }
+
+  onSearch3($event) {
+    this.searchData3 = $event;
+    this.pageNumber3 = 1;
+    this.tableData3 = null;
+    this.search3();
+    this.getTotalTableData3();
+  }
+
+  getTotalTableData3() {
+    this.explorerService.getTotalCount(this.tableSeries3, this.searchData3)
+      .subscribe(
+        (result) => {
+          this.totalItems3 = result;
+        },
+        (error) => console.log(error)
+      );
+  }
+
+  private search3() {
+    this.loadingComplete3 = false;
+    this.explorerService.tableSearch(this.tableSeries3, this.searchData3, this.pageNumber3, this.pageSize3, this.orderColumn3, this.descending3)
+      .subscribe(result => {
+          this.tableData3 = result;
+          this.loadingComplete3 = true;
+        },
+        error => {
+          this.log.error('Table data could not be loaded. Please try again.');
+          this.loadingComplete3 = true;
+        }
+      );
+  }
+
+  pageChange3($event) {
+    this.pageNumber3 = $event.pageIndex + 1;
+    this.pageSize3 = $event.pageSize;
+    this.search3();
+  }
+
+  onOrderChange3($event) {
+    this.orderColumn3 = $event.active;
+    this.descending3 = $event.direction3 == 'desc' ? true : false;
+    this.search3();
+  }
+
+  onSearch4($event) {
+    this.searchData4 = $event;
+    this.pageNumber4 = 1;
+    this.tableData4 = null;
+    this.search4();
+    this.getTotalTableData4();
+  }
+
+  getTotalTableData4() {
+    this.explorerService.getTotalCount(this.tableSeries4, this.searchData4)
+      .subscribe(
+        (result) => {
+          this.totalItems4 = result;
+        },
+        (error) => console.log(error)
+      );
+  }
+
+  private search4() {
+    this.loadingComplete4 = false;
+    this.explorerService.tableSearch(this.tableSeries4, this.searchData4, this.pageNumber4, this.pageSize4, this.orderColumn4, this.descending4)
+      .subscribe(result => {
+          this.tableData4 = result;
+          this.loadingComplete4 = true;
+        },
+        error => {
+          this.log.error('Table data could not be loaded. Please try again.');
+          this.loadingComplete4 = true;
+        }
+      );
+  }
+
+  pageChange4($event) {
+    this.pageNumber4 = $event.pageIndex + 1;
+    this.pageSize4 = $event.pageSize;
+    this.search4();
+  }
+
+  onOrderChange4($event) {
+    this.orderColumn4 = $event.active;
+    this.descending4 = $event.direction4 == 'desc' ? true : false;
+    this.search4();
+  }
 }

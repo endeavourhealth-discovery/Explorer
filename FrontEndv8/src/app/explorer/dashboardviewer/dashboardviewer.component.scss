@@ -25,3 +25,9 @@ mat-grid-tile {
   margin-top: 0%; position: center;
 }
 
+.table-scroll {
+  overflow-x: auto;
+  max-height: 100%;
+  max-width: 100%;
+  overflow-y: scroll;
+}
