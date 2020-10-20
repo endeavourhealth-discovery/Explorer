@@ -14,8 +14,8 @@ DECLARE includedOrganisation VARCHAR(5000) DEFAULT NULL;
 DECLARE registrationStatus VARCHAR(255) DEFAULT NULL; 
 
 DECLARE cohortValue VARCHAR(5000) DEFAULT NULL; 
-DECLARE valueDateFrom VARCHAR(20) DEFAULT NULL; 
-DECLARE valueDateTo VARCHAR(20) DEFAULT NULL; 
+DECLARE valueDateFrom VARCHAR(30) DEFAULT NULL; 
+DECLARE valueDateTo VARCHAR(30) DEFAULT NULL; 
 
 DECLARE ageFrom VARCHAR(20) DEFAULT NULL;   
 DECLARE ageTo VARCHAR(20) DEFAULT NULL;  
@@ -30,29 +30,23 @@ DECLARE currentMedication VARCHAR(10) DEFAULT NULL;
 DECLARE clinicalEvents VARCHAR(10) DEFAULT NULL;
 DECLARE activeProblems VARCHAR(10) DEFAULT NULL;
 
-DECLARE dateFromEncounters VARCHAR(50) DEFAULT NULL; 
-DECLARE dateToEncounters VARCHAR(50) DEFAULT NULL; 
-DECLARE dateFromMedication VARCHAR(50) DEFAULT NULL; 
-DECLARE dateToMedication VARCHAR(50) DEFAULT NULL; 
-DECLARE dateFromClinicalEvents VARCHAR(50) DEFAULT NULL; 
-DECLARE dateToClinicalEvents VARCHAR(50) DEFAULT NULL; 
+DECLARE dateFromEncounters VARCHAR(30) DEFAULT NULL; 
+DECLARE dateToEncounters VARCHAR(30) DEFAULT NULL; 
+DECLARE dateFromMedication VARCHAR(30) DEFAULT NULL; 
+DECLARE dateToMedication VARCHAR(30) DEFAULT NULL; 
+DECLARE dateFromClinicalEvents VARCHAR(30) DEFAULT NULL; 
+DECLARE dateToClinicalEvents VARCHAR(30) DEFAULT NULL; 
 
-DECLARE selectedDemographicFields VARCHAR(1000) DEFAULT NULL;
-DECLARE selectedEncounterFields VARCHAR(1000) DEFAULT NULL;
-DECLARE selectedMedicationFields VARCHAR(1000) DEFAULT NULL;
-DECLARE selectedClinicalEventFields VARCHAR(1000) DEFAULT NULL;
+DECLARE selectedDemographicFields VARCHAR(2000) DEFAULT NULL;
+DECLARE selectedEncounterFields VARCHAR(2000) DEFAULT NULL;
+DECLARE selectedMedicationFields VARCHAR(2000) DEFAULT NULL;
+DECLARE selectedClinicalEventFields VARCHAR(2000) DEFAULT NULL;
+
 DECLARE selectedClinicalTypes VARCHAR(1000) DEFAULT NULL;
 
 DECLARE selectedEncounterValueSet VARCHAR(1000) DEFAULT NULL;
 DECLARE selectedMedicationValueSet VARCHAR(1000) DEFAULT NULL;
 DECLARE selectedClinicalEventValueSet VARCHAR(1000) DEFAULT NULL;
-
--- DECLARE active VARCHAR(10) DEFAULT NULL;
--- DECLARE datasetValue VARCHAR(1000) DEFAULT NULL;
--- DECLARE dateFrom VARCHAR(20) DEFAULT NULL; 
--- DECLARE dateTo VARCHAR(20) DEFAULT NULL; 
--- DECLARE outputField VARCHAR(1000) DEFAULT NULL;
--- DECLARE outputType VARCHAR(100) DEFAULT NULL;
 
 DECLARE schedule VARCHAR(100) DEFAULT NULL;
 DECLARE delivery VARCHAR(100) DEFAULT NULL;
@@ -60,24 +54,24 @@ DECLARE delivery VARCHAR(100) DEFAULT NULL;
 DECLARE includedExclude1 VARCHAR(10) DEFAULT NULL; 
 DECLARE includedAnyAll1 VARCHAR(10) DEFAULT NULL; 
 DECLARE includedValueSet1 VARCHAR(1000) DEFAULT NULL; 
-DECLARE includedDateFrom1 VARCHAR(20) DEFAULT NULL; 
-DECLARE includedDateTo1 VARCHAR(20) DEFAULT NULL; 
+DECLARE includedDateFrom1 VARCHAR(30) DEFAULT NULL; 
+DECLARE includedDateTo1 VARCHAR(30) DEFAULT NULL; 
 DECLARE includedPeriodValue1 VARCHAR(10) DEFAULT NULL; 
 DECLARE includedPeriodType1 VARCHAR(20) DEFAULT NULL; 
 
 DECLARE includedExclude1a VARCHAR(10) DEFAULT NULL; 
 DECLARE includedAnyAll1a VARCHAR(10) DEFAULT NULL; 
 DECLARE includedValueSet1a VARCHAR(1000) DEFAULT NULL; 
-DECLARE includedDateFrom1a VARCHAR(20) DEFAULT NULL; 
-DECLARE includedDateTo1a VARCHAR(20) DEFAULT NULL; 
+DECLARE includedDateFrom1a VARCHAR(30) DEFAULT NULL; 
+DECLARE includedDateTo1a VARCHAR(30) DEFAULT NULL; 
 DECLARE includedPeriodValue1a VARCHAR(10) DEFAULT NULL; 
 DECLARE includedPeriodType1a VARCHAR(20) DEFAULT NULL; 
 
 DECLARE includedExclude1b VARCHAR(10) DEFAULT NULL; 
 DECLARE includedAnyAll1b VARCHAR(10) DEFAULT NULL; 
 DECLARE includedValueSet1b VARCHAR(1000) DEFAULT NULL; 
-DECLARE includedDateFrom1b VARCHAR(20) DEFAULT NULL; 
-DECLARE includedDateTo1b VARCHAR(20) DEFAULT NULL; 
+DECLARE includedDateFrom1b VARCHAR(30) DEFAULT NULL; 
+DECLARE includedDateTo1b VARCHAR(30) DEFAULT NULL; 
 DECLARE includedPeriodValue1b VARCHAR(10) DEFAULT NULL; 
 DECLARE includedPeriodType1b VARCHAR(20) DEFAULT NULL; 
 
@@ -87,8 +81,8 @@ DECLARE includedValueSet2 VARCHAR(1000) DEFAULT NULL;
 DECLARE includedEarliestLatest2 VARCHAR(20) DEFAULT NULL; 
 DECLARE includedOperator2 VARCHAR(50) DEFAULT NULL; 
 DECLARE includedEntryValue2 VARCHAR(20) DEFAULT NULL; 
-DECLARE includedDateFrom2 VARCHAR(20) DEFAULT NULL; 
-DECLARE includedDateTo2 VARCHAR(20) DEFAULT NULL; 
+DECLARE includedDateFrom2 VARCHAR(30) DEFAULT NULL; 
+DECLARE includedDateTo2 VARCHAR(30) DEFAULT NULL; 
 DECLARE includedPeriodValue2 VARCHAR(10) DEFAULT NULL; 
 DECLARE includedPeriodType2 VARCHAR(20) DEFAULT NULL; 
 
@@ -98,8 +92,8 @@ DECLARE includedValueSet2a VARCHAR(1000) DEFAULT NULL;
 DECLARE includedEarliestLatest2a VARCHAR(20) DEFAULT NULL; 
 DECLARE includedOperator2a VARCHAR(50) DEFAULT NULL; 
 DECLARE includedEntryValue2a VARCHAR(20) DEFAULT NULL; 
-DECLARE includedDateFrom2a VARCHAR(20) DEFAULT NULL; 
-DECLARE includedDateTo2a VARCHAR(20) DEFAULT NULL; 
+DECLARE includedDateFrom2a VARCHAR(30) DEFAULT NULL; 
+DECLARE includedDateTo2a VARCHAR(30) DEFAULT NULL; 
 DECLARE includedPeriodValue2a VARCHAR(10) DEFAULT NULL; 
 DECLARE includedPeriodType2a VARCHAR(20) DEFAULT NULL; 
 
@@ -116,8 +110,8 @@ DECLARE includedValueSet4 VARCHAR(1000) DEFAULT NULL;
 DECLARE includedAreNot4 VARCHAR(10) DEFAULT NULL; 
 DECLARE includedAnyAllFollowedBy4 VARCHAR(10) DEFAULT NULL; 
 DECLARE includedFollowedByValueSet4 VARCHAR(1000) DEFAULT NULL; 
-DECLARE includedDateFrom4 VARCHAR(20) DEFAULT NULL; 
-DECLARE includedDateTo4 VARCHAR(20) DEFAULT NULL; 
+DECLARE includedDateFrom4 VARCHAR(30) DEFAULT NULL; 
+DECLARE includedDateTo4 VARCHAR(30) DEFAULT NULL; 
 DECLARE includedPeriodValue4 VARCHAR(10) DEFAULT NULL; 
 DECLARE includedPeriodType4 VARCHAR(20) DEFAULT NULL; 
 
@@ -126,8 +120,8 @@ DECLARE includedAnyAll5 VARCHAR(10) DEFAULT NULL;
 DECLARE includedValueSet5 VARCHAR(1000) DEFAULT NULL; 
 DECLARE includedOperator5 VARCHAR(50) DEFAULT NULL; 
 DECLARE includedEntryValue5 VARCHAR(20) DEFAULT NULL; 
-DECLARE includedDateFrom5 VARCHAR(20) DEFAULT NULL; 
-DECLARE includedDateTo5 VARCHAR(20) DEFAULT NULL; 
+DECLARE includedDateFrom5 VARCHAR(30) DEFAULT NULL; 
+DECLARE includedDateTo5 VARCHAR(30) DEFAULT NULL; 
 DECLARE includedPeriodValue5 VARCHAR(10) DEFAULT NULL; 
 DECLARE includedPeriodType5 VARCHAR(20) DEFAULT NULL; 
 
@@ -184,9 +178,6 @@ DECLARE medicationConcept_tmp VARCHAR(64) DEFAULT NULL;
 DECLARE clinicalEventConcept_tmp VARCHAR(64) DEFAULT NULL;
 DECLARE clinicalTypesConcept_tmp VARCHAR(64) DEFAULT NULL; 
 
--- DECLARE datasetValue_tmp VARCHAR(64) DEFAULT NULL;
--- DECLARE datasetConcept_tmp VARCHAR(64) DEFAULT NULL;
-
 DECLARE patient_cohort_tmp VARCHAR(64) DEFAULT NULL;
 
 DECLARE tempTables VARCHAR(5000);
@@ -205,14 +196,6 @@ SET ageFrom = JSON_UNQUOTE(JSON_EXTRACT(query,'$.ageFrom'));
 SET ageTo = JSON_UNQUOTE(JSON_EXTRACT(query,'$.ageTo'));  
 SET gender = LOWER(JSON_UNQUOTE(JSON_EXTRACT(query,'$.gender'))); 
 SET postcode = JSON_UNQUOTE(JSON_EXTRACT(query,'$.postcode'));
-
--- SET eventType = UPPER(REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.eventType'),'[',''),']',''),'"',''));
--- SET active = UPPER(JSON_EXTRACT(query,'$.active'));
--- SET datasetValue = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.datasetValue'),'[',''),']',''),'"','');
--- SET dateFrom = JSON_UNQUOTE(JSON_EXTRACT(query,'$.dateFrom')); 
--- SET dateTo = JSON_UNQUOTE(JSON_EXTRACT(query,'$.dateTo')); 
--- SET outputField = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.outputField'),'[',''),']',''),'"',''); 
--- SET outputType = JSON_UNQUOTE(JSON_EXTRACT(query,'$.outputType')); 
 
 SET demographics = UPPER(JSON_EXTRACT(query,'$.demographics')); 
 SET encounters = UPPER(JSON_EXTRACT(query,'$.encounters')); 
@@ -358,8 +341,6 @@ SET medicationConcept_tmp  = CONCAT('medicationConcept_tmp_',query_id);
 SET clinicalEventConcept_tmp  = CONCAT('clinicalEventConcept_tmp_',query_id);
 SET clinicalTypesConcept_tmp  = CONCAT('clinicalTypesConcept_tmp_',query_id);
 
--- SET datasetValue_tmp  = CONCAT('datasetValue_tmp_',query_id);
--- SET datasetConcept_tmp  = CONCAT('datasetConcept_tmp_',query_id);
 SET patient_cohort_tmp  = CONCAT('patient_cohort_tmp_',query_id);
 
 -- build cohort definition --
@@ -428,7 +409,8 @@ encounterConcept_tmp, medicationValueSet_tmp, medicationConcept_tmp, clinicalEve
 SET eventTypes = @eventTypes;
 
 -- dataset output definition --
-CALL buildDatasetOutputTables(outputField, outputType, eventTypes, store_tmp, sourceSchema, query_id);
+CALL buildDatasetOutputTables(selectedDemographicFields, selectedEncounterFields, selectedMedicationFields, selectedClinicalEventFields, 
+eventTypes, store_tmp, sourceSchema, query_id);
 
 -- update queue for next run date
 CALL updateQueue(query_id, schedule);

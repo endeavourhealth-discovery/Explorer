@@ -4,9 +4,11 @@ DROP PROCEDURE IF EXISTS buildDatasetOutputTables;
 
 DELIMITER //
 
-CREATE PROCEDURE buildDatasetOutputTables (
-  p_outputField VARCHAR(1000), 
-  p_outputType VARCHAR(100),
+CREATE PROCEDURE buildDatasetOutputTables ( 
+  p_selectedDemographicFields VARCHAR(2000),
+  p_selectedEncounterFields VARCHAR(2000),
+  p_selectedMedicationFields VARCHAR(2000),
+  p_selectedClinicalEventFields VARCHAR(2000),
   p_event_type VARCHAR(255),
   p_storetab VARCHAR(64),
   p_schema VARCHAR(255),
@@ -25,15 +27,10 @@ BEGIN
   DECLARE n INT DEFAULT 0;
   DECLARE i INT DEFAULT 0;
 
-  CALL storeString(p_outputField, p_storetab);
+ processloop:
+ LOOP  
 
-    processloop:
-    LOOP  
-
-       IF LENGTH(TRIM(p_event_type)) = 0 
-          OR p_event_type IS NULL 
-          OR LENGTH(TRIM(p_outputField)) = 0 
-          OR p_outputField IS NULL THEN
+       IF LENGTH(TRIM(p_event_type)) = 0 OR p_event_type IS NULL THEN
          LEAVE processloop;
        END IF;
 
@@ -46,26 +43,31 @@ BEGIN
          SET event_table = 'patient';
          SET result_dataset = 'person_dataset';
          SET output_table = CONCAT('person_output_',p_query_id);
+         CALL storeString(p_selectedDemographicFields, p_storetab);
       ELSEIF TempValue = 'CLINICALEVENTS' THEN
          SET event_table = 'observation';
          SET result_dataset = 'observation_dataset';
          SET output_table = CONCAT('observation_output_',p_query_id);
+         CALL storeString(p_selectedClinicalEventFields, p_storetab);
       ELSEIF TempValue = 'MEDICATION' THEN
          SET event_table = 'medication_statement';
          SET result_dataset = 'medication_dataset';
          SET output_table = CONCAT('medication_output_',p_query_id);
+         CALL storeString(p_selectedMedicationFields, p_storetab);
       ELSEIF TempValue = 'ENCOUNTERS' THEN
          SET event_table = 'encounter';
          SET result_dataset = 'encounter_dataset';
          SET output_table = CONCAT('encounter_output_',p_query_id);
+         CALL storeString(p_selectedEncounterFields, p_storetab);
       END IF;
-
-      -- drop output table if exists
+   
+      -- drop the output table if exists (from previous run)
       SET @sql = CONCAT('DROP TABLE IF EXISTS ', output_table); 
       PREPARE stmt FROM @sql;
       EXECUTE stmt;
       DEALLOCATE PREPARE stmt;
-      -- match column to output field
+
+      -- match the columns to the output fields
       DROP TEMPORARY TABLE IF EXISTS qry_tmp;
 
       SET @sql = CONCAT(
@@ -84,11 +86,10 @@ BEGIN
         -- build column list from output fields
         SET @sql =  CONCAT(BINARY @sql,(SELECT CONCAT(IF (INSTR(q.column_name,'(') = 0, CONCAT('t.',q.column_name), CONCAT(p_schema ,'.',INSERT(q.column_name,INSTR(q.column_name,'('),1,'(t.'))),' AS ',QUOTE(q.field_name)) FROM  qry_tmp q LIMIT i, 1));
         SET @sql =  CONCAT(BINARY @sql,CASE WHEN LENGTH(@sql)>0 THEN ',' ELSE '' END);
-
         SET i = i + 1;
       END WHILE;
 
-      IF LENGTH(@sql)>0 THEN
+      IF LENGTH(@sql)>0 THEN  -- continues if output fields exist
       -- remove the last comma in string
          SET @sql = SUBSTRING(@sql, 1, LENGTH(@sql)-1);
       -- create output table for the selected output fields
@@ -102,6 +103,7 @@ BEGIN
 
       SET p_event_type = INSERT(p_event_type, 1, frontlen + 1, '');
 
-    END LOOP;
+ END LOOP;
+
 END //
 DELIMITER ;

@@ -3,7 +3,7 @@ USE dashboards;
 DROP FUNCTION IF EXISTS getAgeDateRangeString;
 
 DELIMITER //
-CREATE FUNCTION getAgeDateRangeString(p_from VARCHAR(20), p_to VARCHAR(20), p_type INT) -- 1 = age, 2 = date
+CREATE FUNCTION getAgeDateRangeString(p_from VARCHAR(30), p_to VARCHAR(30), p_type INT) -- 1 = age, 2 = date
 RETURNS VARCHAR(255)
 NOT DETERMINISTIC READS SQL DATA
 BEGIN

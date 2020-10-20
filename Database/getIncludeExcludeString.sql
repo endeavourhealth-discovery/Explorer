@@ -7,8 +7,8 @@ CREATE PROCEDURE getIncludeExcludeString(
 IN p_includedExclude VARCHAR(10),
 IN p_includedAnyAll VARCHAR(10),
 IN p_includedValueSet VARCHAR(1000), 
-IN p_includedDateFrom VARCHAR(20), 
-IN p_includedDateTo VARCHAR(20), 
+IN p_includedDateFrom VARCHAR(30), 
+IN p_includedDateTo VARCHAR(30), 
 IN p_includedPeriodValue VARCHAR(10),
 IN p_includedPeriodType VARCHAR(20),
 IN p_includeValuesettab VARCHAR(64),
@@ -45,8 +45,8 @@ DECLARE timeperioddaterange VARCHAR(255);
 SET p_includedExclude = IF(p_includedExclude = '', NULL, p_includedExclude);
 SET p_includedAnyAll = IF(p_includedAnyAll = '', NULL, p_includedAnyAll); 
 SET p_includedValueSet = IF(p_includedValueSet = '', NULL, p_includedValueSet); 
-SET p_includedDateFrom = IF(p_includedDateFrom = 'NaN-NaN-NaN',NULL, IF(p_includedDateFrom = '', NULL, p_includedDateFrom));
-SET p_includedDateTo = IF(p_includedDateTo = 'NaN-NaN-NaN',NULL, IF(p_includedDateTo = '', NULL, p_includedDateTo));
+SET p_includedDateFrom = IF(p_includedDateFrom = 'NaN-NaN-NaN',NULL, IF(p_includedDateFrom = '', NULL, SUBSTRING(p_includedDateFrom,1,10)));
+SET p_includedDateTo = IF(p_includedDateTo = 'NaN-NaN-NaN',NULL, IF(p_includedDateTo = '', NULL, SUBSTRING(p_includedDateTo,1,10)));
 SET p_includedPeriodValue = IF(p_includedPeriodValue = '', NULL, p_includedPeriodValue);
 SET p_includedPeriodType = IF(p_includedPeriodType = '', NULL, p_includedPeriodType); 
 

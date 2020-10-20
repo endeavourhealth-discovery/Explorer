@@ -14,12 +14,12 @@ CREATE PROCEDURE buildResultDatasets (
   IN p_currentMedication VARCHAR(20),
   IN p_clinicalEvents VARCHAR(20),
   IN p_activeProblems VARCHAR(20),
-  IN p_dateFromEncounters VARCHAR(50),
-  IN p_dateToEncounters VARCHAR(50),
-  IN p_dateFromMedication VARCHAR(50),
-  IN p_dateToMedication VARCHAR(50),
-  IN p_dateFromClinicalEvents VARCHAR(50),
-  IN p_dateToClinicalEvents VARCHAR(50),
+  IN p_dateFromEncounters VARCHAR(30),
+  IN p_dateToEncounters VARCHAR(30),
+  IN p_dateFromMedication VARCHAR(30),
+  IN p_dateToMedication VARCHAR(30),
+  IN p_dateFromClinicalEvents VARCHAR(30),
+  IN p_dateToClinicalEvents VARCHAR(30),
   IN p_selectedClinicalTypes VARCHAR(1000),
   IN p_selectedEncounterValueSet VARCHAR(1000),
   IN p_selectedMedicationValueSet VARCHAR(1000),
@@ -47,6 +47,13 @@ BEGIN
   DECLARE clinicalEventsValueSetString VARCHAR(255);
   DECLARE clinicalEventsDateRangeString VARCHAR(255); 
   DECLARE clinicalTypesSetString VARCHAR(255); 
+
+SET p_dateFromEncounters = IF(p_dateFromEncounters = 'NaN-NaN-NaN',NULL, IF(p_dateFromEncounters = '', NULL, SUBSTRING(p_dateFromEncounters,1,10)));
+SET p_dateToEncounters = IF(p_dateToEncounters = 'NaN-NaN-NaN',NULL, IF(p_dateToEncounters = '', NULL, SUBSTRING(p_dateToEncounters,1,10)));
+SET p_dateFromMedication = IF(p_dateFromMedication = 'NaN-NaN-NaN',NULL, IF(p_dateFromMedication = '', NULL, SUBSTRING(p_dateFromMedication,1,10)));
+SET p_dateToMedication = IF(p_dateToMedication = 'NaN-NaN-NaN',NULL, IF(p_dateToMedication = '', NULL, SUBSTRING(p_dateToMedication,1,10)));
+SET p_dateFromClinicalEvents = IF(p_dateFromClinicalEvents = 'NaN-NaN-NaN',NULL, IF(p_dateFromClinicalEvents = '', NULL, SUBSTRING(p_dateFromClinicalEvents,1,10)));
+SET p_dateToClinicalEvents = IF(p_dateToClinicalEvents = 'NaN-NaN-NaN',NULL, IF(p_dateToClinicalEvents = '', NULL, SUBSTRING(p_dateToClinicalEvents,1,10)));
 
 IF p_demographics = 'TRUE' THEN
    SET eventTypeString = CONCAT(eventTypeString,'DEMOGRAPHICS,');

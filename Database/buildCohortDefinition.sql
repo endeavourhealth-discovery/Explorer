@@ -67,8 +67,8 @@ BEGIN
    SET postcoderange = '1';
   END IF;
 -- date range
-  SET p_dateFrom = IF(p_dateFrom = 'NaN-NaN-NaN',NULL, IF(p_dateFrom = '', NULL, p_dateFrom));
-  SET p_dateTo = IF(p_dateTo = 'NaN-NaN-NaN',NULL, IF(p_dateTo = '', NULL, p_dateTo));
+  SET p_dateFrom = IF(p_dateFrom = 'NaN-NaN-NaN',NULL, IF(p_dateFrom = '', NULL, SUBSTRING(p_dateFrom,1,10)));
+  SET p_dateTo = IF(p_dateTo = 'NaN-NaN-NaN',NULL, IF(p_dateTo = '', NULL, SUBSTRING(p_dateTo,1,10)));
 
   IF (p_dateFrom IS NOT NULL) AND (p_dateTo IS NOT NULL) THEN
     SET daterange = getAgeDateRangeString(p_dateFrom, p_dateTo, 2);

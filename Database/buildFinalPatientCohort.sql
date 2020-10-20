@@ -24,8 +24,7 @@ BEGIN
 
     DROP TEMPORARY TABLE IF EXISTS qry_tmp;
     SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp AS 
-    SELECT DISTINCT ', p_query_id,' AS query_id, o.patient_id 
-    FROM ', p_observationcohorttab,' o ');
+    SELECT DISTINCT ', p_query_id,' AS query_id, o.patient_id FROM ', p_observationcohorttab,' o ');
     PREPARE stmt FROM @sql;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
@@ -33,13 +32,12 @@ BEGIN
 
     SET qrytabname = 'qry_tmp';
 -- 1
+
     IF p_includeExclude1String <> '1' THEN
 
       DROP TEMPORARY TABLE IF EXISTS qry_tmp_1;
       SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp_1 AS 
-      SELECT DISTINCT o.query_id, o.patient_id 
-      FROM ', qrytabname,' o 
-      WHERE ', p_includeExclude1String);
+      SELECT DISTINCT o.query_id, o.patient_id FROM ', qrytabname,' o WHERE ', p_includeExclude1String);
       PREPARE stmt FROM @sql;
       EXECUTE stmt;
       DEALLOCATE PREPARE stmt;
@@ -49,13 +47,12 @@ BEGIN
 
     END IF;
 -- 1a
+
     IF p_includeExclude1aString <> '1' THEN
 
       DROP TEMPORARY TABLE IF EXISTS qry_tmp_1a;
       SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp_1a AS 
-      SELECT DISTINCT o.query_id, o.patient_id 
-      FROM ', qrytabname,' o 
-      WHERE ', p_includeExclude1aString);
+      SELECT DISTINCT o.query_id, o.patient_id FROM ', qrytabname,' o WHERE ', p_includeExclude1aString);
       PREPARE stmt FROM @sql;
       EXECUTE stmt;
       DEALLOCATE PREPARE stmt;
@@ -65,13 +62,12 @@ BEGIN
 
     END IF;
 -- 1b
+
     IF p_includeExclude1bString <> '1' THEN
 
       DROP TEMPORARY TABLE IF EXISTS qry_tmp_1b;
       SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp_1b AS 
-      SELECT DISTINCT o.query_id, o.patient_id 
-      FROM ', qrytabname,' o 
-      WHERE ', p_includeExclude1bString);
+      SELECT DISTINCT o.query_id, o.patient_id FROM ', qrytabname,' o WHERE ', p_includeExclude1bString);
       PREPARE stmt FROM @sql;
       EXECUTE stmt;
       DEALLOCATE PREPARE stmt;
@@ -81,13 +77,12 @@ BEGIN
 
     END IF;
 -- 2
+
     IF p_includeExclude2String <> '1' THEN
 
       DROP TEMPORARY TABLE IF EXISTS qry_tmp_2;
       SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp_2 AS 
-      SELECT DISTINCT o.query_id, o.patient_id 
-      FROM ', qrytabname,' o 
-      WHERE ', p_includeExclude2String);
+      SELECT DISTINCT o.query_id, o.patient_id FROM ', qrytabname,' o WHERE ', p_includeExclude2String);
       PREPARE stmt FROM @sql;
       EXECUTE stmt;
       DEALLOCATE PREPARE stmt;
@@ -97,13 +92,12 @@ BEGIN
 
     END IF;
 -- 2a    
+
     IF p_includeExclude2aString <> '1' THEN
 
       DROP TEMPORARY TABLE IF EXISTS qry_tmp_2a;
       SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp_2a AS 
-      SELECT DISTINCT o.query_id, o.patient_id 
-      FROM ', qrytabname,' o 
-      WHERE ', p_includeExclude2aString);
+      SELECT DISTINCT o.query_id, o.patient_id FROM ', qrytabname,' o WHERE ', p_includeExclude2aString);
       PREPARE stmt FROM @sql;
       EXECUTE stmt;
       DEALLOCATE PREPARE stmt;
@@ -113,13 +107,12 @@ BEGIN
 
     END IF;
 -- 3
+
     IF p_includeExclude3String <> '1' THEN
 
       DROP TEMPORARY TABLE IF EXISTS qry_tmp_3;
       SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp_3 AS 
-      SELECT DISTINCT o.query_id, o.patient_id 
-      FROM ', qrytabname,' o 
-      WHERE ', p_includeExclude3String);
+      SELECT DISTINCT o.query_id, o.patient_id FROM ', qrytabname,' o WHERE ', p_includeExclude3String);
       PREPARE stmt FROM @sql;
       EXECUTE stmt;
       DEALLOCATE PREPARE stmt;
@@ -129,13 +122,12 @@ BEGIN
 
     END IF;
 -- 4
+
     IF p_includeExclude4String <> '1' THEN
 
       DROP TEMPORARY TABLE IF EXISTS qry_tmp_4;
       SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp_4 AS 
-      SELECT DISTINCT o.query_id, o.patient_id 
-      FROM ', qrytabname,' o 
-      WHERE ', p_includeExclude4String);
+      SELECT DISTINCT o.query_id, o.patient_id FROM ', qrytabname,' o WHERE ', p_includeExclude4String);
       PREPARE stmt FROM @sql;
       EXECUTE stmt;
       DEALLOCATE PREPARE stmt;
@@ -145,13 +137,12 @@ BEGIN
 
     END IF;
 -- 5
+
     IF p_includeExclude5String <> '1' THEN
 
       DROP TEMPORARY TABLE IF EXISTS qry_tmp_5;
       SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp_5 AS 
-      SELECT DISTINCT o.query_id, o.patient_id 
-      FROM ', qrytabname,' o 
-      WHERE ', p_includeExclude5String);
+      SELECT DISTINCT o.query_id, o.patient_id FROM ', qrytabname,' o WHERE ', p_includeExclude5String);
       PREPARE stmt FROM @sql;
       EXECUTE stmt;
       DEALLOCATE PREPARE stmt;
@@ -169,8 +160,7 @@ BEGIN
     DEALLOCATE PREPARE stmt;
 
     SET @sql = CONCAT('CREATE TABLE ', p_patientcohorttab,' AS 
-    SELECT DISTINCT o.query_id, o.patient_id 
-    FROM ', qrytabname,' o ');
+    SELECT DISTINCT o.query_id, o.patient_id FROM ', qrytabname,' o ');
     PREPARE stmt FROM @sql;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
@@ -179,15 +169,6 @@ BEGIN
     PREPARE stmt FROM @sql;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
-
-    DROP TEMPORARY TABLE IF EXISTS qry_tmp_1;
-    DROP TEMPORARY TABLE IF EXISTS qry_tmp_1a;
-    DROP TEMPORARY TABLE IF EXISTS qry_tmp_1b;
-    DROP TEMPORARY TABLE IF EXISTS qry_tmp_2;
-    DROP TEMPORARY TABLE IF EXISTS qry_tmp_2a;
-    DROP TEMPORARY TABLE IF EXISTS qry_tmp_3;
-    DROP TEMPORARY TABLE IF EXISTS qry_tmp_4;
-    DROP TEMPORARY TABLE IF EXISTS qry_tmp_5;
 
 END//
 DELIMITER ;

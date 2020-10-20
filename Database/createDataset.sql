@@ -29,8 +29,8 @@ CREATE TABLE IF NOT EXISTS observation_dataset (
   PRIMARY KEY (query_id, observation_id) ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE IF NOT EXISTS medication_dataset (
-  query_id INT(11) NOT NULL, medication_id BIGINT(20) NOT NULL,
-  PRIMARY KEY (query_id, medication_id) ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  query_id INT(11) NOT NULL, medication_statement_id BIGINT(20) NOT NULL,
+  PRIMARY KEY (query_id, medication_statement_id) ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE IF NOT EXISTS encounter_dataset (
   query_id INT(11) NOT NULL, encounter_id BIGINT(20) NOT NULL, 

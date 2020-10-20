@@ -1,9 +1,9 @@
 USE dashboards;
 
-DROP PROCEDURE IF EXISTS createConcept;
+DROP PROCEDURE IF EXISTS createClinicalTypesConcept;
 
 DELIMITER //
-CREATE PROCEDURE createConcept(p_clinicalTypesConceptTab VARCHAR(64), p_clinicalTypesTab VARCHAR(64), p_schema VARCHAR(255))
+CREATE PROCEDURE createClinicalTypesConcept(p_clinicalTypesConceptTab VARCHAR(64), p_clinicalTypesTab VARCHAR(64), p_schema VARCHAR(255))
 BEGIN
 
    SET @sql = CONCAT('DROP TABLE IF EXISTS ', p_clinicalTypesConceptTab);
@@ -20,7 +20,7 @@ BEGIN
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;
 
-   SET @sql = CONCAT('ALTER TABLE ', p_concepttab, ' ADD INDEX non_cpt_idx(non_core_concept_id)');
+   SET @sql = CONCAT('ALTER TABLE ', p_clinicalTypesConceptTab, ' ADD INDEX non_cpt_idx(non_core_concept_id)');
    PREPARE stmt FROM @sql;
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;
