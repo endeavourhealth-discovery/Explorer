@@ -205,11 +205,6 @@ export class DashboardViewerComponent implements OnInit {
   tableData3: TableData = null;
   tableData4: TableData = null;
 
-  loadingComplete1: boolean = false;
-  loadingComplete2: boolean = false;
-  loadingComplete3: boolean = false;
-  loadingComplete4: boolean = false;
-
   tableSeries1: string = "";
   tableSeries2: string = "";
   tableSeries3: string = "";
@@ -655,10 +650,10 @@ export class DashboardViewerComponent implements OnInit {
 
     console.log(this.selectedWidgets.length);
     if (this.selectedWidgets.length < 3) {
-      this.pageSize1 = 15;
-      this.pageSize2 = 15;
-      this.pageSize3 = 15;
-      this.pageSize4 = 15;
+      this.pageSize1 = 10;
+      this.pageSize2 = 10;
+      this.pageSize3 = 10;
+      this.pageSize4 = 10;
       this.tableStyle1 = 'table-scroll-800';
       this.tableStyle2 = 'table-scroll-800';
       this.tableStyle3 = 'table-scroll-800';
@@ -959,6 +954,7 @@ export class DashboardViewerComponent implements OnInit {
     this.pageNumber1 = 1;
     this.tableData1 = null;
     this.search1();
+    this.getTotalTableData1();
   }
 
   getTotalTableData1() {
@@ -972,16 +968,12 @@ export class DashboardViewerComponent implements OnInit {
   }
 
   private search1() {
-    this.loadingComplete1 = false;
     this.explorerService.tableSearch(this.tableSeries1, this.searchData1, this.pageNumber1, this.pageSize1, this.orderColumn1, this.descending1)
       .subscribe(result => {
           this.tableData1 = result;
-          this.getTotalTableData1();
-          this.loadingComplete1 = true;
         },
         error => {
           this.log.error('Table data could not be loaded. Please try again.');
-          this.loadingComplete1 = true;
         }
       );
   }
@@ -1003,6 +995,7 @@ export class DashboardViewerComponent implements OnInit {
     this.pageNumber2 = 1;
     this.tableData2 = null;
     this.search2();
+    this.getTotalTableData2();
   }
 
   getTotalTableData2() {
@@ -1016,16 +1009,12 @@ export class DashboardViewerComponent implements OnInit {
   }
 
   private search2() {
-    this.loadingComplete2 = false;
     this.explorerService.tableSearch(this.tableSeries2, this.searchData2, this.pageNumber2, this.pageSize2, this.orderColumn2, this.descending2)
       .subscribe(result => {
           this.tableData2 = result;
-          this.getTotalTableData2();
-          this.loadingComplete2 = true;
         },
         error => {
           this.log.error('Table data could not be loaded. Please try again.');
-          this.loadingComplete2 = true;
         }
       );
   }
@@ -1047,6 +1036,7 @@ export class DashboardViewerComponent implements OnInit {
     this.pageNumber3 = 1;
     this.tableData3 = null;
     this.search3();
+    this.getTotalTableData3();
   }
 
   getTotalTableData3() {
@@ -1060,16 +1050,13 @@ export class DashboardViewerComponent implements OnInit {
   }
 
   private search3() {
-    this.loadingComplete3 = false;
     this.explorerService.tableSearch(this.tableSeries3, this.searchData3, this.pageNumber3, this.pageSize3, this.orderColumn3, this.descending3)
       .subscribe(result => {
           this.tableData3 = result;
           this.getTotalTableData3();
-          this.loadingComplete3 = true;
         },
         error => {
           this.log.error('Table data could not be loaded. Please try again.');
-          this.loadingComplete3 = true;
         }
       );
   }
@@ -1091,6 +1078,7 @@ export class DashboardViewerComponent implements OnInit {
     this.pageNumber4 = 1;
     this.tableData4 = null;
     this.search4();
+    this.getTotalTableData4();
   }
 
   getTotalTableData4() {
@@ -1104,16 +1092,13 @@ export class DashboardViewerComponent implements OnInit {
   }
 
   private search4() {
-    this.loadingComplete4 = false;
     this.explorerService.tableSearch(this.tableSeries4, this.searchData4, this.pageNumber4, this.pageSize4, this.orderColumn4, this.descending4)
       .subscribe(result => {
           this.tableData4 = result;
           this.getTotalTableData4();
-          this.loadingComplete4 = true;
         },
         error => {
           this.log.error('Table data could not be loaded. Please try again.');
-          this.loadingComplete4 = true;
         }
       );
   }
