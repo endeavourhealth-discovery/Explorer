@@ -8,7 +8,7 @@ CREATE PROCEDURE processReportQueue()
 BEGIN
 
 DECLARE queryid INT;
-DECLARE query TEXT;
+DECLARE query_text TEXT;
 
 -- update queue if any existing query been updated
 UPDATE queue q JOIN query_library l ON q.query_id = l.id 
@@ -35,11 +35,11 @@ AND status <> 'A'; -- i.e. not already processing
 
 START TRANSACTION;
 
-SELECT query_id, query INTO queryid, query
+SELECT query_id, query INTO queryid, query_text
 FROM queue 
 WHERE status = 'N' 
 AND next_run_date = CURDATE()
-AND EXISTS (SELECT COUNT(*) FROM queue WHERE status = 'A' HAVING COUNT(*) < 3)  -- less than 3 query ids to process
+AND 2 >= (SELECT COUNT(*) FROM queue WHERE status = 'A')  -- less than 3 query ids to process
 LIMIT 1 FOR UPDATE;
 
 -- set status to active i.e. processing and commit record
@@ -57,7 +57,7 @@ IF queryid IS NOT NULL THEN
 
 UPDATE queue SET timesubmit = now() WHERE query_id = queryid;
 
-CALL reportgenerator(queryid, query);
+CALL reportgenerator(queryid, query_text);
 
 UPDATE queue SET timefinish = now() WHERE query_id = queryid;
 UPDATE queue SET timeexecute = STR_TO_DATE(TIMEDIFF(timefinish, timesubmit),'%H:%i:%s') WHERE query_id = queryid;

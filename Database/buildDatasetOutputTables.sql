@@ -72,7 +72,7 @@ BEGIN
 
       SET @sql = CONCAT(
       'CREATE TEMPORARY TABLE qry_tmp (column_name VARCHAR(300), field_name VARCHAR(300)) 
-      AS SELECT table_name, column_name, field_name FROM dataset_tables dt JOIN ', p_storetab,' s 
+      AS SELECT dt.column_name, dt.field_name FROM dataset_tables dt JOIN ', p_storetab,' s 
       ON s.code =  dt.field_name WHERE dt.table_name = ', QUOTE(event_table),' ORDER BY dt.id');
       PREPARE stmt FROM @sql;
       EXECUTE stmt;

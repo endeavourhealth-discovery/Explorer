@@ -13,6 +13,7 @@ BEGIN
    DECLARE front       VARCHAR(5000) DEFAULT NULL;
    DECLARE frontlen    INT           DEFAULT NULL;
    DECLARE TempValue   VARCHAR(5000) DEFAULT NULL;
+   DECLARE flag        VARCHAR(1) DEFAULT NULL;
 
    SET @sql = CONCAT('DROP TABLE IF EXISTS ', p_storetab);
    PREPARE stmt FROM @sql;
@@ -36,7 +37,14 @@ BEGIN
          LEAVE processloop;
        END IF;
 
-    SET front = SUBSTRING_INDEX(stringValue, ',', 1);
+       IF LOCATE('"',stringValue)>0 THEN  -- if string contains quotes
+          SET front = SUBSTRING_INDEX(stringValue, '"', 2);
+          SET front = REPLACE(front,'"','');
+          SET flag = 'Y';
+       ELSE
+          SET front = SUBSTRING_INDEX(stringValue, ',', 1);
+       END IF;
+
     SET frontlen = LENGTH(front);
     SET TempValue = TRIM(front);
 
@@ -45,7 +53,12 @@ BEGIN
        EXECUTE stmt;
        DEALLOCATE PREPARE stmt;
 
-    SET stringValue = INSERT(stringValue, 1, frontlen + 1, '');
+       IF flag = 'Y' THEN
+          SET stringValue = INSERT(stringValue, 1, frontlen + 3, '');
+       ELSE
+          SET stringValue = INSERT(stringValue, 1, frontlen + 1, '');
+       END IF;
+
     END LOOP;
 
     -- remove duplicates if exists

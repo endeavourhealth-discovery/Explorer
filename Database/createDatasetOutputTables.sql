@@ -25,7 +25,7 @@ ALTER TABLE dataset_tables ADD INDEX field_idx(field_name);
 
 INSERT INTO dataset_tables (table_name, column_name, field_name)
 VALUES
-('patient', 'getOrganizationName(registered_practice_organization_id)', 'Registered Practice'),
+('patient', 'getOrganizationName(registered_practice_organization_id)', 'Registered practice'),
 ('patient', 'title', 'Title'),
 ('patient', 'first_names', 'First Names'),
 ('patient', 'last_name', 'Last Name'),

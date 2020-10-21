@@ -211,10 +211,10 @@ SET dateToMedication = JSON_UNQUOTE(JSON_EXTRACT(query,'$.dateToMedication'));
 SET dateFromClinicalEvents = JSON_UNQUOTE(JSON_EXTRACT(query,'$.dateFromClinicalEvents'));   
 SET dateToClinicalEvents = JSON_UNQUOTE(JSON_EXTRACT(query,'$.dateToClinicalEvents'));   
 
-SET selectedDemographicFields = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.selectedDemographicFields'),'[',''),']',''),'"',''); 
-SET selectedEncounterFields = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.selectedEncounterFields'),'[',''),']',''),'"','');  
-SET selectedMedicationFields = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.selectedMedicationFields'),'[',''),']',''),'"','');  
-SET selectedClinicalEventFields = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.selectedClinicalEventFields'),'[',''),']',''),'"','');  
+SET selectedDemographicFields = REPLACE(REPLACE(JSON_EXTRACT(query,'$.selectedDemographicFields'),'[',''),']',''); 
+SET selectedEncounterFields = REPLACE(REPLACE(JSON_EXTRACT(query,'$.selectedEncounterFields'),'[',''),']','');  
+SET selectedMedicationFields = REPLACE(REPLACE(JSON_EXTRACT(query,'$.selectedMedicationFields'),'[',''),']','');  
+SET selectedClinicalEventFields = REPLACE(REPLACE(JSON_EXTRACT(query,'$.selectedClinicalEventFields'),'[',''),']','');  
 
 SET selectedClinicalTypes = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.selectedClinicalTypes'),'[',''),']',''),'"','');  
 
