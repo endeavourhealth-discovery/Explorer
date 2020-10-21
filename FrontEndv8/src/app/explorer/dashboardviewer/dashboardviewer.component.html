@@ -23,20 +23,20 @@
                   </mat-datepicker-toggle>
                   <mat-datepicker #picker2></mat-datepicker>
                 </mat-form-field>
-                <mat-form-field style="width:250px; margin-left: 10px"  appearance="outline" *ngIf="showLineCharts1">
+                <mat-form-field style="width:250px; margin-left: 10px"  appearance="outline" *ngIf="showLineCharts1||showBarCharts1">
                   <mat-label>Filter series</mat-label>
                   <mat-select style="width:230px" [formControl]="seriesValues1" multiple [(value)]="selectedSeries1">
                     <mat-option (click)="refresh1(false)" *ngFor="let result of seriesList1" [value]="result">{{result}}</mat-option>
                   </mat-select>
                 </mat-form-field>
-                <mat-form-field style="width:250px; margin-left: 10px"  appearance="outline" *ngIf="showLineCharts1">
+                <mat-form-field style="width:250px; margin-left: 10px"  appearance="outline" *ngIf="showLineCharts1||showBarCharts1">
                   <mat-label>Filter CCG/TRUST</mat-label>
                   <mat-select style="width:230px" [formControl]="ccgValues1" multiple [(value)]="selectedCCG1">
                     <mat-checkbox class="mat-option" [(ngModel)]="selectAll1" (change)="toggleSelection1($event)">Select All</mat-checkbox>
                     <mat-option (click)="refresh1(true)" *ngFor="let result of ccgList1" [value]="result">{{result}}</mat-option>
                   </mat-select>
                 </mat-form-field>
-                <div style="margin-top: -13px" *ngIf="showLineCharts1">
+                <div style="margin-top: -13px" *ngIf="showLineCharts1||showBarCharts1">
                   <mat-checkbox class="checkbox" [(ngModel)]="showGridLines1">Show gridlines</mat-checkbox>
                   <mat-checkbox *ngIf="showLineCharts1" class="checkbox" [(ngModel)]="showAreaChart1">Show area chart</mat-checkbox>
                   <mat-checkbox class="checkbox" [(ngModel)]="gradient1">Gradient fill</mat-checkbox>
@@ -181,20 +181,20 @@
                   </mat-datepicker-toggle>
                   <mat-datepicker #picker2></mat-datepicker>
                 </mat-form-field>
-                <mat-form-field style="width:250px; margin-left: 10px"  appearance="outline" *ngIf="showLineCharts2">
+                <mat-form-field style="width:250px; margin-left: 10px"  appearance="outline" *ngIf="showLineCharts2||showBarCharts2">
                   <mat-label>Filter series</mat-label>
                   <mat-select style="width:230px" [formControl]="seriesValues2" multiple [(value)]="selectedSeries2">
                     <mat-option (click)="refresh2(false)" *ngFor="let result of seriesList2" [value]="result">{{result}}</mat-option>
                   </mat-select>
                 </mat-form-field>
-                <mat-form-field style="width:250px; margin-left: 10px"  appearance="outline" *ngIf="showLineCharts2">
+                <mat-form-field style="width:250px; margin-left: 10px"  appearance="outline" *ngIf="showLineCharts2||showBarCharts2">
                   <mat-label>Filter CCG/TRUST</mat-label>
                   <mat-select style="width:230px" [formControl]="ccgValues2" multiple [(value)]="selectedCCG2">
                     <mat-checkbox class="mat-option" [(ngModel)]="selectAll2" (change)="toggleSelection2($event)">Select All</mat-checkbox>
                     <mat-option (click)="refresh2(true)" *ngFor="let result of ccgList2" [value]="result">{{result}}</mat-option>
                   </mat-select>
                 </mat-form-field>
-                <div style="margin-top: -13px" *ngIf="showLineCharts2">
+                <div style="margin-top: -13px" *ngIf="showLineCharts2||showBarCharts2">
                   <mat-checkbox class="checkbox" [(ngModel)]="showGridLines2">Show gridlines</mat-checkbox>
                   <mat-checkbox *ngIf="showLineCharts2" class="checkbox" [(ngModel)]="showAreaChart2">Show area chart</mat-checkbox>
                   <mat-checkbox class="checkbox" [(ngModel)]="gradient2">Gradient fill</mat-checkbox>
@@ -339,20 +339,20 @@
                   </mat-datepicker-toggle>
                   <mat-datepicker #picker2></mat-datepicker>
                 </mat-form-field>
-                <mat-form-field style="width:250px; margin-left: 10px"  appearance="outline" *ngIf="showLineCharts3">
+                <mat-form-field style="width:250px; margin-left: 10px"  appearance="outline" *ngIf="showLineCharts3||showBarCharts3">
                   <mat-label>Filter series</mat-label>
                   <mat-select style="width:230px" [formControl]="seriesValues3" multiple [(value)]="selectedSeries3">
                     <mat-option (click)="refresh3(false)" *ngFor="let result of seriesList3" [value]="result">{{result}}</mat-option>
                   </mat-select>
                 </mat-form-field>
-                <mat-form-field style="width:250px; margin-left: 10px"  appearance="outline" *ngIf="showLineCharts3">
+                <mat-form-field style="width:250px; margin-left: 10px"  appearance="outline" *ngIf="showLineCharts3||showBarCharts3">
                   <mat-label>Filter CCG/TRUST</mat-label>
                   <mat-select style="width:230px" [formControl]="ccgValues3" multiple [(value)]="selectedCCG3">
                     <mat-checkbox class="mat-option" [(ngModel)]="selectAll3" (change)="toggleSelection3($event)">Select All</mat-checkbox>
                     <mat-option (click)="refresh3(true)" *ngFor="let result of ccgList3" [value]="result">{{result}}</mat-option>
                   </mat-select>
                 </mat-form-field>
-                <div style="margin-top: -13px" *ngIf="showLineCharts3">
+                <div style="margin-top: -13px" *ngIf="showLineCharts3||showBarCharts3">
                   <mat-checkbox class="checkbox" [(ngModel)]="showGridLines3">Show gridlines</mat-checkbox>
                   <mat-checkbox *ngIf="showLineCharts3" class="checkbox" [(ngModel)]="showAreaChart3">Show area chart</mat-checkbox>
                   <mat-checkbox class="checkbox" [(ngModel)]="gradient3">Gradient fill</mat-checkbox>
@@ -497,20 +497,20 @@
                   </mat-datepicker-toggle>
                   <mat-datepicker #picker2></mat-datepicker>
                 </mat-form-field>
-                <mat-form-field style="width:250px; margin-left: 10px"  appearance="outline" *ngIf="showLineCharts4">
+                <mat-form-field style="width:250px; margin-left: 10px"  appearance="outline" *ngIf="showLineCharts4||showBarCharts4">
                   <mat-label>Filter series</mat-label>
                   <mat-select style="width:230px" [formControl]="seriesValues4" multiple [(value)]="selectedSeries4">
                     <mat-option (click)="refresh4(false)" *ngFor="let result of seriesList4" [value]="result">{{result}}</mat-option>
                   </mat-select>
                 </mat-form-field>
-                <mat-form-field style="width:250px; margin-left: 10px"  appearance="outline" *ngIf="showLineCharts4">
+                <mat-form-field style="width:250px; margin-left: 10px"  appearance="outline" *ngIf="showLineCharts4||showBarCharts4">
                   <mat-label>Filter CCG/TRUST</mat-label>
                   <mat-select style="width:230px" [formControl]="ccgValues4" multiple [(value)]="selectedCCG4">
                     <mat-checkbox class="mat-option" [(ngModel)]="selectAll4" (change)="toggleSelection4($event)">Select All</mat-checkbox>
                     <mat-option (click)="refresh4(true)" *ngFor="let result of ccgList4" [value]="result">{{result}}</mat-option>
                   </mat-select>
                 </mat-form-field>
-                <div style="margin-top: -13px" *ngIf="showLineCharts4">
+                <div style="margin-top: -13px" *ngIf="showLineCharts4||showBarCharts4">
                   <mat-checkbox class="checkbox" [(ngModel)]="showGridLines4">Show gridlines</mat-checkbox>
                   <mat-checkbox *ngIf="showLineCharts4" class="checkbox" [(ngModel)]="showAreaChart4">Show area chart</mat-checkbox>
                   <mat-checkbox class="checkbox" [(ngModel)]="gradient4">Gradient fill</mat-checkbox>
