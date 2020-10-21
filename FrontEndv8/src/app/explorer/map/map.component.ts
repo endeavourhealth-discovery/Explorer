@@ -7,7 +7,7 @@ import {MapLayer} from "./model/MapLayer";
 import {MatSliderChange} from "@angular/material/slider";
 import {Level} from "./model/Level";
 import {CookieService} from "ngx-cookie-service";
-import {UserProfile} from "dds-angular8/lib/user-manager/models/UserProfile";
+import {UserProfile} from "dds-angular8/user-manager/models/UserProfile";
 
 @Component({
   selector: 'app-map',
@@ -46,6 +46,7 @@ export class MapComponent implements OnInit {
     this.userService.getUserProfile(true).then(
       result => {
         this.user = result;
+        console.log(this.user);
         this.init();
       }
     );
