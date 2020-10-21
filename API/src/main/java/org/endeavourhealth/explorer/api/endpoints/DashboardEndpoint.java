@@ -763,60 +763,58 @@ public class DashboardEndpoint {
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
 
             TableData data = new TableData();
-            if (series.equals("Demo query")) {
 
-                TableHeader header = new TableHeader();
+            TableHeader header = new TableHeader();
 
-                header.setLabel("Title");
-                header.setProperty("title");
-                header.setSecondary(false);
-                data.getHeaders().add(header);
+            header.setLabel("Title");
+            header.setProperty("title");
+            header.setSecondary(false);
+            data.getHeaders().add(header);
 
-                header = new TableHeader();
-                header.setLabel("Firstnames");
-                header.setProperty("firstnames");
-                header.setSecondary(false);
-                data.getHeaders().add(header);
+            header = new TableHeader();
+            header.setLabel("Firstnames");
+            header.setProperty("firstnames");
+            header.setSecondary(false);
+            data.getHeaders().add(header);
 
-                header = new TableHeader();
-                header.setLabel("Lastname");
-                header.setProperty("lastname");
-                header.setSecondary(false);
-                data.getHeaders().add(header);
+            header = new TableHeader();
+            header.setLabel("Lastname");
+            header.setProperty("lastname");
+            header.setSecondary(false);
+            data.getHeaders().add(header);
 
-                header = new TableHeader();
-                header.setLabel("Address");
-                header.setProperty("address");
-                header.setSecondary(false);
-                data.getHeaders().add(header);
+            header = new TableHeader();
+            header.setLabel("Address");
+            header.setProperty("address");
+            header.setSecondary(false);
+            data.getHeaders().add(header);
 
-                header = new TableHeader();
-                header.setLabel("NHS Number");
-                header.setProperty("nhs_number");
-                header.setSecondary(false);
-                data.getHeaders().add(header);
+            header = new TableHeader();
+            header.setLabel("NHS Number");
+            header.setProperty("nhs_number");
+            header.setSecondary(false);
+            data.getHeaders().add(header);
 
-                header = new TableHeader();
-                header.setLabel("Company");
-                header.setProperty("company");
-                header.setSecondary(false);
-                data.getHeaders().add(header);
+            header = new TableHeader();
+            header.setLabel("Company");
+            header.setProperty("company");
+            header.setSecondary(false);
+            data.getHeaders().add(header);
 
-                ArrayList<JSONObject> fakeObjects = new ArrayList();
-                JSONObject obj = null;
-                Faker faker = new Faker();
-                for (int i = 0; i < 100; i++) {
-                    obj = new JSONObject();
-                    obj.put("title", faker.name().title());
-                    obj.put("firstnames", faker.name().firstName());
-                    obj.put("lastname", faker.name().lastName());
-                    obj.put("address", faker.address().fullAddress());
-                    obj.put("nhs_number", faker.idNumber().valid());
-                    obj.put("company", faker.company().name());
-                    fakeObjects.add(obj);
-                }
-                data.getRows().addAll(fakeObjects.subList((pageNumber-1)*pageSize,((pageNumber-1)*pageSize)+pageSize));
+            ArrayList<JSONObject> fakeObjects = new ArrayList();
+            JSONObject obj = null;
+            Faker faker = new Faker();
+            for (int i = 0; i < 100; i++) {
+                obj = new JSONObject();
+                obj.put("title", faker.name().title());
+                obj.put("firstnames", faker.name().firstName());
+                obj.put("lastname", faker.name().lastName());
+                obj.put("address", faker.address().fullAddress());
+                obj.put("nhs_number", faker.idNumber().valid());
+                obj.put("company", faker.company().name());
+                fakeObjects.add(obj);
             }
+            data.getRows().addAll(fakeObjects.subList((pageNumber-1)*pageSize,((pageNumber-1)*pageSize)+pageSize));
 
             return Response
                     .ok()
@@ -837,10 +835,8 @@ public class DashboardEndpoint {
 
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
 
-            long count = 0;
-            if (series.equals("Demo query")) {
-                count = 100;
-            }
+            long count = 100;
+
             return Response
                     .ok()
                     .entity(count)
