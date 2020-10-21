@@ -95,7 +95,7 @@ export class RegistriesComponent implements OnInit {
 
   patientDialog(chartName: any, seriesName: any) {
     const dialogRef = this.dialog.open(PatientComponent, {
-      height: '780px',
+      height: '830px',
       width: '1600px',
 
       data: {chartName: "covid_shielding_ccg", seriesName: "high/moderate risk (50-59)", ccgs: "NHS Tower Hamlets CCG"}

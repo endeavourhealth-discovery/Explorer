@@ -127,7 +127,7 @@ export class OrganisationGroupsComponent implements OnInit {
 
   organisationsDialog(organisation_group_id: any) {
     const dialogRef = this.dialog.open(OrganisationsComponent, {
-      height: '780px',
+      height: '830px',
       width: '1600px',
       data: {organisation_group_id: organisation_group_id}
     });

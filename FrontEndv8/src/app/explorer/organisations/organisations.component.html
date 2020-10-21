@@ -10,7 +10,7 @@
 </div>
 
 <div mat-dialog-content class="flex" fxLayout="row wrap" fxLayoutAlign="start">
-  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 mat-table-compact" fxFlex="100" fxFill matSort>
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" fxFlex="100" fxFill matSort>
     <ng-container matColumnDef="select">
       <th mat-header-cell *matHeaderCellDef>
         <mat-checkbox (change)="$event ? masterToggle() : null"
