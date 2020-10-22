@@ -4,7 +4,7 @@ USE subscriber_pi_rv;
 DROP FUNCTION IF EXISTS getCurrentAddress;
 
 DELIMITER //
-CREATE FUNCTION getCurrentAddress(p_address_id INT)
+CREATE FUNCTION getCurrentAddress(p_address_id BIGINT)
 RETURNS VARCHAR(1000)
 NOT DETERMINISTIC READS SQL DATA
 BEGIN

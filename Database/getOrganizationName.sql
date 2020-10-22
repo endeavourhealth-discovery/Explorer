@@ -4,7 +4,7 @@ USE subscriber_pi_rv;
 DROP FUNCTION IF EXISTS getOrganizationName;
 
 DELIMITER //
-CREATE FUNCTION getOrganizationName(p_org_id INT)
+CREATE FUNCTION getOrganizationName(p_org_id BIGINT)
 RETURNS VARCHAR(255)
 NOT DETERMINISTIC READS SQL DATA
 BEGIN

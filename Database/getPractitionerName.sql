@@ -4,7 +4,7 @@ USE subscriber_pi_rv;
 DROP FUNCTION IF EXISTS getPractitionerName;
 
 DELIMITER //
-CREATE FUNCTION getPractitionerName(p_id INT)
+CREATE FUNCTION getPractitionerName(p_id BIGINT)
 RETURNS VARCHAR(255)
 NOT DETERMINISTIC READS SQL DATA
 BEGIN
