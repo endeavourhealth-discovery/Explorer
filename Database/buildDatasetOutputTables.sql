@@ -84,7 +84,7 @@ BEGIN
       SET i = 0;
       WHILE i < n DO 
         -- build column list from output fields
-        SET @sql =  CONCAT(BINARY @sql,(SELECT CONCAT(IF (INSTR(q.column_name,'(') = 0, CONCAT('t.',q.column_name), CONCAT(p_schema ,'.',INSERT(q.column_name,INSTR(q.column_name,'('),1,'(t.'))),' AS ',QUOTE(q.field_name)) FROM  qry_tmp q LIMIT i, 1));
+        SET @sql =  CONCAT(BINARY @sql,(SELECT CONCAT(IF (INSTR(q.column_name,'(') = 0, q.column_name, CONCAT(p_schema ,'.', q.column_name)),' AS ',QUOTE(q.field_name)) FROM  qry_tmp q LIMIT i, 1));        
         SET @sql =  CONCAT(BINARY @sql,CASE WHEN LENGTH(@sql)>0 THEN ',' ELSE '' END);
         SET i = i + 1;
       END WHILE;
