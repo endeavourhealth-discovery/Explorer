@@ -33,19 +33,6 @@ export class ExplorerService {
     return this.http.get('api/events/dashboard', {params});
   }
 
-  getDashboard2(charts: string, dateFrom: string, dateTo: string, cumulative: string, grouping: string, weekly: string): Observable<any> {
-    let params = new HttpParams();
-
-    params = params.append('chartName', charts);
-    params = params.append('dateFrom', dateFrom);
-    params = params.append('dateTo', dateTo);
-    params = params.append('cumulative', cumulative);
-    params = params.append('grouping', grouping);
-    params = params.append('weekly', weekly);
-
-    return this.http.get('api/events/dashboard2', {params});
-  }
-
   getDashboardSingle(chart: string, dateFrom: string, dateTo: string, ignoreDateRange: number, grouping: string): Observable<any> {
     let params = new HttpParams();
 

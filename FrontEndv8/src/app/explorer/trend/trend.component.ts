@@ -20,15 +20,18 @@ export class TrendComponent {
   chartResults: any[];
   chartResultsSingle1: any[];
   chartResultsSingle2: any[];
-  dateFrom: string = '20020-01-01';
+  dateFrom: string = '2020-01-01';
   dateTo: string = this.formatDate(new Date());
   showLineCharts: boolean = true;
   showBarCharts: boolean = true;
-  results = new FormControl();
-  resultList: string[] = [''];
-  selected: string = '';
+  organisations = new FormControl();
+  orgList: string[] = [''];
+  selectedOrganisation: string = '';
   months: string[] = [''];
   weekly: boolean = false;
+  indicatorList: string[] = [''];
+  indicators = new FormControl(this.indicatorList);
+  selectedIndicator: string = '';
 
   // options
   legend: boolean = true;
@@ -59,35 +62,56 @@ export class TrendComponent {
     private explorerService: ExplorerService,
     private log: LoggerService,
     @Inject(MAT_DIALOG_DATA) public data: DialogData) {
-
     this.orgs = data.orgs;
+
   }
 
   ngOnInit() {
     this.showLineCharts = true;
-    this.refresh();
+
+    this.explorerService.getLookupLists('7')
+        .subscribe(
+            (result) => this.loadList(result),
+            (error) => this.log.error(error)
+        );
   }
 
   refresh() {
+    this.orgList = this.orgs.split(',');
     let weekly = "0";
+    let cumulative = "0";
+    let values: string;
+    let indicators: string;
+
     if (this.weekly) {
       weekly = "1";
     }
 
-    let cumulative = "0";
-
-    let values = "";
-
-    this.resultList = this.orgs.split(',');
-
-    if (this.selected == "") {
-      values = this.resultList.toString();
-    }
-    else {
-      values = this.selected;
+    if (this.selectedOrganisation == "") {
+      values = this.orgList.toString();
+    } else {
+      values = this.selectedOrganisation;
     }
 
-    this.explorerService.getDashboard2(values, this.formatDate(this.dateFrom), this.formatDate(this.dateTo), cumulative, 'Registries', weekly)
+    if (this.selectedIndicator == "") {
+      indicators = this.indicatorList.toString();
+    } else {
+      indicators = this.selectedIndicator;
+    }
+
+    let orgs = values.split(',');
+    let ind = indicators.split(',');
+    let names = '';
+    for(var i = 0; i < orgs.length; i++)
+    {
+      for(var j = 0; j < ind.length; j++)
+      {
+        names += ',' + orgs[i] + ' - '+ind[j];
+      }
+    }
+    names = names.substr(1);
+
+    this.explorerService.getDashboard(names, this.formatDate(this.dateFrom), this.formatDate(this.dateTo), cumulative, 'Registries', weekly)
       .subscribe(result => {
         this.chartResults = result.results;
 
@@ -122,6 +146,17 @@ export class TrendComponent {
           this.chartResultsSingle2 = result.series;
         });
     }
+  }
+
+  loadList(lists: any) {
+    lists.results.map(
+        e => {
+          this.indicatorList.push(e.type);
+        }
+    )
+    this.indicators = new FormControl(this.indicatorList);
+
+    this.refresh();
   }
 
   formatTooltipYAxis(val: number) {

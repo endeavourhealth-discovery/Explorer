@@ -81,29 +81,6 @@ public class DashboardEndpoint {
     }
 
     @GET
-    @Path("/dashboard2")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getDashboard2(@Context SecurityContext sc,
-                                 @QueryParam("chartName") String chartName,
-                                 @QueryParam("dateFrom") String dateFrom,
-                                 @QueryParam("dateTo") String dateTo,
-                                 @QueryParam("cumulative") String cumulative,
-                                 @QueryParam("grouping") String grouping,
-                                 @QueryParam("weekly") String weekly) throws Exception {
-        LOG.debug("getDashboard2");
-
-        try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
-            ChartResult result = viewerDAL.getDashboard2(chartName,dateFrom,dateTo, cumulative, grouping,weekly);
-
-            return Response
-                    .ok()
-                    .entity(result)
-                    .build();
-        }
-    }
-
-    @GET
     @Path("/dashboardsingle")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
