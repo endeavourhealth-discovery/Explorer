@@ -223,8 +223,8 @@ export class RegistriesComponent implements OnInit {
     orgs = orgs +",CCG AVERAGE";
 
     const dialogRef = this.dialog.open(TrendComponent, {
-      height: '850px',
-      width: '1600px',
+      height: '900px',
+      width: '1800px',
       data: {orgs: orgs}
     });
 

@@ -88,10 +88,10 @@ export class DashboardViewerComponent implements OnInit {
   seriesValues2 = new FormControl();
   seriesValues3 = new FormControl();
   seriesValues4 = new FormControl();
-  seriesList1: string[] = [''];
-  seriesList2: string[] = [''];
-  seriesList3: string[] = [''];
-  seriesList4: string[] = [''];
+  seriesList1: string[] = [];
+  seriesList2: string[] = [];
+  seriesList3: string[] = [];
+  seriesList4: string[] = [];
   selectedCCG1: string = '';
   selectedCCGString1: string = '';
   selectedCCG2: string = '';
@@ -100,7 +100,7 @@ export class DashboardViewerComponent implements OnInit {
   selectedCCGString3: string = '';
   selectedCCG4: string = '';
   selectedCCGString4: string = '';
-  months: string[] = [''];
+  months: string[] = [];
   chartName: string = "";
   widget1: boolean = false;
   widget2: boolean = false;
@@ -179,22 +179,22 @@ export class DashboardViewerComponent implements OnInit {
 
   selectedVisualisation1: string;
   selectedOutputField1: string;
-  selectedSeries1: string[] = [''];
+  selectedSeries1: string[] = [];
   xAxisLabel1: string;
   yAxisLabel1: string;
   selectedVisualisation2: string;
   selectedOutputField2: string;
-  selectedSeries2: string[] = [''];
+  selectedSeries2: string[] = [];
   xAxisLabel2: string;
   yAxisLabel2: string;
   selectedVisualisation3: string;
   selectedOutputField3: string;
-  selectedSeries3: string[] = [''];
+  selectedSeries3: string[] = [];
   xAxisLabel3: string;
   yAxisLabel3: string;
   selectedVisualisation4: string;
   selectedOutputField4: string;
-  selectedSeries4: string[] = [''];
+  selectedSeries4: string[] = [];
   xAxisLabel4: string;
   yAxisLabel4: string;
   selectedWidgets : widget[] = [

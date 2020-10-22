@@ -3,9 +3,15 @@ import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {LoggerService} from 'dds-angular8';
 import {FormControl} from '@angular/forms';
 import {ExplorerService} from "../explorer.service";
+import {ReplaySubject, Subject} from "rxjs";
+import {takeUntil} from "rxjs/operators";
 
 export interface DialogData {
   orgs: string;
+}
+
+interface orgList {
+  value: string;
 }
 
 @Component({
@@ -15,21 +21,23 @@ export interface DialogData {
 })
 
 export class TrendComponent {
-  view: any[] = [850, 400];
-  view2: any[] = [400, 200];
+  filterCtrl: FormControl = new FormControl();
+  filteredValueset: ReplaySubject<orgList[]> = new ReplaySubject<orgList[]>(1);
+
+  view: any[] = [650, 330];
+  view2: any[] = [650, 330];
   chartResults: any[];
-  chartResultsSingle1: any[];
-  chartResultsSingle2: any[];
+  chartResultsSingle: any[];
   dateFrom: string = '2020-01-01';
   dateTo: string = this.formatDate(new Date());
   showLineCharts: boolean = true;
   showBarCharts: boolean = true;
   organisations = new FormControl();
-  orgList: string[] = [''];
+  orgList: string[] = [];
   selectedOrganisation: string = '';
-  months: string[] = [''];
+  months: string[] = [];
   weekly: boolean = false;
-  indicatorList: string[] = [''];
+  indicatorList = [];
   indicators = new FormControl(this.indicatorList);
   selectedIndicator: string = '';
 
@@ -66,6 +74,8 @@ export class TrendComponent {
 
   }
 
+  private _onDestroy = new Subject<void>();
+
   ngOnInit() {
     this.showLineCharts = true;
 
@@ -80,27 +90,22 @@ export class TrendComponent {
     this.orgList = this.orgs.split(',');
     let weekly = "0";
     let cumulative = "0";
-    let values: string;
-    let indicators: string;
+    let organisation: string;
+    let indicator: string;
 
     if (this.weekly) {
       weekly = "1";
     }
 
-    if (this.selectedOrganisation == "") {
-      values = this.orgList.toString();
-    } else {
-      values = this.selectedOrganisation;
-    }
+    if (this.selectedOrganisation=="" || this.selectedIndicator=="")
+      return;
 
-    if (this.selectedIndicator == "") {
-      indicators = this.indicatorList.toString();
-    } else {
-      indicators = this.selectedIndicator;
-    }
+    organisation = this.selectedOrganisation;
+    indicator = this.selectedIndicator;
 
-    let orgs = values.split(',');
-    let ind = indicators.split(',');
+    let orgs = organisation.toString().split(',');
+    let ind = indicator.toString().split(',');
+
     let names = '';
     for(var i = 0; i < orgs.length; i++)
     {
@@ -111,7 +116,7 @@ export class TrendComponent {
     }
     names = names.substr(1);
 
-    this.explorerService.getDashboard(names, this.formatDate(this.dateFrom), this.formatDate(this.dateTo), cumulative, 'Registries', weekly)
+    this.explorerService.getDashboard(names, this.formatDate(this.dateFrom), this.formatDate(this.dateTo), cumulative, 'registry_trend', weekly)
       .subscribe(result => {
         this.chartResults = result.results;
 
@@ -134,18 +139,12 @@ export class TrendComponent {
       });
 
     if (this.showBarCharts) {
-      this.explorerService.getDashboardSingle('Diabetes - BP 140/80 or less', this.formatDate(this.dateFrom), this.formatDate(this.dateTo), 1, 'Registries')
+      this.explorerService.getDashboardSingle(indicator, this.formatDate(this.dateFrom), this.formatDate(this.dateTo), 1, 'registry_latest')
         .subscribe(result => {
-          this.chartResultsSingle1 = result.series;
+          this.chartResultsSingle = result.series;
         });
     }
 
-    if (this.showBarCharts) {
-      this.explorerService.getDashboardSingle('Diabetes - Foot examination', this.formatDate(this.dateFrom), this.formatDate(this.dateTo), 1, 'Registries')
-        .subscribe(result => {
-          this.chartResultsSingle2 = result.series;
-        });
-    }
   }
 
   loadList(lists: any) {
@@ -154,9 +153,35 @@ export class TrendComponent {
           this.indicatorList.push(e.type);
         }
     )
+
+    this.filteredValueset.next(this.indicatorList.slice());
+
+    this.filterCtrl.valueChanges
+      .pipe(takeUntil(this._onDestroy))
+      .subscribe(() => {
+        this.filterIndicatorset();
+      });
+
     this.indicators = new FormControl(this.indicatorList);
 
+    this.indicators.reset(false);
+
     this.refresh();
+  }
+
+  filterIndicatorset() {
+    let search = this.filterCtrl.value;
+
+    if (!search) {
+      this.filteredValueset.next(this.indicatorList.slice());
+      return;
+    } else {
+      search = search.toLowerCase();
+    }
+
+    this.filteredValueset.next(
+      this.indicatorList.filter(value => value.toLowerCase().indexOf(search) > -1)
+    );
   }
 
   formatTooltipYAxis(val: number) {
