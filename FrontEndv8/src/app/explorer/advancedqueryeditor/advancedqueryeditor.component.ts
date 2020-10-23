@@ -102,8 +102,6 @@ interface savedQuery {
   currentMedication: boolean;
   clinicalEvents: boolean;
   activeProblems: boolean;
-  dateFromDemographics: string;
-  dateToDemographics: string;
   dateFromEncounters: string;
   dateToEncounters: string;
   dateFromMedication: string;
@@ -267,8 +265,6 @@ export class AdvancedQueryEditorComponent implements OnInit {
   currentMedication: boolean = false;
   clinicalEvents: boolean = false;
   activeProblems: boolean = false;
-  dateFromDemographics: string = this.formatDate(new Date());
-  dateToDemographics: string = this.formatDate(new Date());
   dateFromEncounters: string = this.formatDate(new Date());
   dateToEncounters: string = this.formatDate(new Date());
   dateFromMedication: string = this.formatDate(new Date());
@@ -483,8 +479,6 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.currentMedication = query.currentMedication;
       this.clinicalEvents = query.clinicalEvents;
       this.activeProblems = query.activeProblems;
-      this.dateFromDemographics = query.dateFromDemographics;
-      this.dateToDemographics = query.dateToDemographics;
       this.dateFromEncounters = query.dateFromEncounters;
       this.dateToEncounters = query.dateToEncounters;
       this.dateFromMedication = query.dateFromMedication;
@@ -542,7 +536,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
       control61a: [''], control62a: [''], control63a: [''], control64a: ['']
     });
     this.fourthFormGroup = this._formBuilder.group({
-      control65a: [''], control65c: [''], control65d: [''], control65e: [''], control66a: [''], control66c: [''], control66d: [''], control66e: [''], control66g: [''], control67a: [''],
+      control65a: [''],  control65e: [''], control66a: [''], control66c: [''], control66d: [''], control66e: [''], control66g: [''], control67a: [''],
       control67b: [''], control67c: [''], control67d: [''], control67e: [''], control67g: [''], control68a: [''], control68b: [''], control68c: [''], control68d: [''], control68e: [''], control68f: [''], control68g: ['']
     });
     this.fifthFormGroup = this._formBuilder.group({
@@ -755,8 +749,6 @@ export class AdvancedQueryEditorComponent implements OnInit {
       currentMedication: this.currentMedication,
       clinicalEvents: this.clinicalEvents,
       activeProblems: this.activeProblems,
-      dateFromDemographics: this.dateFromDemographics,
-      dateToDemographics: this.dateToDemographics,
       dateFromEncounters: this.dateFromEncounters,
       dateToEncounters: this.dateToEncounters,
       dateFromMedication: this.dateFromMedication,

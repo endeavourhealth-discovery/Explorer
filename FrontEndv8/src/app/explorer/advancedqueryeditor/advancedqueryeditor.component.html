@@ -857,41 +857,24 @@
     <mat-step [stepControl]="fourthFormGroup" errorMessage="Step not completed.">
       <form [formGroup]="fourthFormGroup">
         <ng-template matStepLabel>Data set criteria</ng-template>
-        <p>Once a patient cohort has been identified, these are the criteria choices for defining the data set (output tables).
+        <p>Once a patient cohort has been identified, these are the choices for defining the data set (output tables).
         The data set output will apply to each patient identified in the cohort.
-        The data set can either be delivered as CSV files to a secure location, or as visualisation tables in the dashboard library.
+        The data set can be delivered as either CSV files to a secure location, or as tables in the dashboards.
         </p>
         <br/>
         <table>
           <tr class="table-header">
-            <td style="width: 100px">Output types</td>
+            <td style="width: 100px">Select tables to output</td>
             <td>Date range</td>
-            <td>Output fields</td>
-            <td>Clinical types</td>
-            <td>Output value set</td>
+            <td>Table fields</td>
+            <td>Filter by types</td>
+            <td>Filter by value set</td>
           </tr>
           <tr>
             <td>
               <mat-checkbox class="checkbox" [(ngModel)]="demographics" formControlName="control65a">Demographics</mat-checkbox>
             </td>
             <td style="padding-top: 20px">
-              <mat-form-field class="example-full-width" appearance="outline" style="width: 130px">
-                <mat-label>Date from</mat-label>
-                <input matInput [matDatepicker]="picker65c" placeholder="Date from" [(ngModel)]="dateFromDemographics" formControlName="control65c">
-                <mat-datepicker-toggle matSuffix [for]="picker65c">
-                  <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
-                </mat-datepicker-toggle>
-                <mat-datepicker #picker65c></mat-datepicker>
-              </mat-form-field>
-
-              <mat-form-field class="example-full-width" appearance="outline" style="width: 130px; margin-left: 10px">
-                <mat-label>Date to</mat-label>
-                <input matInput [matDatepicker]="control65d" placeholder="Date to" [(ngModel)]="dateToDemographics" formControlName="control65d">
-                <mat-datepicker-toggle matSuffix [for]="control65d">
-                  <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
-                </mat-datepicker-toggle>
-                <mat-datepicker #control65d></mat-datepicker>
-              </mat-form-field>
             </td>
             <td style="padding-top: 20px">
               <mat-form-field appearance="outline" style="width: 200px">
@@ -956,7 +939,7 @@
           <tr>
             <td>
               <mat-checkbox class="checkbox" [(ngModel)]="medication" formControlName="control67a">Medication</mat-checkbox>
-              <mat-checkbox class="checkbox" [(ngModel)]="currentMedication" formControlName="control67b">Current medication only</mat-checkbox>
+              <mat-checkbox class="checkbox" [(ngModel)]="currentMedication" formControlName="control67b">(Current medication only)</mat-checkbox>
             </td>
             <td style="padding-top: 20px">
               <mat-form-field class="example-full-width" appearance="outline" style="width: 130px">
@@ -1003,7 +986,7 @@
           <tr>
             <td>
               <mat-checkbox class="checkbox" [(ngModel)]="clinicalEvents" formControlName="control68a">Clinical events</mat-checkbox>
-              <mat-checkbox class="checkbox" [(ngModel)]="activeProblems" formControlName="control68b">Active problems only</mat-checkbox>
+              <mat-checkbox class="checkbox" [(ngModel)]="activeProblems" formControlName="control68b">(Active problems only)</mat-checkbox>
             </td>
             <td style="padding-top: 20px">
               <mat-form-field class="example-full-width" appearance="outline" style="width: 130px">
