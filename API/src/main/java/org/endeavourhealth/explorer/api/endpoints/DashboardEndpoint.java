@@ -1,10 +1,7 @@
 package org.endeavourhealth.explorer.api.endpoints;
 
-import com.github.javafaker.Faker;
-import org.endeavourhealth.explorer.common.dal.EMISExplorerJDBCDAL;
 import org.endeavourhealth.explorer.common.dal.ExplorerJDBCDAL;
 import org.endeavourhealth.explorer.common.models.*;
-import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,7 +11,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Path("events")
@@ -728,70 +724,19 @@ public class DashboardEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/tableData")
     public Response getTableData(@Context SecurityContext sc,
-                                    @QueryParam("series") String series,
-                                    @QueryParam("search_data") String searchData,
-                                    @QueryParam("page_number") Integer pageNumber,
-                                    @QueryParam("page_size") Integer pageSize,
-                                    @QueryParam("order_column") String orderColumn,
-                                    @QueryParam("descending") boolean descending) throws Exception {
+                                 @QueryParam("query_name") String queryName,
+                                 @QueryParam("output_type") String outputType,
+                                 @QueryParam("search_data") String searchData,
+                                 @QueryParam("page_number") Integer pageNumber,
+                                 @QueryParam("page_size") Integer pageSize,
+                                 @QueryParam("order_column") String orderColumn,
+                                 @QueryParam("descending") boolean descending) throws Exception {
 
-        LOG.debug("getTableData " + series + ":" + searchData + ":" + pageNumber + ":" +pageSize + ":" + orderColumn + ":" + descending);
+        LOG.debug("getTableData " + queryName + ":" + outputType + ":" + searchData + ":" + pageNumber + ":" +pageSize + ":" + orderColumn + ":" + descending);
 
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
 
-            TableData data = new TableData();
-
-            TableHeader header = new TableHeader();
-
-            header.setLabel("Title");
-            header.setProperty("title");
-            header.setSecondary(false);
-            data.getHeaders().add(header);
-
-            header = new TableHeader();
-            header.setLabel("Firstnames");
-            header.setProperty("firstnames");
-            header.setSecondary(false);
-            data.getHeaders().add(header);
-
-            header = new TableHeader();
-            header.setLabel("Lastname");
-            header.setProperty("lastname");
-            header.setSecondary(false);
-            data.getHeaders().add(header);
-
-            header = new TableHeader();
-            header.setLabel("Address");
-            header.setProperty("address");
-            header.setSecondary(false);
-            data.getHeaders().add(header);
-
-            header = new TableHeader();
-            header.setLabel("NHS Number");
-            header.setProperty("nhs_number");
-            header.setSecondary(false);
-            data.getHeaders().add(header);
-
-            header = new TableHeader();
-            header.setLabel("Company");
-            header.setProperty("company");
-            header.setSecondary(false);
-            data.getHeaders().add(header);
-
-            ArrayList<JSONObject> fakeObjects = new ArrayList();
-            JSONObject obj = null;
-            Faker faker = new Faker();
-            for (int i = 0; i < 100; i++) {
-                obj = new JSONObject();
-                obj.put("title", faker.name().title());
-                obj.put("firstnames", faker.name().firstName());
-                obj.put("lastname", faker.name().lastName());
-                obj.put("address", faker.address().fullAddress());
-                obj.put("nhs_number", faker.idNumber().valid());
-                obj.put("company", faker.company().name());
-                fakeObjects.add(obj);
-            }
-            data.getRows().addAll(fakeObjects.subList((pageNumber-1)*pageSize,((pageNumber-1)*pageSize)+pageSize));
+            TableData data = viewerDAL.getTableData(queryName, outputType, searchData, pageNumber, pageSize, orderColumn, descending);
 
             return Response
                     .ok()
@@ -805,14 +750,15 @@ public class DashboardEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/tableTotalCount")
     public Response getTableTotalCount(@Context SecurityContext sc,
-                                 @QueryParam("series") String series,
-                                 @QueryParam("search_data") String searchData) throws Exception {
+                                       @QueryParam("query_name") String queryName,
+                                       @QueryParam("output_type") String outputType,
+                                       @QueryParam("search_data") String searchData) throws Exception {
 
-        LOG.debug("getTableTotalCount " + series + ":" + searchData);
+        LOG.debug("getTableTotalCount " + queryName + ":" + outputType + ":" + searchData);
 
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
 
-            long count = 100;
+            long count = viewerDAL.getTableTotalCount(queryName, outputType, searchData);
 
             return Response
                     .ok()

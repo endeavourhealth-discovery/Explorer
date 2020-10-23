@@ -205,10 +205,15 @@ export class DashboardViewerComponent implements OnInit {
   tableData3: TableData = null;
   tableData4: TableData = null;
 
-  tableSeries1: string = "";
-  tableSeries2: string = "";
-  tableSeries3: string = "";
-  tableSeries4: string = "";
+  tableQuery1: string = "";
+  tableQuery2: string = "";
+  tableQuery3: string = "";
+  tableQuery4: string = "";
+
+  tableOutput1: string = "";
+  tableOutput2: string = "";
+  tableOutput3: string = "";
+  tableOutput4: string = "";
 
   searchData1: string = "";
   searchData2: string = "";
@@ -230,10 +235,10 @@ export class DashboardViewerComponent implements OnInit {
   pageSize3: number = 3;
   pageSize4: number = 3;
 
-  orderColumn1 = 'firstnames';
-  orderColumn2 = 'firstnames';
-  orderColumn3 = 'firstnames';
-  orderColumn4 = 'firstnames';
+  orderColumn1 = null;
+  orderColumn2 = null;
+  orderColumn3 = null;
+  orderColumn4 = null;
 
   descending1 = false;
   descending2 = false;
@@ -364,9 +369,9 @@ export class DashboardViewerComponent implements OnInit {
     }
 
     if (this.showTables1) {
-      this.tableSeries1 = this.selectedSeries1[0];
+      this.tableQuery1 = this.selectedSeries1[0];
+      this.searchData1 = '';
       this.search1();
-      this.getTotalTableData1();
     }
   }
 
@@ -428,9 +433,9 @@ export class DashboardViewerComponent implements OnInit {
     }
 
     if (this.showTables2) {
-      this.tableSeries2 = this.selectedSeries2[0];
+      this.tableQuery2 = this.selectedSeries2[0];
+      this.searchData2 = '';
       this.search2();
-      this.getTotalTableData2();
     }
   }
 
@@ -492,9 +497,9 @@ export class DashboardViewerComponent implements OnInit {
     }
 
     if (this.showTables3) {
-      this.tableSeries3 = this.selectedSeries3[0];
+      this.tableQuery3 = this.selectedSeries3[0];
+      this.searchData3 = '';
       this.search3();
-      this.getTotalTableData3();
     }
   }
 
@@ -556,9 +561,9 @@ export class DashboardViewerComponent implements OnInit {
     }
 
     if (this.showTables4) {
-      this.tableSeries4 = this.selectedSeries4[0];
+      this.tableQuery4 = this.selectedSeries4[0];
+      this.searchData4 = '';
       this.search4();
-      this.getTotalTableData4();
     }
   }
 
@@ -952,13 +957,11 @@ export class DashboardViewerComponent implements OnInit {
   onSearch1($event) {
     this.searchData1 = $event;
     this.pageNumber1 = 1;
-    this.tableData1 = null;
     this.search1();
-    this.getTotalTableData1();
   }
 
   getTotalTableData1() {
-    this.explorerService.getTotalCount(this.tableSeries1, this.searchData1)
+    this.explorerService.getTotalCount(this.tableQuery1, this.tableOutput1, this.searchData1)
       .subscribe(
         (result) => {
           this.totalItems1 = result;
@@ -968,9 +971,12 @@ export class DashboardViewerComponent implements OnInit {
   }
 
   private search1() {
-    this.explorerService.tableSearch(this.tableSeries1, this.searchData1, this.pageNumber1, this.pageSize1, this.orderColumn1, this.descending1)
+    this.explorerService.tableSearch(this.tableQuery1, this.tableOutput1, this.searchData1, this.pageNumber1,
+      this.pageSize1, this.orderColumn1, this.descending1)
       .subscribe(result => {
           this.tableData1 = result;
+          this.tableOutput1 = result.outputType;
+          this.getTotalTableData1();
         },
         error => {
           this.log.error('Table data could not be loaded. Please try again.');
@@ -993,13 +999,11 @@ export class DashboardViewerComponent implements OnInit {
   onSearch2($event) {
     this.searchData2 = $event;
     this.pageNumber2 = 1;
-    this.tableData2 = null;
     this.search2();
-    this.getTotalTableData2();
   }
 
   getTotalTableData2() {
-    this.explorerService.getTotalCount(this.tableSeries2, this.searchData2)
+    this.explorerService.getTotalCount(this.tableQuery2, this.tableOutput2, this.searchData2)
       .subscribe(
         (result) => {
           this.totalItems2 = result;
@@ -1009,9 +1013,12 @@ export class DashboardViewerComponent implements OnInit {
   }
 
   private search2() {
-    this.explorerService.tableSearch(this.tableSeries2, this.searchData2, this.pageNumber2, this.pageSize2, this.orderColumn2, this.descending2)
+    this.explorerService.tableSearch(this.tableQuery2, this.tableOutput2, this.searchData2, this.pageNumber2,
+      this.pageSize2, this.orderColumn2, this.descending2)
       .subscribe(result => {
           this.tableData2 = result;
+          this.tableOutput2 = result.outputType;
+          this.getTotalTableData2();
         },
         error => {
           this.log.error('Table data could not be loaded. Please try again.');
@@ -1034,25 +1041,26 @@ export class DashboardViewerComponent implements OnInit {
   onSearch3($event) {
     this.searchData3 = $event;
     this.pageNumber3 = 1;
-    this.tableData3 = null;
     this.search3();
-    this.getTotalTableData3();
   }
 
   getTotalTableData3() {
-    this.explorerService.getTotalCount(this.tableSeries3, this.searchData3)
+    this.explorerService.getTotalCount(this.tableQuery3, this.tableOutput3, this.searchData3)
       .subscribe(
         (result) => {
           this.totalItems3 = result;
+          this.getTotalTableData3();
         },
         (error) => console.log(error)
       );
   }
 
   private search3() {
-    this.explorerService.tableSearch(this.tableSeries3, this.searchData3, this.pageNumber3, this.pageSize3, this.orderColumn3, this.descending3)
+    this.explorerService.tableSearch(this.tableQuery3, this.tableOutput3, this.searchData3, this.pageNumber3,
+      this.pageSize3, this.orderColumn3, this.descending3)
       .subscribe(result => {
           this.tableData3 = result;
+          this.tableOutput3 = result.outputType;
           this.getTotalTableData3();
         },
         error => {
@@ -1076,25 +1084,26 @@ export class DashboardViewerComponent implements OnInit {
   onSearch4($event) {
     this.searchData4 = $event;
     this.pageNumber4 = 1;
-    this.tableData4 = null;
     this.search4();
-    this.getTotalTableData4();
   }
 
   getTotalTableData4() {
-    this.explorerService.getTotalCount(this.tableSeries4, this.searchData4)
+    this.explorerService.getTotalCount(this.tableQuery4, this.tableOutput4, this.searchData4)
       .subscribe(
         (result) => {
           this.totalItems4 = result;
+          this.getTotalTableData4();
         },
         (error) => console.log(error)
       );
   }
 
   private search4() {
-    this.explorerService.tableSearch(this.tableSeries4, this.searchData4, this.pageNumber4, this.pageSize4, this.orderColumn4, this.descending4)
+    this.explorerService.tableSearch(this.tableQuery4, this.tableOutput4, this.searchData4, this.pageNumber4,
+      this.pageSize4, this.orderColumn4, this.descending4)
       .subscribe(result => {
           this.tableData4 = result;
+          this.tableOutput4 = result.outputType;
           this.getTotalTableData4();
         },
         error => {

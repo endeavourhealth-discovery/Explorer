@@ -8,6 +8,8 @@ public class TableData {
 
     private ArrayList<TableHeader> headers = new ArrayList();
     private ArrayList<JSONObject> rows = new ArrayList();
+    private ArrayList<String> outputTypes = new ArrayList<>();
+    private String outputType = "";
 
     public ArrayList<TableHeader> getHeaders() {
         return headers;
@@ -22,4 +24,12 @@ public class TableData {
     public void setRows(ArrayList<JSONObject> rows) {
         this.rows = rows;
     }
+
+    public ArrayList<String> getOutputTypes() { return outputTypes; }
+
+    public void setOutputTypes(ArrayList<String> outputTypes) { this.outputTypes = outputTypes; }
+
+    public String getOutputType() { return outputType; }
+
+    public void setOutputType(String outputType) { this.outputType = outputType; }
 }

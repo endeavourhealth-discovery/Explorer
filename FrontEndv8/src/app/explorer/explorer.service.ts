@@ -329,10 +329,11 @@ export class ExplorerService {
     return this.http.get('api/events/covidMaps', {params});
   }
 
-  tableSearch(series: string, searchData: string, pageNumber: number, pageSize: number,
+  tableSearch(queryName: string, outputType: string, searchData: string, pageNumber: number, pageSize: number,
               orderColumn: string, descending: boolean): Observable<any> {
     let params = new HttpParams();
-    if (series) params = params.append('series', series);
+    if (queryName) params = params.append('query_name', queryName);
+    if (outputType) params = params.append('output_type', outputType);
     if (searchData) params = params.append('search_data', searchData);
     if (pageNumber) params = params.append('page_number', pageNumber.toString());
     if (pageSize) params = params.append('page_size', pageSize.toString());
@@ -341,9 +342,10 @@ export class ExplorerService {
     return this.http.get('api/events/tableData', {params});
   }
 
-  getTotalCount(series: string, searchData: string): Observable<any> {
+  getTotalCount(queryName: string, outputType: string, searchData: string): Observable<any> {
     let params = new HttpParams();
-    if (series) params = params.append('series', series);
+    if (queryName) params = params.append('query_name', queryName);
+    if (outputType) params = params.append('output_type', outputType);
     if (searchData) params = params.append('search_data', searchData);
     return this.http.get('api/events/tableTotalCount', {params});
   }

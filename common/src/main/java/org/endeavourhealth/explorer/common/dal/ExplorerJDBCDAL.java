@@ -1,12 +1,20 @@
 package org.endeavourhealth.explorer.common.dal;
 
 import com.amazonaws.util.StringUtils;
+import com.facebook.presto.jdbc.internal.google.api.client.json.Json;
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.endeavourhealth.explorer.common.models.*;
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -1511,10 +1519,11 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                 "WHERE covid.lsoa_code = regs.lsoa_code " +
                 "AND covid.lsoa_code = map.area_code " +
                 "AND covid.covid_date >= '" + minDate + "' " +
-                "AND covid.covid_date <= '" + date + "' " +
+                "AND covid.covid_date <= ? " +
                 "GROUP BY covid.lsoa_code " +
                 "ORDER BY covid.lsoa_code ";
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            statement.setString(1, date);
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
                     MapLayer layer = new MapLayer();
@@ -1569,5 +1578,283 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         result.setLayers(layers);
 
         return result;
+    }
+
+    public TableData getTableData(String queryName, String outputType, String searchData, Integer pageNumber,
+                             Integer pageSize, String orderColumn, boolean descending)  throws Exception {
+
+        TableData data = new TableData();
+
+        String sql = "select * from dashboards.query_library where name = ? ";
+        JsonObject query = null;
+        String queryId = null;
+        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            statement.setString(1, queryName);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    queryId = resultSet.getString("id");
+                    query = new JsonParser().parse(resultSet.getString("query")).getAsJsonObject();
+                }
+            }
+        }
+
+        if (query == null) {
+            throw new Exception("Invalid query.");
+        }
+
+        ArrayList<String> outputTypes = new ArrayList<>();
+        ArrayList<String> demographicsFields  = new ArrayList<>();
+        ArrayList<String> encountersFields  = new ArrayList<>();
+        ArrayList<String> medicationFields  = new ArrayList<>();
+        ArrayList<String> clinicalEventsFields  = new ArrayList<>();
+        Type listType = new TypeToken<List<String>>() {}.getType();
+
+        if (query.get("demographics").getAsBoolean()) {
+            outputTypes.add("Demographics");
+            demographicsFields = new Gson().fromJson(query.get("selectedDemographicFields"), listType);
+        }
+
+        if (query.get("encounters").getAsBoolean()) {
+            outputTypes.add("Encounters");
+            encountersFields = new Gson().fromJson(query.get("selectedEncounterFields"), listType);
+        }
+
+        if (query.get("medication").getAsBoolean()) {
+            outputTypes.add("Medication");
+            medicationFields = new Gson().fromJson(query.get("selectedMedicationFields"), listType);
+        }
+
+        if (query.get("clinicalEvents").getAsBoolean()) {
+            outputTypes.add("Clinical Events");
+            clinicalEventsFields = new Gson().fromJson(query.get("selectedClinicalEventFields"), listType);
+        }
+
+        if (outputTypes.size() == 0) {
+            throw new Exception("Query has no valid table output types.");
+        } else {
+            data.getOutputTypes().addAll(outputTypes);
+        }
+
+        String tableName = "";
+        if (StringUtils.isNullOrEmpty(outputType)) {
+            outputType = outputTypes.get(0);
+        }
+        data.setOutputType(outputType);
+
+        if (outputType.equalsIgnoreCase("Demographics")) {
+            tableName = "person_output_" +queryId;
+        } else if (outputType.equalsIgnoreCase("Encounters")) {
+            tableName = "encounter_output_" +queryId;
+        } else if (outputType.equalsIgnoreCase("Medication")) {
+            tableName = "medication_output_" +queryId;
+        } else if (outputType.equalsIgnoreCase("Clinical Events")) {
+            tableName = "observation_output_" +queryId;
+        } else {
+            throw new Exception("Unknown output type:" + outputType);
+        }
+
+        ArrayList<String> fieldsList = new ArrayList<>();
+        if (outputType.equalsIgnoreCase("Demographics")) {
+            fieldsList.addAll(demographicsFields);
+        } else if (outputType.equalsIgnoreCase("Encounters")) {
+            fieldsList.addAll(encountersFields);
+        } else if (outputType.equalsIgnoreCase("Medication")) {
+            fieldsList.addAll(medicationFields);
+        } else if (outputType.equalsIgnoreCase("Clinical Events")) {
+            fieldsList.addAll(clinicalEventsFields);
+        }
+
+        sql = "select * from information_schema.tables where table_schema = 'dashboards' and table_name = '" + tableName + "'";
+        boolean tableFound = false;
+        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    tableFound = true;
+                }
+            }
+        }
+
+        if (!tableFound) {
+            throw new Exception("Information not yet available.");
+        }
+
+        String andColumns = "and (";
+        for (String field : fieldsList) {
+            andColumns += " column_name = '" + field + "' or ";
+        }
+        andColumns = andColumns.substring(0, andColumns.length() - 3);
+        andColumns += ")";
+
+
+        sql = "select column_name, data_type from information_schema.columns " +
+                " where table_schema='dashboards' and table_name = '" + tableName + "'" + andColumns;
+
+        ArrayList<String> columns = new ArrayList();
+        ArrayList<String> likeColumns = new ArrayList();
+        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    String column = resultSet.getString("column_name");
+                    columns.add(column);
+                    String type = resultSet.getString("data_type");
+                    if (isTypeString(type)) {
+                        likeColumns.add(column);
+                    }
+                }
+            }
+        }
+
+        String order = "asc";
+        if (descending) {
+            order = "desc";
+        }
+
+        ArrayList<JSONObject> tableRows = new ArrayList();
+        JSONObject row = null;
+        TableHeader header = null;
+
+        for (String column : columns) {
+            header = new TableHeader();
+            header.setLabel(column);
+            header.setProperty(column);
+            header.setSecondary(false);
+            data.getHeaders().add(header);
+        }
+
+        if (StringUtils.isNullOrEmpty(orderColumn)){
+            orderColumn = columns.get(0);
+        }
+
+        String like = "";
+        if (!StringUtils.isNullOrEmpty(searchData)) {
+            like = " where ";
+            for (String column : likeColumns) {
+                like += "`" + column + "`" + " like ? or ";
+            }
+            like = like.substring(0, like.length() - 3);
+        }
+
+        String fields = "";
+        for (String field : fieldsList) {
+            fields += "`" + field + "`,";
+        }
+        fields = fields.substring(0, fields.length()-1);
+
+
+        if (StringUtils.isNullOrEmpty(searchData)) {
+            sql = "select " + fields + " from dashboards." + tableName +
+                    " order by `" + orderColumn + "` " + order +
+                    " limit " + ((pageNumber - 1)*pageSize) + "," + pageSize;
+        } else {
+            sql = "select " + fields + " from dashboards." + tableName +
+                    like +
+                    " order by " + orderColumn + " " + order +
+                    " limit " + ((pageNumber - 1)*pageSize) + "," + pageSize;
+        }
+
+        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            if (!StringUtils.isNullOrEmpty(searchData)) {
+                for (int i = 0; i < likeColumns.size(); i++) {
+                    statement.setString(i+1, "%" + searchData + "%");
+                }
+            }
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    row = new JSONObject();
+                    for (String column : columns) {
+                        row.put(column, resultSet.getString(column));
+                    }
+                    tableRows.add(row);
+                }
+            }
+        }
+        data.getRows().addAll(tableRows);
+        return data;
+    }
+
+    public long getTableTotalCount(String queryName, String outputType, String searchData) throws Exception {
+        long count = 0;
+
+        String sql = "select * from dashboards.query_library where name = ? ";
+        JsonObject query = null;
+        String queryId = null;
+        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            statement.setString(1, queryName);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    queryId = resultSet.getString("id");
+                    query = new JsonParser().parse(resultSet.getString("query")).getAsJsonObject();
+                }
+            }
+        }
+
+        if (query == null) {
+            throw new Exception("Invalid query.");
+        }
+
+        String tableName = "";
+        if (outputType.equalsIgnoreCase("Demographics")) {
+            tableName = "person_output_" +queryId;
+        } else if (outputType.equalsIgnoreCase("Encounters")) {
+            tableName = "encounter_output_" +queryId;
+        } else if (outputType.equalsIgnoreCase("Medication")) {
+            tableName = "medication_output_" +queryId;
+        } else if (outputType.equalsIgnoreCase("Clinical Events")) {
+            tableName = "observation_output_" +queryId;
+        } else {
+            throw new Exception("Unknown output type:" + outputType);
+        }
+
+        sql = "select column_name, data_type from information_schema.columns " +
+                " where table_schema='dashboards' and table_name = '" + tableName + "'";
+
+        ArrayList<String> likeColumns = new ArrayList();
+        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    String column = resultSet.getString("column_name");
+                    String type = resultSet.getString("data_type");
+                    if (isTypeString(type)) {
+                        likeColumns.add(column);
+                    }
+                }
+            }
+        }
+
+        sql = "select count(*) as total from dashboards." + tableName;
+        if (!StringUtils.isNullOrEmpty(searchData)) {
+            String like = like = " where ";
+            for (String column : likeColumns) {
+                like += "`" + column + "`" + " like ? or ";
+            }
+            like = like.substring(0, like.length() - 3);
+            sql += " " + like;
+
+        }
+        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            if (!StringUtils.isNullOrEmpty(searchData)) {
+                for (int i = 0; i < likeColumns.size(); i++) {
+                    statement.setString(i+1, "%" + searchData + "%");
+                }
+            }
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    count = resultSet.getLong("total");
+                }
+            }
+        }
+
+        return count;
+    }
+
+    private boolean isTypeString(String type) {
+        if (!StringUtils.isNullOrEmpty(type)) {
+            if (type.equalsIgnoreCase("char") ||
+                    type.equalsIgnoreCase("varchar") ||
+                    type.equalsIgnoreCase("text")) {
+                return true;
+            }
+        }
+        return false;
     }
 }
