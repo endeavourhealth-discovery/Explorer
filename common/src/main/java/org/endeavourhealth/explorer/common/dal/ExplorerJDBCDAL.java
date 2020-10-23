@@ -1748,7 +1748,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         } else {
             sql = "select " + fields + " from dashboards." + tableName +
                     like +
-                    " order by " + orderColumn + " " + order +
+                    " order by `" + orderColumn + "` " + order +
                     " limit " + ((pageNumber - 1)*pageSize) + "," + pageSize;
         }
 

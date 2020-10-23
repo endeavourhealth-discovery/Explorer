@@ -215,10 +215,10 @@ export class DashboardViewerComponent implements OnInit {
   tableOutput3: string = "";
   tableOutput4: string = "";
 
-  searchData1: string = "";
-  searchData2: string = "";
-  searchData3: string = "";
-  searchData4: string = "";
+  searchData1: string = null;
+  searchData2: string = null;
+  searchData3: string = null;
+  searchData4: string = null;
 
   totalItems1: number = 0;
   totalItems2: number = 0;
@@ -235,15 +235,15 @@ export class DashboardViewerComponent implements OnInit {
   pageSize3: number = 3;
   pageSize4: number = 3;
 
-  orderColumn1 = null;
-  orderColumn2 = null;
-  orderColumn3 = null;
-  orderColumn4 = null;
+  orderColumn1: string = null;
+  orderColumn2: string = null;
+  orderColumn3: string = null;
+  orderColumn4: string = null;
 
-  descending1 = false;
-  descending2 = false;
-  descending3 = false;
-  descending4 = false;
+  descending1: boolean;
+  descending2: boolean;
+  descending3: boolean;
+  descending4: boolean;
 
   tableStyle1 = '';
   tableStyle2 = '';
@@ -370,7 +370,8 @@ export class DashboardViewerComponent implements OnInit {
 
     if (this.showTables1) {
       this.tableQuery1 = this.selectedSeries1[0];
-      this.searchData1 = '';
+      this.searchData1 = null;
+      this.orderColumn1 = null;
       this.search1();
     }
   }
@@ -434,7 +435,8 @@ export class DashboardViewerComponent implements OnInit {
 
     if (this.showTables2) {
       this.tableQuery2 = this.selectedSeries2[0];
-      this.searchData2 = '';
+      this.searchData2 = null;
+      this.orderColumn2 = null;
       this.search2();
     }
   }
@@ -498,7 +500,8 @@ export class DashboardViewerComponent implements OnInit {
 
     if (this.showTables3) {
       this.tableQuery3 = this.selectedSeries3[0];
-      this.searchData3 = '';
+      this.searchData3 = null;
+      this.orderColumn3 = null;
       this.search3();
     }
   }
@@ -562,7 +565,8 @@ export class DashboardViewerComponent implements OnInit {
 
     if (this.showTables4) {
       this.tableQuery4 = this.selectedSeries4[0];
-      this.searchData4 = '';
+      this.searchData4 = null;
+      this.orderColumn4 = null;
       this.search4();
     }
   }
@@ -976,6 +980,9 @@ export class DashboardViewerComponent implements OnInit {
       .subscribe(result => {
           this.tableData1 = result;
           this.tableOutput1 = result.outputType;
+          if (this.orderColumn1 == null) {
+            this.orderColumn1 = result.headers[0].property;
+          }
           this.getTotalTableData1();
         },
         error => {
@@ -992,7 +999,7 @@ export class DashboardViewerComponent implements OnInit {
 
   onOrderChange1($event) {
     this.orderColumn1 = $event.active;
-    this.descending1 = $event.direction1 == 'desc' ? true : false;
+    this.descending1 = $event.direction == 'desc' ? true : false;
     this.search1();
   }
 
@@ -1018,9 +1025,13 @@ export class DashboardViewerComponent implements OnInit {
       .subscribe(result => {
           this.tableData2 = result;
           this.tableOutput2 = result.outputType;
+          if (this.orderColumn2 == null) {
+            this.orderColumn2 = result.headers[0].property;
+          }
           this.getTotalTableData2();
         },
         error => {
+          console.log(error.toString());
           this.log.error('Table data could not be loaded. Please try again.');
         }
       );
@@ -1034,7 +1045,7 @@ export class DashboardViewerComponent implements OnInit {
 
   onOrderChange2($event) {
     this.orderColumn2 = $event.active;
-    this.descending2 = $event.direction2 == 'desc' ? true : false;
+    this.descending2 = $event.direction == 'desc' ? true : false;
     this.search2();
   }
 
@@ -1061,6 +1072,9 @@ export class DashboardViewerComponent implements OnInit {
       .subscribe(result => {
           this.tableData3 = result;
           this.tableOutput3 = result.outputType;
+          if (this.orderColumn3 == null) {
+            this.orderColumn3 = result.headers[0].property;
+          }
           this.getTotalTableData3();
         },
         error => {
@@ -1077,7 +1091,7 @@ export class DashboardViewerComponent implements OnInit {
 
   onOrderChange3($event) {
     this.orderColumn3 = $event.active;
-    this.descending3 = $event.direction3 == 'desc' ? true : false;
+    this.descending3 = $event.direction == 'desc' ? true : false;
     this.search3();
   }
 
@@ -1104,6 +1118,9 @@ export class DashboardViewerComponent implements OnInit {
       .subscribe(result => {
           this.tableData4 = result;
           this.tableOutput4 = result.outputType;
+          if (this.orderColumn4 == null) {
+            this.orderColumn4 = result.headers[0].property;
+          }
           this.getTotalTableData4();
         },
         error => {
@@ -1120,7 +1137,7 @@ export class DashboardViewerComponent implements OnInit {
 
   onOrderChange4($event) {
     this.orderColumn4 = $event.active;
-    this.descending4 = $event.direction4 == 'desc' ? true : false;
+    this.descending4 = $event.direction == 'desc' ? true : false;
     this.search4();
   }
 }
