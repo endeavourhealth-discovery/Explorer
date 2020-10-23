@@ -38,6 +38,7 @@ export class RegistryEditorComponent {
   id: string;
   queryList = [];
   filteredValueset: ReplaySubject<queryList[]> = new ReplaySubject<queryList[]>(1);
+  saveCaption = 'Save';
 
   constructor(
     public dialogRef: MatDialogRef<RegistryEditorComponent>,
@@ -94,6 +95,7 @@ export class RegistryEditorComponent {
   }
 
   saveRegistry() {
+    this.saveCaption = 'Saving, please wait....'
     this.explorerService.saveRegistry(this.query, this.name, this.id, this.providerOrganisation)
       .subscribe(saved => {
           this.addIndicator(this.name);

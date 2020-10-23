@@ -1331,6 +1331,13 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                 stmt.executeUpdate();
             }
         }
+
+        // create fake registry results for now
+        sql = "CALL dashboards.dummy_registries()";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.executeUpdate();
+        }
     }
 
     public void deleteRegistry(String id, String name, String odscode) throws Exception {
@@ -1400,6 +1407,13 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
             stmt.setString(4, name);
             stmt.setString(5, indicator);
             stmt.setString(6, name);
+            stmt.executeUpdate();
+        }
+
+        // create fake registry results for now
+        sql = "CALL dashboards.dummy_registries()";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.executeUpdate();
         }
     }
