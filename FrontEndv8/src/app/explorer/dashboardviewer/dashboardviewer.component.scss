@@ -25,16 +25,20 @@ mat-grid-tile {
   margin-top: 0%; position: center;
 }
 
-.table-scroll-300 {
-  overflow-x: auto;
+.table-scroll-quarter {
   max-height: 300px;
-  max-width: 100%;
-  overflow-y: scroll;
+  max-width: 850px;
+  overflow: scroll;
 }
 
-.table-scroll-800 {
-  overflow-x: auto;
-  max-height: 800px;
-  max-width: 100%;
-  overflow-y: scroll;
+.table-scroll-half {
+  max-height: 700px;
+  max-width: 850px;
+  overflow: scroll;
+}
+
+.table-scroll-full {
+  max-height: 700px;
+  max-width: 1700px;
+  overflow: scroll;
 }

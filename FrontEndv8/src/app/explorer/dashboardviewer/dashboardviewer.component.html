@@ -45,7 +45,7 @@
                   <mat-checkbox *ngIf="showLineCharts1" class="checkbox" (change)="refresh1(false)" [(ngModel)]="weekly1">Weekly</mat-checkbox>
                   <button class="download" mat-flat-button color="primary" (click)="download1()">Download</button>
                 </div>
-                <mat-form-field style="width:250px; margin-left: 10px"  appearance="outline" *ngIf="showTables1 && tableData1">
+                <mat-form-field style="width:250px;"  appearance="outline" *ngIf="showTables1 && tableData1">
                   <mat-label>Output Types</mat-label>
                   <mat-select (selectionChange)="refresh1(false)" style="width:230px" [(value)]="tableOutput1">
                     <mat-option *ngFor="let result of tableData1.outputTypes" [value]="result">{{result}}</mat-option>
@@ -209,7 +209,7 @@
                   <mat-checkbox *ngIf="showLineCharts2" class="checkbox" (change)="refresh2(false)" [(ngModel)]="weekly2">Weekly</mat-checkbox>
                   <button class="download" mat-flat-button color="primary" (click)="download2()">Download</button>
                 </div>
-                <mat-form-field style="width:250px; margin-left: 10px"  appearance="outline" *ngIf="showTables2 && tableData2">
+                <mat-form-field style="width:250px;"  appearance="outline" *ngIf="showTables2 && tableData2">
                   <mat-label>Output Types</mat-label>
                   <mat-select (selectionChange)="refresh2(false)" style="width:230px" [(value)]="tableOutput2">
                     <mat-option *ngFor="let result of tableData2.outputTypes" [value]="result">{{result}}</mat-option>
@@ -373,7 +373,7 @@
                   <mat-checkbox *ngIf="showLineCharts3" class="checkbox" (change)="refresh3(false)" [(ngModel)]="weekly3">Weekly</mat-checkbox>
                   <button class="download" mat-flat-button color="primary" (click)="download3()">Download</button>
                 </div>
-                <mat-form-field style="width:250px; margin-left: 10px"  appearance="outline" *ngIf="showTables3 && tableData3">
+                <mat-form-field style="width:250px;"  appearance="outline" *ngIf="showTables3 && tableData3">
                   <mat-label>Output Types</mat-label>
                   <mat-select (selectionChange)="refresh3(false)" style="width:230px" [(value)]="tableOutput3">
                     <mat-option *ngFor="let result of tableData3.outputTypes" [value]="result">{{result}}</mat-option>
@@ -537,7 +537,7 @@
                   <mat-checkbox *ngIf="showLineCharts4" class="checkbox" (change)="refresh4(false)" [(ngModel)]="weekly4">Weekly</mat-checkbox>
                   <button class="download" mat-flat-button color="primary" (click)="download4()">Download</button>
                 </div>
-                <mat-form-field style="width:250px; margin-left: 10px"  appearance="outline" *ngIf="showTables4 && tableData4">
+                <mat-form-field style="width:250px;"  appearance="outline" *ngIf="showTables4 && tableData4">
                   <mat-label>Output Types</mat-label>
                   <mat-select (selectionChange)="refresh4(false)" style="width:230px" [(value)]="tableOutput4">
                     <mat-option *ngFor="let result of tableData4.outputTypes" [value]="result">{{result}}</mat-option>

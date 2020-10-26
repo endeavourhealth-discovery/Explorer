@@ -658,24 +658,33 @@ export class DashboardViewerComponent implements OnInit {
     this.chartTitle4 = this.selectedVisualisation4;
 
     console.log(this.selectedWidgets.length);
-    if (this.selectedWidgets.length < 3) {
+    if (this.selectedWidgets.length == 1) {
       this.pageSize1 = 10;
       this.pageSize2 = 10;
       this.pageSize3 = 10;
       this.pageSize4 = 10;
-      this.tableStyle1 = 'table-scroll-800';
-      this.tableStyle2 = 'table-scroll-800';
-      this.tableStyle3 = 'table-scroll-800';
-      this.tableStyle4 = 'table-scroll-800';
-    }  else {
+      this.tableStyle1 = 'table-scroll-full';
+      this.tableStyle2 = 'table-scroll-full';
+      this.tableStyle3 = 'table-scroll-full';
+      this.tableStyle4 = 'table-scroll-full';
+    } else if (this.selectedWidgets.length == 2) {
+      this.pageSize1 = 10;
+      this.pageSize2 = 10;
+      this.pageSize3 = 10;
+      this.pageSize4 = 10;
+      this.tableStyle1 = 'table-scroll-half';
+      this.tableStyle2 = 'table-scroll-half';
+      this.tableStyle3 = 'table-scroll-half';
+      this.tableStyle4 = 'table-scroll-half';
+    } else {
       this.pageSize1 = 3;
       this.pageSize2 = 3;
       this.pageSize3 = 3;
       this.pageSize4 = 3;
-      this.tableStyle1 = 'table-scroll-300';
-      this.tableStyle2 = 'table-scroll-300';
-      this.tableStyle3 = 'table-scroll-300';
-      this.tableStyle4 = 'table-scroll-300';
+      this.tableStyle1 = 'table-scroll-quarter';
+      this.tableStyle2 = 'table-scroll-quarter';
+      this.tableStyle3 = 'table-scroll-quarter';
+      this.tableStyle4 = 'table-scroll-quarter';
     }
 
     if (this.selectedWidgets.length==1) {
