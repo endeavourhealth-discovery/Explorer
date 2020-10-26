@@ -4,7 +4,7 @@ DROP PROCEDURE IF EXISTS filterObservationByEarliestLatest;
 
 DELIMITER //
 CREATE PROCEDURE filterObservationByEarliestLatest(
-  p_includeconcepttab VARCHAR(64),
+  p_concepttab VARCHAR(64),
   p_observationcohorttab VARCHAR(64),
   p_earliestlatestobservationtab VARCHAR(64),
   p_includedEarliestLatest VARCHAR(20),
@@ -37,7 +37,7 @@ BEGIN
      DROP TEMPORARY TABLE IF EXISTS qry_tmp;
      SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp AS 
      SELECT o2.id, o2.patient_id, o2.clinical_effective_date, o2.result_value, o2.non_core_concept_id, c.value_set_code_type 
-     FROM ', p_observationcohorttab,' o2 JOIN ', p_includeconcepttab,' c ON o2.non_core_concept_id = c.non_core_concept_id 
+     FROM ', p_observationcohorttab,' o2 JOIN ', p_concepttab,' c ON o2.non_core_concept_id = c.non_core_concept_id 
      WHERE ', resultvaluestring,' AND ', p_timeperioddaterange);
      PREPARE stmt FROM @sql;
      EXECUTE stmt;
@@ -76,7 +76,7 @@ BEGIN
      DROP TEMPORARY TABLE IF EXISTS qry_tmp;
      SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp AS 
      SELECT o2.id, o2.patient_id, o2.clinical_effective_date, o2.result_value, o2.non_core_concept_id, c.value_set_code_type 
-     FROM ', p_observationcohorttab,' o2 JOIN ', p_includeconcepttab,' c ON o2.non_core_concept_id = c.non_core_concept_id 
+     FROM ', p_observationcohorttab,' o2 JOIN ', p_concepttab,' c ON o2.non_core_concept_id = c.non_core_concept_id 
      WHERE ', resultvaluestring,' AND ', p_timeperioddaterange);
      PREPARE stmt FROM @sql;
      EXECUTE stmt;

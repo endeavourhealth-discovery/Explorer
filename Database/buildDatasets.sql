@@ -35,6 +35,14 @@ BEGIN
   DECLARE frontlen INT DEFAULT NULL;
   DECLARE TempValue VARCHAR(500) DEFAULT NULL;
 
+  DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+      GET DIAGNOSTICS CONDITION 1
+        @code = RETURNED_SQLSTATE, @msg = MESSAGE_TEXT;
+        CALL log_errors(p_query_id,'buildDatasets',@code,@msg,now());
+        RESIGNAL; -- rethrow the error
+    END;  
+
 
   -- remove previous query id data
 

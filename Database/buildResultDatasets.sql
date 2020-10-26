@@ -48,6 +48,14 @@ BEGIN
   DECLARE clinicalEventsDateRangeString VARCHAR(255); 
   DECLARE clinicalTypesSetString VARCHAR(255); 
 
+  DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+      GET DIAGNOSTICS CONDITION 1
+        @code = RETURNED_SQLSTATE, @msg = MESSAGE_TEXT;
+        CALL log_errors(p_query_id,'buildResultDatasets',@code,@msg,now());
+        RESIGNAL; -- rethrow the error
+    END;  
+
 SET p_dateFromEncounters = IF(p_dateFromEncounters = 'NaN-NaN-NaN',NULL, IF(p_dateFromEncounters = '', NULL, SUBSTRING(p_dateFromEncounters,1,10)));
 SET p_dateToEncounters = IF(p_dateToEncounters = 'NaN-NaN-NaN',NULL, IF(p_dateToEncounters = '', NULL, SUBSTRING(p_dateToEncounters,1,10)));
 SET p_dateFromMedication = IF(p_dateFromMedication = 'NaN-NaN-NaN',NULL, IF(p_dateFromMedication = '', NULL, SUBSTRING(p_dateFromMedication,1,10)));

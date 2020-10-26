@@ -18,7 +18,7 @@ CREATE PROCEDURE createDataset (
   p_datasettab VARCHAR(64)
 )
 
-BEGIN
+BEGIN 
 
 CREATE TABLE IF NOT EXISTS person_dataset (
   query_id INT(11) NOT NULL, patient_id BIGINT(20) NOT NULL,

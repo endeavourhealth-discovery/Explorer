@@ -20,7 +20,15 @@ CREATE PROCEDURE buildFinalPatientCohort (
 
 BEGIN
 
-    DECLARE qrytabname VARCHAR(64);
+  DECLARE qrytabname VARCHAR(64);
+
+  DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+      GET DIAGNOSTICS CONDITION 1
+        @code = RETURNED_SQLSTATE, @msg = MESSAGE_TEXT;
+        CALL log_errors(p_query_id,'buildFinalPatientCohort',@code,@msg,now());
+        RESIGNAL; -- rethrow the error
+    END;   
 
     DROP TEMPORARY TABLE IF EXISTS qry_tmp;
     SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp AS 

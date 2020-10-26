@@ -80,12 +80,11 @@ BEGIN
       ON c.patient_id = o.patient_id AND c.organization_id = o.organization_id AND c.person_id = o.person_id 
       JOIN ',p_concepttab ,' ct ON ct.non_core_concept_id = o.non_core_concept_id 
       WHERE ',p_daterange);
-
    PREPARE stmt FROM @sql;
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;
 
-   SET @sql = CONCAT('ALTER TABLE ', p_cohorttab, ' ADD INDEX pat_idx(patient_id)');
+   SET @sql = CONCAT('ALTER TABLE ', p_cohorttab, ' ADD INDEX pat_idx (patient_id)');
    PREPARE stmt FROM @sql;
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;

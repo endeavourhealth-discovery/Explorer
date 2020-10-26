@@ -10,6 +10,8 @@ BEGIN
 DECLARE queryid INT;
 DECLARE query_text TEXT;
 
+SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
+
 -- update queue if any existing query been updated
 UPDATE queue q JOIN query_library l ON q.query_id = l.id 
 SET q.query = l.query, 
@@ -49,7 +51,7 @@ IF queryid IS NOT NULL THEN
  WHERE query_id = queryid;
 END IF;
 
--- allowing 3 query ids to process if run concurrently
+-- allowing only 3 query ids to process if run concurrently
 
 COMMIT;
 

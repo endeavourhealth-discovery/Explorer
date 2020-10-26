@@ -17,16 +17,8 @@ BEGIN
    
    -- create the observation cohort from the patient cohort
    SET @sql = CONCAT('CREATE TABLE ', p_observationtab, ' AS 
-      SELECT DISTINCT 
-          o.id,
-          o.patient_id,
-          o.person_id,
-          o.clinical_effective_date,
-          o.result_value,
-          o.result_value_units,
-          o.non_core_concept_id 
-      FROM ', p_cohorttab,' c JOIN ',p_schema ,'.observation o 
-      ON c.patient_id = o.patient_id AND c.organization_id = o.organization_id AND c.person_id = o.person_id');
+      SELECT o.id, o.patient_id, o.clinical_effective_date, o.result_value, o.non_core_concept_id 
+      FROM ', p_cohorttab,' c JOIN ',p_schema ,'.observation o ON c.patient_id = o.patient_id AND c.organization_id = o.organization_id');
 
    PREPARE stmt FROM @sql;
    EXECUTE stmt;

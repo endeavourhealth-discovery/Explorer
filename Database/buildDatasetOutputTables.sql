@@ -27,6 +27,14 @@ BEGIN
   DECLARE n INT DEFAULT 0;
   DECLARE i INT DEFAULT 0;
 
+  DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+      GET DIAGNOSTICS CONDITION 1
+        @code = RETURNED_SQLSTATE, @msg = MESSAGE_TEXT;
+        CALL log_errors(p_query_id,'buildDatasetOutputTables',@code,@msg,now());
+        RESIGNAL; -- rethrow the error
+    END;
+
  processloop:
  LOOP  
 
@@ -101,14 +109,20 @@ BEGIN
 
       -- create output table for the selected output fields
          SET @sql = CONCAT('CREATE TABLE ', output_table ,' AS 
-         SELECT DISTINCT ', BINARY @sql ,' FROM ', p_schema,'.', event_table,' t JOIN ', result_dataset,' r ON t.id = r.', event_table,'_id 
+         SELECT DISTINCT ', event_table,'_id AS Id, ', BINARY @sql ,' FROM ', p_schema,'.', event_table,' t JOIN ', result_dataset,' r ON t.id = r.', event_table,'_id 
          WHERE r.query_id = ', p_query_id);
+         PREPARE stmt FROM @sql;
+         EXECUTE stmt;
+         DEALLOCATE PREPARE stmt;
+
+         SET @sql = CONCAT('ALTER TABLE ', output_table,' ADD PRIMARY KEY(Id)' );
          PREPARE stmt FROM @sql;
          EXECUTE stmt;
          DEALLOCATE PREPARE stmt;
 
       END IF;
 
+      -- fetch next event type
       SET p_event_type = INSERT(p_event_type, 1, frontlen + 1, '');
 
  END LOOP;

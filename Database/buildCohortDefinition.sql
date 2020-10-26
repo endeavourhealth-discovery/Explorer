@@ -4,6 +4,7 @@ DROP PROCEDURE IF EXISTS buildCohortDefinition;
 
 DELIMITER //
 CREATE PROCEDURE buildCohortDefinition(
+     p_query_id INT,
      p_providerOrganisation VARCHAR(5000),
      p_includedOrganisation VARCHAR(5000),
      p_registrationStatus VARCHAR(255),
@@ -33,6 +34,14 @@ BEGIN
   DECLARE postcoderange VARCHAR(255) DEFAULT NULL;
   DECLARE cohortvalueset VARCHAR(5000) DEFAULT NULL;
 
+  DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+      GET DIAGNOSTICS CONDITION 1
+        @code = RETURNED_SQLSTATE, @msg = MESSAGE_TEXT;
+        CALL log_errors(p_query_id,'buildCohortDefinition',@code,@msg,now());
+        RESIGNAL; -- rethrow the error
+    END;
+
 -- provider and include orgs
   SET p_includedOrganisation = IF(p_includedOrganisation = '', NULL, p_includedOrganisation);  
   IF p_includedOrganisation IS NOT NULL THEN
@@ -42,23 +51,26 @@ BEGIN
       CALL getOrgString(p_providerOrganisation, p_organisationtab, p_storetab, @Org);
       SET orgrange = @Org;
   END IF;
+
 -- reg status
   SET p_registrationStatus = IF(p_registrationStatus = '', NULL, p_registrationStatus);  
   IF p_registrationStatus IS NOT NULL THEN
     SET regstatus = getRegStatusString(p_registrationStatus);
   END IF;
+
 -- age range
   SET p_ageFrom = IF(p_ageFrom = 'NaN-NaN-NaN', NULL, IF(p_ageFrom = '', NULL, p_ageFrom));
   SET p_ageTo = IF(p_ageTo = 'NaN-NaN-NaN', NULL, IF(p_ageTo = '', NULL, p_ageTo));
-
   IF (p_ageFrom IS NOT NULL) OR (p_ageTo IS NOT NULL) THEN
     SET agerange = getAgeDateRangeString(p_ageFrom, p_ageTo, 1);
   ELSE
     SET agerange = '1';
   END IF;
+
 -- gender
-   SET p_gender = IF(p_gender = '', NULL, p_gender);
-   SET genderrange = getGenderString(p_gender); 
+  SET p_gender = IF(p_gender = '', NULL, p_gender);
+  SET genderrange = getGenderString(p_gender); 
+
 -- postcode
   SET p_postcode = IF(p_postcode = '', NULL, p_postcode);
   IF p_postcode IS NOT NULL THEN
@@ -66,10 +78,10 @@ BEGIN
   ELSE
    SET postcoderange = '1';
   END IF;
+
 -- date range
   SET p_dateFrom = IF(p_dateFrom = 'NaN-NaN-NaN',NULL, IF(p_dateFrom = '', NULL, SUBSTRING(p_dateFrom,1,10)));
   SET p_dateTo = IF(p_dateTo = 'NaN-NaN-NaN',NULL, IF(p_dateTo = '', NULL, SUBSTRING(p_dateTo,1,10)));
-
   IF (p_dateFrom IS NOT NULL) AND (p_dateTo IS NOT NULL) THEN
     SET daterange = getAgeDateRangeString(p_dateFrom, p_dateTo, 2);
   ELSE
@@ -86,7 +98,6 @@ BEGIN
   END IF;
 
 -- build cohort definition -- 
-
 -- create valueset cohort
   CALL createValueSet(cohortvalueset, p_valuesettab);
 -- create concept cohort from the valueset
