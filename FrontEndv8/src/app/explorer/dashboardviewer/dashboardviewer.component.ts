@@ -668,14 +668,14 @@ export class DashboardViewerComponent implements OnInit {
       this.tableStyle3 = 'table-scroll-800';
       this.tableStyle4 = 'table-scroll-800';
     }  else {
-      this.pageSize1 = 5;
-      this.pageSize2 = 5;
-      this.pageSize3 = 5;
-      this.pageSize4 = 5;
-      this.tableStyle1 = 'table-scroll-400';
-      this.tableStyle2 = 'table-scroll-400';
-      this.tableStyle3 = 'table-scroll-400';
-      this.tableStyle4 = 'table-scroll-400';
+      this.pageSize1 = 3;
+      this.pageSize2 = 3;
+      this.pageSize3 = 3;
+      this.pageSize4 = 3;
+      this.tableStyle1 = 'table-scroll-300';
+      this.tableStyle2 = 'table-scroll-300';
+      this.tableStyle3 = 'table-scroll-300';
+      this.tableStyle4 = 'table-scroll-300';
     }
 
     if (this.selectedWidgets.length==1) {
