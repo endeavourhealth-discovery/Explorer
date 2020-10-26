@@ -1031,7 +1031,7 @@ export class DashboardViewerComponent implements OnInit {
           this.getTotalTableData2();
         },
         error => {
-          console.log(error.toString());
+          console.log(error);
           this.log.error('Table data could not be loaded. Please try again.');
         }
       );
@@ -1060,7 +1060,6 @@ export class DashboardViewerComponent implements OnInit {
       .subscribe(
         (result) => {
           this.totalItems3 = result;
-          this.getTotalTableData3();
         },
         (error) => console.log(error)
       );
@@ -1106,7 +1105,6 @@ export class DashboardViewerComponent implements OnInit {
       .subscribe(
         (result) => {
           this.totalItems4 = result;
-          this.getTotalTableData4();
         },
         (error) => console.log(error)
       );

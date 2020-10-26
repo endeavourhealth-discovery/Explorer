@@ -759,6 +759,7 @@ public class DashboardEndpoint {
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
 
             long count = viewerDAL.getTableTotalCount(queryName, outputType, searchData);
+            LOG.debug("getTableTotalCount result=" + count);
 
             return Response
                     .ok()
