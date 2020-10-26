@@ -10,7 +10,7 @@ DETERMINISTIC READS SQL DATA
 BEGIN
 DECLARE l_address VARCHAR(1000);
 
-SELECT  CONCAT_WS(', ', address_line_1, address_line_2, address_line_3, address_line_4, city)  INTO l_address
+SELECT  CONCAT_WS(', ', address_line_1, NULLIF(address_line_2,''), NULLIF(address_line_3,''), NULLIF(address_line_4,''), NULLIF(city,''))  INTO l_address
 FROM patient_address 
 WHERE id = p_address_id;
 
