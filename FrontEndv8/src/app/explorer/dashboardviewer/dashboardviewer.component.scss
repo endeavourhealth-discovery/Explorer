@@ -26,19 +26,19 @@ mat-grid-tile {
 }
 
 .table-scroll-quarter {
-  max-height: 300px;
-  max-width: 850px;
+  max-height: 30vh;
+  max-width: 45vw;
   overflow: scroll;
 }
 
 .table-scroll-half {
-  max-height: 700px;
-  max-width: 850px;
+  max-height: 70vh;
+  max-width: 45vw;
   overflow: scroll;
 }
 
 .table-scroll-full {
-  max-height: 700px;
-  max-width: 1700px;
+  max-height: 70vh;
+  max-width: 90vw;
   overflow: scroll;
 }
