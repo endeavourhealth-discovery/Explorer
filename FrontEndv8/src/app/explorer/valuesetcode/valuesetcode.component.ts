@@ -8,6 +8,8 @@ import {MessageBoxDialogComponent} from "../message-box-dialog/message-box-dialo
 import {SelectionModel} from "@angular/cdk/collections";
 import {ValueSetCodeEditorComponent} from "../valuesetcodeeditor/valuesetcodeeditor.component";
 import {MatSort} from "@angular/material/sort";
+import {FormControl} from "@angular/forms";
+import {ngxCsv} from "ngx-csv";
 
 export interface DialogData {
   value_set_id: string;
@@ -25,11 +27,18 @@ export class ValueSetCodeComponent {
 
   events: any[] = [];
   dataSource: MatTableDataSource<any>;
-  value_set_id: string = "";
+  valueSetId: string = "";
   @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: false}) sort: MatSort;
 
   displayedColumns: string[] = ['select', 'type', 'code', 'term', 'snomed', 'updated'];
+
+  selectedType: string = '';
+  selectedTypeString: string = '';
+  selectAll: boolean = true;
+
+  typeList = [];
+  typeValues = new FormControl(this.typeList);
 
   constructor(
     public dialogRef: MatDialogRef<ValueSetCodeComponent>,
@@ -37,13 +46,53 @@ export class ValueSetCodeComponent {
     private log: LoggerService,
     private dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: DialogData) {
-    this.value_set_id = data.value_set_id;
+    this.valueSetId = data.value_set_id;
+    this.explorerService.getLookupListValueSet(this.valueSetId)
+      .subscribe(
+        (result) => this.loadList(result),
+        (error) => this.log.error(error)
+      );
+    this.loadEvents();
+  }
+
+  loadList(lists: any) {
+    this.typeList = [];
+    lists.results.map(
+      e => {
+        this.typeList.push(e.type);
+      }
+    )
+    this.typeValues = new FormControl(this.typeList);
+    this.refresh(false);
+  }
+
+  toggleSelection(event) {
+    if (event.checked) {
+      this.typeValues = new FormControl(this.typeList);
+      this.selectedTypeString = this.typeList.toString();
+    } else {
+      this.typeValues = new FormControl([]);
+      this.selectedTypeString = "";
+    }
+    this.refresh(false);
+  }
+
+  refresh(override) {
+    if (this.selectedType=="" && this.selectAll) {
+      this.typeValues = new FormControl(this.typeList);
+      this.selectedTypeString = this.typeList.toString();
+    }
+
+    if (override) {
+      this.selectAll = false;
+      this.selectedTypeString = this.selectedType.toString();
+    }
     this.loadEvents();
   }
 
   loadEvents() {
     this.events = null;
-    this.explorerService.getValueSetCodes(this.value_set_id)
+    this.explorerService.getValueSetCodes(this.valueSetId, this.selectedTypeString)
       .subscribe(
         (result) => this.displayEvents(result),
         (error) => this.log.error(error)
@@ -56,6 +105,26 @@ export class ValueSetCodeComponent {
     this.dataSource = new MatTableDataSource(events.results);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+  }
+
+  onDownloadClick() {
+    let values:any = this.dataSource.filteredData;
+    //remove id from the data to be saved to csv
+    let exportData = values.map(({type, code, term, snomed, updated}) => ({type, code, term, snomed, updated}));
+    if (exportData) {
+      let options = {
+        fieldSeparator: ',',
+        quoteStrings: '"',
+        decimalseparator: '.',
+        showLabels: true,
+        headers: ['Type', 'Original Code', 'Original Term', 'Snomed ID', 'Last Updated'],
+        showTitle: false,
+        title: 'Value Set Codes',
+        useTextFile: false,
+        useBom: false,
+      };
+      new ngxCsv(exportData, 'value_set_codes', options);
+    }
   }
 
   onCancelClick(): void {
@@ -87,7 +156,7 @@ export class ValueSetCodeComponent {
     const dialogRef = this.dialog.open(ValueSetCodeEditorComponent, {
       height: '500px',
       width: '600px',
-      data: {type: "", code: "", term: "", snomed: "", id: "", value_set_id: this.value_set_id}
+      data: {type: "", code: "", term: "", snomed: "", id: "", value_set_id: this.valueSetId}
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result)

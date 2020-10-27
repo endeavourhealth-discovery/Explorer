@@ -36,6 +36,24 @@ public class DashboardEndpoint {
     }
 
     @GET
+    @Path("/lookuplistbyvalueset")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getLookupListByValueSet(@Context SecurityContext sc,
+                                   @QueryParam("selectedValueSet") String valueSetId) throws Exception {
+        LOG.debug("getLookupListByValueSet");
+
+        try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
+            LookupListResult result = viewerDAL.getLookupListByValueSet(valueSetId);
+
+            return Response
+                    .ok()
+                    .entity(result)
+                    .build();
+        }
+    }
+
+    @GET
     @Path("/dashboardlibrary")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -148,11 +166,13 @@ public class DashboardEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getValueSetCodes(@Context SecurityContext sc,
-                                       @QueryParam("value_set_id") String value_set_id) throws Exception {
+                                     @QueryParam("valueSetId") String valueSetId,
+                                     @QueryParam("selectedTypeString") String selectedTypeString) throws Exception {
+
         LOG.debug("getValueSetCodes");
 
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
-            ValueSetCodeResult result = viewerDAL.getValueSetCodes(value_set_id);
+            ValueSetCodeResult result = viewerDAL.getValueSetCodes(valueSetId, selectedTypeString);
 
             return Response
                     .ok()
@@ -732,7 +752,7 @@ public class DashboardEndpoint {
                                  @QueryParam("order_column") String orderColumn,
                                  @QueryParam("descending") boolean descending) throws Exception {
 
-        LOG.debug("getTableData " + queryName + ":" + outputType + ":" + searchData + ":" + pageNumber + ":" +pageSize + ":" + orderColumn + ":" + descending);
+        LOG.debug("getTableData");
 
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
 
@@ -754,7 +774,7 @@ public class DashboardEndpoint {
                                        @QueryParam("output_type") String outputType,
                                        @QueryParam("search_data") String searchData) throws Exception {
 
-        LOG.debug("getTableTotalCount " + queryName + ":" + outputType + ":" + searchData);
+        LOG.debug("getTableTotalCount");
 
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
 

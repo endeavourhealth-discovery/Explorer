@@ -388,6 +388,36 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         return result;
     }
 
+    public LookupListResult getLookupListByValueSet(String valueSetId) throws Exception {
+        LookupListResult result = new LookupListResult();
+
+        String sql = "SELECT distinct(type) " +
+                " FROM dashboards.value_set_codes" +
+                " WHERE value_set_id = ? " +
+                " order by type";
+
+        String sqlCount = "SELECT count(distinct(type)) " +
+                " FROM dashboards.value_set_codes" +
+                " WHERE value_set_id = ? ";
+
+        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            statement.setInt(1, Integer.valueOf(valueSetId));
+            try (ResultSet resultSet = statement.executeQuery()) {
+                result.setResults(getLookupList(resultSet));
+            }
+        }
+
+        try (PreparedStatement statement = conn.prepareStatement(sqlCount)) {
+            statement.setInt(1, Integer.valueOf(valueSetId));
+            try (ResultSet resultSet = statement.executeQuery()) {
+                resultSet.next();
+                result.setLength(resultSet.getInt(1));
+            }
+        }
+
+        return result;
+    }
+
     private List<LookupList> getLookupList(ResultSet resultSet) throws SQLException {
         List<LookupList> result = new ArrayList<>();
         while (resultSet.next()) {
@@ -461,30 +491,36 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         return querylibrary;
     }
 
-    public ValueSetCodeResult getValueSetCodes(String value_set_id) throws Exception {
+    public ValueSetCodeResult getValueSetCodes(String valueSetId, String selectedTypeString) throws Exception {
         ValueSetCodeResult result = new ValueSetCodeResult();
 
         String sql = "";
         String sqlCount = "";
 
+        selectedTypeString = selectedTypeString.replaceAll(",","','");
+        selectedTypeString = "'" + selectedTypeString + "'";
+        selectedTypeString = "AND type in ("+selectedTypeString+")";
+
         sql = "SELECT type, original_code, original_term, snomed_id, updated, id " +
                 "FROM dashboards.value_set_codes " +
                 "WHERE value_set_id = ? " +
-                "order by type, original_term";
+                selectedTypeString +
+                " order by type, original_term";
 
         sqlCount = "SELECT count(1) " +
                 "FROM dashboards.value_set_codes " +
-                "WHERE value_set_id = ?";
+                "WHERE value_set_id = ? " +
+                selectedTypeString;
 
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
-            statement.setString(1, value_set_id);
+            statement.setString(1, valueSetId);
             try (ResultSet resultSet = statement.executeQuery()) {
                 result.setResults(getValueSetList(resultSet));
             }
         }
 
         try (PreparedStatement statement = conn.prepareStatement(sqlCount)) {
-            statement.setString(1, value_set_id);
+            statement.setString(1, valueSetId);
             try (ResultSet resultSet = statement.executeQuery()) {
                 resultSet.next();
                 result.setLength(resultSet.getInt(1));

@@ -20,6 +20,14 @@ export class ExplorerService {
     return this.http.get('api/events/lookuplists', {params});
   }
 
+  getLookupListValueSet(valueSetId: string): Observable<any> {
+    let params = new HttpParams();
+
+    params = params.append('selectedValueSet', valueSetId);
+
+    return this.http.get('api/events/lookuplistbyvalueset', {params});
+  }
+
   getDashboard(charts: string, dateFrom: string, dateTo: string, cumulative: string, grouping: string, weekly: string): Observable<any> {
     let params = new HttpParams();
 
@@ -74,10 +82,11 @@ export class ExplorerService {
     return this.http.get('api/events/valuesetlibrary', {params});
   }
 
-  getValueSetCodes(value_set_id?: string): Observable<any> {
+  getValueSetCodes(valueSetId?: string, selectedTypeString?: string): Observable<any> {
 
     let params = new HttpParams();
-    params = params.append('value_set_id', value_set_id);
+    params = params.append('valueSetId', valueSetId);
+    params = params.append('selectedTypeString', selectedTypeString);
 
     return this.http.get('api/events/valuesetcode', {params});
   }
