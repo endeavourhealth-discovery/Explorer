@@ -100,23 +100,50 @@ BEGIN
       IF LENGTH(@sql)>0 THEN  -- continues if output field exists
 
       -- check for current address -- if found add postcode as a separate field
-         IF LOCATE('Current Address', @sql) > 0 THEN
-            SET @sql = INSERT (@sql,LOCATE('Current Address', @sql)+16,0,CONCAT(',', p_schema,".getCurrentAddressPostcode(t.current_address_id) AS 'Postcode'"));
+         IF LOCATE('Current address', @sql) > 0 THEN
+            SET @sql = INSERT (@sql,LOCATE('Current address', @sql)+16,0,CONCAT(',', p_schema,".getCurrentAddressPostcode(t.current_address_id) AS 'Postcode'"));
          END IF;
 
       -- remove the last comma in the string
          SET @sql = SUBSTRING(@sql, 1, LENGTH(@sql)-1);
 
-      -- create output table for the selected output fields
-         SET @sql = CONCAT('CREATE TABLE ', output_table ,' AS 
+         -- create an empty table output table
+         SET @output = CONCAT('CREATE TABLE ', output_table ,' AS 
          SELECT DISTINCT ', event_table,'_id AS Id, ', BINARY @sql ,' FROM ', p_schema,'.', event_table,' t JOIN ', result_dataset,' r ON t.id = r.', event_table,'_id 
+         WHERE r.query_id = ', p_query_id,' LIMIT 0');
+         PREPARE stmt FROM @output;
+         EXECUTE stmt;
+         DEALLOCATE PREPARE stmt;
+         
+         -- create a temporary table to hold the ids
+         DROP TEMPORARY TABLE IF EXISTS qry_output_tmp;
+         SET @tmp = CONCAT('CREATE TEMPORARY TABLE qry_output_tmp ( row_id INT, id BIGINT, PRIMARY KEY(row_id) ) AS 
+         SELECT (@row_no := @row_no + 1) AS row_id, ', event_table,'_id AS Id FROM ', result_dataset,' r JOIN (SELECT @row_no := 0) t 
          WHERE r.query_id = ', p_query_id);
-         PREPARE stmt FROM @sql;
+         PREPARE stmt FROM @tmp;
          EXECUTE stmt;
          DEALLOCATE PREPARE stmt;
 
-         SET @sql = CONCAT('ALTER TABLE ', output_table,' ADD PRIMARY KEY(Id)' );
-         PREPARE stmt FROM @sql;
+         SET @row_id = 0;
+
+         -- loop through the ids and insert data into the output table in batches
+         WHILE EXISTS (SELECT row_id from qry_output_tmp WHERE row_id > @row_id AND row_id <= @row_id + 2000) DO
+
+               SET @ins = CONCAT("INSERT INTO  ", output_table, " 
+               SELECT q.id AS Id, ", BINARY @sql ," FROM ", p_schema,".", event_table," t JOIN qry_output_tmp q ON t.id = q.id 
+               WHERE q.row_id > @row_id AND q.row_id <= @row_id + 2000");
+
+               PREPARE stmt FROM @ins;
+               EXECUTE stmt;
+               DEALLOCATE PREPARE stmt;
+
+               SET @row_id = @row_id + 2000; 
+
+         END WHILE; 
+
+
+         SET @alt = CONCAT('ALTER TABLE ', output_table,' ADD PRIMARY KEY(Id)' );
+         PREPARE stmt FROM @alt;
          EXECUTE stmt;
          DEALLOCATE PREPARE stmt;
 

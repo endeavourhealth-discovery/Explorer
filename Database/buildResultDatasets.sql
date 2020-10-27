@@ -40,13 +40,13 @@ CREATE PROCEDURE buildResultDatasets (
 BEGIN
   
   DECLARE eventTypeString VARCHAR(255) DEFAULT '';
-  DECLARE encountersValueSetString VARCHAR(255);
-  DECLARE encountersDateRangeString VARCHAR(255); 
-  DECLARE medicationValueSetString VARCHAR(255);
-  DECLARE medicationDateRangeString VARCHAR(255); 
-  DECLARE clinicalEventsValueSetString VARCHAR(255);
-  DECLARE clinicalEventsDateRangeString VARCHAR(255); 
-  DECLARE clinicalTypesSetString VARCHAR(255); 
+  DECLARE encountersValueSetString VARCHAR(255) DEFAULT NULL; 
+  DECLARE encountersDateRangeString VARCHAR(255) DEFAULT NULL; 
+  DECLARE medicationValueSetString VARCHAR(255) DEFAULT NULL; 
+  DECLARE medicationDateRangeString VARCHAR(255) DEFAULT NULL;  
+  DECLARE clinicalEventsValueSetString VARCHAR(255) DEFAULT NULL; 
+  DECLARE clinicalEventsDateRangeString VARCHAR(255) DEFAULT NULL;  
+  DECLARE clinicalTypesSetString VARCHAR(255) DEFAULT NULL; 
 
   DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -81,13 +81,14 @@ IF p_encounters = 'TRUE' THEN
   IF p_selectedEncounterValueSet IS NOT NULL THEN
     CALL getValueSetString(p_selectedEncounterValueSet, p_storetab, @selectedEncounterValueSetString);
     SET encountersValueSetString = @selectedEncounterValueSetString;
+    -- create encounters valueset 
+    CALL createValueSet(encountersValueSetString, p_encounterValueSet_tmp);
+    -- create concept from encounters valueset
+    CALL createConcept(p_encounterConcept_tmp, p_encounterValueSet_tmp, p_schema);
   ELSE  -- bring back everything
-    SET encountersValueSetString = '1';
+    SET p_encounterConcept_tmp = NULL;
   END IF;
-  -- create encounters valueset 
-  CALL createValueSet(encountersValueSetString, p_encounterValueSet_tmp);
-  -- create concept from encounters valueset
-  CALL createConcept(p_encounterConcept_tmp, p_encounterValueSet_tmp, p_schema);
+
 END IF;
 
 IF p_medication = 'TRUE' THEN
@@ -103,13 +104,14 @@ IF p_medication = 'TRUE' THEN
   IF p_selectedMedicationValueSet IS NOT NULL THEN
     CALL getValueSetString(p_selectedMedicationValueSet, p_storetab, @selectedMedicationValueSetString);
     SET medicationValueSetString = @selectedMedicationValueSetString;
+    -- create medication valueset 
+    CALL createValueSet(medicationValueSetString, p_medicationValueSet_tmp);
+    -- create concept from medication valueset
+    CALL createConcept(p_medicationConcept_tmp, p_medicationValueSet_tmp, p_schema);
   ELSE  -- bring back everything
-    SET medicationValueSetString = '1';
+    SET p_medicationConcept_tmp = NULL;
   END IF;
-  -- create medication valueset 
-  CALL createValueSet(medicationValueSetString, p_medicationValueSet_tmp);
-  -- create concept from medication valueset
-  CALL createConcept(p_medicationConcept_tmp, p_medicationValueSet_tmp, p_schema);
+
 END IF;
 
 IF p_clinicalEvents = 'TRUE' THEN
@@ -125,25 +127,27 @@ IF p_clinicalEvents = 'TRUE' THEN
   IF p_selectedClinicalEventValueSet IS NOT NULL THEN
     CALL getValueSetString(p_selectedClinicalEventValueSet, p_storetab, @selectedClinicalEventValueSetString);
     SET clinicalEventsValueSetString = @selectedClinicalEventValueSetString;
+    -- create clinical events valueset 
+    CALL createValueSet(clinicalEventsValueSetString, p_clinicalEventValueSet_tmp);
+    -- create concept from clinical events valueset
+    CALL createConcept(p_clinicalEventConcept_tmp, p_clinicalEventValueSet_tmp, p_schema);
   ELSE  -- bring back everything
-    SET clinicalEventsValueSetString = '1';
+    SET p_clinicalEventConcept_tmp = NULL;
   END IF;
-  -- create clinical events valueset 
-  CALL createValueSet(clinicalEventsValueSetString, p_clinicalEventValueSet_tmp);
-  -- create concept from clinical events valueset
-  CALL createConcept(p_clinicalEventConcept_tmp, p_clinicalEventValueSet_tmp, p_schema);
+
   -- get clinical type string for clinical events
   SET p_selectedClinicalTypes = IF(p_selectedClinicalTypes = '', NULL, p_selectedClinicalTypes); 
   IF p_selectedClinicalTypes IS NOT NULL THEN
     CALL getClinicalTypesSetString(p_selectedClinicalTypes, p_storetab, @selectedClinicalTypesString);
     SET clinicalTypesSetString = @selectedClinicalTypesString;
+    -- create clinical types set
+    CALL createclinicalTypesSet(clinicalTypesSetString, p_clinicalTypes_tmp);
+    -- create concept from clinical events valueset
+    CALL createClinicalTypesConcept(p_clinicalTypesConcept_tmp, p_clinicalTypes_tmp, p_schema);
   ELSE  -- bring back everything
-    SET clinicalTypesSetString = '1';
+    SET p_clinicalTypesConcept_tmp = NULL;
   END IF;
-  -- create clinical types set
-  CALL createclinicalTypesSet(clinicalTypesSetString, p_clinicalTypes_tmp);
-  -- create concept from clinical events valueset
-  CALL createClinicalTypesConcept(p_clinicalTypesConcept_tmp, p_clinicalTypes_tmp, p_schema);
+
 END IF;
 
       IF LENGTH(eventTypeString)>0 THEN
