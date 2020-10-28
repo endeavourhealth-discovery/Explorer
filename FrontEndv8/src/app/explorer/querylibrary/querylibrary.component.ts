@@ -13,14 +13,12 @@ import {animate, state, style, transition, trigger} from "@angular/animations";
 import {MatSort} from "@angular/material/sort";
 
 interface query {
-  outputField: string;
-  outputType: string;
+  demographics: boolean;
+  encounters: boolean;
+  medication: boolean;
+  clinicalEvents: boolean;
   schedule: string;
   delivery: string;
-  eventType: string;
-  datasetValue: string;
-  dateFrom: string;
-  dateTo: string;
   providerOrganisation: string;
   includedOrganisation: string;
   registrationStatus: string;
@@ -244,18 +242,16 @@ export class QueryLibraryComponent implements OnInit {
         details = query.gender
       }else if (fieldName=='postcode') {
         details = query.postcode
-      }else if (fieldName=='eventType') {
-        details = query.eventType
-      }else if (fieldName=='datasetValue') {
-        details = query.datasetValue
-      }else if (fieldName=='dateFrom') {
-        details = query.dateFrom
-      }else if (fieldName=='dateTo') {
-        details = query.dateTo
-      }else if (fieldName=='outputField') {
-        details = query.outputField
-      }else if (fieldName=='outputType') {
-        details = query.outputType
+      }else if (fieldName=='tables') {
+        details = '';
+        if (query.demographics)
+          details += ' Demographics ';
+        if (query.encounters)
+          details += ' Encounters ';
+        if (query.medication)
+          details += ' Medication ';
+        if (query.clinicalEvents)
+          details += ' Clinical events ';
       }else if (fieldName=='schedule') {
         details = query.schedule
       }else if (fieldName=='delivery') {

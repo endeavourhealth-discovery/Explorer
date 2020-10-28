@@ -18,35 +18,19 @@ interface widget {
 }
 
 interface query {
-  selectedQuery1: string;
   selectedVisualisation1: string;
-  selectedOutputField1: string;
-  selectedOutputType1: string;
-  selectedSchedule1: string;
   selectedSeries1: string[];
   xAxisLabel1: string;
   yAxisLabel1: string;
-  selectedQuery2: string;
   selectedVisualisation2: string;
-  selectedOutputField2: string;
-  selectedOutputType2: string;
-  selectedSchedule2: string;
   selectedSeries2: string[];
   xAxisLabel2: string;
   yAxisLabel2: string;
-  selectedQuery3: string;
   selectedVisualisation3: string;
-  selectedOutputField3: string;
-  selectedOutputType3: string;
-  selectedSchedule3: string;
   selectedSeries3: string[];
   xAxisLabel3: string;
   yAxisLabel3: string;
-  selectedQuery4: string;
   selectedVisualisation4: string;
-  selectedOutputField4: string;
-  selectedOutputType4: string;
-  selectedSchedule4: string;
   selectedSeries4: string[];
   xAxisLabel4: string;
   yAxisLabel4: string;
@@ -280,8 +264,6 @@ export class DashboardLibraryComponent implements OnInit {
       if (query.visualType.length == 1) {
         if (fieldName=='selectedVisualisation1') {
           details = query.selectedVisualisation1;
-        } else if (fieldName=='selectedOutputField1') {
-          details = query.selectedOutputField1;
         } else if (fieldName=='selectedSeries1') {
           details = query.selectedSeries1.toString();
         } else if (fieldName=='visualType1') {
@@ -290,16 +272,12 @@ export class DashboardLibraryComponent implements OnInit {
       } else if (query.visualType.length == 2) {
         if (fieldName=='selectedVisualisation1') {
           details = query.selectedVisualisation1;
-        } else if (fieldName=='selectedOutputField1') {
-          details = query.selectedOutputField1;
         } else if (fieldName=='selectedSeries1') {
           details = query.selectedSeries1.toString();
         } else if (fieldName=='visualType1') {
           details = query.visualType[0].name.toString();
         } else if (fieldName=='selectedVisualisation2') {
           details = query.selectedVisualisation2;
-        } else if (fieldName=='selectedOutputField2') {
-          details = query.selectedOutputField2;
         } else if (fieldName=='selectedSeries2') {
           details = query.selectedSeries2.toString();
         } else if (fieldName=='visualType2') {
@@ -308,24 +286,18 @@ export class DashboardLibraryComponent implements OnInit {
       } else if (query.visualType.length == 3) {
         if (fieldName=='selectedVisualisation1') {
           details = query.selectedVisualisation1;
-        } else if (fieldName=='selectedOutputField1') {
-          details = query.selectedOutputField1;
         } else if (fieldName=='selectedSeries1') {
           details = query.selectedSeries1.toString();
         } else if (fieldName=='visualType1') {
           details = query.visualType[0].name.toString();
         } else if (fieldName=='selectedVisualisation2') {
           details = query.selectedVisualisation2;
-        } else if (fieldName=='selectedOutputField2') {
-          details = query.selectedOutputField2;
         } else if (fieldName=='selectedSeries2') {
           details = query.selectedSeries2.toString();
         } else if (fieldName=='visualType2') {
           details = query.visualType[1].name.toString();
         } else if (fieldName=='selectedVisualisation3') {
           details = query.selectedVisualisation3;
-        } else if (fieldName=='selectedOutputField3') {
-          details = query.selectedOutputField3;
         } else if (fieldName=='selectedSeries3') {
           details = query.selectedSeries3.toString();
         } else if (fieldName=='visualType3') {
@@ -334,32 +306,24 @@ export class DashboardLibraryComponent implements OnInit {
       } else if (query.visualType.length == 4) {
         if (fieldName=='selectedVisualisation1') {
           details = query.selectedVisualisation1;
-        } else if (fieldName=='selectedOutputField1') {
-          details = query.selectedOutputField1;
         } else if (fieldName=='selectedSeries1') {
           details = query.selectedSeries1.toString();
         } else if (fieldName=='visualType1') {
           details = query.visualType[0].name.toString();
         } else if (fieldName=='selectedVisualisation2') {
           details = query.selectedVisualisation2;
-        } else if (fieldName=='selectedOutputField2') {
-          details = query.selectedOutputField2;
         } else if (fieldName=='selectedSeries2') {
           details = query.selectedSeries2.toString();
         } else if (fieldName=='visualType2') {
           details = query.visualType[1].name.toString();
         } else if (fieldName=='selectedVisualisation3') {
           details = query.selectedVisualisation3;
-        } else if (fieldName=='selectedOutputField3') {
-          details = query.selectedOutputField3;
         } else if (fieldName=='selectedSeries3') {
           details = query.selectedSeries3.toString();
         } else if (fieldName=='visualType3') {
           details = query.visualType[2].name.toString();
         } else if (fieldName=='selectedVisualisation4') {
           details = query.selectedVisualisation4;
-        } else if (fieldName=='selectedOutputField4') {
-          details = query.selectedOutputField4;
         } else if (fieldName=='selectedSeries4') {
           details = query.selectedSeries4.toString();
         } else if (fieldName=='visualType4') {
