@@ -1,5 +1,6 @@
 package org.endeavourhealth.explorer.api.endpoints;
 
+import org.endeavourhealth.explorer.common.dal.EMISExplorerJDBCDAL;
 import org.endeavourhealth.explorer.common.dal.ExplorerJDBCDAL;
 import org.endeavourhealth.explorer.common.models.*;
 import org.slf4j.Logger;

@@ -14,7 +14,7 @@ public class EMISExplorerJDBCDAL extends EMISBaseJDBCDAL {
 
     private static final Logger LOG = LoggerFactory.getLogger(EMISExplorerJDBCDAL.class);
 
-    public OrganisationGroupsResult getOrganisationGroups(Integer page, Integer size, String selectedTypeString) throws Exception {
+    public OrganisationGroupsResult getOrganisationGroups(String selectedTypeString) throws Exception {
         OrganisationGroupsResult result = new OrganisationGroupsResult();
 
         selectedTypeString = selectedTypeString.replaceAll(",","','");
@@ -24,7 +24,10 @@ public class EMISExplorerJDBCDAL extends EMISBaseJDBCDAL {
         String sql = "";
         String sqlCount = "";
 
-        sql = "select rubric as name from extract_primary_care.allergy_view LIMIT 100";
+        sql = "select o.effectivedate,o.originalterm as name " +
+                "from explorer_emis_web.carerecord_observation o  " +
+                "where codeid = 254063019 " +
+                "limit 100";
 
         sqlCount = "SELECT 100";
 

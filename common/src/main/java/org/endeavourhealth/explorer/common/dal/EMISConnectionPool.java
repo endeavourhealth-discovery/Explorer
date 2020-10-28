@@ -55,11 +55,11 @@ public class EMISConnectionPool extends GenericCache<Connection> {
             ConfigManager.Initialize("explorer");
             JsonNode json = ConfigManager.getConfigurationAsJson("database");
             String url = json.get("url").asText();
-            url = "jdbc:presto://explorerplus-test.testemisnightingale.co.uk:443/hive";
+            url = "jdbc:presto://providerplus-test.testemisnightingale.co.uk:443/hive";
             String user = json.get("username").asText();
             user = "darren.sheavills";
             String pass = json.get("password").asText();
-            pass = "9wbl7IVlDv9cvifqTVJ6";
+            pass = "";
             String driver = json.get("class") == null ? null : json.get("class").asText();
 
             if (driver != null && !driver.isEmpty())
@@ -70,6 +70,8 @@ public class EMISConnectionPool extends GenericCache<Connection> {
             props.setProperty("user", user);
             props.setProperty("password", pass);
             props.setProperty("SSL", "true");
+            props.setProperty("SSLKeyStorePassword", "lhsemis");
+            props.setProperty("SSLKeyStorePath", "/Users/darren/darren.sheavills_keystore.jks");
 
             Connection connection = DriverManager.getConnection(url, props);
 
