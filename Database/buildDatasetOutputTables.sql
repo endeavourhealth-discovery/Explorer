@@ -101,7 +101,7 @@ BEGIN
 
       -- check for current address -- if found add postcode as a separate field
          IF LOCATE('Current address', @sql) > 0 THEN
-            SET @sql = INSERT (@sql,LOCATE('Current address', @sql)+16,0,CONCAT(',', p_schema,".getCurrentAddressPostcode(t.current_address_id) AS 'Postcode'"));
+            SET @sql = INSERT (@sql,LOCATE('Current address', @sql)+16,0,CONCAT(',', p_schema,".getCurrentAddressPostcode(t.current_address_id,t.id) AS 'Postcode'"));
          END IF;
 
       -- remove the last comma in the string
@@ -127,17 +127,17 @@ BEGIN
          SET @row_id = 0;
 
          -- loop through the ids and insert data into the output table in batches
-         WHILE EXISTS (SELECT row_id from qry_output_tmp WHERE row_id > @row_id AND row_id <= @row_id + 2000) DO
+         WHILE EXISTS (SELECT row_id from qry_output_tmp WHERE row_id > @row_id AND row_id <= @row_id + 10000) DO
 
                SET @ins = CONCAT("INSERT INTO  ", output_table, " 
                SELECT q.id AS Id, ", BINARY @sql ," FROM ", p_schema,".", event_table," t JOIN qry_output_tmp q ON t.id = q.id 
-               WHERE q.row_id > @row_id AND q.row_id <= @row_id + 2000");
+               WHERE q.row_id > @row_id AND q.row_id <= @row_id + 10000");
 
                PREPARE stmt FROM @ins;
                EXECUTE stmt;
                DEALLOCATE PREPARE stmt;
 
-               SET @row_id = @row_id + 2000; 
+               SET @row_id = @row_id + 10000; 
 
          END WHILE; 
 

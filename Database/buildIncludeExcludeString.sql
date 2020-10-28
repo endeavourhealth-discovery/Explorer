@@ -114,7 +114,6 @@ ELSEIF p_filtertype = 4 THEN
    DEALLOCATE PREPARE stmt;
 
    ALTER TABLE qry_tmp_1 ADD INDEX pat_idx (patient_id);
-   ALTER TABLE qry_tmp_1 ADD INDEX non_core_concept_idx (non_core_concept_id);
 
    DROP TEMPORARY TABLE IF EXISTS qry_tmp_2;
    
@@ -127,7 +126,6 @@ ELSEIF p_filtertype = 4 THEN
    DEALLOCATE PREPARE stmt;
 
    ALTER TABLE qry_tmp_2 ADD INDEX pat_idx (patient_id);
-   ALTER TABLE qry_tmp_2 ADD INDEX non_core_concept_idx (non_core_concept_id);
 
    SET @sql = CONCAT('DROP TABLE IF EXISTS ', p_filtertab);
    PREPARE stmt FROM @sql;
@@ -135,7 +133,7 @@ ELSEIF p_filtertype = 4 THEN
    DEALLOCATE PREPARE stmt;
 
    -- filter the 1st cohort to include or exclude patients from the 2nd cohort
-   SET @sql = CONCAT('CREATE TABLE ', p_filtertab, 'AS SELECT DISTINCT q1.patient_id FROM qry_tmp_1 q1 WHERE ', p_includedAreNot, '(SELECT 1 FROM qry_tmp_2 q2 WHERE q2.patient_id = q1.patient_id)');
+   SET @sql = CONCAT('CREATE TABLE ', p_filtertab, ' AS SELECT DISTINCT q1.patient_id FROM qry_tmp_1 q1 WHERE ', p_includedAreNot, '(SELECT 1 FROM qry_tmp_2 q2 WHERE q2.patient_id = q1.patient_id)');
 
    PREPARE stmt FROM @sql;
    EXECUTE stmt;
@@ -148,11 +146,15 @@ ELSEIF p_filtertype = 5 THEN
    DROP TEMPORARY TABLE IF EXISTS qry_tmp_1;
 
    -- create a temporary patient observation cohort where each patient contains a number of distinct selected concepts greater or less than the specified value and each of those concept is within the specified time period
-   SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp_1 AS SELECT DISTINCT a.patient_id 
-   FROM (SELECT o2.patient_id, COUNT(DISTINCT c2.non_core_concept_id) 
-   FROM ', p_observationcohorttab,' o2 JOIN ', p_concepttab,' c2 ON o2.non_core_concept_id = c2.non_core_concept_id 
-   WHERE ', p_timeperioddaterange,' GROUP BY o2.patient_id 
-   HAVING COUNT(DISTINCT c2.non_core_concept_id) ', p_greaterless,' ', p_greaterlessvalue,') a');
+   SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp_1 AS SELECT DISTINCT b.patient_id 
+   FROM ( SELECT a.patient_id, COUNT(*) cnt
+          FROM (SELECT DISTINCT o2.patient_id, o2.clinical_effective_date, c2.non_core_concept_id 
+                FROM ', p_observationcohorttab,' o2 
+                JOIN ', p_concepttab,' c2 ON o2.non_core_concept_id = c2.non_core_concept_id 
+                WHERE ', p_timeperioddaterange,' 
+                GROUP BY o2.patient_id, o2.clinical_effective_date) a 
+          GROUP BY a.patient_id 
+          HAVING COUNT(*) ', p_greaterless,' ', p_greaterlessvalue,') b' );
    PREPARE stmt FROM @sql;
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;
@@ -167,7 +169,7 @@ ELSEIF p_filtertype = 5 THEN
    -- filter the above patient observation again to determine which patient contains any or all the selected concepts
    SET @sql = CONCAT('CREATE TABLE ', p_filtertab,' AS 
    SELECT DISTINCT o.patient_id FROM ', p_observationcohorttab,' o JOIN qry_tmp_1 q ON o.patient_id = q.patient_id 
-   WHERE o.non_core_concept_id = ', p_includedAnyAll,'(SELECT DISTINCT c.non_core_concept_id FROM ', p_concepttab,' c');  
+   WHERE o.non_core_concept_id = ', p_includedAnyAll,'(SELECT DISTINCT c.non_core_concept_id FROM ', p_concepttab,' c)');  
    PREPARE stmt FROM @sql;
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;

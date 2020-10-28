@@ -171,6 +171,7 @@ DECLARE incTestedConcept3_tmp VARCHAR(64) DEFAULT NULL;
 
 DECLARE incValueSet4_tmp VARCHAR(64) DEFAULT NULL;
 DECLARE incConcept4_tmp VARCHAR(64) DEFAULT NULL;
+DECLARE observation4_tmp VARCHAR(64) DEFAULT NULL;
 DECLARE incFollowedByValueSet4_tmp VARCHAR(64) DEFAULT NULL;
 DECLARE incFollowedByConcept4_tmp VARCHAR(64) DEFAULT NULL;
 
@@ -345,6 +346,7 @@ SET incTestedConcept3_tmp  = CONCAT('incTestedConcept3_tmp_',query_id);
 
 SET incValueSet4_tmp  = CONCAT('incValueSet4_tmp_',query_id);
 SET incConcept4_tmp  = CONCAT('incConcept4_tmp_',query_id);
+SET observation4_tmp  = CONCAT('observation4_tmp_',query_id);
 SET incFollowedByValueSet4_tmp  = CONCAT('incFollowedByValueSet4_tmp_',query_id);
 SET incFollowedByConcept4_tmp  = CONCAT('incFollowedByConcept4_tmp_',query_id);
 
@@ -421,7 +423,7 @@ SET includeExclude3String = @includeExclude3String;
 -- rule 4  
 CALL getIncludeExcludeString(query_id,includedExclude4,includedAnyAll4,includedValueSet4, includedDateFrom4, includedDateTo4, 
 includedPeriodValue4, includedPeriodType4, incValueSet4_tmp, incConcept4_tmp, observation_tmp, 
-4, NULL, NULL, NULL, NULL, 
+4, NULL, NULL, NULL, observation4_tmp, 
 NULL, NULL, NULL, NULL, includedAreNot4, 
 includedAnyAllFollowedBy4, includedFollowedByValueSet4, incFollowedByValueSet4_tmp, incFollowedByConcept4_tmp, NULL, 
 NULL, sourceSchema , store_tmp, @includeExclude4String);
@@ -460,7 +462,7 @@ CALL updateQueue(query_id, schedule);
  incConcept1_tmp,',',incValueSet1a_tmp,',',incConcept1a_tmp,',',incValueSet1b_tmp,',',incConcept1b_tmp,',',incValueSet2_tmp,',',
  incConcept2_tmp,',',observation2_tmp,',',incValueSet2a_tmp,',',incConcept2a_tmp,',',observation2a_tmp,',',incValueSet3_tmp,',',
  incConcept3_tmp,',',observation3_tmp,',',incTestedValueSet3_tmp,',',incTestedConcept3_tmp,',',incValueSet4_tmp,',',
- incConcept4_tmp,',',incFollowedByValueSet4_tmp,',',incFollowedByConcept4_tmp ,',',incValueSet5_tmp,',',
+ incConcept4_tmp,',',observation4_tmp,',',incFollowedByValueSet4_tmp,',',incFollowedByConcept4_tmp ,',',incValueSet5_tmp,',',
  incConcept5_tmp,',',observation5_tmp,',',observation1_tmp,',',observation1a_tmp,',',observation1b_tmp,',',clinicalTypes_tmp,',',
  clinicalTypesConcept_tmp,',',encounterValueSet_tmp,',',encounterConcept_tmp,',',
  medicationValueSet_tmp,',',medicationConcept_tmp,',',clinicalEventValueSet_tmp,',',
