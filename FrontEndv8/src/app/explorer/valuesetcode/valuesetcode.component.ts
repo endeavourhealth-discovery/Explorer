@@ -47,6 +47,10 @@ export class ValueSetCodeComponent {
     private dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: DialogData) {
     this.valueSetId = data.value_set_id;
+    this.init();
+  }
+
+  init() {
     this.explorerService.getLookupListValueSet(this.valueSetId)
       .subscribe(
         (result) => this.loadList(result),
@@ -160,7 +164,7 @@ export class ValueSetCodeComponent {
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result)
-        this.loadEvents();
+        this.init();
     });
 
   }
@@ -181,7 +185,7 @@ export class ValueSetCodeComponent {
 
           this.explorerService.deleteValueSetCode(id.toString())
             .subscribe(saved => {
-                this.loadEvents();
+                this.init();
               },
               error => this.log.error('This value set code could not be deleted.')
             );
@@ -197,7 +201,7 @@ export class ValueSetCodeComponent {
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result)
-        this.loadEvents();
+        this.init();
     });
   }
 
