@@ -35,6 +35,32 @@ BEGIN
         RESIGNAL; -- rethrow the error
     END;
 
+ IF LENGTH(TRIM(p_event_type)) <> 0 OR p_event_type IS NOT NULL THEN
+         
+      -- drop all output tables from previous run
+
+      SET @sql = CONCAT('DROP TABLE IF EXISTS person_output_',p_query_id); 
+      PREPARE stmt FROM @sql;
+      EXECUTE stmt;
+      DEALLOCATE PREPARE stmt;
+
+      SET @sql = CONCAT('DROP TABLE IF EXISTS observation_output_',p_query_id); 
+      PREPARE stmt FROM @sql;
+      EXECUTE stmt;
+      DEALLOCATE PREPARE stmt;
+
+      SET @sql = CONCAT('DROP TABLE IF EXISTS medication_output_',p_query_id); 
+      PREPARE stmt FROM @sql;
+      EXECUTE stmt;
+      DEALLOCATE PREPARE stmt;
+
+      SET @sql = CONCAT('DROP TABLE IF EXISTS encounter_output_',p_query_id); 
+      PREPARE stmt FROM @sql;
+      EXECUTE stmt;
+      DEALLOCATE PREPARE stmt;
+
+ END IF;
+
  processloop:
  LOOP  
 
@@ -68,12 +94,6 @@ BEGIN
          SET output_table = CONCAT('encounter_output_',p_query_id);
          CALL storeString(p_selectedEncounterFields, p_storetab);
       END IF;
-   
-      -- drop the output table if exists (from previous run)
-      SET @sql = CONCAT('DROP TABLE IF EXISTS ', output_table); 
-      PREPARE stmt FROM @sql;
-      EXECUTE stmt;
-      DEALLOCATE PREPARE stmt;
 
       -- match the columns to the output fields
       DROP TEMPORARY TABLE IF EXISTS qry_tmp;
