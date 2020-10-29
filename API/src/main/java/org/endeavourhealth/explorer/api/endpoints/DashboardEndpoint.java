@@ -11,6 +11,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -702,6 +704,8 @@ public class DashboardEndpoint {
 
         LOG.debug("getMapDates");
 
+        query = URLDecoder.decode(query, StandardCharsets.UTF_8.toString());
+
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
             ArrayList<String> result = viewerDAL.getMapDates(query);
 
@@ -726,6 +730,9 @@ public class DashboardEndpoint {
                             @QueryParam("descriptions") List<String> descriptions) throws Exception {
 
         LOG.debug("getMaps");
+
+        query = URLDecoder.decode(query, StandardCharsets.UTF_8.toString());
+        selectedConceptString = URLDecoder.decode(selectedConceptString, StandardCharsets.UTF_8.toString());
 
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
             MapResult result = viewerDAL.getMaps(query, selectedConceptString, date, lowerLimits, upperLimits, colors, descriptions);
@@ -817,7 +824,9 @@ public class DashboardEndpoint {
     public Response getConceptLookupFromQuery(@Context SecurityContext sc,
                                               @QueryParam("query") String query,
                                               @QueryParam("selectedConceptString") String selectedConceptString) throws Exception {
+
         LOG.debug("getConceptLookupFromQuery");
+        query = URLDecoder.decode(query, StandardCharsets.UTF_8.toString());
 
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
             LookupListResult result = viewerDAL.getConceptLookupFromQuery(query);
