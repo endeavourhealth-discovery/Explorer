@@ -8,6 +8,7 @@ import {MatSliderChange} from "@angular/material/slider";
 import {Level} from "./model/Level";
 import {CookieService} from "ngx-cookie-service";
 import {UserProfile} from "dds-angular8/user-manager/models/UserProfile";
+import {FormControl} from "@angular/forms";
 
 @Component({
   selector: 'app-map',
@@ -16,8 +17,12 @@ import {UserProfile} from "dds-angular8/user-manager/models/UserProfile";
 })
 export class MapComponent implements OnInit {
 
+  query: string;
+  queries: string[];
+
   display: string;
   generating: string;
+  sliderValue: number = 0;
   max: number;
   dates: string[];
   selectedDate: string;
@@ -35,6 +40,13 @@ export class MapComponent implements OnInit {
   levels: Level[];
   user: UserProfile;
 
+  selectedConcept: string = '';
+  selectedConceptString: string = '';
+  selectAll: boolean = true;
+
+  conceptList = null;
+  conceptValues = new FormControl(this.conceptList);
+
   constructor(private explorerService: ExplorerService,
               private log: LoggerService,
               private cookieService: CookieService,
@@ -43,17 +55,23 @@ export class MapComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.userService.getUserProfile(true).then(
-      result => {
-        this.user = result;
-        console.log(this.user);
-        this.init();
-      }
-    );
+    this.explorerService.getMapQueries()
+      .subscribe(
+        (result) => {
+          this.queries = result;
+          this.query = "Suspected and confirmed Covid-19 cases";
+          this.userService.getUserProfile(true).then(
+            result => {
+              this.user = result;
+              this.init();
+            }
+          );
+        },
+        (error) => this.log.error(error)
+      );
   }
 
   init() {
-
     let cookieLevel = this.cookieService.get(this.user.uuid + "_custom_levels");
     if (cookieLevel) {
       let values = cookieLevel.split(",",10);
@@ -65,13 +83,13 @@ export class MapComponent implements OnInit {
     this.generating = "Generating map...";
     this.display = this.generating;
     this.layersToRemove = [];
-    this.explorerService.getCovidDates()
+    this.explorerService.getMapDates(this.query)
       .subscribe(
         (result) =>{
           this.dates = result;
           this.selectedDate = this.dates[0];
           this.max = this.dates.length;
-          this.explorerService.getCovidMaps(this.selectedDate, this.levels)
+          this.explorerService.getMaps(this.query, this.selectedConceptString, this.selectedDate, this.levels)
             .subscribe(
               (result) =>{
                 this.mapResults = result;
@@ -97,6 +115,15 @@ export class MapComponent implements OnInit {
         },
         (error) => this.log.error(error)
       );
+  }
+
+  clearLayers() {
+    if (this.layersToRemove && this.layersToRemove.length > 0) {
+      for(let i=0;  i<this.layersToRemove.length; i++){
+        this.map.removeLayer(this.layersToRemove[i]);
+      }
+      this.layersToRemove = [];
+    }
   }
 
   createCookieLevels(values) {
@@ -180,12 +207,7 @@ export class MapComponent implements OnInit {
   createMap() {
 
     this.map.fitBounds(this.buildingLayers.getBounds());
-    if (this.layersToRemove && this.layersToRemove.length > 0) {
-      for(let i=0;  i<this.layersToRemove.length; i++){
-        this.map.removeLayer(this.layersToRemove[i]);
-      }
-      this.layersToRemove = [];
-    }
+    this.clearLayers();
 
     let layer = L.geoJSON();
     let count = 0;
@@ -264,7 +286,7 @@ export class MapComponent implements OnInit {
   }
 
   refreshMap() {
-    this.explorerService.getCovidMaps(this.selectedDate, this.levels)
+    this.explorerService.getMaps(this.query, this.selectedConceptString, this.selectedDate, this.levels)
       .subscribe(
         (result) =>{
           this.mapResults = result;
@@ -296,14 +318,7 @@ export class MapComponent implements OnInit {
     if (this.selectedLayer == "All levels") {
       this.createMap();
     } else {
-
-      if (this.layersToRemove && this.layersToRemove.length > 0) {
-        for(let i=0;  i<this.layersToRemove.length; i++){
-          this.map.removeLayer(this.layersToRemove[i]);
-        }
-        this.layersToRemove = [];
-      }
-
+      this.clearLayers();
       let layer = L.geoJSON();
       let count = 0;
       this.layers  = this.mapResults.layers[this.selectedLayer];
@@ -336,5 +351,78 @@ export class MapComponent implements OnInit {
   recompute() {
     this.display = this.generating;
     this.refreshMap();
+  }
+
+  changeQuery() {
+    setTimeout(() => this.sliderValue = 0);
+    this.selectedDate = '';
+    this.selectAll = true;
+    this.selectedConceptString = '';
+    this.clearLayers();
+    this.generating = "Generating map...";
+    this.display = this.generating;
+    this.layersToRemove = [];
+    this.explorerService.getMapDates(this.query)
+      .subscribe(
+        (result) =>{
+          this.dates = result;
+          this.selectedDate = this.dates[0];
+          this.max = this.dates.length;
+          if (this.query != "Suspected and confirmed Covid-19 cases") {
+            this.explorerService.getConceptsFromQuery(this.query)
+              .subscribe(
+                (result) => {
+                  this.loadList(result);
+                  this.refreshMap();
+                },
+                (error) => this.log.error(error)
+              );
+          } else {
+            this.conceptList = null;
+            this.refreshMap();
+          }
+        },
+        (error) => this.log.error(error)
+      );
+  }
+
+  toggleSelection(event) {
+    if (event.checked) {
+      this.conceptValues = new FormControl(this.conceptList);
+      this.selectedConceptString = this.conceptList.toString();
+    } else {
+      this.conceptValues = new FormControl([]);
+      this.selectedConceptString = '';
+    }
+    this.refresh(false);
+  }
+
+  refresh(override) {
+    if (this.selectedConcept == "" && this.selectAll) {
+      this.conceptValues = new FormControl(this.conceptList);
+      this.selectedConceptString = this.conceptList.toString();
+    }
+
+    if (override) {
+      this.selectAll = false;
+      this.selectedConceptString = this.selectedConcept.toString();
+    }
+
+    this.clearLayers();
+    this.generating = "Generating map...";
+    this.display = this.generating;
+    this.layersToRemove = [];
+    this.refreshMap();
+  }
+
+  loadList(lists: any) {
+    this.conceptList = [];
+    lists.results.map(
+      e => {
+        this.conceptList.push(e.type);
+      }
+    )
+    this.conceptValues = new FormControl(this.conceptList);
+    this.refresh(false);
   }
 }

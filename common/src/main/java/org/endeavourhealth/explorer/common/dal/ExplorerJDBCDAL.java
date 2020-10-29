@@ -1483,15 +1483,32 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         }
     }
 
-    public ArrayList<String> getCovidDates() throws Exception {
+    public ArrayList<String> getMapDates(String query) throws Exception {
+
+        String sql = "";
+        if ("Suspected and confirmed Covid-19 cases".equalsIgnoreCase(query)) {
+            sql = "select distinct date_format(covid_date, '%Y-%m-%d') as date " +
+                    "from dashboards.lsoa_covid order by covid_date";
+        } else {
+            sql = "select id from dashboards.query_library where name = ? ";
+            String queryId = null;
+            try (PreparedStatement statement = conn.prepareStatement(sql)) {
+                statement.setString(1, query);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    while (resultSet.next()) {
+                        queryId = resultSet.getString("id");
+                    }
+                }
+            }
+            sql = "select distinct date_format(`Effective date`, '%Y-%m-%d') as date " +
+                    "from dashboards.observation_output_" + queryId + " order by `Effective date`";
+        }
 
         ArrayList<String> list = new ArrayList();
-        String sql = "select distinct date_format(covid_date, '%Y-%m-%d') as covid_date " +
-                "from dashboards.lsoa_covid order by covid_date";
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
-                    String date = resultSet.getString("covid_date");
+                    String date = resultSet.getString("date");
                     list.add(date);
                 }
             }
@@ -1499,11 +1516,27 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         return list;
     }
 
-    public MapResult getCovidMaps(String date,
-                                  List<String> lowerLimits,
-                                  List<String> upperLimits,
-                                  List<String> colors,
-                                  List<String> descriptions) throws Exception {
+    public MapResult getMaps(String query, String selectedConceptString, String date,
+                             List<String> lowerLimits, List<String> upperLimits,
+                             List<String> colors, List<String> descriptions) throws Exception {
+
+
+        selectedConceptString = selectedConceptString.replaceAll(",","','");
+        selectedConceptString = "'" + selectedConceptString + "'";
+        selectedConceptString = "AND obs.`Concept term` in ("+selectedConceptString+")";
+
+        String queryId = null;
+        if (!"Suspected and confirmed Covid-19 cases".equalsIgnoreCase(query)) {
+            String sql = "select id from dashboards.query_library where name = ? ";
+            try (PreparedStatement statement = conn.prepareStatement(sql)) {
+                statement.setString(1, query);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    while (resultSet.next()) {
+                        queryId = resultSet.getString("id");
+                    }
+                }
+            }
+        }
 
         ArrayList<String> ids = new ArrayList<String>();
         HashMap<String, List<MapLayer>> layers = new HashMap();
@@ -1526,7 +1559,11 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         }
 
         String minDate = "";
-        sql = "select min(date_format(covid_date, '%Y-%m-%d')) as min_date from dashboards.lsoa_covid";
+        if (queryId == null) {
+            sql = "select min(date_format(covid_date, '%Y-%m-%d')) as min_date from dashboards.lsoa_covid";
+        } else {
+            sql = "select min(date_format(`Effective date`, '%Y-%m-%d')) as min_date from dashboards.observation_output_" + queryId;
+        }
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
@@ -1541,23 +1578,44 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         ArrayList<MapLayer> layer4 = new ArrayList();
         ArrayList<MapLayer> layer5 = new ArrayList();
 
-        sql = "SELECT COUNT(covid.lsoa_code) AS covid_patients, " +
-                "regs.reg_count AS reg_patients, " +
-                "ROUND(((COUNT(covid.lsoa_code) * 1000) / regs.reg_count),1) AS ratio, " +
-                "covid.lsoa_code AS lsoa_code, " +
-                "map.geo_json " +
-                "FROM dashboards.lsoa_covid covid, " +
-                "( SELECT reg.lsoa_code, sum(reg.count) reg_count " +
-                "  FROM dashboards.lsoa_registrations reg " +
-                "  WHERE reg.lsoa_code IS NOT NULL " +
-                "  GROUP BY reg.lsoa_code " +
-                ") regs, dashboards.maps map " +
-                "WHERE covid.lsoa_code = regs.lsoa_code " +
-                "AND covid.lsoa_code = map.area_code " +
-                "AND covid.covid_date >= '" + minDate + "' " +
-                "AND covid.covid_date <= ? " +
-                "GROUP BY covid.lsoa_code " +
-                "ORDER BY covid.lsoa_code ";
+        if (queryId == null) {
+            sql = "SELECT COUNT(covid.lsoa_code) AS patients, " +
+                    "regs.reg_count AS reg_patients, " +
+                    "ROUND(((COUNT(covid.lsoa_code) * 1000) / regs.reg_count),1) AS ratio, " +
+                    "covid.lsoa_code AS lsoa_code, " +
+                    "map.geo_json " +
+                    "FROM dashboards.lsoa_covid covid, " +
+                    "( SELECT reg.lsoa_code, sum(reg.count) reg_count " +
+                    "  FROM dashboards.lsoa_registrations reg " +
+                    "  WHERE reg.lsoa_code IS NOT NULL " +
+                    "  GROUP BY reg.lsoa_code " +
+                    ") regs, dashboards.maps map " +
+                    "WHERE covid.lsoa_code = regs.lsoa_code " +
+                    "AND covid.lsoa_code = map.area_code " +
+                    "AND covid.covid_date >= '" + minDate + "' " +
+                    "AND covid.covid_date <= ? " +
+                    "GROUP BY covid.lsoa_code " +
+                    "ORDER BY covid.lsoa_code ";
+        } else {
+            sql = "SELECT COUNT(obs.`LSOA code`) AS patients, " +
+                    "regs.reg_count AS reg_patients, " +
+                    "ROUND(((COUNT(obs.`LSOA code`) * 1000) / regs.reg_count),1) AS ratio, " +
+                    "obs.`LSOA code` AS lsoa_code, " +
+                    "map.geo_json " +
+                    "FROM dashboards.observation_output_" + queryId + " obs, " +
+                    "( SELECT reg.lsoa_code, sum(reg.count) reg_count " +
+                    "  FROM dashboards.lsoa_registrations reg " +
+                    "  WHERE reg.lsoa_code IS NOT NULL " +
+                    "  GROUP BY reg.lsoa_code " +
+                    ") regs, dashboards.maps map " +
+                    "WHERE obs.`LSOA code` = regs.lsoa_code " +
+                    "AND obs.`LSOA code` = map.area_code " +
+                    "AND obs.`Effective date` >= '" + minDate + "' " +
+                    "AND obs.`Effective date` <= ? " +
+                    selectedConceptString +
+                    " GROUP BY obs.`LSOA code` " +
+                    " ORDER BY obs.`LSOA code` ";
+        }
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
             statement.setString(1, date);
             try (ResultSet resultSet = statement.executeQuery()) {
@@ -1569,7 +1627,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
                     layer.setAreaCode(resultSet.getString("lsoa_code"));
                     description = layer.getAreaCode() + ": " +
-                            resultSet.getInt("covid_patients") + " of " +
+                            resultSet.getInt("patients") + " of " +
                             resultSet.getInt("reg_patients");
                     layer.setDescription(description);
                     layer.setGeoJson(resultSet.getString("geo_json"));
@@ -1892,5 +1950,78 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
             }
         }
         return false;
+    }
+
+    public ArrayList<String> getMapQueries() throws Exception {
+
+        ArrayList<String> list = new ArrayList<>();
+        list.add("Suspected and confirmed Covid-19 cases");
+
+        HashMap<Integer,String> queryLibrary = new HashMap<>();
+        String sql = "select id, name from dashboards.query_library";
+        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    queryLibrary.put(resultSet.getInt("id"), resultSet.getString("name"));
+                }
+            }
+        }
+
+        String tableName = "observation_output_";
+        for (Integer id : queryLibrary.keySet()) {
+            sql = "select column_name, data_type from information_schema.columns " +
+                    " where table_schema='dashboards' and table_name = '" + tableName + id + "'" +
+                    " and column_name = 'LSOA code'";
+            try (PreparedStatement statement = conn.prepareStatement(sql)) {
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    while (resultSet.next()) {
+                        list.add(queryLibrary.get(id));
+                    }
+                }
+            }
+        }
+        Collections.sort(list);
+        return list;
+    }
+
+    public LookupListResult getConceptLookupFromQuery(String query) throws Exception {
+
+        String sql = "select id from dashboards.query_library where name = ?";
+        String id = null;
+        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            statement.setString(1, query);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    id = resultSet.getString("id");
+                }
+            }
+        }
+         if (StringUtils.isNullOrEmpty(id)) {
+             throw new Exception("Invalid query.");
+         }
+
+        LookupListResult result = new LookupListResult();
+
+        sql = "SELECT distinct(`Concept term`) as type " +
+                " FROM dashboards.observation_output_" + id +
+                " order by `Concept term`";
+
+        String sqlCount = "SELECT count(distinct(`Concept term`)) " +
+                " FROM dashboards.observation_output_" + id;
+
+        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                result.setResults(getLookupList(resultSet));
+            }
+        }
+
+        try (PreparedStatement statement = conn.prepareStatement(sqlCount)) {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                resultSet.next();
+                result.setLength(resultSet.getInt(1));
+            }
+        }
+
+        return result;
     }
 }

@@ -694,15 +694,16 @@ public class DashboardEndpoint {
     }
 
     @GET
-    @Path("/covidDates")
+    @Path("/mapDates")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getCovidDates(@Context SecurityContext sc) throws Exception {
+    public Response getMapDates(@Context SecurityContext sc,
+                                  @QueryParam("query") String query) throws Exception {
 
-        LOG.debug("getCovidDates");
+        LOG.debug("getMapDates");
 
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
-            ArrayList<String> result = viewerDAL.getCovidDates();
+            ArrayList<String> result = viewerDAL.getMapDates(query);
 
             return Response
                     .ok()
@@ -712,20 +713,22 @@ public class DashboardEndpoint {
     }
 
     @GET
-    @Path("/covidMaps")
+    @Path("/getMaps")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getCovidMaps(@Context SecurityContext sc,
-                                 @QueryParam("date") String date,
-                                 @QueryParam("lower_limits") List<String> lowerLimits,
-                                 @QueryParam("upper_limits") List<String> upperLimits,
-                                 @QueryParam("colors") List<String> colors,
-                                 @QueryParam("descriptions") List<String> descriptions) throws Exception {
+    public Response getMaps(@Context SecurityContext sc,
+                            @QueryParam("query") String query,
+                            @QueryParam("selectedConceptString") String selectedConceptString,
+                            @QueryParam("date") String date,
+                            @QueryParam("lower_limits") List<String> lowerLimits,
+                            @QueryParam("upper_limits") List<String> upperLimits,
+                            @QueryParam("colors") List<String> colors,
+                            @QueryParam("descriptions") List<String> descriptions) throws Exception {
 
-        LOG.debug("getCovidMaps");
+        LOG.debug("getMaps");
 
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
-            MapResult result = viewerDAL.getCovidMaps(date, lowerLimits, upperLimits, colors, descriptions);
+            MapResult result = viewerDAL.getMaps(query, selectedConceptString, date, lowerLimits, upperLimits, colors, descriptions);
             result.setLowerLimits(new ArrayList(lowerLimits));
             result.setUpperLimits(new ArrayList(upperLimits));
             result.setColors(new ArrayList(colors));
@@ -785,6 +788,43 @@ public class DashboardEndpoint {
             return Response
                     .ok()
                     .entity(count)
+                    .build();
+        }
+    }
+
+    @GET
+    @Path("/mapQueries")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getMapQueries(@Context SecurityContext sc) throws Exception {
+
+        LOG.debug("getMapQueries");
+
+        try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
+            ArrayList<String> result = viewerDAL.getMapQueries();
+
+            return Response
+                    .ok()
+                    .entity(result)
+                    .build();
+        }
+    }
+
+    @GET
+    @Path("/conceptLookupFromQuery")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getConceptLookupFromQuery(@Context SecurityContext sc,
+                                              @QueryParam("query") String query,
+                                              @QueryParam("selectedConceptString") String selectedConceptString) throws Exception {
+        LOG.debug("getConceptLookupFromQuery");
+
+        try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
+            LookupListResult result = viewerDAL.getConceptLookupFromQuery(query);
+
+            return Response
+                    .ok()
+                    .entity(result)
                     .build();
         }
     }

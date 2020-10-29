@@ -321,13 +321,16 @@ export class ExplorerService {
     return this.http.get('api/events/dashboardview', {params});
   }
 
-  getCovidDates(): Observable<any> {
+  getMapDates(query: string): Observable<any> {
     let params = new HttpParams();
-    return this.http.get('api/events/covidDates', {params});
+    params = params.append('query', query);
+    return this.http.get('api/events/mapDates', {params});
   }
 
-  getCovidMaps(date: string, levels: Level[]): Observable<any> {
+  getMaps(query: string, selectedConceptString: string, date: string, levels: Level[]): Observable<any> {
     let params = new HttpParams();
+    params = params.append('query', query);
+    params = params.append('selectedConceptString', selectedConceptString);
     params = params.append('date', date);
     for (let level in levels) {
       params = params.append('lower_limits', levels[level].lowerLimit);
@@ -335,7 +338,7 @@ export class ExplorerService {
       params = params.append('colors', levels[level].color);
       params = params.append('descriptions', levels[level].description);
     }
-    return this.http.get('api/events/covidMaps', {params});
+    return this.http.get('api/events/getMaps', {params});
   }
 
   tableSearch(queryName: string, outputType: string, searchData: string, pageNumber: number, pageSize: number,
@@ -357,5 +360,16 @@ export class ExplorerService {
     if (outputType) params = params.append('output_type', outputType);
     if (searchData) params = params.append('search_data', searchData);
     return this.http.get('api/events/tableTotalCount', {params});
+  }
+
+  getMapQueries(): Observable<any> {
+    let params = new HttpParams();
+    return this.http.get('api/events/mapQueries', {params});
+  }
+
+  getConceptsFromQuery(query: string): Observable<any> {
+    let params = new HttpParams();
+    params = params.append('query', query);
+    return this.http.get('api/events/conceptLookupFromQuery', {params});
   }
 }

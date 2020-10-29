@@ -4,13 +4,31 @@
       <i class="fad fa-map-marked-alt"></i>
     </div>
     <mat-card-title>Map Dashboard</mat-card-title>
-    <mat-card-subtitle>Suspected and confirmed COVID-19 per 1000 registered patients by LSOA</mat-card-subtitle>
+    <mat-card-subtitle>{{query}} per 1000 registered patients by LSOA</mat-card-subtitle>
   </mat-card-header>
   <mat-card-content style="text-align: center;">
     <form #form="ngForm">
+      <div class="flex" fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="5px grid" fxLayoutAlign="start">
+        <mat-form-field appearance="outline" *ngIf= "queries" fxFlex="50" fxFill>
+          <mat-label>Queries</mat-label>
+          <mat-select (selectionChange)="changeQuery()" [(value)]="query">
+            <mat-option *ngFor="let result of queries" [value]="result">{{result}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline" *ngIf= "conceptList" fxFlex="50" fxFill>
+          <mat-label>Concept terms</mat-label>
+          <mat-select [formControl]="conceptValues" multiple [(value)]="selectedConcept">
+            <mat-checkbox class="mat-option" [(ngModel)]="selectAll" (change)="toggleSelection($event)" name="concepts">Select All</mat-checkbox>
+            <mat-option (click)="refresh(true)" *ngFor="let result of conceptList" [value]="result">{{result}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div>
+        &nbsp;
+      </div>
       <div>
         <mat-label style="font-size:25px;" ><b>{{ display }}</b></mat-label><br>
-        <mat-slider [disabled]="form.invalid" (input)="onInputChange($event)" min="0" max="{{max-1}}" step="1" (change)="updateDate($event)" [tickInterval]="1"></mat-slider>
+        <mat-slider [disabled]="form.invalid" (input)="onInputChange($event)" [(ngModel)]="sliderValue" min="0" max="{{max-1}}" step="1" (change)="updateDate($event)" [tickInterval]="1" name="sliderDate"></mat-slider>
       </div>
       <div class="flex" fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="16px grid" fxLayoutAlign="start">
         <div fxFlex="15" fxFill>
