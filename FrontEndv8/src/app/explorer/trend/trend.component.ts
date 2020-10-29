@@ -116,7 +116,7 @@ export class TrendComponent {
     }
     names = names.substr(1);
 
-    this.explorerService.getDashboard(names, this.formatDate(this.dateFrom), this.formatDate(this.dateTo), cumulative, 'registry_trend', weekly)
+    this.explorerService.getDashboard(names, this.formatDate(this.dateFrom), this.formatDate(this.dateTo), cumulative, 'registry_trend', weekly, '0')
       .subscribe(result => {
         this.chartResults = result.results;
 

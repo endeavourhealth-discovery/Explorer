@@ -136,6 +136,7 @@ export class DashboardViewerComponent implements OnInit {
   logarithmic1: boolean = false;
   cumulative1: boolean = false;
   weekly1: boolean = false;
+  rate1: boolean = false;
   refLines1 = [{value: 1, name: 'Minimum'}, {value: 2, name: 'Average'}, {value: 3, name: 'Maximum'}];
   ccgList1 = [];
   ccgValues1 = new FormControl(this.ccgList1);
@@ -146,6 +147,7 @@ export class DashboardViewerComponent implements OnInit {
   logarithmic2: boolean = false;
   cumulative2: boolean = false;
   weekly2: boolean = false;
+  rate2: boolean = false;
   refLines2 = [{value: 1, name: 'Minimum'}, {value: 2, name: 'Average'}, {value: 3, name: 'Maximum'}];
   ccgList2 = [];
   ccgValues2 = new FormControl(this.ccgList2);
@@ -156,6 +158,7 @@ export class DashboardViewerComponent implements OnInit {
   logarithmic3: boolean = false;
   cumulative3: boolean = false;
   weekly3: boolean = false;
+  rate3: boolean = false;
   refLines3 = [{value: 1, name: 'Minimum'}, {value: 2, name: 'Average'}, {value: 3, name: 'Maximum'}];
   ccgList3 = [];
   ccgValues3 = new FormControl(this.ccgList3);
@@ -166,6 +169,7 @@ export class DashboardViewerComponent implements OnInit {
   logarithmic4: boolean = false;
   cumulative4: boolean = false;
   weekly4: boolean = false;
+  rate4: boolean = false;
   refLines4 = [{value: 1, name: 'Minimum'}, {value: 2, name: 'Average'}, {value: 3, name: 'Maximum'}];
   ccgList4 = [];
   ccgValues4 = new FormControl(this.ccgList4);
@@ -337,8 +341,12 @@ export class DashboardViewerComponent implements OnInit {
       if (this.weekly1) {
         weekly = "1";
       }
+      let rate = "0";
+      if (this.rate1) {
+        rate = "1";
+      }
 
-      this.explorerService.getDashboard(values1, this.formatDate(this.dateFrom1), this.formatDate(this.dateTo1), cumulative, this.selectedCCGString1, weekly)
+      this.explorerService.getDashboard(values1, this.formatDate(this.dateFrom1), this.formatDate(this.dateTo1), cumulative, this.selectedCCGString1, weekly, rate)
         .subscribe(result => {
           this.chartResults1 = result.results;
 
@@ -402,8 +410,11 @@ export class DashboardViewerComponent implements OnInit {
       if (this.weekly2) {
         weekly = "1";
       }
-
-      this.explorerService.getDashboard(values2, this.formatDate(this.dateFrom2), this.formatDate(this.dateTo2), cumulative, this.selectedCCGString2, weekly)
+      let rate = "0";
+      if (this.rate2) {
+        rate = "1";
+      }
+      this.explorerService.getDashboard(values2, this.formatDate(this.dateFrom2), this.formatDate(this.dateTo2), cumulative, this.selectedCCGString2, weekly, rate)
         .subscribe(result => {
           this.chartResults2 = result.results;
 
@@ -467,8 +478,11 @@ export class DashboardViewerComponent implements OnInit {
       if (this.weekly3) {
         weekly = "1";
       }
-
-      this.explorerService.getDashboard(values3, this.formatDate(this.dateFrom3), this.formatDate(this.dateTo3), cumulative, this.selectedCCGString3, weekly)
+      let rate = "0";
+      if (this.rate3) {
+        rate = "1";
+      }
+      this.explorerService.getDashboard(values3, this.formatDate(this.dateFrom3), this.formatDate(this.dateTo3), cumulative, this.selectedCCGString3, weekly, rate)
         .subscribe(result => {
           this.chartResults3 = result.results;
 
@@ -532,8 +546,12 @@ export class DashboardViewerComponent implements OnInit {
       if (this.weekly4) {
         weekly = "1";
       }
+      let rate = "0";
+      if (this.rate4) {
+        rate = "1";
+      }
 
-      this.explorerService.getDashboard(values4, this.formatDate(this.dateFrom4), this.formatDate(this.dateTo4), cumulative, this.selectedCCGString4, weekly)
+      this.explorerService.getDashboard(values4, this.formatDate(this.dateFrom4), this.formatDate(this.dateTo4), cumulative, this.selectedCCGString4, weekly, rate)
         .subscribe(result => {
           this.chartResults4 = result.results;
 

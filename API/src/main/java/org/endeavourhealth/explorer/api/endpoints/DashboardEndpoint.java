@@ -84,11 +84,12 @@ public class DashboardEndpoint {
                                  @QueryParam("dateTo") String dateTo,
                                  @QueryParam("cumulative") String cumulative,
                                  @QueryParam("grouping") String grouping,
-                                 @QueryParam("weekly") String weekly) throws Exception {
+                                 @QueryParam("weekly") String weekly,
+                                 @QueryParam("rate") String rate) throws Exception {
         LOG.debug("getDashboard");
 
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
-            ChartResult result = viewerDAL.getDashboard(chartName,dateFrom,dateTo, cumulative, grouping,weekly);
+            ChartResult result = viewerDAL.getDashboard(chartName,dateFrom,dateTo, cumulative, grouping,weekly,rate);
 
             return Response
                     .ok()
