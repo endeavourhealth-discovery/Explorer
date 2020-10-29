@@ -15,7 +15,8 @@ CREATE PROCEDURE buildFinalPatientCohort (
     IN p_includeExclude2aString VARCHAR(1000),
     IN p_includeExclude3String VARCHAR(1000),
     IN p_includeExclude4String VARCHAR(1000),
-    IN p_includeExclude5String VARCHAR(1000) 
+    IN p_includeExclude5String VARCHAR(1000),
+    IN p_schema VARCHAR(255)
 )
 
 BEGIN
@@ -32,7 +33,7 @@ BEGIN
 
     DROP TEMPORARY TABLE IF EXISTS qry_tmp;
     SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp AS 
-    SELECT DISTINCT ', p_query_id,' AS query_id, o.patient_id FROM ', p_observationcohorttab,' o ');
+    SELECT DISTINCT ', p_query_id,' AS query_id, o.patient_id, o.person_id, o.organization_id FROM ', p_observationcohorttab,' o ');
     PREPARE stmt FROM @sql;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
@@ -45,7 +46,7 @@ BEGIN
 
       DROP TEMPORARY TABLE IF EXISTS qry_tmp_1;
       SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp_1 AS 
-      SELECT DISTINCT o.query_id, o.patient_id FROM ', qrytabname,' o WHERE ', p_includeExclude1String);
+      SELECT DISTINCT o.query_id, o.patient_id, o.person_id, o.organization_id FROM ', qrytabname,' o WHERE ', p_includeExclude1String);
       PREPARE stmt FROM @sql;
       EXECUTE stmt;
       DEALLOCATE PREPARE stmt;
@@ -60,7 +61,7 @@ BEGIN
 
       DROP TEMPORARY TABLE IF EXISTS qry_tmp_1a;
       SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp_1a AS 
-      SELECT DISTINCT o.query_id, o.patient_id FROM ', qrytabname,' o WHERE ', p_includeExclude1aString);
+      SELECT DISTINCT o.query_id, o.patient_id, o.person_id, o.organization_id FROM ', qrytabname,' o WHERE ', p_includeExclude1aString);
       PREPARE stmt FROM @sql;
       EXECUTE stmt;
       DEALLOCATE PREPARE stmt;
@@ -75,7 +76,7 @@ BEGIN
 
       DROP TEMPORARY TABLE IF EXISTS qry_tmp_1b;
       SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp_1b AS 
-      SELECT DISTINCT o.query_id, o.patient_id FROM ', qrytabname,' o WHERE ', p_includeExclude1bString);
+      SELECT DISTINCT o.query_id, o.patient_id, o.person_id, o.organization_id FROM ', qrytabname,' o WHERE ', p_includeExclude1bString);
       PREPARE stmt FROM @sql;
       EXECUTE stmt;
       DEALLOCATE PREPARE stmt;
@@ -90,7 +91,7 @@ BEGIN
 
       DROP TEMPORARY TABLE IF EXISTS qry_tmp_2;
       SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp_2 AS 
-      SELECT DISTINCT o.query_id, o.patient_id FROM ', qrytabname,' o WHERE ', p_includeExclude2String);
+      SELECT DISTINCT o.query_id, o.patient_id, o.person_id, o.organization_id FROM ', qrytabname,' o WHERE ', p_includeExclude2String);
       PREPARE stmt FROM @sql;
       EXECUTE stmt;
       DEALLOCATE PREPARE stmt;
@@ -105,7 +106,7 @@ BEGIN
 
       DROP TEMPORARY TABLE IF EXISTS qry_tmp_2a;
       SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp_2a AS 
-      SELECT DISTINCT o.query_id, o.patient_id FROM ', qrytabname,' o WHERE ', p_includeExclude2aString);
+      SELECT DISTINCT o.query_id, o.patient_id, o.person_id, o.organization_id FROM ', qrytabname,' o WHERE ', p_includeExclude2aString);
       PREPARE stmt FROM @sql;
       EXECUTE stmt;
       DEALLOCATE PREPARE stmt;
@@ -120,7 +121,7 @@ BEGIN
 
       DROP TEMPORARY TABLE IF EXISTS qry_tmp_3;
       SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp_3 AS 
-      SELECT DISTINCT o.query_id, o.patient_id FROM ', qrytabname,' o WHERE ', p_includeExclude3String);
+      SELECT DISTINCT o.query_id, o.patient_id, o.person_id, o.organization_id FROM ', qrytabname,' o WHERE ', p_includeExclude3String);
       PREPARE stmt FROM @sql;
       EXECUTE stmt;
       DEALLOCATE PREPARE stmt;
@@ -135,7 +136,7 @@ BEGIN
 
       DROP TEMPORARY TABLE IF EXISTS qry_tmp_4;
       SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp_4 AS 
-      SELECT DISTINCT o.query_id, o.patient_id FROM ', qrytabname,' o WHERE ', p_includeExclude4String);
+      SELECT DISTINCT o.query_id, o.patient_id, o.person_id, o.organization_id FROM ', qrytabname,' o WHERE ', p_includeExclude4String);
       PREPARE stmt FROM @sql;
       EXECUTE stmt;
       DEALLOCATE PREPARE stmt;
@@ -150,7 +151,7 @@ BEGIN
 
       DROP TEMPORARY TABLE IF EXISTS qry_tmp_5;
       SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp_5 AS 
-      SELECT DISTINCT o.query_id, o.patient_id FROM ', qrytabname,' o WHERE ', p_includeExclude5String);
+      SELECT DISTINCT o.query_id, o.patient_id, o.person_id, o.organization_id FROM ', qrytabname,' o WHERE ', p_includeExclude5String);
       PREPARE stmt FROM @sql;
       EXECUTE stmt;
       DEALLOCATE PREPARE stmt;
@@ -160,15 +161,43 @@ BEGIN
 
     END IF;
     
--- build patient cohort table
+-- build final patient cohort table
 
+    DROP TEMPORARY TABLE IF EXISTS qry_tmp_6;
+
+    SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp_6 AS 
+    SELECT DISTINCT o.query_id, o.patient_id, o.person_id, o.organization_id FROM ', qrytabname,' o ');
+    PREPARE stmt FROM @sql;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt; 
+    
     SET @sql = CONCAT('DROP TABLE IF EXISTS ', p_patientcohorttab);
     PREPARE stmt FROM @sql;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 
     SET @sql = CONCAT('CREATE TABLE ', p_patientcohorttab,' AS 
-    SELECT DISTINCT o.query_id, o.patient_id FROM ', qrytabname,' o ');
+    SELECT q.query_id, 
+           p.id AS patient_id, 
+           p.person_id, 
+           p.organization_id, '
+           ,p_schema,'.getOrganizationName(p.organization_id) AS Organization, ' 
+           ,p_schema,'.getCCGName(p.organization_id) AS CCG, ' 
+           ,p_schema,'.getOrganizationName(p.registered_practice_organization_id) AS registered_practice, '  
+           ,p_schema,'.getConceptName(p.gender_concept_id) AS gender,  
+           p.nhs_number, 
+           p.date_of_birth, 
+           p.date_of_death, ' 
+           ,p_schema,'.getCurrentAddress(p.current_address_id, p.id) AS current_address, ' 
+           ,p_schema,'.getCurrentAddressPostcode(p.current_address_id, p.id) AS postcode, ' 
+           ,p_schema,'.getLSOACode(p.id) AS lsoa_code, '
+           ,p_schema,'.getConceptName(p.ethnic_code_concept_id) AS ethnicity, 
+           p.title, 
+           p.first_names, 
+           p.last_name, ' 
+           ,p_schema,'.getPatientName(p.id) AS patient_name 
+    FROM qry_tmp_6 q JOIN ', p_schema,'.patient p ON p.id = q.patient_id AND p.person_id = q.person_id AND p.organization_id = q.organization_id ');
+
     PREPARE stmt FROM @sql;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
@@ -177,6 +206,12 @@ BEGIN
     PREPARE stmt FROM @sql;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
+
+    SET @sql = CONCAT('ALTER TABLE ', p_patientcohorttab,' ADD INDEX org_idx(organization_id)');
+    PREPARE stmt FROM @sql;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+
 
 END//
 DELIMITER ;
