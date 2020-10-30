@@ -1647,7 +1647,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         } else {
             sql = "SELECT COUNT(DISTINCT(obs.`Patient ID`)) AS patients, " +
                     "regs.reg_count AS reg_patients, " +
-                    "ROUND(((COUNT(obs.`LSOA code`) * 1000) / regs.reg_count),1) AS ratio, " +
+                    "ROUND(((COUNT(DISTINCT(obs.`Patient ID`)) * 1000) / regs.reg_count),1) AS ratio, " +
                     "obs.`LSOA code` AS lsoa_code, " +
                     "map.geo_json " +
                     "FROM dashboards.observation_output_" + queryId + " obs, " +
