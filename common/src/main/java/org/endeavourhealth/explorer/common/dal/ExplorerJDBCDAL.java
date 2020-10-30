@@ -839,7 +839,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
         grouping = grouping.replaceAll(",","','");
         grouping = "'" + grouping + "'";
-        grouping = " and grouping in ("+grouping+")";
+        grouping = " and `grouping` in ("+grouping+")";
 
         String sql = "";
 
