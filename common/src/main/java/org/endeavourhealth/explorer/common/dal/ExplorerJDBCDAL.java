@@ -1645,7 +1645,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                     "GROUP BY covid.lsoa_code " +
                     "ORDER BY covid.lsoa_code ";
         } else {
-            sql = "SELECT COUNT(obs.`LSOA code`) AS patients, " +
+            sql = "SELECT COUNT(DISTINCT(obs.`Patient ID`)) AS patients, " +
                     "regs.reg_count AS reg_patients, " +
                     "ROUND(((COUNT(obs.`LSOA code`) * 1000) / regs.reg_count),1) AS ratio, " +
                     "obs.`LSOA code` AS lsoa_code, " +
@@ -1741,6 +1741,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         }
 
         if (query == null) {
+            LOG.error("Invalid query.");
             throw new Exception("Invalid query.");
         }
 
@@ -1772,6 +1773,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         }
 
         if (outputTypes.size() == 0) {
+            LOG.error("Query has no valid table output types.");
             throw new Exception("Query has no valid table output types.");
         } else {
             data.getOutputTypes().addAll(outputTypes);
@@ -1792,6 +1794,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         } else if (outputType.equalsIgnoreCase("Clinical Events")) {
             tableName = "observation_output_" +queryId;
         } else {
+            LOG.error("Unknown output type:" + outputType);
             throw new Exception("Unknown output type:" + outputType);
         }
 
@@ -1817,6 +1820,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         }
 
         if (!tableFound) {
+            LOG.error("Information not yet available.");
             throw new Exception("Information not yet available.");
         }
 
@@ -1931,6 +1935,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         }
 
         if (query == null) {
+            LOG.error("Invalid query.");
             throw new Exception("Invalid query.");
         }
 
@@ -1944,6 +1949,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         } else if (outputType.equalsIgnoreCase("Clinical Events")) {
             tableName = "observation_output_" +queryId;
         } else {
+            LOG.error("Unknown output type:" + outputType);
             throw new Exception("Unknown output type:" + outputType);
         }
 
@@ -2016,13 +2022,16 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         }
 
         String tableName = "observation_output_";
+        int size = 0;
         for (Integer id : queryLibrary.keySet()) {
-            sql = "select column_name, data_type from information_schema.columns " +
+            sql = "select count(*) from information_schema.columns " +
                     " where table_schema='dashboards' and table_name = '" + tableName + id + "'" +
-                    " and column_name = 'LSOA code'";
+                    " and (column_name = 'LSOA code' or column_name = 'Concept term' or column_name = 'Effective date') ";
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
                 try (ResultSet resultSet = statement.executeQuery()) {
-                    while (resultSet.next()) {
+                    resultSet.next();
+                    size = resultSet.getInt(1);
+                    if (size == 3) {
                         list.add(queryLibrary.get(id));
                     }
                 }
@@ -2045,6 +2054,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
             }
         }
          if (StringUtils.isNullOrEmpty(id)) {
+             LOG.error("Invalid query.");
              throw new Exception("Invalid query.");
          }
 

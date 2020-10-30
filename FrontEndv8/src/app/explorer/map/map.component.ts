@@ -87,8 +87,9 @@ export class MapComponent implements OnInit {
       .subscribe(
         (result) =>{
           this.dates = result;
-          this.selectedDate = this.dates[0];
+          this.selectedDate = this.dates[this.dates.length-1];
           this.max = this.dates.length;
+          this.sliderValue = this.max;
           this.explorerService.getMaps(this.query, this.selectedConceptString, this.selectedDate, this.levels)
             .subscribe(
               (result) =>{
@@ -354,7 +355,6 @@ export class MapComponent implements OnInit {
   }
 
   changeQuery() {
-    setTimeout(() => this.sliderValue = 0);
     this.selectedDate = '';
     this.selectAll = true;
     this.selectedConceptString = '';
@@ -366,8 +366,9 @@ export class MapComponent implements OnInit {
       .subscribe(
         (result) =>{
           this.dates = result;
-          this.selectedDate = this.dates[0];
+          this.selectedDate = this.dates[this.dates.length-1];
           this.max = this.dates.length;
+          this.sliderValue = this.max;
           if (this.query != "Suspected and confirmed Covid-19 cases") {
             this.explorerService.getConceptsFromQuery(this.query)
               .subscribe(
