@@ -439,7 +439,7 @@ SET includeExclude5String = @includeExclude5String;
 
 -- build final patient cohort based on advance criteria 
 CALL buildFinalPatientCohort(query_id, patient_cohort_tmp, observation_tmp, includeExclude1String, includeExclude1aString, includeExclude1bString, 
-includeExclude2String, includeExclude2aString, includeExclude3String, includeExclude4String, includeExclude5String);
+includeExclude2String, includeExclude2aString, includeExclude3String, includeExclude4String, includeExclude5String,sourceSchema);
 
 -- build result datasets
 CALL buildResultDatasets(query_id, patient_cohort_tmp, demographics, encounters, medication, currentMedication, clinicalEvents, activeProblems, 
@@ -450,7 +450,7 @@ SET eventTypes = @eventTypes;
 
 -- dataset output definition --
 CALL buildDatasetOutputTables(selectedDemographicFields, selectedEncounterFields, selectedMedicationFields, selectedClinicalEventFields, 
-eventTypes, store_tmp, sourceSchema, query_id);
+eventTypes, store_tmp, sourceSchema, query_id, patient_cohort_tmp);
 
 -- update queue for next run date
 CALL updateQueue(query_id, schedule);
