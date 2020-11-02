@@ -234,6 +234,24 @@ BEGIN
          EXECUTE stmt;
          DEALLOCATE PREPARE stmt;    
 
+         SET @cnt = CONCAT('SELECT BINARY COUNT(*) FROM ', output_table,' INTO @total');
+
+         SELECT @cnt;
+
+         PREPARE stmt FROM @cnt;
+         EXECUTE stmt;
+         DEALLOCATE PREPARE stmt; 
+
+         SET @cnt = CONCAT('INSERT INTO dataset_results_hist (query_id, dataset, total, date) 
+         VALUES (',p_query_id,',',QUOTE(result_dataset),',',@total,',',QUOTE(now()),')');
+
+           SELECT @cnt;
+
+         PREPARE stmt FROM @cnt;
+         EXECUTE stmt;
+         DEALLOCATE PREPARE stmt; 
+
+
       END IF;
 
       -- fetch next event type
