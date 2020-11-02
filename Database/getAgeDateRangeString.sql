@@ -21,7 +21,16 @@ IF p_type = 1 THEN
   END IF;
   
 ELSEIF p_type = 2 THEN
-  SET ageDateString = CONCAT('o.clinical_effective_date BETWEEN ', QUOTE(p_from),' AND ', QUOTE(p_to));
+
+ IF p_from IS NOT NULL AND p_to IS NOT NULL THEN
+    SET ageDateString = CONCAT('o.clinical_effective_date BETWEEN ', QUOTE(p_from),' AND ', QUOTE(p_to));
+ ELSEIF p_from IS NOT NULL AND p_to IS NULL THEN
+    SET ageDateString = CONCAT('o.clinical_effective_date >= ', QUOTE(p_from));
+ ELSEIF p_to IS NOT NULL AND p_from IS NULL THEN
+    SET ageDateString = CONCAT('o.clinical_effective_date <= ', QUOTE(p_to));
+ END IF;
+
+
 END IF;
 
 RETURN ageDateString;
