@@ -1549,7 +1549,8 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                 }
             }
             sql = "select distinct date_format(`Effective date`, '%Y-%m-%d') as date " +
-                    "from dashboards.observation_output_" + queryId + " order by `Effective date`";
+                    "from dashboards.observation_output_" + queryId + " " +
+                    "order by `Effective date`";
         }
 
         ArrayList<String> list = new ArrayList();
@@ -1564,14 +1565,10 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         return list;
     }
 
-    public MapResult getMaps(String query, String selectedConceptString, String date,
+    public MapResult getMaps(String query, String date,
                              List<String> lowerLimits, List<String> upperLimits,
                              List<String> colors, List<String> descriptions) throws Exception {
 
-
-        selectedConceptString = selectedConceptString.replaceAll(",","','");
-        selectedConceptString = "'" + selectedConceptString + "'";
-        selectedConceptString = "AND obs.`Concept term` in ("+selectedConceptString+")";
 
         String queryId = null;
         if (!"Suspected and confirmed Covid-19 cases".equalsIgnoreCase(query)) {
@@ -1645,27 +1642,31 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                     "GROUP BY covid.lsoa_code " +
                     "ORDER BY covid.lsoa_code ";
         } else {
-            sql = "SELECT DATA.patients as patients, " +
-                    " SUM(REG.count) as reg_patients, " +
-                    " ROUND(((DATA.patients * 1000) / SUM(REG.count)),1) AS ratio, " +
-                    " REG.lsoa_code as lsoa_code, " +
-                    " MAP.geo_json as geo_json " +
-                    " FROM dashboards.lsoa_registrations REG, " +
-                    " dashboards.maps MAP, " +
-                    " ( SELECT COUNT(DATA.lsoa_code) as patients, DATA.lsoa_code as lsoa_code " +
-                    " FROM " +
-                    " ( SELECT DISTINCT obs.`Patient ID` patient_id, obs.`Concept term` term, obs.`LSOA code` AS lsoa_code " +
-                    " FROM dashboards.observation_output_86 obs " +
-                    " WHERE obs.`Effective date` >= '" + minDate + "' " +
-                    " AND obs.`Effective date` <= ? " +
-                    selectedConceptString +
-                    " ORDER BY obs.`Patient ID` " +
-                    " ) DATA " +
-                    " GROUP BY DATA.lsoa_code) DATA " +
-                    " WHERE REG.lsoa_code IS NOT NULL " +
-                    " AND DATA.lsoa_code = REG.lsoa_code " +
-                    " AND MAP.area_code = REG.lsoa_code " +
-                    " GROUP BY REG.lsoa_code ";
+            sql = "SELECT COUNT(PERSON.`LSOA code`) as patients, " +
+                    "REGS.reg_count as reg_patients, " +
+                    "ROUND(((COUNT(PERSON.`LSOA code`) * 1000) / REGS.reg_count),1) AS ratio, " +
+                    "PERSON.`LSOA code` as lsoa_code, " +
+                    "MAP.geo_json " +
+                    "FROM " +
+                    "dashboards.person_output_" + queryId + " PERSON, " +
+                    "dashboards.maps MAP, " +
+                    "(SELECT DISTINCT " +
+                    "obs.`Patient ID` " +
+                    "FROM dashboards.observation_output_" + queryId + " obs " +
+                    "WHERE obs.`Effective date` >= '" + minDate + "' " +
+                    "AND obs.`Effective date` <= ? " +
+                    "ORDER BY obs.`Patient ID`) OBS, " +
+                    "(SELECT lsoa_code, " +
+                    "SUM(count) as reg_count " +
+                    "FROM dashboards.lsoa_registrations " +
+                    "WHERE lsoa_code IS NOT NULL " +
+                    "GROUP BY lsoa_code " +
+                    ") REGS " +
+                    "WHERE PERSON.`Patient ID` = OBS.`Patient ID` " +
+                    "AND REGS.lsoa_code = PERSON.`LSOA code` " +
+                    "AND MAP.area_code = PERSON.`LSOA code` " +
+                    "GROUP BY PERSON.`LSOA code` " +
+                    "ORDER BY PERSON.`LSOA code` ";
         }
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
             statement.setString(1, date);
@@ -2024,17 +2025,15 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
             }
         }
 
-        String tableName = "observation_output_";
         int size = 0;
         for (Integer id : queryLibrary.keySet()) {
-            sql = "select count(*) from information_schema.columns " +
-                    " where table_schema='dashboards' and table_name = '" + tableName + id + "'" +
-                    " and (column_name = 'LSOA code' or column_name = 'Concept term' or column_name = 'Effective date') ";
+            sql = "select count(*) from information_schema.columns where (table_name = 'observation_output_" + id + "' and column_name = 'Effective date')  " +
+                    "or (table_name = 'person_output_" + id + "' and column_name = 'LSOA code');";
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
                 try (ResultSet resultSet = statement.executeQuery()) {
                     resultSet.next();
                     size = resultSet.getInt(1);
-                    if (size == 3) {
+                    if (size == 2) {
                         list.add(queryLibrary.get(id));
                     }
                 }
@@ -2042,47 +2041,5 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         }
         Collections.sort(list);
         return list;
-    }
-
-    public LookupListResult getConceptLookupFromQuery(String query) throws Exception {
-
-        String sql = "select id from dashboards.query_library where name = ?";
-        String id = null;
-        try (PreparedStatement statement = conn.prepareStatement(sql)) {
-            statement.setString(1, query);
-            try (ResultSet resultSet = statement.executeQuery()) {
-                while (resultSet.next()) {
-                    id = resultSet.getString("id");
-                }
-            }
-        }
-         if (StringUtils.isNullOrEmpty(id)) {
-             LOG.error("Invalid query.");
-             throw new Exception("Invalid query.");
-         }
-
-        LookupListResult result = new LookupListResult();
-
-        sql = "SELECT distinct(`Concept term`) as type " +
-                " FROM dashboards.observation_output_" + id +
-                " order by `Concept term`";
-
-        String sqlCount = "SELECT count(distinct(`Concept term`)) " +
-                " FROM dashboards.observation_output_" + id;
-
-        try (PreparedStatement statement = conn.prepareStatement(sql)) {
-            try (ResultSet resultSet = statement.executeQuery()) {
-                result.setResults(getLookupList(resultSet));
-            }
-        }
-
-        try (PreparedStatement statement = conn.prepareStatement(sqlCount)) {
-            try (ResultSet resultSet = statement.executeQuery()) {
-                resultSet.next();
-                result.setLength(resultSet.getInt(1));
-            }
-        }
-
-        return result;
     }
 }

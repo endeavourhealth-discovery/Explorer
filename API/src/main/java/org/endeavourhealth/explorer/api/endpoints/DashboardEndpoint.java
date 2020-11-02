@@ -723,7 +723,6 @@ public class DashboardEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getMaps(@Context SecurityContext sc,
                             @QueryParam("query") String query,
-                            @QueryParam("selectedConceptString") String selectedConceptString,
                             @QueryParam("date") String date,
                             @QueryParam("lower_limits") List<String> lowerLimits,
                             @QueryParam("upper_limits") List<String> upperLimits,
@@ -733,10 +732,9 @@ public class DashboardEndpoint {
         LOG.debug("getMaps");
 
         query = URLDecoder.decode(query, StandardCharsets.UTF_8.toString());
-        selectedConceptString = URLDecoder.decode(selectedConceptString, StandardCharsets.UTF_8.toString());
 
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
-            MapResult result = viewerDAL.getMaps(query, selectedConceptString, date, lowerLimits, upperLimits, colors, descriptions);
+            MapResult result = viewerDAL.getMaps(query, date, lowerLimits, upperLimits, colors, descriptions);
             result.setLowerLimits(new ArrayList(lowerLimits));
             result.setUpperLimits(new ArrayList(upperLimits));
             result.setColors(new ArrayList(colors));
@@ -810,27 +808,6 @@ public class DashboardEndpoint {
 
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
             ArrayList<String> result = viewerDAL.getMapQueries();
-
-            return Response
-                    .ok()
-                    .entity(result)
-                    .build();
-        }
-    }
-
-    @GET
-    @Path("/conceptLookupFromQuery")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getConceptLookupFromQuery(@Context SecurityContext sc,
-                                              @QueryParam("query") String query,
-                                              @QueryParam("selectedConceptString") String selectedConceptString) throws Exception {
-
-        LOG.debug("getConceptLookupFromQuery");
-        query = URLDecoder.decode(query, StandardCharsets.UTF_8.toString());
-
-        try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
-            LookupListResult result = viewerDAL.getConceptLookupFromQuery(query);
 
             return Response
                     .ok()

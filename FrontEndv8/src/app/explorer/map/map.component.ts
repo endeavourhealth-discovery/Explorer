@@ -8,7 +8,6 @@ import {MatSliderChange} from "@angular/material/slider";
 import {Level} from "./model/Level";
 import {CookieService} from "ngx-cookie-service";
 import {UserProfile} from "dds-angular8/user-manager/models/UserProfile";
-import {FormControl} from "@angular/forms";
 
 @Component({
   selector: 'app-map',
@@ -39,13 +38,6 @@ export class MapComponent implements OnInit {
 
   levels: Level[];
   user: UserProfile;
-
-  selectedConcept: string = '';
-  selectedConceptString: string = '';
-  selectAll: boolean = true;
-
-  conceptList = null;
-  conceptValues = new FormControl(this.conceptList);
 
   constructor(private explorerService: ExplorerService,
               private log: LoggerService,
@@ -90,7 +82,7 @@ export class MapComponent implements OnInit {
           this.selectedDate = this.dates[this.dates.length-1];
           this.max = this.dates.length;
           this.sliderValue = this.max;
-          this.explorerService.getMaps(this.query, this.selectedConceptString, this.selectedDate, this.levels)
+          this.explorerService.getMaps(this.query, this.selectedDate, this.levels)
             .subscribe(
               (result) =>{
                 this.mapResults = result;
@@ -287,7 +279,7 @@ export class MapComponent implements OnInit {
   }
 
   refreshMap() {
-    this.explorerService.getMaps(this.query, this.selectedConceptString, this.selectedDate, this.levels)
+    this.explorerService.getMaps(this.query, this.selectedDate, this.levels)
       .subscribe(
         (result) =>{
           this.mapResults = result;
@@ -356,8 +348,6 @@ export class MapComponent implements OnInit {
 
   changeQuery() {
     this.selectedDate = '';
-    this.selectAll = true;
-    this.selectedConceptString = '';
     this.clearLayers();
     this.generating = "Generating map...";
     this.display = this.generating;
@@ -369,61 +359,9 @@ export class MapComponent implements OnInit {
           this.selectedDate = this.dates[this.dates.length-1];
           this.max = this.dates.length;
           this.sliderValue = this.max;
-          if (this.query != "Suspected and confirmed Covid-19 cases") {
-            this.explorerService.getConceptsFromQuery(this.query)
-              .subscribe(
-                (result) => {
-                  this.loadList(result);
-                  this.refreshMap();
-                },
-                (error) => this.log.error(error)
-              );
-          } else {
-            this.conceptList = null;
-            this.refreshMap();
-          }
+          this.refreshMap();
         },
         (error) => this.log.error(error)
       );
-  }
-
-  toggleSelection(event) {
-    if (event.checked) {
-      this.conceptValues = new FormControl(this.conceptList);
-      this.selectedConceptString = this.conceptList.toString();
-    } else {
-      this.conceptValues = new FormControl([]);
-      this.selectedConceptString = '';
-    }
-    this.refresh(false);
-  }
-
-  refresh(override) {
-    if (this.selectedConcept == "" && this.selectAll) {
-      this.conceptValues = new FormControl(this.conceptList);
-      this.selectedConceptString = this.conceptList.toString();
-    }
-
-    if (override) {
-      this.selectAll = false;
-      this.selectedConceptString = this.selectedConcept.toString();
-    }
-
-    this.clearLayers();
-    this.generating = "Generating map...";
-    this.display = this.generating;
-    this.layersToRemove = [];
-    this.refreshMap();
-  }
-
-  loadList(lists: any) {
-    this.conceptList = [];
-    lists.results.map(
-      e => {
-        this.conceptList.push(e.type);
-      }
-    )
-    this.conceptValues = new FormControl(this.conceptList);
-    this.refresh(false);
   }
 }

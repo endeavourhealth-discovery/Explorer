@@ -328,10 +328,9 @@ export class ExplorerService {
     return this.http.get('api/events/mapDates', {params});
   }
 
-  getMaps(query: string, selectedConceptString: string, date: string, levels: Level[]): Observable<any> {
+  getMaps(query: string, date: string, levels: Level[]): Observable<any> {
     let params = new HttpParams();
     params = params.append('query', encodeURIComponent(query));
-    params = params.append('selectedConceptString', encodeURIComponent(selectedConceptString));
     params = params.append('date', date);
     for (let level in levels) {
       params = params.append('lower_limits', levels[level].lowerLimit);
@@ -366,11 +365,5 @@ export class ExplorerService {
   getMapQueries(): Observable<any> {
     let params = new HttpParams();
     return this.http.get('api/events/mapQueries', {params});
-  }
-
-  getConceptsFromQuery(query: string): Observable<any> {
-    let params = new HttpParams();
-    params = params.append('query', encodeURIComponent(query));
-    return this.http.get('api/events/conceptLookupFromQuery', {params});
   }
 }

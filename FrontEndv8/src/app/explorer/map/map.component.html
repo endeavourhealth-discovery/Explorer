@@ -9,17 +9,10 @@
   <mat-card-content style="text-align: center;">
     <form #form="ngForm">
       <div class="flex" fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="5px grid" fxLayoutAlign="start">
-        <mat-form-field appearance="outline" *ngIf= "queries" fxFlex="50" fxFill>
+        <mat-form-field appearance="outline" *ngIf= "queries" fxFlex="100" fxFill>
           <mat-label>Queries</mat-label>
           <mat-select (selectionChange)="changeQuery()" [(value)]="query">
             <mat-option *ngFor="let result of queries" [value]="result">{{result}}</mat-option>
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field appearance="outline" *ngIf= "conceptList" fxFlex="50" fxFill>
-          <mat-label>Concept terms</mat-label>
-          <mat-select [formControl]="conceptValues" multiple [(value)]="selectedConcept">
-            <mat-checkbox class="mat-option" [(ngModel)]="selectAll" (change)="toggleSelection($event)" name="concepts">Select All</mat-checkbox>
-            <mat-option (click)="refresh(true)" *ngFor="let result of conceptList" [value]="result">{{result}}</mat-option>
           </mat-select>
         </mat-form-field>
       </div>
