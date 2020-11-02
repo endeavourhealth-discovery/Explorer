@@ -1645,24 +1645,27 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                     "GROUP BY covid.lsoa_code " +
                     "ORDER BY covid.lsoa_code ";
         } else {
-            sql = "SELECT COUNT(DISTINCT(obs.`Patient ID`)) AS patients, " +
-                    "regs.reg_count AS reg_patients, " +
-                    "ROUND(((COUNT(DISTINCT(obs.`Patient ID`)) * 1000) / regs.reg_count),1) AS ratio, " +
-                    "obs.`LSOA code` AS lsoa_code, " +
-                    "map.geo_json " +
-                    "FROM dashboards.observation_output_" + queryId + " obs, " +
-                    "( SELECT reg.lsoa_code, sum(reg.count) reg_count " +
-                    "  FROM dashboards.lsoa_registrations reg " +
-                    "  WHERE reg.lsoa_code IS NOT NULL " +
-                    "  GROUP BY reg.lsoa_code " +
-                    ") regs, dashboards.maps map " +
-                    "WHERE obs.`LSOA code` = regs.lsoa_code " +
-                    "AND obs.`LSOA code` = map.area_code " +
-                    "AND obs.`Effective date` >= '" + minDate + "' " +
-                    "AND obs.`Effective date` <= ? " +
+            sql = "SELECT DATA.patients as patients, " +
+                    " SUM(REG.count) as reg_patients, " +
+                    " ROUND(((DATA.patients * 1000) / SUM(REG.count)),1) AS ratio, " +
+                    " REG.lsoa_code as lsoa_code, " +
+                    " MAP.geo_json as geo_json " +
+                    " FROM dashboards.lsoa_registrations REG, " +
+                    " dashboards.maps MAP, " +
+                    " ( SELECT COUNT(DATA.lsoa_code) as patients, DATA.lsoa_code as lsoa_code " +
+                    " FROM " +
+                    " ( SELECT DISTINCT obs.`Patient ID` patient_id, obs.`Concept term` term, obs.`LSOA code` AS lsoa_code " +
+                    " FROM dashboards.observation_output_86 obs " +
+                    " WHERE obs.`Effective date` >= '" + minDate + "' " +
+                    " AND obs.`Effective date` <= ? " +
                     selectedConceptString +
-                    " GROUP BY obs.`LSOA code` " +
-                    " ORDER BY obs.`LSOA code` ";
+                    " ORDER BY obs.`Patient ID` " +
+                    " ) DATA " +
+                    " GROUP BY DATA.lsoa_code) DATA " +
+                    " WHERE REG.lsoa_code IS NOT NULL " +
+                    " AND DATA.lsoa_code = REG.lsoa_code " +
+                    " AND MAP.area_code = REG.lsoa_code " +
+                    " GROUP BY REG.lsoa_code ";
         }
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
             statement.setString(1, date);
