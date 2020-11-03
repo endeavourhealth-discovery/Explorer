@@ -18,6 +18,8 @@ CREATE PROCEDURE buildCohortDefinition(
      p_organisationtab VARCHAR(64),
      p_valuesettab VARCHAR(64),
      p_concepttab VARCHAR(64),
+     p_allvaluesettab VARCHAR(64),
+     p_allconcepttab VARCHAR(64),
      p_cohorttab VARCHAR(64),
      p_observationtab VARCHAR(64),
      p_schema VARCHAR(255),
@@ -82,10 +84,20 @@ BEGIN
 -- date range
   SET p_dateFrom = IF(p_dateFrom = 'NaN-NaN-NaN',NULL, IF(p_dateFrom = '', NULL, SUBSTRING(p_dateFrom,1,10)));
   SET p_dateTo = IF(p_dateTo = 'NaN-NaN-NaN',NULL, IF(p_dateTo = '', NULL, SUBSTRING(p_dateTo,1,10)));
-  IF (p_dateFrom IS NOT NULL) AND (p_dateTo IS NOT NULL) THEN
-    SET daterange = getAgeDateRangeString(p_dateFrom, p_dateTo, 2);
+
+  IF p_dateFrom = '1970-01-01' AND p_dateTo = '1970-01-01' THEN
+    SET p_dateFrom = NULL;
+    SET p_dateTo = NULL;
+  ELSEIF p_dateFrom <> '1970-01-01' AND p_dateTo = '1970-01-01' THEN
+    SET p_dateTo = NULL;
+  ELSEIF p_dateFrom = '1970-01-01' AND p_dateTo <> '1970-01-01' THEN
+    SET p_dateFrom = NULL;
+  END IF;
+
+  IF (p_dateFrom IS NULL) AND (p_dateTo IS NULL) THEN
+     SET daterange = '1';
   ELSE
-    SET daterange = '1';
+    SET daterange = getAgeDateRangeString(p_dateFrom, p_dateTo, 2);
   END IF;
 
 -- cohort value set
@@ -104,8 +116,14 @@ BEGIN
   CALL createConcept(p_concepttab, p_valuesettab, p_schema);
 -- create the patient cohort
   CALL createPatientCohort(orgrange, regstatus, agerange, genderrange, postcoderange, daterange, p_concepttab, p_cohorttab, p_schema);
+
+-- create all valueset cohort
+  CALL createValueSet('1', p_allvaluesettab);
+-- create all concept cohort from the valueset
+  CALL createConcept(p_allconcepttab, p_allvaluesettab, p_schema);
+
 -- create observation cohort from the patient cohort
-  CALL createObservationCohort(p_observationtab, p_cohorttab, p_schema);
+  CALL createObservationCohort(p_observationtab, p_cohorttab, p_allconcepttab, p_schema);
 
 END//
 DELIMITER ;
