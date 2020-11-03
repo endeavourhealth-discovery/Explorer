@@ -140,6 +140,8 @@ DECLARE org_tmp VARCHAR(64) DEFAULT NULL;
 DECLARE store_tmp VARCHAR(64) DEFAULT NULL;
 DECLARE valueset_tmp VARCHAR(64) DEFAULT NULL;
 DECLARE concept_tmp VARCHAR(64) DEFAULT NULL;
+DECLARE all_valueset_tmp VARCHAR(64) DEFAULT NULL;
+DECLARE all_concept_tmp VARCHAR(64) DEFAULT NULL;
 DECLARE cohort_tmp VARCHAR(64) DEFAULT NULL;
 DECLARE observation_tmp VARCHAR(64) DEFAULT NULL;
 
@@ -315,6 +317,9 @@ SET org_tmp  = CONCAT('org_tmp_',query_id);
 SET store_tmp  = CONCAT('store_tmp_',query_id);
 SET valueset_tmp  = CONCAT('valueset_tmp_',query_id);
 SET concept_tmp  = CONCAT('concept_tmp_',query_id);
+SET all_valueset_tmp  = CONCAT('all_valueset_tmp_',query_id);
+SET all_concept_tmp  = CONCAT('all_concept_tmp_',query_id);
+
 SET cohort_tmp  = CONCAT('cohort_tmp_',query_id);
 SET observation_tmp  = CONCAT('observation_tmp_',query_id);
 
@@ -368,7 +373,7 @@ SET patient_cohort_tmp  = CONCAT('patient_cohort_tmp_',query_id);
 
 -- build cohort definition --
 CALL buildCohortDefinition(query_id,providerOrganisation, includedOrganisation, registrationStatus, ageFrom, ageTo, gender, postcode, 
-valueDateFrom, valueDateTo, cohortValue, org_tmp, valueset_tmp, concept_tmp, cohort_tmp, observation_tmp, sourceSchema, store_tmp);
+valueDateFrom, valueDateTo, cohortValue, org_tmp, valueset_tmp, concept_tmp, all_valueset_tmp, all_concept_tmp, cohort_tmp, observation_tmp, sourceSchema, store_tmp);
 
 -- build advance criteria --
 
@@ -458,7 +463,8 @@ CALL updateQueue(query_id, schedule);
 -- clean up --
 
 -- remove temp tables
- SET tempTables = CONCAT(org_tmp,',',store_tmp,',',valueset_tmp,',',concept_tmp ,',',cohort_tmp ,',',observation_tmp,',',incValueSet1_tmp,',',
+ SET tempTables = CONCAT(org_tmp,',',store_tmp,',',valueset_tmp,',',
+ concept_tmp ,',',all_valueset_tmp,',',all_concept_tmp,',',cohort_tmp ,',',observation_tmp,',',incValueSet1_tmp,',',
  incConcept1_tmp,',',incValueSet1a_tmp,',',incConcept1a_tmp,',',incValueSet1b_tmp,',',incConcept1b_tmp,',',incValueSet2_tmp,',',
  incConcept2_tmp,',',observation2_tmp,',',incValueSet2a_tmp,',',incConcept2a_tmp,',',observation2a_tmp,',',incValueSet3_tmp,',',
  incConcept3_tmp,',',observation3_tmp,',',incTestedValueSet3_tmp,',',incTestedConcept3_tmp,',',incValueSet4_tmp,',',
