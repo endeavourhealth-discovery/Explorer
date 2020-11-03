@@ -25,5 +25,10 @@ BEGIN
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;
 
+   SET @sql = CONCAT('ALTER TABLE ', p_clinicalTypesConceptTab, ' ADD INDEX code_type_idx(code_type)');
+   PREPARE stmt FROM @sql;
+   EXECUTE stmt;
+   DEALLOCATE PREPARE stmt;
+
 END//
 DELIMITER ;
