@@ -21,7 +21,10 @@
       </div>
       <div>
         <mat-label style="font-size:25px;" ><b>{{ display }}</b></mat-label><br>
-        <mat-slider [disabled]="form.invalid" (input)="onInputChange($event)" [(ngModel)]="sliderValue" min="0" max="{{max-1}}" step="1" (change)="updateDate($event)" [tickInterval]="1" name="sliderDate"></mat-slider>
+        <mat-slider *ngIf="isCovidQuery" [disabled]="form.invalid" (input)="onInputChange($event)" [(ngModel)]="sliderValue" min="0" max="{{max-1}}" step="1" (change)="updateDate($event)" [tickInterval]="1" name="sliderDate"></mat-slider>
+      </div>
+      <div *ngIf="!isCovidQuery">
+        &nbsp;
       </div>
       <div class="flex" fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="16px grid" fxLayoutAlign="start">
         <div fxFlex="15" fxFill>

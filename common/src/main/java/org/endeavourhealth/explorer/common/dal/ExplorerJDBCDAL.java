@@ -1647,29 +1647,23 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                     "ROUND(((COUNT(PERSON.`LSOA code`) * 1000) / REGS.reg_count),1) AS ratio, " +
                     "PERSON.`LSOA code` as lsoa_code, " +
                     "MAP.geo_json " +
-                    "FROM " +
-                    "dashboards.person_output_" + queryId + " PERSON, " +
+                    "FROM  dashboards.person_output_" + queryId + " PERSON, " +
                     "dashboards.maps MAP, " +
-                    "(SELECT DISTINCT " +
-                    "obs.`Patient ID` " +
-                    "FROM dashboards.observation_output_" + queryId + " obs " +
-                    "WHERE obs.`Effective date` >= '" + minDate + "' " +
-                    "AND obs.`Effective date` <= ? " +
-                    "ORDER BY obs.`Patient ID`) OBS, " +
                     "(SELECT lsoa_code, " +
                     "SUM(count) as reg_count " +
                     "FROM dashboards.lsoa_registrations " +
                     "WHERE lsoa_code IS NOT NULL " +
                     "GROUP BY lsoa_code " +
                     ") REGS " +
-                    "WHERE PERSON.`Patient ID` = OBS.`Patient ID` " +
-                    "AND REGS.lsoa_code = PERSON.`LSOA code` " +
+                    "WHERE  REGS.lsoa_code = PERSON.`LSOA code` " +
                     "AND MAP.area_code = PERSON.`LSOA code` " +
                     "GROUP BY PERSON.`LSOA code` " +
                     "ORDER BY PERSON.`LSOA code` ";
         }
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
-            statement.setString(1, date);
+            if(queryId == null) {
+                statement.setString(1, date);
+            }
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
                     MapLayer layer = new MapLayer();
@@ -2025,15 +2019,11 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
             }
         }
 
-        int size = 0;
         for (Integer id : queryLibrary.keySet()) {
-            sql = "select count(*) from information_schema.columns where (table_name = 'observation_output_" + id + "' and column_name = 'Effective date')  " +
-                    "or (table_name = 'person_output_" + id + "' and column_name = 'LSOA code');";
+            sql = "select table_name from information_schema.columns where table_name = 'person_output_" + id + "' and column_name = 'LSOA code';";
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
                 try (ResultSet resultSet = statement.executeQuery()) {
-                    resultSet.next();
-                    size = resultSet.getInt(1);
-                    if (size == 2) {
+                    while (resultSet.next()) {
                         list.add(queryLibrary.get(id));
                     }
                 }

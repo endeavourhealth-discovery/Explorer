@@ -20,7 +20,7 @@ export class MapComponent implements OnInit {
   queries: string[];
 
   display: string;
-  generating: string;
+  generating: string = "Generating map...";
   sliderValue: number = 0;
   max: number;
   dates: string[];
@@ -38,6 +38,8 @@ export class MapComponent implements OnInit {
 
   levels: Level[];
   user: UserProfile;
+  covidQuery: string = "Suspected and confirmed Covid-19 cases";
+  isCovidQuery: boolean = true;
 
   constructor(private explorerService: ExplorerService,
               private log: LoggerService,
@@ -51,7 +53,7 @@ export class MapComponent implements OnInit {
       .subscribe(
         (result) => {
           this.queries = result;
-          this.query = "Suspected and confirmed Covid-19 cases";
+          this.query = this.covidQuery;
           this.userService.getUserProfile(true).then(
             result => {
               this.user = result;
@@ -72,7 +74,6 @@ export class MapComponent implements OnInit {
       this.defaultLevels();
     }
 
-    this.generating = "Generating map...";
     this.display = this.generating;
     this.layersToRemove = [];
     this.explorerService.getMapDates(this.query)
@@ -275,7 +276,11 @@ export class MapComponent implements OnInit {
     });
 
     L.tileLayer(this.url, { maxZoom: 18, attribution: this.attribution, id: 'mapbox/streets-v11', tileSize: 512, zoomOffset: -1 }).addTo(this.map);
-    this.display = this.selectedDate;
+    if (this.isCovidQuery) {
+      this.display = this.selectedDate;
+    } else {
+      this.display = "";
+    }
   }
 
   refreshMap() {
@@ -349,19 +354,24 @@ export class MapComponent implements OnInit {
   changeQuery() {
     this.selectedDate = '';
     this.clearLayers();
-    this.generating = "Generating map...";
     this.display = this.generating;
     this.layersToRemove = [];
-    this.explorerService.getMapDates(this.query)
-      .subscribe(
-        (result) =>{
-          this.dates = result;
-          this.selectedDate = this.dates[this.dates.length-1];
-          this.max = this.dates.length;
-          this.sliderValue = this.max;
-          this.refreshMap();
-        },
-        (error) => this.log.error(error)
-      );
+    if (this.query == this.covidQuery) {
+      this.isCovidQuery = true;
+      this.explorerService.getMapDates(this.query)
+        .subscribe(
+          (result) =>{
+            this.dates = result;
+            this.selectedDate = this.dates[this.dates.length-1];
+            this.max = this.dates.length;
+            this.sliderValue = this.max;
+            this.refreshMap();
+          },
+          (error) => this.log.error(error)
+        );
+    } else {
+      this.isCovidQuery = false;
+      this.refreshMap();
+    }
   }
 }
