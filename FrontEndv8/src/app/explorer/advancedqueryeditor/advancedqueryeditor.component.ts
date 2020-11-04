@@ -50,6 +50,20 @@ interface savedQuery {
   includedPeriodValue1b: string;
   includedPeriodType1b: string;
   includedAnyAll1b: string;
+  includedExclude1c: string;
+  includedValueSet1c: string;
+  includedDateFrom1c: string;
+  includedDateTo1c: string;
+  includedPeriodValue1c: string;
+  includedPeriodType1c: string;
+  includedAnyAll1c: string;
+  includedExclude1d: string;
+  includedValueSet1d: string;
+  includedDateFrom1d: string;
+  includedDateTo1d: string;
+  includedPeriodValue1d: string;
+  includedPeriodType1d: string;
+  includedAnyAll1d: string;
   includedExclude2: string;
   includedValueSet2: string;
   includedEarliestLatest2: string;
@@ -213,6 +227,20 @@ export class AdvancedQueryEditorComponent implements OnInit {
   includedPeriodValue1b: string = '';
   includedPeriodType1b: string = '';
   includedAnyAll1b: string = '';
+  includedExclude1c: string = '';
+  includedValueSet1c: string = '';
+  includedDateFrom1c: string = '';
+  includedDateTo1c: string = '';
+  includedPeriodValue1c: string = '';
+  includedPeriodType1c: string = '';
+  includedAnyAll1c: string = '';
+  includedExclude1d: string = '';
+  includedValueSet1d: string = '';
+  includedDateFrom1d: string = '';
+  includedDateTo1d: string = '';
+  includedPeriodValue1d: string = '';
+  includedPeriodType1d: string = '';
+  includedAnyAll1d: string = '';
   includedExclude2: string = '';
   includedValueSet2: string = '';
   includedEarliestLatest2: string = '';
@@ -330,6 +358,10 @@ export class AdvancedQueryEditorComponent implements OnInit {
   addQuery1: boolean = true;
   select1b: boolean = false;
   addQuery1b: boolean = true;
+  select1c: boolean = false;
+  addQuery1c: boolean = true;
+  select1d: boolean = false;
+  addQuery1d: boolean = true;
   select2a: boolean = false;
   addQuery2: boolean = true;
 
@@ -427,6 +459,20 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.includedPeriodValue1b = query.includedPeriodValue1b;
       this.includedPeriodType1b = query.includedPeriodType1b;
       this.includedAnyAll1b = query.includedAnyAll1b;
+      this.includedExclude1c = query.includedExclude1c;
+      this.includedValueSet1c = query.includedValueSet1c;
+      this.includedDateFrom1c = query.includedDateFrom1c;
+      this.includedDateTo1c = query.includedDateTo1c;
+      this.includedPeriodValue1c = query.includedPeriodValue1c;
+      this.includedPeriodType1c = query.includedPeriodType1c;
+      this.includedAnyAll1c = query.includedAnyAll1c;
+      this.includedExclude1d = query.includedExclude1d;
+      this.includedValueSet1d = query.includedValueSet1d;
+      this.includedDateFrom1d = query.includedDateFrom1d;
+      this.includedDateTo1d = query.includedDateTo1d;
+      this.includedPeriodValue1d = query.includedPeriodValue1d;
+      this.includedPeriodType1d = query.includedPeriodType1d;
+      this.includedAnyAll1d = query.includedAnyAll1d;
       this.includedExclude2 = query.includedExclude2;
       this.includedValueSet2 = query.includedValueSet2;
       this.includedEarliestLatest2 = query.includedEarliestLatest2;
@@ -504,6 +550,16 @@ export class AdvancedQueryEditorComponent implements OnInit {
         this.addQuery1b = false;
       }
 
+      if (this.includedExclude1c != "") {
+        this.select1c = true;
+        this.addQuery1c = false;
+      }
+
+      if (this.includedExclude1d != "") {
+        this.select1d = true;
+        this.addQuery1d = false;
+      }
+
       if (this.includedExclude2a != "") {
         this.select2a = true;
         this.addQuery2 = false;
@@ -522,6 +578,10 @@ export class AdvancedQueryEditorComponent implements OnInit {
       control46a: [''], control47a: [''], control48a: [''],
       control22b: [''], control23b: [''], control24b: [''], control25b: [''],
       control46b: [''], control47b: [''], control48b: [''],
+      control22c: [''], control23c: [''], control24c: [''], control25c: [''],
+      control46c: [''], control47c: [''], control48c: [''],
+      control22d: [''], control23d: [''], control24d: [''], control25d: [''],
+      control46d: [''], control47d: [''], control48d: [''],
       control26: [''], control27: [''], control28: [''], control29: [''],
       control30: [''], control31: [''], control32: [''], control33: [''],
       control34: [''], control35: [''], control36: [''], control37: [''],
@@ -698,6 +758,20 @@ export class AdvancedQueryEditorComponent implements OnInit {
       includedDateTo1b: this.formatDate(this.includedDateTo1b),
       includedPeriodValue1b: this.includedPeriodValue1b,
       includedPeriodType1b: this.includedPeriodType1b,
+      includedExclude1c: this.includedExclude1c,
+      includedAnyAll1c: this.includedAnyAll1c,
+      includedValueSet1c: this.includedValueSet1c,
+      includedDateFrom1c: this.formatDate(this.includedDateFrom1c),
+      includedDateTo1c: this.formatDate(this.includedDateTo1c),
+      includedPeriodValue1c: this.includedPeriodValue1c,
+      includedPeriodType1c: this.includedPeriodType1c,
+      includedExclude1d: this.includedExclude1d,
+      includedAnyAll1d: this.includedAnyAll1d,
+      includedValueSet1d: this.includedValueSet1d,
+      includedDateFrom1d: this.formatDate(this.includedDateFrom1d),
+      includedDateTo1d: this.formatDate(this.includedDateTo1d),
+      includedPeriodValue1d: this.includedPeriodValue1d,
+      includedPeriodType1d: this.includedPeriodType1d,
       includedExclude2: this.includedExclude2,
       includedAnyAll2: this.includedAnyAll2,
       includedValueSet2: this.includedValueSet2,
@@ -817,6 +891,14 @@ export class AdvancedQueryEditorComponent implements OnInit {
 
   addSameRule1b() {
     this.select1b = true;
+  }
+
+  addSameRule1c() {
+    this.select1c = true;
+  }
+
+  addSameRule1d() {
+    this.select1d = true;
   }
 
   addSameRule2() {
