@@ -80,9 +80,6 @@ BEGIN
        SET concept_join_clause = CONCAT('JOIN ',p_concepttab ,' ct ON ct.non_core_concept_id = o.non_core_concept_id '); 
    END IF;
 
-   select p_concepttab;
-   select concept_join_clause;
-
    -- filter patients by observations to create the patient cohort
    SET @sql = CONCAT('CREATE TABLE ', p_cohorttab, ' AS 
    SELECT DISTINCT o.person_id, o.patient_id, o.organization_id 
@@ -90,8 +87,6 @@ BEGIN
    AND c.organization_id = o.organization_id 
    AND c.person_id = o.person_id ', concept_join_clause ,' 
    WHERE ', p_daterange);
-
-   select  @sql;
 
    PREPARE stmt FROM @sql;
    EXECUTE stmt;
