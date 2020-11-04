@@ -75,6 +75,22 @@ DECLARE includedDateTo1b VARCHAR(30) DEFAULT NULL;
 DECLARE includedPeriodValue1b VARCHAR(10) DEFAULT NULL; 
 DECLARE includedPeriodType1b VARCHAR(20) DEFAULT NULL; 
 
+DECLARE includedExclude1c VARCHAR(10) DEFAULT NULL; 
+DECLARE includedAnyAll1c VARCHAR(10) DEFAULT NULL; 
+DECLARE includedValueSet1c VARCHAR(1000) DEFAULT NULL; 
+DECLARE includedDateFrom1c VARCHAR(30) DEFAULT NULL; 
+DECLARE includedDateTo1c VARCHAR(30) DEFAULT NULL; 
+DECLARE includedPeriodValue1c VARCHAR(10) DEFAULT NULL; 
+DECLARE includedPeriodType1c VARCHAR(20) DEFAULT NULL; 
+
+DECLARE includedExclude1d VARCHAR(10) DEFAULT NULL; 
+DECLARE includedAnyAll1d VARCHAR(10) DEFAULT NULL; 
+DECLARE includedValueSet1d VARCHAR(1000) DEFAULT NULL; 
+DECLARE includedDateFrom1d VARCHAR(30) DEFAULT NULL; 
+DECLARE includedDateTo1d VARCHAR(30) DEFAULT NULL; 
+DECLARE includedPeriodValue1d VARCHAR(10) DEFAULT NULL; 
+DECLARE includedPeriodType1d VARCHAR(20) DEFAULT NULL; 
+
 DECLARE includedExclude2 VARCHAR(10) DEFAULT NULL; 
 DECLARE includedAnyAll2 VARCHAR(10) DEFAULT NULL; 
 DECLARE includedValueSet2 VARCHAR(1000) DEFAULT NULL; 
@@ -128,6 +144,9 @@ DECLARE includedPeriodType5 VARCHAR(20) DEFAULT NULL;
 DECLARE includeExclude1String VARCHAR(1000) DEFAULT NULL; 
 DECLARE includeExclude1aString VARCHAR(1000) DEFAULT NULL; 
 DECLARE includeExclude1bString VARCHAR(1000) DEFAULT NULL; 
+DECLARE includeExclude1cString VARCHAR(1000) DEFAULT NULL; 
+DECLARE includeExclude1dString VARCHAR(1000) DEFAULT NULL; 
+
 DECLARE includeExclude2String VARCHAR(1000) DEFAULT NULL; 
 DECLARE includeExclude2aString VARCHAR(1000) DEFAULT NULL; 
 DECLARE includeExclude3String VARCHAR(1000) DEFAULT NULL; 
@@ -156,6 +175,14 @@ DECLARE observation1a_tmp VARCHAR(64) DEFAULT NULL;
 DECLARE incValueSet1b_tmp VARCHAR(64) DEFAULT NULL;
 DECLARE incConcept1b_tmp VARCHAR(64) DEFAULT NULL;
 DECLARE observation1b_tmp VARCHAR(64) DEFAULT NULL;
+
+DECLARE incValueSet1c_tmp VARCHAR(64) DEFAULT NULL;
+DECLARE incConcept1c_tmp VARCHAR(64) DEFAULT NULL;
+DECLARE observation1c_tmp VARCHAR(64) DEFAULT NULL;
+
+DECLARE incValueSet1d_tmp VARCHAR(64) DEFAULT NULL;
+DECLARE incConcept1d_tmp VARCHAR(64) DEFAULT NULL;
+DECLARE observation1d_tmp VARCHAR(64) DEFAULT NULL;
 
 DECLARE incValueSet2_tmp VARCHAR(64) DEFAULT NULL;
 DECLARE incConcept2_tmp VARCHAR(64) DEFAULT NULL;
@@ -263,6 +290,22 @@ SET includedDateTo1b = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedDateTo1b'));
 SET includedPeriodValue1b = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodValue1b'));
 SET includedPeriodType1b = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodType1b'));
 
+SET includedExclude1c = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedExclude1c'));  
+SET includedAnyAll1c = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedAnyAll1c')); 
+SET includedValueSet1c = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.includedValueSet1c'),'[',''),']',''),'"','');
+SET includedDateFrom1c = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedDateFrom1c')); 
+SET includedDateTo1c = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedDateTo1c'));  
+SET includedPeriodValue1c = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodValue1c'));
+SET includedPeriodType1c = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodType1c'));
+
+SET includedExclude1d = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedExclude1d'));  
+SET includedAnyAll1d = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedAnyAll1d')); 
+SET includedValueSet1d = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.includedValueSet1d'),'[',''),']',''),'"','');
+SET includedDateFrom1d = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedDateFrom1d')); 
+SET includedDateTo1d = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedDateTo1d'));  
+SET includedPeriodValue1d = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodValue1d'));
+SET includedPeriodType1d = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodType1d'));
+
 SET includedExclude2 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedExclude2'));
 SET includedAnyAll2 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedAnyAll2'));
 SET includedValueSet2 = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.includedValueSet2'),'[',''),']',''),'"','');  
@@ -335,6 +378,14 @@ SET incValueSet1b_tmp  = CONCAT('incValueSet1b_tmp_',query_id);
 SET incConcept1b_tmp  = CONCAT('incConcept1b_tmp_',query_id);
 SET observation1b_tmp  = CONCAT('observation1b_tmp_',query_id);
 
+SET incValueSet1c_tmp  = CONCAT('incValueSet1c_tmp_',query_id);
+SET incConcept1c_tmp  = CONCAT('incConcept1c_tmp_',query_id);
+SET observation1c_tmp  = CONCAT('observation1c_tmp_',query_id);
+
+SET incValueSet1d_tmp  = CONCAT('incValueSet1d_tmp_',query_id);
+SET incConcept1d_tmp  = CONCAT('incConcept1d_tmp_',query_id);
+SET observation1d_tmp  = CONCAT('observation1d_tmp_',query_id);
+
 SET incValueSet2_tmp  = CONCAT('incValueSet2_tmp_',query_id);
 SET incConcept2_tmp  = CONCAT('incConcept2_tmp_',query_id);
 SET observation2_tmp  = CONCAT('observation2_tmp_',query_id);
@@ -401,6 +452,22 @@ NULL, NULL, NULL, NULL, NULL,
 NULL, NULL, NULL, NULL, NULL, 
 NULL, sourceSchema , store_tmp, @includeExclude1bString);
 SET includeExclude1bString = @includeExclude1bString;
+-- rule 1c 
+CALL getIncludeExcludeString(query_id,includedExclude1c,includedAnyAll1c,includedValueSet1c, includedDateFrom1c, includedDateTo1c, 
+includedPeriodValue1c,includedPeriodType1c, incValueSet1c_tmp, incConcept1c_tmp, observation_tmp, 
+1, NULL, NULL, NULL, observation1c_tmp, 
+NULL, NULL, NULL, NULL, NULL, 
+NULL, NULL, NULL, NULL, NULL, 
+NULL, sourceSchema , store_tmp, @includeExclude1cString);
+SET includeExclude1cString = @includeExclude1cString;
+-- rule 1d
+CALL getIncludeExcludeString(query_id,includedExclude1d,includedAnyAll1d,includedValueSet1d, includedDateFrom1d, includedDateTo1d, 
+includedPeriodValue1d,includedPeriodType1d, incValueSet1d_tmp, incConcept1d_tmp, observation_tmp, 
+1, NULL, NULL, NULL, observation1d_tmp, 
+NULL, NULL, NULL, NULL, NULL, 
+NULL, NULL, NULL, NULL, NULL, 
+NULL, sourceSchema , store_tmp, @includeExclude1dString);
+SET includeExclude1dString = @includeExclude1dString;
 -- rule 2  
 CALL getIncludeExcludeString(query_id,includedExclude2,includedAnyAll2,includedValueSet2, includedDateFrom2, includedDateTo2, 
 includedPeriodValue2,includedPeriodType2, incValueSet2_tmp, incConcept2_tmp, observation_tmp, 
@@ -444,7 +511,8 @@ SET includeExclude5String = @includeExclude5String;
 
 -- build final patient cohort based on advance criteria 
 CALL buildFinalPatientCohort(query_id, patient_cohort_tmp, observation_tmp, includeExclude1String, includeExclude1aString, includeExclude1bString, 
-includeExclude2String, includeExclude2aString, includeExclude3String, includeExclude4String, includeExclude5String,sourceSchema);
+includeExclude1cString, includeExclude1dString,includeExclude2String, includeExclude2aString, includeExclude3String, includeExclude4String, 
+includeExclude5String,sourceSchema);
 
 -- build result datasets
 CALL buildResultDatasets(query_id, patient_cohort_tmp, demographics, encounters, medication, currentMedication, clinicalEvents, activeProblems, 
@@ -465,14 +533,14 @@ CALL updateQueue(query_id, schedule);
 -- remove temp tables
  SET tempTables = CONCAT(org_tmp,',',store_tmp,',',valueset_tmp,',',
  concept_tmp ,',',all_valueset_tmp,',',all_concept_tmp,',',cohort_tmp ,',',observation_tmp,',',incValueSet1_tmp,',',
- incConcept1_tmp,',',incValueSet1a_tmp,',',incConcept1a_tmp,',',incValueSet1b_tmp,',',incConcept1b_tmp,',',incValueSet2_tmp,',',
- incConcept2_tmp,',',observation2_tmp,',',incValueSet2a_tmp,',',incConcept2a_tmp,',',observation2a_tmp,',',incValueSet3_tmp,',',
+ incConcept1_tmp,',',incValueSet1a_tmp,',',incConcept1a_tmp,',',incValueSet1b_tmp,',',incConcept1b_tmp,',',incValueSet1c_tmp,',',
+ incConcept1c_tmp,',',incValueSet1d_tmp,',',incConcept1d_tmp,',',incValueSet2_tmp,',',incConcept2_tmp,',',
+ observation2_tmp,',',incValueSet2a_tmp,',',incConcept2a_tmp,',',observation2a_tmp,',',incValueSet3_tmp,',',
  incConcept3_tmp,',',observation3_tmp,',',incTestedValueSet3_tmp,',',incTestedConcept3_tmp,',',incValueSet4_tmp,',',
- incConcept4_tmp,',',observation4_tmp,',',incFollowedByValueSet4_tmp,',',incFollowedByConcept4_tmp ,',',incValueSet5_tmp,',',
- incConcept5_tmp,',',observation5_tmp,',',observation1_tmp,',',observation1a_tmp,',',observation1b_tmp,',',clinicalTypes_tmp,',',
- clinicalTypesConcept_tmp,',',encounterValueSet_tmp,',',encounterConcept_tmp,',',
- medicationValueSet_tmp,',',medicationConcept_tmp,',',clinicalEventValueSet_tmp,',',
- clinicalEventConcept_tmp,',',patient_cohort_tmp);
+ incConcept4_tmp,',',observation4_tmp,',',incFollowedByValueSet4_tmp,',',incFollowedByConcept4_tmp ,',',
+ incValueSet5_tmp,',',incConcept5_tmp,',',observation5_tmp,',',observation1_tmp,',',observation1a_tmp,',',observation1b_tmp,',',observation1c_tmp,',',
+ observation1d_tmp,',',clinicalTypes_tmp,',',clinicalTypesConcept_tmp,',',encounterValueSet_tmp,',',encounterConcept_tmp,',',medicationValueSet_tmp,',',
+ medicationConcept_tmp,',',clinicalEventValueSet_tmp,',',clinicalEventConcept_tmp,',',patient_cohort_tmp);
 
 CALL dropTempTables(tempTables);
 
