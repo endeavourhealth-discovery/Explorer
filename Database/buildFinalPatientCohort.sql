@@ -177,7 +177,7 @@ BEGIN
     DEALLOCATE PREPARE stmt;
 
     SET @sql = CONCAT('CREATE TABLE ', p_patientcohorttab,' AS 
-    SELECT q.query_id, 
+    SELECT DISTINCT q.query_id, 
            p.id AS patient_id, 
            p.person_id, 
            p.organization_id, '
