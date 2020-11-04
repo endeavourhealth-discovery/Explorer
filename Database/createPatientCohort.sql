@@ -18,6 +18,7 @@ CREATE PROCEDURE createPatientCohort(
 BEGIN
 
    DECLARE p_death VARCHAR(100) DEFAULT NULL;
+   DECLARE concept_join_clause VARCHAR(255) DEFAULT NULL;
 
    IF p_regstatus <> '1' THEN
     SET p_death = 'p.date_of_death IS NULL';
@@ -73,13 +74,25 @@ BEGIN
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;
 
+   IF p_concepttab IS NULL THEN
+       SET concept_join_clause = 'JOIN (SELECT 1 ) ct '; -- dummy join
+   ELSE
+       SET concept_join_clause = CONCAT('JOIN ',p_concepttab ,' ct ON ct.non_core_concept_id = o.non_core_concept_id '); 
+   END IF;
+
+   select p_concepttab;
+   select concept_join_clause;
+
    -- filter patients by observations to create the patient cohort
    SET @sql = CONCAT('CREATE TABLE ', p_cohorttab, ' AS 
-      SELECT DISTINCT o.person_id, o.patient_id, o.organization_id 
-      FROM qry_tmp c JOIN ',p_schema ,'.observation o 
-      ON c.patient_id = o.patient_id AND c.organization_id = o.organization_id AND c.person_id = o.person_id 
-      JOIN ',p_concepttab ,' ct ON ct.non_core_concept_id = o.non_core_concept_id 
-      WHERE ',p_daterange);
+   SELECT DISTINCT o.person_id, o.patient_id, o.organization_id 
+   FROM qry_tmp c JOIN ',p_schema ,'.observation o ON c.patient_id = o.patient_id 
+   AND c.organization_id = o.organization_id 
+   AND c.person_id = o.person_id ', concept_join_clause ,' 
+   WHERE ', p_daterange);
+
+   select  @sql;
+
    PREPARE stmt FROM @sql;
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;

@@ -105,15 +105,17 @@ BEGIN
   IF p_cohortValue IS NOT NULL THEN
     CALL getValueSetString(p_cohortValue, p_storetab, @valueString);
     SET cohortvalueset = @valueString;
-  ELSE  -- no limit
-    SET cohortvalueset = '1';
+    -- create valueset cohort
+    CALL createValueSet(cohortvalueset, p_valuesettab);
+    -- create concept cohort from the valueset
+    CALL createConcept(p_concepttab, p_valuesettab, p_schema);
+  ELSE  -- if no value set is selected
+    SET cohortvalueset = NULL;
+    SET p_concepttab = NULL;
   END IF;
 
 -- build cohort definition -- 
--- create valueset cohort
-  CALL createValueSet(cohortvalueset, p_valuesettab);
--- create concept cohort from the valueset
-  CALL createConcept(p_concepttab, p_valuesettab, p_schema);
+
 -- create the patient cohort
   CALL createPatientCohort(orgrange, regstatus, agerange, genderrange, postcoderange, daterange, p_concepttab, p_cohorttab, p_schema);
 
@@ -121,8 +123,7 @@ BEGIN
   CALL createValueSet('1', p_allvaluesettab);
 -- create all concept cohort from the valueset
   CALL createConcept(p_allconcepttab, p_allvaluesettab, p_schema);
-
--- create observation cohort from the patient cohort
+-- create observation cohort from the patient cohort for all value set
   CALL createObservationCohort(p_observationtab, p_cohorttab, p_allconcepttab, p_schema);
 
 END//
