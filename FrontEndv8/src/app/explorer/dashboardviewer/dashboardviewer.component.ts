@@ -8,6 +8,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {PatientComponent} from "../patient/patient.component";
 import {Globals} from '../globals'
 import {TableData} from "./model/TableData";
+import {ngxCsv} from "ngx-csv";
 
 interface widget {
   icon: string;
@@ -909,9 +910,46 @@ export class DashboardViewerComponent implements OnInit {
     else
       csvData = this.ConvertToCSVSingle(this.chartResultsSingle1,this.selectedCCGString1,this.selectedSeries1);
 
-    let blob = new Blob([csvData], { type: 'text/csv' });
-    let url= window.URL.createObjectURL(blob);
-    window.open(url);
+    let exportData = this.csvJSON(csvData);
+
+    if (exportData) {
+      let options = {
+        fieldSeparator: ',',
+        quoteStrings: '"',
+        decimalseparator: '.',
+        showLabels: true,
+        headers: ['group','key','point','count'],
+        showTitle: false,
+        title: '`````dashboard`````',
+        useTextFile: false,
+        useBom: false,
+      };
+      new ngxCsv(exportData, 'dashboard', options);
+    }
+  }
+
+  csvJSON(csv){
+    var lines=csv.split("\n");
+
+    var result = [];
+
+    var headers=lines[0].split(",");
+
+    headers = ["group","key","point","count"];
+
+    for(var i=0;i<lines.length-1;i++){
+
+      var obj = {};
+      var currentline=lines[i].split(",");
+
+      for(var j=0;j<headers.length;j++){
+        obj[headers[j]] = currentline[j];
+      }
+
+      result.push(obj);
+
+    }
+    return result;
   }
 
   download2() {
@@ -921,9 +959,22 @@ export class DashboardViewerComponent implements OnInit {
     else
       csvData = this.ConvertToCSVSingle(this.chartResultsSingle2,this.selectedCCGString2,this.selectedSeries2);
 
-    let blob = new Blob([csvData], { type: 'text/csv' });
-    let url= window.URL.createObjectURL(blob);
-    window.open(url);
+    let exportData = this.csvJSON(csvData);
+
+    if (exportData) {
+      let options = {
+        fieldSeparator: ',',
+        quoteStrings: '"',
+        decimalseparator: '.',
+        showLabels: true,
+        headers: ['group','key','point','count'],
+        showTitle: false,
+        title: '`````dashboard`````',
+        useTextFile: false,
+        useBom: false,
+      };
+      new ngxCsv(exportData, 'dashboard', options);
+    }
   }
 
   download3() {
@@ -933,9 +984,22 @@ export class DashboardViewerComponent implements OnInit {
     else
       csvData = this.ConvertToCSVSingle(this.chartResultsSingle3,this.selectedCCGString3,this.selectedSeries3);
 
-    let blob = new Blob([csvData], { type: 'text/csv' });
-    let url= window.URL.createObjectURL(blob);
-    window.open(url);
+    let exportData = this.csvJSON(csvData);
+
+    if (exportData) {
+      let options = {
+        fieldSeparator: ',',
+        quoteStrings: '"',
+        decimalseparator: '.',
+        showLabels: true,
+        headers: ['group','key','point','count'],
+        showTitle: false,
+        title: '`````dashboard`````',
+        useTextFile: false,
+        useBom: false,
+      };
+      new ngxCsv(exportData, 'dashboard', options);
+    }
   }
 
   download4() {
@@ -945,14 +1009,27 @@ export class DashboardViewerComponent implements OnInit {
     else
       csvData = this.ConvertToCSVSingle(this.chartResultsSingle4,this.selectedCCGString4,this.selectedSeries4);
 
-    let blob = new Blob([csvData], { type: 'text/csv' });
-    let url= window.URL.createObjectURL(blob);
-    window.open(url);
+    let exportData = this.csvJSON(csvData);
+
+    if (exportData) {
+      let options = {
+        fieldSeparator: ',',
+        quoteStrings: '"',
+        decimalseparator: '.',
+        showLabels: true,
+        headers: ['group','key','point','count'],
+        showTitle: false,
+        title: '`````dashboard`````',
+        useTextFile: false,
+        useBom: false,
+      };
+      new ngxCsv(exportData, 'dashboard', options);
+    }
   }
 
   ConvertToCSVMulti(objArray, group) {
     let array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
-    let csv = 'group,key,point,count\r\n';
+    let csv = '';
     for (let key in array) {
       if (array.hasOwnProperty(key)) {
         for (let key2 in array[key].series) {
