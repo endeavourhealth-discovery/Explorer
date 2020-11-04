@@ -62,6 +62,16 @@ SET p_includedEarliestLatest = IF(p_includedEarliestLatest = '', NULL, p_include
 SET p_includedOperator = IF(p_includedOperator = '', NULL, p_includedOperator); 
 SET p_includedEntryValue = IF(p_includedEntryValue = '', NULL, p_includedEntryValue); 
 
+SET p_includedAnyAllTested = IF(p_includedAnyAllTested = '', NULL, p_includedAnyAllTested);  
+SET p_includedTestedValueSet = IF(p_includedTestedValueSet = '', NULL, p_includedTestedValueSet);  
+
+SET p_includedAreNot = IF(p_includedAreNot = '', NULL, p_includedAreNot);  
+SET p_includedAnyAllFollowedBy = IF(p_includedAnyAllFollowedBy = '', NULL, p_includedAnyAllFollowedBy);  
+SET p_includedFollowedByValueSet = IF(p_includedFollowedByValueSet = '', NULL, p_includedFollowedByValueSet);  
+
+SET p_greaterless = IF(p_greaterless = '', NULL, p_greaterless);  
+SET p_greaterlessvalue = IF(p_greaterlessvalue = '', NULL, p_greaterlessvalue);  
+
  IF p_filterType = 1 THEN -- filter rule 1
 
     IF p_includedExclude IS NOT NULL AND
