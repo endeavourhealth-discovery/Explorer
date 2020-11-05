@@ -22,9 +22,11 @@ interface savedQuery {
   ageTo: string;
   gender: string;
   postcode: string;
-  cohortValue: string;
-  valueDateFrom: string;
-  valueDateTo: string;
+  registrationExclude: string;
+  registrationDateFrom: string;
+  registrationDateTo: string;
+  registrationPeriodValue: string;
+  registrationPeriodType: string;
 
   schedule: string;
   delivery: string;
@@ -90,6 +92,10 @@ interface savedQuery {
   includedTestedValueSet3: string;
   includedAnyAll3: string;
   includedAnyAllTested3: string;
+  includedDateFrom3: string;
+  includedDateTo3: string;
+  includedPeriodValue3: string;
+  includedPeriodType3: string;
   includedExclude4: string;
   includedValueSet4: string;
   includedFollowedByValueSet4: string;
@@ -198,9 +204,11 @@ export class AdvancedQueryEditorComponent implements OnInit {
   selectedOrganisation: string = '';
   selectedIncludedOrganisation: string = '';
   selectedRegistration: string = '';
-  selectedCohortValueSet: string = '';
-  valueDateFrom: string = this.formatDate(new Date());
-  valueDateTo: string = this.formatDate(new Date());
+  registrationExclude: string = '';
+  registrationDateFrom: string = this.formatDate(new Date());
+  registrationDateTo: string = this.formatDate(new Date());
+  registrationPeriodValue: string= '';
+  registrationPeriodType: string= '';
   ageFrom: string = '';
   ageTo: string = '';
   selectedGender: string = '';
@@ -267,6 +275,10 @@ export class AdvancedQueryEditorComponent implements OnInit {
   includedTestedValueSet3: string = '';
   includedAnyAll3: string = '';
   includedAnyAllTested3: string = '';
+  includedDateFrom3: string = '';
+  includedDateTo3: string = '';
+  includedPeriodValue3: string = '';
+  includedPeriodType3: string = '';
   includedExclude4: string = '';
   includedValueSet4: string = '';
   includedFollowedByValueSet4: string = '';
@@ -433,9 +445,11 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.ageTo = query.ageTo;
       this.selectedGender = query.gender;
       this.postcode = query.postcode;
-      this.selectedCohortValueSet = query.cohortValue;
-      this.valueDateFrom = query.valueDateFrom;
-      this.valueDateTo = query.valueDateTo;
+      this.registrationExclude = query.registrationExclude;
+      this.registrationDateFrom = query.registrationDateFrom;
+      this.registrationDateTo = query.registrationDateTo;
+      this.registrationPeriodValue = query.registrationPeriodValue;
+      this.registrationPeriodType = query.registrationPeriodType;
       this.selectedSchedule = query.schedule;
       this.selectedDelivery = query.delivery;
       this.includedExclude1 = query.includedExclude1;
@@ -499,6 +513,10 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.includedTestedValueSet3 = query.includedTestedValueSet3;
       this.includedAnyAll3 = query.includedAnyAll3;
       this.includedAnyAllTested3 = query.includedAnyAllTested3;
+      this.includedDateFrom3 = query.includedDateFrom3;
+      this.includedDateTo3 = query.includedDateTo3;
+      this.includedPeriodValue3 = query.includedPeriodValue3;
+      this.includedPeriodType3 = query.includedPeriodType3;
       this.includedExclude4 = query.includedExclude4;
       this.includedValueSet4 = query.includedValueSet4;
       this.includedFollowedByValueSet4 = query.includedFollowedByValueSet4;
@@ -570,7 +588,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
       control1: ['', Validators.required], control2: ['', Validators.required]
     });
     this.secondFormGroup = this._formBuilder.group({
-      control17: [''], control3: ['', Validators.required], control4: ['', Validators.required], control5: [''], control20: [''], control21: [''], control6: [''], control7: [''], control8: [''], control9: ['']
+      control17: [''], control3: ['', Validators.required], control4: ['', Validators.required], control5: [''], control5a: [''], control5b: [''], control20: [''], control21: [''], control6: [''], control7: [''], control8: [''], control9: ['']
     });
     this.thirdFormGroup = this._formBuilder.group({
       control22: [''], control23: [''], control24: [''], control25: [''],
@@ -593,7 +611,8 @@ export class AdvancedQueryEditorComponent implements OnInit {
       control53: [''], control54: [''], control55: [''], control56: [''],
       control57: [''], control58: [''], control59: [''], control60: [''],
       control61: [''], control62: [''], control63: [''], control64: [''],
-      control61a: [''], control62a: [''], control63a: [''], control64a: ['']
+      control61a: [''], control62a: [''], control63a: [''], control64a: [''],
+      control65: [''], control66: [''], control67: [''], control68: ['']
     });
     this.fourthFormGroup = this._formBuilder.group({
       control65a: [''],  control65e: [''], control66a: [''], control66c: [''], control66d: [''], control66e: [''], control66g: [''], control67a: [''],
@@ -730,9 +749,11 @@ export class AdvancedQueryEditorComponent implements OnInit {
       providerOrganisation: this.selectedOrganisation,
       includedOrganisation: this.selectedIncludedOrganisation,
       registrationStatus: this.selectedRegistration,
-      cohortValue: this.selectedCohortValueSet,
-      valueDateFrom: this.formatDate(this.valueDateFrom),
-      valueDateTo: this.formatDate(this.valueDateTo),
+      registrationExclude: this.registrationExclude,
+      registrationDateFrom: this.formatDate(this.registrationDateFrom),
+      registrationDateTo: this.formatDate(this.registrationDateTo),
+      registrationPeriodValue: this.registrationPeriodValue,
+      registrationPeriodType: this.registrationPeriodType,
       ageFrom: this.ageFrom,
       ageTo: this.ageTo,
       gender: this.selectedGender,
@@ -797,6 +818,10 @@ export class AdvancedQueryEditorComponent implements OnInit {
       includedValueSet3: this.includedValueSet3,
       includedEarliestLatest3: this.includedEarliestLatest3,
       includedAnyAllTested3: this.includedAnyAllTested3,
+      includedDateFrom3: this.formatDate(this.includedDateFrom3),
+      includedDateTo3: this.formatDate(this.includedDateTo3),
+      includedPeriodValue3: this.includedPeriodValue3,
+      includedPeriodType3: this.includedPeriodType3,
       includedTestedValueSet3: this.includedTestedValueSet3,
       includedExclude4: this.includedExclude4,
       includedAnyAll4: this.includedAnyAll4,

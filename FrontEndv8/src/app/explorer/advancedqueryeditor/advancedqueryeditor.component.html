@@ -33,7 +33,7 @@
             <p>Name of query.</p>
           </div>
         </div>
-        <div style="margin-top: 380px" mat-dialog-actions align="end">
+        <div style="margin-top: 470px" mat-dialog-actions align="end">
           <button style="margin-right: 15px" mat-button color="accent" (click)="onCancelClick()">Cancel</button>
           <button style="margin-right: 15px" mat-flat-button color="accent" (click)="stepper.next()">Next</button>
           <button style="margin-right: 15px" mat-flat-button color="accent" [disabled]="disableForm" (click)="saveQuery()">Save</button>
@@ -75,32 +75,45 @@
             </mat-form-field>
           </div>
           <br/>
-          <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            <mat-form-field appearance="outline" style="margin-left: 25px; width: 500px">
-              <mat-label>Cohort value set</mat-label>
-              <mat-select multiple [(ngModel)]="selectedCohortValueSet" formControlName="control5" (ngModelChange)="formChanged()">
-                <mat-select-search [formControl]="filterCtrl"></mat-select-search>
-                <mat-option *ngFor="let result of filteredValueset | async" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
-                  {{result}}
+          <div class="flex" fxLayout.xs="column"  fxLayoutAlign="start">
+            <mat-form-field appearance="outline" style="margin-left: 25px; width: 155px">
+              <mat-label>Include/Exclude</mat-label>
+              <mat-select [(ngModel)]="registrationExclude" formControlName="control5" (ngModelChange)="formChanged()">
+                <mat-option *ngFor="let value of exclude" [value]="value.exclude">
+                  {{value.exclude}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <p style="margin-left:10px; margin-top: 20px"> patients who registered within the last</p>
+            <br/>
+          </div>
+          <div class="flex" fxLayout.xs="column"  fxLayoutAlign="start">
+            <mat-form-field appearance="outline" style="margin-left: 25px; width: 80px">
+              <input matInput placeholder="Value" [(ngModel)]="registrationPeriodValue" formControlName="control5a" (keydown.enter)="stepper.next()">
+            </mat-form-field>
+            <mat-form-field appearance="outline" style="margin-left: 10px; width: 170px">
+              <mat-label>Days/Weeks/Months</mat-label>
+              <mat-select [(ngModel)]="registrationPeriodType" formControlName="control5b" (ngModelChange)="formChanged()">
+                <mat-option *ngFor="let value of period" [value]="value.period">
+                  {{value.period}}
                 </mat-option>
               </mat-select>
             </mat-form-field>
           </div>
-          <br/>
-
+          <p style="margin-left:25px"> or within the registration date range from</p>
           <div class="flex" fxLayout.xs="column"  fxLayoutAlign="start">
-            <mat-form-field class="example-full-width" appearance="outline" style="margin-left: 25px; width: 140px">
+            <mat-form-field class="example-full-width" appearance="outline" style="margin-left: 25px; width: 150px">
               <mat-label>Date range from</mat-label>
-              <input matInput [matDatepicker]="valuepicker1" placeholder="Date from" [(ngModel)]="valueDateFrom" formControlName="control20">
+              <input matInput [matDatepicker]="valuepicker1" placeholder="Date from" [(ngModel)]="registrationDateFrom" formControlName="control20">
               <mat-datepicker-toggle matSuffix [for]="valuepicker1">
                 <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
               </mat-datepicker-toggle>
               <mat-datepicker #valuepicker1></mat-datepicker>
             </mat-form-field>
 
-            <mat-form-field class="example-full-width" appearance="outline" style="margin-left: 20px; width: 140px">
+            <mat-form-field class="example-full-width" appearance="outline" style="margin-left: 20px; width: 150px">
               <mat-label>Date range to</mat-label>
-              <input matInput [matDatepicker]="valuepicker2" placeholder="Date to" [(ngModel)]="valueDateTo" formControlName="control21">
+              <input matInput [matDatepicker]="valuepicker2" placeholder="Date to" [(ngModel)]="registrationDateTo" formControlName="control21">
               <mat-datepicker-toggle matSuffix [for]="valuepicker2">
                 <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
               </mat-datepicker-toggle>
@@ -149,25 +162,6 @@
             This is the list of organisations whose records are included for the patients in the base cohort. For example, patients who have records in a GP practice might be in the cohort base, they might have visited hospital and the hospital could also be included in the included organisation list. If an organisation is not defined, those organisations records are not included.
           </div>
 
-          <div style="margin-top: 35px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            Limit the cohort by patient registration status.
-          </div>
-
-          <div style="margin-top: 50px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            Limit the cohort to only include patients that have clinical events, medication or encounters containing concepts that are part of the selected value set(s).
-          </div>
-
-          <div style="margin-top: 60px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            Filter the value set by date range.
-          </div>
-
-          <div style="margin-top: 57px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            Limit the cohort by age range.
-          </div>
-
-          <div style="margin-top: 57px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            Limit the cohort by gender and/or partial or full post code.
-          </div>
         </div>
 
         <div style="margin-top: 20px" mat-dialog-actions align="end">
@@ -196,7 +190,7 @@
             </mat-select>
           </mat-form-field>
           <br/>
-          <p style="margin-left: 10px; margin-top: 28px"><span style="color: blue">patients</span> if they have <span style="color: blue">entries</span> containing <span style="color: blue">concepts</span> that are part of</p>
+          <p style="margin-left: 10px; margin-top: 28px">patients with records containing <span style="color: blue">concepts</span> of</p>
           <mat-form-field appearance="standard" style="margin-left: 10px; width: 70px">
             <mat-label>Any/All</mat-label>
             <mat-select [(ngModel)]="includedAnyAll1" formControlName="control46" (ngModelChange)="formChanged()">
@@ -268,7 +262,7 @@
             </mat-select>
           </mat-form-field>
           <br/>
-          <p style="margin-left: 10px; margin-top: 28px"><span style="color: blue">patients</span> if they have <span style="color: blue">entries</span> containing <span style="color: blue">concepts</span> that are part of</p>
+          <p style="margin-left: 10px; margin-top: 28px">patients with records containing <span style="color: blue">concepts</span> of</p>
           <mat-form-field appearance="standard" style="margin-left: 10px; width: 70px">
             <mat-label>Any/All</mat-label>
             <mat-select [(ngModel)]="includedAnyAll1a" formControlName="control46a" (ngModelChange)="formChanged()">
@@ -340,7 +334,7 @@
             </mat-select>
           </mat-form-field>
           <br/>
-          <p style="margin-left: 10px; margin-top: 28px"><span style="color: blue">patients</span> if they have <span style="color: blue">entries</span> containing <span style="color: blue">concepts</span> that are part of</p>
+          <p style="margin-left: 10px; margin-top: 28px">patients with records containing <span style="color: blue">concepts</span> of</p>
           <mat-form-field appearance="standard" style="margin-left: 10px; width: 70px">
             <mat-label>Any/All</mat-label>
             <mat-select [(ngModel)]="includedAnyAll1b" formControlName="control46b" (ngModelChange)="formChanged()">
@@ -412,7 +406,7 @@
               </mat-select>
             </mat-form-field>
             <br/>
-            <p style="margin-left: 10px; margin-top: 28px"><span style="color: blue">patients</span> if they have <span style="color: blue">entries</span> containing <span style="color: blue">concepts</span> that are part of</p>
+            <p style="margin-left: 10px; margin-top: 28px">patients with records containing <span style="color: blue">concepts</span> of</p>
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 70px">
               <mat-label>Any/All</mat-label>
               <mat-select [(ngModel)]="includedAnyAll1c" formControlName="control46c" (ngModelChange)="formChanged()">
@@ -484,7 +478,7 @@
               </mat-select>
             </mat-form-field>
             <br/>
-            <p style="margin-left: 10px; margin-top: 28px"><span style="color: blue">patients</span> if they have <span style="color: blue">entries</span> containing <span style="color: blue">concepts</span> that are part of</p>
+            <p style="margin-left: 10px; margin-top: 28px">patients with records containing <span style="color: blue">concepts</span> of</p>
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 70px">
               <mat-label>Any/All</mat-label>
               <mat-select [(ngModel)]="includedAnyAll1d" formControlName="control46d" (ngModelChange)="formChanged()">
@@ -553,7 +547,7 @@
             </mat-select>
           </mat-form-field>
           <br/>
-          <p style="margin-left: 10px; margin-top: 29px"><span style="color: blue">patients</span> if they have <span style="color: blue">entries</span> containing <span style="color: blue">concepts</span> that are part of</p>
+          <p style="margin-left: 10px; margin-top: 29px">patients with records containing <span style="color: blue">concepts</span> of</p>
           <mat-form-field appearance="standard" style="margin-left: 10px; width: 70px">
             <mat-label>Any/All</mat-label>
             <mat-select [(ngModel)]="includedAnyAll2" formControlName="control49" (ngModelChange)="formChanged()">
@@ -654,7 +648,7 @@
             </mat-select>
           </mat-form-field>
           <br/>
-          <p style="margin-left: 10px; margin-top: 29px"><span style="color: blue">patients</span> if they have <span style="color: blue">entries</span> containing <span style="color: blue">concepts</span> that are part of</p>
+          <p style="margin-left: 10px; margin-top: 29px">patients with records containing <span style="color: blue">concepts</span> of</p>
           <mat-form-field appearance="standard" style="margin-left: 10px; width: 70px">
             <mat-label>Any/All</mat-label>
             <mat-select [(ngModel)]="includedAnyAll2a" formControlName="control50" (ngModelChange)="formChanged()">
@@ -750,7 +744,7 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
-          <p style="margin-left: 10px; margin-top: 28px"><span style="color: blue">patients</span> if they have <span style="color: blue">entries</span> containing <span style="color: blue">concepts</span> that are part of</p>
+          <p style="margin-left: 10px; margin-top: 28px">patients with records containing <span style="color: blue">concepts</span> of</p>
           <mat-form-field appearance="standard" style="margin-left: 10px; width: 70px">
             <mat-label>Any/All</mat-label>
             <mat-select [(ngModel)]="includedAnyAll3" formControlName="control51" (ngModelChange)="formChanged()">
@@ -789,7 +783,7 @@
                 </mat-option>
               </mat-select>
             </mat-form-field>
-            <p style="margin-left: 10px; margin-top: 28px">of</p>
+            <p style="margin-left: 10px; margin-top: 28px"> of the <span style="color: blue">value set(s)</span></p>
             <mat-form-field appearance="standard" style="width: 500px; margin-left: 10px">
               <mat-label>Cohort value set</mat-label>
               <mat-select multiple [(ngModel)]="includedTestedValueSet3" formControlName="control34" (ngModelChange)="formChanged()">
@@ -800,6 +794,44 @@
               </mat-select>
             </mat-form-field>
           </div>
+          <br/>
+          <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <p style="margin-left: 10px; margin-top: 28px">within the <span style="color: blue">time period</span></p>
+            <mat-form-field class="example-full-width" appearance="standard" style="margin-left: 10px; width: 120px">
+              <mat-label>Date from</mat-label>
+              <input matInput [matDatepicker]="picker93" placeholder="Date from" [(ngModel)]="includedDateFrom3" formControlName="control65">
+              <mat-datepicker-toggle matSuffix [for]="picker93">
+                <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+              </mat-datepicker-toggle>
+              <mat-datepicker #picker93></mat-datepicker>
+            </mat-form-field>
+            <p style="margin-left: 10px; margin-top: 28px">to</p>
+            <mat-form-field class="example-full-width" appearance="standard" style="margin-left: 10px; width: 120px">
+              <mat-label>Date to</mat-label>
+              <input matInput [matDatepicker]="picker103" placeholder="Date to" [(ngModel)]="includedDateTo3" formControlName="control66">
+              <mat-datepicker-toggle matSuffix [for]="picker103">
+                <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+              </mat-datepicker-toggle>
+              <mat-datepicker #picker103></mat-datepicker>
+            </mat-form-field>
+            <br/>
+            <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <p style="margin-left: 10px; margin-top: 28px">or <span style="color: blue">within the last</span></p>
+              <mat-form-field appearance="standard" style="margin-left: 10px; width: 60px">
+                <mat-label>Period</mat-label>
+                <input matInput placeholder="Value" [(ngModel)]="includedPeriodValue3" formControlName="control67" (keydown.enter)="stepper.next()">
+              </mat-form-field>
+              <mat-form-field appearance="standard" style="margin-left: 10px; width: 160px">
+                <mat-label>Days/Weeks/Months</mat-label>
+                <mat-select [(ngModel)]="includedPeriodType3" formControlName="control68" (ngModelChange)="formChanged()">
+                  <mat-option *ngFor="let value of period" [value]="value.period">
+                    {{value.period}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+
         </div>
 
         <br/>
@@ -815,7 +847,7 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
-          <p style="margin-left: 10px; margin-top: 28px"><span style="color: blue">patients</span> if they have <span style="color: blue">entries</span> containing <span style="color: blue">concepts</span> that are part of</p>
+          <p style="margin-left: 10px; margin-top: 28px">patients with records containing <span style="color: blue">concepts</span> of</p>
           <mat-form-field appearance="standard" style="margin-left: 10px; width: 70px">
             <mat-label>Any/All</mat-label>
             <mat-select [(ngModel)]="includedAnyAll4" formControlName="control53" (ngModelChange)="formChanged()">
@@ -843,7 +875,7 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
-          <p style="margin-left: 10px; margin-top: 28px; display: inline"><span style="color: blue">followed</span> by <span style="color: blue">entries</span> containing <span style="color: blue">concepts</span> that are part of</p>
+          <p style="margin-left: 10px; margin-top: 28px; display: inline"><span style="color: blue">followed</span> by <span style="color: blue">entries</span> containing <span style="color: blue">concepts</span> of </p>
           <mat-form-field appearance="standard" style="margin-left: 10px; width: 70px">
             <mat-label>Any/All</mat-label>
             <mat-select [(ngModel)]="includedAnyAllFollowedBy4" formControlName="control55" (ngModelChange)="formChanged()">
@@ -914,7 +946,7 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
-          <p style="margin-left: 10px; margin-top: 28px"><span style="color: blue">patients</span> if they have <span style="color: blue">entries</span> containing <span style="color: blue">concepts</span> that are part of</p>
+          <p style="margin-left: 10px; margin-top: 28px">patients with records containing <span style="color: blue">concepts</span> of</p>
           <mat-form-field appearance="standard" style="margin-left: 10px; width: 70px">
             <mat-label>Any/All</mat-label>
             <mat-select [(ngModel)]="includedAnyAll5" formControlName="control56" (ngModelChange)="formChanged()">
@@ -1187,7 +1219,7 @@
           </tr>
         </table>
 
-        <div style="margin-top: 50px" mat-dialog-actions align="end">
+        <div style="margin-top: 140px" mat-dialog-actions align="end">
           <button style="margin-right: 15px" mat-button color="accent" (click)="onCancelClick()">Cancel</button>
           <button style="margin-right: 15px" mat-button color="accent" matStepperPrevious>Back</button>
           <button style="margin-right: 15px" mat-flat-button color="accent" (click)="stepper.next()">Next</button>
@@ -1236,7 +1268,7 @@
           </div>
         </div>
 
-        <div style="margin-top: 380px" mat-dialog-actions align="end">
+        <div style="margin-top: 480px" mat-dialog-actions align="end">
           <button style="margin-right: 15px" mat-button color="accent" (click)="onCancelClick()">Cancel</button>
           <button style="margin-right: 15px" mat-button color="accent" matStepperPrevious>Back</button>
           <button style="margin-right: 15px" mat-flat-button color="accent" [disabled]="disableForm" (click)="saveQuery()">Save</button>
