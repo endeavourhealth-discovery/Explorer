@@ -1038,7 +1038,7 @@ export class DashboardViewerComponent implements OnInit {
             if (point.toString().indexOf("GMT") > -1) { // date type of series
               point = this.formatDate(point);
             }
-            csv += group.replaceAll(',','|')+ ',' + array[key].name+ ',' + point + ',' + array[key].series[key2].value + '\r\n';
+            csv += group.replaceAll(',','|')+ ',' + array[key].name+ ',' + point + ',' + array[key].series[key2].value + '\n';
           }
         }
       }
@@ -1056,7 +1056,7 @@ export class DashboardViewerComponent implements OnInit {
         if (point.toString().indexOf("GMT") > -1) { // date type of series
           point = this.formatDate(point);
         }
-        csv += group.replaceAll(',','|')+ ',' +series+ ',' + point + ',' + array[key].value + '\r\n';
+        csv += group.replaceAll(',','|')+ ',' +series+ ',' + point + ',' + array[key].value + '\n';
       }
     }
     return csv;
