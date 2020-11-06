@@ -47,7 +47,7 @@
         <br/>
         <div class="summary-column">
           <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            <mat-form-field appearance="outline" style="margin-left: 25px; width: 500px">
+            <mat-form-field appearance="outline" style="margin-left: 25px; width: 450px">
               <mat-label>Provider organisations</mat-label>
               <mat-select multiple [(ngModel)]="selectedOrganisation" formControlName="control3" (ngModelChange)="formChanged()" required>
                 <mat-option *ngFor="let result of orgList" [value]="result">{{result}}</mat-option>
@@ -56,7 +56,7 @@
           </div>
           <br/>
           <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            <mat-form-field appearance="outline" style="margin-left: 25px; width: 500px">
+            <mat-form-field appearance="outline" style="margin-left: 25px; width: 450px">
               <mat-label>Included organisations</mat-label>
               <mat-select multiple [(ngModel)]="selectedIncludedOrganisation" formControlName="control17" (ngModelChange)="formChanged()">
                 <mat-option *ngFor="let result of orgIncList" [value]="result">{{result}}</mat-option>
@@ -65,7 +65,7 @@
           </div>
           <br/>
           <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            <mat-form-field appearance="outline" style="margin-left: 25px; width: 500px">
+            <mat-form-field appearance="outline" style="margin-left: 25px; width: 450px">
               <mat-label>Patient GP registration status</mat-label>
               <mat-select [(ngModel)]="selectedRegistration" formControlName="control4" (ngModelChange)="formChanged()" required>
                 <mat-option *ngFor="let registration of registrations" [value]="registration.regValue">
@@ -190,7 +190,7 @@
             </mat-select>
           </mat-form-field>
           <br/>
-          <p style="margin-left: 10px; margin-top: 28px">patients with records containing <span style="color: blue">concepts</span> of</p>
+          <p style="margin-left: 10px; margin-top: 28px">patients with records containing <span style="color: blue">concepts</span> matching</p>
           <mat-form-field appearance="standard" style="margin-left: 10px; width: 70px">
             <mat-label>Any/All</mat-label>
             <mat-select [(ngModel)]="includedAnyAll1" formControlName="control46" (ngModelChange)="formChanged()">
@@ -200,7 +200,7 @@
             </mat-select>
           </mat-form-field>
           <p style="margin-left: 10px; margin-top: 28px"> of the <span style="color: blue">value set(s)</span></p>
-          <mat-form-field appearance="standard" style="width: 500px; margin-left: 10px">
+          <mat-form-field appearance="standard" style="width: 450px; margin-left: 10px">
             <mat-label>Cohort value set</mat-label>
             <mat-select multiple [(ngModel)]="includedValueSet1" formControlName="control23" (ngModelChange)="formChanged()">
               <mat-select-search [formControl]="filterCtrl"></mat-select-search>
@@ -229,7 +229,15 @@
               </mat-datepicker-toggle>
               <mat-datepicker #picker4></mat-datepicker>
             </mat-form-field>
-            <p style="margin-left: 10px; margin-top: 28px">or <span style="color: blue">within</span> the <span style="color: blue">last</span></p>
+            <p style="margin-left: 10px; margin-top: 28px">/ </p>
+            <mat-form-field appearance="standard" style="margin-left: 10px; width: 130px">
+              <mat-label>Within/Before</mat-label>
+              <mat-select [(ngModel)]="includedPeriodOperator1" formControlName="control147" (ngModelChange)="formChanged()">
+                <mat-option *ngFor="let value of withinBefore" [value]="value.withinBefore">
+                  {{value.withinBefore}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 60px">
               <mat-label>Period</mat-label>
               <input matInput placeholder="Value" [(ngModel)]="includedPeriodValue1" formControlName="control47" (keydown.enter)="stepper.next()">
@@ -241,7 +249,7 @@
                   {{value.period}}
                 </mat-option>
               </mat-select>
-            </mat-form-field>
+            </mat-form-field><p style="margin-left: 10px; margin-top: 28px"> of the run date</p>
           </div>
           <div mat-dialog-actions style="margin-bottom: 10px; margin-left: 20px" *ngIf="addQuery1">
             <button mat-flat-button color="accent" (click)="addSameRule1()">Add same rule</button>
@@ -262,7 +270,7 @@
             </mat-select>
           </mat-form-field>
           <br/>
-          <p style="margin-left: 10px; margin-top: 28px">patients with records containing <span style="color: blue">concepts</span> of</p>
+          <p style="margin-left: 10px; margin-top: 28px">patients with records containing <span style="color: blue">concepts</span> matching</p>
           <mat-form-field appearance="standard" style="margin-left: 10px; width: 70px">
             <mat-label>Any/All</mat-label>
             <mat-select [(ngModel)]="includedAnyAll1a" formControlName="control46a" (ngModelChange)="formChanged()">
@@ -272,7 +280,7 @@
             </mat-select>
           </mat-form-field>
           <p style="margin-left: 10px; margin-top: 28px"> of the <span style="color: blue">value set(s)</span></p>
-          <mat-form-field appearance="standard" style="width: 500px; margin-left: 10px">
+          <mat-form-field appearance="standard" style="width: 450px; margin-left: 10px">
             <mat-label>Cohort value set</mat-label>
             <mat-select multiple [(ngModel)]="includedValueSet1a" formControlName="control23a" (ngModelChange)="formChanged()">
               <mat-select-search [formControl]="filterCtrl"></mat-select-search>
@@ -301,7 +309,15 @@
               </mat-datepicker-toggle>
               <mat-datepicker #picker4a></mat-datepicker>
             </mat-form-field>
-            <p style="margin-left: 10px; margin-top: 28px">or <span style="color: blue">within</span> the <span style="color: blue">last</span></p>
+            <p style="margin-left: 10px; margin-top: 28px">/ </p>
+            <mat-form-field appearance="standard" style="margin-left: 10px; width: 130px">
+              <mat-label>Within/Before</mat-label>
+              <mat-select [(ngModel)]="includedPeriodOperator1a" formControlName="control148" (ngModelChange)="formChanged()">
+                <mat-option *ngFor="let value of withinBefore" [value]="value.withinBefore">
+                  {{value.withinBefore}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 60px">
               <mat-label>Period</mat-label>
               <input matInput placeholder="Value" [(ngModel)]="includedPeriodValue1a" formControlName="control47a" (keydown.enter)="stepper.next()">
@@ -313,7 +329,7 @@
                   {{value.period}}
                 </mat-option>
               </mat-select>
-            </mat-form-field>
+            </mat-form-field><p style="margin-left: 10px; margin-top: 28px"> of the run date</p>
           </div>
           <div mat-dialog-actions style="margin-bottom: 10px; margin-left: 20px" *ngIf="addQuery1b">
             <button mat-flat-button color="accent" (click)="addSameRule1b()">Add same rule</button>
@@ -334,7 +350,7 @@
             </mat-select>
           </mat-form-field>
           <br/>
-          <p style="margin-left: 10px; margin-top: 28px">patients with records containing <span style="color: blue">concepts</span> of</p>
+          <p style="margin-left: 10px; margin-top: 28px">patients with records containing <span style="color: blue">concepts</span> matching</p>
           <mat-form-field appearance="standard" style="margin-left: 10px; width: 70px">
             <mat-label>Any/All</mat-label>
             <mat-select [(ngModel)]="includedAnyAll1b" formControlName="control46b" (ngModelChange)="formChanged()">
@@ -344,7 +360,7 @@
             </mat-select>
           </mat-form-field>
           <p style="margin-left: 10px; margin-top: 28px"> of the <span style="color: blue">value set(s)</span></p>
-          <mat-form-field appearance="standard" style="width: 500px; margin-left: 10px">
+          <mat-form-field appearance="standard" style="width: 450px; margin-left: 10px">
             <mat-label>Cohort value set</mat-label>
             <mat-select multiple [(ngModel)]="includedValueSet1b" formControlName="control23b" (ngModelChange)="formChanged()">
               <mat-select-search [formControl]="filterCtrl"></mat-select-search>
@@ -373,7 +389,15 @@
               </mat-datepicker-toggle>
               <mat-datepicker #picker4b></mat-datepicker>
             </mat-form-field>
-            <p style="margin-left: 10px; margin-top: 28px">or <span style="color: blue">within</span> the <span style="color: blue">last</span></p>
+            <p style="margin-left: 10px; margin-top: 28px">/ </p>
+            <mat-form-field appearance="standard" style="margin-left: 10px; width: 130px">
+              <mat-label>Within/Before</mat-label>
+              <mat-select [(ngModel)]="includedPeriodOperator1b" formControlName="control149" (ngModelChange)="formChanged()">
+                <mat-option *ngFor="let value of withinBefore" [value]="value.withinBefore">
+                  {{value.withinBefore}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 60px">
               <mat-label>Period</mat-label>
               <input matInput placeholder="Value" [(ngModel)]="includedPeriodValue1b" formControlName="control47b" (keydown.enter)="stepper.next()">
@@ -385,7 +409,7 @@
                   {{value.period}}
                 </mat-option>
               </mat-select>
-            </mat-form-field>
+            </mat-form-field><p style="margin-left: 10px; margin-top: 28px"> of the run date</p>
           </div>
           <div mat-dialog-actions style="margin-bottom: 10px; margin-left: 20px" *ngIf="addQuery1c">
             <button mat-flat-button color="accent" (click)="addSameRule1c()">Add same rule</button>
@@ -406,7 +430,7 @@
               </mat-select>
             </mat-form-field>
             <br/>
-            <p style="margin-left: 10px; margin-top: 28px">patients with records containing <span style="color: blue">concepts</span> of</p>
+            <p style="margin-left: 10px; margin-top: 28px">patients with records containing <span style="color: blue">concepts</span> matching</p>
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 70px">
               <mat-label>Any/All</mat-label>
               <mat-select [(ngModel)]="includedAnyAll1c" formControlName="control46c" (ngModelChange)="formChanged()">
@@ -416,7 +440,7 @@
               </mat-select>
             </mat-form-field>
             <p style="margin-left: 10px; margin-top: 28px"> of the <span style="color: blue">value set(s)</span></p>
-            <mat-form-field appearance="standard" style="width: 500px; margin-left: 10px">
+            <mat-form-field appearance="standard" style="width: 450px; margin-left: 10px">
               <mat-label>Cohort value set</mat-label>
               <mat-select multiple [(ngModel)]="includedValueSet1c" formControlName="control23c" (ngModelChange)="formChanged()">
                 <mat-select-search [formControl]="filterCtrl"></mat-select-search>
@@ -445,7 +469,15 @@
                 </mat-datepicker-toggle>
                 <mat-datepicker #picker4c></mat-datepicker>
               </mat-form-field>
-              <p style="margin-left: 10px; margin-top: 28px">or <span style="color: blue">within</span> the <span style="color: blue">last</span></p>
+              <p style="margin-left: 10px; margin-top: 28px">/ </p>
+              <mat-form-field appearance="standard" style="margin-left: 10px; width: 130px">
+                <mat-label>Within/Before</mat-label>
+                <mat-select [(ngModel)]="includedPeriodOperator1c" formControlName="control150" (ngModelChange)="formChanged()">
+                  <mat-option *ngFor="let value of withinBefore" [value]="value.withinBefore">
+                    {{value.withinBefore}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
               <mat-form-field appearance="standard" style="margin-left: 10px; width: 60px">
                 <mat-label>Period</mat-label>
                 <input matInput placeholder="Value" [(ngModel)]="includedPeriodValue1c" formControlName="control47c" (keydown.enter)="stepper.next()">
@@ -457,7 +489,7 @@
                     {{value.period}}
                   </mat-option>
                 </mat-select>
-              </mat-form-field>
+              </mat-form-field><p style="margin-left: 10px; margin-top: 28px"> of the run date</p>
             </div>
             <div mat-dialog-actions style="margin-bottom: 10px; margin-left: 20px" *ngIf="addQuery1d">
               <button mat-flat-button color="accent" (click)="addSameRule1d()">Add same rule</button>
@@ -478,7 +510,7 @@
               </mat-select>
             </mat-form-field>
             <br/>
-            <p style="margin-left: 10px; margin-top: 28px">patients with records containing <span style="color: blue">concepts</span> of</p>
+            <p style="margin-left: 10px; margin-top: 28px">patients with records containing <span style="color: blue">concepts</span> matching</p>
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 70px">
               <mat-label>Any/All</mat-label>
               <mat-select [(ngModel)]="includedAnyAll1d" formControlName="control46d" (ngModelChange)="formChanged()">
@@ -488,7 +520,7 @@
               </mat-select>
             </mat-form-field>
             <p style="margin-left: 10px; margin-top: 28px"> of the <span style="color: blue">value set(s)</span></p>
-            <mat-form-field appearance="standard" style="width: 500px; margin-left: 10px">
+            <mat-form-field appearance="standard" style="width: 450px; margin-left: 10px">
               <mat-label>Cohort value set</mat-label>
               <mat-select multiple [(ngModel)]="includedValueSet1d" formControlName="control23d" (ngModelChange)="formChanged()">
                 <mat-select-search [formControl]="filterCtrl"></mat-select-search>
@@ -517,7 +549,15 @@
                 </mat-datepicker-toggle>
                 <mat-datepicker #picker4d></mat-datepicker>
               </mat-form-field>
-              <p style="margin-left: 10px; margin-top: 28px">or <span style="color: blue">within</span> the <span style="color: blue">last</span></p>
+
+              <mat-form-field appearance="standard" style="margin-left: 10px; width: 130px">
+                <mat-label>Within/Before</mat-label>
+                <mat-select [(ngModel)]="includedPeriodOperator1d" formControlName="control151" (ngModelChange)="formChanged()">
+                  <mat-option *ngFor="let value of withinBefore" [value]="value.withinBefore">
+                    {{value.withinBefore}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
               <mat-form-field appearance="standard" style="margin-left: 10px; width: 60px">
                 <mat-label>Period</mat-label>
                 <input matInput placeholder="Value" [(ngModel)]="includedPeriodValue1d" formControlName="control47d" (keydown.enter)="stepper.next()">
@@ -529,7 +569,7 @@
                     {{value.period}}
                   </mat-option>
                 </mat-select>
-              </mat-form-field>
+              </mat-form-field><p style="margin-left: 10px; margin-top: 28px"> of the run date</p>
             </div>
           </div>
 
@@ -547,7 +587,7 @@
             </mat-select>
           </mat-form-field>
           <br/>
-          <p style="margin-left: 10px; margin-top: 29px">patients with records containing <span style="color: blue">concepts</span> of</p>
+          <p style="margin-left: 10px; margin-top: 29px">patients with records containing <span style="color: blue">concepts</span> matching</p>
           <mat-form-field appearance="standard" style="margin-left: 10px; width: 70px">
             <mat-label>Any/All</mat-label>
             <mat-select [(ngModel)]="includedAnyAll2" formControlName="control49" (ngModelChange)="formChanged()">
@@ -557,7 +597,7 @@
             </mat-select>
           </mat-form-field>
           <p style="margin-left: 10px; margin-top: 28px"> of the <span style="color: blue">value set(s)</span></p>
-          <mat-form-field appearance="standard" style="width: 500px; margin-left: 10px">
+          <mat-form-field appearance="standard" style="width: 450px; margin-left: 10px">
             <mat-label>Cohort value set</mat-label>
             <mat-select multiple [(ngModel)]="includedValueSet2" formControlName="control27" (ngModelChange)="formChanged()">
               <mat-select-search [formControl]="filterCtrl"></mat-select-search>
@@ -613,7 +653,15 @@
             </mat-form-field>
             <br/>
             <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-              <p style="margin-left: 10px; margin-top: 28px">or <span style="color: blue">within the last</span></p>
+              <p style="margin-left: 10px; margin-top: 28px">/ </p>
+              <mat-form-field appearance="standard" style="margin-left: 10px; width: 130px">
+                <mat-label>Within/Before</mat-label>
+                <mat-select [(ngModel)]="includedPeriodOperator2" formControlName="control152" (ngModelChange)="formChanged()">
+                  <mat-option *ngFor="let value of withinBefore" [value]="value.withinBefore">
+                    {{value.withinBefore}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
               <mat-form-field appearance="standard" style="margin-left: 10px; width: 60px">
                 <mat-label>Period</mat-label>
                 <input matInput placeholder="Value" [(ngModel)]="includedPeriodValue2" formControlName="control63" (keydown.enter)="stepper.next()">
@@ -625,7 +673,7 @@
                     {{value.period}}
                   </mat-option>
                 </mat-select>
-              </mat-form-field>
+              </mat-form-field><p style="margin-left: 10px; margin-top: 28px"> of the run date</p>
             </div>
           </div>
 
@@ -648,7 +696,7 @@
             </mat-select>
           </mat-form-field>
           <br/>
-          <p style="margin-left: 10px; margin-top: 29px">patients with records containing <span style="color: blue">concepts</span> of</p>
+          <p style="margin-left: 10px; margin-top: 29px">patients with records containing <span style="color: blue">concepts</span> matching</p>
           <mat-form-field appearance="standard" style="margin-left: 10px; width: 70px">
             <mat-label>Any/All</mat-label>
             <mat-select [(ngModel)]="includedAnyAll2a" formControlName="control50" (ngModelChange)="formChanged()">
@@ -658,7 +706,7 @@
             </mat-select>
           </mat-form-field>
           <p style="margin-left: 10px; margin-top: 28px"> of the <span style="color: blue">value set(s)</span></p>
-          <mat-form-field appearance="standard" style="width: 500px; margin-left: 10px">
+          <mat-form-field appearance="standard" style="width: 450px; margin-left: 10px">
             <mat-label>Cohort value set</mat-label>
             <mat-select multiple [(ngModel)]="includedValueSet2a" formControlName="control27a" (ngModelChange)="formChanged()">
               <mat-select-search [formControl]="filterCtrl"></mat-select-search>
@@ -714,7 +762,15 @@
             </mat-form-field>
             <br/>
             <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-              <p style="margin-left: 10px; margin-top: 28px">or <span style="color: blue">within the last</span></p>
+              <p style="margin-left: 10px; margin-top: 28px">/ </p>
+              <mat-form-field appearance="standard" style="margin-left: 10px; width: 130px">
+                <mat-label>Within/Before</mat-label>
+                <mat-select [(ngModel)]="includedPeriodOperator2a" formControlName="control153" (ngModelChange)="formChanged()">
+                  <mat-option *ngFor="let value of withinBefore" [value]="value.withinBefore">
+                    {{value.withinBefore}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
               <mat-form-field appearance="standard" style="margin-left: 10px; width: 60px">
                 <mat-label>Period</mat-label>
                 <input matInput placeholder="Value" [(ngModel)]="includedPeriodValue2a" formControlName="control63a" (keydown.enter)="stepper.next()">
@@ -726,7 +782,7 @@
                     {{value.period}}
                   </mat-option>
                 </mat-select>
-              </mat-form-field>
+              </mat-form-field><p style="margin-left: 10px; margin-top: 28px"> of the run date</p>
             </div>
           </div>
         </div>
@@ -744,7 +800,7 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
-          <p style="margin-left: 10px; margin-top: 28px">patients with records containing <span style="color: blue">concepts</span> of</p>
+          <p style="margin-left: 10px; margin-top: 28px">patients with records containing <span style="color: blue">concepts</span> matching</p>
           <mat-form-field appearance="standard" style="margin-left: 10px; width: 70px">
             <mat-label>Any/All</mat-label>
             <mat-select [(ngModel)]="includedAnyAll3" formControlName="control51" (ngModelChange)="formChanged()">
@@ -754,7 +810,7 @@
             </mat-select>
           </mat-form-field>
           <p style="margin-left: 10px; margin-top: 28px"> of the <span style="color: blue">value set(s)</span></p>
-          <mat-form-field appearance="standard" style="width: 500px; margin-left: 10px">
+          <mat-form-field appearance="standard" style="width: 450px; margin-left: 10px">
             <mat-label>Cohort value set</mat-label>
             <mat-select multiple [(ngModel)]="includedValueSet3" formControlName="control32" (ngModelChange)="formChanged()">
               <mat-select-search [formControl]="filterCtrl"></mat-select-search>
@@ -784,7 +840,7 @@
               </mat-select>
             </mat-form-field>
             <p style="margin-left: 10px; margin-top: 28px"> of the <span style="color: blue">value set(s)</span></p>
-            <mat-form-field appearance="standard" style="width: 500px; margin-left: 10px">
+            <mat-form-field appearance="standard" style="width: 450px; margin-left: 10px">
               <mat-label>Cohort value set</mat-label>
               <mat-select multiple [(ngModel)]="includedTestedValueSet3" formControlName="control34" (ngModelChange)="formChanged()">
                 <mat-select-search [formControl]="filterCtrl"></mat-select-search>
@@ -816,7 +872,7 @@
             </mat-form-field>
             <br/>
             <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-              <p style="margin-left: 10px; margin-top: 28px">or </p>
+              <p style="margin-left: 10px; margin-top: 28px">/ </p>
               <mat-form-field appearance="standard" style="margin-left: 10px; width: 130px">
                 <mat-label>Within/Before</mat-label>
                 <mat-select [(ngModel)]="includedPeriodOperator3" formControlName="control69" (ngModelChange)="formChanged()">
@@ -825,7 +881,6 @@
                   </mat-option>
                 </mat-select>
               </mat-form-field>
-
               <mat-form-field appearance="standard" style="margin-left: 10px; width: 60px">
                 <mat-label>Period</mat-label>
                 <input matInput placeholder="Value" [(ngModel)]="includedPeriodValue3" formControlName="control67" (keydown.enter)="stepper.next()">
@@ -837,7 +892,7 @@
                     {{value.period}}
                   </mat-option>
                 </mat-select>
-              </mat-form-field>
+              </mat-form-field><p style="margin-left: 10px; margin-top: 28px"> of the run date</p>
             </div>
             <div mat-dialog-actions style="margin-bottom: 10px; margin-left: 20px" *ngIf="addQuery3">
               <button mat-flat-button color="accent" (click)="addSameRule3()">Add same rule</button>
@@ -858,7 +913,7 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
-          <p style="margin-left: 10px; margin-top: 28px">patients with records containing <span style="color: blue">concepts</span> of</p>
+          <p style="margin-left: 10px; margin-top: 28px">patients with records containing <span style="color: blue">concepts</span> matching</p>
           <mat-form-field appearance="standard" style="margin-left: 10px; width: 70px">
             <mat-label>Any/All</mat-label>
             <mat-select [(ngModel)]="includedAnyAll3a" formControlName="control51a" (ngModelChange)="formChanged()">
@@ -868,7 +923,7 @@
             </mat-select>
           </mat-form-field>
           <p style="margin-left: 10px; margin-top: 28px"> of the <span style="color: blue">value set(s)</span></p>
-          <mat-form-field appearance="standard" style="width: 500px; margin-left: 10px">
+          <mat-form-field appearance="standard" style="width: 450px; margin-left: 10px">
             <mat-label>Cohort value set</mat-label>
             <mat-select multiple [(ngModel)]="includedValueSet3a" formControlName="control32a" (ngModelChange)="formChanged()">
               <mat-select-search [formControl]="filterCtrl"></mat-select-search>
@@ -898,7 +953,7 @@
               </mat-select>
             </mat-form-field>
             <p style="margin-left: 10px; margin-top: 28px"> of the <span style="color: blue">value set(s)</span></p>
-            <mat-form-field appearance="standard" style="width: 500px; margin-left: 10px">
+            <mat-form-field appearance="standard" style="width: 450px; margin-left: 10px">
               <mat-label>Cohort value set</mat-label>
               <mat-select multiple [(ngModel)]="includedTestedValueSet3a" formControlName="control34a" (ngModelChange)="formChanged()">
                 <mat-select-search [formControl]="filterCtrl"></mat-select-search>
@@ -930,7 +985,7 @@
             </mat-form-field>
             <br/>
             <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-              <p style="margin-left: 10px; margin-top: 28px">or </p>
+              <p style="margin-left: 10px; margin-top: 28px">/ </p>
               <mat-form-field appearance="standard" style="margin-left: 10px; width: 130px">
                 <mat-label>Within/Before</mat-label>
                 <mat-select [(ngModel)]="includedPeriodOperator3a" formControlName="control69a" (ngModelChange)="formChanged()">
@@ -951,7 +1006,7 @@
                     {{value.period}}
                   </mat-option>
                 </mat-select>
-              </mat-form-field>
+              </mat-form-field><p style="margin-left: 10px; margin-top: 28px"> of the run date</p>
             </div>
           </div>
         </div>
@@ -969,7 +1024,7 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
-          <p style="margin-left: 10px; margin-top: 28px">patients with records containing <span style="color: blue">concepts</span> of</p>
+          <p style="margin-left: 10px; margin-top: 28px">patients with records containing <span style="color: blue">concepts</span> matching</p>
           <mat-form-field appearance="standard" style="margin-left: 10px; width: 70px">
             <mat-label>Any/All</mat-label>
             <mat-select [(ngModel)]="includedAnyAll4" formControlName="control53" (ngModelChange)="formChanged()">
@@ -979,7 +1034,7 @@
             </mat-select>
           </mat-form-field>
           <p style="margin-left: 10px; margin-top: 28px">of the <span style="color: blue">value set(s)</span></p>
-          <mat-form-field appearance="standard" style="width: 500px; margin-left: 10px">
+          <mat-form-field appearance="standard" style="width: 450px; margin-left: 10px">
             <mat-label>Cohort value set</mat-label>
             <mat-select multiple [(ngModel)]="includedValueSet4" formControlName="control36" (ngModelChange)="formChanged()">
               <mat-select-search [formControl]="filterCtrl"></mat-select-search>
@@ -997,7 +1052,7 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
-          <p style="margin-left: 10px; margin-top: 28px; display: inline"><span style="color: blue">followed</span> by <span style="color: blue">entries</span> containing <span style="color: blue">concepts</span> of </p>
+          <p style="margin-left: 10px; margin-top: 28px; display: inline"><span style="color: blue">followed</span> by <span style="color: blue">entries</span> containing <span style="color: blue">concepts</span> matching </p>
           <mat-form-field appearance="standard" style="margin-left: 10px; width: 70px">
             <mat-label>Any/All</mat-label>
             <mat-select [(ngModel)]="includedAnyAllFollowedBy4" formControlName="control55" (ngModelChange)="formChanged()">
@@ -1007,7 +1062,7 @@
             </mat-select>
           </mat-form-field>
           <p style="margin-left: 10px; margin-top: 28px">of the <span style="color: blue">value set(s)</span></p>
-          <mat-form-field appearance="standard" style="width: 500px; margin-left: 10px">
+          <mat-form-field appearance="standard" style="width: 450px; margin-left: 10px">
             <mat-label>Cohort value set</mat-label>
             <mat-select multiple [(ngModel)]="includedFollowedByValueSet4" formControlName="control37" (ngModelChange)="formChanged()">
               <mat-select-search [formControl]="filterCtrl"></mat-select-search>
@@ -1018,27 +1073,15 @@
           </mat-form-field>
           <br/>
           <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            <p style="margin-left: 10px; margin-top: 28px">within the <span style="color: blue">time period</span></p>
-            <mat-form-field class="example-full-width" appearance="standard" style="margin-left: 10px; width: 120px">
-              <mat-label>Date from</mat-label>
-              <input matInput [matDatepicker]="picker5" placeholder="Date from" [(ngModel)]="includedDateFrom4" formControlName="control59">
-              <mat-datepicker-toggle matSuffix [for]="picker5">
-                <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
-              </mat-datepicker-toggle>
-              <mat-datepicker #picker5></mat-datepicker>
-            </mat-form-field>
-            <p style="margin-left: 10px; margin-top: 28px">to</p>
-            <mat-form-field class="example-full-width" appearance="standard" style="margin-left: 10px; width: 120px">
-              <mat-label>Date to</mat-label>
-              <input matInput [matDatepicker]="picker6" placeholder="Date to" [(ngModel)]="includedDateTo4" formControlName="control60">
-              <mat-datepicker-toggle matSuffix [for]="picker6">
-                <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
-              </mat-datepicker-toggle>
-              <mat-datepicker #picker6></mat-datepicker>
-            </mat-form-field>
-            <br/>
             <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-              <p style="margin-left: 10px; margin-top: 28px">or <span style="color: blue">within the last</span></p>
+              <mat-form-field appearance="standard" style="margin-left: 10px; width: 130px">
+                <mat-label>Within/Before</mat-label>
+                <mat-select [(ngModel)]="includedPeriodOperator4" formControlName="control154" (ngModelChange)="formChanged()">
+                  <mat-option *ngFor="let value of withinBefore" [value]="value.withinBefore">
+                    {{value.withinBefore}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
               <mat-form-field appearance="standard" style="margin-left: 10px; width: 60px">
                 <mat-label>Period</mat-label>
                 <input matInput placeholder="Value" [(ngModel)]="includedPeriodValue4" formControlName="control38" (keydown.enter)="stepper.next()">
@@ -1068,7 +1111,7 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
-          <p style="margin-left: 10px; margin-top: 28px">patients with records containing <span style="color: blue">concepts</span> of</p>
+          <p style="margin-left: 10px; margin-top: 28px">patients with records containing <span style="color: blue">concepts</span> matching</p>
           <mat-form-field appearance="standard" style="margin-left: 10px; width: 70px">
             <mat-label>Any/All</mat-label>
             <mat-select [(ngModel)]="includedAnyAll5" formControlName="control56" (ngModelChange)="formChanged()">
@@ -1078,7 +1121,7 @@
             </mat-select>
           </mat-form-field>
           <p style="margin-left: 10px; margin-top: 28px">of the <span style="color: blue">value set(s)</span></p>
-          <mat-form-field appearance="standard" style="width: 500px; margin-left: 10px">
+          <mat-form-field appearance="standard" style="width: 450px; margin-left: 10px">
             <mat-label>Cohort value set</mat-label>
             <mat-select multiple [(ngModel)]="includedValueSet5" formControlName="control41" (ngModelChange)="formChanged()">
               <mat-select-search [formControl]="filterCtrl"></mat-select-search>
@@ -1125,7 +1168,15 @@
               </mat-form-field>
               <br/>
               <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-                <p style="margin-left: 10px; margin-top: 28px">or <span style="color: blue">within the last</span></p>
+                <p style="margin-left: 10px; margin-top: 28px">/ </p>
+                <mat-form-field appearance="standard" style="margin-left: 10px; width: 130px">
+                  <mat-label>Within/Before</mat-label>
+                  <mat-select [(ngModel)]="includedPeriodOperator5" formControlName="control155" (ngModelChange)="formChanged()">
+                    <mat-option *ngFor="let value of withinBefore" [value]="value.withinBefore">
+                      {{value.withinBefore}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
                 <mat-form-field appearance="standard" style="margin-left: 10px; width: 60px">
                   <mat-label>Period</mat-label>
                   <input matInput placeholder="Value" [(ngModel)]="includedPeriodValue5" formControlName="control57" (keydown.enter)="stepper.next()">
@@ -1137,7 +1188,7 @@
                       {{value.period}}
                     </mat-option>
                   </mat-select>
-                </mat-form-field>
+                </mat-form-field><p style="margin-left: 10px; margin-top: 28px"> of the run date</p>
               </div>
             </div>
             <div mat-dialog-actions style="margin-bottom: 10px; margin-left: 20px" *ngIf="addQuery5">
@@ -1159,7 +1210,7 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
-          <p style="margin-left: 10px; margin-top: 28px">patients with records containing <span style="color: blue">concepts</span> of</p>
+          <p style="margin-left: 10px; margin-top: 28px">patients with records containing <span style="color: blue">concepts</span> matching</p>
           <mat-form-field appearance="standard" style="margin-left: 10px; width: 70px">
             <mat-label>Any/All</mat-label>
             <mat-select [(ngModel)]="includedAnyAll5a" formControlName="control56a" (ngModelChange)="formChanged()">
@@ -1169,7 +1220,7 @@
             </mat-select>
           </mat-form-field>
           <p style="margin-left: 10px; margin-top: 28px">of the <span style="color: blue">value set(s)</span></p>
-          <mat-form-field appearance="standard" style="width: 500px; margin-left: 10px">
+          <mat-form-field appearance="standard" style="width: 450px; margin-left: 10px">
             <mat-label>Cohort value set</mat-label>
             <mat-select multiple [(ngModel)]="includedValueSet5a" formControlName="control41a" (ngModelChange)="formChanged()">
               <mat-select-search [formControl]="filterCtrl"></mat-select-search>
@@ -1216,7 +1267,15 @@
               </mat-form-field>
               <br/>
               <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-                <p style="margin-left: 10px; margin-top: 28px">or <span style="color: blue">within the last</span></p>
+                <p style="margin-left: 10px; margin-top: 28px">/ </p>
+                <mat-form-field appearance="standard" style="margin-left: 10px; width: 130px">
+                  <mat-label>Within/Before</mat-label>
+                  <mat-select [(ngModel)]="includedPeriodOperator5a" formControlName="control156" (ngModelChange)="formChanged()">
+                    <mat-option *ngFor="let value of withinBefore" [value]="value.withinBefore">
+                      {{value.withinBefore}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
                 <mat-form-field appearance="standard" style="margin-left: 10px; width: 60px">
                   <mat-label>Period</mat-label>
                   <input matInput placeholder="Value" [(ngModel)]="includedPeriodValue5a" formControlName="control57a" (keydown.enter)="stepper.next()">
@@ -1228,7 +1287,7 @@
                       {{value.period}}
                     </mat-option>
                   </mat-select>
-                </mat-form-field>
+                </mat-form-field><p style="margin-left: 10px; margin-top: 28px"> of the run date</p>
               </div>
             </div>
           </div>

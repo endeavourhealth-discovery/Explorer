@@ -35,6 +35,7 @@ interface savedQuery {
   includedValueSet1: string;
   includedDateFrom1: string;
   includedDateTo1: string;
+  includedPeriodOperator1: string;
   includedPeriodValue1: string;
   includedPeriodType1: string;
   includedAnyAll1: string;
@@ -42,6 +43,7 @@ interface savedQuery {
   includedValueSet1a: string;
   includedDateFrom1a: string;
   includedDateTo1a: string;
+  includedPeriodOperator1a: string;
   includedPeriodValue1a: string;
   includedPeriodType1a: string;
   includedAnyAll1a: string;
@@ -49,6 +51,7 @@ interface savedQuery {
   includedValueSet1b: string;
   includedDateFrom1b: string;
   includedDateTo1b: string;
+  includedPeriodOperator1b: string;
   includedPeriodValue1b: string;
   includedPeriodType1b: string;
   includedAnyAll1b: string;
@@ -56,6 +59,7 @@ interface savedQuery {
   includedValueSet1c: string;
   includedDateFrom1c: string;
   includedDateTo1c: string;
+  includedPeriodOperator1c: string;
   includedPeriodValue1c: string;
   includedPeriodType1c: string;
   includedAnyAll1c: string;
@@ -63,6 +67,7 @@ interface savedQuery {
   includedValueSet1d: string;
   includedDateFrom1d: string;
   includedDateTo1d: string;
+  includedPeriodOperator1d: string;
   includedPeriodValue1d: string;
   includedPeriodType1d: string;
   includedAnyAll1d: string;
@@ -74,6 +79,7 @@ interface savedQuery {
   includedAnyAll2: string;
   includedDateFrom2: string;
   includedDateTo2: string;
+  includedPeriodOperator2: string;
   includedPeriodValue2: string;
   includedPeriodType2: string;
   includedExclude2a: string;
@@ -84,6 +90,7 @@ interface savedQuery {
   includedAnyAll2a: string;
   includedDateFrom2a: string;
   includedDateTo2a: string;
+  includedPeriodOperator2a: string;
   includedPeriodValue2a: string;
   includedPeriodType2a: string;
   includedExclude3: string;
@@ -113,6 +120,7 @@ interface savedQuery {
   includedFollowedByValueSet4: string;
   includedDateFrom4: string;
   includedDateTo4: string;
+  includedPeriodOperator4: string;
   includedPeriodValue4: string;
   includedPeriodType4: string;
   includedAnyAll4: string;
@@ -124,6 +132,7 @@ interface savedQuery {
   includedEntryValue5: string;
   includedDateFrom5: string;
   includedDateTo5: string;
+  includedPeriodOperator5: string;
   includedPeriodValue5: string;
   includedPeriodType5: string;
   includedAnyAll5: string;
@@ -133,6 +142,7 @@ interface savedQuery {
   includedEntryValue5a: string;
   includedDateFrom5a: string;
   includedDateTo5a: string;
+  includedPeriodOperator5a: string;
   includedPeriodValue5a: string;
   includedPeriodType5a: string;
   includedAnyAll5a: string;
@@ -243,6 +253,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
   includedValueSet1: string = '';
   includedDateFrom1: string = '';
   includedDateTo1: string = '';
+  includedPeriodOperator1: string = '';
   includedPeriodValue1: string = '';
   includedPeriodType1: string = '';
   includedAnyAll1: string = '';
@@ -250,6 +261,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
   includedValueSet1a: string = '';
   includedDateFrom1a: string = '';
   includedDateTo1a: string = '';
+  includedPeriodOperator1a: string = '';
   includedPeriodValue1a: string = '';
   includedPeriodType1a: string = '';
   includedAnyAll1a: string = '';
@@ -257,6 +269,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
   includedValueSet1b: string = '';
   includedDateFrom1b: string = '';
   includedDateTo1b: string = '';
+  includedPeriodOperator1b: string = '';
   includedPeriodValue1b: string = '';
   includedPeriodType1b: string = '';
   includedAnyAll1b: string = '';
@@ -264,6 +277,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
   includedValueSet1c: string = '';
   includedDateFrom1c: string = '';
   includedDateTo1c: string = '';
+  includedPeriodOperator1c: string = '';
   includedPeriodValue1c: string = '';
   includedPeriodType1c: string = '';
   includedAnyAll1c: string = '';
@@ -271,6 +285,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
   includedValueSet1d: string = '';
   includedDateFrom1d: string = '';
   includedDateTo1d: string = '';
+  includedPeriodOperator1d: string = '';
   includedPeriodValue1d: string = '';
   includedPeriodType1d: string = '';
   includedAnyAll1d: string = '';
@@ -282,6 +297,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
   includedAnyAll2: string = '';
   includedDateFrom2: string = '';
   includedDateTo2: string = '';
+  includedPeriodOperator2: string = '';
   includedPeriodValue2: string = '';
   includedPeriodType2: string = '';
   includedExclude2a: string = '';
@@ -292,6 +308,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
   includedAnyAll2a: string = '';
   includedDateFrom2a: string = '';
   includedDateTo2a: string = '';
+  includedPeriodOperator2a: string = '';
   includedPeriodValue2a: string = '';
   includedPeriodType2a: string = '';
   includedExclude3: string = '';
@@ -321,6 +338,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
   includedFollowedByValueSet4: string = '';
   includedDateFrom4: string = '';
   includedDateTo4: string = '';
+  includedPeriodOperator4: string = '';
   includedPeriodValue4: string = '';
   includedPeriodType4: string = '';
   includedAnyAll4: string = '';
@@ -332,6 +350,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
   includedEntryValue5: string = '';
   includedDateFrom5: string = '';
   includedDateTo5: string = '';
+  includedPeriodOperator5: string = '';
   includedPeriodValue5: string = '';
   includedPeriodType5: string = '';
   includedAnyAll5: string = '';
@@ -341,6 +360,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
   includedEntryValue5a: string = '';
   includedDateFrom5a: string = '';
   includedDateTo5a: string = '';
+  includedPeriodOperator5a: string = '';
   includedPeriodValue5a: string = '';
   includedPeriodType5a: string = '';
   includedAnyAll5a: string = '';
@@ -474,8 +494,8 @@ export class AdvancedQueryEditorComponent implements OnInit {
     {areNot: 'Are not'}
   ];
   withinBefore: withinBefore[] = [
-    {withinBefore: 'is within the last'},
-    {withinBefore: 'is before'}
+    {withinBefore: 'within'},
+    {withinBefore: 'before'}
   ];
 
   constructor(
@@ -510,6 +530,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.includedValueSet1 = query.includedValueSet1;
       this.includedDateFrom1 = query.includedDateFrom1;
       this.includedDateTo1 = query.includedDateTo1;
+      this.includedPeriodOperator1 = query.includedPeriodOperator1;
       this.includedPeriodValue1 = query.includedPeriodValue1;
       this.includedPeriodType1 = query.includedPeriodType1;
       this.includedAnyAll1 = query.includedAnyAll1;
@@ -517,6 +538,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.includedValueSet1a = query.includedValueSet1a;
       this.includedDateFrom1a = query.includedDateFrom1a;
       this.includedDateTo1a = query.includedDateTo1a;
+      this.includedPeriodOperator1a = query.includedPeriodOperator1a;
       this.includedPeriodValue1a = query.includedPeriodValue1a;
       this.includedPeriodType1a = query.includedPeriodType1a;
       this.includedAnyAll1a = query.includedAnyAll1a;
@@ -524,6 +546,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.includedValueSet1b = query.includedValueSet1b;
       this.includedDateFrom1b = query.includedDateFrom1b;
       this.includedDateTo1b = query.includedDateTo1b;
+      this.includedPeriodOperator1b = query.includedPeriodOperator1b;
       this.includedPeriodValue1b = query.includedPeriodValue1b;
       this.includedPeriodType1b = query.includedPeriodType1b;
       this.includedAnyAll1b = query.includedAnyAll1b;
@@ -531,6 +554,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.includedValueSet1c = query.includedValueSet1c;
       this.includedDateFrom1c = query.includedDateFrom1c;
       this.includedDateTo1c = query.includedDateTo1c;
+      this.includedPeriodOperator1c = query.includedPeriodOperator1c;
       this.includedPeriodValue1c = query.includedPeriodValue1c;
       this.includedPeriodType1c = query.includedPeriodType1c;
       this.includedAnyAll1c = query.includedAnyAll1c;
@@ -538,6 +562,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.includedValueSet1d = query.includedValueSet1d;
       this.includedDateFrom1d = query.includedDateFrom1d;
       this.includedDateTo1d = query.includedDateTo1d;
+      this.includedPeriodOperator1d = query.includedPeriodOperator1d;
       this.includedPeriodValue1d = query.includedPeriodValue1d;
       this.includedPeriodType1d = query.includedPeriodType1d;
       this.includedAnyAll1d = query.includedAnyAll1d;
@@ -549,6 +574,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.includedAnyAll2 = query.includedAnyAll2;
       this.includedDateFrom2 = query.includedDateFrom2;
       this.includedDateTo2 = query.includedDateTo2;
+      this.includedPeriodOperator2 = query.includedPeriodOperator2;
       this.includedPeriodValue2 = query.includedPeriodValue2;
       this.includedPeriodType2 = query.includedPeriodType2;
       this.includedExclude2a = query.includedExclude2a;
@@ -559,6 +585,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.includedAnyAll2a = query.includedAnyAll2a;
       this.includedDateFrom2a = query.includedDateFrom2a;
       this.includedDateTo2a = query.includedDateTo2a;
+      this.includedPeriodOperator2a = query.includedPeriodOperator2a;
       this.includedPeriodValue2a = query.includedPeriodValue2a;
       this.includedPeriodType2a = query.includedPeriodType2a;
       this.includedExclude3 = query.includedExclude3;
@@ -588,6 +615,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.includedFollowedByValueSet4 = query.includedFollowedByValueSet4;
       this.includedDateFrom4 = query.includedDateFrom4;
       this.includedDateTo4 = query.includedDateTo4;
+      this.includedPeriodOperator4 = query.includedPeriodOperator4;
       this.includedPeriodValue4 = query.includedPeriodValue4;
       this.includedPeriodType4 = query.includedPeriodType4;
       this.includedAnyAll4 = query.includedAnyAll4;
@@ -599,6 +627,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.includedEntryValue5 = query.includedEntryValue5;
       this.includedDateFrom5 = query.includedDateFrom5;
       this.includedDateTo5 = query.includedDateTo5;
+      this.includedPeriodOperator5 = query.includedPeriodOperator5;
       this.includedPeriodValue5 = query.includedPeriodValue5;
       this.includedPeriodType5 = query.includedPeriodType5;
       this.includedAnyAll5 = query.includedAnyAll5;
@@ -608,6 +637,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.includedEntryValue5a = query.includedEntryValue5a;
       this.includedDateFrom5a = query.includedDateFrom5a;
       this.includedDateTo5a = query.includedDateTo5a;
+      this.includedPeriodOperator5a = query.includedPeriodOperator5a;
       this.includedPeriodValue5a = query.includedPeriodValue5a;
       this.includedPeriodType5a = query.includedPeriodType5a;
       this.includedAnyAll5a = query.includedAnyAll5a;
@@ -697,7 +727,8 @@ export class AdvancedQueryEditorComponent implements OnInit {
       control61a: [''], control62a: [''], control63a: [''], control64a: [''],
       control65: [''], control66: [''], control67: [''], control68: [''], control69: [''],
       control31a: [''],control51a: [''],control32a: [''],control33a: [''],control52a: [''],control34a: [''],control65a: [''],control66a: [''],control69a: [''],control67a: [''], control68a: [''],
-      control40a: [''],control56a: [''],control41a: [''],control42a: [''],control43a: [''],control44a: [''],control45a: [''],control57a: [''],control58a: ['']
+      control40a: [''],control56a: [''],control41a: [''],control42a: [''],control43a: [''],control44a: [''],control45a: [''],control57a: [''],control58a: [''],control147: [''],control148: [''],
+      control149: [''],control150: [''],control151: [''],control152: [''],control153: [''],control154: [''],control155: [''],control156: ['']
     });
     this.fourthFormGroup = this._formBuilder.group({
       control165a: [''],  control165e: [''], control166a: [''], control166c: [''], control166d: [''], control166e: [''], control166g: [''], control167a: [''],
@@ -848,6 +879,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
       includedValueSet1: this.includedValueSet1,
       includedDateFrom1: this.formatDate(this.includedDateFrom1),
       includedDateTo1: this.formatDate(this.includedDateTo1),
+      includedPeriodOperator1: this.includedPeriodOperator1,
       includedPeriodValue1: this.includedPeriodValue1,
       includedPeriodType1: this.includedPeriodType1,
       includedExclude1a: this.includedExclude1a,
@@ -855,6 +887,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
       includedValueSet1a: this.includedValueSet1a,
       includedDateFrom1a: this.formatDate(this.includedDateFrom1a),
       includedDateTo1a: this.formatDate(this.includedDateTo1a),
+      includedPeriodOperator1a: this.includedPeriodOperator1a,
       includedPeriodValue1a: this.includedPeriodValue1a,
       includedPeriodType1a: this.includedPeriodType1a,
       includedExclude1b: this.includedExclude1b,
@@ -862,6 +895,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
       includedValueSet1b: this.includedValueSet1b,
       includedDateFrom1b: this.formatDate(this.includedDateFrom1b),
       includedDateTo1b: this.formatDate(this.includedDateTo1b),
+      includedPeriodOperator1b: this.includedPeriodOperator1b,
       includedPeriodValue1b: this.includedPeriodValue1b,
       includedPeriodType1b: this.includedPeriodType1b,
       includedExclude1c: this.includedExclude1c,
@@ -869,6 +903,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
       includedValueSet1c: this.includedValueSet1c,
       includedDateFrom1c: this.formatDate(this.includedDateFrom1c),
       includedDateTo1c: this.formatDate(this.includedDateTo1c),
+      includedPeriodOperator1c: this.includedPeriodOperator1c,
       includedPeriodValue1c: this.includedPeriodValue1c,
       includedPeriodType1c: this.includedPeriodType1c,
       includedExclude1d: this.includedExclude1d,
@@ -876,6 +911,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
       includedValueSet1d: this.includedValueSet1d,
       includedDateFrom1d: this.formatDate(this.includedDateFrom1d),
       includedDateTo1d: this.formatDate(this.includedDateTo1d),
+      includedPeriodOperator1d: this.includedPeriodOperator1d,
       includedPeriodValue1d: this.includedPeriodValue1d,
       includedPeriodType1d: this.includedPeriodType1d,
       includedExclude2: this.includedExclude2,
@@ -886,6 +922,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
       includedEntryValue2: this.includedEntryValue2,
       includedDateFrom2: this.formatDate(this.includedDateFrom2),
       includedDateTo2: this.formatDate(this.includedDateTo2),
+      includedPeriodOperator2: this.includedPeriodOperator2,
       includedPeriodValue2: this.includedPeriodValue2,
       includedPeriodType2: this.includedPeriodType2,
       includedExclude2a: this.includedExclude2a,
@@ -896,6 +933,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
       includedEntryValue2a: this.includedEntryValue2a,
       includedDateFrom2a: this.formatDate(this.includedDateFrom2a),
       includedDateTo2a: this.formatDate(this.includedDateTo2a),
+      includedPeriodOperator2a: this.includedPeriodOperator2a,
       includedPeriodValue2a: this.includedPeriodValue2a,
       includedPeriodType2a: this.includedPeriodType2a,
       includedExclude3: this.includedExclude3,
@@ -928,6 +966,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
       includedFollowedByValueSet4: this.includedFollowedByValueSet4,
       includedDateFrom4: this.formatDate(this.includedDateFrom4),
       includedDateTo4: this.formatDate(this.includedDateTo4),
+      includedPeriodOperator4: this.includedPeriodOperator4,
       includedPeriodValue4: this.includedPeriodValue4,
       includedPeriodType4: this.includedPeriodType4,
       includedExclude5: this.includedExclude5,
@@ -937,6 +976,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
       includedEntryValue5: this.includedEntryValue5,
       includedDateFrom5: this.formatDate(this.includedDateFrom5),
       includedDateTo5: this.formatDate(this.includedDateTo5),
+      includedPeriodOperator5: this.includedPeriodOperator5,
       includedPeriodValue5: this.includedPeriodValue5,
       includedPeriodType5: this.includedPeriodType5,
       includedExclude5a: this.includedExclude5a,
@@ -946,6 +986,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
       includedEntryValue5a: this.includedEntryValue5a,
       includedDateFrom5a: this.formatDate(this.includedDateFrom5a),
       includedDateTo5a: this.formatDate(this.includedDateTo5a),
+      includedPeriodOperator5a: this.includedPeriodOperator5a,
       includedPeriodValue5a: this.includedPeriodValue5a,
       includedPeriodType5a: this.includedPeriodType5a,
       demographics: this.demographics,
