@@ -20,6 +20,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.rmi.registry.Registry;
 import java.sql.*;
+import java.text.DecimalFormat;
 import java.util.*;
 
 public class ExplorerJDBCDAL extends BaseJDBCDAL {
@@ -2031,5 +2032,140 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         }
         Collections.sort(list);
         return list;
+    }
+
+    public ArrayList<JSONObject> searchOrganisations(String searchData, Integer pageNumber, Integer pageSize,
+                                         String orderColumn, boolean descending) throws Exception {
+
+        ArrayList<JSONObject> data = new ArrayList<>();
+        JSONObject row = null;
+        String order = " asc ";
+        if (descending) {
+            order = " desc ";
+        }
+        String sql = null;
+        if (StringUtils.isNullOrEmpty(searchData)) {
+            sql = "select *  from dashboards.ccg_list_sizes " +
+                    " order by " + orderColumn + order +
+                    " limit " + ((pageNumber - 1)*pageSize) + "," + pageSize;
+        } else {
+            sql = "select *  from dashboards.ccg_list_sizes " +
+                    " where ccg like ? " +
+                    " order by " + orderColumn + order +
+                    " limit " + ((pageNumber - 1)*pageSize) + "," + pageSize;
+        }
+        DecimalFormat formatter = new DecimalFormat("#,###");
+        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            if (!StringUtils.isNullOrEmpty(searchData)) {
+                statement.setString(1, "%" + searchData + "%");
+            }
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    row = new JSONObject();
+                    row.put("ccg", resultSet.getString("ccg"));
+                    row.put("list_size", formatter.format(resultSet.getBigDecimal("list_size")));
+                    data.add(row);
+                }
+            }
+        }
+        return data;
+    }
+
+    public long getOrganisationsTotalCount(String searchData) throws Exception {
+        int count = 0;
+        String sql = null;
+        if (StringUtils.isNullOrEmpty(searchData)) {
+            sql = "select count(*) as count from dashboards.ccg_list_sizes ";
+        } else {
+            sql = "select count(*) as count from dashboards.ccg_list_sizes " +
+                    " where ccg like ? ";
+        }
+        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            if (!StringUtils.isNullOrEmpty(searchData)) {
+                statement.setString(1, "%" + searchData + "%");
+            }
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    count = resultSet.getInt("count");
+                }
+            }
+        }
+        LOG.debug("count: " + count);
+        return count;
+    }
+
+    public ArrayList<JSONObject> searchPractices(String ccg, String searchData, Integer pageNumber, Integer pageSize,
+                                                     String orderColumn, boolean descending) throws Exception {
+
+        ArrayList<JSONObject> data = new ArrayList<>();
+        JSONObject row = null;
+        String order = " asc ";
+        if (descending) {
+            order = " desc ";
+        }
+        String like = "";
+        if (!StringUtils.isNullOrEmpty(searchData)) {
+            like = " and (practice like ? or ods_code like ?) ";
+        }
+        String sql = null;
+        if (StringUtils.isNullOrEmpty(searchData)) {
+            sql = "select *  from dashboards.practice_list_sizes " +
+                    " where ccg = ? " +
+                    " order by " + orderColumn + order +
+                    " limit " + ((pageNumber - 1)*pageSize) + "," + pageSize;
+        } else {
+            sql = "select *  from dashboards.practice_list_sizes " +
+                    " where ccg = ? " +
+                    like +
+                    " order by " + orderColumn + order +
+                    " limit " + ((pageNumber - 1)*pageSize) + "," + pageSize;
+        }
+        DecimalFormat formatter = new DecimalFormat("#,###");
+        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            statement.setString(1, ccg);
+            if (!StringUtils.isNullOrEmpty(searchData)) {
+                statement.setString(2, "%" + searchData + "%");
+                statement.setString(3, "%" + searchData + "%");
+            }
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    row = new JSONObject();
+                    row.put("practice", resultSet.getString("practice"));
+                    row.put("ods_code", resultSet.getString("ods_code"));
+                    row.put("list_size", formatter.format(resultSet.getBigDecimal("list_size")));
+                    data.add(row);
+                }
+            }
+        }
+        return data;
+    }
+
+    public long getPracticesTotalCount(String ccg, String searchData) throws Exception {
+        int count = 0;
+        String like = "";
+        if (!StringUtils.isNullOrEmpty(searchData)) {
+            like = " and (practice like ? or ods_code like ?) ";
+        }
+        String sql = null;
+        if (StringUtils.isNullOrEmpty(searchData)) {
+            sql = "select count(*) as count from dashboards.practice_list_sizes " +
+                    " where ccg = ? ";
+        } else {
+            sql = "select count(*) as count from dashboards.practice_list_sizes " +
+                    " where ccg = ? " + like;
+        }
+        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            statement.setString(1, ccg);
+            if (!StringUtils.isNullOrEmpty(searchData)) {
+                statement.setString(2, "%" + searchData + "%");
+                statement.setString(3, "%" + searchData + "%");
+            }
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    count = resultSet.getInt("count");
+                }
+            }
+        }
+        return count;
     }
 }

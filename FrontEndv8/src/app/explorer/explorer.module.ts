@@ -57,6 +57,8 @@ import {RegistryIndicatorEditorComponent} from "./registryindicatoreditor/regist
 import {MapComponent} from './map/map.component';
 import {MatSliderModule} from "@angular/material/slider";
 import {TrendComponent} from "./trend/trend.component";
+import { OrganisationListSizesComponent } from './organisationlistsizes/organisationlistsizes.component';
+import { PracticeListSizesComponent } from './practicelistsizes/practicelistsizes.component';
 
 @NgModule({
   declarations: [
@@ -80,7 +82,9 @@ import {TrendComponent} from "./trend/trend.component";
     RegistryEditorComponent,
     RegistryIndicatorEditorComponent,
     MapComponent,
-    TrendComponent
+    TrendComponent,
+    OrganisationListSizesComponent,
+    PracticeListSizesComponent
   ],
     imports: [
         BrowserModule,

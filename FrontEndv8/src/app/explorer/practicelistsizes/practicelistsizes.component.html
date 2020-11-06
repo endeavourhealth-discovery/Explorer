@@ -1,0 +1,20 @@
+<mat-card>
+  <mat-card-header>
+    <div mat-card-avatar>
+      <i class="fad fa-hospital"></i>
+    </div>
+    <mat-card-title>{{ccg}}</mat-card-title>
+    <mat-card-subtitle>A list of the practices sizes in this CCG</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <app-generic-table-ssp
+      [items]="practices"
+      [totalItems]="totalItems"
+      [detailsToShow]="headers"
+      [pageSize]="pageSize"
+      (onPageChange)="pageChange($event)"
+      (onOrderChange)="orderChange($event)"
+      (search)="searchClicked($event)">
+    </app-generic-table-ssp>
+  </mat-card-content>
+</mat-card>
