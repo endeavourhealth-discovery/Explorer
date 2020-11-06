@@ -13,9 +13,11 @@ DECLARE providerOrganisation VARCHAR(5000) DEFAULT NULL;
 DECLARE includedOrganisation VARCHAR(5000) DEFAULT NULL; 
 DECLARE registrationStatus VARCHAR(255) DEFAULT NULL; 
 
-DECLARE cohortValue VARCHAR(5000) DEFAULT NULL; 
-DECLARE valueDateFrom VARCHAR(30) DEFAULT NULL; 
-DECLARE valueDateTo VARCHAR(30) DEFAULT NULL; 
+DECLARE registrationExclude VARCHAR(10) DEFAULT NULL; 
+DECLARE registrationDateFrom VARCHAR(20) DEFAULT NULL;   
+DECLARE registrationDateTo VARCHAR(20) DEFAULT NULL;   
+DECLARE registrationPeriodValue VARCHAR(10) DEFAULT NULL; 
+DECLARE registrationPeriodType VARCHAR(20) DEFAULT NULL; 
 
 DECLARE ageFrom VARCHAR(20) DEFAULT NULL;   
 DECLARE ageTo VARCHAR(20) DEFAULT NULL;  
@@ -118,7 +120,11 @@ DECLARE includedAnyAll3 VARCHAR(10) DEFAULT NULL;
 DECLARE includedValueSet3 VARCHAR(1000) DEFAULT NULL; 
 DECLARE includedEarliestLatest3 VARCHAR(20) DEFAULT NULL; 
 DECLARE includedAnyAllTested3 VARCHAR(10) DEFAULT NULL; 
-DECLARE includedTestedValueSet3 VARCHAR(1000) DEFAULT NULL; 
+DECLARE includedTestedValueSet3 VARCHAR(1000) DEFAULT NULL;
+DECLARE includedDateFrom3 VARCHAR(30) DEFAULT NULL; 
+DECLARE includedDateTo3 VARCHAR(30) DEFAULT NULL; 
+DECLARE includedPeriodValue3 VARCHAR(10) DEFAULT NULL; 
+DECLARE includedPeriodType3 VARCHAR(20) DEFAULT NULL; 
 
 DECLARE includedExclude4 VARCHAR(10) DEFAULT NULL; 
 DECLARE includedAnyAll4 VARCHAR(10) DEFAULT NULL; 
@@ -229,9 +235,11 @@ SET providerOrganisation = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.provide
 SET includedOrganisation = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.includedOrganisation'),'[',''),']',''),'"','');
 SET registrationStatus = JSON_UNQUOTE(JSON_EXTRACT(query,'$.registrationStatus'));
 
-SET cohortValue = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.cohortValue'),'[',''),']',''),'"','');
-SET valueDateFrom = JSON_UNQUOTE(JSON_EXTRACT(query,'$.valueDateFrom')); 
-SET valueDateTo = JSON_UNQUOTE(JSON_EXTRACT(query,'$.valueDateTo')); 
+SET registrationExclude = JSON_UNQUOTE(JSON_EXTRACT(query,'$.registrationExclude')); 
+SET registrationDateFrom = JSON_UNQUOTE(JSON_EXTRACT(query,'$.registrationDateFrom'));   
+SET registrationDateTo = JSON_UNQUOTE(JSON_EXTRACT(query,'$.registrationDateTo')); 
+SET registrationPeriodValue = JSON_UNQUOTE(JSON_EXTRACT(query,'$.registrationPeriodValue'));
+SET registrationPeriodType = JSON_UNQUOTE(JSON_EXTRACT(query,'$.registrationPeriodType')); 
 
 SET ageFrom = JSON_UNQUOTE(JSON_EXTRACT(query,'$.ageFrom'));
 SET ageTo = JSON_UNQUOTE(JSON_EXTRACT(query,'$.ageTo'));  
@@ -334,6 +342,10 @@ SET includedValueSet3 = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.includedVa
 SET includedEarliestLatest3 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedEarliestLatest3'));
 SET includedAnyAllTested3 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedAnyAllTested3'));
 SET includedTestedValueSet3 = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.includedTestedValueSet3'),'[',''),']',''),'"','');
+SET includedDateFrom3 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedDateFrom3')); 
+SET includedDateTo3 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedDateTo3')); 
+SET includedPeriodValue3 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodValue3')); 
+SET includedPeriodType3 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodType3')); 
 
 SET includedExclude4 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedExclude4')); 
 SET includedAnyAll4 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedAnyAll4'));
@@ -424,10 +436,10 @@ SET patient_cohort_tmp  = CONCAT('patient_cohort_tmp_',query_id);
 
 -- build cohort definition --
 CALL buildCohortDefinition(query_id,providerOrganisation, includedOrganisation, registrationStatus, ageFrom, ageTo, gender, postcode, 
-valueDateFrom, valueDateTo, cohortValue, org_tmp, valueset_tmp, concept_tmp, all_valueset_tmp, all_concept_tmp, cohort_tmp, observation_tmp, sourceSchema, store_tmp);
+registrationExclude, registrationDateFrom, registrationDateTo, registrationPeriodValue, registrationPeriodType, org_tmp, valueset_tmp, 
+concept_tmp, all_valueset_tmp, all_concept_tmp, cohort_tmp, observation_tmp, sourceSchema, store_tmp);
 
 -- build advance criteria --
-
 -- rule 1 --
 CALL getIncludeExcludeString(query_id,includedExclude1,includedAnyAll1,includedValueSet1, includedDateFrom1, includedDateTo1, 
 includedPeriodValue1,includedPeriodType1,incValueSet1_tmp, incConcept1_tmp, observation_tmp, 
@@ -485,8 +497,8 @@ NULL, NULL, NULL, NULL, NULL,
 NULL, sourceSchema , store_tmp, @includeExclude2aString);
 SET includeExclude2aString = @includeExclude2aString;
 -- rule 3 
-CALL getIncludeExcludeString(query_id,includedExclude3,includedAnyAll3,includedValueSet3, NULL, NULL, 
-NULL, NULL, incValueSet3_tmp, incConcept3_tmp, observation_tmp, 
+CALL getIncludeExcludeString(query_id,includedExclude3,includedAnyAll3,includedValueSet3, includedDateFrom3, includedDateTo3, 
+includedPeriodValue3, includedPeriodType3, incValueSet3_tmp, incConcept3_tmp, observation_tmp, 
 3, includedEarliestLatest3, NULL, NULL, observation3_tmp, 
 includedAnyAllTested3, includedTestedValueSet3, incTestedValueset3_tmp, incTestedConcept3_tmp, NULL, 
 NULL, NULL, NULL, NULL, NULL, 

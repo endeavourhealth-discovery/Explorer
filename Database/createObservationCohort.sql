@@ -35,7 +35,7 @@ BEGIN
    DROP TEMPORARY TABLE IF EXISTS qry_tmp;
    SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp (row_id INT, id BIGINT, value_set_code_type VARCHAR(255), PRIMARY KEY (row_id) ) AS 
    SELECT (@row_no := @row_no + 1) AS row_id, o.id AS id, cpt.value_set_code_type AS value_set_code_type 
-   FROM ', p_cohorttab,' c JOIN ',p_schema ,'.observation o ON c.patient_id = o.patient_id AND c.organization_id = o.organization_id 
+   FROM ', p_cohorttab,' c JOIN ', p_schema,'.observation o ON c.patient_id = o.patient_id AND c.organization_id = o.organization_id 
    JOIN ', p_allconcepttab,' cpt ON cpt.non_core_concept_id = o.non_core_concept_id 
    JOIN (SELECT @row_no := 0) t');
    PREPARE stmt FROM @sql;
@@ -59,12 +59,12 @@ BEGIN
 
    END WHILE; 
 
-   SET @sql = CONCAT('ALTER TABLE ', p_observationtab, ' ADD INDEX pat_idx(patient_id)');
+   SET @sql = CONCAT('ALTER TABLE ', p_observationtab, ' ADD INDEX patient_idx(patient_id)');
    PREPARE stmt FROM @sql;
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;
 
-   SET @sql = CONCAT('ALTER TABLE ', p_observationtab, ' ADD INDEX non_core_cpt_idx(non_core_concept_id)');
+   SET @sql = CONCAT('ALTER TABLE ', p_observationtab, ' ADD INDEX non_core_concept_idx(non_core_concept_id)');
    PREPARE stmt FROM @sql;
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;
@@ -74,7 +74,7 @@ BEGIN
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;
 
-   SET @sql = CONCAT('ALTER TABLE ', p_observationtab, ' ADD INDEX clinical_date_idx(clinical_effective_date)');
+   SET @sql = CONCAT('ALTER TABLE ', p_observationtab, ' ADD INDEX clinical_effective_date_idx(clinical_effective_date)');
    PREPARE stmt FROM @sql;
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;

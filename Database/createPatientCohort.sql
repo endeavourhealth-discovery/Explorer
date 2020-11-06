@@ -9,8 +9,8 @@ CREATE PROCEDURE createPatientCohort(
      p_agerange VARCHAR(255),
      p_genderrange VARCHAR(255),
      p_postcoderange VARCHAR(255),
-     p_daterange VARCHAR(255), 
-     p_concepttab VARCHAR(64),
+     p_regPeriodRange VARCHAR(500), 
+     p_regIncludeExclude VARCHAR(10),
      p_cohorttab VARCHAR(64),
      p_schema VARCHAR(255)
 )
@@ -18,7 +18,10 @@ CREATE PROCEDURE createPatientCohort(
 BEGIN
 
    DECLARE p_death VARCHAR(100) DEFAULT NULL;
-   DECLARE concept_join_clause VARCHAR(255) DEFAULT NULL;
+   DECLARE where_clause_1 VARCHAR(1000) DEFAULT NULL;
+
+   SET p_regIncludeExclude = UPPER(p_regIncludeExclude);
+   SET p_regIncludeExclude = IF(p_regIncludeExclude = 'EXCLUDE','NOT EXISTS', IF(p_regIncludeExclude = 'INCLUDE','EXISTS',''));
 
    IF p_regstatus <> '1' THEN
     SET p_death = 'p.date_of_death IS NULL';
@@ -27,9 +30,9 @@ BEGIN
    END IF;
 
    DROP TEMPORARY TABLE IF EXISTS qry_tmp;
-
-   SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp 
-    AS SELECT DISTINCT 
+  
+   SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp  
+   AS SELECT DISTINCT 
           e.person_id, 
           e.patient_id, 
           e.date_registered, 
@@ -61,32 +64,43 @@ BEGIN
      AND ',p_genderrange,' 
      AND ',p_postcoderange,' 
      AND ',p_death);
-     
+
    PREPARE stmt FROM @sql;
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;
 
    ALTER TABLE qry_tmp ADD INDEX pat_idx(patient_id);
    ALTER TABLE qry_tmp ADD INDEX org_idx(organization_id);
+  
+   IF p_regPeriodRange <> '1' THEN 
+
+        DROP TEMPORARY TABLE IF EXISTS qry_tmp_2;
+
+        -- filter patients by registration date range
+        SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp_2 AS 
+        SELECT DISTINCT c.person_id, c.patient_id, c.organization_id 
+        FROM qry_tmp c 
+        WHERE ', p_regPeriodRange);
+        PREPARE stmt FROM @sql;
+        EXECUTE stmt;
+        DEALLOCATE PREPARE stmt;
+        
+        -- set where clause
+        SET where_clause_1 = CONCAT(p_regIncludeExclude,' (SELECT 1 FROM qry_tmp_2 c2 WHERE c2.patient_id = c.patient_id) ');
+   ELSE
+        SET where_clause_1 = '1';
+   END IF;
 
    SET @sql = CONCAT('DROP TABLE IF EXISTS ', p_cohorttab);
    PREPARE stmt FROM @sql;
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;
 
-   IF p_concepttab IS NULL THEN
-       SET concept_join_clause = 'JOIN (SELECT 1 ) ct '; -- dummy join
-   ELSE
-       SET concept_join_clause = CONCAT('JOIN ',p_concepttab ,' ct ON ct.non_core_concept_id = o.non_core_concept_id '); 
-   END IF;
-
-   -- filter patients by observations to create the patient cohort
-   SET @sql = CONCAT('CREATE TABLE ', p_cohorttab, ' AS 
-   SELECT DISTINCT o.person_id, o.patient_id, o.organization_id 
-   FROM qry_tmp c JOIN ',p_schema ,'.observation o ON c.patient_id = o.patient_id 
-   AND c.organization_id = o.organization_id 
-   AND c.person_id = o.person_id ', concept_join_clause ,' 
-   WHERE ', p_daterange);
+   -- filter patients to create the patient cohort
+   SET @sql = CONCAT('CREATE TABLE ', p_cohorttab, ' 
+   AS SELECT DISTINCT c.person_id, c.patient_id, c.organization_id 
+   FROM qry_tmp c 
+   WHERE ', where_clause_1);
 
    PREPARE stmt FROM @sql;
    EXECUTE stmt;
@@ -96,6 +110,7 @@ BEGIN
    PREPARE stmt FROM @sql;
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;
+
 
 END//
 DELIMITER ;

@@ -12,9 +12,11 @@ CREATE PROCEDURE buildCohortDefinition(
      p_ageTo VARCHAR(20),
      p_gender VARCHAR(20),
      p_postcode VARCHAR(20),
-     p_dateFrom VARCHAR(20),
-     p_dateTo VARCHAR(20),
-     p_cohortValue VARCHAR(5000),
+     p_registrationExclude VARCHAR(10),
+     p_registrationDateFrom VARCHAR(20),  
+     p_registrationDateTo VARCHAR(20),  
+     p_registrationPeriodValue VARCHAR(10),
+     p_registrationPeriodType VARCHAR(20),
      p_organisationtab VARCHAR(64),
      p_valuesettab VARCHAR(64),
      p_concepttab VARCHAR(64),
@@ -28,13 +30,12 @@ CREATE PROCEDURE buildCohortDefinition(
 
 BEGIN
 
-  DECLARE agerange VARCHAR(255) DEFAULT NULL;
-  DECLARE daterange VARCHAR(255) DEFAULT NULL;
+  DECLARE agerange VARCHAR(500) DEFAULT NULL;
   DECLARE orgrange VARCHAR(255) DEFAULT NULL;
   DECLARE regstatus VARCHAR(255) DEFAULT NULL;
   DECLARE genderrange VARCHAR(255) DEFAULT NULL;
   DECLARE postcoderange VARCHAR(255) DEFAULT NULL;
-  DECLARE cohortvalueset VARCHAR(5000) DEFAULT NULL;
+  DECLARE regPeriodRange VARCHAR(500) DEFAULT NULL;
 
   DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -60,11 +61,25 @@ BEGIN
     SET regstatus = getRegStatusString(p_registrationStatus);
   END IF;
 
+-- get reg time period
+  SET p_registrationDateFrom = IF(p_registrationDateFrom = 'NaN-NaN-NaN', NULL, IF(p_registrationDateFrom = '', NULL, p_registrationDateFrom));
+  SET p_registrationDateTo = IF(p_registrationDateTo = 'NaN-NaN-NaN', NULL, IF(p_registrationDateTo = '', NULL, p_registrationDateTo));
+  SET p_registrationPeriodType = IF(p_registrationPeriodType = 'Days','DAY', IF(p_registrationPeriodType = 'Weeks','WEEK', IF(p_registrationPeriodType = 'Months', 'MONTH', NULL)));
+
+  IF (p_registrationExclude IS NOT NULL AND (
+     (p_registrationDateFrom IS NOT NULL OR p_registrationDateTo IS NOT NULL) OR 
+     (p_registrationPeriodValue IS NOT NULL AND p_registrationPeriodType IS NOT NULL))) THEN 
+     SET regPeriodRange = getAgeDateRangeString(NULL, NULL, p_registrationDateFrom, p_registrationDateTo, p_registrationPeriodValue, p_registrationPeriodType, 2);
+  ELSE
+     SET regPeriodRange = '1';
+  END IF;
+
 -- age range
   SET p_ageFrom = IF(p_ageFrom = 'NaN-NaN-NaN', NULL, IF(p_ageFrom = '', NULL, p_ageFrom));
   SET p_ageTo = IF(p_ageTo = 'NaN-NaN-NaN', NULL, IF(p_ageTo = '', NULL, p_ageTo));
+
   IF (p_ageFrom IS NOT NULL) OR (p_ageTo IS NOT NULL) THEN
-    SET agerange = getAgeDateRangeString(p_ageFrom, p_ageTo, 1);
+    SET agerange = getAgeDateRangeString(p_ageFrom, p_ageTo, NULL, NULL, NULL, NULL, 1);
   ELSE
     SET agerange = '1';
   END IF;
@@ -81,49 +96,14 @@ BEGIN
    SET postcoderange = '1';
   END IF;
 
--- date range
-  SET p_dateFrom = IF(p_dateFrom = 'NaN-NaN-NaN',NULL, IF(p_dateFrom = '', NULL, SUBSTRING(p_dateFrom,1,10)));
-  SET p_dateTo = IF(p_dateTo = 'NaN-NaN-NaN',NULL, IF(p_dateTo = '', NULL, SUBSTRING(p_dateTo,1,10)));
-
-  IF p_dateFrom = '1970-01-01' AND p_dateTo = '1970-01-01' THEN
-    SET p_dateFrom = NULL;
-    SET p_dateTo = NULL;
-  ELSEIF p_dateFrom <> '1970-01-01' AND p_dateTo = '1970-01-01' THEN
-    SET p_dateTo = NULL;
-  ELSEIF p_dateFrom = '1970-01-01' AND p_dateTo <> '1970-01-01' THEN
-    SET p_dateFrom = NULL;
-  END IF;
-
-  IF (p_dateFrom IS NULL) AND (p_dateTo IS NULL) THEN
-     SET daterange = '1';
-  ELSE
-    SET daterange = getAgeDateRangeString(p_dateFrom, p_dateTo, 2);
-  END IF;
-
--- cohort value set
-  SET p_cohortValue = IF(p_cohortValue = '', NULL, p_cohortValue); 
-  IF p_cohortValue IS NOT NULL THEN
-    CALL getValueSetString(p_cohortValue, p_storetab, @valueString);
-    SET cohortvalueset = @valueString;
-    -- create valueset cohort
-    CALL createValueSet(cohortvalueset, p_valuesettab);
-    -- create concept cohort from the valueset
-    CALL createConcept(p_concepttab, p_valuesettab, p_schema);
-  ELSE  -- if no value set is selected
-    SET cohortvalueset = NULL;
-    SET p_concepttab = NULL;
-  END IF;
-
 -- build cohort definition -- 
 
 -- create the patient cohort
-  CALL createPatientCohort(orgrange, regstatus, agerange, genderrange, postcoderange, daterange, p_concepttab, p_cohorttab, p_schema);
+  CALL createPatientCohort(orgrange, regstatus, agerange, genderrange, postcoderange, regPeriodRange, p_registrationExclude, p_cohorttab, p_schema);
 
--- create all valueset cohort
+-- create the observation cohort for all the value sets to be used in the advance queries
   CALL createValueSet('1', p_allvaluesettab);
--- create all concept cohort from the valueset
   CALL createConcept(p_allconcepttab, p_allvaluesettab, p_schema);
--- create observation cohort from the patient cohort for all value set
   CALL createObservationCohort(p_observationtab, p_cohorttab, p_allconcepttab, p_schema);
 
 END//

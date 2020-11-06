@@ -150,9 +150,11 @@ SET p_greaterlessvalue = IF(p_greaterlessvalue = '', NULL, p_greaterlessvalue);
       CALL createValueSet(includedTestedValueSetString, p_includeTestedValuesettab);
       -- create concept from includeexclude valueset
       CALL createConcept(p_includeTestedConcepttab, p_includeTestedValuesettab, p_schema);
-      
+      -- get time period date range string
+      SET timeperioddaterange = getTimePeriodDateRange(p_includedDateFrom, p_includedDateTo, p_includedPeriodValue, p_includedPeriodType);
+
       -- build include exclude string
-      CALL buildIncludeExcludeString(p_includedExclude, p_includedAnyAll, NULL, p_includeConcepttab, p_observationcohorttab, 
+      CALL buildIncludeExcludeString(p_includedExclude, p_includedAnyAll, timeperioddaterange, p_includeConcepttab, p_observationcohorttab, 
       p_filtertab, p_includedEarliestLatest, NULL, NULL, p_includedAnyAllTested,
       p_includeTestedConcepttab, NULL, NULL, NULL, NULL, 
       NULL, 3, @includeExcludeString);
