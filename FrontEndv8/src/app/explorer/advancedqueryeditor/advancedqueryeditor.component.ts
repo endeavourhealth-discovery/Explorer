@@ -94,6 +94,7 @@ interface savedQuery {
   includedAnyAllTested3: string;
   includedDateFrom3: string;
   includedDateTo3: string;
+  includedPeriodOperator3: string;
   includedPeriodValue3: string;
   includedPeriodType3: string;
   includedExclude4: string;
@@ -176,6 +177,10 @@ interface period {
 
 interface anyAll {
   anyAll: string;
+}
+
+interface withinBefore {
+  withinBefore: string;
 }
 
 interface areNot {
@@ -277,6 +282,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
   includedAnyAllTested3: string = '';
   includedDateFrom3: string = '';
   includedDateTo3: string = '';
+  includedPeriodOperator3: string = '';
   includedPeriodValue3: string = '';
   includedPeriodType3: string = '';
   includedExclude4: string = '';
@@ -423,6 +429,10 @@ export class AdvancedQueryEditorComponent implements OnInit {
     {areNot: 'Are'},
     {areNot: 'Are not'}
   ];
+  withinBefore: withinBefore[] = [
+    {withinBefore: 'is within the last'},
+    {withinBefore: 'is before'}
+  ];
 
   constructor(
     public dialogRef: MatDialogRef<AdvancedQueryEditorComponent>,
@@ -515,6 +525,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.includedAnyAllTested3 = query.includedAnyAllTested3;
       this.includedDateFrom3 = query.includedDateFrom3;
       this.includedDateTo3 = query.includedDateTo3;
+      this.includedPeriodOperator3 = query.includedPeriodOperator3;
       this.includedPeriodValue3 = query.includedPeriodValue3;
       this.includedPeriodType3 = query.includedPeriodType3;
       this.includedExclude4 = query.includedExclude4;
@@ -612,7 +623,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
       control57: [''], control58: [''], control59: [''], control60: [''],
       control61: [''], control62: [''], control63: [''], control64: [''],
       control61a: [''], control62a: [''], control63a: [''], control64a: [''],
-      control65: [''], control66: [''], control67: [''], control68: ['']
+      control65: [''], control66: [''], control67: [''], control68: [''], control69: ['']
     });
     this.fourthFormGroup = this._formBuilder.group({
       control65a: [''],  control65e: [''], control66a: [''], control66c: [''], control66d: [''], control66e: [''], control66g: [''], control67a: [''],
@@ -820,6 +831,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
       includedAnyAllTested3: this.includedAnyAllTested3,
       includedDateFrom3: this.formatDate(this.includedDateFrom3),
       includedDateTo3: this.formatDate(this.includedDateTo3),
+      includedPeriodOperator3: this.includedPeriodOperator3,
       includedPeriodValue3: this.includedPeriodValue3,
       includedPeriodType3: this.includedPeriodType3,
       includedTestedValueSet3: this.includedTestedValueSet3,

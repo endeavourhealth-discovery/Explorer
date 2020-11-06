@@ -816,7 +816,16 @@
             </mat-form-field>
             <br/>
             <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-              <p style="margin-left: 10px; margin-top: 28px">or <span style="color: blue">within the last</span></p>
+              <p style="margin-left: 10px; margin-top: 28px">or </p>
+              <mat-form-field appearance="standard" style="margin-left: 10px; width: 130px">
+                <mat-label>Within/Before</mat-label>
+                <mat-select [(ngModel)]="includedPeriodOperator3" formControlName="control69" (ngModelChange)="formChanged()">
+                  <mat-option *ngFor="let value of withinBefore" [value]="value.withinBefore">
+                    {{value.withinBefore}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+
               <mat-form-field appearance="standard" style="margin-left: 10px; width: 60px">
                 <mat-label>Period</mat-label>
                 <input matInput placeholder="Value" [(ngModel)]="includedPeriodValue3" formControlName="control67" (keydown.enter)="stepper.next()">
