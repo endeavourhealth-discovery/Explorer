@@ -97,6 +97,17 @@ interface savedQuery {
   includedPeriodOperator3: string;
   includedPeriodValue3: string;
   includedPeriodType3: string;
+  includedExclude3a: string;
+  includedValueSet3a: string;
+  includedEarliestLatest3a: string;
+  includedTestedValueSet3a: string;
+  includedAnyAll3a: string;
+  includedAnyAllTested3a: string;
+  includedDateFrom3a: string;
+  includedDateTo3a: string;
+  includedPeriodOperator3a: string;
+  includedPeriodValue3a: string;
+  includedPeriodType3a: string;
   includedExclude4: string;
   includedValueSet4: string;
   includedFollowedByValueSet4: string;
@@ -116,6 +127,15 @@ interface savedQuery {
   includedPeriodValue5: string;
   includedPeriodType5: string;
   includedAnyAll5: string;
+  includedExclude5a: string;
+  includedValueSet5a: string;
+  includedOperator5a: string;
+  includedEntryValue5a: string;
+  includedDateFrom5a: string;
+  includedDateTo5a: string;
+  includedPeriodValue5a: string;
+  includedPeriodType5a: string;
+  includedAnyAll5a: string;
 
   demographics: boolean;
   encounters: boolean;
@@ -285,6 +305,17 @@ export class AdvancedQueryEditorComponent implements OnInit {
   includedPeriodOperator3: string = '';
   includedPeriodValue3: string = '';
   includedPeriodType3: string = '';
+  includedExclude3a: string = '';
+  includedValueSet3a: string = '';
+  includedEarliestLatest3a: string = '';
+  includedTestedValueSet3a: string = '';
+  includedAnyAll3a: string = '';
+  includedAnyAllTested3a: string = '';
+  includedDateFrom3a: string = '';
+  includedDateTo3a: string = '';
+  includedPeriodOperator3a: string = '';
+  includedPeriodValue3a: string = '';
+  includedPeriodType3a: string = '';
   includedExclude4: string = '';
   includedValueSet4: string = '';
   includedFollowedByValueSet4: string = '';
@@ -304,6 +335,15 @@ export class AdvancedQueryEditorComponent implements OnInit {
   includedPeriodValue5: string = '';
   includedPeriodType5: string = '';
   includedAnyAll5: string = '';
+  includedExclude5a: string = '';
+  includedValueSet5a: string = '';
+  includedOperator5a: string = '';
+  includedEntryValue5a: string = '';
+  includedDateFrom5a: string = '';
+  includedDateTo5a: string = '';
+  includedPeriodValue5a: string = '';
+  includedPeriodType5a: string = '';
+  includedAnyAll5a: string = '';
 
   demographics: boolean = false;
   encounters: boolean = false;
@@ -382,6 +422,10 @@ export class AdvancedQueryEditorComponent implements OnInit {
   addQuery1d: boolean = true;
   select2a: boolean = false;
   addQuery2: boolean = true;
+  select3a: boolean = false;
+  addQuery3: boolean = true;
+  select5a: boolean = false;
+  addQuery5: boolean = true;
 
   registrations: registration[] = [
     {regValue: 'Currently registered patients'},
@@ -528,6 +572,17 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.includedPeriodOperator3 = query.includedPeriodOperator3;
       this.includedPeriodValue3 = query.includedPeriodValue3;
       this.includedPeriodType3 = query.includedPeriodType3;
+      this.includedExclude3a = query.includedExclude3a;
+      this.includedValueSet3a = query.includedValueSet3a;
+      this.includedEarliestLatest3a = query.includedEarliestLatest3a;
+      this.includedTestedValueSet3a = query.includedTestedValueSet3a;
+      this.includedAnyAll3a = query.includedAnyAll3a;
+      this.includedAnyAllTested3a = query.includedAnyAllTested3a;
+      this.includedDateFrom3a = query.includedDateFrom3a;
+      this.includedDateTo3a = query.includedDateTo3a;
+      this.includedPeriodOperator3a = query.includedPeriodOperator3a;
+      this.includedPeriodValue3a = query.includedPeriodValue3a;
+      this.includedPeriodType3a = query.includedPeriodType3a;
       this.includedExclude4 = query.includedExclude4;
       this.includedValueSet4 = query.includedValueSet4;
       this.includedFollowedByValueSet4 = query.includedFollowedByValueSet4;
@@ -547,6 +602,15 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.includedPeriodValue5 = query.includedPeriodValue5;
       this.includedPeriodType5 = query.includedPeriodType5;
       this.includedAnyAll5 = query.includedAnyAll5;
+      this.includedExclude5a = query.includedExclude5a;
+      this.includedValueSet5a = query.includedValueSet5a;
+      this.includedOperator5a = query.includedOperator5a;
+      this.includedEntryValue5a = query.includedEntryValue5a;
+      this.includedDateFrom5a = query.includedDateFrom5a;
+      this.includedDateTo5a = query.includedDateTo5a;
+      this.includedPeriodValue5a = query.includedPeriodValue5a;
+      this.includedPeriodType5a = query.includedPeriodType5a;
+      this.includedAnyAll5a = query.includedAnyAll5a;
 
       this.demographics = query.demographics;
       this.encounters = query.encounters;
@@ -593,6 +657,14 @@ export class AdvancedQueryEditorComponent implements OnInit {
         this.select2a = true;
         this.addQuery2 = false;
       }
+      if (this.includedExclude3a != "") {
+        this.select3a = true;
+        this.addQuery3 = false;
+      }
+      if (this.includedExclude5a != "") {
+        this.select5a = true;
+        this.addQuery5 = false;
+      }
     }
 
     this.firstFormGroup = this._formBuilder.group({
@@ -623,11 +695,13 @@ export class AdvancedQueryEditorComponent implements OnInit {
       control57: [''], control58: [''], control59: [''], control60: [''],
       control61: [''], control62: [''], control63: [''], control64: [''],
       control61a: [''], control62a: [''], control63a: [''], control64a: [''],
-      control65: [''], control66: [''], control67: [''], control68: [''], control69: ['']
+      control65: [''], control66: [''], control67: [''], control68: [''], control69: [''],
+      control31a: [''],control51a: [''],control32a: [''],control33a: [''],control52a: [''],control34a: [''],control65a: [''],control66a: [''],control69a: [''],control67a: [''], control68a: [''],
+      control40a: [''],control56a: [''],control41a: [''],control42a: [''],control43a: [''],control44a: [''],control45a: [''],control57a: [''],control58a: ['']
     });
     this.fourthFormGroup = this._formBuilder.group({
-      control65a: [''],  control65e: [''], control66a: [''], control66c: [''], control66d: [''], control66e: [''], control66g: [''], control67a: [''],
-      control67b: [''], control67c: [''], control67d: [''], control67e: [''], control67g: [''], control68a: [''], control68b: [''], control68c: [''], control68d: [''], control68e: [''], control68f: [''], control68g: ['']
+      control165a: [''],  control165e: [''], control166a: [''], control166c: [''], control166d: [''], control166e: [''], control166g: [''], control167a: [''],
+      control167b: [''], control167c: [''], control167d: [''], control167e: [''], control167g: [''], control168a: [''], control168b: [''], control168c: [''], control168d: [''], control168e: [''], control168f: [''], control168g: ['']
     });
     this.fifthFormGroup = this._formBuilder.group({
       control15: [''], control18: ['', Validators.required], control19: ['', Validators.required]
@@ -835,6 +909,17 @@ export class AdvancedQueryEditorComponent implements OnInit {
       includedPeriodValue3: this.includedPeriodValue3,
       includedPeriodType3: this.includedPeriodType3,
       includedTestedValueSet3: this.includedTestedValueSet3,
+      includedExclude3a: this.includedExclude3a,
+      includedAnyAll3a: this.includedAnyAll3a,
+      includedValueSet3a: this.includedValueSet3a,
+      includedEarliestLatest3a: this.includedEarliestLatest3a,
+      includedAnyAllTested3a: this.includedAnyAllTested3a,
+      includedDateFrom3a: this.formatDate(this.includedDateFrom3a),
+      includedDateTo3a: this.formatDate(this.includedDateTo3a),
+      includedPeriodOperator3a: this.includedPeriodOperator3a,
+      includedPeriodValue3a: this.includedPeriodValue3a,
+      includedPeriodType3a: this.includedPeriodType3a,
+      includedTestedValueSet3a: this.includedTestedValueSet3a,
       includedExclude4: this.includedExclude4,
       includedAnyAll4: this.includedAnyAll4,
       includedValueSet4: this.includedValueSet4,
@@ -854,6 +939,15 @@ export class AdvancedQueryEditorComponent implements OnInit {
       includedDateTo5: this.formatDate(this.includedDateTo5),
       includedPeriodValue5: this.includedPeriodValue5,
       includedPeriodType5: this.includedPeriodType5,
+      includedExclude5a: this.includedExclude5a,
+      includedAnyAll5a: this.includedAnyAll5a,
+      includedValueSet5a: this.includedValueSet5a,
+      includedOperator5a: this.includedOperator5a,
+      includedEntryValue5a: this.includedEntryValue5a,
+      includedDateFrom5a: this.formatDate(this.includedDateFrom5a),
+      includedDateTo5a: this.formatDate(this.includedDateTo5a),
+      includedPeriodValue5a: this.includedPeriodValue5a,
+      includedPeriodType5a: this.includedPeriodType5a,
       demographics: this.demographics,
       encounters: this.encounters,
       medication: this.medication,
@@ -918,8 +1012,8 @@ export class AdvancedQueryEditorComponent implements OnInit {
   formChanged() {
     this.disableForm = this.type=='' || this.type==undefined || this.name=='' || this.name==undefined || this.selectedOrganisation=='' || this.selectedOrganisation==undefined ||
       this.selectedRegistration=='' || this.selectedRegistration==undefined
-    || this.selectedDelivery=='' || this.selectedDelivery==undefined || this.selectedSchedule=='' || this.selectedSchedule==undefined
-        ;
+      || this.selectedDelivery=='' || this.selectedDelivery==undefined || this.selectedSchedule=='' || this.selectedSchedule==undefined
+    ;
   }
 
   addSameRule1() {
@@ -941,5 +1035,14 @@ export class AdvancedQueryEditorComponent implements OnInit {
   addSameRule2() {
     this.select2a = true;
   }
+
+  addSameRule3() {
+    this.select3a = true;
+  }
+
+  addSameRule5() {
+    this.select5a = true;
+  }
+
 
 }
