@@ -1046,7 +1046,7 @@
           <p style="margin-left: 10px; margin-top: 28px; display: inline">and those <span style="color: blue">entries</span></p>
           <mat-form-field appearance="standard" style="width: 100px; margin-left: 10px">
             <mat-label>Are/Are not</mat-label>
-            <mat-select multiple [(ngModel)]="includedAreNot4 " formControlName="control54" (ngModelChange)="formChanged()">
+            <mat-select [(ngModel)]="includedAreNot4 " formControlName="control54" (ngModelChange)="formChanged()">
               <mat-option *ngFor="let value of areNot" [value]="value.areNot">
                 {{value.areNot}}
               </mat-option>

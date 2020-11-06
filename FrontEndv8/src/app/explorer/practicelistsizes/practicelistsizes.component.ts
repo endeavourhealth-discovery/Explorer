@@ -20,8 +20,8 @@ export class PracticeListSizesComponent implements OnInit {
   searchData = '';
   headers: any[] = [
     {label: 'Practice', property: 'practice', secondary: false},
-    {label: 'ODS Code', property: 'ods_code', secondary: false},
-    {label: 'Size', property: 'list_size', secondary: false}
+    {label: 'ODS code', property: 'ods_code', secondary: false},
+    {label: 'List size', property: 'list_size', secondary: false}
   ];
 
   constructor(private explorerService: ExplorerService,
