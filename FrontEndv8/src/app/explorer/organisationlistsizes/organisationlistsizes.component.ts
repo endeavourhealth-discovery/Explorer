@@ -26,7 +26,6 @@ export class OrganisationListSizesComponent implements OnInit {
 
   ngOnInit() {
     this.search();
-    this.getTotalOrganisationCount();
   }
 
   itemClicked(org: any) {
@@ -50,7 +49,6 @@ export class OrganisationListSizesComponent implements OnInit {
     this.pageNumber = 1;
     this.tableData.rows = [];
     this.search();
-    this.getTotalOrganisationCount();
   }
 
   getTotalOrganisationCount() {
@@ -67,6 +65,7 @@ export class OrganisationListSizesComponent implements OnInit {
     this.explorerService.searchOrganisations(this.searchData, this.pageNumber, this.pageSize, this.orderColumn, this.descending)
       .subscribe(result => {
           this.tableData = result;
+          this.getTotalOrganisationCount();
         },
         error => {
           this.log.error('The organisations could not be loaded. Please try again.');

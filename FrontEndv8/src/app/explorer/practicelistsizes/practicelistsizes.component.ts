@@ -29,7 +29,6 @@ export class PracticeListSizesComponent implements OnInit {
     this.router.params.subscribe(params => {
       this.ccg = params['ccg'];
       this.search();
-      this.getTotalPracticesCount();
     });
   }
 
@@ -50,7 +49,6 @@ export class PracticeListSizesComponent implements OnInit {
     this.pageNumber = 1;
     this.tableData.rows = [];
     this.search();
-    this.getTotalPracticesCount();
   }
 
   getTotalPracticesCount() {
@@ -67,6 +65,7 @@ export class PracticeListSizesComponent implements OnInit {
       this.pageSize, this.orderColumn, this.descending)
       .subscribe(result => {
           this.tableData = result;
+            this.getTotalPracticesCount();
         },
         error => {
           this.log.error('The practices could not be loaded. Please try again.');
