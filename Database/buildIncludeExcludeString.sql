@@ -132,7 +132,7 @@ ELSEIF p_filtertype = 4 THEN
    ALTER TABLE qry_tmp_1 ADD INDEX pat_idx (patient_id);
 
    DROP TEMPORARY TABLE IF EXISTS qry_tmp_2;
-   -- create a 2nd temporary patient observation cohort which contains any or all the selected followed by value sets within the selected time period if applicable
+   -- create a 2nd temporary patient observation cohort which contains any or all of the selected followed by value sets within the selected time period if applicable
    SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp_2 AS 
    SELECT DISTINCT o2.patient_id 
    FROM ', p_observationcohorttab,' o2 
@@ -160,9 +160,9 @@ ELSEIF p_filtertype = 4 THEN
 ELSEIF p_filtertype = 5 THEN
 
    DROP TEMPORARY TABLE IF EXISTS qry_tmp_1;
-   -- create a temporary patient observation cohort which contains any or all of the selected value sets within the select time period if applicable
+   -- create a temporary patient observation cohort which contains any or all of the selected value sets within the selected time period if applicable
    SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp_1 AS 
-   SELECT DISTINCT o2.patient_id, o2.non_core_concept_id 
+   SELECT DISTINCT o2.patient_id, o2.value_set_code_type, o2.non_core_concept_id, o2.clinical_effective_date 
    FROM ', p_observationcohorttab,' o2  
    WHERE o2.value_set_code_type = ', p_includedAnyAll,' (SELECT DISTINCT c.value_set_code_type FROM ', p_concepttab,' c) 
    AND ', p_timeperioddaterange);

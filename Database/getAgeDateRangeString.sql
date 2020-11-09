@@ -6,8 +6,8 @@ DELIMITER //
 CREATE FUNCTION getAgeDateRangeString(
    p_from VARCHAR(30), 
    p_to VARCHAR(30), 
-   p_periodFrom VARCHAR(20), 
-   p_periodTo VARCHAR(20),  
+   p_dateFrom VARCHAR(20), 
+   p_dateTo VARCHAR(20),  
    p_periodValue VARCHAR(20), 
    p_periodType VARCHAR(20), 
    p_type INT) -- 1 = age, 2 = reg date
@@ -29,37 +29,33 @@ IF p_type = 1 THEN
   
 ELSEIF p_type = 2 THEN
 
-     IF p_periodFrom IS NOT NULL AND p_periodTo IS NOT NULL AND p_periodValue IS NOT NULL THEN
+     -- additional checks for default date values
+     IF p_dateFrom = '1970-01-01' AND p_dateTo = '1970-01-01' THEN
+           SET p_dateFrom = NULL;
+           SET p_dateTo = NULL;
+     ELSEIF p_dateFrom <> '1970-01-01' AND p_dateTo = '1970-01-01' THEN
+           SET p_dateTo = NULL;
+     ELSEIF p_dateFrom = '1970-01-01' AND p_dateTo <> '1970-01-01' THEN
+           SET p_dateFrom = NULL;
+     END IF;
 
+     IF p_dateFrom IS NOT NULL AND p_dateTo IS NOT NULL AND p_periodValue IS NOT NULL THEN
          SET ageDateString = CONCAT('((c.date_registered >= DATE_SUB( NOW(), INTERVAL ', p_periodValue,' ', p_periodType,')) 
-         OR (c.date_registered BETWEEN ', QUOTE(p_periodFrom) ,' AND ', QUOTE(p_periodTo),') )' );
-
-     ELSEIF p_periodFrom IS NOT NULL AND p_periodTo IS NULL AND p_periodValue IS NOT NULL THEN
-
+         OR (c.date_registered BETWEEN ', QUOTE(p_dateFrom) ,' AND ', QUOTE(p_dateTo),') )' );
+     ELSEIF p_dateFrom IS NOT NULL AND p_dateTo IS NULL AND p_periodValue IS NOT NULL THEN
          SET ageDateString = CONCAT('((c.date_registered >= DATE_SUB( NOW(), INTERVAL ', p_periodValue,' ', p_periodType,')) 
-         OR (c.date_registered >= ', QUOTE(p_periodFrom), ') )' );
-
-     ELSEIF p_periodFrom IS NULL AND p_periodTo IS NOT NULL AND p_periodValue IS NOT NULL THEN
-
+         OR (c.date_registered >= ', QUOTE(p_dateFrom), ') )' );
+     ELSEIF p_dateFrom IS NULL AND p_dateTo IS NOT NULL AND p_periodValue IS NOT NULL THEN
          SET ageDateString = CONCAT('((c.date_registered >= DATE_SUB( NOW(), INTERVAL ', p_periodValue,' ', p_periodType,')) 
-         OR (c.date_registered <= ', QUOTE(p_periodTo), ') )' );
-
-     ELSEIF p_periodFrom IS NOT NULL AND p_periodTo IS NOT NULL AND p_periodValue IS NULL THEN
-
-         SET ageDateString = CONCAT('c.date_registered BETWEEN ', QUOTE(p_periodFrom) ,' AND ', QUOTE(p_periodTo));
-
-     ELSEIF p_periodFrom IS NOT NULL AND p_periodTo IS NULL AND p_periodValue IS NULL THEN
-
-         SET ageDateString = CONCAT('c.date_registered >= ', QUOTE(p_periodFrom) );
-
-     ELSEIF p_periodFrom IS NULL AND p_periodTo IS NOT NULL AND p_periodValue IS NULL THEN
-
-         SET ageDateString = CONCAT('c.date_registered <= ', QUOTE(p_periodTo) );
-
-     ELSEIF p_periodFrom IS NULL AND p_periodTo IS NULL AND p_periodValue IS NOT NULL THEN
-
+         OR (c.date_registered <= ', QUOTE(p_dateTo), ') )' );
+     ELSEIF p_dateFrom IS NOT NULL AND p_dateTo IS NOT NULL AND p_periodValue IS NULL THEN
+         SET ageDateString = CONCAT('c.date_registered BETWEEN ', QUOTE(p_dateFrom) ,' AND ', QUOTE(p_dateTo));
+     ELSEIF p_dateFrom IS NOT NULL AND p_dateTo IS NULL AND p_periodValue IS NULL THEN
+         SET ageDateString = CONCAT('c.date_registered >= ', QUOTE(p_dateFrom) );
+     ELSEIF p_dateFrom IS NULL AND p_dateTo IS NOT NULL AND p_periodValue IS NULL THEN
+         SET ageDateString = CONCAT('c.date_registered <= ', QUOTE(p_dateTo) );
+     ELSEIF p_dateFrom IS NULL AND p_dateTo IS NULL AND p_periodValue IS NOT NULL THEN
          SET ageDateString = CONCAT('c.date_registered >= DATE_SUB(NOW(), INTERVAL ', p_periodValue,' ', p_periodType,')');
-
      END IF;
      
 END IF;

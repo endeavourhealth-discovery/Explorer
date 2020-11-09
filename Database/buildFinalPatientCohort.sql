@@ -16,8 +16,10 @@ CREATE PROCEDURE buildFinalPatientCohort (
     IN p_includeExclude2String VARCHAR(1000),
     IN p_includeExclude2aString VARCHAR(1000),
     IN p_includeExclude3String VARCHAR(1000),
+    IN p_includeExclude3aString VARCHAR(1000),
     IN p_includeExclude4String VARCHAR(1000),
     IN p_includeExclude5String VARCHAR(1000),
+    IN p_includeExclude5aString VARCHAR(1000),
     IN p_schema VARCHAR(255)
 )
 
@@ -42,8 +44,7 @@ BEGIN
     ALTER TABLE qry_tmp ADD INDEX pat_idx(patient_id);
 
     SET qrytabname = 'qry_tmp';
--- 1
-
+-- 1 --
     IF p_includeExclude1String <> '1' THEN
 
       DROP TEMPORARY TABLE IF EXISTS qry_tmp_1;
@@ -57,8 +58,7 @@ BEGIN
       SET qrytabname = 'qry_tmp_1';
 
     END IF;
--- 1a
-
+-- 1a --
     IF p_includeExclude1aString <> '1' THEN
 
       DROP TEMPORARY TABLE IF EXISTS qry_tmp_1a;
@@ -72,8 +72,7 @@ BEGIN
       SET qrytabname = 'qry_tmp_1a';
 
     END IF;
--- 1b
-
+-- 1b --
     IF p_includeExclude1bString <> '1' THEN
 
       DROP TEMPORARY TABLE IF EXISTS qry_tmp_1b;
@@ -87,9 +86,7 @@ BEGIN
       SET qrytabname = 'qry_tmp_1b';
 
     END IF;
-
--- 1c
-
+-- 1c --
     IF p_includeExclude1cString <> '1' THEN
 
       DROP TEMPORARY TABLE IF EXISTS qry_tmp_1c;
@@ -103,9 +100,7 @@ BEGIN
       SET qrytabname = 'qry_tmp_1c';
 
     END IF;
-
--- 1d
-
+-- 1d --
     IF p_includeExclude1dString <> '1' THEN
 
       DROP TEMPORARY TABLE IF EXISTS qry_tmp_1d;
@@ -119,9 +114,7 @@ BEGIN
       SET qrytabname = 'qry_tmp_1d';
 
     END IF;
-
--- 2
-
+-- 2 --
     IF p_includeExclude2String <> '1' THEN
 
       DROP TEMPORARY TABLE IF EXISTS qry_tmp_2;
@@ -135,8 +128,7 @@ BEGIN
       SET qrytabname = 'qry_tmp_2';
 
     END IF;
--- 2a    
-
+-- 2a --  
     IF p_includeExclude2aString <> '1' THEN
 
       DROP TEMPORARY TABLE IF EXISTS qry_tmp_2a;
@@ -150,8 +142,7 @@ BEGIN
       SET qrytabname = 'qry_tmp_2a';
 
     END IF;
--- 3
-
+-- 3 --
     IF p_includeExclude3String <> '1' THEN
 
       DROP TEMPORARY TABLE IF EXISTS qry_tmp_3;
@@ -165,8 +156,21 @@ BEGIN
       SET qrytabname = 'qry_tmp_3';
 
     END IF;
--- 4
+-- 3a --
+    IF p_includeExclude3aString <> '1' THEN
 
+      DROP TEMPORARY TABLE IF EXISTS qry_tmp_3a;
+      SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp_3a AS 
+      SELECT DISTINCT o.query_id, o.patient_id, o.person_id, o.organization_id FROM ', qrytabname,' o WHERE ', p_includeExclude3aString);
+      PREPARE stmt FROM @sql;
+      EXECUTE stmt;
+      DEALLOCATE PREPARE stmt;
+      ALTER TABLE qry_tmp_3a ADD INDEX pat_idx(patient_id);
+
+      SET qrytabname = 'qry_tmp_3a';
+
+    END IF;
+-- 4 --
     IF p_includeExclude4String <> '1' THEN
 
       DROP TEMPORARY TABLE IF EXISTS qry_tmp_4;
@@ -180,8 +184,7 @@ BEGIN
       SET qrytabname = 'qry_tmp_4';
 
     END IF;
--- 5
-
+-- 5 --
     IF p_includeExclude5String <> '1' THEN
 
       DROP TEMPORARY TABLE IF EXISTS qry_tmp_5;
@@ -195,7 +198,21 @@ BEGIN
       SET qrytabname = 'qry_tmp_5';
 
     END IF;
-    
+-- 5a --
+    IF p_includeExclude5aString <> '1' THEN
+
+      DROP TEMPORARY TABLE IF EXISTS qry_tmp_5a;
+      SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp_5a AS 
+      SELECT DISTINCT o.query_id, o.patient_id, o.person_id, o.organization_id FROM ', qrytabname,' o WHERE ', p_includeExclude5aString);
+      PREPARE stmt FROM @sql;
+      EXECUTE stmt;
+      DEALLOCATE PREPARE stmt;
+      ALTER TABLE qry_tmp_5a ADD INDEX pat_idx(patient_id);
+
+      SET qrytabname = 'qry_tmp_5a';
+
+    END IF;
+
 -- build final patient cohort table
 
     DROP TEMPORARY TABLE IF EXISTS qry_tmp_6;
