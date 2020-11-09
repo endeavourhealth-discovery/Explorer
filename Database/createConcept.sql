@@ -20,17 +20,7 @@ BEGIN
    UNION 
    SELECT vc.value_set_code_type, 
           cpt.dbid AS non_core_concept_id 
-   FROM ", p_valuesettab," vc JOIN ", p_schema,".concept cpt ON cpt.id = vc.original_code 
-   UNION 
-   SELECT vc.value_set_code_type, 
-          cpt.dbid AS non_core_concept_id 
-   FROM ", p_valuesettab," vc JOIN ", p_schema,".concept cpt ON cpt.id = CONCAT('R2_',vc.original_code) 
-   WHERE vc.snomed_id = '0' AND vc.value_set_code_type = 'Blood Pressure' 
-   UNION 
-   SELECT vc.value_set_code_type, 
-          cpt.dbid AS non_core_concept_id 
-   FROM ", p_valuesettab," vc JOIN ", p_schema,".concept cpt ON cpt.id = CONCAT('R3_',vc.original_code) 
-   WHERE vc.snomed_id = '0' AND vc.value_set_code_type = 'Blood Pressure'");
+   FROM ", p_valuesettab," vc JOIN ", p_schema,".concept cpt ON cpt.id = vc.original_code ");
    PREPARE stmt FROM @sql;
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;
