@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {ExplorerService} from "../explorer.service";
 import {ActivatedRoute} from "@angular/router";
 import {LoggerService} from "dds-angular8";
+import {TableData} from "../dashboardviewer/model/TableData";
 
 @Component({
   selector: 'app-practicelistsizes',
@@ -11,18 +12,13 @@ import {LoggerService} from "dds-angular8";
 export class PracticeListSizesComponent implements OnInit {
 
   ccg: string;
-  practices: any[];
+  tableData: TableData = null;
   totalItems = 0;
   pageNumber = 1;
   pageSize = 10;
   orderColumn = 'practice';
   descending = false;
   searchData = '';
-  headers: any[] = [
-    {label: 'Practice', property: 'practice', secondary: false},
-    {label: 'ODS code', property: 'ods_code', secondary: false},
-    {label: 'List size', property: 'list_size', secondary: false}
-  ];
 
   constructor(private explorerService: ExplorerService,
               private router: ActivatedRoute,
@@ -52,7 +48,7 @@ export class PracticeListSizesComponent implements OnInit {
   searchClicked($event) {
     this.searchData = $event;
     this.pageNumber = 1;
-    this.practices = [];
+    this.tableData.rows = [];
     this.search();
     this.getTotalPracticesCount();
   }
@@ -70,7 +66,7 @@ export class PracticeListSizesComponent implements OnInit {
     this.explorerService.searchPractices(this.ccg, this.searchData, this.pageNumber,
       this.pageSize, this.orderColumn, this.descending)
       .subscribe(result => {
-          this.practices = result;
+          this.tableData = result;
         },
         error => {
           this.log.error('The practices could not be loaded. Please try again.');

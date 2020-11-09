@@ -7,14 +7,16 @@
     <mat-card-subtitle>A list practices and their list sizes</mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
-    <app-generic-table-ssp
-      [items]="practices"
-      [totalItems]="totalItems"
-      [detailsToShow]="headers"
-      [pageSize]="pageSize"
-      (onPageChange)="pageChange($event)"
-      (onOrderChange)="orderChange($event)"
-      (search)="searchClicked($event)">
-    </app-generic-table-ssp>
+    <div *ngIf="tableData && tableData.rows">
+      <app-generic-table-ssp
+        [items]="tableData.rows"
+        [totalItems]="totalItems"
+        [detailsToShow]="tableData.headers"
+        [pageSize]="pageSize"
+        (onPageChange)="pageChange($event)"
+        (onOrderChange)="orderChange($event)"
+        (search)="searchClicked($event)">
+      </app-generic-table-ssp>
+    </div>
   </mat-card-content>
 </mat-card>

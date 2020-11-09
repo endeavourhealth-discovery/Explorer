@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {LoggerService} from "dds-angular8";
 import {ExplorerService} from "../explorer.service";
 import {Router} from "@angular/router";
+import {TableData} from "../dashboardviewer/model/TableData";
 
 @Component({
   selector: 'app-organisationlistsizes',
@@ -10,23 +11,13 @@ import {Router} from "@angular/router";
 })
 export class OrganisationListSizesComponent implements OnInit {
 
-  organisations: any[];
+  tableData: TableData = null;
   totalItems = 0;
   pageNumber = 1;
   pageSize = 10;
   orderColumn = 'ccg';
   descending = false;
   searchData = '';
-  headers: any[] = [
-    {label: 'Name', property: 'ccg', secondary: false},
-    {label: 'List size', property: 'list_size', secondary: false}
-  ];
-
-  ccgHeaders: any[] = [
-    {label: 'Practice', property: 'practice', secondary: false},
-    {label: 'ODS code', property: 'ods_code', secondary: false},
-    {label: 'List size', property: 'list_size', secondary: false}
-  ];
 
   constructor(private explorerService: ExplorerService,
               private router: Router,
@@ -57,7 +48,7 @@ export class OrganisationListSizesComponent implements OnInit {
   searchClicked($event) {
     this.searchData = $event;
     this.pageNumber = 1;
-    this.organisations = [];
+    this.tableData.rows = [];
     this.search();
     this.getTotalOrganisationCount();
   }
@@ -75,7 +66,7 @@ export class OrganisationListSizesComponent implements OnInit {
   private search() {
     this.explorerService.searchOrganisations(this.searchData, this.pageNumber, this.pageSize, this.orderColumn, this.descending)
       .subscribe(result => {
-          this.organisations = result;
+          this.tableData = result;
         },
         error => {
           this.log.error('The organisations could not be loaded. Please try again.');

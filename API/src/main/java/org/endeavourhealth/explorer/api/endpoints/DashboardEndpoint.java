@@ -833,7 +833,7 @@ public class DashboardEndpoint {
 
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
 
-            ArrayList<JSONObject> data = viewerDAL.searchOrganisations(searchData, pageNumber, pageSize,
+            TableData data = viewerDAL.searchOrganisations(searchData, pageNumber, pageSize,
                     orderColumn, descending);
 
             return Response
@@ -879,7 +879,7 @@ public class DashboardEndpoint {
 
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
 
-            ArrayList<JSONObject> data = viewerDAL.searchPractices(ccg, searchData, pageNumber, pageSize,
+            TableData data = viewerDAL.searchPractices(ccg, searchData, pageNumber, pageSize,
                     orderColumn, descending);
 
             return Response

@@ -2034,10 +2034,23 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         return list;
     }
 
-    public ArrayList<JSONObject> searchOrganisations(String searchData, Integer pageNumber, Integer pageSize,
+    public TableData searchOrganisations(String searchData, Integer pageNumber, Integer pageSize,
                                          String orderColumn, boolean descending) throws Exception {
 
-        ArrayList<JSONObject> data = new ArrayList<>();
+        TableData data = new TableData();
+
+        TableHeader header = new TableHeader();
+        header.setLabel("Name");
+        header.setProperty("ccg");
+        header.setSecondary(false);
+        data.getHeaders().add(header);
+
+        header = new TableHeader();
+        header.setLabel("List size");
+        header.setProperty("list_size");
+        header.setSecondary(false);
+        data.getHeaders().add(header);
+
         JSONObject row = null;
         String order = " asc ";
         if (descending) {
@@ -2064,7 +2077,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                     row = new JSONObject();
                     row.put("ccg", resultSet.getString("ccg"));
                     row.put("list_size", formatter.format(resultSet.getBigDecimal("list_size")));
-                    data.add(row);
+                    data.getRows().add(row);
                 }
             }
         }
@@ -2094,10 +2107,29 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         return count;
     }
 
-    public ArrayList<JSONObject> searchPractices(String ccg, String searchData, Integer pageNumber, Integer pageSize,
+    public TableData searchPractices(String ccg, String searchData, Integer pageNumber, Integer pageSize,
                                                      String orderColumn, boolean descending) throws Exception {
 
-        ArrayList<JSONObject> data = new ArrayList<>();
+        TableData data = new TableData();
+
+        TableHeader header = new TableHeader();
+        header.setLabel("Practice");
+        header.setProperty("practice");
+        header.setSecondary(false);
+        data.getHeaders().add(header);
+
+        header = new TableHeader();
+        header.setLabel("ODS code");
+        header.setProperty("ods_code");
+        header.setSecondary(false);
+        data.getHeaders().add(header);
+
+        header = new TableHeader();
+        header.setLabel("List size");
+        header.setProperty("list_size");
+        header.setSecondary(false);
+        data.getHeaders().add(header);
+
         JSONObject row = null;
         String order = " asc ";
         if (descending) {
@@ -2133,7 +2165,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                     row.put("practice", resultSet.getString("practice"));
                     row.put("ods_code", resultSet.getString("ods_code"));
                     row.put("list_size", formatter.format(resultSet.getBigDecimal("list_size")));
-                    data.add(row);
+                    data.getRows().add(row);
                 }
             }
         }
