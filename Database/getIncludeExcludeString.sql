@@ -116,7 +116,7 @@ SET p_greaterlessvalue = IF(p_greaterlessvalue = '', NULL, p_greaterlessvalue);
       -- get time period date range string
       SET timeperioddaterange = getTimePeriodDateRange(p_includedDateFrom, p_includedDateTo, p_includedPeriodValue, p_includedPeriodType, p_includedPeriodOperator);
       -- build include exclude string
-      CALL buildIncludeExcludeString(p_includedExclude, p_includedAnyAll, NULL, p_includeConcepttab, p_observationcohorttab, 
+      CALL buildIncludeExcludeString(p_includedExclude, p_includedAnyAll, timeperioddaterange, p_includeConcepttab, p_observationcohorttab, 
       p_filtertab, p_includedEarliestLatest, p_includedOperator, p_includedEntryValue, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, @includeExcludeString);
       SET p_includeExcludeString = @includeExcludeString;
     ELSE 
