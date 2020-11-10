@@ -448,20 +448,24 @@ export class AdvancedQueryEditorComponent implements OnInit {
   addQuery5: boolean = true;
 
   registrations: registration[] = [
+    {regValue: ''},
     {regValue: 'Currently registered patients'},
     {regValue: 'All patients included left and deads'}
   ];
   genders: gender[] = [
+    {genValue: ''},
     {genValue: 'All'},
     {genValue: 'Male'},
     {genValue: 'Female'},
     {genValue: 'Other'}
   ];
   deliveries: delivery[] = [
+    {deliveryValue: ''},
     {deliveryValue: 'Dashboard'},
     {deliveryValue: 'CSV files'}
   ];
   schedules: schedule[] = [
+    {scheduleValue: ''},
     {scheduleValue: 'Daily'},
     {scheduleValue: 'Weekly'},
     {scheduleValue: 'Monthly'},
@@ -469,31 +473,38 @@ export class AdvancedQueryEditorComponent implements OnInit {
     {scheduleValue: 'One-off'}
   ];
   exclude: exclude[] = [
+    {exclude: ''},
     {exclude: 'Include'},
     {exclude: 'Exclude'}
   ];
   earliestLatest: earliestLatest[] = [
+    {earliestLatest: ''},
     {earliestLatest: 'Earliest'},
     {earliestLatest: 'Latest'}
   ];
   operator: operator[] = [
+    {operator: ''},
     {operator: 'Less than'},
     {operator: 'Greater than'}
   ];
   period: period[] = [
+    {period: ''},
     {period: 'Days'},
     {period: 'Weeks'},
     {period: 'Months'}
   ];
   anyAll: anyAll[] = [
+    {anyAll: ''},
     {anyAll: 'Any'},
     {anyAll: 'All'}
   ];
   areNot: areNot[] = [
+    {areNot: ''},
     {areNot: 'Are'},
     {areNot: 'Are not'}
   ];
   withinBefore: withinBefore[] = [
+    {withinBefore: ''},
     {withinBefore: 'within'},
     {withinBefore: 'before'}
   ];
