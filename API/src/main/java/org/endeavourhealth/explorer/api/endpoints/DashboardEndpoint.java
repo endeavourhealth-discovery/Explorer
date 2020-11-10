@@ -1,9 +1,7 @@
 package org.endeavourhealth.explorer.api.endpoints;
 
-import org.endeavourhealth.explorer.common.dal.EMISExplorerJDBCDAL;
 import org.endeavourhealth.explorer.common.dal.ExplorerJDBCDAL;
 import org.endeavourhealth.explorer.common.models.*;
-import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -790,7 +788,6 @@ public class DashboardEndpoint {
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
 
             long count = viewerDAL.getTableTotalCount(queryName, outputType, searchData);
-            LOG.debug("getTableTotalCount result=" + count);
 
             return Response
                     .ok()

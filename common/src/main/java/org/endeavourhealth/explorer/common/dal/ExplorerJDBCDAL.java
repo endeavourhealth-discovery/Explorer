@@ -1862,7 +1862,6 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
             header = new TableHeader();
             header.setLabel(column);
             header.setProperty(column);
-            header.setSecondary(false);
             data.getHeaders().add(header);
         }
 
@@ -2042,13 +2041,11 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         TableHeader header = new TableHeader();
         header.setLabel("Name");
         header.setProperty("ccg");
-        header.setSecondary(false);
         data.getHeaders().add(header);
 
         header = new TableHeader();
         header.setLabel("List size");
         header.setProperty("list_size");
-        header.setSecondary(false);
         data.getHeaders().add(header);
 
         JSONObject row = null;
@@ -2103,7 +2100,6 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                 }
             }
         }
-        LOG.debug("count: " + count);
         return count;
     }
 
@@ -2115,19 +2111,16 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         TableHeader header = new TableHeader();
         header.setLabel("Practice");
         header.setProperty("practice");
-        header.setSecondary(false);
         data.getHeaders().add(header);
 
         header = new TableHeader();
         header.setLabel("ODS code");
         header.setProperty("ods_code");
-        header.setSecondary(false);
         data.getHeaders().add(header);
 
         header = new TableHeader();
         header.setLabel("List size");
         header.setProperty("list_size");
-        header.setSecondary(false);
         data.getHeaders().add(header);
 
         JSONObject row = null;

@@ -41,7 +41,5 @@ public class TableHeader {
         return secondary;
     }
 
-    public void setSecondary(boolean secondary) {
-        this.secondary = secondary;
-    }
+    public void setSecondary(boolean secondary) { this.secondary = secondary; }
 }
