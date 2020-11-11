@@ -335,6 +335,7 @@ public class DashboardEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     public Response saveValueSetCode(@Context SecurityContext sc,
                                   @QueryParam("type") String type,
+                                  @QueryParam("selectedDataType") String selectedDataType,
                                   @QueryParam("code") String code,
                                   @QueryParam("term") String term,
                                   @QueryParam("snomed") String snomed,
@@ -343,7 +344,7 @@ public class DashboardEndpoint {
         LOG.debug("saveValueSetCode");
 
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
-            viewerDAL.saveValueSetCode(type, code, term, snomed, value_set_id, id);
+            viewerDAL.saveValueSetCode(type, selectedDataType, code, term, snomed, value_set_id, id);
 
             return Response
                     .ok()

@@ -31,7 +31,7 @@ export class ValueSetCodeComponent {
   @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: false}) sort: MatSort;
 
-  displayedColumns: string[] = ['select', 'type', 'code', 'term', 'snomed', 'updated'];
+  displayedColumns: string[] = ['select', 'type', 'dataType', 'code', 'term', 'snomed', 'updated'];
 
   selectedType: string = '';
   selectedTypeString: string = '';
@@ -158,7 +158,7 @@ export class ValueSetCodeComponent {
 
   add() {
     const dialogRef = this.dialog.open(ValueSetCodeEditorComponent, {
-      height: '500px',
+      height: '550px',
       width: '600px',
       data: {type: "", code: "", term: "", snomed: "", id: "", value_set_id: this.valueSetId}
     });
@@ -195,7 +195,7 @@ export class ValueSetCodeComponent {
 
   edit() {
     const dialogRef = this.dialog.open(ValueSetCodeEditorComponent, {
-      height: '500px',
+      height: '550px',
       width: '600px',
       data: {type:this.selection.selected[0].type, code: this.selection.selected[0].code, term: this.selection.selected[0].term, snomed: this.selection.selected[0].snomed, id: this.selection.selected[0].id, value_set_id: ""}
     });

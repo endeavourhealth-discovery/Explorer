@@ -157,9 +157,10 @@ export class ExplorerService {
     return this.http.get('api/events/valuesetduplicate', {params});
   }
 
-  saveValueSetCode(type?: string, code?: string, term?: string, snomed?: string, value_set_id?: string, id?: string): Observable<any> {
+  saveValueSetCode(type?: string, selectedDataType?: string, code?: string, term?: string, snomed?: string, value_set_id?: string, id?: string): Observable<any> {
     let params = new HttpParams();
     params = params.append('type', type);
+    params = params.append('selectedDataType', selectedDataType);
     params = params.append('code', code);
     params = params.append('term', term);
     params = params.append('snomed', snomed);

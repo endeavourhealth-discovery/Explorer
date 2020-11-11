@@ -8,6 +8,14 @@
         <input required matInput placeholder="Type" [(ngModel)]="type" (ngModelChange)="formChanged()">
       </mat-form-field>
       <mat-form-field appearance="outline" style="width: 500px">
+        <mat-label>Data type</mat-label>
+        <mat-select [(ngModel)]="selectedDataType" (ngModelChange)="formChanged()" required>
+          <mat-option *ngFor="let dataType of dataTypes" [value]="dataType.value">
+            {{dataType.value}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline" style="width: 500px">
         <mat-label>Original code</mat-label>
         <input required matInput placeholder="Code" [(ngModel)]="code" (ngModelChange)="formChanged()">
       </mat-form-field>

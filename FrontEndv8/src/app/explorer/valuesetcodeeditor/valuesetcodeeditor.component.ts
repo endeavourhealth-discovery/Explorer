@@ -6,11 +6,16 @@ import {FormGroup} from "@angular/forms";
 
 export interface DialogData {
   type: string;
+  selectedDataType: string;
   code: string;
   term: string;
   snomed: string;
   id: string;
   value_set_id: string;
+}
+
+interface dataType {
+  value: string;
 }
 
 @Component({
@@ -21,12 +26,20 @@ export interface DialogData {
 
 export class ValueSetCodeEditorComponent {
   type: string;
+  selectedDataType: string;
   code: string;
   term: string;
   snomed: string;
   disableForm: boolean;
   id: string;
   value_set_id: string;
+
+  dataTypes: dataType[] = [
+    {value: 'Observation'},
+    {value: 'Ethnicity'},
+    {value: 'Encounter'},
+    {value: 'Medication'}
+  ];
 
   constructor(
     public dialogRef: MatDialogRef<ValueSetCodeEditorComponent>,
@@ -35,6 +48,7 @@ export class ValueSetCodeEditorComponent {
     @Inject(MAT_DIALOG_DATA) public data: DialogData) {
     this.disableForm = true;
     this.type = data.type;
+    this.selectedDataType = data.selectedDataType;
     this.code = data.code;
     this.term = data.term;
     this.snomed = data.snomed;
@@ -43,7 +57,8 @@ export class ValueSetCodeEditorComponent {
   }
 
   saveValueSetCode() {
-    this.explorerService.saveValueSetCode(this.type, this.code, this.term, this.snomed, this.value_set_id, this.id)
+    console.log(this.selectedDataType);
+    this.explorerService.saveValueSetCode(this.type, this.selectedDataType, this.code, this.term, this.snomed, this.value_set_id, this.id)
       .subscribe(saved => {
           this.dialogRef.close(true);
         },
@@ -69,7 +84,7 @@ export class ValueSetCodeEditorComponent {
   }
 
   formChanged() {
-    this.disableForm = this.type=='' || this.type==undefined || this.code=='' || this.code==undefined || this.term=='' || this.term==undefined || this.snomed=='' || this.snomed==undefined;
+    this.disableForm = this.type=='' || this.type==undefined || this.selectedDataType=='' || this.selectedDataType==undefined || this.code=='' || this.code==undefined || this.term=='' || this.term==undefined || this.snomed=='' || this.snomed==undefined;
   }
 
 }

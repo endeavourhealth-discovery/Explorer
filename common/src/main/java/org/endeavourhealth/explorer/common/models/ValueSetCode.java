@@ -12,6 +12,7 @@ public class ValueSetCode {
     private static final Logger LOG = LoggerFactory.getLogger(ValueSetCode.class);
 
     private String type;
+    private String dataType;
     private String code;
     private String term;
     private String snomed;
@@ -25,6 +26,15 @@ public class ValueSetCode {
 
     public ValueSetCode setType(String type) {
         this.type = type;
+        return this;
+    }
+
+    public String getDataType() {
+        return dataType;
+    }
+
+    public ValueSetCode setDataType(String dataType) {
+        this.dataType = dataType;
         return this;
     }
 

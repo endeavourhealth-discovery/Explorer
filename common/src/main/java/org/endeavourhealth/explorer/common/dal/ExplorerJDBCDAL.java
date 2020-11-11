@@ -38,32 +38,34 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         }
     }
 
-    public void saveValueSetCode(String type, String code, String term, String snomed, String value_set_id, String id) throws Exception {
+    public void saveValueSetCode(String type, String selectedDataType, String code, String term, String snomed, String value_set_id, String id) throws Exception {
 
         String sql = "";
 
         if (id.equals("")) {
-            sql = "INSERT INTO dashboards.value_set_codes (type, original_code, original_term, snomed_id, value_set_id) " +
-                    "VALUES (?, ?, ?, ?, ?)";
+            sql = "INSERT INTO dashboards.value_set_codes (type, data_type, original_code, original_term, snomed_id, value_set_id) " +
+                    "VALUES (?, ?, ?, ?, ?, ?)";
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
                 stmt.setString(1, type);
-                stmt.setString(2, code);
-                stmt.setString(3, term);
-                stmt.setString(4, snomed);
-                stmt.setString(5, value_set_id);
+                stmt.setString(2, selectedDataType);
+                stmt.setString(3, code);
+                stmt.setString(4, term);
+                stmt.setString(5, snomed);
+                stmt.setString(6, value_set_id);
                 stmt.executeUpdate();
             }
         } else // edit
         {
-            sql = "UPDATE dashboards.value_set_codes SET type = ?, original_code = ?, original_term = ?, snomed_id = ? " +
+            sql = "UPDATE dashboards.value_set_codes SET type = ?, data_type = ?, original_code = ?, original_term = ?, snomed_id = ? " +
                     "WHERE id = ?";
 
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
                 stmt.setString(1, type);
-                stmt.setString(2, code);
-                stmt.setString(3, term);
-                stmt.setString(4, snomed);
-                stmt.setString(5, id);
+                stmt.setString(2, selectedDataType);
+                stmt.setString(3, code);
+                stmt.setString(4, term);
+                stmt.setString(5, snomed);
+                stmt.setString(6, id);
                 stmt.executeUpdate();
             }
         }
@@ -502,7 +504,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         selectedTypeString = "'" + selectedTypeString + "'";
         selectedTypeString = "AND type in ("+selectedTypeString+")";
 
-        sql = "SELECT type, original_code, original_term, snomed_id, updated, id " +
+        sql = "SELECT type, data_type, original_code, original_term, snomed_id, updated, id " +
                 "FROM dashboards.value_set_codes " +
                 "WHERE value_set_id = ? " +
                 selectedTypeString +
@@ -545,6 +547,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
         valueset
                 .setType(resultSet.getString("type"))
+                .setDataType(resultSet.getString("data_type"))
                 .setCode(resultSet.getString("original_code"))
                 .setTerm(resultSet.getString("original_term"))
                 .setSnomed(resultSet.getString("snomed_id"))
