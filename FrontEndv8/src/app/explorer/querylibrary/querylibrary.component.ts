@@ -68,7 +68,7 @@ export class QueryLibraryComponent implements OnInit {
     private dialog: MatDialog) {}
 
   ngOnInit() {
-    this.explorerService.getLookupLists('2')
+    this.explorerService.getLookupLists('2','')
       .subscribe(
         (result) => this.loadList(result),
         (error) => this.log.error(error)

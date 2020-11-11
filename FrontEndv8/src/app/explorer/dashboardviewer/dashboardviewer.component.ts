@@ -265,7 +265,7 @@ export class DashboardViewerComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.explorerService.getLookupLists('3')
+    this.explorerService.getLookupLists('3','')
       .subscribe(
         (result) => this.loadList(result),
         (error) => this.log.error(error)

@@ -81,7 +81,7 @@ export class DashboardLibraryComponent implements OnInit {
     private dialog: MatDialog) { }
 
   ngOnInit() {
-    this.explorerService.getLookupLists('1')
+    this.explorerService.getLookupLists('1','')
       .subscribe(
         (result) => this.loadList(result),
         (error) => this.log.error(error)

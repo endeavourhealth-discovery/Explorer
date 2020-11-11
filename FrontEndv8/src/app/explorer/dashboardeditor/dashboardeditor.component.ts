@@ -201,7 +201,7 @@ export class DashboardEditorComponent {
   private _onDestroy = new Subject<void>();
 
   ngOnInit() {
-    this.explorerService.getLookupLists('12')
+    this.explorerService.getLookupLists('12','')
       .subscribe(
         (result) => this.loadSeriesList(result),
         (error) => this.log.error(error)

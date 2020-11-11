@@ -234,11 +234,14 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         }
     }
 
-    public LookupListResult getLookupLists(String list) throws Exception {
+    public LookupListResult getLookupLists(String list, String type) throws Exception {
         LookupListResult result = new LookupListResult();
 
         String sql = "";
         String sqlCount = "";
+        String typeSQL = "";
+        if (!type.isEmpty())
+            typeSQL = " where data_type = ? ";
 
         switch (list) {
             case "1":
@@ -299,7 +302,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                 break;
             case "8":
                 sql = "SELECT distinct(type) " +
-                        "FROM dashboards.value_set_codes" +
+                        "FROM dashboards.value_set_codes " + typeSQL +
                         " order by type";
 
                 sqlCount = "SELECT count(distinct(type)) " +
@@ -376,6 +379,8 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         }
 
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            if (!type.isEmpty())
+                statement.setString(1, type);
             try (ResultSet resultSet = statement.executeQuery()) {
                 result.setResults(getLookupList(resultSet));
             }

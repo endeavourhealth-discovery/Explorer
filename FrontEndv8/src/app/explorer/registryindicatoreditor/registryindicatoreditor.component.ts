@@ -50,7 +50,7 @@ export class RegistryIndicatorEditorComponent {
   private _onDestroy = new Subject<void>();
 
   ngOnInit() {
-    this.explorerService.getLookupLists('11')
+    this.explorerService.getLookupLists('11','')
       .subscribe(
         (result) => this.loadQueryList(result),
         (error) => this.log.error(error)
