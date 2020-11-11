@@ -12,10 +12,11 @@ export class ExplorerService {
 
   constructor(private http: HttpClient) { }
 
-  getLookupLists(list: string): Observable<any> {
+  getLookupLists(list: string, type: string): Observable<any> {
     let params = new HttpParams();
 
     params = params.append('list', list);
+    params = params.append('type', type);
 
     return this.http.get('api/events/lookuplists', {params});
   }

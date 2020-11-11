@@ -1312,7 +1312,7 @@
       <form [formGroup]="fourthFormGroup">
         <ng-template matStepLabel>Data set criteria</ng-template>
         <p>Once a patient cohort has been identified, these are the choices for defining the data set (output tables).
-        The data set output will apply to each patient identified in the cohort.
+        The data set output tables will be produced for each patient identified in the cohort.
         The data set can be delivered as either CSV files to a secure location, or as tables in the dashboards.
         </p>
         <br/>
@@ -1328,9 +1328,9 @@
             <td>
               <mat-checkbox class="checkbox" [(ngModel)]="demographics" formControlName="control165a">Demographics</mat-checkbox>
             </td>
-            <td style="padding-top: 20px">
+            <td >
             </td>
-            <td style="padding-top: 20px">
+            <td >
               <mat-form-field appearance="outline" style="width: 200px">
                 <mat-label>Demographic fields</mat-label>
                 <mat-select multiple [(ngModel)]="selectedDemographicFields" formControlName="control165e" (ngModelChange)="formChanged()">
@@ -1347,7 +1347,7 @@
             <td>
               <mat-checkbox class="checkbox" [(ngModel)]="encounters" formControlName="control166a">Encounters</mat-checkbox>
             </td>
-            <td style="padding-top: 20px">
+            <td >
               <mat-form-field class="example-full-width" appearance="outline" style="width: 130px">
                 <mat-label>Date from</mat-label>
                 <input matInput [matDatepicker]="picker66c" placeholder="Date from" [(ngModel)]="dateFromEncounters" formControlName="control166c">
@@ -1366,7 +1366,7 @@
                 <mat-datepicker #control166d></mat-datepicker>
               </mat-form-field>
             </td>
-            <td style="padding-top: 20px">
+            <td >
               <mat-form-field appearance="outline" style="width: 200px">
                 <mat-label>Encounter fields</mat-label>
                 <mat-select multiple [(ngModel)]="selectedEncounterFields" formControlName="control166e" (ngModelChange)="formChanged()">
@@ -1378,12 +1378,12 @@
 
             </td>
             <td></td>
-            <td style="padding-top: 20px">
+            <td >
               <mat-form-field appearance="outline" style="width: 200px">
                 <mat-label>Encounter value set</mat-label>
                 <mat-select multiple [(ngModel)]="selectedEncounterValueSet" formControlName="control166g" (ngModelChange)="formChanged()">
-                  <mat-select-search [formControl]="filterCtrl"></mat-select-search>
-                  <mat-option *ngFor="let result of filteredValueset | async" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
+                  <mat-select-search [formControl]="filterCtrlEncounter"></mat-select-search>
+                  <mat-option *ngFor="let result of filteredValuesetEncounter | async" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
                     {{result}}
                   </mat-option>
                 </mat-select>
@@ -1395,7 +1395,7 @@
               <mat-checkbox class="checkbox" [(ngModel)]="medication" formControlName="control167a">Medication</mat-checkbox>
               <mat-checkbox class="checkbox" [(ngModel)]="currentMedication" formControlName="control167b">(Current medication only)</mat-checkbox>
             </td>
-            <td style="padding-top: 20px">
+            <td >
               <mat-form-field class="example-full-width" appearance="outline" style="width: 130px">
                 <mat-label>Date from</mat-label>
                 <input matInput [matDatepicker]="picker67c" placeholder="Date from" [(ngModel)]="dateFromMedication" formControlName="control167c">
@@ -1414,7 +1414,7 @@
                 <mat-datepicker #control167d></mat-datepicker>
               </mat-form-field>
             </td>
-            <td style="padding-top: 20px">
+            <td >
               <mat-form-field appearance="outline" style="width: 200px">
                 <mat-label>Medication fields</mat-label>
                 <mat-select multiple [(ngModel)]="selectedMedicationFields" formControlName="control167e" (ngModelChange)="formChanged()">
@@ -1425,12 +1425,12 @@
               </mat-form-field>
             </td>
             <td></td>
-            <td style="padding-top: 20px">
+            <td >
               <mat-form-field appearance="outline" style="width: 200px">
                 <mat-label>Medication value set</mat-label>
                 <mat-select multiple [(ngModel)]="selectedMedicationValueSet" formControlName="control167g" (ngModelChange)="formChanged()">
-                  <mat-select-search [formControl]="filterCtrl"></mat-select-search>
-                  <mat-option *ngFor="let result of filteredValueset | async" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
+                  <mat-select-search [formControl]="filterCtrlMedication"></mat-select-search>
+                  <mat-option *ngFor="let result of filteredValuesetMedication | async" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
                     {{result}}
                   </mat-option>
                 </mat-select>
@@ -1442,7 +1442,7 @@
               <mat-checkbox class="checkbox" [(ngModel)]="clinicalEvents" formControlName="control168a">Clinical events</mat-checkbox>
               <mat-checkbox class="checkbox" [(ngModel)]="activeProblems" formControlName="control168b">(Active problems only)</mat-checkbox>
             </td>
-            <td style="padding-top: 20px">
+            <td >
               <mat-form-field class="example-full-width" appearance="outline" style="width: 130px">
                 <mat-label>Date from</mat-label>
                 <input matInput [matDatepicker]="picker68c" placeholder="Date from" [(ngModel)]="dateFromClinicalEvents" formControlName="control168c">
@@ -1461,7 +1461,7 @@
                 <mat-datepicker #control168d></mat-datepicker>
               </mat-form-field>
             </td>
-            <td style="padding-top: 20px">
+            <td >
               <mat-form-field appearance="outline" style="width: 200px">
                 <mat-label>Clinical event fields</mat-label>
                 <mat-select multiple [(ngModel)]="selectedClinicalEventFields" formControlName="control168e" (ngModelChange)="formChanged()">
@@ -1472,7 +1472,7 @@
               </mat-form-field>
 
             </td>
-            <td style="padding-top: 20px">
+            <td >
               <mat-form-field appearance="outline" style="width: 200px">
                 <mat-label>Clinical types</mat-label>
                 <mat-select multiple [(ngModel)]="selectedClinicalTypes" formControlName="control168f" (ngModelChange)="formChanged()">
@@ -1482,12 +1482,12 @@
                 </mat-select>
               </mat-form-field>
             </td>
-            <td style="padding-top: 20px">
+            <td >
               <mat-form-field appearance="outline" style="width: 200px">
                 <mat-label>Clinical event value set</mat-label>
                 <mat-select multiple [(ngModel)]="selectedClinicalEventValueSet" formControlName="control168g" (ngModelChange)="formChanged()">
-                  <mat-select-search [formControl]="filterCtrl"></mat-select-search>
-                  <mat-option *ngFor="let result of filteredValueset | async" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
+                  <mat-select-search [formControl]="filterCtrlObservation"></mat-select-search>
+                  <mat-option *ngFor="let result of filteredValuesetObservation | async" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
                     {{result}}
                   </mat-option>
                 </mat-select>
@@ -1497,7 +1497,60 @@
           </tr>
         </table>
 
-        <div style="margin-top: 140px" mat-dialog-actions align="end">
+        <div>
+          In addition, or instead of output tables with rows as defined above, you can select to aggregate the data over time.
+          <br/>
+          <br/>
+          <mat-checkbox class="checkbox" [(ngModel)]="timeSeries" formControlName="control70">Tick this box to output the data as a time series for inclusion in the dashboard line charts.</mat-checkbox>
+          <br/>
+          <br/>
+          Selecting this option will group the patients defined in this cohort by their registering organisation and count the number of individual patients identified each day over the time period specified.
+          The X-Axis will be the date of the event, and the Y-Axis will be the count of patients with events matching the selected value set on each date.
+          <br/>
+          <br/>
+          The data source for the events will be
+          <mat-form-field appearance="standard" style="margin-left: 10px; width: 110px">
+            <mat-label>Table</mat-label>
+            <mat-select [(ngModel)]="seriesTable" formControlName="control71" (ngModelChange)="formChanged()">
+              <mat-option *ngFor="let value of tables" [value]="value.table">
+                {{value.table}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+           and the concept(s) to display as chart trend line(s) are from these selected value sets
+          <mat-form-field appearance="outline" style="margin-left: 10px; width: 250px" *ngIf="seriesTableEncounter">
+            <mat-label>Encounter value set</mat-label>
+            <mat-select multiple [(ngModel)]="seriesEncounterValueSet" formControlName="control73" (ngModelChange)="formChanged()">
+              <mat-select-search [formControl]="filterCtrlEncounter"></mat-select-search>
+              <mat-option *ngFor="let result of filteredValuesetEncounter | async" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
+                {{result}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline" style="margin-left: 10px; width: 250px" *ngIf="seriesTableMedication">
+            <mat-label>Medication value set</mat-label>
+            <mat-select multiple [(ngModel)]="seriesMedicationValueSet" formControlName="control74" (ngModelChange)="formChanged()">
+              <mat-select-search [formControl]="filterCtrlMedication"></mat-select-search>
+              <mat-option *ngFor="let result of filteredValuesetMedication | async" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
+                {{result}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline" style="margin-left: 10px; width: 250px" *ngIf="seriesTableObservation">
+            <mat-label>Cinical events value set</mat-label>
+            <mat-select multiple [(ngModel)]="seriesClinicalEventValueSet" formControlName="control75" (ngModelChange)="formChanged()">
+              <mat-select-search [formControl]="filterCtrlObservation"></mat-select-search>
+              <mat-option *ngFor="let result of filteredValuesetObservation | async" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
+                {{result}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+        </div>
+
+
+
+        <div style="margin-top: 0px" mat-dialog-actions align="end">
           <button style="margin-right: 15px" mat-button color="accent" (click)="onCancelClick()">Cancel</button>
           <button style="margin-right: 15px" mat-button color="accent" matStepperPrevious>Back</button>
           <button style="margin-right: 15px" mat-flat-button color="accent" (click)="stepper.next()">Next</button>

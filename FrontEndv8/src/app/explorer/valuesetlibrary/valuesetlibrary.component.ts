@@ -43,7 +43,7 @@ export class ValueSetLibraryComponent implements OnInit {
     private dialog: MatDialog) { }
 
   ngOnInit() {
-    this.explorerService.getLookupLists('4')
+    this.explorerService.getLookupLists('4','')
       .subscribe(
         (result) => this.loadList(result),
         (error) => this.log.error(error)

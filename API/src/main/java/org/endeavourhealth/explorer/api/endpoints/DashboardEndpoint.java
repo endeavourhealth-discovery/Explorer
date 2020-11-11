@@ -24,11 +24,12 @@ public class DashboardEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getLookupLists(@Context SecurityContext sc,
-                                        @QueryParam("list") String list) throws Exception {
+                                        @QueryParam("list") String list,
+                                        @QueryParam("type") String type) throws Exception {
         LOG.debug("getLookupLists");
 
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
-            LookupListResult result = viewerDAL.getLookupLists(list);
+            LookupListResult result = viewerDAL.getLookupLists(list, type);
 
             return Response
                     .ok()

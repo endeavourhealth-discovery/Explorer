@@ -42,7 +42,7 @@ export class OrganisationGroupsComponent implements OnInit {
     private dialog: MatDialog) { }
 
   ngOnInit() {
-    this.explorerService.getLookupLists('9')
+    this.explorerService.getLookupLists('9','')
       .subscribe(
         (result) => this.loadList(result),
         (error) => this.log.error(error)

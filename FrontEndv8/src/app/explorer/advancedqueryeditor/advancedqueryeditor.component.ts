@@ -167,6 +167,21 @@ interface savedQuery {
   selectedEncounterValueSet: string;
   selectedMedicationValueSet: string;
   selectedClinicalEventValueSet: string;
+  seriesEncounterValueSet: string;
+  seriesMedicationValueSet: string;
+  seriesClinicalEventValueSet: string;
+
+  timeSeries: boolean;
+  seriesTable: string;
+  seriesField: string;
+}
+
+interface table {
+  table: string;
+}
+
+interface field {
+  field: string;
 }
 
 interface registration {
@@ -221,6 +236,16 @@ interface valueSet {
   value: string;
 }
 
+interface valueSetObservation {
+  value: string;
+}
+interface valueSetMedication {
+  value: string;
+}
+interface valueSetEncounter {
+  value: string;
+}
+
 @Component({
   selector: 'app-queryeditor',
   templateUrl: './advancedqueryeditor.component.html',
@@ -232,6 +257,9 @@ interface valueSet {
 
 export class AdvancedQueryEditorComponent implements OnInit {
   filterCtrl: FormControl = new FormControl();
+  filterCtrlObservation: FormControl = new FormControl();
+  filterCtrlMedication: FormControl = new FormControl();
+  filterCtrlEncounter: FormControl = new FormControl();
 
   type: string = '';
   name: string = '';
@@ -371,6 +399,13 @@ export class AdvancedQueryEditorComponent implements OnInit {
   currentMedication: boolean = false;
   clinicalEvents: boolean = false;
   activeProblems: boolean = false;
+  timeSeries: boolean = false;
+  seriesTable: string = '';
+  seriesField: string = 'Concept term';
+  seriesTableEncounter: boolean = false;
+  seriesTableMedication: boolean = false;
+  seriesTableObservation: boolean = false;
+
   dateFromEncounters: string = this.formatDate(new Date());
   dateToEncounters: string = this.formatDate(new Date());
   dateFromMedication: string = this.formatDate(new Date());
@@ -413,6 +448,10 @@ export class AdvancedQueryEditorComponent implements OnInit {
   selectedMedicationValueSet: string = '';
   selectedClinicalEventValueSet: string = '';
 
+  seriesEncounterValueSet: string = '';
+  seriesMedicationValueSet: string = '';
+  seriesClinicalEventValueSet: string = '';
+
   selectedDelivery: string = '';
   selectedSchedule: string = '';
 
@@ -427,8 +466,14 @@ export class AdvancedQueryEditorComponent implements OnInit {
   orgList = [];
   orgIncList = [];
   valueSet = [];
+  valueSetObservation = [];
+  valueSetMedication = [];
+  valueSetEncounter = [];
 
   filteredValueset: ReplaySubject<valueSet[]> = new ReplaySubject<valueSet[]>(1);
+  filteredValuesetObservation: ReplaySubject<valueSetObservation[]> = new ReplaySubject<valueSetObservation[]>(1);
+  filteredValuesetMedication: ReplaySubject<valueSetMedication[]> = new ReplaySubject<valueSetMedication[]>(1);
+  filteredValuesetEncounter: ReplaySubject<valueSetEncounter[]> = new ReplaySubject<valueSetEncounter[]>(1);
 
   jsonQuery: string;
 
@@ -447,6 +492,16 @@ export class AdvancedQueryEditorComponent implements OnInit {
   select5a: boolean = false;
   addQuery5: boolean = true;
 
+  tables: table[] = [
+    {table: ''},
+    {table: 'Clinical events'},
+    {table: 'Medication'},
+    {table: 'Encounter'}
+  ];
+  seriesFields: field[] = [
+    {field: ''},
+    {field: 'Concept term'}
+  ];
   registrations: registration[] = [
     {regValue: ''},
     {regValue: 'Currently registered patients'},
@@ -673,6 +728,12 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.selectedEncounterValueSet = query.selectedEncounterValueSet;
       this.selectedMedicationValueSet = query.selectedMedicationValueSet;
       this.selectedClinicalEventValueSet = query.selectedClinicalEventValueSet;
+      this.timeSeries = query.timeSeries;
+      this.seriesTable = query.seriesTable;
+      this.seriesField = query.seriesField;
+      this.seriesEncounterValueSet = query.seriesEncounterValueSet;
+      this.seriesMedicationValueSet = query.seriesMedicationValueSet;
+      this.seriesClinicalEventValueSet = query.seriesClinicalEventValueSet;
 
       if (this.includedExclude1a != "") {
         this.select1a = true;
@@ -743,7 +804,8 @@ export class AdvancedQueryEditorComponent implements OnInit {
     });
     this.fourthFormGroup = this._formBuilder.group({
       control165a: [''],  control165e: [''], control166a: [''], control166c: [''], control166d: [''], control166e: [''], control166g: [''], control167a: [''],
-      control167b: [''], control167c: [''], control167d: [''], control167e: [''], control167g: [''], control168a: [''], control168b: [''], control168c: [''], control168d: [''], control168e: [''], control168f: [''], control168g: ['']
+      control167b: [''], control167c: [''], control167d: [''], control167e: [''], control167g: [''], control168a: [''], control168b: [''], control168c: [''], control168d: [''],
+      control168e: [''], control168f: [''], control168g: [''], control70: [''], control71: [''], control72: [''], control73: [''], control74: [''], control75: ['']
     });
     this.fifthFormGroup = this._formBuilder.group({
       control15: [''], control18: ['', Validators.required], control19: ['', Validators.required]
@@ -753,7 +815,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
   private _onDestroy = new Subject<void>();
 
   ngOnInit() {
-    this.explorerService.getLookupLists('10')
+    this.explorerService.getLookupLists('10','')
       .subscribe(
         (result) => this.loadOrgList(result),
         (error) => this.log.error(error)
@@ -772,14 +834,32 @@ export class AdvancedQueryEditorComponent implements OnInit {
       }
     )
 
-    this.explorerService.getLookupLists('8')
+    this.explorerService.getLookupLists('8','')
       .subscribe(
-        (result) => this.loadValueSet(result),
+        (result) => this.loadValueSet1(result),
+        (error) => this.log.error(error)
+      );
+
+    this.explorerService.getLookupLists('8','Observation')
+      .subscribe(
+        (result) => this.loadValueSet2(result),
+        (error) => this.log.error(error)
+      );
+
+    this.explorerService.getLookupLists('8','Medication')
+      .subscribe(
+        (result) => this.loadValueSet3(result),
+        (error) => this.log.error(error)
+      );
+
+    this.explorerService.getLookupLists('8','Encounter')
+      .subscribe(
+        (result) => this.loadValueSet4(result),
         (error) => this.log.error(error)
       );
   }
 
-  loadValueSet(lists: any) {
+  loadValueSet1(lists: any) {
     lists.results.map(
       e => {
         this.valueSet.push(e.type);
@@ -791,14 +871,62 @@ export class AdvancedQueryEditorComponent implements OnInit {
     this.filterCtrl.valueChanges
       .pipe(takeUntil(this._onDestroy))
       .subscribe(() => {
-        this.filterValueset();
+        this.filterValueset1();
       });
 
-    this.explorerService.getLookupLists('13')
+    this.explorerService.getLookupLists('13','')
       .subscribe(
         (result) => this.loadDemographicSet(result),
         (error) => this.log.error(error)
       );
+  }
+
+  loadValueSet2(lists: any) {
+    lists.results.map(
+      e => {
+        this.valueSetObservation.push(e.type);
+      }
+    )
+
+    this.filteredValuesetObservation.next(this.valueSetObservation.slice());
+
+    this.filterCtrlObservation.valueChanges
+      .pipe(takeUntil(this._onDestroy))
+      .subscribe(() => {
+        this.filterValueset2();
+      });
+  }
+
+  loadValueSet3(lists: any) {
+    lists.results.map(
+      e => {
+        this.valueSetMedication.push(e.type);
+      }
+    )
+
+    this.filteredValuesetMedication.next(this.valueSetMedication.slice());
+
+    this.filterCtrlMedication.valueChanges
+      .pipe(takeUntil(this._onDestroy))
+      .subscribe(() => {
+        this.filterValueset3();
+      });
+  }
+
+  loadValueSet4(lists: any) {
+    lists.results.map(
+      e => {
+        this.valueSetEncounter.push(e.type);
+      }
+    )
+
+    this.filteredValuesetEncounter.next(this.valueSetEncounter.slice());
+
+    this.filterCtrlEncounter.valueChanges
+      .pipe(takeUntil(this._onDestroy))
+      .subscribe(() => {
+        this.filterValueset4();
+      });
   }
 
   loadDemographicSet(lists: any) {
@@ -808,7 +936,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
       }
     )
 
-    this.explorerService.getLookupLists('14')
+    this.explorerService.getLookupLists('14','')
       .subscribe(
         (result) => this.loadClinicalEventSet(result),
         (error) => this.log.error(error)
@@ -823,7 +951,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
       }
     )
 
-    this.explorerService.getLookupLists('15')
+    this.explorerService.getLookupLists('15','')
       .subscribe(
         (result) => this.loadMedicationSet(result),
         (error) => this.log.error(error)
@@ -838,7 +966,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
       }
     )
 
-    this.explorerService.getLookupLists('16')
+    this.explorerService.getLookupLists('16','')
       .subscribe(
         (result) => this.loadEncounterSet(result),
         (error) => this.log.error(error)
@@ -855,7 +983,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
 
   }
 
-  filterValueset() {
+  filterValueset1() {
     let search = this.filterCtrl.value;
 
     if (!search) {
@@ -867,6 +995,51 @@ export class AdvancedQueryEditorComponent implements OnInit {
 
     this.filteredValueset.next(
       this.valueSet.filter(value => value.toLowerCase().indexOf(search) > -1)
+    );
+  }
+
+  filterValueset2() {
+    let search = this.filterCtrlObservation.value;
+
+    if (!search) {
+      this.filteredValuesetObservation.next(this.valueSetObservation.slice());
+      return;
+    } else {
+      search = search.toLowerCase();
+    }
+
+    this.filteredValuesetObservation.next(
+      this.valueSetObservation.filter(value => value.toLowerCase().indexOf(search) > -1)
+    );
+  }
+
+  filterValueset3() {
+    let search = this.filterCtrlMedication.value;
+
+    if (!search) {
+      this.filteredValuesetMedication.next(this.valueSetMedication.slice());
+      return;
+    } else {
+      search = search.toLowerCase();
+    }
+
+    this.filteredValuesetMedication.next(
+      this.valueSetMedication.filter(value => value.toLowerCase().indexOf(search) > -1)
+    );
+  }
+
+  filterValueset4() {
+    let search = this.filterCtrlEncounter.value;
+
+    if (!search) {
+      this.filteredValuesetEncounter.next(this.valueSetEncounter.slice());
+      return;
+    } else {
+      search = search.toLowerCase();
+    }
+
+    this.filteredValuesetEncounter.next(
+      this.valueSetEncounter.filter(value => value.toLowerCase().indexOf(search) > -1)
     );
   }
 
@@ -1020,6 +1193,12 @@ export class AdvancedQueryEditorComponent implements OnInit {
       selectedEncounterValueSet: this.selectedEncounterValueSet,
       selectedMedicationValueSet: this.selectedMedicationValueSet,
       selectedClinicalEventValueSet: this.selectedClinicalEventValueSet,
+      timeSeries: this.timeSeries,
+      seriesTable: this.seriesTable,
+      seriesField: this.seriesField,
+      seriesEncounterValueSet: this.seriesEncounterValueSet,
+      seriesMedicationValueSet: this.seriesMedicationValueSet,
+      seriesClinicalEventValueSet: this.seriesClinicalEventValueSet,
       schedule: this.selectedSchedule,
       delivery: this.selectedDelivery
     };
@@ -1062,6 +1241,28 @@ export class AdvancedQueryEditorComponent implements OnInit {
 
 
   formChanged() {
+    this.seriesTableEncounter = false;
+    this.seriesTableMedication = false;
+    this.seriesTableObservation = false;
+
+    if (this.seriesTable=='Encounter') {
+      this.seriesMedicationValueSet = '';
+      this.seriesClinicalEventValueSet = '';
+      this.seriesTableEncounter = true;
+    }
+
+    else  if (this.seriesTable=='Medication') {
+      this.seriesEncounterValueSet = '';
+      this.seriesClinicalEventValueSet = '';
+      this.seriesTableMedication = true;
+    }
+
+    else if (this.seriesTable=='Clinical events') {
+      this.seriesEncounterValueSet = '';
+      this.seriesMedicationValueSet = '';
+      this.seriesTableObservation = true;
+    }
+
     this.disableForm = this.type=='' || this.type==undefined || this.name=='' || this.name==undefined || this.selectedOrganisation=='' || this.selectedOrganisation==undefined ||
       this.selectedRegistration=='' || this.selectedRegistration==undefined
       || this.selectedDelivery=='' || this.selectedDelivery==undefined || this.selectedSchedule=='' || this.selectedSchedule==undefined
