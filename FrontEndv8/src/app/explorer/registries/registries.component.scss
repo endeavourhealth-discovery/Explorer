@@ -1,9 +1,26 @@
 .poor{
   color: red;
+  font-weight: normal;
 }
 
 .good{
   color: green;
+  font-weight: normal;
+}
+
+.poorBold{
+  color: red;
+  font-weight: bold;
+}
+
+.goodBold{
+  color: green;
+  font-weight: bold;
+}
+
+.neutral {
+  color: grey;
+  font-weight: normal;
 }
 
 .ok{

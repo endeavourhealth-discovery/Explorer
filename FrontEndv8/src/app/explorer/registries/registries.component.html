@@ -67,15 +67,25 @@
 
                       </td>
                       <td style="text-align: left">
-                        <div [ngClass]="{
-                  'poor': toPercent(index,element.registrySize)<65&&element.registrySize!='-1'&&element.registrySize!='',
-                  'good': toPercent(index,element.registrySize)>=65}">
+                        <div>
 
-                          {{getSize(index, element.registrySize)}} <span *ngIf="index>0&&toPercent(index,element.registrySize)>0"> patients</span>
-                          <div *ngIf="index>0&&toPercent(index,element.registrySize)>0"  style="cursor: pointer;color: gray" (click)="showPatientDialog()">Not met: <b style="color: #0074D9">{{(element.registrySize-index).toLocaleString()}}</b></div>
+                          <span [ngClass]="{
+                        'neutral': toPercent(index,element.registrySize)<65&&element.registrySize!='-1'&&element.registrySize!='',
+                        'good': toPercent(index,element.registrySize)>=65}"
+                        *ngIf="index>0&&toPercent(index,element.registrySize)>0">Criteria met: </span>
+                          <span [ngClass]="{
+                        'neutral': toPercent(index,element.registrySize)<65&&element.registrySize!='-1'&&element.registrySize!='',
+                        'goodBold': toPercent(index,element.registrySize)>=65}">{{getSize(index, element.registrySize)}}</span>
+                          <div [ngClass]="{
+                        'poor': toPercent(index,element.registrySize)<65&&element.registrySize!='-1'&&element.registrySize!='',
+                        'neutral': toPercent(index,element.registrySize)>=65}"
+                        *ngIf="index>0&&toPercent(index,element.registrySize)>0" style="cursor: pointer" (click)="showPatientDialog()">Not met:
+                          <span [ngClass]="{
+                        'poorBold': toPercent(index,element.registrySize)<65&&element.registrySize!='-1'&&element.registrySize!='',
+                        'neutral': toPercent(index,element.registrySize)>=65}">{{(element.registrySize-index).toLocaleString()}}</span></div>
+
                         </div>
                       </td>
-
                     </tr>
                   </table>
 
