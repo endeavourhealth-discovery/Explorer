@@ -513,7 +513,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                 "FROM dashboards.value_set_codes " +
                 "WHERE value_set_id = ? " +
                 selectedTypeString +
-                " order by type, original_term LIMIT 20000";
+                " order by type, original_term";
 
         sqlCount = "SELECT count(1) " +
                 "FROM dashboards.value_set_codes " +
