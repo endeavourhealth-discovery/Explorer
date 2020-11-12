@@ -1545,10 +1545,48 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
-
+          <div *ngIf="seriesTableEncounter || seriesTableMedication || seriesTableObservation" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <p style="margin-left: 10px; margin-top: 28px"><span style="color: blue">within</span> the <span style="color: blue">time period</span></p>
+            <mat-form-field class="example-full-width" appearance="standard" style="margin-left: 10px; width: 120px">
+              <mat-label>Date from</mat-label>
+              <input matInput [matDatepicker]="picker69c" placeholder="Date from" [(ngModel)]="includedDateFrom" formControlName="control76">
+              <mat-datepicker-toggle matSuffix [for]="picker69c">
+                <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+              </mat-datepicker-toggle>
+              <mat-datepicker #picker69c></mat-datepicker>
+            </mat-form-field>
+            <p style="margin-left: 10px; margin-top: 28px">to</p>
+            <mat-form-field class="example-full-width" appearance="standard" style="margin-left: 10px; width: 120px">
+              <mat-label>Date to</mat-label>
+              <input matInput [matDatepicker]="picker169c" placeholder="Date to" [(ngModel)]="includedDateTo" formControlName="control77">
+              <mat-datepicker-toggle matSuffix [for]="picker169c">
+                <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+              </mat-datepicker-toggle>
+              <mat-datepicker #picker169c></mat-datepicker>
+            </mat-form-field>
+            <p style="margin-left: 10px; margin-top: 28px">/ </p>
+            <mat-form-field appearance="standard" style="margin-left: 10px; width: 130px">
+              <mat-label>Within/Before</mat-label>
+              <mat-select [(ngModel)]="includedPeriodOperator" formControlName="control78" (ngModelChange)="formChanged()">
+                <mat-option *ngFor="let value of withinBefore" [value]="value.withinBefore">
+                  {{value.withinBefore}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="standard" style="margin-left: 10px; width: 60px">
+              <mat-label>Period</mat-label>
+              <input matInput placeholder="Value" [(ngModel)]="includedPeriodValue" formControlName="control47">
+            </mat-form-field>
+            <mat-form-field appearance="standard" style="margin-left: 10px; width: 160px">
+              <mat-label>Days/Weeks/Months</mat-label>
+              <mat-select [(ngModel)]="includedPeriodType" formControlName="control79" (ngModelChange)="formChanged()">
+                <mat-option *ngFor="let value of period" [value]="value.period">
+                  {{value.period}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field><p style="margin-left: 10px; margin-top: 28px"> of the run date.</p>
+          </div>
         </div>
-
-
 
         <div style="margin-top: 0px" mat-dialog-actions align="end">
           <button style="margin-right: 15px" mat-button color="accent" (click)="onCancelClick()">Cancel</button>
