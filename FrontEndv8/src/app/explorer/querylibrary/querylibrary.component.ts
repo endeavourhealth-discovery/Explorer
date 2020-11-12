@@ -152,7 +152,7 @@ export class QueryLibraryComponent implements OnInit {
 
   add() {
       const dialogRef = this.dialog.open(AdvancedQueryEditorComponent, {
-        height: '900px',
+        height: '950px',
         width: '1275px',
         data: {id: "", name: "", type: "", query: ""}
       });
@@ -201,7 +201,7 @@ export class QueryLibraryComponent implements OnInit {
 
   edit() {
       const dialogRef = this.dialog.open(AdvancedQueryEditorComponent, {
-        height: '900px',
+        height: '950px',
         width: '1275px',
         data: {
           id: this.selection.selected[0].id,

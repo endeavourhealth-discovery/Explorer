@@ -170,6 +170,11 @@ interface savedQuery {
   seriesEncounterValueSet: string;
   seriesMedicationValueSet: string;
   seriesClinicalEventValueSet: string;
+  seriesDateFrom: string;
+  seriesDateTo: string;
+  seriesPeriodOperator: string;
+  seriesPeriodValue: string;
+  seriesPeriodType: string;
 
   timeSeries: boolean;
   seriesTable: string;
@@ -451,11 +456,11 @@ export class AdvancedQueryEditorComponent implements OnInit {
   seriesEncounterValueSet: string = '';
   seriesMedicationValueSet: string = '';
   seriesClinicalEventValueSet: string = '';
-  includedDateFrom: string = '';
-  includedDateTo: string = '';
-  includedPeriodOperator: string = '';
-  includedPeriodValue: string = '';
-  includedPeriodType: string = '';
+  seriesDateFrom: string = '';
+  seriesDateTo: string = '';
+  seriesPeriodOperator: string = '';
+  seriesPeriodValue: string = '';
+  seriesPeriodType: string = '';
 
   selectedDelivery: string = '';
   selectedSchedule: string = '';
@@ -739,6 +744,11 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.seriesEncounterValueSet = query.seriesEncounterValueSet;
       this.seriesMedicationValueSet = query.seriesMedicationValueSet;
       this.seriesClinicalEventValueSet = query.seriesClinicalEventValueSet;
+      this.seriesDateFrom = query.seriesDateFrom;
+      this.seriesDateTo = query.seriesDateTo;
+      this.seriesPeriodOperator = query.seriesPeriodOperator;
+      this.seriesPeriodValue = query.seriesPeriodValue;
+      this.seriesPeriodType = query.seriesPeriodType;
 
       if (this.includedExclude1a != "") {
         this.select1a = true;
@@ -810,7 +820,8 @@ export class AdvancedQueryEditorComponent implements OnInit {
     this.fourthFormGroup = this._formBuilder.group({
       control165a: [''],  control165e: [''], control166a: [''], control166c: [''], control166d: [''], control166e: [''], control166g: [''], control167a: [''],
       control167b: [''], control167c: [''], control167d: [''], control167e: [''], control167g: [''], control168a: [''], control168b: [''], control168c: [''], control168d: [''],
-      control168e: [''], control168f: [''], control168g: [''], control70: [''], control71: [''], control72: [''], control73: [''], control74: [''], control75: [''], control76: [''], control77: [''], control78: [''], control79: ['']
+      control168e: [''], control168f: [''], control168g: [''], control70: [''], control71: [''], control72: [''], control73: [''], control74: [''], control75: [''], control76: [''],
+      control77: [''], control78: [''], control79: [''], control80: ['']
     });
     this.fifthFormGroup = this._formBuilder.group({
       control15: [''], control18: ['', Validators.required], control19: ['', Validators.required]
@@ -1204,6 +1215,11 @@ export class AdvancedQueryEditorComponent implements OnInit {
       seriesEncounterValueSet: this.seriesEncounterValueSet,
       seriesMedicationValueSet: this.seriesMedicationValueSet,
       seriesClinicalEventValueSet: this.seriesClinicalEventValueSet,
+      seriesDateFrom: this.seriesDateFrom,
+      seriesDateTo: this.seriesDateTo,
+      seriesPeriodOperator: this.seriesPeriodOperator,
+      seriesPeriodValue: this.seriesPeriodValue,
+      seriesPeriodType: this.seriesPeriodType,
       schedule: this.selectedSchedule,
       delivery: this.selectedDelivery
     };
