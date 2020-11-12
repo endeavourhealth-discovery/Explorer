@@ -57,7 +57,6 @@ export class ValueSetCodeEditorComponent {
   }
 
   saveValueSetCode() {
-    console.log(this.selectedDataType);
     this.explorerService.saveValueSetCode(this.type, this.selectedDataType, this.code, this.term, this.snomed, this.value_set_id, this.id)
       .subscribe(saved => {
           this.dialogRef.close(true);
