@@ -20,7 +20,7 @@ BEGIN
    SET p_includedOperator = IF(p_includedOperator = 'Greater than','>','<');
 
    IF p_includedOperator IS NOT NULL AND p_includedEntryValue IS NOT NULL THEN
-      SET resultvaluestring = CONCAT('o2.result_value IS NOT NULL AND o2.result_value ',p_includedOperator,' ',p_includedEntryValue);
+      SET resultvaluestring = CONCAT('ob.result_value IS NOT NULL AND ob.result_value ',p_includedOperator,' ',p_includedEntryValue);
    ELSE
       SET resultvaluestring = '1';
    END IF;
@@ -38,7 +38,7 @@ BEGIN
      SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp AS 
      SELECT o2.id, o2.patient_id, o2.clinical_effective_date, o2.result_value, o2.non_core_concept_id, c.value_set_code_type 
      FROM ', p_observationcohorttab,' o2 JOIN ', p_concepttab,' c ON o2.non_core_concept_id = c.non_core_concept_id 
-     WHERE ', resultvaluestring,' AND ', p_timeperioddaterange);
+     WHERE ', p_timeperioddaterange);
      PREPARE stmt FROM @sql;
      EXECUTE stmt;
      DEALLOCATE PREPARE stmt;
@@ -65,7 +65,8 @@ BEGIN
           FROM qry_tmp o2 JOIN (SELECT @currank := 0, @curpatient := 0) r 
           ORDER BY o2.patient_id, o2.clinical_effective_date DESC, o2.id DESC 
           ) ob 
-     WHERE ob.rnk = 1');
+     WHERE ob.rnk = 1 
+     AND ', resultvaluestring);
      PREPARE stmt FROM @sql;
      EXECUTE stmt;
      DEALLOCATE PREPARE stmt;
@@ -76,7 +77,7 @@ BEGIN
      SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp AS 
      SELECT o2.id, o2.patient_id, o2.clinical_effective_date, o2.result_value, o2.non_core_concept_id, c.value_set_code_type 
      FROM ', p_observationcohorttab,' o2 JOIN ', p_concepttab,' c ON o2.non_core_concept_id = c.non_core_concept_id 
-     WHERE ', resultvaluestring,' AND ', p_timeperioddaterange);
+     WHERE ', p_timeperioddaterange);
      PREPARE stmt FROM @sql;
      EXECUTE stmt;
      DEALLOCATE PREPARE stmt;
@@ -103,7 +104,8 @@ BEGIN
           FROM qry_tmp o2 JOIN (SELECT @currank := 0, @curpatient := 0) r 
           ORDER BY o2.patient_id, o2.clinical_effective_date ASC, o2.id ASC 
           ) ob 
-     WHERE ob.rnk = 1');
+     WHERE ob.rnk = 1 
+     AND ', resultvaluestring);
      PREPARE stmt FROM @sql;
      EXECUTE stmt;
      DEALLOCATE PREPARE stmt;
