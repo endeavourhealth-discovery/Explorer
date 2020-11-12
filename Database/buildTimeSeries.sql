@@ -70,9 +70,9 @@ IF p_timeSeries = 'TRUE' AND
    -- get time series value set string
    CALL getValueSetString(seriesValueSet, p_storetab, @seriesValueSetString);
    SET seriesValueSetString = @seriesValueSetString;
-   -- create includeexclude valueset
+   -- create time series valueset
    CALL createValueSet(seriesValueSetString, p_seriesValuesetTab);
-   -- create concept from includeexclude valueset
+   -- create concept from time series valueset
    CALL createConcept(p_seriesConceptTab, p_seriesValuesetTab, p_schema);
 
    IF p_seriesField = 'Concept term' THEN -- to add more fields when available
