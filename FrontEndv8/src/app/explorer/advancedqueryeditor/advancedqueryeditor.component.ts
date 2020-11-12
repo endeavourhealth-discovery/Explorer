@@ -451,6 +451,11 @@ export class AdvancedQueryEditorComponent implements OnInit {
   seriesEncounterValueSet: string = '';
   seriesMedicationValueSet: string = '';
   seriesClinicalEventValueSet: string = '';
+  includedDateFrom: string = '';
+  includedDateTo: string = '';
+  includedPeriodOperator: string = '';
+  includedPeriodValue: string = '';
+  includedPeriodType: string = '';
 
   selectedDelivery: string = '';
   selectedSchedule: string = '';
@@ -805,7 +810,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
     this.fourthFormGroup = this._formBuilder.group({
       control165a: [''],  control165e: [''], control166a: [''], control166c: [''], control166d: [''], control166e: [''], control166g: [''], control167a: [''],
       control167b: [''], control167c: [''], control167d: [''], control167e: [''], control167g: [''], control168a: [''], control168b: [''], control168c: [''], control168d: [''],
-      control168e: [''], control168f: [''], control168g: [''], control70: [''], control71: [''], control72: [''], control73: [''], control74: [''], control75: ['']
+      control168e: [''], control168f: [''], control168g: [''], control70: [''], control71: [''], control72: [''], control73: [''], control74: [''], control75: [''], control76: [''], control77: [''], control78: [''], control79: ['']
     });
     this.fifthFormGroup = this._formBuilder.group({
       control15: [''], control18: ['', Validators.required], control19: ['', Validators.required]
