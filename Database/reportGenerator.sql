@@ -49,6 +49,19 @@ DECLARE selectedEncounterValueSet VARCHAR(1000) DEFAULT NULL;
 DECLARE selectedMedicationValueSet VARCHAR(1000) DEFAULT NULL;
 DECLARE selectedClinicalEventValueSet VARCHAR(1000) DEFAULT NULL;
 
+DECLARE timeSeries VARCHAR(10) DEFAULT NULL;
+DECLARE seriesTable VARCHAR(50) DEFAULT NULL; 
+DECLARE seriesField VARCHAR(100) DEFAULT NULL; 
+DECLARE seriesEncounterValueSet VARCHAR(1000) DEFAULT NULL; 
+DECLARE seriesMedicationValueSet VARCHAR(1000) DEFAULT NULL; 
+DECLARE seriesClinicalEventValueSet VARCHAR(1000) DEFAULT NULL; 
+
+DECLARE seriesDateFrom VARCHAR(30) DEFAULT NULL;
+DECLARE seriesDateTo VARCHAR(30) DEFAULT NULL;
+DECLARE seriesPeriodOperator VARCHAR(50) DEFAULT NULL;
+DECLARE seriesPeriodValue VARCHAR(10) DEFAULT NULL; 
+DECLARE seriesPeriodType VARCHAR(20) DEFAULT NULL; 
+
 DECLARE schedule VARCHAR(100) DEFAULT NULL;
 DECLARE delivery VARCHAR(100) DEFAULT NULL;
 
@@ -268,6 +281,9 @@ DECLARE medicationConcept_tmp VARCHAR(64) DEFAULT NULL;
 DECLARE clinicalEventConcept_tmp VARCHAR(64) DEFAULT NULL;
 DECLARE clinicalTypesConcept_tmp VARCHAR(64) DEFAULT NULL; 
 
+DECLARE seriesValueset_tmp VARCHAR(64) DEFAULT NULL; 
+DECLARE seriesConcept_tmp VARCHAR(64) DEFAULT NULL; 
+
 DECLARE patient_cohort_tmp VARCHAR(64) DEFAULT NULL;
 
 DECLARE tempTables VARCHAR(5000);
@@ -314,6 +330,19 @@ SET selectedClinicalTypes = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.select
 SET selectedEncounterValueSet = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.selectedEncounterValueSet'),'[',''),']',''),'"','');
 SET selectedMedicationValueSet = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.selectedMedicationValueSet'),'[',''),']',''),'"','');
 SET selectedClinicalEventValueSet = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.selectedClinicalEventValueSet'),'[',''),']',''),'"','');
+
+SET timeSeries = UPPER(JSON_EXTRACT(query,'$.timeSeries')); 
+SET seriesTable = JSON_UNQUOTE(JSON_EXTRACT(query,'$.seriesTable'));
+SET seriesField = JSON_UNQUOTE(JSON_EXTRACT(query,'$.seriesField'));
+SET seriesEncounterValueSet = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.seriesEncounterValueSet'),'[',''),']',''),'"','');
+SET seriesMedicationValueSet = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.seriesMedicationValueSet'),'[',''),']',''),'"','');
+SET seriesClinicalEventValueSet = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.seriesClinicalEventValueSet'),'[',''),']',''),'"','');
+
+SET seriesDateFrom = JSON_UNQUOTE(JSON_EXTRACT(query,'$.seriesDateFrom')); 
+SET seriesDateTo = JSON_UNQUOTE(JSON_EXTRACT(query,'$.seriesDateTo')); 
+SET seriesPeriodOperator = JSON_UNQUOTE(JSON_EXTRACT(query,'$.seriesPeriodOperator'));
+SET seriesPeriodValue = JSON_UNQUOTE(JSON_EXTRACT(query,'$.seriesPeriodValue')); 
+SET seriesPeriodType = JSON_UNQUOTE(JSON_EXTRACT(query,'$.seriesPeriodType'));
 
 SET schedule = JSON_UNQUOTE(JSON_EXTRACT(query,'$.schedule')); 
 SET delivery = JSON_UNQUOTE(JSON_EXTRACT(query,'$.delivery')); 
@@ -507,8 +536,7 @@ SET observation5_tmp  = CONCAT('observation5_tmp_',query_id);
 SET incValueSet5a_tmp  = CONCAT('incValueSet5a_tmp_',query_id);
 SET incConcept5a_tmp  = CONCAT('incConcept5a_tmp_',query_id);
 SET observation5a_tmp  = CONCAT('observation5a_tmp_',query_id);
-
--- events
+-- events value set and concept tmp tables
 SET encounterValueSet_tmp  = CONCAT('encounterValueSet_tmp_',query_id);
 SET medicationValueSet_tmp  = CONCAT('medicationValueSet_tmp_',query_id);
 SET clinicalEventValueSet_tmp  = CONCAT('clinicalEventValueSet_tmp_',query_id);
@@ -518,14 +546,15 @@ SET encounterConcept_tmp  = CONCAT('encounterConcept_tmp_',query_id);
 SET medicationConcept_tmp  = CONCAT('medicationConcept_tmp_',query_id);
 SET clinicalEventConcept_tmp  = CONCAT('clinicalEventConcept_tmp_',query_id);
 SET clinicalTypesConcept_tmp  = CONCAT('clinicalTypesConcept_tmp_',query_id);
+-- time series value set and concept tmp tables
+SET seriesValueset_tmp = CONCAT('seriesValueset_tmp_',query_id); 
+SET seriesConcept_tmp = CONCAT('seriesConcept_tmp_',query_id);
 
 SET patient_cohort_tmp  = CONCAT('patient_cohort_tmp_',query_id);
-
 -- cohort definition --
 CALL buildCohortDefinition(query_id,providerOrganisation, includedOrganisation, registrationStatus, ageFrom, ageTo, gender, postcode, 
 registrationExclude, registrationDateFrom, registrationDateTo, registrationPeriodValue, registrationPeriodType, org_tmp, valueset_tmp, 
 concept_tmp, all_valueset_tmp, all_concept_tmp, cohort_tmp, observation_tmp, sourceSchema, store_tmp);
-
 -- advance criteria --
 -- rule 1 --
 CALL getIncludeExcludeString(query_id,includedExclude1,includedAnyAll1,includedValueSet1, includedDateFrom1, includedDateTo1, includedPeriodOperator1,
@@ -599,26 +628,25 @@ includedPeriodValue5a, includedPeriodType5a, incValueSet5a_tmp, incConcept5a_tmp
 5, NULL, NULL, NULL, observation5a_tmp, NULL, NULL, NULL, NULL, NULL, 
 NULL, NULL, NULL, NULL, includedOperator5a, includedEntryValue5a, sourceSchema , store_tmp, @includeExclude5aString);
 SET includeExclude5aString = @includeExclude5aString;
-
 -- final patient cohort
 CALL buildFinalPatientCohort(query_id, patient_cohort_tmp, observation_tmp, includeExclude1String, includeExclude1aString, includeExclude1bString, 
 includeExclude1cString, includeExclude1dString,includeExclude2String, includeExclude2aString, includeExclude3String, includeExclude3aString, includeExclude4String, 
 includeExclude5String, includeExclude5aString, sourceSchema);
-
 -- result datasets
 CALL buildResultDatasets(query_id, patient_cohort_tmp, demographics, encounters, medication, currentMedication, clinicalEvents, activeProblems, 
 dateFromEncounters, dateToEncounters, dateFromMedication, dateToMedication, dateFromClinicalEvents, dateToClinicalEvents, selectedClinicalTypes, 
 selectedEncounterValueSet, selectedMedicationValueSet, selectedClinicalEventValueSet, clinicalTypes_tmp,  clinicalTypesConcept_tmp, encounterValueSet_tmp, 
 encounterConcept_tmp, medicationValueSet_tmp, medicationConcept_tmp, clinicalEventValueSet_tmp, clinicalEventConcept_tmp, sourceSchema, store_tmp, @eventTypes);
 SET eventTypes = @eventTypes;
-
 -- dataset outputs
 CALL buildDatasetOutputTables(selectedDemographicFields, selectedEncounterFields, selectedMedicationFields, selectedClinicalEventFields, 
 eventTypes, store_tmp, sourceSchema, query_id, patient_cohort_tmp);
-
+-- build time series
+CALL buildTimeSeries(timeSeries, seriesTable, seriesField, seriesEncounterValueSet, seriesMedicationValueSet, seriesClinicalEventValueSet, 
+seriesDateFrom, seriesDateTo, seriesPeriodOperator, seriesPeriodValue, seriesPeriodType, store_tmp, seriesValueset_tmp, seriesConcept_tmp, 
+sourceSchema, query_id, patient_cohort_tmp); 
 -- update queue for next run date
 CALL updateQueue(query_id, schedule);
-
 -- clean up --
 -- remove temp tables
  SET tempTables = CONCAT(org_tmp,',',store_tmp,',',cohort_tmp ,',',observation_tmp,',',valueset_tmp,',',concept_tmp ,',',all_valueset_tmp,',',all_concept_tmp,',',
@@ -630,7 +658,7 @@ CALL updateQueue(query_id, schedule);
  incTestedConcept3a_tmp,',',observation3a_tmp,',',incValueSet4_tmp,',',incConcept4_tmp,',',incFollowedByValueSet4_tmp,',',incFollowedByConcept4_tmp ,',',observation4_tmp,',',
  incValueSet5_tmp,',',incConcept5_tmp,',',observation5_tmp,',',incValueSet5a_tmp,',',incConcept5a_tmp,',',observation5a_tmp,',',encounterValueSet_tmp,',',encounterConcept_tmp,',',
  medicationValueSet_tmp,',',medicationConcept_tmp,',',clinicalTypes_tmp,',',clinicalTypesConcept_tmp,',',clinicalEventValueSet_tmp,',',clinicalEventConcept_tmp,',',
- patient_cohort_tmp);
+ seriesValueset_tmp,',',seriesConcept_tmp,',',patient_cohort_tmp);
 
 CALL dropTempTables(tempTables);
 
