@@ -466,13 +466,13 @@ export class DashboardViewerComponent implements OnInit {
       this.selectedCCGString2 = this.selectedCCG2.toString();
     }
 
-    if (this.selectedSeries1 == "" && this.selectAllSeries1) {
-      this.seriesValues1 = new FormControl(this.seriesList1);
-      this.selectedSeriesString1 = this.seriesList1.toString();
+    if (this.selectedSeries2 == "" && this.selectAllSeries2) {
+      this.seriesValues2 = new FormControl(this.seriesList2);
+      this.selectedSeriesString2 = this.seriesList2.toString();
     }
     if (override) {
-      this.selectAllSeries1 = false;
-      this.selectedSeriesString1 = this.selectedSeries1.toString();
+      this.selectAllSeries2 = false;
+      this.selectedSeriesString2 = this.selectedSeries2.toString();
     }
 
     let values2 = this.selectedSeries2.toString();
@@ -552,13 +552,13 @@ export class DashboardViewerComponent implements OnInit {
       this.selectedCCGString3 = this.selectedCCG3.toString();
     }
 
-    if (this.selectedSeries1 == "" && this.selectAllSeries1) {
-      this.seriesValues1 = new FormControl(this.seriesList1);
-      this.selectedSeriesString1 = this.seriesList1.toString();
+    if (this.selectedSeries3 == "" && this.selectAllSeries3) {
+      this.seriesValues3 = new FormControl(this.seriesList3);
+      this.selectedSeriesString3 = this.seriesList3.toString();
     }
     if (override) {
-      this.selectAllSeries1 = false;
-      this.selectedSeriesString1 = this.selectedSeries1.toString();
+      this.selectAllSeries3 = false;
+      this.selectedSeriesString3 = this.selectedSeries3.toString();
     }
 
     let values3 = this.selectedSeries3.toString();
@@ -638,13 +638,13 @@ export class DashboardViewerComponent implements OnInit {
       this.selectedCCGString4 = this.selectedCCG4.toString();
     }
 
-    if (this.selectedSeries1 == "" && this.selectAllSeries1) {
-      this.seriesValues1 = new FormControl(this.seriesList1);
+    if (this.selectedSeries4 == "" && this.selectAllSeries4) {
+      this.seriesValues4 = new FormControl(this.seriesList4);
       this.selectedSeriesString1 = this.seriesList1.toString();
     }
     if (override) {
-      this.selectAllSeries1 = false;
-      this.selectedSeriesString1 = this.selectedSeries1.toString();
+      this.selectAllSeries4 = false;
+      this.selectedSeriesString4 = this.selectedSeries4.toString();
     }
 
     let values4 = this.selectedSeries4.toString();
