@@ -213,4 +213,11 @@ export class ValueSetCodeComponent {
       this.dataSource.paginator.firstPage();
     }
   }
+
+  showSnomed(code) {
+    let url = 'https://termbrowser.nhs.uk/?perspective=full&conceptId1='+code+'&edition=uk-edition&release=v20201001&server=https://termbrowser.nhs.uk/sct-browser-api/snomed&langRefset=999001261000000100,999000691000001104';
+
+    window.open(url);
+
+  }
 }
