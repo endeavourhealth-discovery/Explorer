@@ -16,11 +16,17 @@ BEGIN
           cptm.legacy AS non_core_concept_id 
    FROM ",p_valuesettab," vc JOIN ", p_schema,".concept cpt ON cpt.id = vc.original_code 
    JOIN ", p_schema,".concept_map cptm ON cptm.core = cpt.dbid 
-   WHERE vc.original_code LIKE 'SN\_%' 
-   UNION 
+   WHERE vc.original_code LIKE 'SN\_%' AND vc.data_type = 'observation' 
+   UNION
    SELECT vc.value_set_code_type, 
           cpt.dbid AS non_core_concept_id 
-   FROM ", p_valuesettab," vc JOIN ", p_schema,".concept cpt ON cpt.id = vc.original_code ");
+   FROM ", p_valuesettab," vc JOIN ", p_schema,".concept cpt ON cpt.id = vc.original_code 
+   WHERE vc.original_code LIKE 'SN\_%' AND vc.data_type = 'medication' 
+   UNION
+   SELECT vc.value_set_code_type, 
+          cpt.dbid AS non_core_concept_id 
+   FROM ", p_valuesettab," vc JOIN ", p_schema,".concept cpt ON cpt.id = vc.original_code 
+   WHERE vc.snomed_id = '0' ");
    PREPARE stmt FROM @sql;
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;

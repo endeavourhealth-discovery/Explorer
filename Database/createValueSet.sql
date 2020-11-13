@@ -11,14 +11,16 @@ BEGIN
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;
 
+-- observation, encounter, medication
    SET @sql = CONCAT("CREATE TABLE ", p_tab_name, 
    " AS SELECT DISTINCT vsc.original_code, vsc.original_term, 
-   vsc.snomed_id, vsc.type AS value_set_code_type 
+   vsc.snomed_id, vsc.type AS value_set_code_type, vsc.data_type  
    FROM value_set_codes vsc WHERE ", p_valueString);
    PREPARE stmt FROM @sql;
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;
 
+-- Ethnicity
    SET @sql = CONCAT("UPDATE ", p_tab_name,
    " SET original_code = CONCAT('FHIR_EC_', original_code) 
    WHERE snomed_id ='0' AND original_code REGEXP '^[A-Z]$' ");
@@ -26,6 +28,7 @@ BEGIN
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;
 
+-- observation
    SET @sql = CONCAT("UPDATE ", p_tab_name,
    " SET original_code = CONCAT('EMLOC_', original_code) 
    WHERE snomed_id ='0' AND LEFT(original_code, 5) = '^ESCT' ");
@@ -33,18 +36,22 @@ BEGIN
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;
 
+-- observation, medication
    SET @sql = CONCAT("UPDATE ", p_tab_name,
    " SET original_code = CONCAT('SN_', snomed_id) WHERE snomed_id <> '0' ");
    PREPARE stmt FROM @sql;
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;
 
-
    SET @sql = CONCAT("ALTER TABLE ", p_tab_name," ADD INDEX org_code_idx(original_code)");
    PREPARE stmt FROM @sql;
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;
 
+   SET @sql = CONCAT("ALTER TABLE ", p_tab_name," ADD INDEX data_type_idx(data_type)");
+   PREPARE stmt FROM @sql;
+   EXECUTE stmt;
+   DEALLOCATE PREPARE stmt;
 
 
 END//
