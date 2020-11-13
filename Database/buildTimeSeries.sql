@@ -13,6 +13,9 @@ CREATE PROCEDURE buildTimeSeries (
   p_seriesClinicalEventValueSet VARCHAR(1000),
   p_fromDate VARCHAR(30),
   p_toDate VARCHAR(30),
+  p_periodOperator VARCHAR(50),
+  p_periodValue VARCHAR(10), 
+  p_periodType VARCHAR(20), 
   p_storetab VARCHAR(64),
   p_seriesValuesetTab VARCHAR(64),
   p_seriesConceptTab VARCHAR(64),
@@ -39,8 +42,14 @@ BEGIN
         RESIGNAL; -- rethrow the error
     END;
 
+  -- check date format passed
+  SET p_fromDate = IF(p_fromDate = 'NaN-NaN-NaN', NULL, IF(p_fromDate = '', NULL, SUBSTRING(p_fromDate, 1, 10)));
+  SET p_toDate = IF(p_toDate = 'NaN-NaN-NaN', NULL, IF(p_toDate = '', NULL, SUBSTRING(p_toDate, 1, 10)));
+
   SET p_seriesTable = IF(p_seriesTable = '', NULL, p_seriesTable);
   SET p_seriesField = IF(p_seriesField = '', NULL, p_seriesField);
+
+  SET p_seriesField = 'Concept term'; -- default value
 
    IF p_seriesTable = 'Clinical events' THEN
       SET seriesValueSet = p_seriesClinicalEventValueSet;
@@ -64,9 +73,8 @@ IF p_timeSeries = 'TRUE' AND
    ELSEIF p_seriesTable = 'Encounters' THEN
       SET sourceTab = 'encounter';
    END IF;
-
    -- get time series date range string
-   SET seriesDateRange = getTimePeriodDateRange(p_fromDate, p_toDate, NULL, NULL, NULL);    
+   SET seriesDateRange = getTimePeriodDateRange(p_fromDate, p_toDate, p_periodValue, p_periodType, p_periodOperator);    
    -- get time series value set string
    CALL getValueSetString(seriesValueSet, p_storetab, @seriesValueSetString);
    SET seriesValueSetString = @seriesValueSetString;
