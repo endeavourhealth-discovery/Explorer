@@ -26,6 +26,7 @@
                 <mat-form-field style="width:250px; margin-left: 10px"  appearance="outline" *ngIf="showLineCharts1||showBarCharts1">
                   <mat-label>Filter series</mat-label>
                   <mat-select style="width:230px" [formControl]="seriesValues1" multiple [(value)]="selectedSeries1">
+                    <mat-checkbox class="mat-option" [(ngModel)]="selectAllSeries1" (change)="toggleSelectionSeries1($event)">Select All</mat-checkbox>
                     <mat-option (click)="refresh1(false)" *ngFor="let result of seriesList1" [value]="result">{{result}}</mat-option>
                   </mat-select>
                 </mat-form-field>
@@ -191,6 +192,7 @@
                 <mat-form-field style="width:250px; margin-left: 10px"  appearance="outline" *ngIf="showLineCharts2||showBarCharts2">
                   <mat-label>Filter series</mat-label>
                   <mat-select style="width:230px" [formControl]="seriesValues2" multiple [(value)]="selectedSeries2">
+                    <mat-checkbox class="mat-option" [(ngModel)]="selectAllSeries2" (change)="toggleSelectionSeries2($event)">Select All</mat-checkbox>
                     <mat-option (click)="refresh2(false)" *ngFor="let result of seriesList2" [value]="result">{{result}}</mat-option>
                   </mat-select>
                 </mat-form-field>
@@ -356,6 +358,7 @@
                 <mat-form-field style="width:250px; margin-left: 10px"  appearance="outline" *ngIf="showLineCharts3||showBarCharts3">
                   <mat-label>Filter series</mat-label>
                   <mat-select style="width:230px" [formControl]="seriesValues3" multiple [(value)]="selectedSeries3">
+                    <mat-checkbox class="mat-option" [(ngModel)]="selectAllSeries3" (change)="toggleSelectionSeries3($event)">Select All</mat-checkbox>
                     <mat-option (click)="refresh3(false)" *ngFor="let result of seriesList3" [value]="result">{{result}}</mat-option>
                   </mat-select>
                 </mat-form-field>
@@ -521,6 +524,7 @@
                 <mat-form-field style="width:250px; margin-left: 10px"  appearance="outline" *ngIf="showLineCharts4||showBarCharts4">
                   <mat-label>Filter series</mat-label>
                   <mat-select style="width:230px" [formControl]="seriesValues4" multiple [(value)]="selectedSeries4">
+                    <mat-checkbox class="mat-option" [(ngModel)]="selectAllSeries4" (change)="toggleSelectionSeries4($event)">Select All</mat-checkbox>
                     <mat-option (click)="refresh4(false)" *ngFor="let result of seriesList4" [value]="result">{{result}}</mat-option>
                   </mat-select>
                 </mat-form-field>

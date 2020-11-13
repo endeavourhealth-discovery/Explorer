@@ -18,22 +18,22 @@ interface widget {
 interface dashboardQuery {
   selectedVisualisation1: string;
   selectedOutputField1: string;
-  selectedSeries1: string[];
+  selectedSeries1: string;
   xAxisLabel1: string;
   yAxisLabel1: string;
   selectedVisualisation2: string;
   selectedOutputField2: string;
-  selectedSeries2: string[];
+  selectedSeries2: string;
   xAxisLabel2: string;
   yAxisLabel2: string;
   selectedVisualisation3: string;
   selectedOutputField3: string;
-  selectedSeries3: string[];
+  selectedSeries3: string;
   xAxisLabel3: string;
   yAxisLabel3: string;
   selectedVisualisation4: string;
   selectedOutputField4: string;
-  selectedSeries4: string[];
+  selectedSeries4: string;
   xAxisLabel4: string;
   yAxisLabel4: string;
   visualType: widget[];
@@ -52,6 +52,10 @@ export class DashboardViewerComponent implements OnInit {
   selectAll2: boolean = true;
   selectAll3: boolean = true;
   selectAll4: boolean = true;
+  selectAllSeries1: boolean = true;
+  selectAllSeries2: boolean = true;
+  selectAllSeries3: boolean = true;
+  selectAllSeries4: boolean = true;
   view1: any[] = [770, 250];
   view2: any[] = [770, 250];
   view3: any[] = [770, 250];
@@ -89,10 +93,10 @@ export class DashboardViewerComponent implements OnInit {
   seriesValues2 = new FormControl();
   seriesValues3 = new FormControl();
   seriesValues4 = new FormControl();
-  seriesList1: string[] = [];
-  seriesList2: string[] = [];
-  seriesList3: string[] = [];
-  seriesList4: string[] = [];
+  seriesList1: string = '';
+  seriesList2: string = '';
+  seriesList3: string = '';
+  seriesList4: string = '';
   selectedCCG1: string = '';
   selectedCCGString1: string = '';
   selectedCCG2: string = '';
@@ -184,22 +188,26 @@ export class DashboardViewerComponent implements OnInit {
 
   selectedVisualisation1: string;
   selectedOutputField1: string;
-  selectedSeries1: string[] = [];
+  selectedSeries1: string = '';
+  selectedSeriesString1: string = '';
   xAxisLabel1: string;
   yAxisLabel1: string;
   selectedVisualisation2: string;
   selectedOutputField2: string;
-  selectedSeries2: string[] = [];
+  selectedSeries2: string = '';
+  selectedSeriesString2: string = '';
   xAxisLabel2: string;
   yAxisLabel2: string;
   selectedVisualisation3: string;
   selectedOutputField3: string;
-  selectedSeries3: string[] = [];
+  selectedSeries3: string = '';
+  selectedSeriesString3: string = '';
   xAxisLabel3: string;
   yAxisLabel3: string;
   selectedVisualisation4: string;
   selectedOutputField4: string;
-  selectedSeries4: string[] = [];
+  selectedSeries4: string = '';
+  selectedSeriesString4: string = '';
   xAxisLabel4: string;
   yAxisLabel4: string;
   selectedWidgets : widget[] = [
@@ -316,15 +324,67 @@ export class DashboardViewerComponent implements OnInit {
     this.refresh4(false);
   }
 
+  toggleSelectionSeries1(event) {
+    if (event.checked) {
+      this.seriesValues1 = new FormControl(this.seriesList1);
+      this.selectedSeriesString1 = this.seriesList1.toString();
+    } else {
+      this.seriesValues1 = new FormControl([]);
+      this.selectedSeriesString1 = "";
+    }
+    this.refresh1(false);
+  }
+
+  toggleSelectionSeries2(event) {
+    if (event.checked) {
+      this.seriesValues2 = new FormControl(this.seriesList2);
+      this.selectedSeriesString2 = this.seriesList2.toString();
+    } else {
+      this.seriesValues2 = new FormControl([]);
+      this.selectedSeriesString2 = "";
+    }
+    this.refresh2(false);
+  }
+
+  toggleSelectionSeries3(event) {
+    if (event.checked) {
+      this.seriesValues3 = new FormControl(this.seriesList3);
+      this.selectedSeriesString3 = this.seriesList3.toString();
+    } else {
+      this.seriesValues3 = new FormControl([]);
+      this.selectedSeriesString3 = "";
+    }
+    this.refresh3(false);
+  }
+
+  toggleSelectionSeries4(event) {
+    if (event.checked) {
+      this.seriesValues4 = new FormControl(this.seriesList4);
+      this.selectedSeriesString4 = this.seriesList4.toString();
+    } else {
+      this.seriesValues4 = new FormControl([]);
+      this.selectedSeriesString4 = "";
+    }
+    this.refresh4(false);
+  }
+
   refresh1(override) {
     if (this.selectedCCG1=="" && this.selectAll1) {
       this.ccgValues1 = new FormControl(this.ccgList1);
       this.selectedCCGString1 = this.ccgList1.toString();
     }
-
     if (override) {
       this.selectAll1 = false;
       this.selectedCCGString1 = this.selectedCCG1.toString();
+    }
+
+    if (this.selectedSeries1 == "" && this.selectAllSeries1) {
+      this.seriesValues1 = new FormControl(this.seriesList1);
+      this.selectedSeriesString1 = this.seriesList1.toString();
+    }
+    if (override) {
+      this.selectAllSeries1 = false;
+      this.selectedSeriesString1 = this.selectedSeries1.toString();
     }
 
     let values1 = this.selectedSeries1.toString();
@@ -401,10 +461,18 @@ export class DashboardViewerComponent implements OnInit {
       this.ccgValues2 = new FormControl(this.ccgList2);
       this.selectedCCGString2 = this.ccgList2.toString();
     }
-
     if (override) {
       this.selectAll2 = false;
       this.selectedCCGString2 = this.selectedCCG2.toString();
+    }
+
+    if (this.selectedSeries1 == "" && this.selectAllSeries1) {
+      this.seriesValues1 = new FormControl(this.seriesList1);
+      this.selectedSeriesString1 = this.seriesList1.toString();
+    }
+    if (override) {
+      this.selectAllSeries1 = false;
+      this.selectedSeriesString1 = this.selectedSeries1.toString();
     }
 
     let values2 = this.selectedSeries2.toString();
@@ -426,6 +494,16 @@ export class DashboardViewerComponent implements OnInit {
       if (this.rate2) {
         rate = "1";
       }
+
+      let yAxis = this.yAxisLab2;
+
+      if (rate == '1') {
+        this.yAxisLabel2 = 'Rate per 100,000 patients';
+      }
+      else {
+        this.yAxisLabel2 = yAxis;
+      }
+
       this.explorerService.getDashboard(values2, this.formatDate(this.dateFrom2), this.formatDate(this.dateTo2), cumulative, this.selectedCCGString2, weekly, rate)
         .subscribe(result => {
           this.chartResults2 = result.results;
@@ -469,10 +547,18 @@ export class DashboardViewerComponent implements OnInit {
       this.ccgValues3 = new FormControl(this.ccgList3);
       this.selectedCCGString3 = this.ccgList3.toString();
     }
-
     if (override) {
       this.selectAll3 = false;
       this.selectedCCGString3 = this.selectedCCG3.toString();
+    }
+
+    if (this.selectedSeries1 == "" && this.selectAllSeries1) {
+      this.seriesValues1 = new FormControl(this.seriesList1);
+      this.selectedSeriesString1 = this.seriesList1.toString();
+    }
+    if (override) {
+      this.selectAllSeries1 = false;
+      this.selectedSeriesString1 = this.selectedSeries1.toString();
     }
 
     let values3 = this.selectedSeries3.toString();
@@ -494,6 +580,16 @@ export class DashboardViewerComponent implements OnInit {
       if (this.rate3) {
         rate = "1";
       }
+
+      let yAxis = this.yAxisLab3;
+
+      if (rate == '1') {
+        this.yAxisLabel3 = 'Rate per 100,000 patients';
+      }
+      else {
+        this.yAxisLabel3 = yAxis;
+      }
+
       this.explorerService.getDashboard(values3, this.formatDate(this.dateFrom3), this.formatDate(this.dateTo3), cumulative, this.selectedCCGString3, weekly, rate)
         .subscribe(result => {
           this.chartResults3 = result.results;
@@ -537,10 +633,18 @@ export class DashboardViewerComponent implements OnInit {
       this.ccgValues4 = new FormControl(this.ccgList4);
       this.selectedCCGString4 = this.ccgList4.toString();
     }
-
     if (override) {
       this.selectAll4 = false;
       this.selectedCCGString4 = this.selectedCCG4.toString();
+    }
+
+    if (this.selectedSeries1 == "" && this.selectAllSeries1) {
+      this.seriesValues1 = new FormControl(this.seriesList1);
+      this.selectedSeriesString1 = this.seriesList1.toString();
+    }
+    if (override) {
+      this.selectAllSeries1 = false;
+      this.selectedSeriesString1 = this.selectedSeries1.toString();
     }
 
     let values4 = this.selectedSeries4.toString();
@@ -561,6 +665,15 @@ export class DashboardViewerComponent implements OnInit {
       let rate = "0";
       if (this.rate4) {
         rate = "1";
+      }
+
+      let yAxis = this.yAxisLab4;
+
+      if (rate == '1') {
+        this.yAxisLabel4 = 'Rate per 100,000 patients';
+      }
+      else {
+        this.yAxisLabel4 = yAxis;
       }
 
       this.explorerService.getDashboard(values4, this.formatDate(this.dateFrom4), this.formatDate(this.dateTo4), cumulative, this.selectedCCGString4, weekly, rate)
