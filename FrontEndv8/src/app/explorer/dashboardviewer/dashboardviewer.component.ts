@@ -342,10 +342,21 @@ export class DashboardViewerComponent implements OnInit {
       if (this.weekly1) {
         weekly = "1";
       }
+
       let rate = "0";
       if (this.rate1) {
         rate = "1";
       }
+
+      let yAxis = this.yAxisLab1;
+
+      if (rate == '1') {
+        this.yAxisLabel1 = 'Rate per 100,000 patients';
+      }
+      else {
+        this.yAxisLabel1 = yAxis;
+      }
+
 
       this.explorerService.getDashboard(values1, this.formatDate(this.dateFrom1), this.formatDate(this.dateTo1), cumulative, this.selectedCCGString1, weekly, rate)
         .subscribe(result => {
