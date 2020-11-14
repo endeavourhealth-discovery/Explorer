@@ -189,25 +189,21 @@ export class DashboardViewerComponent implements OnInit {
   selectedVisualisation1: string;
   selectedOutputField1: string;
   selectedSeries1: string = '';
-  selectedSeriesString1: string = '';
   xAxisLabel1: string;
   yAxisLabel1: string;
   selectedVisualisation2: string;
   selectedOutputField2: string;
   selectedSeries2: string = '';
-  selectedSeriesString2: string = '';
   xAxisLabel2: string;
   yAxisLabel2: string;
   selectedVisualisation3: string;
   selectedOutputField3: string;
   selectedSeries3: string = '';
-  selectedSeriesString3: string = '';
   xAxisLabel3: string;
   yAxisLabel3: string;
   selectedVisualisation4: string;
   selectedOutputField4: string;
   selectedSeries4: string = '';
-  selectedSeriesString4: string = '';
   xAxisLabel4: string;
   yAxisLabel4: string;
   selectedWidgets : widget[] = [
@@ -327,10 +323,10 @@ export class DashboardViewerComponent implements OnInit {
   toggleSelectionSeries1(event) {
     if (event.checked) {
       this.seriesValues1 = new FormControl(this.seriesList1);
-      this.selectedSeriesString1 = this.seriesList1.toString();
+      this.selectedSeries1 = this.seriesList1;
     } else {
       this.seriesValues1 = new FormControl([]);
-      this.selectedSeriesString1 = "";
+      this.selectedSeries1 = "";
     }
     this.refresh1(false);
   }
@@ -338,10 +334,10 @@ export class DashboardViewerComponent implements OnInit {
   toggleSelectionSeries2(event) {
     if (event.checked) {
       this.seriesValues2 = new FormControl(this.seriesList2);
-      this.selectedSeriesString2 = this.seriesList2.toString();
+      this.selectedSeries2 = this.seriesList2;
     } else {
       this.seriesValues2 = new FormControl([]);
-      this.selectedSeriesString2 = "";
+      this.selectedSeries2 = "";
     }
     this.refresh2(false);
   }
@@ -349,10 +345,10 @@ export class DashboardViewerComponent implements OnInit {
   toggleSelectionSeries3(event) {
     if (event.checked) {
       this.seriesValues3 = new FormControl(this.seriesList3);
-      this.selectedSeriesString3 = this.seriesList3.toString();
+      this.selectedSeries3 = this.seriesList3;
     } else {
       this.seriesValues3 = new FormControl([]);
-      this.selectedSeriesString3 = "";
+      this.selectedSeries3 = "";
     }
     this.refresh3(false);
   }
@@ -360,10 +356,10 @@ export class DashboardViewerComponent implements OnInit {
   toggleSelectionSeries4(event) {
     if (event.checked) {
       this.seriesValues4 = new FormControl(this.seriesList4);
-      this.selectedSeriesString4 = this.seriesList4.toString();
+      this.selectedSeries4 = this.seriesList4;
     } else {
       this.seriesValues4 = new FormControl([]);
-      this.selectedSeriesString4 = "";
+      this.selectedSeries4 = "";
     }
     this.refresh4(false);
   }
@@ -376,15 +372,6 @@ export class DashboardViewerComponent implements OnInit {
     if (override) {
       this.selectAll1 = false;
       this.selectedCCGString1 = this.selectedCCG1.toString();
-    }
-
-    if (this.selectedSeries1 == "" && this.selectAllSeries1) {
-      this.seriesValues1 = new FormControl(this.seriesList1);
-      this.selectedSeriesString1 = this.seriesList1.toString();
-    }
-    if (override) {
-      this.selectAllSeries1 = false;
-      this.selectedSeriesString1 = this.selectedSeries1.toString();
     }
 
     let values1 = this.selectedSeries1.toString();
@@ -466,15 +453,6 @@ export class DashboardViewerComponent implements OnInit {
       this.selectedCCGString2 = this.selectedCCG2.toString();
     }
 
-    if (this.selectedSeries2 == "" && this.selectAllSeries2) {
-      this.seriesValues2 = new FormControl(this.seriesList2);
-      this.selectedSeriesString2 = this.seriesList2.toString();
-    }
-    if (override) {
-      this.selectAllSeries2 = false;
-      this.selectedSeriesString2 = this.selectedSeries2.toString();
-    }
-
     let values2 = this.selectedSeries2.toString();
 
     this.showLineCharts2 = this.selectedWidgets[1].name=='Line chart';
@@ -552,15 +530,6 @@ export class DashboardViewerComponent implements OnInit {
       this.selectedCCGString3 = this.selectedCCG3.toString();
     }
 
-    if (this.selectedSeries3 == "" && this.selectAllSeries3) {
-      this.seriesValues3 = new FormControl(this.seriesList3);
-      this.selectedSeriesString3 = this.seriesList3.toString();
-    }
-    if (override) {
-      this.selectAllSeries3 = false;
-      this.selectedSeriesString3 = this.selectedSeries3.toString();
-    }
-
     let values3 = this.selectedSeries3.toString();
 
     this.showLineCharts3 = this.selectedWidgets[2].name=='Line chart';
@@ -636,15 +605,6 @@ export class DashboardViewerComponent implements OnInit {
     if (override) {
       this.selectAll4 = false;
       this.selectedCCGString4 = this.selectedCCG4.toString();
-    }
-
-    if (this.selectedSeries4 == "" && this.selectAllSeries4) {
-      this.seriesValues4 = new FormControl(this.seriesList4);
-      this.selectedSeriesString1 = this.seriesList1.toString();
-    }
-    if (override) {
-      this.selectAllSeries4 = false;
-      this.selectedSeriesString4 = this.selectedSeries4.toString();
     }
 
     let values4 = this.selectedSeries4.toString();
@@ -800,7 +760,6 @@ export class DashboardViewerComponent implements OnInit {
     this.chartTitle3 = this.selectedVisualisation3;
     this.chartTitle4 = this.selectedVisualisation4;
 
-    console.log(this.selectedWidgets.length);
     if (this.selectedWidgets.length == 1) {
       this.pageSize1 = 10;
       this.pageSize2 = 10;
@@ -1171,7 +1130,6 @@ export class DashboardViewerComponent implements OnInit {
   }
 
   ConvertToCSVSingle(objArray, group, series) {
-    console.log(objArray);
     let array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
     let csv = 'group,key,point,count\r\n';
     for (let key in array) {
