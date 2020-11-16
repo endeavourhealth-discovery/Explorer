@@ -119,20 +119,24 @@ IF p_timeSeries = 'TRUE' AND
        series_name DATE,  
        series_value INT, PRIMARY KEY (row_id) 
    ) AS 
-   SELECT  (@row_no := @row_no + 1) AS row_id, 
-           org2.name AS `grouping`,', 
-           seriesColumn,' AS name, 
-           o2.clinical_effective_date AS series_name, 
-           COUNT(DISTINCT(o2.patient_id)) AS series_value 
+   SELECT (@row_no := @row_no + 1) AS row_id, 
+         a.grouping,
+         a.name,
+         a.series_name,
+         a.series_value
+   FROM (SELECT  
+         org2.name AS `grouping`,', 
+         seriesColumn,' AS name, 
+         o2.clinical_effective_date AS series_name, 
+         COUNT(DISTINCT(o2.patient_id)) AS series_value 
    FROM ', p_patientcohorttab,' c JOIN ', p_schema,'.', sourceTab,' o2 
    ON c.patient_id = o2.patient_id AND c.organization_id = o2.organization_id ', 
    join_clause_1,' 
    JOIN ', p_schema,'.organization org ON org.id = o2.organization_id 
    LEFT JOIN ', p_schema,'.organization org2 ON org2.id = org.parent_organization_id 
-   JOIN (SELECT @row_no := 0) t 
    WHERE ', seriesDateRange,'  
-   GROUP BY org2.name,', seriesColumn,', o2.clinical_effective_date 
-   ORDER BY o2.clinical_effective_date, org2.name'); 
+   GROUP BY org2.name,', seriesColumn,', o2.clinical_effective_date) a JOIN (SELECT @row_no := 0) t 
+   ORDER BY a.series_name, a.grouping'); 
    PREPARE stmt FROM @sql;
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;
