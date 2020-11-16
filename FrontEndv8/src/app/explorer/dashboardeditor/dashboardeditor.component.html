@@ -59,9 +59,9 @@
             </div>
             <br/>
             <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-              <mat-form-field appearance="outline" style="margin-left: 25px; width: 300px">
-                <mat-label>Query/Dataset/Series</mat-label>
-                <mat-select multiple [(ngModel)]="selectedSeries1" formControlName="control7a" (ngModelChange)="formChanged()" required>
+              <mat-form-field appearance="outline" style="margin-left: 25px; width: 600px">
+                <mat-label>Select query and dataset for series</mat-label>
+                <mat-select [(ngModel)]="selectedSeries1" formControlName="control7a" (ngModelChange)="formChanged()" required>
                   <mat-select-search [formControl]="filterCtrl"></mat-select-search>
                   <mat-option *ngFor="let result of filteredValueset | async" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
                     {{result}}
@@ -71,14 +71,14 @@
             </div>
             <br/>
             <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-              <mat-form-field appearance="outline" style="margin-left: 25px; width: 400px">
+              <mat-form-field appearance="outline" style="margin-left: 25px; width: 600px">
                 <mat-label>X Axis label</mat-label>
                 <input matInput placeholder="X Axis label" [(ngModel)]="xAxisLabel1" formControlName="control8a" (ngModelChange)="formChanged()">
               </mat-form-field>
             </div>
             <br/>
             <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-              <mat-form-field appearance="outline" style="margin-left: 25px; width: 400px">
+              <mat-form-field appearance="outline" style="margin-left: 25px; width: 600px">
                 <mat-label>Y Axis label</mat-label>
                 <input matInput placeholder="Y Axis label" [(ngModel)]="yAxisLabel1" formControlName="control9a" (ngModelChange)="formChanged()">
               </mat-form-field>
@@ -115,9 +115,9 @@
             </div>
             <br/>
             <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-              <mat-form-field appearance="outline" style="margin-left: 25px; width: 300px">
-                <mat-label>Query/Dataset/Series</mat-label>
-                <mat-select multiple [(ngModel)]="selectedSeries2" formControlName="control7b" (ngModelChange)="formChanged()" >
+              <mat-form-field appearance="outline" style="margin-left: 25px; width: 600px">
+                <mat-label>Select query and dataset for series</mat-label>
+                <mat-select [(ngModel)]="selectedSeries2" formControlName="control7b" (ngModelChange)="formChanged()" >
                   <mat-select-search [formControl]="filterCtrl"></mat-select-search>
                   <mat-option *ngFor="let result of filteredValueset | async" [value]="result"  matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
                     {{result}}
@@ -127,14 +127,14 @@
             </div>
             <br/>
             <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-              <mat-form-field appearance="outline" style="margin-left: 25px; width: 400px">
+              <mat-form-field appearance="outline" style="margin-left: 25px; width: 600px">
                 <mat-label>X Axis label</mat-label>
                 <input matInput placeholder="X Axis label" [(ngModel)]="xAxisLabel2" formControlName="control8b" (ngModelChange)="formChanged()">
               </mat-form-field>
             </div>
             <br/>
             <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-              <mat-form-field appearance="outline" style="margin-left: 25px; width: 400px">
+              <mat-form-field appearance="outline" style="margin-left: 25px; width: 600px">
                 <mat-label>Y Axis label</mat-label>
                 <input matInput placeholder="Y Axis label" [(ngModel)]="yAxisLabel2" formControlName="control9b" (ngModelChange)="formChanged()">
               </mat-form-field>
@@ -171,9 +171,9 @@
             </div>
             <br/>
             <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-              <mat-form-field appearance="outline" style="margin-left: 25px; width: 300px">
-                <mat-label>Query/Dataset/Series</mat-label>
-                <mat-select multiple [(ngModel)]="selectedSeries3" formControlName="control7c" (ngModelChange)="formChanged()" >
+              <mat-form-field appearance="outline" style="margin-left: 25px; width: 600px">
+                <mat-label>Select query and dataset for series</mat-label>
+                <mat-select [(ngModel)]="selectedSeries3" formControlName="control7c" (ngModelChange)="formChanged()" >
                   <mat-select-search [formControl]="filterCtrl"></mat-select-search>
                   <mat-option *ngFor="let result of filteredValueset | async" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
                     {{result}}
@@ -183,14 +183,14 @@
             </div>
             <br/>
             <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-              <mat-form-field appearance="outline" style="margin-left: 25px; width: 400px">
+              <mat-form-field appearance="outline" style="margin-left: 25px; width: 600px">
                 <mat-label>X Axis label</mat-label>
                 <input matInput placeholder="X Axis label" [(ngModel)]="xAxisLabel3" formControlName="control8c" (ngModelChange)="formChanged()">
               </mat-form-field>
             </div>
             <br/>
             <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-              <mat-form-field appearance="outline" style="margin-left: 25px; width: 400px">
+              <mat-form-field appearance="outline" style="margin-left: 25px; width: 600px">
                 <mat-label>Y Axis label</mat-label>
                 <input matInput placeholder="Y Axis label" [(ngModel)]="yAxisLabel3" formControlName="control9c" (ngModelChange)="formChanged()">
               </mat-form-field>
@@ -227,9 +227,9 @@
             </div>
             <br/>
             <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-              <mat-form-field appearance="outline" style="margin-left: 25px; width: 300px">
-                <mat-label>Query/Dataset/Series</mat-label>
-                <mat-select multiple [(ngModel)]="selectedSeries4" formControlName="control7d" (ngModelChange)="formChanged()" >
+              <mat-form-field appearance="outline" style="margin-left: 25px; width: 600px">
+                <mat-label>Select query and dataset for series</mat-label>
+                <mat-select [(ngModel)]="selectedSeries4" formControlName="control7d" (ngModelChange)="formChanged()" >
                   <mat-select-search [formControl]="filterCtrl"></mat-select-search>
                   <mat-option *ngFor="let result of filteredValueset | async" [value]="result"  matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
                     {{result}}
@@ -239,14 +239,14 @@
             </div>
             <br/>
             <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-              <mat-form-field appearance="outline" style="margin-left: 25px; width: 400px">
+              <mat-form-field appearance="outline" style="margin-left: 25px; width: 600px">
                 <mat-label>X Axis label</mat-label>
                 <input matInput placeholder="X Axis label" [(ngModel)]="xAxisLabel4" formControlName="control8d" (ngModelChange)="formChanged()">
               </mat-form-field>
             </div>
             <br/>
             <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-              <mat-form-field appearance="outline" style="margin-left: 25px; width: 400px">
+              <mat-form-field appearance="outline" style="margin-left: 25px; width: 600px">
                 <mat-label>Y Axis label</mat-label>
                 <input matInput placeholder="Y Axis label" [(ngModel)]="yAxisLabel4" formControlName="control9d" (ngModelChange)="formChanged()">
               </mat-form-field>

@@ -79,6 +79,7 @@ public class DashboardEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getDashboard(@Context SecurityContext sc,
+                                 @QueryParam("query") String query,
                                  @QueryParam("chartName") String chartName,
                                  @QueryParam("dateFrom") String dateFrom,
                                  @QueryParam("dateTo") String dateTo,
@@ -89,7 +90,7 @@ public class DashboardEndpoint {
         LOG.debug("getDashboard");
 
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
-            ChartResult result = viewerDAL.getDashboard(chartName,dateFrom,dateTo, cumulative, grouping,weekly,rate);
+            ChartResult result = viewerDAL.getDashboard(query, chartName,dateFrom,dateTo, cumulative, grouping,weekly,rate);
 
             return Response
                     .ok()
@@ -103,6 +104,7 @@ public class DashboardEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getDashboardSingle(@Context SecurityContext sc,
+                                 @QueryParam("query") String query,
                                  @QueryParam("chartName") String chartName,
                                  @QueryParam("dateFrom") String dateFrom,
                                  @QueryParam("dateTo") String dateTo,
@@ -113,9 +115,9 @@ public class DashboardEndpoint {
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
             Chart result = null;
             if (ignoreDateRange==0)
-                result = viewerDAL.getDashboardSingle(chartName,dateFrom,dateTo, grouping);
+                result = viewerDAL.getDashboardSingle(query, chartName,dateFrom,dateTo, grouping);
             else if (ignoreDateRange==1)
-                result = viewerDAL.getDashboardSingle(chartName, grouping);
+                result = viewerDAL.getDashboardSingle(query, chartName, grouping);
 
             return Response
                     .ok()
@@ -560,6 +562,24 @@ public class DashboardEndpoint {
 
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
             QueryResult result = viewerDAL.getQuery(selectedQuery);
+
+            return Response
+                    .ok()
+                    .entity(result)
+                    .build();
+        }
+    }
+
+    @GET
+    @Path("/seriesFromQuery")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getSeriesFromQuery(@Context SecurityContext sc,
+                             @QueryParam("query") String query) throws Exception {
+        LOG.debug("getSeriesFromQuery");
+
+        try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
+            SeriesResult result = viewerDAL.getSeriesFromQuery(query);
 
             return Response
                     .ok()

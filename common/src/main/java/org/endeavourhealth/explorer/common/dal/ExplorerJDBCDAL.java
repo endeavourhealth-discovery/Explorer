@@ -262,11 +262,11 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                 break;
             case "3":
                 sql = "SELECT distinct(`grouping`) as type " +
-                        "FROM dashboards.dashboard_results " +
+                        "FROM dashboards.dashboard_results_groups " +
                         " order by `grouping`";
 
                 sqlCount = "SELECT count(distinct(`grouping`)) " +
-                        " FROM dashboards.dashboard_results";
+                        " FROM dashboards.dashboard_results_groups";
                 break;
             case "4":
                 sql = "SELECT distinct(type) as type " +
@@ -333,14 +333,12 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                         " FROM dashboards.query_library";
                 break;
             case "12":
-                sql = "SELECT distinct(name) as type " +
-                        "FROM dashboards.dashboard_results " +
-                        "UNION select distinct(name) as type "+
+                sql = "select distinct(name) as type "+
                         "FROM dashboards.query_library " +
                         " order by type";
 
                 sqlCount = "SELECT count(distinct(name)) " +
-                        " FROM dashboards.dashboard_results";
+                        " FROM dashboards.query_library";
                 break;
             case "13":
                 sql = "SELECT distinct(field_name) as type " +
@@ -672,7 +670,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         return dashboardLibrary;
     }
 
-    public ChartResult getDashboard(String chartName, String dateFrom, String dateTo, String cumulative, String grouping, String weekly, String rate) throws Exception {
+    public ChartResult getDashboard(String query, String chartName, String dateFrom, String dateTo, String cumulative, String grouping, String weekly, String rate) throws Exception {
         String ccg = "";
 
         List<String> charts = Arrays.asList(chartName.split("\\s*,\\s*"));
@@ -686,6 +684,17 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
         ChartResult result = new ChartResult();
         String sql = "";
+
+        sql = "select id from dashboards.query_library where name = ? ";
+        String queryId = null;
+        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            statement.setString(1, query);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    queryId = resultSet.getString("id");
+                }
+            }
+        }
 
         List<Chart> chart = new ArrayList<>();
         Chart chartItem = null;
@@ -718,7 +727,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                             "floor(@running_total:=@running_total + t.series_value) as series_value " +
                             "FROM " +
                             "( SELECT name,series_name,sum(series_value/((select sum(list_size) as list_size from dashboards.ccg_list_sizes where ccg in ("+temp+"))/100000)) as series_value "+
-                            "FROM dashboards.dashboard_results r " +
+                            "FROM dashboards.`dashboard_results_" + queryId + "` r " +
                             "where name = ? "+
                             "and series_name between ? and ? "+grouping+" group by series_name) t " +
                             "JOIN (SELECT @running_total:=0) r " +
@@ -728,7 +737,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                             "@running_total:=@running_total + t.series_value as series_value " +
                             "FROM " +
                             "( SELECT name,series_name,sum(series_value) as series_value "+
-                            "FROM dashboards.dashboard_results " +
+                            "FROM dashboards.`dashboard_results_" + queryId + "` " +
                             "where name = ? and series_name between ? and ? "+grouping+" group by series_name) t " +
                             "JOIN (SELECT @running_total:=0) r " +
                             "ORDER BY t.series_name";
@@ -739,7 +748,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                     if (rate.equals("1")) {
                         sql = "SELECT FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) AS series_name, " +
                                 "floor(SUM(series_value/((select sum(list_size) as list_size from dashboards.ccg_list_sizes where ccg in ("+temp+"))/100000))) AS series_value " +
-                                "from dashboards.dashboard_results r "+
+                                "FROM dashboards.`dashboard_results_" + queryId + "` r " +
                                 "where name = ? "+
                                 "and series_name between ? and ? "+grouping+
                                 " GROUP BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) " +
@@ -747,18 +756,18 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                     } else {
                         sql = "SELECT FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) AS series_name, " +
                                 "SUM(series_value) AS series_value " +
-                                "from dashboards.dashboard_results where name = ? " +
+                                "from dashboards.`dashboard_results_" + queryId + "` where name = ? " +
                                 "and series_name between ? and ? "+grouping+
                                 " GROUP BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) " +
                                 "ORDER BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7))";
                     }
                 } else {
                     if (rate.equals("1")) {
-                        sql = "SELECT series_name,floor(sum(series_value/((select sum(list_size) as list_size from dashboards.ccg_list_sizes where ccg in ("+temp+"))/100000))) as series_value from dashboards.dashboard_results r "+
+                        sql = "SELECT series_name,floor(sum(series_value/((select sum(list_size) as list_size from dashboards.ccg_list_sizes where ccg in ("+temp+"))/100000))) as series_value from dashboards.`dashboard_results_" + queryId + "` r "+
                                 "where name = ? "+
                                 "and series_name between ? and ? "+grouping+" group by series_name order by series_name";
                     } else {
-                        sql = "SELECT series_name,sum(series_value) as series_value from dashboards.dashboard_results where name = ? " +
+                        sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` where name = ? " +
                                 "and series_name between ? and ? " + grouping + " group by series_name order by series_name";
                     }
                 }
@@ -781,7 +790,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         return result;
     }
 
-    public Chart getDashboardSingle(String chartName, String dateFrom, String dateTo, String grouping) throws Exception {
+    public Chart getDashboardSingle(String query, String chartName, String dateFrom, String dateTo, String grouping) throws Exception {
 
         grouping = grouping.replaceAll(",","','");
         grouping = "'" + grouping + "'";
@@ -790,7 +799,20 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         Chart chartItem = new Chart();
         chartItem.setName(chartName);
 
-        String sql = "SELECT series_name,sum(series_value) as series_value from dashboards.dashboard_results where name = ? "+
+        String sql = "";
+
+        sql = "select id from dashboards.query_library where name = ? ";
+        String queryId = null;
+        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            statement.setString(1, query);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    queryId = resultSet.getString("id");
+                }
+            }
+        }
+
+        sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` where name = ? "+
                 "and series_name between ? and ? "+grouping+" group by series_name order by series_name";
 
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
@@ -805,7 +827,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         return chartItem;
     }
 
-    public Chart getDashboardSingle(String chartName, String grouping) throws Exception {
+    public Chart getDashboardSingle(String query, String chartName, String grouping) throws Exception {
 
         grouping = grouping.replaceAll(",","','");
         grouping = "'" + grouping + "'";
@@ -814,7 +836,20 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         Chart chartItem = new Chart();
         chartItem.setName(chartName);
 
-        String sql = "SELECT series_name,sum(series_value) as series_value from dashboards.dashboard_results where name = ? "+grouping+
+        String sql = "";
+
+        sql = "select id from dashboards.query_library where name = ? ";
+        String queryId = null;
+        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            statement.setString(1, query);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    queryId = resultSet.getString("id");
+                }
+            }
+        }
+
+        sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` where name = ? "+grouping+
                 " group by series_name order by series_name";
 
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
@@ -2201,4 +2236,62 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         }
         return count;
     }
+
+    public SeriesResult getSeriesFromQuery(String queryName) throws Exception {
+        SeriesResult result = new SeriesResult();
+
+        String sql = "";
+        String sqlCount = "";
+
+        sql = "select id from dashboards.query_library where name = ? ";
+        String queryId = null;
+        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            statement.setString(1, queryName);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    queryId = resultSet.getString("id");
+                }
+            }
+        }
+
+        sql = "SELECT distinct name " +
+                "FROM dashboards.`dashboard_results_" + queryId + "`"+
+                " order by name";
+
+        sqlCount = "SELECT 1";
+
+        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                result.setResults(getSeriesList(resultSet));
+            }
+        }
+
+        try (PreparedStatement statement = conn.prepareStatement(sqlCount)) {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                resultSet.next();
+                result.setLength(resultSet.getInt(1));
+            }
+        }
+
+        return result;
+    }
+
+    private List<Series> getSeriesList(ResultSet resultSet) throws SQLException {
+        List<Series> result = new ArrayList<>();
+        while (resultSet.next()) {
+            result.add(getSeriesValues(resultSet));
+        }
+
+        return result;
+    }
+
+    public static Series getSeriesValues(ResultSet resultSet) throws SQLException {
+        Series series = new Series();
+
+        series
+                .setName(resultSet.getString("name"));
+
+        return series;
+    }
+
 }

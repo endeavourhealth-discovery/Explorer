@@ -29,9 +29,10 @@ export class ExplorerService {
     return this.http.get('api/events/lookuplistbyvalueset', {params});
   }
 
-  getDashboard(charts: string, dateFrom: string, dateTo: string, cumulative: string, grouping: string, weekly: string, rate: string): Observable<any> {
+  getDashboard(query: string, charts: string, dateFrom: string, dateTo: string, cumulative: string, grouping: string, weekly: string, rate: string): Observable<any> {
     let params = new HttpParams();
 
+    params = params.append('query', query);
     params = params.append('chartName', charts);
     params = params.append('dateFrom', dateFrom);
     params = params.append('dateTo', dateTo);
@@ -43,9 +44,10 @@ export class ExplorerService {
     return this.http.get('api/events/dashboard', {params});
   }
 
-  getDashboardSingle(chart: string, dateFrom: string, dateTo: string, ignoreDateRange: number, grouping: string): Observable<any> {
+  getDashboardSingle(query: string, chart: string, dateFrom: string, dateTo: string, ignoreDateRange: number, grouping: string): Observable<any> {
     let params = new HttpParams();
 
+    params = params.append('query', query);
     params = params.append('chartName', chart);
     params = params.append('dateFrom', dateFrom);
     params = params.append('dateTo', dateTo);
@@ -314,6 +316,14 @@ export class ExplorerService {
     params = params.append('selectedQuery', selectedQuery);
 
     return this.http.get('api/events/query', {params});
+  }
+
+  getSeriesFromQuery(query?: string): Observable<any> {
+
+    let params = new HttpParams();
+    params = params.append('query', query);
+
+    return this.http.get('api/events/seriesFromQuery', {params});
   }
 
   getDashboardView(dashboardNumber: string): Observable<any> {
