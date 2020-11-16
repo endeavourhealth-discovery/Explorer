@@ -116,7 +116,7 @@ export class TrendComponent {
     }
     names = names.substr(1);
 
-    this.explorerService.getDashboard(names, this.formatDate(this.dateFrom), this.formatDate(this.dateTo), cumulative, 'registry_trend', weekly, '0')
+    this.explorerService.getDashboard('Registry trends', names, this.formatDate(this.dateFrom), this.formatDate(this.dateTo), cumulative, 'registry_trend', weekly, '0')
       .subscribe(result => {
         this.chartResults = result.results;
 
@@ -139,7 +139,7 @@ export class TrendComponent {
       });
 
     if (this.showBarCharts) {
-      this.explorerService.getDashboardSingle(indicator, this.formatDate(this.dateFrom), this.formatDate(this.dateTo), 1, 'registry_latest')
+      this.explorerService.getDashboardSingle('Registry trends', indicator, this.formatDate(this.dateFrom), this.formatDate(this.dateTo), 1, 'registry_latest')
         .subscribe(result => {
           this.chartResultsSingle = result.series;
         });
