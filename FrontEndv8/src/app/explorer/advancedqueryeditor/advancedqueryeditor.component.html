@@ -23,6 +23,25 @@
             </mat-form-field>
           </div>
           <br/>
+          <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <mat-form-field appearance="outline" style="margin-left: 25px; width: 600px">
+              <mat-label>Denominator query</mat-label>
+              <mat-select [(ngModel)]="selectedDenominator" formControlName="control157" (ngModelChange)="formChanged()">
+                <mat-select-search [formControl]="filterCtrl"></mat-select-search>
+                <mat-option *ngFor="let result of filteredValueset | async" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
+                  {{result}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <br/>
+          <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <mat-form-field appearance="outline" style="margin-left: 25px; width: 200px">
+              <mat-label>Target percentage [%]</mat-label>
+              <input matInput placeholder="Percentage [%]" [(ngModel)]="percent" formControlName="control158" (ngModelChange)="formChanged()" (keydown.enter)="stepper.next()">
+            </mat-form-field>
+          </div>
+          <br/>
           <span style="margin-left: 30px">*Required</span>
         </div>
         <div class="summary-column">
@@ -32,8 +51,11 @@
           <div style="margin-top: 30px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
             <p>Name of query.</p>
           </div>
+          <div style="margin-top: 15px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <p>Select an (optional) query as the denominator for this query. This query’s patient cohort (numerator) will then be compared against the selected denominator query cohort in the registries results.</p>
+          </div>
         </div>
-        <div style="margin-top: 520px" mat-dialog-actions align="end">
+        <div style="margin-top: 380px" mat-dialog-actions align="end">
           <button style="margin-right: 15px" mat-button color="accent" (click)="onCancelClick()">Cancel</button>
           <button style="margin-right: 15px" mat-flat-button color="accent" (click)="stepper.next()">Next</button>
           <button style="margin-right: 15px" mat-flat-button color="accent" [disabled]="disableForm" (click)="saveQuery()">Save</button>

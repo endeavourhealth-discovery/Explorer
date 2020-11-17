@@ -234,8 +234,6 @@ export class QueryLibraryComponent implements OnInit {
         details = query.includedOrganisation
       } else if (fieldName=='registrationStatus') {
         details = query.registrationStatus
-      }else if (fieldName=='cohortValue') {
-        details = query.cohortValue
       }else if (fieldName=='valueDateFrom') {
         details = query.valueDateFrom
       }else if (fieldName=='valueDateTo') {

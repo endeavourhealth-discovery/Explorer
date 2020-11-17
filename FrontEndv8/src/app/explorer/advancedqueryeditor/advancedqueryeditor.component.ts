@@ -15,6 +15,8 @@ export interface DialogData {
 }
 
 interface savedQuery {
+  selectedDenominator: string;
+  percent: string;
   providerOrganisation: string;
   includedOrganisation: string;
   registrationStatus: string;
@@ -267,6 +269,8 @@ export class AdvancedQueryEditorComponent implements OnInit {
 
   type: string = '';
   name: string = '';
+  selectedDenominator: string = '';
+  percent: string = '';
 
   selectedOrganisation: string = '';
   selectedIncludedOrganisation: string = '';
@@ -587,6 +591,8 @@ export class AdvancedQueryEditorComponent implements OnInit {
     if (data.query!='') { // edit mode
       let query: savedQuery = JSON.parse(data.query);
 
+      this.selectedDenominator = query.selectedDenominator;
+      this.percent = query. percent;
       this.selectedOrganisation = query.providerOrganisation;
       this.selectedIncludedOrganisation = query.includedOrganisation;
       this.selectedRegistration = query.registrationStatus;
@@ -784,7 +790,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
     }
 
     this.firstFormGroup = this._formBuilder.group({
-      control1: ['', Validators.required], control2: ['', Validators.required]
+      control1: ['', Validators.required], control2: ['', Validators.required], control157: [''], control158: ['']
     });
     this.secondFormGroup = this._formBuilder.group({
       control17: [''], control3: ['', Validators.required], control4: ['', Validators.required], control5: [''], control5a: [''], control5b: [''], control20: [''], control21: [''], control6: [''], control7: [''], control8: [''], control9: ['']
@@ -1061,6 +1067,8 @@ export class AdvancedQueryEditorComponent implements OnInit {
   saveQuery() {
 
     let query = {
+      denominatorQuery: this.selectedDenominator,
+      targetPercentage: this.percent,
       providerOrganisation: this.selectedOrganisation,
       includedOrganisation: this.selectedIncludedOrganisation,
       registrationStatus: this.selectedRegistration,
