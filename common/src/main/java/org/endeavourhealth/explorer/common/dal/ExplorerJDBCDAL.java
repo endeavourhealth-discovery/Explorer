@@ -824,6 +824,18 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
             }
         }
 
+        if (chartItem.getSeries().size()==0) {
+            sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` where name = ? "+grouping+
+                    " group by series_name order by series_name";
+
+            try (PreparedStatement statement = conn.prepareStatement(sql)) {
+                statement.setString(1, chartName);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    chartItem.setSeries(getSeriesFromResultSet(resultSet));
+                }
+            }
+        }
+
         return chartItem;
     }
 

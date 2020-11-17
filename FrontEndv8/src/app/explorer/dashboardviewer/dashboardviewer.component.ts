@@ -433,7 +433,7 @@ export class DashboardViewerComponent implements OnInit {
     }
 
     if (this.showBarCharts1) {
-      this.explorerService.getDashboardSingle(this.selectedQuery1, values1, this.formatDate(this.dateFrom1), this.formatDate(this.dateTo1), 1, this.selectedCCG1.toString())
+      this.explorerService.getDashboardSingle(this.selectedQuery1, values1, this.formatDate(this.dateFrom1), this.formatDate(this.dateTo1), 0, this.selectedCCG1.toString())
         .subscribe(result => {
           this.chartResultsSingle1 = result.series;
         });
@@ -501,7 +501,7 @@ export class DashboardViewerComponent implements OnInit {
     }
 
     if (this.showBarCharts2) {
-      this.explorerService.getDashboardSingle(this.selectedQuery2, values2, this.formatDate(this.dateFrom2), this.formatDate(this.dateTo2), 1, this.selectedCCG2.toString())
+      this.explorerService.getDashboardSingle(this.selectedQuery2, values2, this.formatDate(this.dateFrom2), this.formatDate(this.dateTo2), 0, this.selectedCCG2.toString())
         .subscribe(result => {
           this.chartResultsSingle2 = result.series;
         });
@@ -569,7 +569,7 @@ export class DashboardViewerComponent implements OnInit {
     }
 
     if (this.showBarCharts3) {
-      this.explorerService.getDashboardSingle(this.selectedQuery3, values3, this.formatDate(this.dateFrom3), this.formatDate(this.dateTo3), 1, this.selectedCCG3.toString())
+      this.explorerService.getDashboardSingle(this.selectedQuery3, values3, this.formatDate(this.dateFrom3), this.formatDate(this.dateTo3), 0, this.selectedCCG3.toString())
         .subscribe(result => {
           this.chartResultsSingle3 = result.series;
         });
@@ -637,7 +637,7 @@ export class DashboardViewerComponent implements OnInit {
     }
 
     if (this.showBarCharts4) {
-      this.explorerService.getDashboardSingle(this.selectedQuery4, values4, this.formatDate(this.dateFrom4), this.formatDate(this.dateTo4), 1, this.selectedCCG4.toString())
+      this.explorerService.getDashboardSingle(this.selectedQuery4, values4, this.formatDate(this.dateFrom4), this.formatDate(this.dateTo4), 0, this.selectedCCG4.toString())
         .subscribe(result => {
           this.chartResultsSingle4 = result.series;
         });
