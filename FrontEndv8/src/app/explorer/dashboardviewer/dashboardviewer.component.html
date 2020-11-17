@@ -7,7 +7,7 @@
                 <div style="font-size:14px; font-weight: bold;padding: 10px 0px 10px 0px">
                   {{chartTitle1}}
                 </div>
-                <mat-form-field style="width: 115px" *ngIf="showLineCharts1" appearance="outline">
+                <mat-form-field style="width: 115px" *ngIf="showLineCharts1||showBarCharts1" appearance="outline">
                   <mat-label>Date from</mat-label>
                   <input matInput [matDatepicker]="picker1" placeholder="Date from" [(ngModel)]="dateFrom1" (dateChange)="refresh1()">
                   <mat-datepicker-toggle matSuffix [for]="picker1">
@@ -15,7 +15,7 @@
                   </mat-datepicker-toggle>
                   <mat-datepicker #picker1></mat-datepicker>
                 </mat-form-field>
-                <mat-form-field style="width: 115px; margin-left: 10px" *ngIf="showLineCharts1" appearance="outline">
+                <mat-form-field style="width: 115px; margin-left: 10px" *ngIf="showLineCharts1||showBarCharts1" appearance="outline">
                   <mat-label>Date to</mat-label>
                   <input matInput [matDatepicker]="picker2" placeholder="Date to" [(ngModel)]="dateTo1" (dateChange)="refresh1()">
                   <mat-datepicker-toggle matSuffix [for]="picker2">
@@ -173,7 +173,7 @@
                 <div style="font-size:14px; font-weight: bold;padding: 10px 0px 10px 0px">
                   {{chartTitle2}}
                 </div>
-                <mat-form-field style="width: 115px" *ngIf="showLineCharts2" appearance="outline">
+                <mat-form-field style="width: 115px" *ngIf="showLineCharts2||showBarCharts2" appearance="outline">
                   <mat-label>Date from</mat-label>
                   <input matInput [matDatepicker]="picker1" placeholder="Date from" [(ngModel)]="dateFrom2" (dateChange)="refresh2()">
                   <mat-datepicker-toggle matSuffix [for]="picker1">
@@ -181,7 +181,7 @@
                   </mat-datepicker-toggle>
                   <mat-datepicker #picker1></mat-datepicker>
                 </mat-form-field>
-                <mat-form-field style="width: 115px; margin-left: 10px" *ngIf="showLineCharts2" appearance="outline">
+                <mat-form-field style="width: 115px; margin-left: 10px" *ngIf="showLineCharts2||showBarCharts2" appearance="outline">
                   <mat-label>Date to</mat-label>
                   <input matInput [matDatepicker]="picker2" placeholder="Date to" [(ngModel)]="dateTo2" (dateChange)="refresh2()">
                   <mat-datepicker-toggle matSuffix [for]="picker2">
@@ -339,7 +339,7 @@
                 <div style="font-size:14px; font-weight: bold;padding: 10px 0px 10px 0px">
                   {{chartTitle3}}
                 </div>
-                <mat-form-field style="width: 115px" *ngIf="showLineCharts3" appearance="outline">
+                <mat-form-field style="width: 115px" *ngIf="showLineCharts3||showBarCharts3" appearance="outline">
                   <mat-label>Date from</mat-label>
                   <input matInput [matDatepicker]="picker1" placeholder="Date from" [(ngModel)]="dateFrom3" (dateChange)="refresh3()">
                   <mat-datepicker-toggle matSuffix [for]="picker1">
@@ -347,7 +347,7 @@
                   </mat-datepicker-toggle>
                   <mat-datepicker #picker1></mat-datepicker>
                 </mat-form-field>
-                <mat-form-field style="width: 115px; margin-left: 10px" *ngIf="showLineCharts3" appearance="outline">
+                <mat-form-field style="width: 115px; margin-left: 10px" *ngIf="showLineCharts3||showBarCharts3" appearance="outline">
                   <mat-label>Date to</mat-label>
                   <input matInput [matDatepicker]="picker2" placeholder="Date to" [(ngModel)]="dateTo3" (dateChange)="refresh3()">
                   <mat-datepicker-toggle matSuffix [for]="picker2">
@@ -505,7 +505,7 @@
                 <div style="font-size:14px; font-weight: bold;padding: 10px 0px 10px 0px">
                   {{chartTitle4}}
                 </div>
-                <mat-form-field style="width: 115px" *ngIf="showLineCharts4" appearance="outline">
+                <mat-form-field style="width: 115px" *ngIf="showLineCharts4||showBarCharts4" appearance="outline">
                   <mat-label>Date from</mat-label>
                   <input matInput [matDatepicker]="picker1" placeholder="Date from" [(ngModel)]="dateFrom4" (dateChange)="refresh4()">
                   <mat-datepicker-toggle matSuffix [for]="picker1">
@@ -513,7 +513,7 @@
                   </mat-datepicker-toggle>
                   <mat-datepicker #picker1></mat-datepicker>
                 </mat-form-field>
-                <mat-form-field style="width: 115px; margin-left: 10px" *ngIf="showLineCharts4" appearance="outline">
+                <mat-form-field style="width: 115px; margin-left: 10px" *ngIf="showLineCharts4||showBarCharts4" appearance="outline">
                   <mat-label>Date to</mat-label>
                   <input matInput [matDatepicker]="picker2" placeholder="Date to" [(ngModel)]="dateTo4" (dateChange)="refresh4()">
                   <mat-datepicker-toggle matSuffix [for]="picker2">
