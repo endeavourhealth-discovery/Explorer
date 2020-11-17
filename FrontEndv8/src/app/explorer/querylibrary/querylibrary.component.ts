@@ -29,6 +29,12 @@ interface query {
   ageTo: string;
   gender: string;
   postcode: string;
+  timeSeries: boolean;
+  seriesTable: string;
+  seriesField: string;
+  seriesClinicalEventsValueSet: string;
+  seriesMedicationValueSet: string;
+  seriesEncounterValueSet: string;
 }
 
 @Component({
@@ -252,11 +258,30 @@ export class QueryLibraryComponent implements OnInit {
           details += ' Medication ';
         if (query.clinicalEvents)
           details += ' Clinical events ';
+      }else if (fieldName=='timeSeries') {
+        if (query.timeSeries == true) {
+          details += ' Yes ';
+        }
+        if (query.timeSeries == false) {
+          details += ' No ';
+        }
+      }else if (fieldName=='seriesTable') {
+        details = query.seriesTable;
+      }else if (fieldName=='seriesField') {
+        if (query.seriesTable == 'Clinical events') {
+          details = query.seriesClinicalEventsValueSet;
+        }
+        else if (query.seriesTable == 'Medication') {
+          details = query.seriesMedicationValueSet;
+        }
+        else if (query.seriesTable == 'Encounter') {
+          details = query.seriesEncounterValueSet;
+        }
       }else if (fieldName=='schedule') {
         details = query.schedule
       }else if (fieldName=='delivery') {
       details = query.delivery
-    }
+      }
 
       return details;
     }

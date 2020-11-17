@@ -175,7 +175,6 @@ interface savedQuery {
   seriesPeriodOperator: string;
   seriesPeriodValue: string;
   seriesPeriodType: string;
-
   timeSeries: boolean;
   seriesTable: string;
   seriesField: string;
