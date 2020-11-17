@@ -68,7 +68,7 @@ export class DashboardEditorComponent {
   type: string;
   name: string;
   seriesList = [];
-  filteredValueset: ReplaySubject<seriesList[]> = new ReplaySubject<seriesList[]>(1);
+  filteredQueryList: ReplaySubject<seriesList[]> = new ReplaySubject<seriesList[]>(1);
 
   selectedVisualisation1: string = '';
   selectedSeries1: string = '';
@@ -215,26 +215,26 @@ export class DashboardEditorComponent {
       }
     )
 
-    this.filteredValueset.next(this.seriesList.slice());
+    this.filteredQueryList.next(this.seriesList.slice());
 
     this.filterCtrl.valueChanges
       .pipe(takeUntil(this._onDestroy))
       .subscribe(() => {
-        this.filterValueset();
+        this.filterQueryList();
       });
   }
 
-  filterValueset() {
+  filterQueryList() {
     let search = this.filterCtrl.value;
 
     if (!search) {
-      this.filteredValueset.next(this.seriesList.slice());
+      this.filteredQueryList.next(this.seriesList.slice());
       return;
     } else {
       search = search.toLowerCase();
     }
 
-    this.filteredValueset.next(
+    this.filteredQueryList.next(
       this.seriesList.filter(value => value.toLowerCase().indexOf(search) > -1)
     );
   }

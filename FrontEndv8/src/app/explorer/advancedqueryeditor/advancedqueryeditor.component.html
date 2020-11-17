@@ -26,9 +26,9 @@
           <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
             <mat-form-field appearance="outline" style="margin-left: 25px; width: 600px">
               <mat-label>Denominator query</mat-label>
-              <mat-select [(ngModel)]="selectedDenominator" formControlName="control157" (ngModelChange)="formChanged()">
-                <mat-select-search [formControl]="filterCtrl"></mat-select-search>
-                <mat-option *ngFor="let result of filteredValueset | async" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
+              <mat-select [(ngModel)]="denominatorQuery" formControlName="control157" (ngModelChange)="formChanged()">
+                <mat-select-search [formControl]="filterQueryCtrl"></mat-select-search>
+                <mat-option *ngFor="let result of filteredQueryList | async" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
                   {{result}}
                 </mat-option>
               </mat-select>
@@ -36,9 +36,9 @@
           </div>
           <br/>
           <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            <mat-form-field appearance="outline" style="margin-left: 25px; width: 200px">
-              <mat-label>Target percentage [%]</mat-label>
-              <input matInput placeholder="Percentage [%]" [(ngModel)]="percent" formControlName="control158" (ngModelChange)="formChanged()" (keydown.enter)="stepper.next()">
+            <mat-form-field appearance="outline" style="margin-left: 25px; width: 100px">
+              <mat-label>Target %</mat-label>
+              <input matInput placeholder="Target %" [(ngModel)]="targetPercentage" formControlName="control158" (ngModelChange)="formChanged()" (keydown.enter)="stepper.next()">
             </mat-form-field>
           </div>
           <br/>
@@ -53,6 +53,9 @@
           </div>
           <div style="margin-top: 15px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
             <p>Select an (optional) query as the denominator for this query. This query’s patient cohort (numerator) will then be compared against the selected denominator query cohort in the registries results.</p>
+          </div>
+          <div style="margin-top: 15px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <p>Target threshold for the numerator against the denominator patient cohort.</p>
           </div>
         </div>
         <div style="margin-top: 380px" mat-dialog-actions align="end">

@@ -63,7 +63,7 @@
                 <mat-label>Select query and dataset for series</mat-label>
                 <mat-select [(ngModel)]="selectedSeries1" formControlName="control7a" (ngModelChange)="formChanged()" required>
                   <mat-select-search [formControl]="filterCtrl"></mat-select-search>
-                  <mat-option *ngFor="let result of filteredValueset | async" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
+                  <mat-option *ngFor="let result of filteredQueryList | async" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
                     {{result}}
                   </mat-option>
                 </mat-select>
@@ -119,7 +119,7 @@
                 <mat-label>Select query and dataset for series</mat-label>
                 <mat-select [(ngModel)]="selectedSeries2" formControlName="control7b" (ngModelChange)="formChanged()" >
                   <mat-select-search [formControl]="filterCtrl"></mat-select-search>
-                  <mat-option *ngFor="let result of filteredValueset | async" [value]="result"  matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
+                  <mat-option *ngFor="let result of filteredQueryList | async" [value]="result"  matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
                     {{result}}
                   </mat-option>
                 </mat-select>
@@ -175,7 +175,7 @@
                 <mat-label>Select query and dataset for series</mat-label>
                 <mat-select [(ngModel)]="selectedSeries3" formControlName="control7c" (ngModelChange)="formChanged()" >
                   <mat-select-search [formControl]="filterCtrl"></mat-select-search>
-                  <mat-option *ngFor="let result of filteredValueset | async" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
+                  <mat-option *ngFor="let result of filteredQueryList | async" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
                     {{result}}
                   </mat-option>
                 </mat-select>
@@ -231,7 +231,7 @@
                 <mat-label>Select query and dataset for series</mat-label>
                 <mat-select [(ngModel)]="selectedSeries4" formControlName="control7d" (ngModelChange)="formChanged()" >
                   <mat-select-search [formControl]="filterCtrl"></mat-select-search>
-                  <mat-option *ngFor="let result of filteredValueset | async" [value]="result"  matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
+                  <mat-option *ngFor="let result of filteredQueryList | async" [value]="result"  matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
                     {{result}}
                   </mat-option>
                 </mat-select>

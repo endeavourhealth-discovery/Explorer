@@ -15,8 +15,8 @@ export interface DialogData {
 }
 
 interface savedQuery {
-  selectedDenominator: string;
-  percent: string;
+  denominatorQuery: string;
+  targetPercentage: string;
   providerOrganisation: string;
   includedOrganisation: string;
   registrationStatus: string;
@@ -242,6 +242,10 @@ interface valueSet {
   value: string;
 }
 
+interface querySet {
+  value: string;
+}
+
 interface valueSetObservation {
   value: string;
 }
@@ -262,15 +266,18 @@ interface valueSetEncounter {
 })
 
 export class AdvancedQueryEditorComponent implements OnInit {
+  filterQueryCtrl: FormControl = new FormControl();
   filterCtrl: FormControl = new FormControl();
   filterCtrlObservation: FormControl = new FormControl();
   filterCtrlMedication: FormControl = new FormControl();
   filterCtrlEncounter: FormControl = new FormControl();
 
+  queryList = [];
+
   type: string = '';
   name: string = '';
-  selectedDenominator: string = '';
-  percent: string = '';
+  denominatorQuery: string = '';
+  targetPercentage: string = '';
 
   selectedOrganisation: string = '';
   selectedIncludedOrganisation: string = '';
@@ -483,6 +490,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
   valueSetMedication = [];
   valueSetEncounter = [];
 
+  filteredQueryList: ReplaySubject<querySet[]> = new ReplaySubject<querySet[]>(1);
   filteredValueset: ReplaySubject<valueSet[]> = new ReplaySubject<valueSet[]>(1);
   filteredValuesetObservation: ReplaySubject<valueSetObservation[]> = new ReplaySubject<valueSetObservation[]>(1);
   filteredValuesetMedication: ReplaySubject<valueSetMedication[]> = new ReplaySubject<valueSetMedication[]>(1);
@@ -591,8 +599,8 @@ export class AdvancedQueryEditorComponent implements OnInit {
     if (data.query!='') { // edit mode
       let query: savedQuery = JSON.parse(data.query);
 
-      this.selectedDenominator = query.selectedDenominator;
-      this.percent = query. percent;
+      this.denominatorQuery = query.denominatorQuery;
+      this.targetPercentage = query.targetPercentage;
       this.selectedOrganisation = query.providerOrganisation;
       this.selectedIncludedOrganisation = query.includedOrganisation;
       this.selectedRegistration = query.registrationStatus;
@@ -855,6 +863,12 @@ export class AdvancedQueryEditorComponent implements OnInit {
       }
     )
 
+    this.explorerService.getLookupLists('12','')
+      .subscribe(
+        (result) => this.loadQueryList(result),
+        (error) => this.log.error(error)
+      );
+
     this.explorerService.getLookupLists('8','')
       .subscribe(
         (result) => this.loadValueSet1(result),
@@ -878,6 +892,37 @@ export class AdvancedQueryEditorComponent implements OnInit {
         (result) => this.loadValueSet4(result),
         (error) => this.log.error(error)
       );
+  }
+
+  loadQueryList(lists: any) {
+    lists.results.map(
+      e => {
+        this.queryList.push(e.type);
+      }
+    )
+
+    this.filteredQueryList.next(this.queryList.slice());
+
+    this.filterQueryCtrl.valueChanges
+      .pipe(takeUntil(this._onDestroy))
+      .subscribe(() => {
+        this.filterQueryList();
+      });
+  }
+
+  filterQueryList() {
+    let search = this.filterQueryCtrl.value;
+
+    if (!search) {
+      this.filteredQueryList.next(this.queryList.slice());
+      return;
+    } else {
+      search = search.toLowerCase();
+    }
+
+    this.filteredQueryList.next(
+      this.queryList.filter(value => value.toLowerCase().indexOf(search) > -1)
+    );
   }
 
   loadValueSet1(lists: any) {
@@ -1067,8 +1112,8 @@ export class AdvancedQueryEditorComponent implements OnInit {
   saveQuery() {
 
     let query = {
-      denominatorQuery: this.selectedDenominator,
-      targetPercentage: this.percent,
+      denominatorQuery: this.denominatorQuery,
+      targetPercentage: this.targetPercentage,
       providerOrganisation: this.selectedOrganisation,
       includedOrganisation: this.selectedIncludedOrganisation,
       registrationStatus: this.selectedRegistration,
