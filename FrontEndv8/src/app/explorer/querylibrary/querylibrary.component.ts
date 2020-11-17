@@ -32,7 +32,7 @@ interface query {
   timeSeries: boolean;
   seriesTable: string;
   seriesField: string;
-  seriesClinicalEventsValueSet: string;
+  seriesClinicalEventValueSet: string;
   seriesMedicationValueSet: string;
   seriesEncounterValueSet: string;
 }
@@ -269,7 +269,7 @@ export class QueryLibraryComponent implements OnInit {
         details = query.seriesTable;
       }else if (fieldName=='seriesField') {
         if (query.seriesTable == 'Clinical events') {
-          details = query.seriesClinicalEventsValueSet;
+          details = query.seriesClinicalEventValueSet;
         }
         else if (query.seriesTable == 'Medication') {
           details = query.seriesMedicationValueSet;
