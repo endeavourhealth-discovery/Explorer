@@ -67,6 +67,7 @@ export class QueryLibraryComponent implements OnInit {
   selectAll: boolean = true;
   typeList = [];
   typeValues = new FormControl(this.typeList);
+  originalData = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -132,13 +133,14 @@ export class QueryLibraryComponent implements OnInit {
   displayEvents(events: any) {
     this.events = events;
 
+    this.originalData = JSON.parse(JSON.stringify(events.results));
+
     this.typeList = [];
 
     let prevFolder = '';
     let thisFolder = '';
 
     events.results.forEach( (item, index) => {
-      events.results[index].type;
       thisFolder = events.results[index].type;
       if (thisFolder==prevFolder) {
         events.results[index].type = '↳';
@@ -224,20 +226,28 @@ export class QueryLibraryComponent implements OnInit {
   }
 
   edit() {
-      const dialogRef = this.dialog.open(AdvancedQueryEditorComponent, {
-        height: '950px',
-        width: '1275px',
-        data: {
-          id: this.selection.selected[0].id,
-          name: this.selection.selected[0].name,
-          type: this.selection.selected[0].type,
-          query: this.selection.selected[0].jsonQuery
-        }
-      });
-      dialogRef.afterClosed().subscribe(result => {
-        if (result)
-          this.ngOnInit();
-      })
+    let type = '';
+
+    this.originalData.forEach( (item, index) => {
+      if (this.originalData[index].id == this.selection.selected[0].id) {
+        type = this.originalData[index].type;
+      }
+    });
+
+    const dialogRef = this.dialog.open(AdvancedQueryEditorComponent, {
+      height: '950px',
+      width: '1275px',
+      data: {
+        id: this.selection.selected[0].id,
+        name: this.selection.selected[0].name,
+        type: type,
+        query: this.selection.selected[0].jsonQuery
+      }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result)
+        this.ngOnInit();
+    })
   }
 
   formatDetail(jsonQuery, fieldName) {

@@ -35,6 +35,7 @@ export class ValueSetLibraryComponent implements OnInit {
 
   typeList = [];
   typeValues = new FormControl(this.typeList);
+  originalData = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -101,13 +102,14 @@ export class ValueSetLibraryComponent implements OnInit {
   displayEvents(events: any) {
     this.events = events;
 
+    this.originalData = JSON.parse(JSON.stringify(events.results));
+
     this.typeList = [];
 
     let prevFolder = '';
     let thisFolder = '';
 
     events.results.forEach( (item, index) => {
-      events.results[index].type;
       thisFolder = events.results[index].type;
       if (thisFolder==prevFolder) {
         events.results[index].type = '↳';
@@ -187,10 +189,18 @@ export class ValueSetLibraryComponent implements OnInit {
   }
 
   edit() {
+    let type = '';
+
+    this.originalData.forEach( (item, index) => {
+      if (this.originalData[index].id == this.selection.selected[0].id) {
+        type = this.originalData[index].type;
+      }
+    });
+
     const dialogRef = this.dialog.open(ValueSetEditorComponent, {
       height: '320px',
       width: '600px',
-      data: {id: this.selection.selected[0].id, name: this.selection.selected[0].name, type:this.selection.selected[0].type}
+      data: {id: this.selection.selected[0].id, name: this.selection.selected[0].name, type:type}
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result)

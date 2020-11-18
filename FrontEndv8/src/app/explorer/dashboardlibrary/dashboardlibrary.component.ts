@@ -67,6 +67,7 @@ export class DashboardLibraryComponent implements OnInit {
   selectAll: boolean = true;
   typeList = [];
   typeValues = new FormControl(this.typeList);
+  originalData = [];
 
   widget1: boolean = false;
   widget2: boolean = false;
@@ -138,13 +139,14 @@ export class DashboardLibraryComponent implements OnInit {
   displayEvents(events: any) {
     this.events = events;
 
+    this.originalData = JSON.parse(JSON.stringify(events.results));
+
     this.typeList = [];
 
     let prevFolder = '';
     let thisFolder = '';
 
     events.results.forEach( (item, index) => {
-      events.results[index].type;
       thisFolder = events.results[index].type;
       if (thisFolder==prevFolder) {
         events.results[index].type = '↳';
@@ -217,10 +219,18 @@ export class DashboardLibraryComponent implements OnInit {
   }
 
   edit() {
+    let type = '';
+
+    this.originalData.forEach( (item, index) => {
+      if (this.originalData[index].dashboardId == this.selection.selected[0].dashboardId) {
+        type = this.originalData[index].type;
+      }
+    });
+
     const dialogRef = this.dialog.open(DashboardEditorComponent, {
       height: '720px',
       width: '1200px',
-      data: {dashboardId: this.selection.selected[0].dashboardId, name: this.selection.selected[0].name, type:this.selection.selected[0].type, query: this.selection.selected[0].jsonQuery}
+      data: {dashboardId: this.selection.selected[0].dashboardId, name: this.selection.selected[0].name, type:type, query: this.selection.selected[0].jsonQuery}
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result)
