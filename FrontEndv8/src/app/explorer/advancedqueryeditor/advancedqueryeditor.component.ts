@@ -19,9 +19,7 @@ export interface DialogData {
 interface savedQuery {
   denominatorQuery: string;
   targetPercentage: string;
-  registry: string;
-  selectedDenominator: string;
-  percent: string;
+  registryName: string;
   providerOrganisation: string;
   includedOrganisation: string;
   registrationStatus: string;
@@ -280,9 +278,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
   name: string = '';
   denominatorQuery: string = '';
   targetPercentage: string = '';
-  registry: string = '';
-  selectedDenominator: string = '';
-  percent: string = '';
+  registryName: string = '';
   selectedOrganisation: string = '';
   selectedIncludedOrganisation: string = '';
   selectedRegistration: string = '';
@@ -606,9 +602,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
 
       this.denominatorQuery = query.denominatorQuery;
       this.targetPercentage = query.targetPercentage;
-      this.registry = query.registry;
-      this.selectedDenominator = query.selectedDenominator;
-      this.percent = query. percent;
+      this.registryName = query.registryName;
       this.selectedOrganisation = query.providerOrganisation;
       this.selectedIncludedOrganisation = query.includedOrganisation;
       this.selectedRegistration = query.registrationStatus;
@@ -1122,7 +1116,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
     let query = {
       denominatorQuery: this.denominatorQuery,
       targetPercentage: this.targetPercentage,
-      registryName: this.registry,
+      registryName: this.registryName,
       providerOrganisation: this.selectedOrganisation,
       includedOrganisation: this.selectedIncludedOrganisation,
       registrationStatus: this.selectedRegistration,
@@ -1286,8 +1280,6 @@ export class AdvancedQueryEditorComponent implements OnInit {
     };
     this.jsonQuery = JSON.stringify(query);
 
-    console.log(this.jsonQuery);
-
     if (this.includedExclude1 == '' && this.includedExclude2 == '' && this.includedExclude3 == '' && this.includedExclude4 == '' && this.includedExclude5 == '') {
       MessageBoxDialogComponent.open(this.dialog, 'Save query', 'Are you sure you want to save this query without any Advanced cohort criteria. It may result in a very large data set?', 'Yes', 'No')
         .subscribe(result => {
@@ -1360,7 +1352,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
 
     this.disableForm = this.type=='' || this.type==undefined ||
       this.name=='' || this.name==undefined ||
-      this.registry=='' || this.registry==undefined ||
+      this.registryName=='' || this.registryName==undefined ||
       this.selectedOrganisation=='' || this.selectedOrganisation==undefined ||
       this.selectedRegistration=='' || this.selectedRegistration==undefined ||
       this.selectedDelivery=='' || this.selectedDelivery==undefined ||

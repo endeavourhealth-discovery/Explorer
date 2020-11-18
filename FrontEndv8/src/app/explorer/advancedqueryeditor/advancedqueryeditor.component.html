@@ -26,7 +26,7 @@
           <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
             <mat-form-field appearance="outline" style="margin-left: 25px; width: 400px">
               <mat-label>Registry name</mat-label>
-              <input maxlength="30" required matInput placeholder="Registry" [(ngModel)]="registry" formControlName="control159" (ngModelChange)="formChanged()" (keydown.enter)="stepper.next()">
+              <input maxlength="60" required matInput placeholder="Registry" [(ngModel)]="registryName" formControlName="control159" (ngModelChange)="formChanged()" (keydown.enter)="stepper.next()">
             </mat-form-field>
           </div>
           <br/>
