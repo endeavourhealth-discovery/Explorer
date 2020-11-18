@@ -1,11 +1,13 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {MatDialogRef, MAT_DIALOG_DATA, MatDialog} from '@angular/material/dialog';
 import {ExplorerService} from '../explorer.service';
 import {LoggerService} from 'dds-angular8';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {STEPPER_GLOBAL_OPTIONS} from "@angular/cdk/stepper";
 import {takeUntil} from "rxjs/operators";
 import {ReplaySubject, Subject} from "rxjs";
+import {MessageBoxDialogComponent} from "../message-box-dialog/message-box-dialog.component";
+import {Router} from "@angular/router";
 
 export interface DialogData {
   id: string;
@@ -17,6 +19,9 @@ export interface DialogData {
 interface savedQuery {
   denominatorQuery: string;
   targetPercentage: string;
+  registry: string;
+  selectedDenominator: string;
+  percent: string;
   providerOrganisation: string;
   includedOrganisation: string;
   registrationStatus: string;
@@ -29,10 +34,8 @@ interface savedQuery {
   registrationDateTo: string;
   registrationPeriodValue: string;
   registrationPeriodType: string;
-
   schedule: string;
   delivery: string;
-
   includedExclude1: string;
   includedValueSet1: string;
   includedDateFrom1: string;
@@ -148,7 +151,6 @@ interface savedQuery {
   includedPeriodValue5a: string;
   includedPeriodType5a: string;
   includedAnyAll5a: string;
-
   demographics: boolean;
   encounters: boolean;
   medication: boolean;
@@ -278,7 +280,9 @@ export class AdvancedQueryEditorComponent implements OnInit {
   name: string = '';
   denominatorQuery: string = '';
   targetPercentage: string = '';
-
+  registry: string = '';
+  selectedDenominator: string = '';
+  percent: string = '';
   selectedOrganisation: string = '';
   selectedIncludedOrganisation: string = '';
   selectedRegistration: string = '';
@@ -590,7 +594,8 @@ export class AdvancedQueryEditorComponent implements OnInit {
     private explorerService: ExplorerService,
     private log: LoggerService,
     private _formBuilder: FormBuilder,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData) {
+    @Inject(MAT_DIALOG_DATA) public data: DialogData,
+    private dialog: MatDialog) {
     this.disableForm = true;
     this.id = data.id;
     this.name = data.name;
@@ -601,6 +606,9 @@ export class AdvancedQueryEditorComponent implements OnInit {
 
       this.denominatorQuery = query.denominatorQuery;
       this.targetPercentage = query.targetPercentage;
+      this.registry = query.registry;
+      this.selectedDenominator = query.selectedDenominator;
+      this.percent = query. percent;
       this.selectedOrganisation = query.providerOrganisation;
       this.selectedIncludedOrganisation = query.includedOrganisation;
       this.selectedRegistration = query.registrationStatus;
@@ -798,7 +806,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
     }
 
     this.firstFormGroup = this._formBuilder.group({
-      control1: ['', Validators.required], control2: ['', Validators.required], control157: [''], control158: ['']
+      control1: ['', Validators.required], control2: ['', Validators.required], control157: [''], control158: [''], control159: ['']
     });
     this.secondFormGroup = this._formBuilder.group({
       control17: [''], control3: ['', Validators.required], control4: ['', Validators.required], control5: [''], control5a: [''], control5b: [''], control20: [''], control21: [''], control6: [''], control7: [''], control8: [''], control9: ['']
@@ -1114,6 +1122,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
     let query = {
       denominatorQuery: this.denominatorQuery,
       targetPercentage: this.targetPercentage,
+      registryName: this.registry,
       providerOrganisation: this.selectedOrganisation,
       includedOrganisation: this.selectedIncludedOrganisation,
       registrationStatus: this.selectedRegistration,
@@ -1279,13 +1288,26 @@ export class AdvancedQueryEditorComponent implements OnInit {
 
     console.log(this.jsonQuery);
 
-    this.explorerService.saveQuery(this.type, this.name, this.id, this.jsonQuery)
-      .subscribe(saved => {
-          this.dialogRef.close(true);
-        },
-        error => this.log.error('This query could not be saved.')
-      );
-
+    if (this.includedExclude1 == '' && this.includedExclude2 == '' && this.includedExclude3 == '' && this.includedExclude4 == '' && this.includedExclude5 == '') {
+      MessageBoxDialogComponent.open(this.dialog, 'Save query', 'Are you sure you want to save this query without any Advanced cohort criteria. It may result in a very large data set?', 'Yes', 'No')
+        .subscribe(result => {
+          if (result) {
+            this.explorerService.saveQuery(this.type, this.name, this.id, this.jsonQuery)
+              .subscribe(saved => {
+                  this.dialogRef.close(true);
+                },
+                error => this.log.error('This query could not be saved.')
+              );
+          }
+        });
+    } else {
+      this.explorerService.saveQuery(this.type, this.name, this.id, this.jsonQuery)
+        .subscribe(saved => {
+            this.dialogRef.close(true);
+          },
+          error => this.log.error('This query could not be saved.')
+        );
+    }
   }
 
   queryEntered(event) {
@@ -1336,10 +1358,13 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.seriesTableObservation = true;
     }
 
-    this.disableForm = this.type=='' || this.type==undefined || this.name=='' || this.name==undefined || this.selectedOrganisation=='' || this.selectedOrganisation==undefined ||
-      this.selectedRegistration=='' || this.selectedRegistration==undefined
-      || this.selectedDelivery=='' || this.selectedDelivery==undefined || this.selectedSchedule=='' || this.selectedSchedule==undefined
-    ;
+    this.disableForm = this.type=='' || this.type==undefined ||
+      this.name=='' || this.name==undefined ||
+      this.registry=='' || this.registry==undefined ||
+      this.selectedOrganisation=='' || this.selectedOrganisation==undefined ||
+      this.selectedRegistration=='' || this.selectedRegistration==undefined ||
+      this.selectedDelivery=='' || this.selectedDelivery==undefined ||
+      this.selectedSchedule=='' || this.selectedSchedule==undefined;
   }
 
   addSameRule1() {
