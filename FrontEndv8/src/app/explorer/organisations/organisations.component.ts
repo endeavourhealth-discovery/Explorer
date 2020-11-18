@@ -29,7 +29,7 @@ export class OrganisationsComponent {
   @ViewChild(MatSort, {static: false}) sort: MatSort;
   organisation_group_id: string = "";
 
-  displayedColumns: string[] = ['select', 'type', 'name', 'code', 'updated'];
+  displayedColumns: string[] = ['type', 'name', 'code', 'updated','select'];
 
   constructor(
     public dialogRef: MatDialogRef<OrganisationsComponent>,

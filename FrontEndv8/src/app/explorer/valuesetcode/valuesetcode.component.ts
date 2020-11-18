@@ -31,7 +31,7 @@ export class ValueSetCodeComponent {
   @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: false}) sort: MatSort;
 
-  displayedColumns: string[] = ['select', 'type', 'dataType', 'code', 'term', 'snomed', 'updated'];
+  displayedColumns: string[] = ['type', 'dataType', 'code', 'term', 'snomed', 'updated','select'];
 
   selectedType: string = '';
   selectedTypeString: string = '';

@@ -59,7 +59,7 @@ export class QueryLibraryComponent implements OnInit {
   @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: false}) sort: MatSort;
 
-  displayedColumns: string[] = ['select', 'type', 'name', 'updated', 'expandArrow'];
+  displayedColumns: string[] = ['type', 'name', 'updated', 'select', 'expandArrow'];
   expandedElement: QueryLibraryComponent | null;
 
   selectedType: string = '';

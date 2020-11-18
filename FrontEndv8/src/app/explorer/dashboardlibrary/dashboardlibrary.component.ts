@@ -59,7 +59,7 @@ export class DashboardLibraryComponent implements OnInit {
   @ViewChild(MatSort, {static: false}) sort: MatSort;
 
 
-  displayedColumns: string[] = ['select', 'type', 'name', 'updated', 'expandArrow'];
+  displayedColumns: string[] = ['type', 'name', 'updated', 'select', 'expandArrow'];
   expandedElement: DashboardLibraryComponent | null;
 
   selectedType: string = '';
