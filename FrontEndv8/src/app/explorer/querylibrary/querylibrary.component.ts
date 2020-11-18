@@ -35,6 +35,7 @@ interface query {
   seriesClinicalEventValueSet: string;
   seriesMedicationValueSet: string;
   seriesEncounterValueSet: string;
+  denominatorQuery: string;
 }
 
 @Component({
@@ -130,7 +131,24 @@ export class QueryLibraryComponent implements OnInit {
 
   displayEvents(events: any) {
     this.events = events;
-    this.dataSource = new MatTableDataSource(events.results);
+
+    this.typeList = [];
+
+    let prevFolder = '';
+    let thisFolder = '';
+
+    events.results.forEach( (item, index) => {
+      events.results[index].type;
+      thisFolder = events.results[index].type;
+      if (thisFolder==prevFolder) {
+        events.results[index].type = '↳';
+      }
+      this.typeList.push(events.results[index]);
+      if (events.results[index].type != '↳')
+        prevFolder = thisFolder;
+    });
+
+    this.dataSource = new MatTableDataSource(this.typeList);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
@@ -224,7 +242,7 @@ export class QueryLibraryComponent implements OnInit {
 
   formatDetail(jsonQuery, fieldName) {
 
-    if (jsonQuery != undefined && jsonQuery != "stored_proc_1"&& jsonQuery != "stored_proc_2"&& jsonQuery != "stored_proc_3"&& jsonQuery != "stored_proc_4"&& jsonQuery != "stored_proc_5"&& jsonQuery != "stored_proc_6"&& jsonQuery != "stored_proc_7") {
+    if (jsonQuery != undefined) {
       let query: query = JSON.parse(jsonQuery);
       let details = '';
 
@@ -278,7 +296,9 @@ export class QueryLibraryComponent implements OnInit {
       }else if (fieldName=='schedule') {
         details = query.schedule
       }else if (fieldName=='delivery') {
-      details = query.delivery
+        details = query.delivery
+      }else if (fieldName=='denominatorQuery') {
+        details = query.denominatorQuery
       }
 
       return details;

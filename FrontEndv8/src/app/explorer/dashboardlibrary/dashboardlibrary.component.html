@@ -52,8 +52,8 @@
           </td>
         </ng-container>
         <ng-container matColumnDef="type">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Folder</th>
-          <td style="cursor: pointer" mat-cell *matCellDef="let element"
+          <th style="display: flex; justify-content: flex-end; height: 60px" mat-header-cell *matHeaderCellDef mat-sort-header>Folder</th>
+          <td style="cursor: pointer; text-align: right; padding-right: 10px" mat-cell *matCellDef="let element"
               [routerLink]="['/dashboardviewer']"
               [queryParams] = "{role: 'explorer', dashboardNumber: element.dashboardId}"> {{element.type}}
           </td>

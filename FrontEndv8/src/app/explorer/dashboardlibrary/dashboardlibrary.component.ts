@@ -137,7 +137,24 @@ export class DashboardLibraryComponent implements OnInit {
 
   displayEvents(events: any) {
     this.events = events;
-    this.dataSource = new MatTableDataSource(events.results);
+
+    this.typeList = [];
+
+    let prevFolder = '';
+    let thisFolder = '';
+
+    events.results.forEach( (item, index) => {
+      events.results[index].type;
+      thisFolder = events.results[index].type;
+      if (thisFolder==prevFolder) {
+        events.results[index].type = '↳';
+      }
+      this.typeList.push(events.results[index]);
+      if (events.results[index].type != '↳')
+        prevFolder = thisFolder;
+    });
+
+    this.dataSource = new MatTableDataSource(this.typeList);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
