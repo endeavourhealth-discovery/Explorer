@@ -59,7 +59,13 @@ IF queryid IS NOT NULL THEN
 
 UPDATE queue SET timesubmit = now() WHERE query_id = queryid;
 
+-- disable binary logging
+SET @@session.sql_log_bin=0;
+
 CALL reportgenerator(queryid, query_text);
+
+-- enable binary logging
+SET @@session.sql_log_bin=1;
 
 UPDATE queue SET timefinish = now() WHERE query_id = queryid;
 UPDATE queue SET timeexecute = STR_TO_DATE(TIMEDIFF(timefinish, timesubmit),'%H:%i:%s') WHERE query_id = queryid;
