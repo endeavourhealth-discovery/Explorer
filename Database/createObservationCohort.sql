@@ -51,11 +51,19 @@ BEGIN
 
    -- create a temporary table to hold the table ids
    DROP TEMPORARY TABLE IF EXISTS qry_tmp;
-   SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp (row_id INT, id BIGINT, value_set_code_type VARCHAR(255), PRIMARY KEY (row_id) ) AS 
-   SELECT (@row_no := @row_no + 1) AS row_id, o.id AS id, cpt.value_set_code_type AS value_set_code_type 
+   SET @sql = CONCAT('
+   CREATE TEMPORARY TABLE qry_tmp (
+      row_id INT, 
+      id BIGINT, 
+      value_set_code_type VARCHAR(255), 
+      PRIMARY KEY (row_id) ) AS 
+   SELECT (@row_no := @row_no + 1) AS row_id, 
+          o.id AS id, 
+          cpt.value_set_code_type AS value_set_code_type 
    FROM ', p_cohorttab,' c JOIN ', p_schema,'.', TempValue,' o ON c.patient_id = o.patient_id AND c.organization_id = o.organization_id 
    JOIN ', p_allconcepttab,' cpt ON cpt.non_core_concept_id = o.non_core_concept_id 
-   JOIN (SELECT @row_no := 0) t');
+   JOIN (SELECT @row_no := 0) t 
+   WHERE cpt.data_type = ', QUOTE(TempValue));
    PREPARE stmt FROM @sql;
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;
@@ -78,11 +86,11 @@ BEGIN
 
       END IF;
 
-         PREPARE stmt FROM @sql;
-         EXECUTE stmt;
-         DEALLOCATE PREPARE stmt;
-
-         SET @row_id = @row_id + 10000; 
+      PREPARE stmt FROM @sql;
+      EXECUTE stmt;
+      DEALLOCATE PREPARE stmt;
+   
+      SET @row_id = @row_id + 10000; 
 
    END WHILE; 
 
@@ -90,6 +98,8 @@ BEGIN
       SET table_names = INSERT(table_names, 1, frontlen + 1, '');
 
  END LOOP;
+
+
 
    SET @sql = CONCAT('ALTER TABLE ', p_observationtab, ' ADD INDEX patient_idx(patient_id)');
    PREPARE stmt FROM @sql;
@@ -110,7 +120,6 @@ BEGIN
    PREPARE stmt FROM @sql;
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;
-
 
 END//
 DELIMITER ;
