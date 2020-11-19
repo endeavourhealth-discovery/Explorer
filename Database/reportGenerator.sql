@@ -8,6 +8,8 @@ CREATE PROCEDURE reportGenerator(query_id INT, query JSON)
 BEGIN
 
 -- declare variables --
+DECLARE denominatorQuery VARCHAR(255) DEFAULT NULL;
+DECLARE registryName VARCHAR(500) DEFAULT NULL;
 DECLARE providerOrganisation VARCHAR(5000) DEFAULT NULL;
 DECLARE includedOrganisation VARCHAR(5000) DEFAULT NULL; 
 DECLARE registrationStatus VARCHAR(255) DEFAULT NULL; 
@@ -291,6 +293,8 @@ DECLARE tempTables VARCHAR(5000);
 -- set variables -- 
 SET sourceSchema = 'subscriber_pi_rv';
 
+SET denominatorQuery = JSON_UNQUOTE(JSON_EXTRACT(query,'$.denominatorQuery')); 
+SET registryName = JSON_UNQUOTE(JSON_EXTRACT(query,'$.registryName'));  
 SET providerOrganisation = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.providerOrganisation'),'[',''),']',''),'"','');
 SET includedOrganisation = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.includedOrganisation'),'[',''),']',''),'"','');
 SET registrationStatus = JSON_UNQUOTE(JSON_EXTRACT(query,'$.registrationStatus'));
@@ -628,17 +632,19 @@ includedPeriodValue5a, includedPeriodType5a, incValueSet5a_tmp, incConcept5a_tmp
 5, NULL, NULL, NULL, observation5a_tmp, NULL, NULL, NULL, NULL, NULL, 
 NULL, NULL, NULL, NULL, includedOperator5a, includedEntryValue5a, sourceSchema , store_tmp, @includeExclude5aString);
 SET includeExclude5aString = @includeExclude5aString;
--- final patient cohort
+-- build final patient cohort
 CALL buildFinalPatientCohort(query_id, patient_cohort_tmp, observation_tmp, includeExclude1String, includeExclude1aString, includeExclude1bString, 
 includeExclude1cString, includeExclude1dString,includeExclude2String, includeExclude2aString, includeExclude3String, includeExclude3aString, includeExclude4String, 
 includeExclude5String, includeExclude5aString, sourceSchema);
--- result datasets
+-- update registries
+CALL buildRegistries(query_id, patient_cohort_tmp, denominatorQuery, registryName);
+-- build result datasets
 CALL buildResultDatasets(query_id, patient_cohort_tmp, demographics, encounters, medication, currentMedication, clinicalEvents, activeProblems, 
 dateFromEncounters, dateToEncounters, dateFromMedication, dateToMedication, dateFromClinicalEvents, dateToClinicalEvents, selectedClinicalTypes, 
 selectedEncounterValueSet, selectedMedicationValueSet, selectedClinicalEventValueSet, clinicalTypes_tmp,  clinicalTypesConcept_tmp, encounterValueSet_tmp, 
 encounterConcept_tmp, medicationValueSet_tmp, medicationConcept_tmp, clinicalEventValueSet_tmp, clinicalEventConcept_tmp, sourceSchema, store_tmp, @eventTypes);
 SET eventTypes = @eventTypes;
--- dataset outputs
+-- build dataset outputs
 CALL buildDatasetOutputTables(selectedDemographicFields, selectedEncounterFields, selectedMedicationFields, selectedClinicalEventFields, 
 eventTypes, store_tmp, sourceSchema, query_id, patient_cohort_tmp);
 -- build time series
