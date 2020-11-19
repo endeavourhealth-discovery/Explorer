@@ -36,6 +36,8 @@ interface query {
   seriesMedicationValueSet: string;
   seriesEncounterValueSet: string;
   denominatorQuery: string;
+  registryName: string;
+  targetPercentage: string;
 }
 
 @Component({
@@ -309,6 +311,10 @@ export class QueryLibraryComponent implements OnInit {
         details = query.delivery
       }else if (fieldName=='denominatorQuery') {
         details = query.denominatorQuery
+      }else if (fieldName=='registryName') {
+        details = query.registryName
+      }else if (fieldName=='targetPercentage') {
+        details = query.targetPercentage
       }
 
       return details;
