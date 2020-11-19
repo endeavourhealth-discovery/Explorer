@@ -235,7 +235,8 @@ BEGIN
            p.organization_id, '
            ,p_schema,'.getOrganizationName(p.organization_id) AS Organization, ' 
            ,p_schema,'.getCCGName(p.organization_id) AS CCG, ' 
-           ,p_schema,'.getOrganizationName(p.registered_practice_organization_id) AS registered_practice, '  
+           ,p_schema,'.getOrganizationName(p.organization_id) AS registered_practice, ' 
+           ,p_schema,'.getOrganizationOds(p.organization_id) AS ods_code, ' 
            ,p_schema,'.getConceptName(p.gender_concept_id) AS gender,  
            p.nhs_number, 
            p.date_of_birth, 
