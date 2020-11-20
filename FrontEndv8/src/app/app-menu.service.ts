@@ -41,12 +41,12 @@ export class AppMenuService implements  AbstractMenuProvider {
   getMenuOptions(): MenuOption[] {
     return [
       {icon: 'fas fa-analytics', caption: 'Dashboard library', state: 'dashboardlibrary'},
+      {icon: 'fas fa-map-marked-alt', caption: 'Maps', state: 'map'},
       {icon: 'fas fa-notes-medical', caption: 'Patient registries', state: 'registries'},
       {icon: 'fas fa-file-search', caption: 'Query & data set library', state: 'querylibrary'},
       {icon: 'fas fa-list-ol', caption: 'Value set library', state: 'valuesetlibrary'},
       {icon: 'fas fa-clinic-medical', caption: 'Organisation groups', state: 'organisationgroups'},
       {icon: 'fas fa-hospital', caption: 'Organisation list sizes', state: 'organisationlistsizes'},
-      {icon: 'fas fa-map-marked-alt', caption: 'Maps', state: 'map'},
       {icon: 'fas fa-video-plus', caption: 'Tutorials', state: 'tutorials'}
     ];
   }
