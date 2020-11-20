@@ -1293,7 +1293,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
           }
         });
     } else {
-      this.explorerService.saveQuery(this.type, this.name, this.id, this.jsonQuery)
+      this.explorerService.saveQuery(this.type.trim(), this.name.trim(), this.id, this.jsonQuery)
         .subscribe(saved => {
             this.dialogRef.close(true);
           },
