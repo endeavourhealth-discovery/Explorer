@@ -15,6 +15,8 @@ public class QueryLibrary {
     private String name;
     private String updated;
     private String jsonQuery;
+    private String registryName;
+    private String denominatorQuery;
 
     public String getUpdated() {
         return updated;
@@ -66,6 +68,24 @@ public class QueryLibrary {
 
     public QueryLibrary setQuery(String jsonQuery) {
         this.jsonQuery = jsonQuery;
+        return this;
+    }
+
+    public String getRegistryName() {
+        return registryName;
+    }
+
+    public QueryLibrary setRegistryName(String registryName) {
+        this.registryName = registryName;
+        return this;
+    }
+
+    public String getDenominatorQuery() {
+        return denominatorQuery;
+    }
+
+    public QueryLibrary setDenominatorQuery(String denominatorQuery) {
+        this.denominatorQuery = denominatorQuery;
         return this;
     }
 

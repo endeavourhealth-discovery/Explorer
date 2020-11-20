@@ -153,29 +153,33 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         }
     }
 
-    public void saveQuery(String type, String name, String id, String jsonQuery) throws Exception {
+    public void saveQuery(String type, String name, String registryName, String denominatorQuery, String id, String jsonQuery) throws Exception {
 
         String sql = "";
 
         if (id.equals("")) {
-            sql = "INSERT INTO dashboards.query_library (type, name, query) " +
-                    "VALUES (?, ?, ?)";
+            sql = "INSERT INTO dashboards.query_library (type, name, registry_name, denominator_query, query) " +
+                    "VALUES (?, ?, ?, ?, ?)";
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
                 stmt.setString(1, type);
                 stmt.setString(2, name);
-                stmt.setString(3, jsonQuery);
+                stmt.setString(3, registryName);
+                stmt.setString(4, denominatorQuery);
+                stmt.setString(5, jsonQuery);
                 stmt.executeUpdate();
             }
         } else // edit
         {
-            sql = "UPDATE dashboards.query_library SET type = ?, name = ?, query = ? " +
+            sql = "UPDATE dashboards.query_library SET type = ?, name = ?, registry_name = ?, denominator_query = ?, query = ? " +
                     "WHERE id = ?";
 
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
                 stmt.setString(1, type);
                 stmt.setString(2, name);
-                stmt.setString(3, jsonQuery);
-                stmt.setString(4, id);
+                stmt.setString(3, registryName);
+                stmt.setString(4, denominatorQuery);
+                stmt.setString(5, jsonQuery);
+                stmt.setString(6, id);
                 stmt.executeUpdate();
             }
         }
@@ -183,8 +187,8 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
     public void duplicateQuery(String id) throws Exception {
 
-        String sql = "insert into dashboards.query_library (type, name, query) " +
-                "select type, concat('Copy of ',name), query from dashboards.query_library where id = ?";
+        String sql = "insert into dashboards.query_library (type, name, registry_name, denominator_query, query) " +
+                "select type, concat('Copy of ',name), concat('Copy of ',registry_name), denominator_query, query from dashboards.query_library where id = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, id);
@@ -451,7 +455,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         String sql = "";
         String sqlCount = "";
 
-        sql = "SELECT id, type, name, updated, query " +
+        sql = "SELECT id, type, name, registry_name, denominator_query, updated, query " +
                 "FROM dashboards.query_library " +
                  selectedTypeString+
                 "order by type,name";
@@ -492,6 +496,8 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                 .setId(resultSet.getInt("id"))
                 .setType(resultSet.getString("type"))
                 .setName(resultSet.getString("name"))
+                .setRegistryName(resultSet.getString("registry_name"))
+                .setDenominatorQuery(resultSet.getString("denominator_query"))
                 .setUpdated(resultSet.getDate("updated"))
                 .setQuery(resultSet.getString("query"));
         return querylibrary;
@@ -2304,6 +2310,53 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                 .setName(resultSet.getString("name"));
 
         return series;
+    }
+
+    public RegistryQueryResult getRegistryQueries() throws Exception {
+        RegistryQueryResult result = new RegistryQueryResult();
+
+        String sql = "";
+        String sqlCount = "";
+
+        sql = "select distinct registry,query from dashboards.registries";
+
+        sqlCount = "SELECT 999";
+
+
+        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                result.setResults(getRegistryQueryList(resultSet));
+            }
+        }
+
+        try (PreparedStatement statement = conn.prepareStatement(sqlCount)) {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                resultSet.next();
+                result.setLength(resultSet.getInt(1));
+            }
+        }
+
+        return result;
+    }
+
+    private List<RegistryQuery> getRegistryQueryList(ResultSet resultSet) throws SQLException {
+        List<RegistryQuery> result = new ArrayList<>();
+        while (resultSet.next()) {
+            result.add(getRegistryQuery(resultSet));
+        }
+
+        return result;
+    }
+
+    public static RegistryQuery getRegistryQuery(ResultSet resultSet) throws SQLException {
+        RegistryQuery registryQuery = new RegistryQuery();
+
+        registryQuery
+                .setQuery(resultSet.getString("query"));
+        registryQuery
+                .setRegistry(resultSet.getString("registry"));
+
+        return registryQuery;
     }
 
 }

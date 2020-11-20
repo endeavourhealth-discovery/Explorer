@@ -13,6 +13,8 @@ export interface DialogData {
   id: string;
   name: string;
   type: string;
+  registryName: string;
+  denominatorQuery: string;
   query: string;
 }
 
@@ -595,14 +597,14 @@ export class AdvancedQueryEditorComponent implements OnInit {
     this.disableForm = true;
     this.id = data.id;
     this.name = data.name;
+    this.registryName = data.registryName;
+    this.denominatorQuery = data.denominatorQuery;
     this.type = data.type;
 
     if (data.query!='') { // edit mode
       let query: savedQuery = JSON.parse(data.query);
 
-      this.denominatorQuery = query.denominatorQuery;
       this.targetPercentage = query.targetPercentage;
-      this.registryName = query.registryName;
       this.selectedOrganisation = query.providerOrganisation;
       this.selectedIncludedOrganisation = query.includedOrganisation;
       this.selectedRegistration = query.registrationStatus;
@@ -1114,9 +1116,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
   saveQuery() {
 
     let query = {
-      denominatorQuery: this.denominatorQuery.trim(),
       targetPercentage: this.targetPercentage,
-      registryName: this.registryName.trim(),
       providerOrganisation: this.selectedOrganisation,
       includedOrganisation: this.selectedIncludedOrganisation,
       registrationStatus: this.selectedRegistration,
@@ -1280,11 +1280,14 @@ export class AdvancedQueryEditorComponent implements OnInit {
     };
     this.jsonQuery = JSON.stringify(query);
 
+    if (this.denominatorQuery==undefined)
+      this.denominatorQuery = '';
+
     if (this.includedExclude1 == '' && this.includedExclude2 == '' && this.includedExclude3 == '' && this.includedExclude4 == '' && this.includedExclude5 == '') {
       MessageBoxDialogComponent.open(this.dialog, 'Save query', 'Are you sure you want to save this query without any Advanced cohort criteria. It may result in a very large data set?', 'Yes', 'No')
         .subscribe(result => {
           if (result) {
-            this.explorerService.saveQuery(this.type.trim(), this.name.trim(), this.id, this.jsonQuery)
+            this.explorerService.saveQuery(this.type.trim(), this.name.trim(), this.registryName.trim(), this.denominatorQuery.trim(), this.id, this.jsonQuery)
               .subscribe(saved => {
                   this.dialogRef.close(true);
                 },
@@ -1293,7 +1296,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
           }
         });
     } else {
-      this.explorerService.saveQuery(this.type.trim(), this.name.trim(), this.id, this.jsonQuery)
+      this.explorerService.saveQuery(this.type.trim(), this.name.trim(), this.registryName.trim(), this.denominatorQuery.trim(), this.id, this.jsonQuery)
         .subscribe(saved => {
             this.dialogRef.close(true);
           },

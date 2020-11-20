@@ -119,10 +119,12 @@ export class ExplorerService {
     return this.http.get('api/events/valuesetdelete', {params});
   }
 
-  saveQuery(type?: string, name?: string, id?: string, jsonQuery?: string): Observable<any> {
+  saveQuery(type?: string, name?: string, registryName?: string, denominatorQuery?:string, id?: string, jsonQuery?: string): Observable<any> {
     let params = new HttpParams();
     params = params.append('type', type);
     params = params.append('name', name);
+    params = params.append('registryName', registryName);
+    params = params.append('denominatorQuery', denominatorQuery);
     params = params.append('id', id);
     params = params.append('jsonQuery', jsonQuery);
 
@@ -413,6 +415,12 @@ export class ExplorerService {
     if (ccg) params = params.append('ccg', ccg);
     if (searchData) params = params.append('search_data', searchData);
     return this.http.get('api/events/practicesTotalCount', {params});
+  }
+
+  getRegistryQueries(): Observable<any> {
+    let params = new HttpParams();
+
+    return this.http.get('api/events/registryQueries', {params});
   }
 
 }

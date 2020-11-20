@@ -53,9 +53,9 @@
           <th mat-header-cell *matHeaderCellDef style="width: 400px" mat-sort-header>Name</th>
           <td mat-cell *matCellDef="let element"> {{element.name}} </td>
         </ng-container>
-        <ng-container matColumnDef="updated">
+        <ng-container matColumnDef="denominatorQuery">
           <th mat-header-cell *matHeaderCellDef style="width: 350px" mat-sort-header>Denominator query</th>
-          <td mat-cell *matCellDef="let element"> {{formatDetail(element.jsonQuery, 'denominatorQuery')}} </td>
+          <td mat-cell *matCellDef="let element"> {{element.denominatorQuery}} </td>
         </ng-container>
         <ng-container matColumnDef="expandArrow">
           <th mat-header-cell *matHeaderCellDef style="width: 10px"></th>
@@ -73,7 +73,7 @@
                     <td><h3>Cohort definition</h3></td><td><h3>Data set criteria</h3></td><td><h3>Data set output definition</h3></td>
                   </tr>
                   <tr>
-                    <td><b>Registry name: </b>{{formatDetail(element.jsonQuery, 'registryName')}}</td><td></td><td></td>
+                    <td><b>Registry name: </b>{{element.registryName}}</td><td></td><td></td>
                   </tr>
                   <tr>
                     <td><b>Target vs denominator: </b>{{formatDetail(element.jsonQuery, 'targetPercentage')}}%</td><td></td><td></td>

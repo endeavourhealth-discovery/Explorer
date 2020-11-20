@@ -248,12 +248,14 @@ public class DashboardEndpoint {
     public Response saveQuery(@Context SecurityContext sc,
                                  @QueryParam("type") String type,
                                  @QueryParam("name") String name,
+                                 @QueryParam("registryName") String registryName,
+                                 @QueryParam("denominatorQuery") String denominatorQuery,
                                  @QueryParam("id") String id,
                                  @QueryParam("jsonQuery") String jsonQuery) throws Exception {
         LOG.debug("saveQuery");
 
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
-            viewerDAL.saveQuery(type, name, id, jsonQuery);
+            viewerDAL.saveQuery(type, name, registryName, denominatorQuery, id, jsonQuery);
 
             return Response
                     .ok()
@@ -925,6 +927,23 @@ public class DashboardEndpoint {
             return Response
                     .ok()
                     .entity(count)
+                    .build();
+        }
+    }
+
+    @GET
+    @Path("/registryQueries")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getRegistryQueries(@Context SecurityContext sc) throws Exception {
+        LOG.debug("getRegistryQueries");
+
+        try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
+            RegistryQueryResult result = viewerDAL.getRegistryQueries();
+
+            return Response
+                    .ok()
+                    .entity(result)
                     .build();
         }
     }

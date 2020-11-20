@@ -12,6 +12,11 @@ import {MessageBoxDialogComponent} from "../message-box-dialog/message-box-dialo
 import {RegistryEditorComponent} from "../registryeditor/registryeditor.component";
 import {TrendComponent} from "../trend/trend.component";
 
+interface queryList {
+  registry: string,
+  query: string
+}
+
 @Component({
   selector: 'app-registries',
   templateUrl: './registries.component.html',
@@ -24,6 +29,7 @@ export class RegistriesComponent implements OnInit {
   events: any;
   dataSource: MatTableDataSource<any>;
   currentCCG: string = '';
+  queryList: queryList[];
 
   displayedColumns: string[] = ['select', 'org', 'listSize', 'registrySize', 'allColumns'];
 
@@ -35,6 +41,17 @@ export class RegistriesComponent implements OnInit {
 
   ngOnInit() {
     this.loadEvents('', '');
+
+    this.explorerService.getRegistryQueries()
+      .subscribe(
+        (result) => this.loadQueries(result),
+        (error) => this.log.error(error)
+      );
+  }
+
+  loadQueries(lists: any) {
+    this.queryList = lists.results;
+
   }
 
   loadEvents(org: any, registry: any) {
@@ -48,8 +65,6 @@ export class RegistriesComponent implements OnInit {
 
   displayEvents(events: any) {
     this.events = events;
-
-    console.log(events.results);
 
     if (events.results[0].registrySize=='')
       this.displayedColumns = ['select', 'org', 'listSize', 'allColumns'];
@@ -68,6 +83,16 @@ export class RegistriesComponent implements OnInit {
     } else {
       return index
     }
+  }
+
+  getQuery(registryLookup: any) {
+    let query = this.queryList.find( record => record.registry === registryLookup);
+
+    if (query!=undefined)
+      return query.query
+    else
+      return '';
+
   }
 
   getOrgs(ccg: any,registry: any) {

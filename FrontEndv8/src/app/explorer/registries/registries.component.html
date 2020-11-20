@@ -49,7 +49,7 @@
           <td mat-cell *matCellDef="let element" >
             <table>
               <tr>
-                <td style="width: 250px;text-align: left" *ngFor="let index of element.allColumns.split('~')" (click)="getOrgs('Indicator', index>0 ? (index*1).toLocaleString() : index)">
+                <td style="width: 250px;text-align: left" *ngFor="let index of element.allColumns.split('~')" (click)="getOrgs('Indicator', index>0 ? (index*1).toLocaleString() : index)" matTooltipClass="tooltip" matTooltipPosition="right" [matTooltip]="getQuery(index>0 ? (index*1).toLocaleString() : index)" >
                   <table style="text-align: left">
                     <tr>
                       <td *ngIf="index>0&&toPercent(index,element.registrySize)>0">

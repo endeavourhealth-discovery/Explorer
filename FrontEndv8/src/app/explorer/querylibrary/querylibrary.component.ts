@@ -61,7 +61,7 @@ export class QueryLibraryComponent implements OnInit {
   @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: false}) sort: MatSort;
 
-  displayedColumns: string[] = ['type', 'name', 'updated', 'select', 'expandArrow'];
+  displayedColumns: string[] = ['type', 'name', 'denominatorQuery', 'select', 'expandArrow'];
   expandedElement: QueryLibraryComponent | null;
 
   selectedType: string = '';
@@ -182,7 +182,7 @@ export class QueryLibraryComponent implements OnInit {
       const dialogRef = this.dialog.open(AdvancedQueryEditorComponent, {
         height: '950px',
         width: '1275px',
-        data: {id: "", name: "", type: "", query: ""}
+        data: {id: "", name: "", type: "", registryName: "", denominatorQuery: "", query: ""}
       });
       dialogRef.afterClosed().subscribe(result => {
         if (result)
@@ -242,6 +242,8 @@ export class QueryLibraryComponent implements OnInit {
       data: {
         id: this.selection.selected[0].id,
         name: this.selection.selected[0].name,
+        registryName: this.selection.selected[0].registryName,
+        denominatorQuery: this.selection.selected[0].denominatorQuery,
         type: type,
         query: this.selection.selected[0].jsonQuery
       }
@@ -309,10 +311,6 @@ export class QueryLibraryComponent implements OnInit {
         details = query.schedule
       }else if (fieldName=='delivery') {
         details = query.delivery
-      }else if (fieldName=='denominatorQuery') {
-        details = query.denominatorQuery
-      }else if (fieldName=='registryName') {
-        details = query.registryName
       }else if (fieldName=='targetPercentage') {
         details = query.targetPercentage
       }
