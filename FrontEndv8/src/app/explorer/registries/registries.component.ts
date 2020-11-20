@@ -8,8 +8,7 @@ import {FormControl} from "@angular/forms";
 import {PatientComponent} from "../patient/patient.component";
 import {MatDialog} from "@angular/material/dialog";
 import {SelectionModel} from "@angular/cdk/collections";
-import {MessageBoxDialogComponent} from "../message-box-dialog/message-box-dialog.component";
-import {RegistryEditorComponent} from "../registryeditor/registryeditor.component";
+
 import {TrendComponent} from "../trend/trend.component";
 
 interface queryList {
@@ -156,83 +155,6 @@ export class RegistriesComponent implements OnInit {
       return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
     }
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
-  }
-
-  add() {
-    const dialogRef = this.dialog.open(RegistryEditorComponent, {
-      height: '400px',
-      width: '600px',
-      data: {id: "", name: "", query: "", ccg: ""}
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      if (result)
-        this.ngOnInit();
-    });
-  }
-
-  delete() {
-    let id = "";
-    this.selection.selected.map(
-      e => {
-        id+=","+e.id;
-      }
-    )
-    id = id.substr(1);
-
-    let name = "";
-    this.selection.selected.map(
-      e => {
-        name+=","+e.name;
-      }
-    )
-    name = name.substr(1);
-
-    let odscode = "";
-    this.selection.selected.map(
-      e => {
-        odscode+=","+e.code;
-      }
-    )
-    odscode = odscode.substr(1);
-
-    MessageBoxDialogComponent.open(this.dialog, 'Delete registry', 'Are you sure you want to delete this registry?', 'Delete', 'Cancel')
-      .subscribe(result => {
-        if (result) {
-          this.explorerService.deleteRegistry(id.toString(), name.toString(), odscode.toString())
-            .subscribe(saved => {
-                this.ngOnInit();
-              },
-              error => this.log.error('This registry could not be deleted.')
-            );
-        }
-      });
-  }
-
-  edit() {
-    const dialogRef = this.dialog.open(RegistryEditorComponent, {
-      height: '400px',
-      width: '600px',
-      data: {id: this.selection.selected[0].id, name: this.selection.selected[0].name, query:this.selection.selected[0].query, ccg:this.selection.selected[0].ccg}
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      if (result)
-        this.ngOnInit();
-    });
-  }
-
-  duplicate() {
-    MessageBoxDialogComponent.open(this.dialog, 'Duplicate registry', 'Are you sure you want to duplicate this registry?', 'Duplicate', 'Cancel')
-      .subscribe(result => {
-        if (result) {
-
-          this.explorerService.duplicateRegistry(this.selection.selected[0].id.toString(),this.selection.selected[0].name.toString())
-            .subscribe(saved => {
-                this.ngOnInit();
-              },
-              error => this.log.error('This registry could not be duplicated.')
-            );
-        }
-      });
   }
 
   showTrend(org: string) {

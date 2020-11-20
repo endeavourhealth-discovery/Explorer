@@ -52,8 +52,6 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
 import {MatTabsModule} from "@angular/material/tabs";
 import {MatSelectSearchModule } from './mat-select-search/mat-select-search.module';
 import {DashboardViewerComponent} from "./dashboardviewer/dashboardviewer.component";
-import {RegistryEditorComponent} from "./registryeditor/registryeditor.component";
-import {RegistryIndicatorEditorComponent} from "./registryindicatoreditor/registryindicatoreditor.component";
 import {MapComponent} from './map/map.component';
 import {MatSliderModule} from "@angular/material/slider";
 import {TrendComponent} from "./trend/trend.component";
@@ -79,8 +77,6 @@ import { PracticeListSizesComponent } from './practicelistsizes/practicelistsize
     OrganisationGroupsEditorComponent,
     OrganisationsEditorComponent,
     DashboardViewerComponent,
-    RegistryEditorComponent,
-    RegistryIndicatorEditorComponent,
     MapComponent,
     TrendComponent,
     OrganisationListSizesComponent,
@@ -140,8 +136,6 @@ import { PracticeListSizesComponent } from './practicelistsizes/practicelistsize
     OrganisationsComponent,
     OrganisationGroupsEditorComponent,
     OrganisationsEditorComponent,
-    RegistryEditorComponent,
-    RegistryIndicatorEditorComponent,
     TrendComponent
   ],
   providers: [ Globals ]
