@@ -57,8 +57,7 @@ export class RegistriesComponent implements OnInit {
     this.events = null;
     this.explorerService.getRegistries(org, registry)
       .subscribe(
-        (result) => this.displayEvents(result),
-        (error) => this.log.error(error)
+        (result) => this.displayEvents(result)
       );
   }
 
