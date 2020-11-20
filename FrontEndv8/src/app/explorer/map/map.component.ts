@@ -38,7 +38,8 @@ export class MapComponent implements OnInit {
 
   levels: Level[];
   user: UserProfile;
-  covidQuery: string = "Suspected and confirmed Covid-19 cases";
+  covidQuery1: string = "Suspected and confirmed Covid-19 cases";
+  covidQuery2: string = "Shielded Covid-19 patients";
   isCovidQuery: boolean = true;
 
   constructor(private explorerService: ExplorerService,
@@ -53,7 +54,7 @@ export class MapComponent implements OnInit {
       .subscribe(
         (result) => {
           this.queries = result;
-          this.query = this.covidQuery;
+          this.query = this.covidQuery1;
           this.userService.getUserProfile(true).then(
             result => {
               this.user = result;
@@ -356,7 +357,7 @@ export class MapComponent implements OnInit {
     this.clearLayers();
     this.display = this.generating;
     this.layersToRemove = [];
-    if (this.query == this.covidQuery) {
+    if (this.query == this.covidQuery1 || this.query == this.covidQuery2) {
       this.isCovidQuery = true;
       this.explorerService.getMapDates(this.query)
         .subscribe(

@@ -1430,6 +1430,9 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         if ("Suspected and confirmed Covid-19 cases".equalsIgnoreCase(query)) {
             sql = "select distinct date_format(covid_date, '%Y-%m-%d') as date " +
                     "from dashboards.lsoa_covid order by covid_date";
+        } else if ("Shielded Covid-19 patients".equalsIgnoreCase(query)) {
+            sql = "select distinct date_format(covid_date, '%Y-%m-%d') as date " +
+                    "from dashboards.lsoa_covid_shielded order by covid_date";
         } else {
             sql = "select id from dashboards.query_library where name = ? ";
             String queryId = null;
@@ -1464,7 +1467,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
 
         String queryId = null;
-        if (!"Suspected and confirmed Covid-19 cases".equalsIgnoreCase(query)) {
+        if (!"Suspected and confirmed Covid-19 cases".equalsIgnoreCase(query)&&!"Shielded Covid-19 patients".equalsIgnoreCase(query)) {
             String sql = "select id from dashboards.query_library where name = ? ";
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
                 statement.setString(1, query);
@@ -1498,7 +1501,10 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
         String minDate = "";
         if (queryId == null) {
-            sql = "select min(date_format(covid_date, '%Y-%m-%d')) as min_date from dashboards.lsoa_covid";
+            if ("Suspected and confirmed Covid-19 cases".equalsIgnoreCase(query))
+                sql = "select min(date_format(covid_date, '%Y-%m-%d')) as min_date from dashboards.lsoa_covid";
+            else if ("Shielded Covid-19 patients".equalsIgnoreCase(query))
+                sql = "select min(date_format(covid_date, '%Y-%m-%d')) as min_date from dashboards.lsoa_covid_shielded";
         } else {
             sql = "select min(date_format(`Effective date`, '%Y-%m-%d')) as min_date from dashboards.observation_output_" + queryId;
         }
@@ -1517,23 +1523,43 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         ArrayList<MapLayer> layer5 = new ArrayList();
 
         if (queryId == null) {
-            sql = "SELECT COUNT(covid.lsoa_code) AS patients, " +
-                    "regs.reg_count AS reg_patients, " +
-                    "ROUND(((COUNT(covid.lsoa_code) * 1000) / regs.reg_count),1) AS ratio, " +
-                    "covid.lsoa_code AS lsoa_code, " +
-                    "map.geo_json " +
-                    "FROM dashboards.lsoa_covid covid, " +
-                    "( SELECT reg.lsoa_code, sum(reg.count) reg_count " +
-                    "  FROM dashboards.lsoa_registrations reg " +
-                    "  WHERE reg.lsoa_code IS NOT NULL " +
-                    "  GROUP BY reg.lsoa_code " +
-                    ") regs, dashboards.maps map " +
-                    "WHERE covid.lsoa_code = regs.lsoa_code " +
-                    "AND covid.lsoa_code = map.area_code " +
-                    "AND covid.covid_date >= '" + minDate + "' " +
-                    "AND covid.covid_date <= ? " +
-                    "GROUP BY covid.lsoa_code " +
-                    "ORDER BY covid.lsoa_code ";
+            if ("Suspected and confirmed Covid-19 cases".equalsIgnoreCase(query))
+                sql = "SELECT COUNT(covid.lsoa_code) AS patients, " +
+                        "regs.reg_count AS reg_patients, " +
+                        "ROUND(((COUNT(covid.lsoa_code) * 1000) / regs.reg_count),1) AS ratio, " +
+                        "covid.lsoa_code AS lsoa_code, " +
+                        "map.geo_json " +
+                        "FROM dashboards.lsoa_covid covid, " +
+                        "( SELECT reg.lsoa_code, sum(reg.count) reg_count " +
+                        "  FROM dashboards.lsoa_registrations reg " +
+                        "  WHERE reg.lsoa_code IS NOT NULL " +
+                        "  GROUP BY reg.lsoa_code " +
+                        ") regs, dashboards.maps map " +
+                        "WHERE covid.lsoa_code = regs.lsoa_code " +
+                        "AND covid.lsoa_code = map.area_code " +
+                        "AND covid.covid_date >= '" + minDate + "' " +
+                        "AND covid.covid_date <= ? " +
+                        "GROUP BY covid.lsoa_code " +
+                        "ORDER BY covid.lsoa_code ";
+            else if ("Shielded Covid-19 patients".equalsIgnoreCase(query))
+                sql = "SELECT COUNT(covid.lsoa_code) AS patients, " +
+                        "regs.reg_count AS reg_patients, " +
+                        "ROUND(((COUNT(covid.lsoa_code) * 1000) / regs.reg_count),1) AS ratio, " +
+                        "covid.lsoa_code AS lsoa_code, " +
+                        "map.geo_json " +
+                        "FROM dashboards.lsoa_covid_shielded covid, " +
+                        "( SELECT reg.lsoa_code, sum(reg.count) reg_count " +
+                        "  FROM dashboards.lsoa_registrations reg " +
+                        "  WHERE reg.lsoa_code IS NOT NULL " +
+                        "  GROUP BY reg.lsoa_code " +
+                        ") regs, dashboards.maps map " +
+                        "WHERE covid.lsoa_code = regs.lsoa_code " +
+                        "AND covid.lsoa_code = map.area_code " +
+                        "AND covid.covid_date >= '" + minDate + "' " +
+                        "AND covid.covid_date <= ? " +
+                        "GROUP BY covid.lsoa_code " +
+                        "ORDER BY covid.lsoa_code ";
+
         } else {
             sql = "SELECT COUNT(PERSON.`LSOA code`) as patients, " +
                     "REGS.reg_count as reg_patients, " +
@@ -1900,6 +1926,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
         ArrayList<String> list = new ArrayList<>();
         list.add("Suspected and confirmed Covid-19 cases");
+        list.add("Shielded Covid-19 patients");
 
         HashMap<Integer,String> queryLibrary = new HashMap<>();
         String sql = "select id, name from dashboards.query_library";
