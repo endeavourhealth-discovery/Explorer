@@ -103,7 +103,7 @@ export class OrganisationGroupsComponent implements OnInit {
 
     this.originalData = JSON.parse(JSON.stringify(events.results));
 
-    this.typeList = [];
+    let typeList = [];
 
     let prevFolder = '';
     let thisFolder = '';
@@ -113,12 +113,12 @@ export class OrganisationGroupsComponent implements OnInit {
       if (thisFolder==prevFolder) {
         events.results[index].type = '↳';
       }
-      this.typeList.push(events.results[index]);
+      typeList.push(events.results[index]);
       if (events.results[index].type != '↳')
         prevFolder = thisFolder;
     });
 
-    this.dataSource = new MatTableDataSource(this.typeList);
+    this.dataSource = new MatTableDataSource(typeList);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
