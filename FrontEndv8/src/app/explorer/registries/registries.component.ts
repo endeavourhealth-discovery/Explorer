@@ -49,6 +49,8 @@ export class RegistriesComponent implements OnInit {
   displayEvents(events: any) {
     this.events = events;
 
+    console.log(events.results);
+
     if (events.results[0].registrySize=='')
       this.displayedColumns = ['select', 'org', 'listSize', 'allColumns'];
     else
