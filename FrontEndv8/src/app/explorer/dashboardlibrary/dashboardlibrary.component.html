@@ -65,8 +65,8 @@
               [queryParams] = "{role: 'explorer', dashboardNumber: element.dashboardId}"> {{element.name}} </td>
         </ng-container>
         <ng-container matColumnDef="updated">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Last updated</th>
-          <td style="cursor: pointer" mat-cell *matCellDef="let element"> {{element.updated}} </td>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Visual</th>
+          <td style="cursor: pointer" mat-cell *matCellDef="let element"> {{formatDetail(element.jsonQuery, 'visualType1')}} </td>
         </ng-container>
 
         <ng-container matColumnDef="expandArrow">
