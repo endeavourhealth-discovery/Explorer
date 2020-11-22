@@ -22,13 +22,15 @@ SET q.query = l.query,
     q.timefinish = NULL,
     q.timeexecute = NULL
 WHERE q.query_last_updated <> l.updated
+AND l.id >= 0
 AND q.status <> 'A';  -- i.e. not already processing
 
 -- add to queue if any new query exists
 INSERT INTO queue(query_id, query, query_last_updated, next_run_date)
 SELECT id, query, updated, CURDATE() 
 FROM query_library 
-WHERE id NOT IN (SELECT query_id FROM queue);  
+WHERE id >= 0
+AND id NOT IN (SELECT query_id FROM queue);  
 
 -- remove from queue if any query been removed
 DELETE FROM queue 
