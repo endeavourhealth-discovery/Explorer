@@ -7,6 +7,12 @@
     <mat-card-subtitle>Patient registries of diseases, conditions, risk factors, exposures, diagnosis or procedures.</mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
+    <div class="filter">
+      <mat-form-field style="width:300px; margin-left: 10px" class="expanded-full-width" appearance="outline">
+        <mat-label>Filter organisations (use spaces to separate multiple organisations)</mat-label>
+        <input matInput (keyup)="applyFilter($event)" placeholder="Filter" #input>
+      </mat-form-field>
+    </div>
     <div class="example-container mat-elevation-z8" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
       <table mat-table [dataSource]="dataSource">
         <ng-container matColumnDef="select" sticky>

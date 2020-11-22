@@ -1,8 +1,7 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from '@angular/material';
 import {ExplorerService} from '../explorer.service';
 import {LoggerService} from 'dds-angular8';
-import {PageEvent} from '@angular/material/paginator';
 import {ActivatedRoute} from "@angular/router";
 import {FormControl} from "@angular/forms";
 import {PatientComponent} from "../patient/patient.component";
@@ -70,6 +69,17 @@ export class RegistriesComponent implements OnInit {
       this.displayedColumns = ['select', 'org', 'listSize', 'registrySize', 'allColumns'];
 
     this.dataSource = new MatTableDataSource(events.results);
+
+    this.dataSource.filterPredicate = (data:{org: string}, filterValue: string) => {
+      const filterArray = filterValue.split(' ');
+      const matchFilter = [];
+      filterArray.forEach(filter => {
+        const customFilter = [];
+        customFilter.push(data.org.trim().toLowerCase().indexOf(filter) !== -1 || data.org.trim().toLowerCase().indexOf('back to') !== -1);
+        matchFilter.push(customFilter.some(Boolean));
+      })
+      return matchFilter.some(Boolean);
+    }
   }
 
   getSize(index, registrySize) {
@@ -197,6 +207,11 @@ export class RegistriesComponent implements OnInit {
       return "goodValue";
     else if (percentage<65)
       return "poorValue";
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
 }
