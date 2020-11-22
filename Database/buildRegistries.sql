@@ -6,12 +6,12 @@ DELIMITER //
 
 CREATE PROCEDURE buildRegistries (
     IN p_query_id INT,
-    IN p_patientcohorttab VARCHAR(64), 
-    IN p_denominator VARCHAR(255),
-    IN p_registryName VARCHAR(500)
+    IN p_patientcohorttab VARCHAR(64)
 )
 
 BEGIN
+
+  DECLARE parentregistry VARCHAR(500) DEFAULT NULL;
 
   DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -21,13 +21,23 @@ BEGIN
         RESIGNAL; -- rethrow the error
     END;   
 
-  SELECT name INTO @qry_name
+  SELECT name INTO @query
   FROM query_library WHERE id = p_query_id;
 
-  SET @sql = CONCAT("DELETE FROM registries WHERE query = ", BINARY QUOTE(@qry_name));
-  PREPARE stmt FROM @sql;
-  EXECUTE stmt;
-  DEALLOCATE PREPARE stmt;
+  SELECT q1.name, 
+         q1.registry_name, 
+         q2.registry_name AS parent_registry 
+         INTO @query, @registry_name, @parent_registry
+  FROM query_library q1 LEFT JOIN query_library q2 ON q1.denominator_query = q2.name
+  WHERE q1.id = p_query_id;
+
+  IF @parent_registry IS NULL THEN
+     SET parentregistry = NULL;
+     SET @parent_registry = 'reg.parent_registry IS NULL';
+  ELSE
+     SET parentregistry = @parent_registry;
+     SET @parent_registry = CONCAT('reg.parent_registry = ', BINARY QUOTE(@parent_registry));
+  END IF;
 
   DROP TEMPORARY TABLE IF EXISTS qry_reg;
   SET @sql = CONCAT("CREATE TEMPORARY TABLE qry_reg AS 
@@ -39,8 +49,17 @@ BEGIN
 
   ALTER TABLE qry_reg ADD INDEX ods_idx(ods_code);
 
+  -- delete previous entries if exist
+  SET @sql = CONCAT("DELETE FROM registries reg 
+                    WHERE reg.query = ", BINARY QUOTE(@query)," AND reg.registry = ", BINARY QUOTE(@registry_name)," AND ", @parent_registry,
+                    " AND EXISTS (SELECT 1 FROM qry_reg q WHERE reg.ods_code = q.ods_code)");
+  PREPARE stmt FROM @sql;
+  EXECUTE stmt;
+  DEALLOCATE PREPARE stmt;
+
+  -- add new entries to registries
   INSERT INTO registries (registry, query, ccg, practice_name, ods_code, list_size, registry_size, updated, parent_registry) 
-  SELECT p_registryName, @qry_name, q.ccg, q.registered_practice, q.ods_code, pls.list_size, q.registry_size, now(), p_denominator 
+  SELECT @registry_name, @query, q.ccg, q.registered_practice, q.ods_code, pls.list_size, q.registry_size, now(), parentregistry 
   FROM qry_reg q LEFT JOIN practice_list_sizes pls ON q.ods_code = pls.ods_code;
 
 
