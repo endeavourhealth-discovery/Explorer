@@ -21,9 +21,6 @@ BEGIN
         RESIGNAL; -- rethrow the error
     END;   
 
-  SELECT name INTO @query
-  FROM query_library WHERE id = p_query_id;
-
   SELECT q1.name, 
          q1.registry_name, 
          q2.registry_name AS parent_registry 

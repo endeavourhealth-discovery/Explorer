@@ -210,8 +210,7 @@ DECLARE sourceSchema VARCHAR(255) DEFAULT NULL;
 
 DECLARE org_tmp VARCHAR(64) DEFAULT NULL;
 DECLARE store_tmp VARCHAR(64) DEFAULT NULL;
-DECLARE valueset_tmp VARCHAR(64) DEFAULT NULL;
-DECLARE concept_tmp VARCHAR(64) DEFAULT NULL;
+
 DECLARE all_valueset_tmp VARCHAR(64) DEFAULT NULL;
 DECLARE all_concept_tmp VARCHAR(64) DEFAULT NULL;
 DECLARE cohort_tmp VARCHAR(64) DEFAULT NULL;
@@ -476,8 +475,7 @@ SET includedPeriodType5a = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodType
 
 SET org_tmp  = CONCAT('org_tmp_',query_id);
 SET store_tmp  = CONCAT('store_tmp_',query_id);
-SET valueset_tmp  = CONCAT('valueset_tmp_',query_id);
-SET concept_tmp  = CONCAT('concept_tmp_',query_id);
+
 SET all_valueset_tmp  = CONCAT('all_valueset_tmp_',query_id);
 SET all_concept_tmp  = CONCAT('all_concept_tmp_',query_id);
 SET cohort_tmp  = CONCAT('cohort_tmp_',query_id);
@@ -553,8 +551,8 @@ SET seriesConcept_tmp = CONCAT('seriesConcept_tmp_',query_id);
 SET patient_cohort_tmp  = CONCAT('patient_cohort_tmp_',query_id);
 -- cohort definition --
 CALL buildCohortDefinition(query_id,providerOrganisation, includedOrganisation, registrationStatus, ageFrom, ageTo, gender, postcode, 
-registrationExclude, registrationDateFrom, registrationDateTo, registrationPeriodValue, registrationPeriodType, org_tmp, valueset_tmp, 
-concept_tmp, all_valueset_tmp, all_concept_tmp, cohort_tmp, observation_tmp, sourceSchema, store_tmp);
+registrationExclude, registrationDateFrom, registrationDateTo, registrationPeriodValue, registrationPeriodType, org_tmp, 
+all_valueset_tmp, all_concept_tmp, cohort_tmp, observation_tmp, sourceSchema, store_tmp);
 -- advance criteria --
 -- rule 1 --
 CALL getIncludeExcludeString(query_id,includedExclude1,includedAnyAll1,includedValueSet1, includedDateFrom1, includedDateTo1, includedPeriodOperator1,
@@ -651,7 +649,7 @@ sourceSchema, query_id, patient_cohort_tmp);
 CALL updateQueue(query_id, schedule);
 -- clean up --
 -- remove temp tables
- SET tempTables = CONCAT(org_tmp,',',store_tmp,',',cohort_tmp ,',',observation_tmp,',',valueset_tmp,',',concept_tmp ,',',all_valueset_tmp,',',all_concept_tmp,',',
+ SET tempTables = CONCAT(org_tmp,',',store_tmp,',',cohort_tmp ,',',observation_tmp,',',all_valueset_tmp,',',all_concept_tmp,',',
  incValueSet1_tmp,',',incConcept1_tmp,',',observation1_tmp,',',incValueSet1a_tmp,',',incConcept1a_tmp,',',observation1a_tmp,',',
  incValueSet1b_tmp,',',incConcept1b_tmp,',',observation1b_tmp,',',incValueSet1c_tmp,',',incConcept1c_tmp,',',observation1c_tmp,',',
  incValueSet1d_tmp,',',incConcept1d_tmp,',',observation1d_tmp,',',incValueSet2_tmp,',',incConcept2_tmp,',',observation2_tmp,',',

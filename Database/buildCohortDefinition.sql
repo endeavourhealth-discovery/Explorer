@@ -18,8 +18,6 @@ CREATE PROCEDURE buildCohortDefinition(
      p_registrationPeriodValue VARCHAR(10),
      p_registrationPeriodType VARCHAR(20),
      p_organisationtab VARCHAR(64),
-     p_valuesettab VARCHAR(64),
-     p_concepttab VARCHAR(64),
      p_allvaluesettab VARCHAR(64),
      p_allconcepttab VARCHAR(64),
      p_cohorttab VARCHAR(64),
