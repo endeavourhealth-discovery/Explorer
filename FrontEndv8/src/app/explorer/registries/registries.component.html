@@ -10,7 +10,7 @@
     <div class="filter">
       <mat-form-field style="width:400px; margin-left: 10px" class="expanded-full-width" appearance="outline">
         <mat-label>Filter organisations (use spaces to separate multiple organisations)</mat-label>
-        <input matInput (keyup)="applyFilter($event)" placeholder="Filter" #input>
+        <input matInput [(ngModel)]="filter" (keyup)="applyFilter()" placeholder="Filter">
       </mat-form-field>
     </div>
     <div class="example-container mat-elevation-z8" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
@@ -38,11 +38,11 @@
             {{element.org}}
           </td>
         </ng-container>
-        <ng-container matColumnDef="listSize">
+        <ng-container matColumnDef="listSize" sticky>
           <th mat-header-cell *matHeaderCellDef style="padding-left: 10px;min-width: 150px;max-width: 150px">List size</th>
           <td mat-cell *matCellDef="let element" style="padding-left: 10px;min-width: 150px;max-width: 150px"> {{(element.listSize!=0) ? element.listSize.toLocaleString():''}} </td>
         </ng-container>
-        <ng-container matColumnDef="registrySize">
+        <ng-container matColumnDef="registrySize" sticky>
           <th mat-header-cell *matHeaderCellDef style="padding-left: 10px;min-width: 150px;max-width: 150px">Registry size</th>
           <td mat-cell *matCellDef="let element" style="padding-left: 10px;min-width: 150px;max-width: 150px"> {{(element.registrySize>0) ? (element.registrySize*1).toLocaleString():element.registrySize}} </td>
         </ng-container>

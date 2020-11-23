@@ -28,6 +28,7 @@ export class RegistriesComponent implements OnInit {
   dataSource: MatTableDataSource<any>;
   currentCCG: string = '';
   queryList: queryList[];
+  filter: string;
 
   displayedColumns: string[] = ['select', 'org', 'listSize', 'registrySize', 'allColumns'];
 
@@ -49,7 +50,6 @@ export class RegistriesComponent implements OnInit {
 
   loadQueries(lists: any) {
     this.queryList = lists.results;
-
   }
 
   loadEvents(org: any, registry: any) {
@@ -80,6 +80,8 @@ export class RegistriesComponent implements OnInit {
       })
       return matchFilter.some(Boolean);
     }
+
+    this.applyFilter();
   }
 
   getSize(index, registrySize) {
@@ -109,8 +111,11 @@ export class RegistriesComponent implements OnInit {
 
    if (ccg=="Indicator")
       ccg = this.currentCCG;
-    else if (ccg=='Back to Clinical Commissioning Groups')
-      ccg = '';
+    else if (ccg=='Back to Clinical Commissioning Groups') {
+     ccg = '';
+     this.filter = '';
+   }
+
 
     this.currentCCG = ccg;
 
@@ -209,8 +214,8 @@ export class RegistriesComponent implements OnInit {
       return "poorValue";
   }
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
+  applyFilter() {
+    const filterValue = this.filter;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
