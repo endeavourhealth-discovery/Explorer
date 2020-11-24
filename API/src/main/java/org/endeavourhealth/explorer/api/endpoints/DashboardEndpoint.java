@@ -86,12 +86,16 @@ public class DashboardEndpoint {
                                  @QueryParam("cumulative") String cumulative,
                                  @QueryParam("grouping") String grouping,
                                  @QueryParam("weekly") String weekly,
-                                 @QueryParam("rate") String rate) throws Exception {
+                                 @QueryParam("rate") String rate,
+                                 @QueryParam("combineSeries") String combineSeries) throws Exception {
         LOG.debug("getDashboard");
-
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
-            ChartResult result = viewerDAL.getDashboard(query, chartName,dateFrom,dateTo, cumulative, grouping,weekly,rate);
-
+            ChartResult result = null;
+            if (combineSeries.equals("1")) {
+                result = viewerDAL.getDashboardCombine(query, chartName, dateFrom, dateTo, cumulative, grouping, weekly, rate);
+            } else {
+                result = viewerDAL.getDashboard(query, chartName, dateFrom, dateTo, cumulative, grouping, weekly, rate);
+            }
             return Response
                     .ok()
                     .entity(result)

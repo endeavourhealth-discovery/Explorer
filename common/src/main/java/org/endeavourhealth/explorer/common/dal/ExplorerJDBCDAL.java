@@ -796,6 +796,117 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         return result;
     }
 
+    public ChartResult getDashboardCombine(String query, String chartName, String dateFrom, String dateTo, String cumulative, String grouping, String weekly, String rate) throws Exception {
+        String ccg = "";
+        String seriesSQL = "";
+        List<String> charts = Arrays.asList(chartName.split("\\s*,\\s*"));
+        if (!grouping.isEmpty()) {
+            grouping = grouping.replaceAll(",","','");
+            grouping = "'" + grouping + "'";
+            ccg = grouping;
+            grouping = " and `grouping` in ("+grouping+")";
+        }
+        seriesSQL = chartName.replaceAll(",","','");
+        seriesSQL = "'" + seriesSQL + "'";
+        seriesSQL = " name in ("+seriesSQL+") ";
+        ChartResult result = new ChartResult();
+        String sql = "";
+        sql = "select id from dashboards.query_library where name = ? ";
+        String queryId = null;
+        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            statement.setString(1, query);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    queryId = resultSet.getString("id");
+                }
+            }
+        }
+        List<Chart> chart = new ArrayList<>();
+        Chart chartItem = null;
+        chartItem = new Chart();
+        chartItem.setName(chartName);
+        String ccgs = "";
+        String temp = "";
+        if (rate.equals("1")) {
+            for (String chart_name : charts) {
+                if (chart_name.contains("(") && !chart_name.contains("CCG")) {
+                    ccgs = chart_name.substring(chart_name.indexOf("("));
+                    ccgs = ccg.replaceAll("CCG", "CCG " + ccgs);
+                } else
+                if (chart_name.contains("(") && chart_name.contains("CCG")) {
+                    ccgs = chart_name.substring(chart_name.indexOf("("));
+                    ccgs = ccgs.replaceFirst("\\(", "\\'");
+                    ccgs = ccgs.replaceAll("\\)$", "\\'");
+                } else
+                {
+                    ccgs = ccg;
+                }
+                temp+=','+ccgs;
+            }
+            temp = temp.replaceFirst(",","");
+        }
+        if (cumulative.equals("1")) {
+            if (rate.equals("1")) {
+                sql = "SELECT t.series_name," +
+                        "floor(@running_total:=@running_total + t.series_value) as series_value " +
+                        "FROM " +
+                        "( SELECT name,series_name,sum(series_value/((select sum(list_size) as list_size from dashboards.ccg_list_sizes where ccg in ("+temp+"))/100000)) as series_value "+
+                        "FROM dashboards.`dashboard_results_" + queryId + "` r " +
+                        "where "+seriesSQL+
+                        "and series_name between ? and ? "+grouping+" group by series_name) t " +
+                        "JOIN (SELECT @running_total:=0) r " +
+                        "ORDER BY t.series_name";
+            } else {
+                sql = "SELECT t.series_name," +
+                        "@running_total:=@running_total + t.series_value as series_value " +
+                        "FROM " +
+                        "( SELECT name,series_name,sum(series_value) as series_value "+
+                        "FROM dashboards.`dashboard_results_" + queryId + "` " +
+                        "where "+seriesSQL+" and series_name between ? and ? "+grouping+" group by series_name) t " +
+                        "JOIN (SELECT @running_total:=0) r " +
+                        "ORDER BY t.series_name";
+            }
+        } else {
+            if (weekly.equals("1")) {
+                if (rate.equals("1")) {
+                    sql = "SELECT FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) AS series_name, " +
+                            "floor(SUM(series_value/((select sum(list_size) as list_size from dashboards.ccg_list_sizes where ccg in ("+temp+"))/100000))) AS series_value " +
+                            "FROM dashboards.`dashboard_results_" + queryId + "` r " +
+                            "where "+seriesSQL+
+                            "and series_name between ? and ? "+grouping+
+                            " GROUP BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) " +
+                            "ORDER BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7))";
+                } else {
+                    sql = "SELECT FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) AS series_name, " +
+                            "SUM(series_value) AS series_value " +
+                            "from dashboards.`dashboard_results_" + queryId + "` where "+seriesSQL+
+                            "and series_name between ? and ? "+grouping+
+                            " GROUP BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) " +
+                            "ORDER BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7))";
+                }
+            } else {
+                if (rate.equals("1")) {
+                    sql = "SELECT series_name,floor(sum(series_value/((select sum(list_size) as list_size from dashboards.ccg_list_sizes where ccg in ("+temp+"))/100000))) as series_value from dashboards.`dashboard_results_" + queryId + "` r "+
+                            "where "+seriesSQL+
+                            "and series_name between ? and ? "+grouping+" group by series_name order by series_name";
+                } else {
+                    sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` where "+seriesSQL+
+                            "and series_name between ? and ? " + grouping + " group by series_name order by series_name";
+                }
+            }
+        }
+        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            statement.setString(1, dateFrom);
+            statement.setString(2, dateTo);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                chartItem.setSeries(getSeriesFromResultSet(resultSet));
+            }
+        }
+        chart.add(chartItem);
+        result.setResults(chart);
+        return result;
+    }
+
     public Chart getDashboardSingle(String query, String chartName, String dateFrom, String dateTo, String grouping) throws Exception {
 
         grouping = grouping.replaceAll(",","','");

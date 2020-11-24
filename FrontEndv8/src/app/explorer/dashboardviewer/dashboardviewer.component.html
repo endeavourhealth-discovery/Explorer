@@ -45,6 +45,7 @@
                   <mat-checkbox *ngIf="showLineCharts1" class="checkbox" (change)="refresh1()" [(ngModel)]="cumulative1">Cumulative</mat-checkbox>
                   <mat-checkbox *ngIf="showLineCharts1" class="checkbox" (change)="refresh1()" [(ngModel)]="weekly1">Weekly</mat-checkbox>
                   <mat-checkbox *ngIf="showLineCharts1" class="checkbox" (change)="refresh1()" [(ngModel)]="rate1">Rate per 100,000</mat-checkbox>
+                  <mat-checkbox *ngIf="showLineCharts1" class="checkbox" (change)="refresh1()" [(ngModel)]="combineSeries1">Combine series</mat-checkbox>
                   <button class="download" mat-flat-button color="primary" (click)="download1()">Download</button>
                 </div>
                 <mat-form-field style="width:250px;"  appearance="outline" *ngIf="showTables1 && tableData1">
@@ -211,6 +212,7 @@
                   <mat-checkbox *ngIf="showLineCharts2" class="checkbox" (change)="refresh2()" [(ngModel)]="cumulative2">Cumulative</mat-checkbox>
                   <mat-checkbox *ngIf="showLineCharts2" class="checkbox" (change)="refresh2()" [(ngModel)]="weekly2">Weekly</mat-checkbox>
                   <mat-checkbox *ngIf="showLineCharts2" class="checkbox" (change)="refresh2()" [(ngModel)]="rate2">Rate per 100,000</mat-checkbox>
+                  <mat-checkbox *ngIf="showLineCharts2" class="checkbox" (change)="refresh2()" [(ngModel)]="combineSeries2">Combine series</mat-checkbox>
                   <button class="download" mat-flat-button color="primary" (click)="download2()">Download</button>
                 </div>
                 <mat-form-field style="width:250px;"  appearance="outline" *ngIf="showTables2 && tableData2">
@@ -377,6 +379,7 @@
                   <mat-checkbox *ngIf="showLineCharts3" class="checkbox" (change)="refresh3()" [(ngModel)]="cumulative3">Cumulative</mat-checkbox>
                   <mat-checkbox *ngIf="showLineCharts3" class="checkbox" (change)="refresh3()" [(ngModel)]="weekly3">Weekly</mat-checkbox>
                   <mat-checkbox *ngIf="showLineCharts3" class="checkbox" (change)="refresh3()" [(ngModel)]="rate3">Rate per 100,000</mat-checkbox>
+                  <mat-checkbox *ngIf="showLineCharts3" class="checkbox" (change)="refresh3()" [(ngModel)]="combineSeries3">Combine series</mat-checkbox>
                   <button class="download" mat-flat-button color="primary" (click)="download3()">Download</button>
                 </div>
                 <mat-form-field style="width:250px;"  appearance="outline" *ngIf="showTables3 && tableData3">
@@ -543,6 +546,7 @@
                   <mat-checkbox *ngIf="showLineCharts4" class="checkbox" (change)="refresh4()" [(ngModel)]="cumulative4">Cumulative</mat-checkbox>
                   <mat-checkbox *ngIf="showLineCharts4" class="checkbox" (change)="refresh4()" [(ngModel)]="weekly4">Weekly</mat-checkbox>
                   <mat-checkbox *ngIf="showLineCharts4" class="checkbox" (change)="refresh4()" [(ngModel)]="rate4">Rate per 100,000</mat-checkbox>
+                  <mat-checkbox *ngIf="showLineCharts4" class="checkbox" (change)="refresh4()" [(ngModel)]="combineSeries4">Combine series</mat-checkbox>
                   <button class="download" mat-flat-button color="primary" (click)="download4()">Download</button>
                 </div>
                 <mat-form-field style="width:250px;"  appearance="outline" *ngIf="showTables4 && tableData4">

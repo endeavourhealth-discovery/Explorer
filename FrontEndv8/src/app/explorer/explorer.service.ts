@@ -29,7 +29,7 @@ export class ExplorerService {
     return this.http.get('api/events/lookuplistbyvalueset', {params});
   }
 
-  getDashboard(query: string, charts: string, dateFrom: string, dateTo: string, cumulative: string, grouping: string, weekly: string, rate: string): Observable<any> {
+  getDashboard(query: string, charts: string, dateFrom: string, dateTo: string, cumulative: string, grouping: string, weekly: string, rate: string, combineSeries: string): Observable<any> {
     let params = new HttpParams();
 
     params = params.append('query', query);
@@ -40,6 +40,7 @@ export class ExplorerService {
     params = params.append('grouping', grouping);
     params = params.append('weekly', weekly);
     params = params.append('rate', rate);
+    params = params.append('combineSeries', combineSeries);
 
     return this.http.get('api/events/dashboard', {params});
   }
