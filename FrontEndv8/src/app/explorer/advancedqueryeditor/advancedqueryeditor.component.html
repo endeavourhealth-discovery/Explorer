@@ -8,67 +8,81 @@
       <form [formGroup]="firstFormGroup">
         <ng-template matStepLabel>Query name</ng-template>
         <br/>
-        <div class="summary-column">
-          <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            <mat-form-field appearance="outline" style="margin-left: 25px; width: 600px">
-              <mat-label>Query folder</mat-label>
-              <input required matInput placeholder="Folder" [(ngModel)]="type" formControlName="control1" (ngModelChange)="formChanged()" (keydown.enter)="stepper.next()">
-            </mat-form-field>
-          </div>
-          <br/>
-          <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            <mat-form-field appearance="outline" style="margin-left: 25px; width: 600px">
-              <mat-label>Query name</mat-label>
-              <input required matInput placeholder="Name" [(ngModel)]="name" formControlName="control2" (ngModelChange)="formChanged()" (keydown.enter)="stepper.next()">
-            </mat-form-field>
-          </div>
-          <br/>
-          <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            <mat-form-field appearance="outline" style="margin-left: 25px; width: 600px">
-              <mat-label>Registry name</mat-label>
-              <input maxlength="60" required matInput placeholder="Registry" [(ngModel)]="registryName" formControlName="control159" (ngModelChange)="formChanged()" (keydown.enter)="stepper.next()">
-            </mat-form-field>
-          </div>
-          <br/>
-          <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            <mat-form-field appearance="outline" style="margin-left: 25px; width: 600px">
-              <mat-label>Denominator query</mat-label>
-              <mat-select [(ngModel)]="denominatorQuery" formControlName="control157" (ngModelChange)="formChanged()">
-                <mat-select-search [formControl]="filterQueryCtrl"></mat-select-search>
-                <mat-option *ngFor="let result of filteredQueryList | async" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
-                  {{result}}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-          <br/>
-          <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            <mat-form-field appearance="outline" style="margin-left: 25px; width: 100px">
-              <mat-label>Target %</mat-label>
-              <input matInput placeholder="Target %" [(ngModel)]="targetPercentage" formControlName="control158" (ngModelChange)="formChanged()" (keydown.enter)="stepper.next()">
-            </mat-form-field>
-          </div>
-          <br/>
-          <span style="margin-left: 30px">*Required</span>
-        </div>
-        <div class="summary-column">
-          <div style="margin-top: 7px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            <p>Folder for grouping query in the library.</p>
-          </div>
-          <div style="margin-top: 30px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            <p>Name of query.</p>
-          </div>
-          <div style="margin-top: 27px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            <p>Please enter an abbreviated name for the registry that will appear as a column in the Registries module.</p>
-          </div>
-          <div style="margin-top: 5px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            <p>Select an (optional) query as the denominator for this query. This query’s patient cohort (numerator) will then be compared against the selected denominator query cohort in the registries results.</p>
-          </div>
-          <div style="margin-top: 15px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            <p>Target threshold for the numerator against the denominator patient cohort.</p>
-          </div>
-        </div>
-        <div style="margin-top: 285px" mat-dialog-actions align="end">
+
+        <table>
+          <tr>
+            <td>
+              <mat-form-field appearance="outline" style="width: 600px">
+                <mat-label>Query folder</mat-label>
+                <input required matInput placeholder="Folder" [(ngModel)]="type" formControlName="control1" (ngModelChange)="formChanged()" (keydown.enter)="stepper.next()">
+              </mat-form-field>
+            </td>
+            <td></td>
+            <td>
+              <p>Folder for grouping query in the library.</p>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <mat-form-field appearance="outline" style="width: 600px">
+                <mat-label>Query name</mat-label>
+                <textarea cdkTextareaAutosize
+                          #autosize="cdkTextareaAutosize"
+                          cdkAutosizeMinRows="1"
+                          cdkAutosizeMaxRows="5" required matInput placeholder="Name" [(ngModel)]="name" formControlName="control2" (ngModelChange)="formChanged()" (keydown.enter)="stepper.next()"></textarea>
+              </mat-form-field>
+            </td>
+            <td></td>
+            <td>
+              <p>Name of query.</p>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <mat-form-field appearance="outline" style="width: 600px">
+                <mat-label>Registry name</mat-label>
+                <input maxlength="60" required matInput placeholder="Registry" [(ngModel)]="registryName" formControlName="control159" (ngModelChange)="formChanged()" (keydown.enter)="stepper.next()">
+              </mat-form-field>
+            </td>
+            <td></td>
+            <td>
+              <p>Please enter an abbreviated name for the registry that will appear as a column in the Registries module.</p>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <mat-form-field appearance="outline" style="width: 600px">
+                <mat-label>Denominator query</mat-label>
+                <mat-select [(ngModel)]="denominatorQuery" formControlName="control157" (ngModelChange)="formChanged()">
+                  <mat-select-search [formControl]="filterQueryCtrl"></mat-select-search>
+                  <mat-option *ngFor="let result of filteredQueryList | async" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
+                    {{result}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </td>
+            <td></td>
+            <td>
+              <p>Select an (optional) query as the denominator for this query. This query’s patient cohort (numerator) will then be compared against the selected denominator query cohort in the registries results.</p>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <mat-form-field appearance="outline" style="width: 100px">
+                <mat-label>Target %</mat-label>
+                <input matInput placeholder="Target %" [(ngModel)]="targetPercentage" formControlName="control158" (ngModelChange)="formChanged()" (keydown.enter)="stepper.next()">
+              </mat-form-field>
+            </td>
+            <td></td>
+            <td>
+              <p>Target threshold for the numerator against the denominator patient cohort.</p>
+            </td>
+          </tr>
+        </table>
+
+        <span style="margin-left: 5px; color: gray">*Required</span>
+
+        <div style="margin-top: 200px" mat-dialog-actions align="end">
           <button style="margin-right: 15px" mat-button color="accent" (click)="onCancelClick()">Cancel</button>
           <button style="margin-right: 15px" mat-flat-button color="accent" (click)="stepper.next()">Next</button>
           <button style="margin-right: 15px" mat-flat-button color="accent" [disabled]="disableForm" (click)="saveQuery()">Save</button>
@@ -79,127 +93,129 @@
     <mat-step [stepControl]="secondFormGroup" errorMessage="Step not completed.">
       <form [formGroup]="secondFormGroup">
         <ng-template matStepLabel>Cohort definition</ng-template>
+
+        <table>
+          <tr>
+            <td>
+              <mat-form-field appearance="outline" style="width: 450px">
+                <mat-label>Provider organisations</mat-label>
+                <mat-select multiple [(ngModel)]="selectedOrganisation" formControlName="control3" (ngModelChange)="formChanged()" required>
+                  <mat-option *ngFor="let result of orgList" [value]="result">{{result}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </td>
+            <td></td>
+            <td>
+              <p>List of organisations, or list of organisation groups, whose records will be used as the base cohort.</p>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <mat-form-field appearance="outline" style="width: 450px">
+                <mat-label>Included organisations</mat-label>
+                <mat-select multiple [(ngModel)]="selectedIncludedOrganisation" formControlName="control17" (ngModelChange)="formChanged()">
+                  <mat-option *ngFor="let result of orgIncList" [value]="result">{{result}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </td>
+            <td></td>
+            <td>
+              <p>This is the list of organisations whose records are included for the patients in the base cohort. For example, patients who have records in a GP practice might be in the cohort base, they might have visited hospital and the hospital could also be included in the included organisation list. If an organisation is not defined, those organisations records are not included.</p>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <mat-form-field appearance="outline" style="width: 450px">
+                <mat-label>Patient GP registration status</mat-label>
+                <mat-select [(ngModel)]="selectedRegistration" formControlName="control4" (ngModelChange)="formChanged()" required>
+                  <mat-option *ngFor="let registration of registrations" [value]="registration.regValue">
+                    {{registration.regValue}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </td>
+            <td></td>
+          </tr>
+        </table>
+
         <br/>
-        <div class="summary-column">
-          <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            <mat-form-field appearance="outline" style="margin-left: 25px; width: 450px">
-              <mat-label>Provider organisations</mat-label>
-              <mat-select multiple [(ngModel)]="selectedOrganisation" formControlName="control3" (ngModelChange)="formChanged()" required>
-                <mat-option *ngFor="let result of orgList" [value]="result">{{result}}</mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-          <br/>
-          <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            <mat-form-field appearance="outline" style="margin-left: 25px; width: 450px">
-              <mat-label>Included organisations</mat-label>
-              <mat-select multiple [(ngModel)]="selectedIncludedOrganisation" formControlName="control17" (ngModelChange)="formChanged()">
-                <mat-option *ngFor="let result of orgIncList" [value]="result">{{result}}</mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-          <br/>
-          <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            <mat-form-field appearance="outline" style="margin-left: 25px; width: 450px">
-              <mat-label>Patient GP registration status</mat-label>
-              <mat-select [(ngModel)]="selectedRegistration" formControlName="control4" (ngModelChange)="formChanged()" required>
-                <mat-option *ngFor="let registration of registrations" [value]="registration.regValue">
-                  {{registration.regValue}}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-          <br/>
-          <div class="flex" fxLayout.xs="column"  fxLayoutAlign="start">
-            <mat-form-field appearance="outline" style="margin-left: 25px; width: 155px">
-              <mat-label>Include/Exclude</mat-label>
-              <mat-select [(ngModel)]="registrationExclude" formControlName="control5" (ngModelChange)="formChanged()">
-                <mat-option *ngFor="let value of exclude" [value]="value.exclude">
-                  {{value.exclude}}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-            <p style="margin-left:10px; margin-top: 20px"> patients who registered within the last</p>
-            <br/>
-          </div>
-          <div class="flex" fxLayout.xs="column"  fxLayoutAlign="start">
-            <mat-form-field appearance="outline" style="margin-left: 25px; width: 80px">
-              <input matInput placeholder="Value" [(ngModel)]="registrationPeriodValue" formControlName="control5a" (keydown.enter)="stepper.next()">
-            </mat-form-field>
-            <mat-form-field appearance="outline" style="margin-left: 10px; width: 170px">
-              <mat-label>Days/Weeks/Months</mat-label>
-              <mat-select [(ngModel)]="registrationPeriodType" formControlName="control5b" (ngModelChange)="formChanged()">
-                <mat-option *ngFor="let value of period" [value]="value.period">
-                  {{value.period}}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-          <p style="margin-left:25px"> or within the registration date range from</p>
-          <div class="flex" fxLayout.xs="column"  fxLayoutAlign="start">
-            <mat-form-field class="example-full-width" appearance="outline" style="margin-left: 25px; width: 150px">
-              <mat-label>Date range from</mat-label>
-              <input matInput [matDatepicker]="valuepicker1" placeholder="Date from" [(ngModel)]="registrationDateFrom" formControlName="control20">
-              <mat-datepicker-toggle matSuffix [for]="valuepicker1">
-                <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
-              </mat-datepicker-toggle>
-              <mat-datepicker #valuepicker1></mat-datepicker>
-            </mat-form-field>
 
-            <mat-form-field class="example-full-width" appearance="outline" style="margin-left: 20px; width: 150px">
-              <mat-label>Date range to</mat-label>
-              <input matInput [matDatepicker]="valuepicker2" placeholder="Date to" [(ngModel)]="registrationDateTo" formControlName="control21">
-              <mat-datepicker-toggle matSuffix [for]="valuepicker2">
-                <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
-              </mat-datepicker-toggle>
-              <mat-datepicker #valuepicker2></mat-datepicker>
-            </mat-form-field>
-          </div>
+        <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+          <mat-form-field appearance="standard" style="width: 110px">
+            <mat-label>Include/Exclude</mat-label>
+            <mat-select [(ngModel)]="registrationExclude" formControlName="control5" (ngModelChange)="formChanged()">
+              <mat-option *ngFor="let value of exclude" [value]="value.exclude">
+                {{value.exclude}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <p style="margin-left: 15px; margin-top: 28px"> patients who registered within the last</p>
+          <mat-form-field appearance="standard" style="width: 50px; margin-left: 15px">
+            <mat-label>Period</mat-label>
+            <input matInput placeholder="Value" [(ngModel)]="registrationPeriodValue" formControlName="control5a" (keydown.enter)="stepper.next()">
+          </mat-form-field>
+          <mat-form-field appearance="standard" style="width: 125px; margin-left: 10px">
+            <mat-label>Days/Weeks/Months</mat-label>
+            <mat-select [(ngModel)]="registrationPeriodType" formControlName="control5b" (ngModelChange)="formChanged()">
+              <mat-option *ngFor="let value of period" [value]="value.period">
+                {{value.period}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <p style="margin-left: 15px; margin-top: 28px"> or within the registration date range from</p>
+          <mat-form-field class="example-full-width" appearance="standard" style="width: 135px; margin-left: 15px">
+            <mat-label>Date range from</mat-label>
+            <input matInput [matDatepicker]="valuepicker1" placeholder="Date from" [(ngModel)]="registrationDateFrom" formControlName="control20">
+            <mat-datepicker-toggle matSuffix [for]="valuepicker1">
+              <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+            </mat-datepicker-toggle>
+            <mat-datepicker #valuepicker1></mat-datepicker>
+          </mat-form-field>
+          <p style="margin-left: 15px; margin-top: 28px"> to</p>
+          <mat-form-field class="example-full-width" appearance="standard" style="width: 130px; margin-left: 15px">
+            <mat-label>Date range to</mat-label>
+            <input matInput [matDatepicker]="valuepicker2" placeholder="Date to" [(ngModel)]="registrationDateTo" formControlName="control21">
+            <mat-datepicker-toggle matSuffix [for]="valuepicker2">
+              <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+            </mat-datepicker-toggle>
+            <mat-datepicker #valuepicker2></mat-datepicker>
+          </mat-form-field>
+          <p style="margin-left: 5px; margin-top: 28px">.</p>
+        </div>
+        <br/>
+        <div class="flex" fxLayout.xs="column"  fxLayoutAlign="start">
+          <mat-form-field appearance="outline" style="width: 140px">
+            <mat-label>Age range from</mat-label>
+            <input matInput placeholder="Age" [(ngModel)]="ageFrom" formControlName="control6" (keydown.enter)="stepper.next()">
+          </mat-form-field>
 
-          <br/>
-          <div class="flex" fxLayout.xs="column"  fxLayoutAlign="start">
-            <mat-form-field appearance="outline" style="margin-left: 25px; width: 140px">
-              <mat-label>Age range from</mat-label>
-              <input matInput placeholder="Age" [(ngModel)]="ageFrom" formControlName="control6" (keydown.enter)="stepper.next()">
-            </mat-form-field>
+          <mat-form-field appearance="outline" style="width: 140px; margin-left: 10px">
+            <mat-label>Age range to</mat-label>
+            <input matInput placeholder="Age" [(ngModel)]="ageTo" formControlName="control7" (keydown.enter)="stepper.next()">
+          </mat-form-field>
+        </div>
+        <br/>
+        <div class="flex" fxLayout.xs="column"  fxLayoutAlign="start">
+          <mat-form-field appearance="outline" style="width: 100px">
+            <mat-label>Gender</mat-label>
+            <mat-select [(ngModel)]="selectedGender" formControlName="control8">
+              <mat-option *ngFor="let gender of genders" [value]="gender.genValue">
+                {{gender.genValue}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
 
-            <mat-form-field appearance="outline" style="margin-left: 20px; width: 140px">
-              <mat-label>Age range to</mat-label>
-              <input matInput placeholder="Age" [(ngModel)]="ageTo" formControlName="control7" (keydown.enter)="stepper.next()">
-            </mat-form-field>
-          </div>
-          <br/>
-          <div class="flex" fxLayout.xs="column"  fxLayoutAlign="start">
-            <mat-form-field appearance="outline" style="margin-left: 25px; width: 100px">
-              <mat-label>Gender</mat-label>
-              <mat-select [(ngModel)]="selectedGender" formControlName="control8">
-                <mat-option *ngFor="let gender of genders" [value]="gender.genValue">
-                  {{gender.genValue}}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-
-            <mat-form-field appearance="outline" style="margin-left: 20px; width: 180px">
-              <mat-label>Home address postcode</mat-label>
-              <input matInput placeholder="Postcode" [(ngModel)]="postcode" formControlName="control9" (keydown.enter)="stepper.next()">
-            </mat-form-field>
-          </div>
-          <br/>
-          <span style="margin-left: 30px">*Required</span>
+          <mat-form-field appearance="outline" style="width: 180px; margin-left: 10px">
+            <mat-label>Home address postcode</mat-label>
+            <input matInput placeholder="Postcode" [(ngModel)]="postcode" formControlName="control9" (keydown.enter)="stepper.next()">
+          </mat-form-field>
         </div>
 
-        <div class="summary-column">
-          <div style="margin-top: 20px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            List of organisations, or list of organisation groups, whose records will be used as the base cohort.
-          </div>
+        <br/>
 
-          <div style="margin-top: 35px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            This is the list of organisations whose records are included for the patients in the base cohort. For example, patients who have records in a GP practice might be in the cohort base, they might have visited hospital and the hospital could also be included in the included organisation list. If an organisation is not defined, those organisations records are not included.
-          </div>
+        <span style="margin-left: 5px; color: gray">*Required</span>
 
-        </div>
-
-        <div style="margin-top: 70px" mat-dialog-actions align="end">
+        <div style="margin-top: 120px" mat-dialog-actions align="end">
           <button style="margin-right: 15px" mat-button color="accent" (click)="onCancelClick()">Cancel</button>
           <button style="margin-right: 15px" mat-button color="accent" matStepperPrevious>Back</button>
           <button style="margin-right: 15px" mat-flat-button color="accent" (click)="stepper.next()">Next</button>
@@ -1635,42 +1651,39 @@
     <mat-step [stepControl]="fifthFormGroup" errorMessage="Step not completed.">
       <form [formGroup]="fifthFormGroup">
         <ng-template matStepLabel>Data set output definition</ng-template>
-        <br/>
 
-        <div class="summary-column">
-          <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            <mat-form-field appearance="outline" style="margin-left: 25px">
-              <mat-label>Refresh schedule</mat-label>
-              <mat-select [(ngModel)]="selectedSchedule" formControlName="control18" (ngModelChange)="formChanged()" required>
-                <mat-option *ngFor="let schedule of schedules" [value]="schedule.scheduleValue">
-                  {{schedule.scheduleValue}}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-          <br/>
-          <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            <mat-form-field appearance="outline" style="margin-left: 25px">
-              <mat-label>Delivery mechanism</mat-label>
-              <mat-select [(ngModel)]="selectedDelivery" formControlName="control19" (ngModelChange)="formChanged()" required>
-                <mat-option *ngFor="let delivery of deliveries" [value]="delivery.deliveryValue">
-                  {{delivery.deliveryValue}}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-          <br/>
-          <span style="margin-left: 30px">*Required</span>
-        </div>
-
-        <div class="summary-column">
-          <div style="margin-top: 7px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            <p>How often should this data set be refreshed.</p>
-          </div>
-          <div style="margin-top: 30px" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            <p>The mechanism that is used to deliver the report.</p>
-          </div>
-        </div>
+        <table>
+          <tr>
+            <td>
+              <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+                <mat-form-field appearance="outline" style="margin-left: 25px">
+                  <mat-label>Refresh schedule</mat-label>
+                  <mat-select [(ngModel)]="selectedSchedule" formControlName="control18" (ngModelChange)="formChanged()" required>
+                    <mat-option *ngFor="let schedule of schedules" [value]="schedule.scheduleValue">
+                      {{schedule.scheduleValue}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <p style="margin-left: 20px; margin-top: 25px">How often should this data set be refreshed.</p>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+                <mat-form-field appearance="outline" style="margin-left: 25px">
+                  <mat-label>Delivery mechanism</mat-label>
+                  <mat-select [(ngModel)]="selectedDelivery" formControlName="control19" (ngModelChange)="formChanged()" required>
+                    <mat-option *ngFor="let delivery of deliveries" [value]="delivery.deliveryValue">
+                      {{delivery.deliveryValue}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <p style="margin-left: 20px; margin-top: 25px">The mechanism that is used to deliver the report.</p>
+              </div>
+            </td>
+          </tr>
+        </table>
 
         <div style="margin-top: 530px" mat-dialog-actions align="end">
           <button style="margin-right: 15px" mat-button color="accent" (click)="onCancelClick()">Cancel</button>
