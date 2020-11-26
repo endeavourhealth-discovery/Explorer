@@ -106,10 +106,16 @@ BEGIN
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;
 
+   SET @sql = CONCAT('ALTER TABLE ', p_cohorttab, ' ADD INDEX pat_per_org_idx (patient_id, person_id, organization_id)');
+   PREPARE stmt FROM @sql;
+   EXECUTE stmt;
+   DEALLOCATE PREPARE stmt;
+   
    SET @sql = CONCAT('ALTER TABLE ', p_cohorttab, ' ADD INDEX pat_idx (patient_id)');
    PREPARE stmt FROM @sql;
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;
+   
 
 
 END//
