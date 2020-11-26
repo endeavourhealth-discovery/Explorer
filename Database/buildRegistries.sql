@@ -59,6 +59,11 @@ BEGIN
   SELECT @registry_name, @query, q.ccg, q.registered_practice, q.ods_code, pls.list_size, q.registry_size, now(), parentregistry 
   FROM qry_reg q LEFT JOIN practice_list_sizes pls ON q.ods_code = pls.ods_code;
 
+  -- add a new entry for registry trend
+  INSERT INTO dashboard_results_0 (`grouping`, name, series_name, series_value)
+  SELECT 'registry_trend', CONCAT(UPPER(q.registered_practice),' (', q.ods_code,') - ', @registry_name), curdate(), q.registry_size 
+  FROM qry_reg q;
+
 
 END//
 DELIMITER ;
