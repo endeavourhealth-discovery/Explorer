@@ -29,7 +29,12 @@ export class OrganisationListSizesComponent implements OnInit {
   }
 
   itemClicked(org: any) {
-    this.router.navigate(['/practicelistsizes', org.ccg]);
+    let ccg = org.ccg;
+    if (ccg.indexOf("↳")>-1) {
+      ccg = ccg.replace(" ↳ ","");
+      ccg = "NHS "+ccg;
+    }
+    this.router.navigate(['/practicelistsizes', ccg]);
   }
 
   orderChange($event) {

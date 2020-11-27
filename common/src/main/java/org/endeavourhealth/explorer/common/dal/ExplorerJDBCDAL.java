@@ -2127,13 +2127,44 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
                     row = new JSONObject();
-                    row.put("ccg", resultSet.getString("ccg"));
+                    String ccg = resultSet.getString("ccg");
+                    if (ccg.contains("Asian")||ccg.contains("Black")||ccg.contains("White")||ccg.contains("Mixed")||ccg.contains("Not Stated")||ccg.contains("Other"))
+                        ccg = " ↳ "+ccg.replaceAll("NHS ","");
+
+                    row.put("ccg", ccg);
                     row.put("list_size", formatter.format(resultSet.getBigDecimal("list_size")));
                     data.getRows().add(row);
                 }
             }
         }
         return data;
+    }
+
+    private static String toTitleCase(String str) {
+
+        if(str == null || str.isEmpty())
+            return "";
+
+        if(str.length() == 1)
+            return str.toUpperCase();
+
+        //split the string by space
+        String[] parts = str.split(" ");
+
+        StringBuilder sb = new StringBuilder( str.length() );
+
+        for(String part : parts){
+
+            if(part.length() > 1 )
+                sb.append( part.substring(0, 1).toUpperCase() )
+                        .append( part.substring(1).toLowerCase() );
+            else
+                sb.append(part.toUpperCase());
+
+            sb.append(" ");
+        }
+
+        return sb.toString().trim();
     }
 
     public long getOrganisationsTotalCount(String searchData) throws Exception {
