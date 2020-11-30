@@ -49,119 +49,59 @@ BEGIN
       SET frontlen = LENGTH(front);
       SET TempValue = TRIM(front);
 
-   -- create a temporary table to hold the table ids
+   -- create a temporary table to hold the patient details
    DROP TEMPORARY TABLE IF EXISTS qry_tmp;
 
-   IF TempValue = 'Observation' THEN  
-
-     SET @sql = CONCAT('
-     CREATE TEMPORARY TABLE qry_tmp (
-        row_id INT, id BIGINT, 
-        patient_id BIGINT, person_id BIGINT, 
-        clinical_effective_date DATE, result_value DOUBLE, 
-        non_core_concept_id INT, organization_id BIGINT,
-        value_set_code_type VARCHAR(255), 
-        PRIMARY KEY (row_id) ) AS 
-     SELECT (@row_no := @row_no + 1) AS row_id, 
-          o.id AS id, o.patient_id, o.person_id, o.clinical_effective_date, 
-          o.result_value, o.non_core_concept_id, o.organization_id, 
-          cpt.value_set_code_type AS value_set_code_type 
-     FROM ', p_cohorttab,' c JOIN ', p_schema,'.observation o ON c.patient_id = o.patient_id AND c.person_id = o.person_id AND c.organization_id = o.organization_id 
-     JOIN ', p_allconcepttab,' cpt ON cpt.non_core_concept_id = o.non_core_concept_id 
-     JOIN (SELECT @row_no := 0) t 
-     WHERE cpt.data_type = ', QUOTE(TempValue));
-
-   ELSEIF TempValue = 'Medication' THEN
-
-     SET @sql = CONCAT('
-     CREATE TEMPORARY TABLE qry_tmp (
-        row_id INT, id BIGINT, 
-        patient_id BIGINT, person_id BIGINT, 
-        clinical_effective_date DATE, result_value DOUBLE, 
-        non_core_concept_id INT, organization_id BIGINT,
-        value_set_code_type VARCHAR(255), 
-        PRIMARY KEY (row_id) ) AS 
-     SELECT (@row_no := @row_no + 1) AS row_id, 
-          o.id AS id, o.patient_id, o.person_id, o.clinical_effective_date, 
-          o.quantity_value AS result_value, o.non_core_concept_id, o.organization_id, 
-          cpt.value_set_code_type AS value_set_code_type 
-     FROM ', p_cohorttab,' c JOIN ', p_schema,'.medication_statement o ON c.patient_id = o.patient_id AND c.person_id = o.person_id AND c.organization_id = o.organization_id 
-     JOIN ', p_allconcepttab,' cpt ON cpt.non_core_concept_id = o.non_core_concept_id 
-     JOIN (SELECT @row_no := 0) t 
-     WHERE cpt.data_type = ', QUOTE(TempValue));
-
-   ELSEIF TempValue = 'Encounter' THEN
-
-     SET @sql = CONCAT('
-     CREATE TEMPORARY TABLE qry_tmp (
-        row_id INT, id BIGINT, 
-        patient_id BIGINT, person_id BIGINT, 
-        clinical_effective_date DATE, 
-        non_core_concept_id INT, organization_id BIGINT,
-        value_set_code_type VARCHAR(255), 
-        PRIMARY KEY (row_id) ) AS 
-     SELECT (@row_no := @row_no + 1) AS row_id, 
-          o.id AS id, o.patient_id, o.person_id, o.clinical_effective_date, 
-          o.non_core_concept_id, o.organization_id, 
-          cpt.value_set_code_type AS value_set_code_type 
-     FROM ', p_cohorttab,' c JOIN ', p_schema,'.encounter o ON c.patient_id = o.patient_id AND c.person_id = o.person_id AND c.organization_id = o.organization_id 
-     JOIN ', p_allconcepttab,' cpt ON cpt.non_core_concept_id = o.non_core_concept_id 
-     JOIN (SELECT @row_no := 0) t 
-     WHERE cpt.data_type = ', QUOTE(TempValue));
-
-   ELSEIF TempValue = 'Ethnicity' THEN
-
-     SET @sql = CONCAT('
-     CREATE TEMPORARY TABLE qry_tmp (
-        row_id INT, id BIGINT, 
-        patient_id BIGINT, person_id BIGINT, 
-        non_core_concept_id INT, organization_id BIGINT,
-        value_set_code_type VARCHAR(255), 
-        PRIMARY KEY (row_id) ) AS 
-     SELECT (@row_no := @row_no + 1) AS row_id, 
-          o.id AS id, o.id AS patient_id, o.person_id,
-          o.ethnic_code_concept_id AS non_core_concept_id, o.organization_id, 
-          cpt.value_set_code_type AS value_set_code_type 
-     FROM ', p_cohorttab,' c JOIN ', p_schema,'.patient o ON c.patient_id = o.id AND c.person_id = o.person_id AND c.organization_id = o.organization_id 
-     JOIN ', p_allconcepttab,' cpt ON cpt.non_core_concept_id = o.ethnic_code_concept_id
-     JOIN (SELECT @row_no := 0) t 
-     WHERE cpt.data_type = ', QUOTE(TempValue));
-
-   END IF;
-
+   SET @sql = CONCAT("
+   CREATE TEMPORARY TABLE qry_tmp (
+   row_id INT, id BIGINT, patient_id BIGINT, person_id BIGINT, organization_id BIGINT, PRIMARY KEY (row_id) ) AS 
+   SELECT (@row_no := @row_no + 1) AS row_id, c.patient_id, c.person_id, c.organization_id 
+   FROM ", p_cohorttab," c JOIN (SELECT @row_no := 0) t "); 
    PREPARE stmt FROM @sql;
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;
 
+   ALTER TABLE qry_tmp ADD INDEX pat_per_org_idx (patient_id, person_id, organization_id);
+
    SET @row_id = 0;
 
-   
    WHILE EXISTS (SELECT row_id from qry_tmp WHERE row_id > @row_id AND row_id <= @row_id + 1000) DO
 
-      IF TempValue IN ('Observation','Medication') THEN  
+ IF TempValue = 'Observation' THEN  
 
          SET @sql = CONCAT("INSERT INTO  ", p_observationtab, " 
-         SELECT q.id, q.patient_id, q.person_id, q.clinical_effective_date, q.result_value, q.non_core_concept_id, 
-         q.organization_id, q.value_set_code_type FROM qry_tmp q 
-         WHERE q.row_id > @row_id AND q.row_id <= @row_id + 1000");
+         SELECT o.id, q.patient_id, q.person_id, o.clinical_effective_date, o.result_value, o.non_core_concept_id, q.organization_id, c.value_set_code_type   
+         FROM qry_tmp q JOIN ", p_schema,".observation o ON q.patient_id = o.patient_id AND q.person_id = o.person_id AND q.organization_id = o.organization_id 
+         JOIN ", p_allconcepttab," c ON c.non_core_concept_id = o.non_core_concept_id  
+         WHERE c.data_type = 'Observation' 
+         AND q.row_id > @row_id AND q.row_id <= @row_id + 1000");
+
+      ELSEIF TempValue = 'Medication' THEN  
+
+         SET @sql = CONCAT("INSERT INTO  ", p_observationtab, " 
+         SELECT m.id, q.patient_id, q.person_id, m.clinical_effective_date, m.quantity_value, m.non_core_concept_id, q.organization_id, c.value_set_code_type   
+         FROM qry_tmp q JOIN ", p_schema,".medication_statement m ON q.patient_id = m.patient_id AND q.person_id = m.person_id AND q.organization_id = m.organization_id 
+         JOIN ", p_allconcepttab," c ON c.non_core_concept_id = m.non_core_concept_id  
+         WHERE c.data_type = 'Medication' 
+         AND q.row_id > @row_id AND q.row_id <= @row_id + 1000");
 
       ELSEIF TempValue = 'Encounter' THEN
 
          SET @sql = CONCAT("INSERT INTO  ", p_observationtab, " 
-         SELECT q.id, q.patient_id, q.person_id, q.clinical_effective_date, NULL, q.non_core_concept_id, q.organization_id, q.value_set_code_type 
-         FROM qry_tmp q WHERE q.row_id > @row_id AND q.row_id <= @row_id + 1000");
-
-      ELSEIF TempValue = 'Encounter' THEN
-
-         SET @sql = CONCAT("INSERT INTO  ", p_observationtab, " 
-         SELECT q.id, q.patient_id, q.person_id, q.clinical_effective_date, NULL, q.non_core_concept_id, q.organization_id, q.value_set_code_type 
-         FROM qry_tmp q WHERE q.row_id > @row_id AND q.row_id <= @row_id + 1000");
+         SELECT en.id, q.patient_id, q.person_id, en.clinical_effective_date, NULL, en.non_core_concept_id, q.organization_id, c.value_set_code_type   
+         FROM qry_tmp q JOIN ", p_schema,".encounter en ON q.patient_id = en.patient_id AND q.person_id = en.person_id AND q.organization_id = en.organization_id 
+         JOIN ", p_allconcepttab," c ON c.non_core_concept_id = en.non_core_concept_id  
+         WHERE c.data_type = 'Encounter' 
+         AND q.row_id > @row_id AND q.row_id <= @row_id + 1000");
 
       ELSEIF TempValue = 'Ethnicity' THEN
 
          SET @sql = CONCAT("INSERT INTO  ", p_observationtab, " 
-         SELECT q.id, q.patient_id, q.person_id, NULL, NULL, q.non_core_concept_id, q.organization_id, q.value_set_code_type 
-         FROM qry_tmp q WHERE q.row_id > @row_id AND q.row_id <= @row_id + 1000");
+         SELECT p.id, q.patient_id, q.person_id, NULL, NULL, p.ethnic_code_concept_id, q.organization_id, c.value_set_code_type   
+         FROM qry_tmp q JOIN ", p_schema,".patient p ON q.patient_id = p.id AND q.person_id = p.person_id AND q.organization_id = p.organization_id 
+         JOIN ", p_allconcepttab," c ON c.non_core_concept_id = p.ethnic_code_concept_id  
+         WHERE c.data_type = 'Ethnicity' 
+         AND q.row_id > @row_id AND q.row_id <= @row_id + 1000");
 
       END IF;
 
@@ -173,28 +113,12 @@ BEGIN
 
    END WHILE; 
 
-   
-
-      -- fetch next table
+      -- fetch the next data type
       SET data_types = INSERT(data_types, 1, frontlen + 1, '');
 
  END LOOP;
 
-  -- add index
-   SET @sql = CONCAT('ALTER TABLE ', p_observationtab, ' ADD INDEX patient_idx(patient_id)');
-   PREPARE stmt FROM @sql;
-   EXECUTE stmt;
-   DEALLOCATE PREPARE stmt;
-
-   SET @sql = CONCAT('ALTER TABLE ', p_observationtab, ' ADD INDEX org_idx(organization_id)');
-   PREPARE stmt FROM @sql;
-   EXECUTE stmt;
-   DEALLOCATE PREPARE stmt;
-
-   SET @sql = CONCAT('ALTER TABLE ', p_observationtab, ' ADD INDEX non_core_concept_idx(non_core_concept_id)');
-   PREPARE stmt FROM @sql;
-   EXECUTE stmt;
-   DEALLOCATE PREPARE stmt;
+   DROP TEMPORARY TABLE IF EXISTS qry_tmp;
 
    SET @sql = CONCAT('ALTER TABLE ', p_observationtab, ' ADD INDEX value_set_code_type_idx(value_set_code_type)');
    PREPARE stmt FROM @sql;
