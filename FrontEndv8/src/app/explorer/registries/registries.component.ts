@@ -200,17 +200,17 @@ export class RegistriesComponent implements OnInit {
     return value+" %";
   }
 
-  valueDialClass(percentage) {
-    if (percentage>=65)
+  valueDialClass(percentage, target) {
+    if (percentage>=target)
       return "good";
-    else if (percentage<65)
+    else if (percentage<target)
       return "poor";
   }
 
-  valueClass(percentage) {
-    if (percentage>=65)
+  valueClass(percentage, target) {
+    if (percentage>=target)
       return "goodValue";
-    else if (percentage<65)
+    else if (percentage<target)
       return "poorValue";
   }
 

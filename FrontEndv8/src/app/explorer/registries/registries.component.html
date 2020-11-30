@@ -51,8 +51,8 @@
           <td mat-cell *matCellDef="let element" >
             <table>
               <tr>
-                <td style="width: 250px;text-align: left" *ngFor="let index of element.allColumns.split('~')" (click)="getOrgs('Indicator', index>0 ? (index*1).toLocaleString() : index)" matTooltipClass="tooltip" matTooltipPosition="right" [matTooltip]="getQuery(index>0 ? (index*1).toLocaleString() : index)" >
-                  <table style="text-align: left">
+                <td style="width: 250px;text-align: left" *ngFor="let index of element.allColumns.split('~'); index as i" (click)="getOrgs('Indicator', index>0 ? (index*1).toLocaleString() : index)" matTooltipClass="tooltip" matTooltipPosition="right" [matTooltip]="getQuery(index>0 ? (index*1).toLocaleString() : index)" >
+                  <table style="text-align: left" *ngIf="index.indexOf('.0000')<0">
                     <tr>
                       <td *ngIf="index>0&&toPercent(index,element.registrySize)>0">
                         <mwl-gauge
@@ -62,29 +62,28 @@
                           [dialEndAngle]="-90.001"
                           [value]=toPercent(index,element.registrySize)
                           [animated]="true"
-                          [valueDialClass]="valueDialClass(toPercent(index,element.registrySize))"
-                          [valueClass]="valueClass(toPercent(index,element.registrySize))"
+                          [valueDialClass]="valueDialClass(toPercent(index,element.registrySize),element.allColumns.split('~')[i+1].split('.')[0]*1)"
+                          [valueClass]="valueClass(toPercent(index,element.registrySize),element.allColumns.split('~')[i+1].split('.')[0]*1)"
                           [animationDuration]="1">
                         </mwl-gauge>
 
                       </td>
                       <td style="text-align: left">
                         <div>
-
                           <span [ngClass]="{
-                        'neutral': toPercent(index,element.registrySize)<65&&element.registrySize!='-1'&&element.registrySize!='',
-                        'good': toPercent(index,element.registrySize)>=65}"
+                        'neutral': toPercent(index,element.registrySize)<element.allColumns.split('~')[i+1].split('.')[0]*1,
+                        'good': toPercent(index,element.registrySize)>=element.allColumns.split('~')[i+1].split('.')[0]*1}"
                         *ngIf="index>0&&toPercent(index,element.registrySize)>0">Criteria met: </span>
                           <span [ngClass]="{
-                        'neutral': toPercent(index,element.registrySize)<65&&element.registrySize!='-1'&&element.registrySize!='',
-                        'goodBold': toPercent(index,element.registrySize)>=65}">{{getSize(index, element.registrySize)}}</span>
+                        'neutral': toPercent(index,element.registrySize)<element.allColumns.split('~')[i+1].split('.')[0]*1,
+                        'good': toPercent(index,element.registrySize)>=element.allColumns.split('~')[i+1].split('.')[0]*1}">{{getSize(index, element.registrySize)}}</span>
                           <div [ngClass]="{
-                        'poor': toPercent(index,element.registrySize)<65&&element.registrySize!='-1'&&element.registrySize!='',
-                        'neutral': toPercent(index,element.registrySize)>=65}"
+                        'poor': toPercent(index,element.registrySize)<element.allColumns.split('~')[i+1].split('.')[0]*1,
+                        'neutral': toPercent(index,element.registrySize)>=element.allColumns.split('~')[i+1].split('.')[0]*1}"
                         *ngIf="index>0&&toPercent(index,element.registrySize)>0" style="cursor: pointer" (click)="showPatientDialog()">Not met:
                           <span [ngClass]="{
-                        'poorBold': toPercent(index,element.registrySize)<65&&element.registrySize!='-1'&&element.registrySize!='',
-                        'neutral': toPercent(index,element.registrySize)>=65}">{{(element.registrySize-index).toLocaleString()}}</span></div>
+                        'poor': toPercent(index,element.registrySize)<element.allColumns.split('~')[i+1].split('.')[0]*1,
+                        'neutral': toPercent(index,element.registrySize)>=element.allColumns.split('~')[i+1].split('.')[0]*1}">{{(element.registrySize-index).toLocaleString()}}</span></div>
 
                         </div>
                       </td>
