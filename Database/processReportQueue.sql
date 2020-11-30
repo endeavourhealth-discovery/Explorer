@@ -10,8 +10,6 @@ BEGIN
 DECLARE queryid INT;
 DECLARE query_text TEXT;
 
-SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
-
 -- update queue if any existing query been updated
 UPDATE queue q JOIN query_library l ON q.query_id = l.id 
 SET q.query = l.query, 
@@ -37,8 +35,6 @@ DELETE FROM queue
 WHERE query_id NOT IN (SELECT id FROM query_library)
 AND status <> 'A'; -- i.e. not already processing
 
-START TRANSACTION;
-
 SELECT query_id, query INTO queryid, query_text
 FROM queue 
 WHERE status = 'N' 
@@ -46,16 +42,12 @@ AND next_run_date = CURDATE()
 AND 2 >= (SELECT COUNT(*) FROM queue WHERE status = 'A')  -- less than 3 query ids to process
 LIMIT 1 FOR UPDATE;
 
--- set status to active i.e. processing and commit record
+-- set status to active - allowing only 3 query ids to process if run concurrently
 
 IF queryid IS NOT NULL THEN
  UPDATE queue SET status = 'A' 
  WHERE query_id = queryid;
 END IF;
-
--- allowing only 3 query ids to process if run concurrently
-
-COMMIT;
 
 IF queryid IS NOT NULL THEN
 
