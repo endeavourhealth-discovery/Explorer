@@ -27,6 +27,7 @@ export class RegistriesComponent implements OnInit {
   events: any;
   dataSource: MatTableDataSource<any>;
   currentCCG: string = '';
+  currentRegistry: string = '';
   queryList: queryList[];
   filter: string;
 
@@ -75,7 +76,7 @@ export class RegistriesComponent implements OnInit {
       const matchFilter = [];
       filterArray.forEach(filter => {
         const customFilter = [];
-        customFilter.push(data.org.trim().toLowerCase().indexOf(filter) !== -1 || data.org.trim().toLowerCase().indexOf('back to') !== -1);
+        customFilter.push(data.org.trim().toLowerCase().indexOf(filter) !== -1 || data.org.trim().toLowerCase().indexOf('go to denominator registry') !== -1);
         matchFilter.push(customFilter.some(Boolean));
       })
       return matchFilter.some(Boolean);
@@ -106,20 +107,37 @@ export class RegistriesComponent implements OnInit {
   }
 
   getOrgs(ccg: any,registry: any) {
-   if (this.selection.selected.length > 0)
-     return;
 
-   if (ccg=="Indicator")
+    if (this.selection.selected.length > 0)
+      return;
+
+    if (ccg=='Go to denominator registry') {
       ccg = this.currentCCG;
-    else if (ccg=='Back to Clinical Commissioning Groups') {
-     ccg = '';
-     this.filter = '';
-   }
+      registry = this.currentRegistry;
 
+    }
 
-    this.currentCCG = ccg;
+    if (this.currentRegistry=='')
+      this.currentRegistry = registry;
+
+    if (registry=='' && this.currentRegistry!= '')
+      registry = this.currentRegistry;
+
+    if (this.currentCCG=='')
+      this.currentCCG = ccg;
+
+    if (ccg=='' && this.currentCCG!= '')
+      ccg = this.currentCCG;
 
     this.loadEvents(ccg, registry);
+
+  }
+
+  restart() {
+    this.currentRegistry = '';
+    this.currentCCG = '';
+    this.filter = '';
+    this.loadEvents('', '');
   }
 
   toPercent(registrysize: any, listsize: any) {
