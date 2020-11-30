@@ -6,12 +6,14 @@ DELIMITER //
 
 CREATE PROCEDURE buildRegistries (
     IN p_query_id INT,
-    IN p_patientcohorttab VARCHAR(64)
+    IN p_patientcohorttab VARCHAR(64),
+    IN p_targetPercentage VARCHAR(10)
 )
 
 BEGIN
 
   DECLARE parentregistry VARCHAR(500) DEFAULT NULL;
+  DECLARE targetPercentage VARCHAR(10) DEFAULT NULL;
 
   DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -21,6 +23,12 @@ BEGIN
         RESIGNAL; -- rethrow the error
     END;   
 
+  IF p_targetPercentage IS NULL OR p_targetPercentage = '' THEN
+     SET targetPercentage = NULL;
+  ELSE
+     SET targetPercentage = p_targetPercentage;
+  END IF;
+  
   SELECT q1.name, 
          q1.registry_name, 
          q2.registry_name AS parent_registry 
@@ -55,8 +63,8 @@ BEGIN
   DEALLOCATE PREPARE stmt;
 
   -- add new entries to registries
-  INSERT INTO registries (registry, query, ccg, practice_name, ods_code, list_size, registry_size, updated, parent_registry) 
-  SELECT @registry_name, @query, q.ccg, q.registered_practice, q.ods_code, pls.list_size, q.registry_size, now(), parentregistry 
+  INSERT INTO registries (registry, query, ccg, practice_name, ods_code, list_size, registry_size, updated, parent_registry, target_percentage) 
+  SELECT @registry_name, @query, q.ccg, q.registered_practice, q.ods_code, pls.list_size, q.registry_size, now(), parentregistry, targetPercentage  
   FROM qry_reg q LEFT JOIN practice_list_sizes pls ON q.ods_code = pls.ods_code;
 
   -- add a new entry for registry trend

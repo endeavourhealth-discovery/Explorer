@@ -8,6 +8,7 @@ CREATE PROCEDURE reportGenerator(query_id INT, query JSON)
 BEGIN
 
 -- declare variables --
+DECLARE targetPercentage VARCHAR(10) DEFAULT NULL;
 DECLARE providerOrganisation VARCHAR(5000) DEFAULT NULL;
 DECLARE includedOrganisation VARCHAR(5000) DEFAULT NULL; 
 DECLARE registrationStatus VARCHAR(255) DEFAULT NULL; 
@@ -290,6 +291,7 @@ DECLARE tempTables VARCHAR(5000);
 -- set variables -- 
 SET sourceSchema = 'subscriber_pi_rv';
 
+SET targetPercentage = JSON_UNQUOTE(JSON_EXTRACT(query,'$.targetPercentage')); 
 SET providerOrganisation = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.providerOrganisation'),'[',''),']',''),'"','');
 SET includedOrganisation = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.includedOrganisation'),'[',''),']',''),'"','');
 SET registrationStatus = JSON_UNQUOTE(JSON_EXTRACT(query,'$.registrationStatus'));
@@ -630,8 +632,23 @@ SET includeExclude5aString = @includeExclude5aString;
 CALL buildFinalPatientCohort(query_id, patient_cohort_tmp, observation_tmp, includeExclude1String, includeExclude1aString, includeExclude1bString, 
 includeExclude1cString, includeExclude1dString,includeExclude2String, includeExclude2aString, includeExclude3String, includeExclude3aString, includeExclude4String, 
 includeExclude5String, includeExclude5aString, sourceSchema);
+-- clean up --
+-- remove tmp tables
+ SET tempTables = CONCAT(org_tmp,',',observation_tmp,',',cohort_tmp,',',
+ all_valueset_tmp,',',all_concept_tmp,',',
+ incValueSet1_tmp,',',incConcept1_tmp,',',observation1_tmp,',',
+ incValueSet1a_tmp,',',incConcept1a_tmp,',',observation1a_tmp,',',
+ incValueSet1b_tmp,',',incConcept1b_tmp,',',observation1b_tmp,',',incValueSet1c_tmp,',',incConcept1c_tmp,',',observation1c_tmp,',',
+ incValueSet1d_tmp,',',incConcept1d_tmp,',',observation1d_tmp,',',incValueSet2_tmp,',',incConcept2_tmp,',',observation2_tmp,',',
+ incValueSet2a_tmp,',',incConcept2a_tmp,',',observation2a_tmp,',',incValueSet3_tmp,',',incConcept3_tmp,',',incTestedValueSet3_tmp,',',
+ incTestedConcept3_tmp,',',observation3_tmp,',',incValueSet3a_tmp,',',incConcept3a_tmp,',',incTestedValueSet3a_tmp,',',
+ incTestedConcept3a_tmp,',',observation3a_tmp,',',incValueSet4_tmp,',',incConcept4_tmp,',',incFollowedByValueSet4_tmp,',',incFollowedByConcept4_tmp ,',',observation4_tmp,',',
+ incValueSet5_tmp,',',incConcept5_tmp,',',observation5_tmp,',',incValueSet5a_tmp,',',incConcept5a_tmp,',',observation5a_tmp);
+
+CALL dropTempTables(tempTables);
+
 -- update registries
-CALL buildRegistries(query_id, patient_cohort_tmp);
+CALL buildRegistries(query_id, patient_cohort_tmp, targetPercentage);
 -- build result datasets
 CALL buildResultDatasets(query_id, patient_cohort_tmp, demographics, encounters, medication, currentMedication, clinicalEvents, activeProblems, 
 dateFromEncounters, dateToEncounters, dateFromMedication, dateToMedication, dateFromClinicalEvents, dateToClinicalEvents, selectedClinicalTypes, 
@@ -649,14 +666,7 @@ sourceSchema, query_id, patient_cohort_tmp);
 CALL updateQueue(query_id, schedule);
 -- clean up --
 -- remove temp tables
- SET tempTables = CONCAT(org_tmp,',',store_tmp,',',cohort_tmp ,',',observation_tmp,',',all_valueset_tmp,',',all_concept_tmp,',',
- incValueSet1_tmp,',',incConcept1_tmp,',',observation1_tmp,',',incValueSet1a_tmp,',',incConcept1a_tmp,',',observation1a_tmp,',',
- incValueSet1b_tmp,',',incConcept1b_tmp,',',observation1b_tmp,',',incValueSet1c_tmp,',',incConcept1c_tmp,',',observation1c_tmp,',',
- incValueSet1d_tmp,',',incConcept1d_tmp,',',observation1d_tmp,',',incValueSet2_tmp,',',incConcept2_tmp,',',observation2_tmp,',',
- incValueSet2a_tmp,',',incConcept2a_tmp,',',observation2a_tmp,',',incValueSet3_tmp,',',incConcept3_tmp,',',incTestedValueSet3_tmp,',',
- incTestedConcept3_tmp,',',observation3_tmp,',',incValueSet3a_tmp,',',incConcept3a_tmp,',',incTestedValueSet3a_tmp,',',
- incTestedConcept3a_tmp,',',observation3a_tmp,',',incValueSet4_tmp,',',incConcept4_tmp,',',incFollowedByValueSet4_tmp,',',incFollowedByConcept4_tmp ,',',observation4_tmp,',',
- incValueSet5_tmp,',',incConcept5_tmp,',',observation5_tmp,',',incValueSet5a_tmp,',',incConcept5a_tmp,',',observation5a_tmp,',',encounterValueSet_tmp,',',encounterConcept_tmp,',',
+ SET tempTables = CONCAT(store_tmp,',',encounterValueSet_tmp,',',encounterConcept_tmp,',',
  medicationValueSet_tmp,',',medicationConcept_tmp,',',clinicalTypes_tmp,',',clinicalTypesConcept_tmp,',',clinicalEventValueSet_tmp,',',clinicalEventConcept_tmp,',',
  seriesValueset_tmp,',',seriesConcept_tmp,',',patient_cohort_tmp);
 
