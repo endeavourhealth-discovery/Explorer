@@ -232,9 +232,11 @@ BEGIN
          SET @alt = CONCAT('ALTER TABLE ', output_table,' ADD PRIMARY KEY(Id)' );
          PREPARE stmt FROM @alt;
          EXECUTE stmt;
-         DEALLOCATE PREPARE stmt;    
+         DEALLOCATE PREPARE stmt;   
 
-         SET @cnt = CONCAT('SELECT BINARY COUNT(*) FROM ', output_table,' INTO @total');
+         -- for testing only
+         
+      /*   SET @cnt = CONCAT('SELECT BINARY COUNT(*) FROM ', output_table,' INTO @total');
 
          PREPARE stmt FROM @cnt;
          EXECUTE stmt;
@@ -245,7 +247,7 @@ BEGIN
 
          PREPARE stmt FROM @cnt;
          EXECUTE stmt;
-         DEALLOCATE PREPARE stmt; 
+         DEALLOCATE PREPARE stmt;  */
 
 
       END IF;
