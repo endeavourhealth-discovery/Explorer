@@ -1,4 +1,4 @@
-USE subscriber_pi_rv;
+-- USE subscriber_pi_rv;
 
 -- function to retrieve the code field on the concept table based on the concept id
 DROP FUNCTION IF EXISTS getConceptCode;
