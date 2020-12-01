@@ -1,4 +1,4 @@
-USE subscriber_pi_rv;
+-- USE subscriber_pi_rv;
 
 -- function to retrieve the patient's current address
 DROP FUNCTION IF EXISTS getCurrentAddress;

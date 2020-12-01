@@ -1,4 +1,4 @@
-USE subscriber_pi_rv;
+-- USE subscriber_pi_rv;
 
 -- function to retrieve the patient's name
 DROP FUNCTION IF EXISTS getPatientName;

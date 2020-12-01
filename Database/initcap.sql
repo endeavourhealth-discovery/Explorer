@@ -1,4 +1,4 @@
-USE subscriber_pi_rv;
+-- USE subscriber_pi_rv;
 
 -- function to convert the first letter of a word to upper case
 DROP FUNCTION IF EXISTS initcap;
