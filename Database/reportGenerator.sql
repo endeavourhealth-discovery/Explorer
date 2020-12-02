@@ -647,14 +647,16 @@ includeExclude5String, includeExclude5aString, sourceSchema);
 
 CALL dropTempTables(tempTables);
 
--- update registries
-CALL buildRegistries(query_id, patient_cohort_tmp, targetPercentage);
 -- build result datasets
 CALL buildResultDatasets(query_id, patient_cohort_tmp, demographics, encounters, medication, currentMedication, clinicalEvents, activeProblems, 
 dateFromEncounters, dateToEncounters, dateFromMedication, dateToMedication, dateFromClinicalEvents, dateToClinicalEvents, selectedClinicalTypes, 
 selectedEncounterValueSet, selectedMedicationValueSet, selectedClinicalEventValueSet, clinicalTypes_tmp,  clinicalTypesConcept_tmp, encounterValueSet_tmp, 
 encounterConcept_tmp, medicationValueSet_tmp, medicationConcept_tmp, clinicalEventValueSet_tmp, clinicalEventConcept_tmp, sourceSchema, store_tmp, @eventTypes);
 SET eventTypes = @eventTypes;
+
+-- update registries
+CALL buildRegistries(query_id, patient_cohort_tmp, targetPercentage);
+
 -- build dataset outputs
 CALL buildDatasetOutputTables(selectedDemographicFields, selectedEncounterFields, selectedMedicationFields, selectedClinicalEventFields, 
 eventTypes, store_tmp, sourceSchema, query_id, patient_cohort_tmp);

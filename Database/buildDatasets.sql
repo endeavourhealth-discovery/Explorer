@@ -81,6 +81,14 @@ CREATE TABLE IF NOT EXISTS encounter_dataset (
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 
+   -- always process DEMOGRAPHICS to get result dataset
+   IF LENGTH(TRIM(p_eventTypeString)) = 0 OR p_eventTypeString IS NULL THEN
+      SET p_eventTypeString = 'DEMOGRAPHICS';
+   ELSE
+        IF LOCATE('DEMOGRAPHICS', p_eventTypeString) = 0 THEN
+           SET p_eventTypeString = CONCAT(p_eventTypeString,',DEMOGRAPHICS');
+        END IF;
+   END IF;
 
     processloop:
     LOOP  

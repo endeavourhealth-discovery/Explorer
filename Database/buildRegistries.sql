@@ -15,6 +15,12 @@ BEGIN
   DECLARE parentregistry VARCHAR(500) DEFAULT NULL;
   DECLARE targetPercentage VARCHAR(10) DEFAULT NULL;
 
+  DECLARE query VARCHAR(500) DEFAULT NULL;
+  DECLARE registry_name VARCHAR(500) DEFAULT NULL;
+  DECLARE parent_registry VARCHAR(500) DEFAULT NULL;
+  DECLARE parent_qry_id INT DEFAULT NULL;
+
+
   DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
       GET DIAGNOSTICS CONDITION 1
@@ -31,17 +37,18 @@ BEGIN
   
   SELECT q1.name, 
          q1.registry_name, 
-         q2.registry_name AS parent_registry 
-         INTO @query, @registry_name, @parent_registry
+         q2.registry_name AS parent_registry,
+         q2.id AS parent_qry_id
+         INTO query, registry_name, parent_registry, parent_qry_id
   FROM query_library q1 LEFT JOIN query_library q2 ON q1.denominator_query = q2.name
   WHERE q1.id = p_query_id;
 
-  IF @parent_registry IS NULL THEN
+  IF parent_registry IS NULL THEN
      SET parentregistry = NULL;
-     SET @parent_registry = 'reg.parent_registry IS NULL';
+     SET parent_registry = 'reg.parent_registry IS NULL';
   ELSE
-     SET parentregistry = @parent_registry;
-     SET @parent_registry = CONCAT('reg.parent_registry = ', BINARY QUOTE(@parent_registry));
+     SET parentregistry = parent_registry;
+     SET parent_registry = CONCAT('reg.parent_registry = ', QUOTE(parent_registry));
   END IF;
 
   DROP TEMPORARY TABLE IF EXISTS qry_reg;
@@ -56,20 +63,42 @@ BEGIN
 
   -- delete previous entries if exist
   SET @sql = CONCAT("DELETE FROM registries reg 
-                    WHERE reg.query = ", BINARY QUOTE(@query)," AND reg.registry = ", BINARY QUOTE(@registry_name)," AND ", @parent_registry,
+                    WHERE reg.query = ", QUOTE(query)," AND reg.registry = ", QUOTE(registry_name)," AND ", parent_registry,
                     " AND EXISTS (SELECT 1 FROM qry_reg q WHERE reg.ods_code = q.ods_code)");
   PREPARE stmt FROM @sql;
   EXECUTE stmt;
   DEALLOCATE PREPARE stmt;
 
+  IF parent_qry_id IS NOT NULL THEN
+
+    DROP TEMPORARY TABLE IF EXISTS qry_list_size;
+    SET @sql = CONCAT("CREATE TEMPORARY TABLE qry_list_size AS 
+    SELECT pd.query_id, COUNT(DISTINCT(pd.patient_id)) AS list_size 
+    FROM person_dataset pd WHERE EXISTS (SELECT 1 FROM query_library q WHERE q.id = pd.query_id) 
+    AND pd.query_id = ", parent_qry_id," GROUP BY pd.query_id" ); 
+    PREPARE stmt FROM @sql;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+
+    SELECT list_size INTO @list_size FROM qry_list_size;
+
+    -- add new entries to registries
+  INSERT INTO registries (registry, query, ccg, practice_name, ods_code, list_size, registry_size, updated, parent_registry, target_percentage) 
+  SELECT registry_name, query, q.ccg, q.registered_practice, q.ods_code, @list_size, q.registry_size, now(), parentregistry, targetPercentage  
+  FROM qry_reg q;
+
+  ELSE
+
   -- add new entries to registries
   INSERT INTO registries (registry, query, ccg, practice_name, ods_code, list_size, registry_size, updated, parent_registry, target_percentage) 
-  SELECT @registry_name, @query, q.ccg, q.registered_practice, q.ods_code, pls.list_size, q.registry_size, now(), parentregistry, targetPercentage  
+  SELECT registry_name, query, q.ccg, q.registered_practice, q.ods_code, pls.list_size, q.registry_size, now(), parentregistry, targetPercentage  
   FROM qry_reg q LEFT JOIN practice_list_sizes pls ON q.ods_code = pls.ods_code;
+
+  END IF;
 
   -- add a new entry for registry trend
   INSERT INTO dashboard_results_0 (`grouping`, name, series_name, series_value)
-  SELECT 'registry_trend', CONCAT(UPPER(q.registered_practice),' (', q.ods_code,') - ', @registry_name), curdate(), q.registry_size 
+  SELECT 'registry_trend', CONCAT(UPPER(q.registered_practice),' (', q.ods_code,') - ', registry_name), curdate(), q.registry_size 
   FROM qry_reg q;
 
 
