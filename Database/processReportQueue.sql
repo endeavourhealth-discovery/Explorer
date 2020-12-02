@@ -9,6 +9,7 @@ BEGIN
 
 DECLARE queryid INT;
 DECLARE query_text TEXT;
+DECLARE flag VARCHAR(1) DEFAULT NULL;
 
 -- update queue if any existing query been updated
 UPDATE queue q JOIN query_library l ON q.query_id = l.id 
@@ -35,21 +36,33 @@ DELETE FROM queue
 WHERE query_id NOT IN (SELECT id FROM query_library)
 AND status <> 'A'; -- i.e. not already processing
 
-SELECT query_id, query INTO queryid, query_text
+-- fetch the next id to process
+SELECT query_id INTO queryid
 FROM queue 
 WHERE status = 'N' 
 AND next_run_date = CURDATE()
 AND 2 >= (SELECT COUNT(*) FROM queue WHERE status = 'A')  -- less than 3 query ids to process
-LIMIT 1 FOR UPDATE;
+LIMIT 1;
 
--- set status to active - allowing only 3 query ids to process if run concurrently
+-- check for parent ids
+CALL getNextQueryIdToProcess(queryid,  @next_query_id);
+-- if found, override query id with the latest parent ancestor id
+SET queryid = @next_query_id;
+
+  -- check if the parent id is already running
+  SELECT 'Y' INTO flag 
+  FROM queue WHERE status = 'A' AND query_id = queryid;
+
+  -- if yes, set the query id to null and skip the run
+  IF flag = 'Y' THEN
+    SET queryid = NULL;
+  END IF;
 
 IF queryid IS NOT NULL THEN
- UPDATE queue SET status = 'A' 
- WHERE query_id = queryid;
-END IF;
 
-IF queryid IS NOT NULL THEN
+SELECT query INTO query_text FROM queue WHERE query_id = queryid;
+
+UPDATE queue SET status = 'A' WHERE query_id = queryid;
 
 UPDATE queue SET timesubmit = now() WHERE query_id = queryid;
 
