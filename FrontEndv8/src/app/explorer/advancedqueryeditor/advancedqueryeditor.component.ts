@@ -1280,6 +1280,8 @@ export class AdvancedQueryEditorComponent implements OnInit {
     };
     this.jsonQuery = JSON.stringify(query);
 
+    this.jsonQuery = this.jsonQuery.replace(/\:"NaN-NaN-NaN"/gi, "\:\"\"");
+
     if (this.denominatorQuery==undefined)
       this.denominatorQuery = '';
 

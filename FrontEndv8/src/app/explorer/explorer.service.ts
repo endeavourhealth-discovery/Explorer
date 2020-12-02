@@ -121,15 +121,16 @@ export class ExplorerService {
   }
 
   saveQuery(type?: string, name?: string, registryName?: string, denominatorQuery?:string, id?: string, jsonQuery?: string): Observable<any> {
-    let params = new HttpParams();
-    params = params.append('type', type);
-    params = params.append('name', name);
-    params = params.append('registryName', registryName);
-    params = params.append('denominatorQuery', denominatorQuery);
-    params = params.append('id', id);
-    params = params.append('jsonQuery', jsonQuery);
+    let body = {
+      type: type,
+      name: name,
+      registryName: registryName,
+      denominatorQuery: denominatorQuery,
+      id: id,
+      jsonQuery: jsonQuery
+    }
 
-    return this.http.get('api/events/queryeditor', {params});
+    return this.http.post<string>('api/events/queryeditor', body);
   }
 
   deleteQuery(id?: string): Observable<any> {

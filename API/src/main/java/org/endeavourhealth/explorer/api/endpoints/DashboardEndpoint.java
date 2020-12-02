@@ -245,21 +245,16 @@ public class DashboardEndpoint {
         }
     }
 
-    @GET
+    @POST
     @Path("/queryeditor")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response saveQuery(@Context SecurityContext sc,
-                                 @QueryParam("type") String type,
-                                 @QueryParam("name") String name,
-                                 @QueryParam("registryName") String registryName,
-                                 @QueryParam("denominatorQuery") String denominatorQuery,
-                                 @QueryParam("id") String id,
-                                 @QueryParam("jsonQuery") String jsonQuery) throws Exception {
+                              QueryLibrary params) throws Exception {
         LOG.debug("saveQuery");
 
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
-            viewerDAL.saveQuery(type, name, registryName, denominatorQuery, id, jsonQuery);
+            viewerDAL.saveQuery(params.getType(), params.getName(), params.getRegistryName(), params.getDenominatorQuery(), params.getId().toString(), params.getJsonQuery());
 
             return Response
                     .ok()
