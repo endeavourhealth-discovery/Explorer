@@ -1357,7 +1357,6 @@ export class AdvancedQueryEditorComponent implements OnInit {
 
     this.disableForm = this.type=='' || this.type==undefined ||
       this.name=='' || this.name==undefined ||
-      this.registryName=='' || this.registryName==undefined ||
       this.selectedOrganisation=='' || this.selectedOrganisation==undefined ||
       this.selectedRegistration=='' || this.selectedRegistration==undefined ||
       this.selectedDelivery=='' || this.selectedDelivery==undefined ||
