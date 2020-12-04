@@ -1007,12 +1007,8 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         return series;
     }
 
-    public PatientResult getPatientResult(Integer page, Integer size, String name, String chartName, String seriesName, String grouping, String queryId) throws Exception {
+    public PatientResult getPatientResult(Integer page, Integer size, String name, String queryId) throws Exception {
         PatientResult result = new PatientResult();
-
-        grouping = grouping.replaceAll(",","','");
-        grouping = "'" + grouping + "'";
-        grouping = " and `grouping` in ("+grouping+")";
 
         String sql = "";
 

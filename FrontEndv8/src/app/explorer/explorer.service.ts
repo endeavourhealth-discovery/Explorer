@@ -58,15 +58,12 @@ export class ExplorerService {
     return this.http.get('api/events/dashboardsingle', {params});
   }
 
-  getPatients(page?: number, size?: number, name?: string, chartName?: string, seriesName?: string, grouping?: string, queryId?: string): Observable<any> {
+  getPatients(page?: number, size?: number, name?: string, queryId?: string): Observable<any> {
 
     let params = new HttpParams();
     params = params.append('page', page.toString());
     params = params.append('size', size.toString());
     params = params.append('name', name);
-    params = params.append('chartName', chartName);
-    params = params.append('seriesName', seriesName);
-    params = params.append('grouping', grouping);
     params = params.append('queryId', queryId);
 
     return this.http.get('api/events/patients', {params});
