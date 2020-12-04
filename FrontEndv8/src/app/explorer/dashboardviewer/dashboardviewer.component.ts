@@ -1320,6 +1320,7 @@ export class DashboardViewerComponent implements OnInit {
   }
 
   pageChange1($event) {
+    console.log($event);
     this.pageNumber1 = $event.pageIndex + 1;
     this.pageSize1 = $event.pageSize;
     this.search1();
@@ -1465,5 +1466,11 @@ export class DashboardViewerComponent implements OnInit {
     this.orderColumn4 = $event.active;
     this.descending4 = $event.direction == 'desc' ? true : false;
     this.search4();
+  }
+
+  tablePatientSelect($event) {
+
+    let patientId = $event["Patient ID"];
+    window.location.href = "https://devgateway.discoverydataservice.net/record-viewer/#/summary?patient_id="+patientId;
   }
 }

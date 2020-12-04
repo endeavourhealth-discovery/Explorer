@@ -156,7 +156,7 @@ export class RegistriesComponent implements OnInit {
       height: '830px',
       width: '1600px',
 
-      data: {chartName: "covid_shielding_ccg", seriesName: "high/moderate risk (50-59)", ccgs: "NHS Tower Hamlets CCG"}
+      data: {chartName: "covid_shielding_ccg", seriesName: "high/moderate risk (50-59)", ccgs: "NHS Tower Hamlets CCG", queryId: "74"}
     });
 
     dialogRef.afterClosed().subscribe(result => {

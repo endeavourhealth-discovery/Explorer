@@ -1007,7 +1007,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         return series;
     }
 
-    public PatientResult getPatientResult(Integer page, Integer size, String name, String chartName, String seriesName, String grouping) throws Exception {
+    public PatientResult getPatientResult(Integer page, Integer size, String name, String chartName, String seriesName, String grouping, String queryId) throws Exception {
         PatientResult result = new PatientResult();
 
         grouping = grouping.replaceAll(",","','");
@@ -1031,16 +1031,14 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                     "join organization o on o.id = p.organization_id " +
                     "join concept con on con.dbid = e.registration_type_concept_id " +
                     "where p.id in "+
-                    "(SELECT patient_id FROM dashboards.dashboard_patients " +
-                    "where name = ? " +
-                    "and series_name = ? "+grouping+") "+
+                    "(SELECT patient_id FROM dashboards.person_dataset " +
+                    "where query_id = ?) " +
                     "LIMIT ?,?";
 
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
-                statement.setString(1, chartName);
-                statement.setString(2, seriesName);
-                statement.setInt(3, page * 10);
-                statement.setInt(4, size);
+                statement.setString(1, queryId);
+                statement.setInt(2, page * 10);
+                statement.setInt(3, size);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     result.setResults(getPatientSummaryList(resultSet));
                 }
@@ -1055,14 +1053,11 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                     "join organization o on o.id = p.organization_id " +
                     "join concept con on con.dbid = e.registration_type_concept_id " +
                     "where p.id in "+
-                    "(SELECT patient_id FROM dashboards.dashboard_patients " +
-                    "where name = ? " +
-                    "and series_name = ? "+grouping+")";
-
+                    "(SELECT patient_id FROM dashboards.person_dataset " +
+                    "where query_id = ?)";
 
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
-                statement.setString(1, chartName);
-                statement.setString(2, seriesName);
+                statement.setString(1, queryId);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     resultSet.next();
                     result.setLength(resultSet.getInt(1));
@@ -1082,17 +1077,15 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                     "join organization o on o.id = p.organization_id " +
                     "join concept con on con.dbid = e.registration_type_concept_id " +
                     "where p.id in "+
-                    "(SELECT patient_id FROM dashboards.dashboard_patients " +
-                    "where name = ? " +
-                    "and series_name = ? "+grouping+") "+
+                    "(SELECT patient_id FROM dashboards.person_dataset " +
+                    "where query_id = ?) " +
                     "and p.last_name like ? LIMIT ?,?";
 
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
-                statement.setString(1, chartName);
-                statement.setString(2, seriesName);
-                statement.setString(3, names[0]+"%");
-                statement.setInt(4, page * 10);
-                statement.setInt(5, size);
+                statement.setString(1, queryId);
+                statement.setString(2, names[0]+"%");
+                statement.setInt(3, page * 10);
+                statement.setInt(4, size);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     result.setResults(getPatientSummaryList(resultSet));
                 }
@@ -1107,15 +1100,13 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                     "join organization o on o.id = p.organization_id " +
                     "join concept con on con.dbid = e.registration_type_concept_id " +
                     "where p.id in "+
-                    "(SELECT patient_id FROM dashboards.dashboard_patients " +
-                    "where name = ? " +
-                    "and series_name = ? "+grouping+") "+
+                    "(SELECT patient_id FROM dashboards.person_dataset " +
+                    "where query_id = ?) " +
                     "and p.last_name like ?";
 
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
-                statement.setString(1, chartName);
-                statement.setString(2, seriesName);
-                statement.setString(3, names[0]+"%");
+                statement.setString(1, queryId);
+                statement.setString(2, names[0]+"%");
                 try (ResultSet resultSet = statement.executeQuery()) {
                     resultSet.next();
                     result.setLength(resultSet.getInt(1));
@@ -1135,18 +1126,16 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                     "join organization o on o.id = p.organization_id " +
                     "join concept con on con.dbid = e.registration_type_concept_id " +
                     "where p.id in "+
-                    "(SELECT patient_id FROM dashboards.dashboard_patients " +
-                    "where name = ? " +
-                    "and series_name = ? "+grouping+") "+
+                    "(SELECT patient_id FROM dashboards.person_dataset " +
+                    "where query_id = ?) " +
                     "and (p.first_names like ? and p.last_name like ?) LIMIT ?,?";
 
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
-                statement.setString(1, chartName);
-                statement.setString(2, seriesName);
-                statement.setString(3, names[0]+"%");
-                statement.setString(4, names[1]+"%");
-                statement.setInt(5, page * 10);
-                statement.setInt(6, size);
+                statement.setString(1, queryId);
+                statement.setString(2, names[0]+"%");
+                statement.setString(3, names[1]+"%");
+                statement.setInt(4, page * 10);
+                statement.setInt(5, size);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     result.setResults(getPatientSummaryList(resultSet));
                 }
@@ -1161,16 +1150,14 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                     "join organization o on o.id = p.organization_id " +
                     "join concept con on con.dbid = e.registration_type_concept_id " +
                     "where p.id in "+
-                    "(SELECT patient_id FROM dashboards.dashboard_patients " +
-                    "where name = ? " +
-                    "and series_name = ? "+grouping+") "+
+                    "(SELECT patient_id FROM dashboards.person_dataset " +
+                    "where query_id = ?) " +
                     "and (p.first_names like ? and p.last_name like ?)";
 
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
-                statement.setString(1, chartName);
-                statement.setString(2, seriesName);
-                statement.setString(3, names[0]+"%");
-                statement.setString(4, names[1]+"%");
+                statement.setString(1, queryId);
+                statement.setString(2, names[0]+"%");
+                statement.setString(3, names[1]+"%");
                 try (ResultSet resultSet = statement.executeQuery()) {
                     resultSet.next();
                     result.setLength(resultSet.getInt(1));
