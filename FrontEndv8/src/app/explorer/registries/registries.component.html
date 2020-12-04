@@ -82,7 +82,7 @@
                           <div [ngClass]="{
                         'poor': toPercent(index,element.registrySize)<element.allColumns.split('~')[i+1].split('.')[0]*1,
                         'neutral': toPercent(index,element.registrySize)>=element.allColumns.split('~')[i+1].split('.')[0]*1}"
-                        *ngIf="index>0&&toPercent(index,element.registrySize)>0" style="cursor: pointer" (click)="showPatientDialog()">Not met:
+                        *ngIf="index>0&&toPercent(index,element.registrySize)>0" style="cursor: pointer" (click)="patientList()">Not met:
                           <span [ngClass]="{
                         'poor': toPercent(index,element.registrySize)<element.allColumns.split('~')[i+1].split('.')[0]*1,
                         'neutral': toPercent(index,element.registrySize)>=element.allColumns.split('~')[i+1].split('.')[0]*1}">{{(element.registrySize-index).toLocaleString()}}</span></div>

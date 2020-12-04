@@ -147,16 +147,12 @@ export class RegistriesComponent implements OnInit {
     return val;
   }
 
-  showPatientDialog() {
-    this.patientDialog("", "");
-  }
-
-  patientDialog(chartName: any, seriesName: any) {
+  patientList() {
     const dialogRef = this.dialog.open(PatientComponent, {
       height: '830px',
       width: '1600px',
 
-      data: {chartName: "covid_shielding_ccg", seriesName: "high/moderate risk (50-59)", ccgs: "NHS Tower Hamlets CCG", queryId: "74"}
+      data: {queryId: "74"} // hard coded till fixed
     });
 
     dialogRef.afterClosed().subscribe(result => {
