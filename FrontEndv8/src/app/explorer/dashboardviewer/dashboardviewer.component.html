@@ -231,7 +231,8 @@
                      [allowSelect]="false"
                      (onPageChange)="pageChange2($event)"
                      (onOrderChange)="onOrderChange2($event)"
-                     (search)="onSearch2($event)">
+                     (search)="onSearch2($event)"
+                     (clicked)="tablePatientSelect($event)">
                   </app-generic-table-ssp>
                 </div>
               </div>
@@ -398,7 +399,8 @@
                      [allowSelect]="false"
                      (onPageChange)="pageChange3($event)"
                      (onOrderChange)="onOrderChange3($event)"
-                     (search)="onSearch3($event)">
+                     (search)="onSearch3($event)"
+                     (clicked)="tablePatientSelect($event)">
                   </app-generic-table-ssp>
                 </div>
               </div>
@@ -565,7 +567,8 @@
                     [allowSelect]="false"
                     (onPageChange)="pageChange4($event)"
                     (onOrderChange)="onOrderChange4($event)"
-                    (search)="onSearch4($event)">
+                    (search)="onSearch4($event)"
+                    (clicked)="tablePatientSelect($event)">
                   </app-generic-table-ssp>
                 </div>
               </div>

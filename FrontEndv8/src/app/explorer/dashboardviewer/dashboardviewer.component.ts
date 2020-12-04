@@ -1469,8 +1469,8 @@ export class DashboardViewerComponent implements OnInit {
   }
 
   tablePatientSelect($event) {
-
     let patientId = $event["Patient ID"];
-    window.location.href = "https://devgateway.discoverydataservice.net/record-viewer/#/summary?patient_id="+patientId;
+    if (patientId!=undefined)
+      window.location.href = "https://devgateway.discoverydataservice.net/record-viewer/#/summary?patient_id="+patientId;
   }
 }
