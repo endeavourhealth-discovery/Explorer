@@ -13,7 +13,12 @@ CREATE PROCEDURE buildDatasetOutputTables (
   p_storetab VARCHAR(64),
   p_schema VARCHAR(255),
   p_query_id INT,
-  p_patientcohorttab VARCHAR(64)
+  p_patientcohorttab VARCHAR(64),
+  p_procedure_req_tmp VARCHAR(64),
+  p_diagnostic_tmp VARCHAR(64),
+  p_warning_tmp VARCHAR(64),
+  p_allergy_tmp VARCHAR(64),
+  p_referral_req_tmp VARCHAR(64)
 )
 BEGIN
 
@@ -27,10 +32,16 @@ BEGIN
   DECLARE join_clause_4 VARCHAR(1000) DEFAULT NULL;
   DECLARE join_clause_5 VARCHAR(1000) DEFAULT NULL;
   DECLARE join_clause_6 VARCHAR(1000) DEFAULT NULL;
+
+  DECLARE clinicalTypeTableString VARCHAR(2000) DEFAULT NULL;
   
   DECLARE front VARCHAR(500) DEFAULT NULL;
   DECLARE frontlen INT DEFAULT NULL;
   DECLARE TempValue VARCHAR(500) DEFAULT NULL;
+
+  DECLARE front2 VARCHAR(500) DEFAULT NULL;
+  DECLARE frontlen2 INT DEFAULT NULL;
+  DECLARE clinicalTypeTable VARCHAR(100);
 
   DECLARE n INT DEFAULT 0;
   DECLARE i INT DEFAULT 0;
@@ -170,14 +181,14 @@ BEGIN
         SET i = i + 1;
       END WHILE;
 
-      IF LENGTH(@sql)>0 THEN  -- continues if output field exists
+      IF LENGTH(@sql)>0 THEN  -- continues if any output field exists
 
 
          IF LOCATE('Current address', @sql) > 0 THEN
             SET @sql = INSERT (@sql,LOCATE('Current address', @sql)+16,0,", p.postcode AS 'Postcode'");
          END IF;
 
-      -- remove the last comma in the string
+         -- remove the last comma in the string
          SET @sql = SUBSTRING(@sql, 1, LENGTH(@sql)-1);
 
          -- create an empty table output table
@@ -229,27 +240,149 @@ BEGIN
 
          END WHILE; 
 
-         SET @alt = CONCAT('ALTER TABLE ', output_table,' ADD PRIMARY KEY(Id)' );
+         SET @alt = CONCAT('ALTER TABLE ', output_table,' ADD INDEX id_idx(Id)' );
          PREPARE stmt FROM @alt;
          EXECUTE stmt;
          DEALLOCATE PREPARE stmt;   
 
-         -- for testing only
-         
-      /*   SET @cnt = CONCAT('SELECT BINARY COUNT(*) FROM ', output_table,' INTO @total');
+            -- check clinical events for clinical types
+            IF TempValue = 'CLINICALEVENTS' THEN
 
-         PREPARE stmt FROM @cnt;
-         EXECUTE stmt;
-         DEALLOCATE PREPARE stmt; 
+                  -- retrieve the columns of the output table
+                  DROP TEMPORARY TABLE IF EXISTS qry_tmp2;
 
-         SET @cnt = CONCAT('INSERT INTO dataset_results_hist (query_id, dataset, total, date) 
-         VALUES (',p_query_id,',',QUOTE(result_dataset),',',@total,',',QUOTE(now()),')');
+                  SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp2 (column_name VARCHAR(300)) AS 
+                  SELECT column_name FROM information_schema.columns 
+                  WHERE table_name = ', QUOTE(output_table));
+                  PREPARE stmt FROM @sql;
+                  EXECUTE stmt;
+                  DEALLOCATE PREPARE stmt;
 
-         PREPARE stmt FROM @cnt;
-         EXECUTE stmt;
-         DEALLOCATE PREPARE stmt;  */
+                  SET n = 0;
 
+                  SELECT COUNT(*) FROM qry_tmp2 INTO n;
 
+                  -- only continues if any column exists
+                  IF n > 0 THEN
+
+                        SET @sql := '';
+                        SET i = 0;
+                        WHILE i < n DO 
+                              -- build column list from the output table fields
+                              SET @sql =  CONCAT(BINARY @sql,(SELECT CONCAT('`',q.column_name,'`') FROM  qry_tmp2 q LIMIT i, 1));        
+                              SET @sql =  CONCAT(BINARY @sql,CASE WHEN LENGTH(@sql)>0 THEN ',' ELSE '' END);
+                              SET i = i + 1;
+                        END WHILE;
+
+                        -- remove the last comma in the string
+                        SET @sql = SUBSTRING(@sql, 1, LENGTH(@sql)-1);
+
+                        -- build a list of clinical type tables that might exist
+                        SET clinicalTypeTableString = CONCAT(p_procedure_req_tmp,',',p_diagnostic_tmp,',',p_warning_tmp,',',p_allergy_tmp,',',p_referral_req_tmp);
+
+                        -- loop through each and process if exists
+                        processloop2:
+                        LOOP  
+
+                              SET @flag = NULL;
+
+                              IF LENGTH(TRIM(clinicalTypeTableString)) = 0 OR clinicalTypeTableString IS NULL THEN
+                                 LEAVE processloop2;
+                              END IF;
+
+                              -- fetch the name of the clinical type table from a comma separated list
+                              SET front2 = SUBSTRING_INDEX(clinicalTypeTableString, ',', 1);
+                              SET frontlen2 = LENGTH(front2);
+                              SET clinicalTypeTable = TRIM(front2);
+
+                              -- check if the clinical type table exists
+                              SET @chk = CONCAT("SELECT 'Y' INTO @flag FROM information_schema.tables 
+                              WHERE table_name = ", QUOTE(clinicalTypeTable));
+                              PREPARE stmt FROM @chk;
+                              EXECUTE stmt;
+                              DEALLOCATE PREPARE stmt;
+
+                              -- if Y then load data into the output table
+                              IF @flag = 'Y' THEN
+
+                                    -- create a temporary table to hold the data from the clinical type table
+                                    DROP TEMPORARY TABLE IF EXISTS qry_clinicalTypeTab_tmp;
+                                    SET @tmp = CONCAT("CREATE TEMPORARY TABLE qry_clinicalTypeTab_tmp (
+                                           row_id INT, 
+                                          `id` BIGINT,
+                                          `Patient ID` BIGINT, 
+                                          `Person ID` BIGINT, 
+                                          `CCG` VARCHAR(255), 
+                                          `Organization` VARCHAR(255), 
+                                          `Patient` VARCHAR(255), 
+                                          `Practitioner` VARCHAR(255), 
+                                          `Effective date` DATE, 
+                                          `Concept term` VARCHAR(255), 
+                                          `Concept code` VARCHAR(40), 
+                                          `Result value` DOUBLE, 
+                                          `Result units` VARCHAR(50), 
+                                          `Result date` DATE, 
+                                          `Result text` TEXT, 
+                                          `Result concept` VARCHAR(255), 
+                                          `Is problem` TINYINT(1), 
+                                          `Is review` TINYINT(1), 
+                                          `Problem end date` DATE, 
+                                          `Age at event` DECIMAL(5,2), 
+                                          `Episode` VARCHAR(255), 
+                                          `Is primary` TINYINT(1), 
+                                           PRIMARY KEY(row_id) ) AS  
+                                    SELECT (@row_no := @row_no + 1) AS row_id, 
+                                          `id`,
+                                          `Patient ID`, 
+                                          `Person ID`, 
+                                          `CCG`, 
+                                          `Organization`, 
+                                          `Patient`, 
+                                          `Practitioner`, 
+                                          `Effective date`, 
+                                          `Concept term`, 
+                                          `Concept code`, 
+                                          `Result value`, 
+                                          `Result units`, 
+                                          `Result date`, 
+                                          `Result text`, 
+                                          `Result concept`, 
+                                          `Is problem`, 
+                                          `Is review`, 
+                                          `Problem end date`, 
+                                          `Age at event`, 
+                                          `Episode`, 
+                                          `Is primary`  
+                                    FROM ", clinicalTypeTable," JOIN (SELECT @row_no := 0) t ");
+                                    PREPARE stmt FROM @tmp;
+                                    EXECUTE stmt;
+                                    DEALLOCATE PREPARE stmt;
+
+                                    SET @row_id = 0;
+
+                                    -- loop through the row ids and insert the clinical type table data into the output table in batches
+                                    WHILE EXISTS (SELECT row_id from qry_clinicalTypeTab_tmp WHERE row_id > @row_id AND row_id <= @row_id + 1000) DO
+
+                                          SET @ins = CONCAT("INSERT INTO  ", output_table, "(", BINARY @sql," )  
+                                          SELECT ", BINARY @sql , " FROM qry_clinicalTypeTab_tmp 
+                                          WHERE row_id > @row_id AND row_id <= @row_id + 1000");
+                                          PREPARE stmt FROM @ins;
+                                          EXECUTE stmt;
+                                          DEALLOCATE PREPARE stmt;
+
+                                          SET @row_id = @row_id + 1000; 
+
+                                    END WHILE; 
+
+                              END IF;
+                                    -- fetch the next clinical type table 
+                                    SET clinicalTypeTableString = INSERT(clinicalTypeTableString, 1, frontlen2 + 1, '');
+                        END LOOP;
+
+                  END IF;
+            
+            END IF;
+      
       END IF;
 
       -- fetch next event type

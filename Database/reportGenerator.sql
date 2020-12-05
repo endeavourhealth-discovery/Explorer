@@ -274,12 +274,16 @@ DECLARE observation5a_tmp VARCHAR(64) DEFAULT NULL;
 DECLARE encounterValueSet_tmp VARCHAR(64) DEFAULT NULL;
 DECLARE medicationValueSet_tmp VARCHAR(64) DEFAULT NULL;
 DECLARE clinicalEventValueSet_tmp VARCHAR(64) DEFAULT NULL;
-DECLARE clinicalTypes_tmp VARCHAR(64) DEFAULT NULL; 
+
+DECLARE procedure_req_tmp VARCHAR(64) DEFAULT NULL;
+DECLARE diagnostic_tmp VARCHAR(64) DEFAULT NULL;
+DECLARE warning_tmp VARCHAR(64) DEFAULT NULL;
+DECLARE allergy_tmp VARCHAR(64) DEFAULT NULL;
+DECLARE referral_req_tmp VARCHAR(64) DEFAULT NULL;
 
 DECLARE encounterConcept_tmp VARCHAR(64) DEFAULT NULL;
 DECLARE medicationConcept_tmp VARCHAR(64) DEFAULT NULL;
 DECLARE clinicalEventConcept_tmp VARCHAR(64) DEFAULT NULL;
-DECLARE clinicalTypesConcept_tmp VARCHAR(64) DEFAULT NULL; 
 
 DECLARE seriesValueset_tmp VARCHAR(64) DEFAULT NULL; 
 DECLARE seriesConcept_tmp VARCHAR(64) DEFAULT NULL; 
@@ -540,22 +544,30 @@ SET observation5a_tmp  = CONCAT('observation5a_tmp_',query_id);
 SET encounterValueSet_tmp  = CONCAT('encounterValueSet_tmp_',query_id);
 SET medicationValueSet_tmp  = CONCAT('medicationValueSet_tmp_',query_id);
 SET clinicalEventValueSet_tmp  = CONCAT('clinicalEventValueSet_tmp_',query_id);
-SET clinicalTypes_tmp  = CONCAT('clinicalTypes_tmp_',query_id);
 
 SET encounterConcept_tmp  = CONCAT('encounterConcept_tmp_',query_id);
 SET medicationConcept_tmp  = CONCAT('medicationConcept_tmp_',query_id);
 SET clinicalEventConcept_tmp  = CONCAT('clinicalEventConcept_tmp_',query_id);
-SET clinicalTypesConcept_tmp  = CONCAT('clinicalTypesConcept_tmp_',query_id);
+
+SET procedure_req_tmp = CONCAT('procedure_req_tmp_',query_id);
+SET diagnostic_tmp = CONCAT('diagnostic_tmp_',query_id);
+SET warning_tmp = CONCAT('warning_tmp_',query_id);
+SET allergy_tmp = CONCAT('allergy_tmp_',query_id);
+SET referral_req_tmp = CONCAT('referral_req_tmp_',query_id);
+
 -- time series value set and concept tmp tables
 SET seriesValueset_tmp = CONCAT('seriesValueset_tmp_',query_id); 
 SET seriesConcept_tmp = CONCAT('seriesConcept_tmp_',query_id);
 
 SET patient_cohort_tmp  = CONCAT('patient_cohort_tmp_',query_id);
+
 -- cohort definition --
 CALL buildCohortDefinition(query_id,providerOrganisation, includedOrganisation, registrationStatus, ageFrom, ageTo, gender, postcode, 
 registrationExclude, registrationDateFrom, registrationDateTo, registrationPeriodValue, registrationPeriodType, org_tmp, 
 all_valueset_tmp, all_concept_tmp, cohort_tmp, observation_tmp, sourceSchema, store_tmp);
+
 -- advance criteria --
+
 -- rule 1 --
 CALL getIncludeExcludeString(query_id,includedExclude1,includedAnyAll1,includedValueSet1, includedDateFrom1, includedDateTo1, includedPeriodOperator1,
 includedPeriodValue1,includedPeriodType1,incValueSet1_tmp, incConcept1_tmp, observation_tmp, 
@@ -628,30 +640,33 @@ includedPeriodValue5a, includedPeriodType5a, incValueSet5a_tmp, incConcept5a_tmp
 5, NULL, NULL, NULL, observation5a_tmp, NULL, NULL, NULL, NULL, NULL, 
 NULL, NULL, NULL, NULL, includedOperator5a, includedEntryValue5a, sourceSchema , store_tmp, @includeExclude5aString);
 SET includeExclude5aString = @includeExclude5aString;
+
 -- build final patient cohort
 CALL buildFinalPatientCohort(query_id, patient_cohort_tmp, observation_tmp, includeExclude1String, includeExclude1aString, includeExclude1bString, 
 includeExclude1cString, includeExclude1dString,includeExclude2String, includeExclude2aString, includeExclude3String, includeExclude3aString, includeExclude4String, 
 includeExclude5String, includeExclude5aString, sourceSchema);
+
 -- clean up --
 -- remove tmp tables
- SET tempTables = CONCAT(org_tmp,',',observation_tmp,',',cohort_tmp,',',
- all_valueset_tmp,',',all_concept_tmp,',',
- incValueSet1_tmp,',',incConcept1_tmp,',',observation1_tmp,',',
- incValueSet1a_tmp,',',incConcept1a_tmp,',',observation1a_tmp,',',
- incValueSet1b_tmp,',',incConcept1b_tmp,',',observation1b_tmp,',',incValueSet1c_tmp,',',incConcept1c_tmp,',',observation1c_tmp,',',
- incValueSet1d_tmp,',',incConcept1d_tmp,',',observation1d_tmp,',',incValueSet2_tmp,',',incConcept2_tmp,',',observation2_tmp,',',
- incValueSet2a_tmp,',',incConcept2a_tmp,',',observation2a_tmp,',',incValueSet3_tmp,',',incConcept3_tmp,',',incTestedValueSet3_tmp,',',
- incTestedConcept3_tmp,',',observation3_tmp,',',incValueSet3a_tmp,',',incConcept3a_tmp,',',incTestedValueSet3a_tmp,',',
- incTestedConcept3a_tmp,',',observation3a_tmp,',',incValueSet4_tmp,',',incConcept4_tmp,',',incFollowedByValueSet4_tmp,',',incFollowedByConcept4_tmp ,',',observation4_tmp,',',
- incValueSet5_tmp,',',incConcept5_tmp,',',observation5_tmp,',',incValueSet5a_tmp,',',incConcept5a_tmp,',',observation5a_tmp);
+SET tempTables = CONCAT(org_tmp,',',observation_tmp,',',cohort_tmp,',',
+all_valueset_tmp,',',all_concept_tmp,',',
+incValueSet1_tmp,',',incConcept1_tmp,',',observation1_tmp,',',
+incValueSet1a_tmp,',',incConcept1a_tmp,',',observation1a_tmp,',',
+incValueSet1b_tmp,',',incConcept1b_tmp,',',observation1b_tmp,',',incValueSet1c_tmp,',',incConcept1c_tmp,',',observation1c_tmp,',',
+incValueSet1d_tmp,',',incConcept1d_tmp,',',observation1d_tmp,',',incValueSet2_tmp,',',incConcept2_tmp,',',observation2_tmp,',',
+incValueSet2a_tmp,',',incConcept2a_tmp,',',observation2a_tmp,',',incValueSet3_tmp,',',incConcept3_tmp,',',incTestedValueSet3_tmp,',',
+incTestedConcept3_tmp,',',observation3_tmp,',',incValueSet3a_tmp,',',incConcept3a_tmp,',',incTestedValueSet3a_tmp,',',
+incTestedConcept3a_tmp,',',observation3a_tmp,',',incValueSet4_tmp,',',incConcept4_tmp,',',incFollowedByValueSet4_tmp,',',incFollowedByConcept4_tmp ,',',observation4_tmp,',',
+incValueSet5_tmp,',',incConcept5_tmp,',',observation5_tmp,',',incValueSet5a_tmp,',',incConcept5a_tmp,',',observation5a_tmp);
 
 CALL dropTempTables(tempTables);
 
 -- build result datasets
 CALL buildResultDatasets(query_id, patient_cohort_tmp, demographics, encounters, medication, currentMedication, clinicalEvents, activeProblems, 
 dateFromEncounters, dateToEncounters, dateFromMedication, dateToMedication, dateFromClinicalEvents, dateToClinicalEvents, selectedClinicalTypes, 
-selectedEncounterValueSet, selectedMedicationValueSet, selectedClinicalEventValueSet, clinicalTypes_tmp,  clinicalTypesConcept_tmp, encounterValueSet_tmp, 
-encounterConcept_tmp, medicationValueSet_tmp, medicationConcept_tmp, clinicalEventValueSet_tmp, clinicalEventConcept_tmp, sourceSchema, store_tmp, @eventTypes);
+selectedEncounterValueSet, selectedMedicationValueSet, selectedClinicalEventValueSet, procedure_req_tmp, diagnostic_tmp, warning_tmp ,allergy_tmp,referral_req_tmp,
+encounterValueSet_tmp, encounterConcept_tmp, medicationValueSet_tmp, medicationConcept_tmp, clinicalEventValueSet_tmp, clinicalEventConcept_tmp, 
+sourceSchema, store_tmp, @eventTypes);
 SET eventTypes = @eventTypes;
 
 -- update registries
@@ -659,18 +674,21 @@ CALL buildRegistries(query_id, patient_cohort_tmp, targetPercentage);
 
 -- build dataset outputs
 CALL buildDatasetOutputTables(selectedDemographicFields, selectedEncounterFields, selectedMedicationFields, selectedClinicalEventFields, 
-eventTypes, store_tmp, sourceSchema, query_id, patient_cohort_tmp);
+eventTypes, store_tmp, sourceSchema, query_id, patient_cohort_tmp,procedure_req_tmp,diagnostic_tmp,warning_tmp,allergy_tmp,referral_req_tmp);
+  
 -- build time series
 CALL buildTimeSeries(timeSeries, seriesTable, seriesField, seriesEncounterValueSet, seriesMedicationValueSet, seriesClinicalEventValueSet, 
 seriesDateFrom, seriesDateTo, seriesPeriodOperator, seriesPeriodValue, seriesPeriodType, store_tmp, seriesValueset_tmp, seriesConcept_tmp, 
 sourceSchema, query_id, patient_cohort_tmp); 
+
 -- update queue for next run date
 CALL updateQueue(query_id, schedule);
+
 -- clean up --
 -- remove temp tables
- SET tempTables = CONCAT(store_tmp,',',encounterValueSet_tmp,',',encounterConcept_tmp,',',
- medicationValueSet_tmp,',',medicationConcept_tmp,',',clinicalTypes_tmp,',',clinicalTypesConcept_tmp,',',clinicalEventValueSet_tmp,',',clinicalEventConcept_tmp,',',
- seriesValueset_tmp,',',seriesConcept_tmp,',',patient_cohort_tmp);
+SET tempTables = CONCAT(store_tmp,',',encounterValueSet_tmp,',',encounterConcept_tmp,',',
+medicationValueSet_tmp,',',medicationConcept_tmp,',',clinicalEventValueSet_tmp,',',clinicalEventConcept_tmp,',',
+seriesValueset_tmp,',',seriesConcept_tmp,',',patient_cohort_tmp,',',procedure_req_tmp,',',diagnostic_tmp,',',warning_tmp,',',allergy_tmp,',',referral_req_tmp);
 
 CALL dropTempTables(tempTables);
 
