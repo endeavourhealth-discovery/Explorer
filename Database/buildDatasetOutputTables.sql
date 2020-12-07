@@ -34,6 +34,7 @@ BEGIN
   DECLARE join_clause_6 VARCHAR(1000) DEFAULT NULL;
 
   DECLARE clinicalTypeTableString VARCHAR(2000) DEFAULT NULL;
+  DECLARE columnNameString VARCHAR(2000) DEFAULT NULL;
   
   DECLARE front VARCHAR(500) DEFAULT NULL;
   DECLARE frontlen INT DEFAULT NULL;
@@ -42,6 +43,11 @@ BEGIN
   DECLARE front2 VARCHAR(500) DEFAULT NULL;
   DECLARE frontlen2 INT DEFAULT NULL;
   DECLARE clinicalTypeTable VARCHAR(100);
+
+  DECLARE front3 VARCHAR(500) DEFAULT NULL;
+  DECLARE frontlen3 INT DEFAULT NULL;
+  DECLARE columnName VARCHAR(100);
+
 
   DECLARE n INT DEFAULT 0;
   DECLARE i INT DEFAULT 0;
@@ -191,7 +197,18 @@ BEGIN
          -- remove the last comma in the string
          SET @sql = SUBSTRING(@sql, 1, LENGTH(@sql)-1);
 
-         -- create an empty table output table
+         
+         SET @sql = REPLACE(@sql, 'procedure_request_status', 'NULL');
+         SET @sql = REPLACE(@sql, 'referral_requester_organisation', 'NULL');
+         SET @sql = REPLACE(@sql, 'referral_recipient_organisation', 'NULL');
+         SET @sql = REPLACE(@sql, 'referral_request_priority', 'NULL');
+         SET @sql = REPLACE(@sql, 'referral_request_type', 'NULL');
+         SET @sql = REPLACE(@sql, 'referral_mode', 'NULL');
+         SET @sql = REPLACE(@sql, 'referral_outgoing_status', 'NULL');
+         SET @sql = REPLACE(@sql, 'warning_flag_status', 'NULL');
+         SET @sql = REPLACE(@sql, 'warning_flag_text', 'NULL');
+
+         -- create an empty output table
          SET @output = CONCAT('CREATE TABLE ', output_table ,' AS 
          SELECT DISTINCT r.', event_table,'_id AS id, ', BINARY @sql ,' FROM ', p_schema,'.', event_table,
          ' t JOIN ', result_dataset,' r ON t.id = r.', event_table,'_id 
@@ -206,7 +223,71 @@ BEGIN
          PREPARE stmt FROM @output;
          EXECUTE stmt;
          DEALLOCATE PREPARE stmt;
-         
+
+         IF TempValue = 'CLINICALEVENTS' THEN
+
+         SET columnNameString = "Procedure request status, Referral requester organisation, Referral recipient organisation, Referral request priority, Referral request type, Referral mode, Referral outgoing status, Warning flag status, Warning flag text";
+
+         processloop3:
+         LOOP  
+
+                  IF LENGTH(TRIM(columnNameString)) = 0 OR columnNameString IS NULL THEN
+                  LEAVE processloop3;
+                  END IF;
+
+                  -- retrieve the column name from comma separated list
+                  SET front3 = SUBSTRING_INDEX(columnNameString, ',', 1);
+                  SET frontlen3 = LENGTH(front3);
+                  SET columnName = TRIM(front3);
+                  
+                  SET @col = NULL;
+
+                  SET @chkCol = CONCAT("SELECT 'Y' INTO @Col FROM information_schema.columns 
+                  WHERE table_name = ", QUOTE(output_table)," AND column_name = ", QUOTE(columnName));
+                  PREPARE stmt FROM @chkCol;
+                  EXECUTE stmt;
+                  DEALLOCATE PREPARE stmt;
+
+                 -- if Y then modify the data type of the column
+                 IF @Col = 'Y' THEN
+
+                    IF columnName IN ('Procedure request status','Referral requester organisation','Referral recipient organisation','Referral request priority','Referral request type') THEN
+
+                         SET @mod = CONCAT("ALTER TABLE ", output_table," MODIFY COLUMN `", columnName,"` VARCHAR(255)");
+                         PREPARE stmt FROM @mod;
+                         EXECUTE stmt;
+                         DEALLOCATE PREPARE stmt;
+
+                    ELSEIF columnName IN ('Referral outgoing status','Warning flag status') THEN
+
+                         SET @mod = CONCAT("ALTER TABLE ", output_table," MODIFY COLUMN `", columnName,"` TINYINT(1)");
+                         PREPARE stmt FROM @mod;
+                         EXECUTE stmt;
+                         DEALLOCATE PREPARE stmt;
+                    
+                    ELSEIF columnName IN ('Referral mode') THEN
+
+                         SET @mod = CONCAT("ALTER TABLE ", output_table," MODIFY COLUMN `", columnName,"` VARCHAR(50)");
+                         PREPARE stmt FROM @mod;
+                         EXECUTE stmt;
+                         DEALLOCATE PREPARE stmt;
+                    
+                    ELSEIF columnName IN ('Warning flag text') THEN
+
+                         SET @mod = CONCAT("ALTER TABLE ", output_table," MODIFY COLUMN `", columnName,"` TEXT");
+                         PREPARE stmt FROM @mod;
+                         EXECUTE stmt;
+                         DEALLOCATE PREPARE stmt;                   
+                    
+                    END IF;
+
+                 END IF;
+                       -- fetch next column name
+                      SET columnNameString = INSERT(columnNameString, 1, frontlen3 + 1, '');
+         END LOOP;
+
+         END IF;
+
          -- create a temporary table to hold the ids
          DROP TEMPORARY TABLE IF EXISTS qry_output_tmp;
          SET @tmp = CONCAT('CREATE TEMPORARY TABLE qry_output_tmp ( row_id INT, id BIGINT, PRIMARY KEY(row_id) ) AS 
@@ -295,6 +376,8 @@ BEGIN
                               SET frontlen2 = LENGTH(front2);
                               SET clinicalTypeTable = TRIM(front2);
 
+                              SET @flag = NULL;
+
                               -- check if the clinical type table exists
                               SET @chk = CONCAT("SELECT 'Y' INTO @flag FROM information_schema.tables 
                               WHERE table_name = ", QUOTE(clinicalTypeTable));
@@ -310,15 +393,18 @@ BEGIN
                                     SET @tmp = CONCAT("CREATE TEMPORARY TABLE qry_clinicalTypeTab_tmp (
                                            row_id INT, 
                                           `id` BIGINT,
-                                          `Patient ID` BIGINT, 
-                                          `Person ID` BIGINT, 
-                                          `CCG` VARCHAR(255), 
                                           `Organization` VARCHAR(255), 
                                           `Patient` VARCHAR(255), 
-                                          `Practitioner` VARCHAR(255), 
-                                          `Effective date` DATE, 
+                                          `Procedure request status` VARCHAR(255), 
+                                          `Warning flag status` VARCHAR(255), 
                                           `Concept term` VARCHAR(255), 
-                                          `Concept code` VARCHAR(40), 
+                                          `Concept code` VARCHAR(40),
+                                          `Age at event` DECIMAL(5,2), 
+                                          `Effective date` DATE,  
+                                          `Patient ID` BIGINT, 
+                                          `Person ID` BIGINT, 
+                                          `Practitioner` VARCHAR(255),
+                                          `CCG` VARCHAR(255), 
                                           `Result value` DOUBLE, 
                                           `Result units` VARCHAR(50), 
                                           `Result date` DATE, 
@@ -327,21 +413,30 @@ BEGIN
                                           `Is problem` TINYINT(1), 
                                           `Is review` TINYINT(1), 
                                           `Problem end date` DATE, 
-                                          `Age at event` DECIMAL(5,2), 
                                           `Episode` VARCHAR(255), 
                                           `Is primary` TINYINT(1), 
+                                          `Warning flag text` TEXT,
+                                          `Referral requester organisation` VARCHAR(255),
+                                          `Referral recipient organisation` VARCHAR(255),
+                                          `Referral request priority` VARCHAR(255),
+                                          `Referral request type` VARCHAR(255),
+                                          `Referral mode` VARCHAR(50),
+                                          `Referral outgoing status` TINYINT(1), 
                                            PRIMARY KEY(row_id) ) AS  
                                     SELECT (@row_no := @row_no + 1) AS row_id, 
                                           `id`,
-                                          `Patient ID`, 
-                                          `Person ID`, 
-                                          `CCG`, 
                                           `Organization`, 
                                           `Patient`, 
-                                          `Practitioner`, 
-                                          `Effective date`, 
+                                          `Procedure request status`, 
+                                          `Warning flag status`, 
                                           `Concept term`, 
-                                          `Concept code`, 
+                                          `Concept code`,
+                                          `Age at event`, 
+                                          `Effective date`,  
+                                          `Patient ID`, 
+                                          `Person ID`, 
+                                          `Practitioner`,
+                                          `CCG`, 
                                           `Result value`, 
                                           `Result units`, 
                                           `Result date`, 
@@ -350,9 +445,15 @@ BEGIN
                                           `Is problem`, 
                                           `Is review`, 
                                           `Problem end date`, 
-                                          `Age at event`, 
                                           `Episode`, 
-                                          `Is primary`  
+                                          `Is primary`, 
+                                          `Warning flag text`,
+                                          `Referral requester organisation`,
+                                          `Referral recipient organisation`,
+                                          `Referral request priority`,
+                                          `Referral request type`,
+                                          `Referral mode`,
+                                          `Referral outgoing status` 
                                     FROM ", clinicalTypeTable," JOIN (SELECT @row_no := 0) t ");
                                     PREPARE stmt FROM @tmp;
                                     EXECUTE stmt;

@@ -284,7 +284,8 @@ DECLARE clinicalType VARCHAR(100);
                               o.organization_id, 
                               org.name AS `Organization`, 
                               p.patient_name AS `Patient`, 
-                              c2.name AS `Status`, 
+                              c2.name AS `Procedure request status`, 
+                              NULL AS `Warning flag status`,
                               c.name AS `Concept term`, 
                               o.non_core_concept_id AS `Concept code`, 
                               o.age_at_event AS `Age at event`,
@@ -302,7 +303,14 @@ DECLARE clinicalType VARCHAR(100);
                               NULL AS `Is review`,
                               NULL AS `Problem end date`,
                               NULL AS `Episode`,
-                              NULL AS `Is primary` 
+                              NULL AS `Is primary`,
+                              NULL AS `Warning flag text`,
+                              NULL AS `Referral requester organisation`,
+                              NULL AS `Referral recipient organisation`,
+                              NULL AS `Referral request priority`,
+                              NULL AS `Referral request type`,
+                              NULL AS `Referral mode`,
+                              NULL AS `Referral outgoing status`
                               FROM ", p_schema,".procedure_request o JOIN ", p_patientcohorttab, " p ON o.patient_id = p.patient_id 
                               AND o.person_id = p.person_id AND o.organization_id = p.organization_id 
                               JOIN ", p_schema,".concept c ON c.dbid = o.non_core_concept_id 
@@ -327,7 +335,8 @@ DECLARE clinicalType VARCHAR(100);
                               o.organization_id, 
                               org.name AS `Organization`, 
                               p.patient_name AS `Patient`, 
-                              NULL AS `Status`, 
+                              NULL AS `Procedure request status`, 
+                              NULL AS `Warning flag status`,
                               c.name AS `Concept term`, 
                               o.non_core_concept_id AS `Concept code`, 
                               o.age_at_event AS `Age at event`,
@@ -345,7 +354,14 @@ DECLARE clinicalType VARCHAR(100);
                               o.is_review AS `Is review`,
                               o.problem_end_date AS `Problem end date`,
                               c3.name AS `Episode`,
-                              o.is_primary AS `Is primary` 
+                              o.is_primary AS `Is primary`,
+                              NULL AS `Warning flag text`,
+                              NULL AS `Referral requester organisation`,
+                              NULL AS `Referral recipient organisation`,
+                              NULL AS `Referral request priority`,
+                              NULL AS `Referral request type`,
+                              NULL AS `Referral mode`,
+                              NULL AS `Referral outgoing status`
                               FROM ", p_schema,".diagnostic_order o JOIN ", p_patientcohorttab, " p ON o.patient_id = p.patient_id 
                               AND o.person_id = p.person_id AND o.organization_id = p.organization_id 
                               JOIN ", p_schema,".concept c ON c.dbid = o.non_core_concept_id 
@@ -373,7 +389,8 @@ DECLARE clinicalType VARCHAR(100);
                               o.organization_id, 
                               org.name AS `Organization`, 
                               p.patient_name AS `Patient`, 
-                              o.is_active AS `Status`, 
+                              NULL AS `Procedure request status`, 
+                              o.is_active AS `Warning flag status`, 
                               NULL AS `Concept term`, 
                               NULL AS `Concept code`, 
                               NULL AS `Age at event`,
@@ -392,7 +409,13 @@ DECLARE clinicalType VARCHAR(100);
                               NULL AS `Problem end date`,
                               NULL AS `Episode`,
                               NULL AS `Is primary`,
-                              o.flag_text AS `Flag text`
+                              o.flag_text AS `Warning flag text`,
+                              NULL AS `Referral requester organisation`,
+                              NULL AS `Referral recipient organisation`,
+                              NULL AS `Referral request priority`,
+                              NULL AS `Referral request type`,
+                              NULL AS `Referral mode`,
+                              NULL AS `Referral outgoing status`
                               FROM ", p_schema,".flag o JOIN ", p_patientcohorttab, " p ON o.patient_id = p.patient_id 
                               AND o.person_id = p.person_id AND o.organization_id = p.organization_id 
                               JOIN ", p_schema,".organization org ON org.id = o.organization_id 
@@ -414,7 +437,8 @@ DECLARE clinicalType VARCHAR(100);
                               o.organization_id, 
                               org.name AS `Organization`, 
                               p.patient_name AS `Patient`, 
-                              NULL AS `Status`, 
+                              NULL AS `Procedure request status`, 
+                              NULL AS `Warning flag status`,  
                               c.name AS `Concept term`, 
                               o.non_core_concept_id AS `Concept code`, 
                               o.age_at_event AS `Age at event`,
@@ -432,7 +456,14 @@ DECLARE clinicalType VARCHAR(100);
                               o.is_review AS `Is review`,
                               NULL AS `Problem end date`,
                               NULL AS `Episode`,
-                              NULL AS `Is primary` 
+                              NULL AS `Is primary`,
+                              NULL AS `Warning flag text`,
+                              NULL AS `Referral requester organisation`,
+                              NULL AS `Referral recipient organisation`,
+                              NULL AS `Referral request priority`,
+                              NULL AS `Referral request type`,
+                              NULL AS `Referral mode`,
+                              NULL AS `Referral outgoing status`
                               FROM ", p_schema,".allergy_intolerance o JOIN ", p_patientcohorttab, " p ON o.patient_id = p.patient_id 
                               AND o.person_id = p.person_id AND o.organization_id = p.organization_id 
                               JOIN ", p_schema,".concept c ON c.dbid = o.non_core_concept_id 
@@ -456,7 +487,8 @@ DECLARE clinicalType VARCHAR(100);
                               o.organization_id, 
                               org.name AS `Organization`, 
                               p.patient_name AS `Patient`, 
-                              c2.name AS `Status`, 
+                              NULL AS `Procedure request status`, 
+                              NULL AS `Warning flag status`,
                               c.name AS `Concept term`, 
                               o.non_core_concept_id AS `Concept code`, 
                               o.age_at_event AS `Age at event`,
@@ -475,17 +507,21 @@ DECLARE clinicalType VARCHAR(100);
                               NULL AS `Problem end date`,
                               NULL AS `Episode`,
                               NULL AS `Is primary`,
-                              o.requester_organization_id,
-                              o.recipient_organization_id,
-                              o.referral_request_priority_concept_id,
-                              o.referral_request_type_concept_id,
-                              o.mode,
-                              o.outgoing_referral 
+                              NULL AS `Warning flag text`,
+                              org2.name AS `Referral requester organisation`,
+                              org3.name AS `Referral recipient organisation`,
+                              c3.name AS `Referral request priority`,
+                              c2.name AS `Referral request type`,
+                              o.mode AS `Referral mode`,
+                              o.outgoing_referral AS `Referral outgoing status`
                               FROM ", p_schema,".referral_request o JOIN ", p_patientcohorttab, " p ON o.patient_id = p.patient_id 
                               AND o.person_id = p.person_id AND o.organization_id = p.organization_id 
                               JOIN ", p_schema,".concept c ON c.dbid = o.non_core_concept_id 
-                              LEFT JOIN ", p_schema,".concept c2 ON c2.dbid = o.status_concept_id 
                               JOIN ", p_schema,".organization org ON org.id = o.organization_id 
+                              LEFT JOIN ", p_schema,".concept c2 ON c2.dbid = o.referral_request_type_concept_id 
+                              LEFT JOIN ", p_schema,".concept c3 ON c3.dbid = o.referral_request_priority_concept_id 
+                              LEFT JOIN ", p_schema,".organization org2 ON org2.id = o.requester_organization_id 
+                              LEFT JOIN ", p_schema,".organization org3 ON org3.id = o.recipient_organization_id 
                               LEFT JOIN ", p_schema,".practitioner pr ON pr.id = o.practitioner_id 
                               WHERE o.non_core_concept_id IS NOT NULL AND ", p_daterange); 
                               PREPARE stmt FROM @sql;
