@@ -37,8 +37,8 @@ BEGIN
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;
 
- processloop:
- LOOP 
+processloop:
+LOOP 
 
       IF LENGTH(TRIM(data_types)) = 0 OR data_types IS NULL THEN
          LEAVE processloop;
@@ -67,7 +67,7 @@ BEGIN
 
    WHILE EXISTS (SELECT row_id from qry_tmp WHERE row_id > @row_id AND row_id <= @row_id + 1000) DO
 
- IF TempValue = 'Observation' THEN  
+      IF TempValue = 'Observation' THEN  
 
          SET @sql = CONCAT("INSERT INTO  ", p_observationtab, " 
          SELECT o.id, q.patient_id, q.person_id, o.clinical_effective_date, o.result_value, o.non_core_concept_id, q.organization_id, c.value_set_code_type   
@@ -116,7 +116,7 @@ BEGIN
       -- fetch the next data type
       SET data_types = INSERT(data_types, 1, frontlen + 1, '');
 
- END LOOP;
+END LOOP;
 
    DROP TEMPORARY TABLE IF EXISTS qry_tmp;
 
