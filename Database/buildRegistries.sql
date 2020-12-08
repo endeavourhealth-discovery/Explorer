@@ -20,12 +20,11 @@ BEGIN
   DECLARE parent_registry VARCHAR(500) DEFAULT NULL;
   DECLARE parent_qry_id INT DEFAULT NULL;
 
-
   DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
       GET DIAGNOSTICS CONDITION 1
         @code = RETURNED_SQLSTATE, @msg = MESSAGE_TEXT;
-        CALL log_errors(p_query_id,'buildRegistries',@code,@msg,now());
+        CALL log_errors(p_query_id,'buildRegistries', @code, @msg, now());
         RESIGNAL; -- rethrow the error
     END;   
 
@@ -80,20 +79,19 @@ BEGIN
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 
+    SET @list_size = NULL;
+
     SELECT list_size INTO @list_size FROM qry_list_size;
 
-    -- add new entries to registries
-  INSERT INTO registries (registry, query, ccg, practice_name, ods_code, list_size, registry_size, updated, parent_registry, target_percentage) 
-  SELECT registry_name, query, q.ccg, q.registered_practice, q.ods_code, @list_size, q.registry_size, now(), parentregistry, targetPercentage  
-  FROM qry_reg q;
-
+            -- add new entries to registries
+          INSERT INTO registries (registry, query, ccg, practice_name, ods_code, list_size, registry_size, updated, parent_registry, target_percentage) 
+          SELECT registry_name, query, q.ccg, q.registered_practice, q.ods_code, @list_size, q.registry_size, now(), parentregistry, targetPercentage  
+          FROM qry_reg q;
   ELSE
-
-  -- add new entries to registries
-  INSERT INTO registries (registry, query, ccg, practice_name, ods_code, list_size, registry_size, updated, parent_registry, target_percentage) 
-  SELECT registry_name, query, q.ccg, q.registered_practice, q.ods_code, pls.list_size, q.registry_size, now(), parentregistry, targetPercentage  
-  FROM qry_reg q LEFT JOIN practice_list_sizes pls ON q.ods_code = pls.ods_code;
-
+          -- add new entries to registries
+          INSERT INTO registries (registry, query, ccg, practice_name, ods_code, list_size, registry_size, updated, parent_registry, target_percentage) 
+          SELECT registry_name, query, q.ccg, q.registered_practice, q.ods_code, pls.list_size, q.registry_size, now(), parentregistry, targetPercentage  
+          FROM qry_reg q LEFT JOIN practice_list_sizes pls ON q.ods_code = pls.ods_code;
   END IF;
 
   -- add a new entry for registry trend
