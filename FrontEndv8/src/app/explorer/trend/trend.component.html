@@ -19,13 +19,13 @@
         </mat-datepicker-toggle>
         <mat-datepicker #picker2></mat-datepicker>
       </mat-form-field>
-      <mat-form-field style="margin-left: 10px" class="example-full-width" appearance="outline">
+      <mat-form-field style="margin-left: 10px; width:300px" class="example-full-width" appearance="outline">
         <mat-label>Select organisation</mat-label>
         <mat-select [formControl]="organisations" multiple [(value)]="selectedOrganisation">
           <mat-option (click)="refresh()" *ngFor="let result of orgList" [value]="result">{{result}}</mat-option>
         </mat-select>
       </mat-form-field>
-      <mat-form-field style="margin-left: 10px" class="example-full-width" appearance="outline">
+      <mat-form-field style="margin-left: 10px; width:400px" class="example-full-width" appearance="outline">
         <mat-label>Select indicator</mat-label>
         <mat-select [formControl]="indicators" multiple [(value)]="selectedIndicator">
           <mat-select-search [formControl]="filterCtrl"></mat-select-search>
@@ -46,7 +46,7 @@
 
     <table style="table-layout: fixed">
       <tr>
-        <td style="vertical-align: top; width: 700px">
+        <td style="vertical-align: top; width: 1200px">
           <div *ngIf="showLineCharts">
             <div *ngIf="!showAreaChart" class="flex" fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="16px grid" fxLayoutAlign="start">
               <ngx-charts-line-chart
@@ -114,34 +114,7 @@
           </div>
 
         </td>
-        <td style="vertical-align: top">
-          <div *ngIf="showBarCharts" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            <ngx-charts-bar-vertical
-              [view]="view2"
-              [scheme]="colorScheme"
-              [legend]="legend"
-              [showXAxisLabel]="showXAxisLabel"
-              [showYAxisLabel]="showYAxisLabel"
-              [animations]="animations"
-              [showGridLines]="showGridLines"
-              [xAxis]="false"
-              [yAxis]="yAxis"
-              [xAxisLabel]="xAxisLabel"
-              [yAxisLabel]="yAxisLabel"
-              [results]="chartResultsSingle"
-              [legendPosition]="legendPosition"
-              [gradient]="gradient"
-              (select)="onSelectBar($event)"
-            >
-              <ng-template #tooltipTemplate let-model="model">
-                <span class="tooltip-label">{{model.name}} • {{model.value}}%</span>
-              </ng-template>
-            </ngx-charts-bar-vertical>
 
-          </div>
-
-
-        </td>
       </tr>
     </table>
 

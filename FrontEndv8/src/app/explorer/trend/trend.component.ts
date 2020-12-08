@@ -24,14 +24,11 @@ export class TrendComponent {
   filterCtrl: FormControl = new FormControl();
   filteredValueset: ReplaySubject<orgList[]> = new ReplaySubject<orgList[]>(1);
 
-  view: any[] = [650, 330];
-  view2: any[] = [650, 330];
+  view: any[] = [1200, 330];
   chartResults: any[];
-  chartResultsSingle: any[];
   dateFrom: string = '2020-01-01';
   dateTo: string = this.formatDate(new Date());
   showLineCharts: boolean = true;
-  showBarCharts: boolean = true;
   organisations = new FormControl();
   orgList: string[] = [];
   selectedOrganisation: string = '';
@@ -138,12 +135,6 @@ export class TrendComponent {
         )
       });
 
-    if (this.showBarCharts) {
-      this.explorerService.getDashboardSingle('Registry trends', indicator, this.formatDate(this.dateFrom), this.formatDate(this.dateTo), 1, 'registry_latest')
-        .subscribe(result => {
-          this.chartResultsSingle = result.series;
-        });
-    }
 
   }
 
@@ -222,10 +213,6 @@ export class TrendComponent {
   }
 
   onSelect(data): void {
-    console.log('Item clicked', JSON.parse(JSON.stringify(data)));
-  }
-
-  onSelectBar(data): void {
     console.log('Item clicked', JSON.parse(JSON.stringify(data)));
   }
 

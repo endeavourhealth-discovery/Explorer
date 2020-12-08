@@ -197,11 +197,11 @@ export class RegistriesComponent implements OnInit {
       orgs = orgs.replace(/,\s*$/, "");
     }
 
-    orgs = orgs +",CCG AVERAGE";
+    orgs = orgs;
 
     const dialogRef = this.dialog.open(TrendComponent, {
       height: '900px',
-      width: '1800px',
+      width: '1300px',
       data: {orgs: orgs}
     });
 
