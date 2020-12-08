@@ -393,7 +393,7 @@ BEGIN
                                     SET @tmp = CONCAT("CREATE TEMPORARY TABLE qry_clinicalTypeTab_tmp (
                                            row_id INT, 
                                           `id` BIGINT,
-                                          `Organization` VARCHAR(255), 
+                                          `Organisation` VARCHAR(255), 
                                           `Patient` VARCHAR(255), 
                                           `Procedure request status` VARCHAR(255), 
                                           `Warning flag status` VARCHAR(255), 
@@ -425,7 +425,7 @@ BEGIN
                                            PRIMARY KEY(row_id) ) AS  
                                     SELECT (@row_no := @row_no + 1) AS row_id, 
                                           `id`,
-                                          `Organization`, 
+                                          `Organisation`, 
                                           `Patient`, 
                                           `Procedure request status`, 
                                           `Warning flag status`, 
