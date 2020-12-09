@@ -1007,6 +1007,52 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         return series;
     }
 
+    public ChartResult getDashboardRegistries(String organisations, String registries) throws Exception {
+        String ccg = "";
+
+        List<String> charts = Arrays.asList(organisations.split("\\s*,\\s*"));
+
+        if (!registries.isEmpty()) {
+            registries = registries.replaceAll(",","','");
+            registries = "'" + registries + "'";
+            registries = " and registry in ("+registries+")";
+        }
+
+        ChartResult result = new ChartResult();
+        String sql = "";
+
+        List<Chart> chart = new ArrayList<>();
+        Chart chartItem = null;
+
+        for (String chart_name : charts) {
+            chartItem = new Chart();
+            chartItem.setName(chart_name);
+
+            String temp = "";
+
+            if (organisations.contains("CCG"))
+                sql = "SELECT registry as series_name,sum(registry_size) as series_value FROM dashboards.registries where ccg = ? " + registries +
+                    " GROUP BY ccg, registry order by registry_size desc";
+            else
+                sql = "SELECT registry as series_name,registry_size as series_value FROM dashboards.registries where practice_name = ? " + registries +
+                        " order by registry_size desc";
+
+            try (PreparedStatement statement = conn.prepareStatement(sql)) {
+                statement.setString(1, chart_name);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    chartItem.setSeries(getSeriesFromResultSet(resultSet));
+                }
+            }
+
+            chart.add(chartItem);
+        }
+
+        result.setResults(chart);
+
+        return result;
+    }
+
+
     public PatientResult getPatientResult(Integer page, Integer size, String name, String queryId) throws Exception {
         PatientResult result = new PatientResult();
 

@@ -91,6 +91,7 @@ public class DashboardEndpoint {
         LOG.debug("getDashboard");
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
             ChartResult result = null;
+
             if (combineSeries.equals("1")) {
                 result = viewerDAL.getDashboardCombine(query, chartName, dateFrom, dateTo, cumulative, grouping, weekly, rate);
             } else {
@@ -122,6 +123,28 @@ public class DashboardEndpoint {
                 result = viewerDAL.getDashboardSingle(query, chartName,dateFrom,dateTo, grouping);
             else if (ignoreDateRange==1)
                 result = viewerDAL.getDashboardSingle(query, chartName, grouping);
+
+            return Response
+                    .ok()
+                    .entity(result)
+                    .build();
+        }
+    }
+
+    @GET
+    @Path("/dashboardregistries")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getDashboardRegistries(@Context SecurityContext sc,
+                                       @QueryParam("organisations") String organisations,
+                                       @QueryParam("registries") String registries
+                                       ) throws Exception {
+        LOG.debug("getDashboardRegistries");
+
+        try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
+            ChartResult result = null;
+
+            result = viewerDAL.getDashboardRegistries(organisations, registries);
 
             return Response
                     .ok()
