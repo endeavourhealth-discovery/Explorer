@@ -226,9 +226,7 @@ BEGIN
 
          IF TempValue = 'CLINICALEVENTS' THEN
 
-         SET columnNameString = "Procedure request status, Referral requester organisation, Referral recipient organisation, 
-         Referral request priority, Referral request type, Referral mode, Referral outgoing status, 
-         Warning flag status, Warning flag text, Is review, Is problem, Is primary";
+         SET columnNameString = "Procedure request status,Referral requester organisation,Referral recipient organisation,Referral request priority,Referral request type,Referral mode,Referral outgoing status,Warning flag status,Warning flag text,Is review,Is problem,Is primary";
 
          processloop3:
          LOOP  
