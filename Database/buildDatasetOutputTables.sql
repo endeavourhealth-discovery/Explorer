@@ -226,7 +226,9 @@ BEGIN
 
          IF TempValue = 'CLINICALEVENTS' THEN
 
-         SET columnNameString = "Procedure request status, Referral requester organisation, Referral recipient organisation, Referral request priority, Referral request type, Referral mode, Referral outgoing status, Warning flag status, Warning flag text";
+         SET columnNameString = "Procedure request status, Referral requester organisation, Referral recipient organisation, 
+         Referral request priority, Referral request type, Referral mode, Referral outgoing status, 
+         Warning flag status, Warning flag text, Is review, Is problem, Is primary";
 
          processloop3:
          LOOP  
@@ -258,9 +260,9 @@ BEGIN
                          EXECUTE stmt;
                          DEALLOCATE PREPARE stmt;
 
-                    ELSEIF columnName IN ('Referral outgoing status','Warning flag status') THEN
+                    ELSEIF columnName IN ('Referral outgoing status','Warning flag status', 'Is review', 'Is problem', 'Is primary') THEN
 
-                         SET @mod = CONCAT("ALTER TABLE ", output_table," MODIFY COLUMN `", columnName,"` TINYINT(1)");
+                         SET @mod = CONCAT("ALTER TABLE ", output_table," MODIFY COLUMN `", columnName,"` TINYINT(1) DEFAULT NULL");
                          PREPARE stmt FROM @mod;
                          EXECUTE stmt;
                          DEALLOCATE PREPARE stmt;
@@ -396,7 +398,7 @@ BEGIN
                                           `Organisation` VARCHAR(255), 
                                           `Patient` VARCHAR(255), 
                                           `Procedure request status` VARCHAR(255), 
-                                          `Warning flag status` VARCHAR(255), 
+                                          `Warning flag status` TINYINT(1), 
                                           `Concept term` VARCHAR(255), 
                                           `Concept code` VARCHAR(40),
                                           `Age at event` DECIMAL(5,2), 
