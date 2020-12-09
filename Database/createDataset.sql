@@ -166,7 +166,7 @@ DECLARE clinicalType VARCHAR(100);
                               SELECT DISTINCT p.query_id, o.id 
                               FROM ", p_sourcetab," o JOIN ", p_patientcohorttab," p ON o.patient_id = p.patient_id 
                               AND o.person_id = p.person_id AND o.organization_id = p.organization_id 
-                              JOIN ", p_schema,".concept cpt ON o.non_core_concept_id = cpt.non_core_concept_id 
+                              JOIN ", p_schema,".concept cpt ON o.non_core_concept_id = cpt.dbid
                               WHERE ( cpt.name NOT LIKE '%procedure%' 
                               AND cpt.name NOT LIKE '%family history%' 
                               AND cpt.name NOT LIKE '%FH:%'  
@@ -185,7 +185,7 @@ DECLARE clinicalType VARCHAR(100);
                               SELECT DISTINCT p.query_id, o.id 
                               FROM ", p_sourcetab," o JOIN ", p_patientcohorttab," p ON o.patient_id = p.patient_id 
                               AND o.person_id = p.person_id AND o.organization_id = p.organization_id 
-                              JOIN ", p_schema,".concept cpt ON o.non_core_concept_id = cpt.non_core_concept_id 
+                              JOIN ", p_schema,".concept cpt ON o.non_core_concept_id = cpt.dbid
                               WHERE o.is_problem = 1 
                               AND o.is_review = 0 
                               AND o.non_core_concept_id IS NOT NULL AND ", p_daterange," AND ", p_activeString); 
@@ -211,7 +211,7 @@ DECLARE clinicalType VARCHAR(100);
                               SELECT DISTINCT p.query_id, o.id 
                               FROM ", p_sourcetab," o JOIN ", p_patientcohorttab," p ON o.patient_id = p.patient_id 
                               AND o.person_id = p.person_id AND o.organization_id = p.organization_id 
-                              JOIN ", p_schema,".concept cpt ON o.non_core_concept_id = cpt.non_core_concept_id 
+                              JOIN ", p_schema,".concept cpt ON o.non_core_concept_id = cpt.dbid
                               WHERE ( cpt.name LIKE '%procedure%' 
                               OR EXISTS (SELECT 1 FROM qry_concept q WHERE q.non_core_concept_id = o.non_core_concept_id) ) 
                               AND o.non_core_concept_id IS NOT NULL AND ", p_daterange," AND ", p_activeString); 
@@ -237,7 +237,7 @@ DECLARE clinicalType VARCHAR(100);
                               SELECT DISTINCT p.query_id, o.id 
                               FROM ", p_sourcetab," o JOIN ", p_patientcohorttab," p ON o.patient_id = p.patient_id 
                               AND o.person_id = p.person_id AND o.organization_id = p.organization_id 
-                              JOIN ", p_schema,".concept cpt ON o.non_core_concept_id = cpt.non_core_concept_id 
+                              JOIN ", p_schema,".concept cpt ON o.non_core_concept_id = cpt.dbid
                               WHERE ( cpt.name LIKE '%family history%' OR cpt.name LIKE '%FH:%' 
                               OR EXISTS (SELECT 1 FROM qry_concept q WHERE q.non_core_concept_id = o.non_core_concept_id) ) 
                               AND o.non_core_concept_id IS NOT NULL AND ", p_daterange," AND ", p_activeString); 
@@ -263,7 +263,7 @@ DECLARE clinicalType VARCHAR(100);
                               SELECT DISTINCT p.query_id, o.id 
                               FROM ", p_sourcetab," o JOIN ", p_patientcohorttab," p ON o.patient_id = p.patient_id 
                               AND o.person_id = p.person_id AND o.organization_id = p.organization_id 
-                              JOIN ", p_schema,".concept cpt ON o.non_core_concept_id = cpt.non_core_concept_id 
+                              JOIN ", p_schema,".concept cpt ON o.non_core_concept_id = cpt.dbid
                               WHERE ( cpt.name LIKE '%immunisation%' OR cpt.name LIKE '%vaccination%' 
                               OR EXISTS (SELECT 1 FROM qry_concept q WHERE q.non_core_concept_id = o.non_core_concept_id) ) 
                               AND o.non_core_concept_id IS NOT NULL AND ", p_daterange," AND ", p_activeString); 
