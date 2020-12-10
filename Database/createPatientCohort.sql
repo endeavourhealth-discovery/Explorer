@@ -94,7 +94,7 @@ BEGIN
         DEALLOCATE PREPARE stmt;
         
         -- set where clause
-        SET where_clause_1 = CONCAT(p_regIncludeExclude,' (SELECT 1 FROM qry_tmp_2 c2 WHERE c2.patient_id = c.patient_id) ');
+        SET where_clause_1 = CONCAT(p_regIncludeExclude,' (SELECT 1 FROM qry_tmp_2 c2 WHERE c2.patient_id = c.patient_id AND c2.organization_id = c.organization_id) ');
    ELSE
         SET where_clause_1 = '1';
    END IF;
