@@ -54,8 +54,8 @@ DECLARE timeperioddaterange VARCHAR(255);
 SET p_includedExclude = IF(p_includedExclude = '', NULL, p_includedExclude);
 SET p_includedAnyAll = IF(p_includedAnyAll = '', NULL, p_includedAnyAll); 
 SET p_includedValueSet = IF(p_includedValueSet = '', NULL, p_includedValueSet); 
-SET p_includedDateFrom = IF(p_includedDateFrom = 'NaN-NaN-NaN',NULL, IF(p_includedDateFrom = '', NULL, SUBSTRING(p_includedDateFrom,1,10)));
-SET p_includedDateTo = IF(p_includedDateTo = 'NaN-NaN-NaN',NULL, IF(p_includedDateTo = '', NULL, SUBSTRING(p_includedDateTo,1,10)));
+SET p_includedDateFrom = IF(p_includedDateFrom = '', NULL, SUBSTRING(p_includedDateFrom,1,10));
+SET p_includedDateTo = IF(p_includedDateTo = '', NULL, SUBSTRING(p_includedDateTo,1,10));
 
 SET p_includedPeriodOperator = IF(p_includedPeriodOperator = '', NULL, p_includedPeriodOperator); 
 
