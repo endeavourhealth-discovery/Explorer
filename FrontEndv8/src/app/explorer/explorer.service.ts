@@ -423,4 +423,13 @@ export class ExplorerService {
     return this.http.get('api/events/registryQueries', {params});
   }
 
+  getDashboardRegistries (selectedOrganisations: string, selectedRegistries: string): Observable<any> {
+    let params = new HttpParams();
+
+    params = params.append('selectedOrganisations', selectedOrganisations);
+    params = params.append('selectedRegistries', selectedRegistries);
+
+    return this.http.get('api/events/dashboardRegistries', {params});
+  }
+
 }

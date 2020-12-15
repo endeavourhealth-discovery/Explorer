@@ -132,7 +132,7 @@ public class DashboardEndpoint {
     }
 
     @GET
-    @Path("/dashboardregistries")
+    @Path("/dashboardRegistries")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getDashboardRegistries(@Context SecurityContext sc,

@@ -57,6 +57,7 @@ import {MatSliderModule} from "@angular/material/slider";
 import {TrendComponent} from "./trend/trend.component";
 import {OrganisationListSizesComponent} from './organisationlistsizes/organisationlistsizes.component';
 import { PracticeListSizesComponent } from './practicelistsizes/practicelistsizes.component';
+import {GraphicalComparisonComponent} from "./graphicalcomparison/graphicalcomparison.component";
 
 @NgModule({
   declarations: [
@@ -80,7 +81,8 @@ import { PracticeListSizesComponent } from './practicelistsizes/practicelistsize
     MapComponent,
     TrendComponent,
     OrganisationListSizesComponent,
-    PracticeListSizesComponent
+    PracticeListSizesComponent,
+    GraphicalComparisonComponent
   ],
     imports: [
         BrowserModule,

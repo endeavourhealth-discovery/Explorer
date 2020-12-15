@@ -25,6 +25,7 @@ tr.expanded-element-row:not(.expanded-expanded-row):active {
 
 .expanded-element-description {
   padding: 16px;
+  width: 100%;
 }
 
 .expanded-element-description-attribution {
@@ -34,6 +35,7 @@ tr.expanded-element-row:not(.expanded-expanded-row):active {
 .expanded-table {
   border-collapse: separate;
   border-spacing: 100px 5px;
+  width: 33%;
 }
 
 ::ng-deep .mat-sort-header-arrow {

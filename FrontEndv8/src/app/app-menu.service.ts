@@ -11,6 +11,7 @@ import {DashboardViewerComponent} from "./explorer/dashboardviewer/dashboardview
 import {MapComponent} from "./explorer/map/map.component";
 import {OrganisationListSizesComponent} from "./explorer/organisationlistsizes/organisationlistsizes.component";
 import {PracticeListSizesComponent} from "./explorer/practicelistsizes/practicelistsizes.component";
+import {GraphicalComparisonComponent} from "./explorer/graphicalcomparison/graphicalcomparison.component";
 
 @Injectable()
 export class AppMenuService implements  AbstractMenuProvider {
@@ -26,7 +27,8 @@ export class AppMenuService implements  AbstractMenuProvider {
       {path: 'organisationlistsizes', component: OrganisationListSizesComponent, data: {role: 'explorer'}},
       {path: 'practicelistsizes/:ccg', component: PracticeListSizesComponent, data: {role: 'explorer'}},
       {path: 'map', component: MapComponent, data: {role: 'explorer'}},
-      {path: 'tutorials', component: TutorialsComponent, data: {role: 'explorer'}}
+      {path: 'tutorials', component: TutorialsComponent, data: {role: 'explorer'}},
+      {path: 'graphicalcomparison', component: GraphicalComparisonComponent, data: {role: 'explorer'}}
     ];
   }
 

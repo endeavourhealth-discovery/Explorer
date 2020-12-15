@@ -7,6 +7,7 @@ import {FormControl} from "@angular/forms";
 import {PatientComponent} from "../patient/patient.component";
 import {MatDialog} from "@angular/material/dialog";
 import {SelectionModel} from "@angular/cdk/collections";
+import {Router} from "@angular/router";
 
 import {TrendComponent} from "../trend/trend.component";
 
@@ -35,6 +36,7 @@ export class RegistriesComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private explorerService: ExplorerService,
     private dialog: MatDialog,
     private log: LoggerService) { }
@@ -231,6 +233,10 @@ export class RegistriesComponent implements OnInit {
   applyFilter() {
     const filterValue = this.filter;
     this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  graphicalComparison () {
+    this.router.navigate(['/graphicalcomparison'])
   }
 
 }
