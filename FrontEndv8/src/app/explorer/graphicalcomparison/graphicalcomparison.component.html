@@ -5,19 +5,19 @@
 
   <mat-card-content>
     <div style="font-size: 14px">
-      <mat-form-field *ngIf="selectedCCG==''" style="margin-left: 10px; width:300px" class="example-full-width" appearance="outline">
+      <mat-form-field *ngIf="selectedCCG==''" style="margin-left: 20px; width:32%" class="example-full-width" appearance="outline">
         <mat-label>Select practice</mat-label>
         <mat-select [formControl]="practices" multiple [(value)]="selectedPractices">
           <mat-option (click)="refresh()" *ngFor="let result of practiceList" [value]="result">{{result}}</mat-option>
         </mat-select>
       </mat-form-field>
-      <mat-form-field *ngIf="selectedPractices==''" style="margin-left: 10px; width:300px" class="example-full-width" appearance="outline">
+      <mat-form-field *ngIf="selectedPractices==''" style="margin-left: 10px; width:32%" class="example-full-width" appearance="outline">
         <mat-label>Filter CCG/TRUST</mat-label>
         <mat-select [formControl]="ccgValues" multiple [(value)]="selectedCCG">
           <mat-option (click)="refresh()" *ngFor="let result of ccgList" [value]="result">{{result}}</mat-option>
         </mat-select>
       </mat-form-field>
-      <mat-form-field style="margin-left: 10px; width:300px" class="example-full-width" appearance="outline">
+      <mat-form-field style="margin-left: 10px; width:32%" class="example-full-width" appearance="outline">
         <mat-label>Select registry</mat-label>
         <mat-select [formControl]="registries" multiple [(value)]="selectedRegistries">
           <mat-select-search [formControl]="filterCtrl"></mat-select-search>
@@ -28,9 +28,9 @@
       </mat-form-field>
     </div>
     <br/>
-    <table style="table-layout: fixed">
+    <table style="table-layout: fixed; min-width: 100%">
       <tr>
-        <td style="vertical-align: top; width: 1200px">
+        <td style="vertical-align: top">
           <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
             <ngx-charts-bar-vertical-2d
               [view]="view"

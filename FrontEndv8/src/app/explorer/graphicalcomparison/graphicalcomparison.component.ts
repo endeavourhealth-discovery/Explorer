@@ -20,7 +20,7 @@ export class GraphicalComparisonComponent implements OnInit {
   filterCtrl: FormControl = new FormControl();
   filteredValueset: ReplaySubject<orgList[]> = new ReplaySubject<orgList[]>(1);
 
-  view: any[] = [1200, 330];
+  view: any[] = [1800, 330];
   chartResults: any[];
   practices = new FormControl();
   practiceList: string[] = [];
@@ -43,7 +43,7 @@ export class GraphicalComparisonComponent implements OnInit {
   xAxisLabel: string = 'Date';
   yAxisLabel: string = 'Percentage';
   showGridLines: boolean = true;
-  gradient: boolean = true;
+  gradient: boolean = false;
   orgs: string;
 
   colorScheme = {
