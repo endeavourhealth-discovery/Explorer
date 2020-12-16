@@ -31,8 +31,6 @@ export class GraphicalComparisonComponent implements OnInit {
   registryList = [];
   registries = new FormControl(this.registryList);
   selectedRegistries: string = '';
-  selectAllCCG: boolean = false;
-  selectAllPractice: boolean = false;
 
   // options
   legend: boolean = true;
@@ -155,28 +153,6 @@ export class GraphicalComparisonComponent implements OnInit {
 
     this.practices.reset(false);
 
-    this.refresh();
-  }
-
-  toggleCCGSelection(event) {
-    if (event.checked) {
-      this.ccgValues = new FormControl(this.ccgList);
-      this.selectedCCG = this.ccgList;
-    } else {
-      this.ccgValues = new FormControl([]);
-      this.selectedCCG = "";
-    }
-    this.refresh();
-  }
-
-  togglePracticeSelection(event) {
-    if (event.checked) {
-      this.practices = new FormControl(this.practiceList);
-      this.selectedPractices = this.practiceList;
-    } else {
-      this.practices = new FormControl([]);
-      this.selectedPractices = "";
-    }
     this.refresh();
   }
 
