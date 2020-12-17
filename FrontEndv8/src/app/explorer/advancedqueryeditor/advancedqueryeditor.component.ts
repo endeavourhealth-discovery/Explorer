@@ -1016,96 +1016,96 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.seriesPeriodValue = query.seriesPeriodValue;
       this.seriesPeriodType = query.seriesPeriodType;
 
-      if (this.withWithout1a != "") {
+      if (this.withWithout1a != "" && this.withWithout1a!=undefined) {
         this.select1a = true;
         this.addQuery1 = false;
       }
 
-      if (this.withWithout1b != "") {
+      if (this.withWithout1b != "" && this.withWithout1b!=undefined) {
         this.select1b = true;
         this.addQuery1b = false;
       }
 
-      if (this.withWithout1c != "") {
+      if (this.withWithout1c != "" && this.withWithout1c!=undefined) {
         this.select1c = true;
         this.addQuery1c = false;
       }
 
-      if (this.withWithout1d != "") {
+      if (this.withWithout1d != "" && this.withWithout1d!=undefined) {
         this.select1d = true;
         this.addQuery1d = false;
       }
 
-      if (this.withWithout2a != "") {
+      if (this.withWithout2a != "" && this.withWithout2a!=undefined) {
         this.select2a = true;
         this.addQuery2 = false;
       }
-      if (this.withWithout3a != "") {
+      if (this.withWithout3a != "" && this.withWithout3a!=undefined) {
         this.select3a = true;
         this.addQuery3 = false;
       }
-      if (this.withWithout5a != "") {
+      if (this.withWithout5a != "" && this.withWithout5a!=undefined) {
         this.select5a = true;
         this.addQuery5 = false;
       }
 
-      if (this.selectReject2 != "") {
+      if (this.selectReject2 != "" && this.selectReject2!=undefined) {
         this.rule1 = true;
         this.addRule1 = false;
       }
-      if (this.selectReject3 != "") {
+      if (this.selectReject3 != ""  && this.selectReject3!=undefined) {
         this.rule2 = true;
         this.addRule2 = false;
       }
-      if (this.selectReject4 != "") {
+      if (this.selectReject4 != ""  && this.selectReject4!=undefined) {
         this.rule3 = true;
         this.addRule3 = false;
       }
-      if (this.selectReject5 != "") {
+      if (this.selectReject5 != ""  && this.selectReject5!=undefined) {
         this.rule4 = true;
         this.addRule4 = false;
       }
-      if (this.selectReject6 != "") {
+      if (this.selectReject6 != ""  && this.selectReject6!=undefined) {
         this.rule5 = true;
         this.addRule5 = false;
       }
-      if (this.selectReject7 != "") {
+      if (this.selectReject7 != ""  && this.selectReject7!=undefined) {
         this.rule6 = true;
         this.addRule6 = false;
       }
-      if (this.selectReject8 != "") {
+      if (this.selectReject8 != ""  && this.selectReject8!=undefined) {
         this.rule7 = true;
         this.addRule7 = false;
       }
-      if (this.selectReject9 != "") {
+      if (this.selectReject9 != ""  && this.selectReject9!=undefined) {
         this.rule8 = true;
         this.addRule8 = false;
       }
-      if (this.selectReject10 != "") {
+      if (this.selectReject10 != ""  && this.selectReject10!=undefined) {
         this.rule9 = true;
         this.addRule9 = false;
       }
-      if (this.selectReject11 != "") {
+      if (this.selectReject11 != ""  && this.selectReject11!=undefined) {
         this.rule10 = true;
         this.addRule10 = false;
       }
-      if (this.selectReject12 != "") {
+      if (this.selectReject12 != ""  && this.selectReject12!=undefined) {
         this.rule11 = true;
         this.addRule11 = false;
       }
-      if (this.selectReject13 != "") {
+      if (this.selectReject13 != ""  && this.selectReject13!=undefined) {
         this.rule12 = true;
         this.addRule12 = false;
       }
-      if (this.selectReject14 != "") {
+      if (this.selectReject14 != ""  && this.selectReject14!=undefined) {
         this.rule13 = true;
         this.addRule13 = false;
       }
-      if (this.selectReject15 != "") {
+      if (this.selectReject15 != ""  && this.selectReject15!=undefined) {
         this.rule14 = true;
         this.addRule14 = false;
       }
-      if (this.selectReject16 != "") {
+      if (this.selectReject16 != ""  && this.selectReject16!=undefined) {
         this.rule15 = true;
         this.addRule15 = false;
       }
