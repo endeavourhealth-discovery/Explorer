@@ -509,7 +509,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         QueryLibrary querylibrary = new QueryLibrary();
 
         querylibrary
-                .setId(resultSet.getInt("id"))
+                .setId(resultSet.getString("id"))
                 .setType(resultSet.getString("type"))
                 .setName(resultSet.getString("name"))
                 .setRegistryName(resultSet.getString("registry_name"))

@@ -36,7 +36,7 @@ interface savedQuery {
   registrationPeriodType: string;
   schedule: string;
   delivery: string;
-  includedExclude1: string;
+  withWithout1: string;
   includedValueSet1: string;
   includedDateFrom1: string;
   includedDateTo1: string;
@@ -44,7 +44,7 @@ interface savedQuery {
   includedPeriodValue1: string;
   includedPeriodType1: string;
   includedAnyAll1: string;
-  includedExclude1a: string;
+  withWithout1a: string;
   includedValueSet1a: string;
   includedDateFrom1a: string;
   includedDateTo1a: string;
@@ -52,7 +52,7 @@ interface savedQuery {
   includedPeriodValue1a: string;
   includedPeriodType1a: string;
   includedAnyAll1a: string;
-  includedExclude1b: string;
+  withWithout1b: string;
   includedValueSet1b: string;
   includedDateFrom1b: string;
   includedDateTo1b: string;
@@ -60,7 +60,7 @@ interface savedQuery {
   includedPeriodValue1b: string;
   includedPeriodType1b: string;
   includedAnyAll1b: string;
-  includedExclude1c: string;
+  withWithout1c: string;
   includedValueSet1c: string;
   includedDateFrom1c: string;
   includedDateTo1c: string;
@@ -68,7 +68,7 @@ interface savedQuery {
   includedPeriodValue1c: string;
   includedPeriodType1c: string;
   includedAnyAll1c: string;
-  includedExclude1d: string;
+  withWithout1d: string;
   includedValueSet1d: string;
   includedDateFrom1d: string;
   includedDateTo1d: string;
@@ -76,7 +76,7 @@ interface savedQuery {
   includedPeriodValue1d: string;
   includedPeriodType1d: string;
   includedAnyAll1d: string;
-  includedExclude2: string;
+  withWithout2: string;
   includedValueSet2: string;
   includedEarliestLatest2: string;
   includedOperator2: string;
@@ -87,7 +87,7 @@ interface savedQuery {
   includedPeriodOperator2: string;
   includedPeriodValue2: string;
   includedPeriodType2: string;
-  includedExclude2a: string;
+  withWithout2a: string;
   includedValueSet2a: string;
   includedEarliestLatest2a: string;
   includedOperator2a: string;
@@ -98,7 +98,7 @@ interface savedQuery {
   includedPeriodOperator2a: string;
   includedPeriodValue2a: string;
   includedPeriodType2a: string;
-  includedExclude3: string;
+  withWithout3: string;
   includedValueSet3: string;
   includedEarliestLatest3: string;
   includedTestedValueSet3: string;
@@ -109,7 +109,7 @@ interface savedQuery {
   includedPeriodOperator3: string;
   includedPeriodValue3: string;
   includedPeriodType3: string;
-  includedExclude3a: string;
+  withWithout3a: string;
   includedValueSet3a: string;
   includedEarliestLatest3a: string;
   includedTestedValueSet3a: string;
@@ -120,7 +120,7 @@ interface savedQuery {
   includedPeriodOperator3a: string;
   includedPeriodValue3a: string;
   includedPeriodType3a: string;
-  includedExclude4: string;
+  withWithout4: string;
   includedValueSet4: string;
   includedFollowedByValueSet4: string;
   includedDateFrom4: string;
@@ -131,7 +131,7 @@ interface savedQuery {
   includedAnyAll4: string;
   includedAnyAllFollowedBy4: string;
   includedAreNot4: string;
-  includedExclude5: string;
+  withWithout5: string;
   includedValueSet5: string;
   includedOperator5: string;
   includedEntryValue5: string;
@@ -141,7 +141,7 @@ interface savedQuery {
   includedPeriodValue5: string;
   includedPeriodType5: string;
   includedAnyAll5: string;
-  includedExclude5a: string;
+  withWithout5a: string;
   includedValueSet5a: string;
   includedOperator5a: string;
   includedEntryValue5a: string;
@@ -182,6 +182,70 @@ interface savedQuery {
   timeSeries: boolean;
   seriesTable: string;
   seriesField: string;
+
+  matching1: string;
+  queryExpression1: string;
+  selectReject2: string;
+  matching2: string;
+  queryExpression2: string;
+  ruleNumber2: string;
+  selectReject3: string;
+  matching3: string;
+  queryExpression3: string;
+  ruleNumber3: string;
+  selectReject4: string;
+  matching4: string;
+  queryExpression4: string;
+  ruleNumber4: string;
+  selectReject5: string;
+  matching5: string;
+  queryExpression5: string;
+  ruleNumber5: string;
+  selectReject6: string;
+  matching6: string;
+  queryExpression6: string;
+  ruleNumber6: string;
+  selectReject7: string;
+  matching7: string;
+  queryExpression7: string;
+  ruleNumber7: string;
+  selectReject8: string;
+  matching8: string;
+  queryExpression8: string;
+  ruleNumber8: string;
+  selectReject9: string;
+  matching9: string;
+  queryExpression9: string;
+  ruleNumber9: string;
+  selectReject10: string;
+  matching10: string;
+  queryExpression10: string;
+  ruleNumber10: string;
+  selectReject11: string;
+  matching11: string;
+  queryExpression11: string;
+  ruleNumber11: string;
+  selectReject12: string;
+  matching12: string;
+  queryExpression12: string;
+  ruleNumber12: string;
+  selectReject13: string;
+  matching13: string;
+  queryExpression13: string;
+  ruleNumber13: string;
+  selectReject14: string;
+  matching14: string;
+  queryExpression14: string;
+  ruleNumber14: string;
+  selectReject15: string;
+  matching15: string;
+  queryExpression15: string;
+  ruleNumber15: string;
+  selectReject16: string;
+  matching16: string;
+  queryExpression16: string;
+  ruleNumber16: string;
+
 }
 
 interface table {
@@ -214,6 +278,18 @@ interface clinicalType {
 
 interface exclude {
   exclude: string;
+}
+
+interface without {
+  without: string;
+}
+
+interface matching {
+  matching: string;
+}
+
+interface selectreject {
+  selectreject: string;
 }
 
 interface earliestLatest {
@@ -294,7 +370,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
   selectedGender: string = '';
   postcode: string = '';
 
-  includedExclude1: string = '';
+  withWithout1: string = '';
   includedValueSet1: string = '';
   includedDateFrom1: string = '';
   includedDateTo1: string = '';
@@ -302,7 +378,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
   includedPeriodValue1: string = '';
   includedPeriodType1: string = '';
   includedAnyAll1: string = '';
-  includedExclude1a: string = '';
+  withWithout1a: string = '';
   includedValueSet1a: string = '';
   includedDateFrom1a: string = '';
   includedDateTo1a: string = '';
@@ -310,7 +386,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
   includedPeriodValue1a: string = '';
   includedPeriodType1a: string = '';
   includedAnyAll1a: string = '';
-  includedExclude1b: string = '';
+  withWithout1b: string = '';
   includedValueSet1b: string = '';
   includedDateFrom1b: string = '';
   includedDateTo1b: string = '';
@@ -318,7 +394,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
   includedPeriodValue1b: string = '';
   includedPeriodType1b: string = '';
   includedAnyAll1b: string = '';
-  includedExclude1c: string = '';
+  withWithout1c: string = '';
   includedValueSet1c: string = '';
   includedDateFrom1c: string = '';
   includedDateTo1c: string = '';
@@ -326,7 +402,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
   includedPeriodValue1c: string = '';
   includedPeriodType1c: string = '';
   includedAnyAll1c: string = '';
-  includedExclude1d: string = '';
+  withWithout1d: string = '';
   includedValueSet1d: string = '';
   includedDateFrom1d: string = '';
   includedDateTo1d: string = '';
@@ -334,7 +410,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
   includedPeriodValue1d: string = '';
   includedPeriodType1d: string = '';
   includedAnyAll1d: string = '';
-  includedExclude2: string = '';
+  withWithout2: string = '';
   includedValueSet2: string = '';
   includedEarliestLatest2: string = '';
   includedOperator2: string = '';
@@ -345,7 +421,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
   includedPeriodOperator2: string = '';
   includedPeriodValue2: string = '';
   includedPeriodType2: string = '';
-  includedExclude2a: string = '';
+  withWithout2a: string = '';
   includedValueSet2a: string = '';
   includedEarliestLatest2a: string = '';
   includedOperator2a: string = '';
@@ -356,7 +432,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
   includedPeriodOperator2a: string = '';
   includedPeriodValue2a: string = '';
   includedPeriodType2a: string = '';
-  includedExclude3: string = '';
+  withWithout3: string = '';
   includedValueSet3: string = '';
   includedEarliestLatest3: string = '';
   includedTestedValueSet3: string = '';
@@ -367,7 +443,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
   includedPeriodOperator3: string = '';
   includedPeriodValue3: string = '';
   includedPeriodType3: string = '';
-  includedExclude3a: string = '';
+  withWithout3a: string = '';
   includedValueSet3a: string = '';
   includedEarliestLatest3a: string = '';
   includedTestedValueSet3a: string = '';
@@ -378,7 +454,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
   includedPeriodOperator3a: string = '';
   includedPeriodValue3a: string = '';
   includedPeriodType3a: string = '';
-  includedExclude4: string = '';
+  withWithout4: string = '';
   includedValueSet4: string = '';
   includedFollowedByValueSet4: string = '';
   includedDateFrom4: string = '';
@@ -389,7 +465,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
   includedAnyAll4: string = '';
   includedAnyAllFollowedBy4: string = '';
   includedAreNot4: string = '';
-  includedExclude5: string = '';
+  withWithout5: string = '';
   includedValueSet5: string = '';
   includedOperator5: string = '';
   includedEntryValue5: string = '';
@@ -399,7 +475,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
   includedPeriodValue5: string = '';
   includedPeriodType5: string = '';
   includedAnyAll5: string = '';
-  includedExclude5a: string = '';
+  withWithout5a: string = '';
   includedValueSet5a: string = '';
   includedOperator5a: string = '';
   includedEntryValue5a: string = '';
@@ -409,6 +485,69 @@ export class AdvancedQueryEditorComponent implements OnInit {
   includedPeriodValue5a: string = '';
   includedPeriodType5a: string = '';
   includedAnyAll5a: string = '';
+
+  matching1: string = '';
+  queryExpression1: string = '';
+  selectReject2: string = '';
+  matching2: string = '';
+  queryExpression2: string = '';
+  ruleNumber2: string = '';
+  selectReject3: string = '';
+  matching3: string = '';
+  queryExpression3: string = '';
+  ruleNumber3: string = '';
+  selectReject4: string = '';
+  matching4: string = '';
+  queryExpression4: string = '';
+  ruleNumber4: string = '';
+  selectReject5: string = '';
+  matching5: string = '';
+  queryExpression5: string = '';
+  ruleNumber5: string = '';
+  selectReject6: string = '';
+  matching6: string = '';
+  queryExpression6: string = '';
+  ruleNumber6: string = '';
+  selectReject7: string = '';
+  matching7: string = '';
+  queryExpression7: string = '';
+  ruleNumber7: string = '';
+  selectReject8: string = '';
+  matching8: string = '';
+  queryExpression8: string = '';
+  ruleNumber8: string = '';
+  selectReject9: string = '';
+  matching9: string = '';
+  queryExpression9: string = '';
+  ruleNumber9: string = '';
+  selectReject10: string = '';
+  matching10: string = '';
+  queryExpression10: string = '';
+  ruleNumber10: string = '';
+  selectReject11: string = '';
+  matching11: string = '';
+  queryExpression11: string = '';
+  ruleNumber11: string = '';
+  selectReject12: string = '';
+  matching12: string = '';
+  queryExpression12: string = '';
+  ruleNumber12: string = '';
+  selectReject13: string = '';
+  matching13: string = '';
+  queryExpression13: string = '';
+  ruleNumber13: string = '';
+  selectReject14: string = '';
+  matching14: string = '';
+  queryExpression14: string = '';
+  ruleNumber14: string = '';
+  selectReject15: string = '';
+  matching15: string = '';
+  queryExpression15: string = '';
+  ruleNumber15: string = '';
+  selectReject16: string = '';
+  matching16: string = '';
+  queryExpression16: string = '';
+  ruleNumber16: string = '';
 
   demographics: boolean = false;
   encounters: boolean = false;
@@ -484,6 +623,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
   thirdFormGroup: FormGroup;
   fourthFormGroup: FormGroup;
   fifthFormGroup: FormGroup;
+  sixthFormGroup: FormGroup;
 
   orgList = [];
   orgIncList = [];
@@ -514,6 +654,37 @@ export class AdvancedQueryEditorComponent implements OnInit {
   addQuery3: boolean = true;
   select5a: boolean = false;
   addQuery5: boolean = true;
+
+  rule1: boolean = false;
+  addRule1: boolean = true;
+  rule2: boolean = false;
+  addRule2: boolean = true;
+  rule3: boolean = false;
+  addRule3: boolean = true;
+  rule4: boolean = false;
+  addRule4: boolean = true;
+  rule5: boolean = false;
+  addRule5: boolean = true;
+  rule6: boolean = false;
+  addRule6: boolean = true;
+  rule7: boolean = false;
+  addRule7: boolean = true;
+  rule8: boolean = false;
+  addRule8: boolean = true;
+  rule9: boolean = false;
+  addRule9: boolean = true;
+  rule10: boolean = false;
+  addRule10: boolean = true;
+  rule11: boolean = false;
+  addRule11: boolean = true;
+  rule12: boolean = false;
+  addRule12: boolean = true;
+  rule13: boolean = false;
+  addRule13: boolean = true;
+  rule14: boolean = false;
+  addRule14: boolean = true;
+  rule15: boolean = false;
+  addRule15: boolean = true;
 
   tables: table[] = [
     {table: ''},
@@ -554,6 +725,21 @@ export class AdvancedQueryEditorComponent implements OnInit {
     {exclude: ''},
     {exclude: 'Include'},
     {exclude: 'Exclude'}
+  ];
+  without: without[] = [
+    {without: ''},
+    {without: 'with'},
+    {without: 'without'}
+  ];
+  matching: matching[] = [
+    {matching: ''},
+    {matching: 'matching'},
+    {matching: 'not matching'}
+  ];
+  selectreject: selectreject[] = [
+    {selectreject: ''},
+    {selectreject: 'Select'},
+    {selectreject: 'Reject'}
   ];
   earliestLatest: earliestLatest[] = [
     {earliestLatest: ''},
@@ -619,7 +805,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.registrationPeriodType = query.registrationPeriodType;
       this.selectedSchedule = query.schedule;
       this.selectedDelivery = query.delivery;
-      this.includedExclude1 = query.includedExclude1;
+      this.withWithout1 = query.withWithout1;
       this.includedValueSet1 = query.includedValueSet1;
       this.includedDateFrom1 = query.includedDateFrom1;
       this.includedDateTo1 = query.includedDateTo1;
@@ -627,7 +813,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.includedPeriodValue1 = query.includedPeriodValue1;
       this.includedPeriodType1 = query.includedPeriodType1;
       this.includedAnyAll1 = query.includedAnyAll1;
-      this.includedExclude1a = query.includedExclude1a;
+      this.withWithout1a = query.withWithout1a;
       this.includedValueSet1a = query.includedValueSet1a;
       this.includedDateFrom1a = query.includedDateFrom1a;
       this.includedDateTo1a = query.includedDateTo1a;
@@ -635,7 +821,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.includedPeriodValue1a = query.includedPeriodValue1a;
       this.includedPeriodType1a = query.includedPeriodType1a;
       this.includedAnyAll1a = query.includedAnyAll1a;
-      this.includedExclude1b = query.includedExclude1b;
+      this.withWithout1b = query.withWithout1b;
       this.includedValueSet1b = query.includedValueSet1b;
       this.includedDateFrom1b = query.includedDateFrom1b;
       this.includedDateTo1b = query.includedDateTo1b;
@@ -643,7 +829,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.includedPeriodValue1b = query.includedPeriodValue1b;
       this.includedPeriodType1b = query.includedPeriodType1b;
       this.includedAnyAll1b = query.includedAnyAll1b;
-      this.includedExclude1c = query.includedExclude1c;
+      this.withWithout1c = query.withWithout1c;
       this.includedValueSet1c = query.includedValueSet1c;
       this.includedDateFrom1c = query.includedDateFrom1c;
       this.includedDateTo1c = query.includedDateTo1c;
@@ -651,7 +837,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.includedPeriodValue1c = query.includedPeriodValue1c;
       this.includedPeriodType1c = query.includedPeriodType1c;
       this.includedAnyAll1c = query.includedAnyAll1c;
-      this.includedExclude1d = query.includedExclude1d;
+      this.withWithout1d = query.withWithout1d;
       this.includedValueSet1d = query.includedValueSet1d;
       this.includedDateFrom1d = query.includedDateFrom1d;
       this.includedDateTo1d = query.includedDateTo1d;
@@ -659,7 +845,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.includedPeriodValue1d = query.includedPeriodValue1d;
       this.includedPeriodType1d = query.includedPeriodType1d;
       this.includedAnyAll1d = query.includedAnyAll1d;
-      this.includedExclude2 = query.includedExclude2;
+      this.withWithout2 = query.withWithout2;
       this.includedValueSet2 = query.includedValueSet2;
       this.includedEarliestLatest2 = query.includedEarliestLatest2;
       this.includedOperator2 = query.includedOperator2;
@@ -670,7 +856,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.includedPeriodOperator2 = query.includedPeriodOperator2;
       this.includedPeriodValue2 = query.includedPeriodValue2;
       this.includedPeriodType2 = query.includedPeriodType2;
-      this.includedExclude2a = query.includedExclude2a;
+      this.withWithout2a = query.withWithout2a;
       this.includedValueSet2a = query.includedValueSet2a;
       this.includedEarliestLatest2a = query.includedEarliestLatest2a;
       this.includedOperator2a = query.includedOperator2a;
@@ -681,7 +867,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.includedPeriodOperator2a = query.includedPeriodOperator2a;
       this.includedPeriodValue2a = query.includedPeriodValue2a;
       this.includedPeriodType2a = query.includedPeriodType2a;
-      this.includedExclude3 = query.includedExclude3;
+      this.withWithout3 = query.withWithout3;
       this.includedValueSet3 = query.includedValueSet3;
       this.includedEarliestLatest3 = query.includedEarliestLatest3;
       this.includedTestedValueSet3 = query.includedTestedValueSet3;
@@ -692,7 +878,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.includedPeriodOperator3 = query.includedPeriodOperator3;
       this.includedPeriodValue3 = query.includedPeriodValue3;
       this.includedPeriodType3 = query.includedPeriodType3;
-      this.includedExclude3a = query.includedExclude3a;
+      this.withWithout3a = query.withWithout3a;
       this.includedValueSet3a = query.includedValueSet3a;
       this.includedEarliestLatest3a = query.includedEarliestLatest3a;
       this.includedTestedValueSet3a = query.includedTestedValueSet3a;
@@ -703,7 +889,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.includedPeriodOperator3a = query.includedPeriodOperator3a;
       this.includedPeriodValue3a = query.includedPeriodValue3a;
       this.includedPeriodType3a = query.includedPeriodType3a;
-      this.includedExclude4 = query.includedExclude4;
+      this.withWithout4 = query.withWithout4;
       this.includedValueSet4 = query.includedValueSet4;
       this.includedFollowedByValueSet4 = query.includedFollowedByValueSet4;
       this.includedDateFrom4 = query.includedDateFrom4;
@@ -714,7 +900,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.includedAnyAll4 = query.includedAnyAll4;
       this.includedAnyAllFollowedBy4 = query.includedAnyAllFollowedBy4;
       this.includedAreNot4 = query.includedAreNot4;
-      this.includedExclude5 = query.includedExclude5;
+      this.withWithout5 = query.withWithout5;
       this.includedValueSet5 = query.includedValueSet5;
       this.includedOperator5 = query.includedOperator5;
       this.includedEntryValue5 = query.includedEntryValue5;
@@ -724,7 +910,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.includedPeriodValue5 = query.includedPeriodValue5;
       this.includedPeriodType5 = query.includedPeriodType5;
       this.includedAnyAll5 = query.includedAnyAll5;
-      this.includedExclude5a = query.includedExclude5a;
+      this.withWithout5a = query.withWithout5a;
       this.includedValueSet5a = query.includedValueSet5a;
       this.includedOperator5a = query.includedOperator5a;
       this.includedEntryValue5a = query.includedEntryValue5a;
@@ -734,6 +920,69 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.includedPeriodValue5a = query.includedPeriodValue5a;
       this.includedPeriodType5a = query.includedPeriodType5a;
       this.includedAnyAll5a = query.includedAnyAll5a;
+
+      this.matching1 = query.matching1;
+      this.queryExpression1 = query.queryExpression1;
+      this.selectReject2 = query.selectReject2;
+      this.matching2 = query.matching2;
+      this.queryExpression2 = query.queryExpression2;
+      this.ruleNumber2 = query.ruleNumber2;
+      this.selectReject3 = query.selectReject3;
+      this.matching3 = query.matching3;
+      this.queryExpression3 = query.queryExpression3;
+      this.ruleNumber3 = query.ruleNumber3;
+      this.selectReject4 = query.selectReject4;
+      this.matching4 = query.matching4;
+      this.queryExpression4 = query.queryExpression4;
+      this.ruleNumber4 = query.ruleNumber4;
+      this.selectReject5 = query.selectReject5;
+      this.matching5 = query.matching5;
+      this.queryExpression5 = query.queryExpression5;
+      this.ruleNumber5 = query.ruleNumber5;
+      this.selectReject6 = query.selectReject6;
+      this.matching6 = query.matching6;
+      this.queryExpression6 = query.queryExpression6;
+      this.ruleNumber6 = query.ruleNumber6;
+      this.selectReject7 = query.selectReject7;
+      this.matching7 = query.matching7;
+      this.queryExpression7 = query.queryExpression7;
+      this.ruleNumber7 = query.ruleNumber7;
+      this.selectReject8 = query.selectReject8;
+      this.matching8 = query.matching8;
+      this.queryExpression8 = query.queryExpression8;
+      this.ruleNumber8 = query.ruleNumber8;
+      this.selectReject9 = query.selectReject9;
+      this.matching9 = query.matching9;
+      this.queryExpression9 = query.queryExpression9;
+      this.ruleNumber9 = query.ruleNumber9;
+      this.selectReject10 = query.selectReject10;
+      this.matching10 = query.matching10;
+      this.queryExpression10 = query.queryExpression10;
+      this.ruleNumber10 = query.ruleNumber10;
+      this.selectReject11 = query.selectReject11;
+      this.matching11 = query.matching11;
+      this.queryExpression11 = query.queryExpression11;
+      this.ruleNumber11 = query.ruleNumber11;
+      this.selectReject12 = query.selectReject12;
+      this.matching12 = query.matching12;
+      this.queryExpression12 = query.queryExpression12;
+      this.ruleNumber12 = query.ruleNumber12;
+      this.selectReject13 = query.selectReject13;
+      this.matching13 = query.matching13;
+      this.queryExpression13 = query.queryExpression13;
+      this.ruleNumber13 = query.ruleNumber13;
+      this.selectReject14 = query.selectReject14;
+      this.matching14 = query.matching14;
+      this.queryExpression14 = query.queryExpression14;
+      this.ruleNumber14 = query.ruleNumber14;
+      this.selectReject15 = query.selectReject15;
+      this.matching15 = query.matching15;
+      this.queryExpression15 = query.queryExpression15;
+      this.ruleNumber15 = query.ruleNumber15;
+      this.selectReject16 = query.selectReject16;
+      this.matching16 = query.matching16;
+      this.queryExpression16 = query.queryExpression16;
+      this.ruleNumber16 = query.ruleNumber16;
 
       this.demographics = query.demographics;
       this.encounters = query.encounters;
@@ -767,37 +1016,98 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.seriesPeriodValue = query.seriesPeriodValue;
       this.seriesPeriodType = query.seriesPeriodType;
 
-      if (this.includedExclude1a != "") {
+      if (this.withWithout1a != "") {
         this.select1a = true;
         this.addQuery1 = false;
       }
 
-      if (this.includedExclude1b != "") {
+      if (this.withWithout1b != "") {
         this.select1b = true;
         this.addQuery1b = false;
       }
 
-      if (this.includedExclude1c != "") {
+      if (this.withWithout1c != "") {
         this.select1c = true;
         this.addQuery1c = false;
       }
 
-      if (this.includedExclude1d != "") {
+      if (this.withWithout1d != "") {
         this.select1d = true;
         this.addQuery1d = false;
       }
 
-      if (this.includedExclude2a != "") {
+      if (this.withWithout2a != "") {
         this.select2a = true;
         this.addQuery2 = false;
       }
-      if (this.includedExclude3a != "") {
+      if (this.withWithout3a != "") {
         this.select3a = true;
         this.addQuery3 = false;
       }
-      if (this.includedExclude5a != "") {
+      if (this.withWithout5a != "") {
         this.select5a = true;
         this.addQuery5 = false;
+      }
+
+      if (this.selectReject2 != "") {
+        this.rule1 = true;
+        this.addRule1 = false;
+      }
+      if (this.selectReject3 != "") {
+        this.rule2 = true;
+        this.addRule2 = false;
+      }
+      if (this.selectReject4 != "") {
+        this.rule3 = true;
+        this.addRule3 = false;
+      }
+      if (this.selectReject5 != "") {
+        this.rule4 = true;
+        this.addRule4 = false;
+      }
+      if (this.selectReject6 != "") {
+        this.rule5 = true;
+        this.addRule5 = false;
+      }
+      if (this.selectReject7 != "") {
+        this.rule6 = true;
+        this.addRule6 = false;
+      }
+      if (this.selectReject8 != "") {
+        this.rule7 = true;
+        this.addRule7 = false;
+      }
+      if (this.selectReject9 != "") {
+        this.rule8 = true;
+        this.addRule8 = false;
+      }
+      if (this.selectReject10 != "") {
+        this.rule9 = true;
+        this.addRule9 = false;
+      }
+      if (this.selectReject11 != "") {
+        this.rule10 = true;
+        this.addRule10 = false;
+      }
+      if (this.selectReject12 != "") {
+        this.rule11 = true;
+        this.addRule11 = false;
+      }
+      if (this.selectReject13 != "") {
+        this.rule12 = true;
+        this.addRule12 = false;
+      }
+      if (this.selectReject14 != "") {
+        this.rule13 = true;
+        this.addRule13 = false;
+      }
+      if (this.selectReject15 != "") {
+        this.rule14 = true;
+        this.addRule14 = false;
+      }
+      if (this.selectReject16 != "") {
+        this.rule15 = true;
+        this.addRule15 = false;
       }
     }
 
@@ -835,12 +1145,30 @@ export class AdvancedQueryEditorComponent implements OnInit {
       control149: [''],control150: [''],control151: [''],control152: [''],control153: [''],control154: [''],control155: [''],control156: ['']
     });
     this.fourthFormGroup = this._formBuilder.group({
+      control170: [''], control171: [''],
+        control172: [''], control173: [''],control174: [''],control175: [''],
+        control172a: [''], control173a: [''],control174a: [''],control175a: [''],
+      control172b: [''], control173b: [''],control174b: [''],control175b: [''],
+      control172c: [''], control173c: [''],control174c: [''],control175c: [''],
+      control172d: [''], control173d: [''],control174d: [''],control175d: [''],
+      control172e: [''], control173e: [''],control174e: [''],control175e: [''],
+      control172f: [''], control173f: [''],control174f: [''],control175f: [''],
+      control172g: [''], control173g: [''],control174g: [''],control175g: [''],
+      control172h: [''], control173h: [''],control174h: [''],control175h: [''],
+      control172i: [''], control173i: [''],control174i: [''],control175i: [''],
+      control172j: [''], control173j: [''],control174j: [''],control175j: [''],
+      control172k: [''], control173k: [''],control174k: [''],control175k: [''],
+      control172l: [''], control173l: [''],control174l: [''],control175l: [''],
+      control172m: [''], control173m: [''],control174m: [''],control175m: [''],
+      control172n: [''], control173n: [''],control174n: [''],control175n: ['']
+    });
+    this.fifthFormGroup = this._formBuilder.group({
       control165a: [''],  control165e: [''], control166a: [''], control166c: [''], control166d: [''], control166e: [''], control166g: [''], control167a: [''],
       control167b: [''], control167c: [''], control167d: [''], control167e: [''], control167g: [''], control168a: [''], control168b: [''], control168c: [''], control168d: [''],
       control168e: [''], control168f: [''], control168g: [''], control70: [''], control71: [''], control72: [''], control73: [''], control74: [''], control75: [''], control76: [''],
       control77: [''], control78: [''], control79: [''], control80: ['']
     });
-    this.fifthFormGroup = this._formBuilder.group({
+    this.sixthFormGroup = this._formBuilder.group({
       control15: [''], control18: ['', Validators.required], control19: ['', Validators.required]
     });
   }
@@ -1129,7 +1457,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
       ageTo: this.ageTo,
       gender: this.selectedGender,
       postcode: this.postcode,
-      includedExclude1: this.includedExclude1,
+      withWithout1: this.withWithout1,
       includedAnyAll1: this.includedAnyAll1,
       includedValueSet1: this.includedValueSet1,
       includedDateFrom1: this.formatDate(this.includedDateFrom1),
@@ -1137,7 +1465,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
       includedPeriodOperator1: this.includedPeriodOperator1,
       includedPeriodValue1: this.includedPeriodValue1,
       includedPeriodType1: this.includedPeriodType1,
-      includedExclude1a: this.includedExclude1a,
+      withWithout1a: this.withWithout1a,
       includedAnyAll1a: this.includedAnyAll1a,
       includedValueSet1a: this.includedValueSet1a,
       includedDateFrom1a: this.formatDate(this.includedDateFrom1a),
@@ -1145,7 +1473,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
       includedPeriodOperator1a: this.includedPeriodOperator1a,
       includedPeriodValue1a: this.includedPeriodValue1a,
       includedPeriodType1a: this.includedPeriodType1a,
-      includedExclude1b: this.includedExclude1b,
+      withWithout1b: this.withWithout1b,
       includedAnyAll1b: this.includedAnyAll1b,
       includedValueSet1b: this.includedValueSet1b,
       includedDateFrom1b: this.formatDate(this.includedDateFrom1b),
@@ -1153,7 +1481,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
       includedPeriodOperator1b: this.includedPeriodOperator1b,
       includedPeriodValue1b: this.includedPeriodValue1b,
       includedPeriodType1b: this.includedPeriodType1b,
-      includedExclude1c: this.includedExclude1c,
+      withWithout1c: this.withWithout1c,
       includedAnyAll1c: this.includedAnyAll1c,
       includedValueSet1c: this.includedValueSet1c,
       includedDateFrom1c: this.formatDate(this.includedDateFrom1c),
@@ -1161,7 +1489,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
       includedPeriodOperator1c: this.includedPeriodOperator1c,
       includedPeriodValue1c: this.includedPeriodValue1c,
       includedPeriodType1c: this.includedPeriodType1c,
-      includedExclude1d: this.includedExclude1d,
+      withWithout1d: this.withWithout1d,
       includedAnyAll1d: this.includedAnyAll1d,
       includedValueSet1d: this.includedValueSet1d,
       includedDateFrom1d: this.formatDate(this.includedDateFrom1d),
@@ -1169,7 +1497,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
       includedPeriodOperator1d: this.includedPeriodOperator1d,
       includedPeriodValue1d: this.includedPeriodValue1d,
       includedPeriodType1d: this.includedPeriodType1d,
-      includedExclude2: this.includedExclude2,
+      withWithout2: this.withWithout2,
       includedAnyAll2: this.includedAnyAll2,
       includedValueSet2: this.includedValueSet2,
       includedEarliestLatest2: this.includedEarliestLatest2,
@@ -1180,7 +1508,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
       includedPeriodOperator2: this.includedPeriodOperator2,
       includedPeriodValue2: this.includedPeriodValue2,
       includedPeriodType2: this.includedPeriodType2,
-      includedExclude2a: this.includedExclude2a,
+      withWithout2a: this.withWithout2a,
       includedAnyAll2a: this.includedAnyAll2a,
       includedValueSet2a: this.includedValueSet2a,
       includedEarliestLatest2a: this.includedEarliestLatest2a,
@@ -1191,7 +1519,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
       includedPeriodOperator2a: this.includedPeriodOperator2a,
       includedPeriodValue2a: this.includedPeriodValue2a,
       includedPeriodType2a: this.includedPeriodType2a,
-      includedExclude3: this.includedExclude3,
+      withWithout3: this.withWithout3,
       includedAnyAll3: this.includedAnyAll3,
       includedValueSet3: this.includedValueSet3,
       includedEarliestLatest3: this.includedEarliestLatest3,
@@ -1202,7 +1530,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
       includedPeriodValue3: this.includedPeriodValue3,
       includedPeriodType3: this.includedPeriodType3,
       includedTestedValueSet3: this.includedTestedValueSet3,
-      includedExclude3a: this.includedExclude3a,
+      withWithout3a: this.withWithout3a,
       includedAnyAll3a: this.includedAnyAll3a,
       includedValueSet3a: this.includedValueSet3a,
       includedEarliestLatest3a: this.includedEarliestLatest3a,
@@ -1213,7 +1541,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
       includedPeriodValue3a: this.includedPeriodValue3a,
       includedPeriodType3a: this.includedPeriodType3a,
       includedTestedValueSet3a: this.includedTestedValueSet3a,
-      includedExclude4: this.includedExclude4,
+      withWithout4: this.withWithout4,
       includedAnyAll4: this.includedAnyAll4,
       includedValueSet4: this.includedValueSet4,
       includedAreNot4: this.includedAreNot4,
@@ -1224,7 +1552,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
       includedPeriodOperator4: this.includedPeriodOperator4,
       includedPeriodValue4: this.includedPeriodValue4,
       includedPeriodType4: this.includedPeriodType4,
-      includedExclude5: this.includedExclude5,
+      withWithout5: this.withWithout5,
       includedAnyAll5: this.includedAnyAll5,
       includedValueSet5: this.includedValueSet5,
       includedOperator5: this.includedOperator5,
@@ -1234,7 +1562,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
       includedPeriodOperator5: this.includedPeriodOperator5,
       includedPeriodValue5: this.includedPeriodValue5,
       includedPeriodType5: this.includedPeriodType5,
-      includedExclude5a: this.includedExclude5a,
+      withWithout5a: this.withWithout5a,
       includedAnyAll5a: this.includedAnyAll5a,
       includedValueSet5a: this.includedValueSet5a,
       includedOperator5a: this.includedOperator5a,
@@ -1244,6 +1572,68 @@ export class AdvancedQueryEditorComponent implements OnInit {
       includedPeriodOperator5a: this.includedPeriodOperator5a,
       includedPeriodValue5a: this.includedPeriodValue5a,
       includedPeriodType5a: this.includedPeriodType5a,
+      matching1 : this.matching1,
+      queryExpression1 : this.queryExpression1,
+      selectReject2 : this.selectReject2,
+      matching2 : this.matching2,
+      queryExpression2 : this.queryExpression2,
+      ruleNumber2 : this.ruleNumber2,
+      selectReject3 : this.selectReject3,
+      matching3 : this.matching3,
+      queryExpression3 : this.queryExpression3,
+      ruleNumber3 : this.ruleNumber3,
+      selectReject4 : this.selectReject4,
+      matching4 : this.matching4,
+      queryExpression4 : this.queryExpression4,
+      ruleNumber4 : this.ruleNumber4,
+      selectReject5 : this.selectReject5,
+      matching5 : this.matching5,
+      queryExpression5 : this.queryExpression5,
+      ruleNumber5 : this.ruleNumber5,
+      selectReject6 : this.selectReject6,
+      matching6 : this.matching6,
+      queryExpression6 : this.queryExpression6,
+      ruleNumber6 : this.ruleNumber6,
+      selectReject7 : this.selectReject7,
+      matching7 : this.matching7,
+      queryExpression7 : this.queryExpression7,
+      ruleNumber7 : this.ruleNumber7,
+      selectReject8 : this.selectReject8,
+      matching8 : this.matching8,
+      queryExpression8 : this.queryExpression8,
+      ruleNumber8 : this.ruleNumber8,
+      selectReject9 : this.selectReject9,
+      matching9 : this.matching9,
+      queryExpression9 : this.queryExpression9,
+      ruleNumber9 : this.ruleNumber9,
+      selectReject10 : this.selectReject10,
+      matching10 : this.matching10,
+      queryExpression10 : this.queryExpression10,
+      ruleNumber10 : this.ruleNumber10,
+      selectReject11 : this.selectReject11,
+      matching11 : this.matching11,
+      queryExpression11 : this.queryExpression11,
+      ruleNumber11 : this.ruleNumber11,
+      selectReject12 : this.selectReject12,
+      matching12 : this.matching12,
+      queryExpression12 : this.queryExpression12,
+      ruleNumber12 : this.ruleNumber12,
+      selectReject13 : this.selectReject13,
+      matching13 : this.matching13,
+      queryExpression13 : this.queryExpression13,
+      ruleNumber13 : this.ruleNumber13,
+      selectReject14 : this.selectReject14,
+      matching14 : this.matching14,
+      queryExpression14 : this.queryExpression14,
+      ruleNumber14 : this.ruleNumber14,
+      selectReject15 : this.selectReject15,
+      matching15 : this.matching15,
+      queryExpression15 : this.queryExpression15,
+      ruleNumber15 : this.ruleNumber15,
+      selectReject16 : this.selectReject16,
+      matching16 : this.matching16,
+      queryExpression16 : this.queryExpression16,
+      ruleNumber16 : this.ruleNumber16,
       demographics: this.demographics,
       encounters: this.encounters,
       medication: this.medication,
@@ -1285,8 +1675,8 @@ export class AdvancedQueryEditorComponent implements OnInit {
     if (this.denominatorQuery==undefined)
       this.denominatorQuery = '';
 
-    if (this.includedExclude1 == '' && this.includedExclude2 == '' && this.includedExclude3 == '' && this.includedExclude4 == '' && this.includedExclude5 == '') {
-      MessageBoxDialogComponent.open(this.dialog, 'Save query', 'Are you sure you want to save this query without any Advanced cohort criteria. It may result in a very large data set?', 'Yes', 'No')
+    if (this.withWithout1 == '' && this.withWithout2 == '' && this.withWithout3 == '' && this.withWithout4 == '' && this.withWithout5 == '') {
+      MessageBoxDialogComponent.open(this.dialog, 'Save query', 'Are you sure you want to save this query without any query criteria. It may result in a very large data set?', 'Yes', 'No')
         .subscribe(result => {
           if (result) {
             this.explorerService.saveQuery(this.type.trim(), this.name.trim(), this.registryName.trim(), this.denominatorQuery.trim(), this.id, this.jsonQuery)
@@ -1363,33 +1753,92 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.selectedSchedule=='' || this.selectedSchedule==undefined;
   }
 
-  addSameRule1() {
+  addSameQuery1() {
     this.select1a = true;
   }
 
-  addSameRule1b() {
+  addSameQuery1b() {
     this.select1b = true;
   }
 
-  addSameRule1c() {
+  addSameQuery1c() {
     this.select1c = true;
   }
 
-  addSameRule1d() {
+  addSameQuery1d() {
     this.select1d = true;
   }
 
-  addSameRule2() {
+  addSameQuery2() {
     this.select2a = true;
   }
 
-  addSameRule3() {
+  addSameQuery3() {
     this.select3a = true;
   }
 
-  addSameRule5() {
+  addSameQuery5() {
     this.select5a = true;
   }
 
+  addSameRule1() {
+    this.rule1 = true;
+  }
+
+  addSameRule2() {
+    this.rule2 = true;
+  }
+
+  addSameRule3() {
+    this.rule3 = true;
+  }
+
+  addSameRule4() {
+    this.rule4 = true;
+  }
+
+  addSameRule5() {
+    this.rule5 = true;
+  }
+
+  addSameRule6() {
+    this.rule6 = true;
+  }
+
+  addSameRule7() {
+    this.rule7 = true;
+  }
+
+  addSameRule8() {
+    this.rule8 = true;
+  }
+
+  addSameRule9() {
+    this.rule9 = true;
+  }
+
+  addSameRule10() {
+    this.rule10 = true;
+  }
+
+  addSameRule11() {
+    this.rule11 = true;
+  }
+
+  addSameRule12() {
+    this.rule12 = true;
+  }
+
+  addSameRule13() {
+    this.rule13 = true;
+  }
+
+  addSameRule14() {
+    this.rule14 = true;
+  }
+
+  addSameRule15() {
+    this.rule15 = true;
+  }
 
 }

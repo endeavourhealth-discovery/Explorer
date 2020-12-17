@@ -275,7 +275,7 @@ public class DashboardEndpoint {
         LOG.debug("saveQuery");
 
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
-            viewerDAL.saveQuery(params.getType(), params.getName(), params.getRegistryName(), params.getDenominatorQuery(), params.getId().toString(), params.getJsonQuery());
+            viewerDAL.saveQuery(params.getType(), params.getName(), params.getRegistryName(), params.getDenominatorQuery(), params.getId(), params.getJsonQuery());
 
             return Response
                     .ok()

@@ -10,7 +10,7 @@ import java.util.Date;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class QueryLibrary {
     private static final Logger LOG = LoggerFactory.getLogger(QueryLibrary.class);
-    private Integer id;
+    private String id;
     private String type;
     private String name;
     private String updated;
@@ -53,11 +53,11 @@ public class QueryLibrary {
         return this;
     }
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public QueryLibrary setId(Integer id) {
+    public QueryLibrary setId(String id) {
         this.id = id;
         return this;
     }
