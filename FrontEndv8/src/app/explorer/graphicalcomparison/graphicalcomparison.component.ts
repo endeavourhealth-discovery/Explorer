@@ -20,7 +20,7 @@ export class GraphicalComparisonComponent implements OnInit {
   filterCtrl: FormControl = new FormControl();
   filteredValueset: ReplaySubject<orgList[]> = new ReplaySubject<orgList[]>(1);
 
-  view: any[] = [1800, 330];
+  view: any[] = [1600, 330];
   chartResults: any[];
   practices = new FormControl();
   practiceList: string[] = [];
@@ -41,7 +41,7 @@ export class GraphicalComparisonComponent implements OnInit {
   showYAxisLabel: boolean = true;
   showXAxisLabel: boolean = false;
   xAxisLabel: string = 'Date';
-  yAxisLabel: string = 'Percentage';
+  yAxisLabel: string = 'Number of patients';
   showGridLines: boolean = true;
   gradient: boolean = false;
   orgs: string;
@@ -76,7 +76,6 @@ export class GraphicalComparisonComponent implements OnInit {
       organisations = this.selectedPractices.toString();
     }
 
-    console.log("refresh");
     this.explorerService.getDashboardRegistries(organisations, this.selectedRegistries.toString())
       .subscribe(result => {
         this.chartResults = result.results;
@@ -158,5 +157,9 @@ export class GraphicalComparisonComponent implements OnInit {
 
   onSelect(data): void {
     console.log('Item clicked', JSON.parse(JSON.stringify(data)));
+  }
+
+  formatTooltipYAxis(val: number) {
+    return Number(val).toLocaleString();
   }
 }

@@ -50,7 +50,7 @@
               (select)="onSelect($event)"
             >
               <ng-template #tooltipTemplate let-model="model">
-                <span class="tooltip-label">{{model.name}} • Patients: {{model.value}}</span>
+                <span class="tooltip-label">{{model.name}} • Patients: {{formatTooltipYAxis(model.value)}}</span>
               </ng-template>
             </ngx-charts-bar-vertical-2d>
           </div>
