@@ -5,13 +5,13 @@ DROP PROCEDURE IF EXISTS createPatientCohort;
 DELIMITER //
 CREATE PROCEDURE createPatientCohort(
      p_org VARCHAR(255),
-     p_regstatus VARCHAR(255),
-     p_agerange VARCHAR(255),
-     p_genderrange VARCHAR(255),
-     p_postcoderange VARCHAR(255),
+     p_regStatus VARCHAR(255),
+     p_ageRange VARCHAR(255),
+     p_genderRange VARCHAR(255),
+     p_postcodeRange VARCHAR(255),
      p_regPeriodRange VARCHAR(500), 
      p_regIncludeExclude VARCHAR(10),
-     p_cohorttab VARCHAR(64),
+     p_practiceCohortTab VARCHAR(64),
      p_schema VARCHAR(255)
 )
 
@@ -26,10 +26,10 @@ BEGIN
    SET p_regIncludeExclude = UPPER(p_regIncludeExclude);
    SET p_regIncludeExclude = IF(p_regIncludeExclude = 'EXCLUDE','NOT EXISTS', IF(p_regIncludeExclude = 'INCLUDE','EXISTS',''));
 
-   IF p_regstatus <> '1' THEN
+   IF p_regStatus <> '1' THEN
     SET p_death = 'p.date_of_death IS NULL';
-    SET regstatus_1 = p_regstatus;
-    SET regstatus_2 = REPLACE(p_regstatus,'e.','e2.');
+    SET regstatus_1 = p_regStatus;
+    SET regstatus_2 = REPLACE(p_regStatus,'e.','e2.');
     SET regstatus_2 = REPLACE(regstatus_2,'c.','c3.');
    ELSE
     SET p_death = '1';
@@ -68,9 +68,9 @@ BEGIN
                   WHERE ',regstatus_2,' 
                   AND e2.person_id = e.person_id AND e2.organization_id = e.organization_id) 
      AND ',p_org,' 
-     AND ',p_agerange,' 
-     AND ',p_genderrange,' 
-     AND ',p_postcoderange,' 
+     AND ',p_ageRange,' 
+     AND ',p_genderRange,' 
+     AND ',p_postcodeRange,' 
      AND ',p_death);
 
    PREPARE stmt FROM @sql;
@@ -83,7 +83,6 @@ BEGIN
    IF p_regPeriodRange <> '1' THEN 
 
         DROP TEMPORARY TABLE IF EXISTS qry_tmp_2;
-
         -- filter patients by registration date range
         SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp_2 AS 
         SELECT DISTINCT c.person_id, c.patient_id, c.organization_id 
@@ -92,20 +91,19 @@ BEGIN
         PREPARE stmt FROM @sql;
         EXECUTE stmt;
         DEALLOCATE PREPARE stmt;
-        
         -- set where clause
         SET where_clause_1 = CONCAT(p_regIncludeExclude,' (SELECT 1 FROM qry_tmp_2 c2 WHERE c2.patient_id = c.patient_id AND c2.organization_id = c.organization_id) ');
    ELSE
         SET where_clause_1 = '1';
    END IF;
 
-   SET @sql = CONCAT('DROP TABLE IF EXISTS ', p_cohorttab);
+   SET @sql = CONCAT('DROP TABLE IF EXISTS ', p_practiceCohortTab);
    PREPARE stmt FROM @sql;
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;
 
    -- filter patients to create the patient cohort
-   SET @sql = CONCAT('CREATE TABLE ', p_cohorttab, ' 
+   SET @sql = CONCAT('CREATE TABLE ', p_practiceCohortTab, ' 
    AS SELECT DISTINCT c.person_id, c.patient_id, c.organization_id 
    FROM qry_tmp c 
    WHERE ', where_clause_1);
@@ -114,12 +112,12 @@ BEGIN
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;
 
-   SET @sql = CONCAT('ALTER TABLE ', p_cohorttab, ' ADD INDEX pat_per_org_idx (patient_id, person_id, organization_id)');
+   SET @sql = CONCAT('ALTER TABLE ', p_practiceCohortTab, ' ADD INDEX pat_idx(patient_id)');
    PREPARE stmt FROM @sql;
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;
-   
-   SET @sql = CONCAT('ALTER TABLE ', p_cohorttab, ' ADD INDEX pat_idx (patient_id)');
+
+   SET @sql = CONCAT('ALTER TABLE ', p_practiceCohortTab, ' ADD INDEX org_idx(organization_id)');
    PREPARE stmt FROM @sql;
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;

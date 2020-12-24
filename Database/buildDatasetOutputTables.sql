@@ -51,6 +51,7 @@ BEGIN
 
   DECLARE n INT DEFAULT 0;
   DECLARE i INT DEFAULT 0;
+  DECLARE l_sql VARCHAR(2000) DEFAULT NULL;
 
   DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -176,41 +177,41 @@ BEGIN
       EXECUTE stmt;
       DEALLOCATE PREPARE stmt;
 
-      SELECT COUNT(*) FROM qry_tmp INTO n;
+      SELECT COUNT(*) INTO n FROM qry_tmp;
 
-      SET @sql := '';
+      SET l_sql = '';
       SET i = 0;
       WHILE i < n DO 
         -- build column list from output fields
-        SET @sql =  CONCAT(BINARY @sql,(SELECT CONCAT(IF (INSTR(q.column_name,'(') = 0, q.column_name, CONCAT(p_schema ,'.', q.column_name)),' AS ',QUOTE(q.field_name)) FROM  qry_tmp q LIMIT i, 1));        
-        SET @sql =  CONCAT(BINARY @sql,CASE WHEN LENGTH(@sql)>0 THEN ',' ELSE '' END);
+        SET l_sql =  CONCAT(BINARY l_sql,(SELECT CONCAT(IF (INSTR(q.column_name,'(') = 0, q.column_name, CONCAT(p_schema ,'.', q.column_name)),' AS ',QUOTE(q.field_name)) FROM  qry_tmp q LIMIT i, 1));        
+        SET l_sql =  CONCAT(BINARY l_sql,CASE WHEN LENGTH(l_sql)>0 THEN ',' ELSE '' END);
         SET i = i + 1;
       END WHILE;
 
-      IF LENGTH(@sql)>0 THEN  -- continues if any output field exists
+      IF LENGTH(l_sql)>0 THEN  -- continues if any output field exists
 
 
-         IF LOCATE('Current address', @sql) > 0 THEN
-            SET @sql = INSERT (@sql,LOCATE('Current address', @sql)+16,0,", p.postcode AS 'Postcode'");
+         IF LOCATE('Current address', l_sql) > 0 THEN
+            SET l_sql = INSERT (l_sql,LOCATE('Current address', l_sql)+16,0,", p.postcode AS 'Postcode'");
          END IF;
 
          -- remove the last comma in the string
-         SET @sql = SUBSTRING(@sql, 1, LENGTH(@sql)-1);
+         SET l_sql = SUBSTRING(l_sql, 1, LENGTH(l_sql)-1);
 
          
-         SET @sql = REPLACE(@sql, 'procedure_request_status', 'NULL');
-         SET @sql = REPLACE(@sql, 'referral_requester_organisation', 'NULL');
-         SET @sql = REPLACE(@sql, 'referral_recipient_organisation', 'NULL');
-         SET @sql = REPLACE(@sql, 'referral_request_priority', 'NULL');
-         SET @sql = REPLACE(@sql, 'referral_request_type', 'NULL');
-         SET @sql = REPLACE(@sql, 'referral_mode', 'NULL');
-         SET @sql = REPLACE(@sql, 'referral_outgoing_status', 'NULL');
-         SET @sql = REPLACE(@sql, 'warning_flag_status', 'NULL');
-         SET @sql = REPLACE(@sql, 'warning_flag_text', 'NULL');
+         SET l_sql = REPLACE(l_sql, 'procedure_request_status', 'NULL');
+         SET l_sql = REPLACE(l_sql, 'referral_requester_organisation', 'NULL');
+         SET l_sql = REPLACE(l_sql, 'referral_recipient_organisation', 'NULL');
+         SET l_sql = REPLACE(l_sql, 'referral_request_priority', 'NULL');
+         SET l_sql = REPLACE(l_sql, 'referral_request_type', 'NULL');
+         SET l_sql = REPLACE(l_sql, 'referral_mode', 'NULL');
+         SET l_sql = REPLACE(l_sql, 'referral_outgoing_status', 'NULL');
+         SET l_sql = REPLACE(l_sql, 'warning_flag_status', 'NULL');
+         SET l_sql = REPLACE(l_sql, 'warning_flag_text', 'NULL');
 
          -- create an empty output table
          SET @output = CONCAT('CREATE TABLE ', output_table ,' AS 
-         SELECT DISTINCT r.', event_table,'_id AS id, ', BINARY @sql ,' FROM ', p_schema,'.', event_table,
+         SELECT DISTINCT r.', event_table,'_id AS id, ', BINARY l_sql ,' FROM ', p_schema,'.', event_table,
          ' t JOIN ', result_dataset,' r ON t.id = r.', event_table,'_id 
          JOIN ', p_patientcohorttab,' p ON p.patient_id = ', event_id,' AND p.organization_id = t.organization_id '
          , join_clause_1,' '
@@ -242,14 +243,14 @@ BEGIN
                   
                   SET @col = NULL;
 
-                  SET @chkCol = CONCAT("SELECT 'Y' INTO @Col FROM information_schema.columns 
+                  SET @chkCol = CONCAT("SELECT 'Y' INTO @col FROM information_schema.columns 
                   WHERE table_name = ", QUOTE(output_table)," AND column_name = ", QUOTE(columnName));
                   PREPARE stmt FROM @chkCol;
                   EXECUTE stmt;
                   DEALLOCATE PREPARE stmt;
 
                  -- if Y then modify the data type of the column
-                 IF @Col = 'Y' THEN
+                 IF @col = 'Y' THEN
 
                     IF columnName IN ('Procedure request status','Referral requester organisation','Referral recipient organisation','Referral request priority','Referral request type') THEN
 
@@ -303,7 +304,7 @@ BEGIN
          WHILE EXISTS (SELECT row_id from qry_output_tmp WHERE row_id > @row_id AND row_id <= @row_id + 1000) DO
 
                SET @ins = CONCAT("INSERT INTO  ", output_table, " 
-               SELECT q.id AS Id, ", BINARY @sql , " FROM ", p_schema,".", event_table," t 
+               SELECT q.id AS Id, ", BINARY l_sql , " FROM ", p_schema,".", event_table," t 
                JOIN qry_output_tmp q ON t.id = q.id 
                JOIN ", p_patientcohorttab," p ON p.patient_id = ", event_id," AND p.organization_id = t.organization_id "
                , join_clause_1," "
@@ -346,17 +347,17 @@ BEGIN
                   -- only continues if any column exists
                   IF n > 0 THEN
 
-                        SET @sql := '';
+                        SET l_sql := '';
                         SET i = 0;
                         WHILE i < n DO 
                               -- build column list from the output table fields
-                              SET @sql =  CONCAT(BINARY @sql,(SELECT CONCAT('`',q.column_name,'`') FROM  qry_tmp2 q LIMIT i, 1));        
-                              SET @sql =  CONCAT(BINARY @sql,CASE WHEN LENGTH(@sql)>0 THEN ',' ELSE '' END);
+                              SET l_sql =  CONCAT(BINARY l_sql,(SELECT CONCAT('`',q.column_name,'`') FROM  qry_tmp2 q LIMIT i, 1));        
+                              SET l_sql =  CONCAT(BINARY l_sql,CASE WHEN LENGTH(l_sql)>0 THEN ',' ELSE '' END);
                               SET i = i + 1;
                         END WHILE;
 
                         -- remove the last comma in the string
-                        SET @sql = SUBSTRING(@sql, 1, LENGTH(@sql)-1);
+                        SET l_sql = SUBSTRING(l_sql, 1, LENGTH(l_sql)-1);
 
                         -- build a list of clinical type tables that might exist
                         SET clinicalTypeTableString = CONCAT(p_procedure_req_tmp,',',p_diagnostic_tmp,',',p_warning_tmp,',',p_allergy_tmp,',',p_referral_req_tmp);
@@ -364,8 +365,6 @@ BEGIN
                         -- loop through each and process if exists
                         processloop2:
                         LOOP  
-
-                              SET @flag = NULL;
 
                               IF LENGTH(TRIM(clinicalTypeTableString)) = 0 OR clinicalTypeTableString IS NULL THEN
                                  LEAVE processloop2;
@@ -464,8 +463,8 @@ BEGIN
                                     -- loop through the row ids and insert the clinical type table data into the output table in batches
                                     WHILE EXISTS (SELECT row_id from qry_clinicalTypeTab_tmp WHERE row_id > @row_id AND row_id <= @row_id + 1000) DO
 
-                                          SET @ins = CONCAT("INSERT INTO  ", output_table, "(", BINARY @sql," )  
-                                          SELECT ", BINARY @sql , " FROM qry_clinicalTypeTab_tmp 
+                                          SET @ins = CONCAT("INSERT INTO  ", output_table, "(", BINARY l_sql," )  
+                                          SELECT ", BINARY l_sql , " FROM qry_clinicalTypeTab_tmp 
                                           WHERE row_id > @row_id AND row_id <= @row_id + 1000");
                                           PREPARE stmt FROM @ins;
                                           EXECUTE stmt;
