@@ -30,8 +30,8 @@ export class OrganisationListSizesComponent implements OnInit {
 
   itemClicked(org: any) {
     let ccg = org.ccg;
-    if (ccg.indexOf("↳")>-1) {
-      ccg = ccg.replace(" ↳ ","");
+    if (ccg.indexOf(">")>-1) {
+      ccg = ccg.replace(" > ","");
       ccg = "NHS "+ccg;
     }
     this.router.navigate(['/practicelistsizes', ccg]);

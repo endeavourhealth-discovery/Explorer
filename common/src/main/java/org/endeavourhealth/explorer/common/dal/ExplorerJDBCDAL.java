@@ -2174,7 +2174,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                     row = new JSONObject();
                     String ccg = resultSet.getString("ccg");
                     if (ccg.contains("Asian")||ccg.contains("Black")||ccg.contains("White")||ccg.contains("Mixed")||ccg.contains("Not Stated")||ccg.contains("Other"))
-                        ccg = " ↳ "+ccg.replaceAll("NHS ","");
+                        ccg = " > "+ccg.replaceAll("NHS ","");
 
                     row.put("ccg", ccg);
                     row.put("list_size", formatter.format(resultSet.getBigDecimal("list_size")));
