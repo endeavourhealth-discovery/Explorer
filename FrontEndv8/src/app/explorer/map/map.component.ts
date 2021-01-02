@@ -91,7 +91,7 @@ export class MapComponent implements OnInit {
                 this.mapResults = result;
                 this.layerIds = this.mapResults.ids;
                 this.selectedLayer = this.layerIds[0];
-                this.map = L.map('map',{ zoomDelta: 0.25, zoomSnap: .25 }).setView([51.505, -0.09], 13);
+                this.map = L.map('map',{ zoomDelta: 1, zoomSnap: 1 }).setView([51.505, -0.09], 13);
                 this.buildingLayers = new L.FeatureGroup().addTo(this.map);
                 let layer = {};
                 this.layers  = this.mapResults.layers['All levels'];

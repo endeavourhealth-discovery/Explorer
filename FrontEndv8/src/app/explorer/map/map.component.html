@@ -1,11 +1,4 @@
 <mat-card id="card">
-  <mat-card-header class="header2">
-    <div mat-card-avatar>
-      <i class="fad fa-map-marked-alt"></i>
-    </div>
-    <mat-card-title>Map Dashboard</mat-card-title>
-    <mat-card-subtitle>{{query}} per 1000 registered patients by LSOA</mat-card-subtitle>
-  </mat-card-header>
   <mat-card-content style="text-align: center;">
     <form #form="ngForm">
       <div class="flex" fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="5px grid" fxLayoutAlign="start">
@@ -20,7 +13,7 @@
         &nbsp;
       </div>
       <div>
-        <mat-label style="font-size:25px;" ><b>{{ display }}</b></mat-label><br>
+        <mat-label style="font-size:16px;" ><b>{{ display }} : (rate per 1,000 registered patients)</b></mat-label><br>
         <mat-slider *ngIf="isCovidQuery" [disabled]="form.invalid" (input)="onInputChange($event)" [(ngModel)]="sliderValue" min="0" max="{{max-1}}" step="1" (change)="updateDate($event)" [tickInterval]="1" name="sliderDate"></mat-slider>
       </div>
       <div *ngIf="!isCovidQuery">
@@ -38,26 +31,22 @@
             <button mat-button disabled="true" fxFlex="20">
               <mat-icon [ngStyle]="{'color': level.color}">label</mat-icon>
             </button>
-            <mat-form-field appearance="outline" style="width:50vw" fxFlex="40">
-              <mat-label>Lower limit</mat-label>
-              <input type="number" step="0.1" matInput required placeholder="Lower limit" name="lower_limit_{{i}}" [(ngModel)]="level.lowerLimit">
+            <mat-form-field appearance="outline" style="width:50vw" fxFlex="30">
+              <mat-label>Lower</mat-label>
+              <input type="number" step="0.1" matInput required placeholder="Lower" name="lower_limit_{{i}}" [(ngModel)]="level.lowerLimit">
             </mat-form-field>
-            <mat-form-field appearance="outline" style="width:50vw" fxFlex="40" *ngIf="i!=4">
-              <mat-label>Upper limit</mat-label>
-              <input type="number" step="0.1" matInput required placeholder="Upper limit" name="upper_limit_{{i}}" [(ngModel)]="level.upperLimit">
+            <mat-form-field appearance="outline" style="width:50vw" fxFlex="30" *ngIf="i!=4">
+              <mat-label>Upper</mat-label>
+              <input type="number" step="0.1" matInput required placeholder="Upper" name="upper_limit_{{i}}" [(ngModel)]="level.upperLimit">
             </mat-form-field>
           </div>
           <div style="text-align: center">
             &nbsp;
           </div>
-          <div style="text-align: right">
+          <div style="text-align: center">
             <button [disabled]="form.invalid" mat-flat-button color="accent" (click)="recompute()">Recompute</button>
           </div>
-        </div>
-        <div fxFlex="70" fxFill>
-          <div id="map"></div>
-        </div>
-        <div fxFlex="15" fxFill style="text-align: left">
+          <br/>
           <div>
             <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Legend</b>
           </div>
@@ -82,6 +71,9 @@
               All levels
             </button>
           </div>
+        </div>
+        <div fxFlex="80" fxFill>
+          <div id="map"></div>
         </div>
       </div>
     </form>
