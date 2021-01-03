@@ -91,7 +91,8 @@ export class MapComponent implements OnInit {
                 this.mapResults = result;
                 this.layerIds = this.mapResults.ids;
                 this.selectedLayer = this.layerIds[0];
-                this.map = L.map('map',{ zoomDelta: 1, zoomSnap: 1 }).setView([51.505, -0.09], 13);
+                //this.map = L.map('map',{ zoomDelta: 1, zoomSnap: 1 });
+                this.map = L.map('map');
                 this.buildingLayers = new L.FeatureGroup().addTo(this.map);
                 let layer = {};
                 this.layers  = this.mapResults.layers['All levels'];
@@ -105,6 +106,7 @@ export class MapComponent implements OnInit {
                   this.map.fitBounds(this.buildingLayers.getBounds());
                 });
                 this.createMap();
+
               },
               (error) => this.log.error(error)
             );
@@ -202,7 +204,7 @@ export class MapComponent implements OnInit {
 
   createMap() {
 
-    this.map.fitBounds(this.buildingLayers.getBounds());
+    //this.map.fitBounds(this.buildingLayers.getBounds());
     this.clearLayers();
 
     let layer = L.geoJSON();
@@ -283,6 +285,7 @@ export class MapComponent implements OnInit {
     } else {
       this.display = "";
     }
+
   }
 
   refreshMap() {
@@ -313,7 +316,7 @@ export class MapComponent implements OnInit {
 
     this.selectedLayer = selected;
 
-    this.map.fitBounds(this.buildingLayers.getBounds());
+    //this.map.fitBounds(this.buildingLayers.getBounds());
 
     if (this.selectedLayer == "All levels") {
       this.createMap();
