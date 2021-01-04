@@ -7,7 +7,7 @@
             <div style="font-size:14px; font-weight: bold;padding: 10px 0px 10px 0px">
               {{chartTitle1}}
             </div>
-            <mat-form-field style="width: 115px" *ngIf="showLineCharts1||showBarCharts1" appearance="fill">
+            <mat-form-field style="width: 115px" *ngIf="showLineCharts1||showBarCharts1" appearance="standard">
               <mat-label>Date from</mat-label>
               <input matInput [matDatepicker]="picker1" placeholder="Date from" [(ngModel)]="dateFrom1" (dateChange)="refresh1()">
               <mat-datepicker-toggle matSuffix [for]="picker1">
@@ -15,7 +15,7 @@
               </mat-datepicker-toggle>
               <mat-datepicker #picker1></mat-datepicker>
             </mat-form-field>
-            <mat-form-field style="width: 115px; margin-left: 10px" *ngIf="showLineCharts1||showBarCharts1" appearance="fill">
+            <mat-form-field style="width: 115px; margin-left: 10px" *ngIf="showLineCharts1||showBarCharts1" appearance="standard">
               <mat-label>Date to</mat-label>
               <input matInput [matDatepicker]="picker2" placeholder="Date to" [(ngModel)]="dateTo1" (dateChange)="refresh1()">
               <mat-datepicker-toggle matSuffix [for]="picker2">
@@ -23,14 +23,14 @@
               </mat-datepicker-toggle>
               <mat-datepicker #picker2></mat-datepicker>
             </mat-form-field>
-            <mat-form-field style="width:650px; margin-left: 10px"  appearance="fill" *ngIf="showLineCharts1||showBarCharts1">
+            <mat-form-field style="width:650px; margin-left: 10px"  appearance="standard" *ngIf="showLineCharts1||showBarCharts1">
               <mat-label>Filter series</mat-label>
               <mat-select style="width:630px" [formControl]="seriesValues1" multiple [(value)]="selectedSeries1">
                 <mat-checkbox class="mat-option" [(ngModel)]="selectAllSeries1" (change)="toggleSelectionSeries1($event)">Select All</mat-checkbox>
                 <mat-option (click)="refresh1()" *ngFor="let result of seriesList1" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">{{result}}</mat-option>
               </mat-select>
             </mat-form-field>
-            <mat-form-field style="width:450px; margin-left: 10px"  appearance="fill" *ngIf="showLineCharts1||showBarCharts1">
+            <mat-form-field style="width:450px; margin-left: 10px"  appearance="standard" *ngIf="showLineCharts1||showBarCharts1">
               <mat-label>Filter CCG/TRUST</mat-label>
               <mat-select style="width:430px" [formControl]="ccgValues1" multiple [(value)]="selectedCCG1">
                 <mat-checkbox class="mat-option" [(ngModel)]="selectAll1" (change)="toggleSelection1($event)">Select All</mat-checkbox>
@@ -48,7 +48,7 @@
               <mat-checkbox *ngIf="showLineCharts1" class="checkbox" (change)="refresh1()" [(ngModel)]="combineSeries1">Combine series</mat-checkbox>
               <button class="download" mat-flat-button color="primary" (click)="download1()">Download</button>
             </div>
-            <mat-form-field style="width:550px;"  appearance="fill" *ngIf="showTables1 && tableData1">
+            <mat-form-field style="width:550px;"  appearance="standard" *ngIf="showTables1 && tableData1">
               <mat-label>Output Types</mat-label>
               <mat-select (selectionChange)="refresh1()" style="width:530px" [(value)]="tableOutput1">
                 <mat-option *ngFor="let result of tableData1.outputTypes" [value]="result">{{result}}</mat-option>
@@ -175,7 +175,7 @@
             <div style="font-size:14px; font-weight: bold;padding: 10px 0px 10px 0px">
               {{chartTitle2}}
             </div>
-            <mat-form-field style="width: 115px" *ngIf="showLineCharts2||showBarCharts2" appearance="fill">
+            <mat-form-field style="width: 115px" *ngIf="showLineCharts2||showBarCharts2" appearance="standard">
               <mat-label>Date from</mat-label>
               <input matInput [matDatepicker]="picker1" placeholder="Date from" [(ngModel)]="dateFrom2" (dateChange)="refresh2()">
               <mat-datepicker-toggle matSuffix [for]="picker1">
@@ -183,7 +183,7 @@
               </mat-datepicker-toggle>
               <mat-datepicker #picker1></mat-datepicker>
             </mat-form-field>
-            <mat-form-field style="width: 115px; margin-left: 10px" *ngIf="showLineCharts2||showBarCharts2" appearance="fill">
+            <mat-form-field style="width: 115px; margin-left: 10px" *ngIf="showLineCharts2||showBarCharts2" appearance="standard">
               <mat-label>Date to</mat-label>
               <input matInput [matDatepicker]="picker2" placeholder="Date to" [(ngModel)]="dateTo2" (dateChange)="refresh2()">
               <mat-datepicker-toggle matSuffix [for]="picker2">
@@ -191,14 +191,14 @@
               </mat-datepicker-toggle>
               <mat-datepicker #picker2></mat-datepicker>
             </mat-form-field>
-            <mat-form-field style="width:650px; margin-left: 10px"  appearance="fill" *ngIf="showLineCharts2||showBarCharts2">
+            <mat-form-field style="width:650px; margin-left: 10px"  appearance="standard" *ngIf="showLineCharts2||showBarCharts2">
               <mat-label>Filter series</mat-label>
               <mat-select style="width:630px" [formControl]="seriesValues2" multiple [(value)]="selectedSeries2">
                 <mat-checkbox class="mat-option" [(ngModel)]="selectAllSeries2" (change)="toggleSelectionSeries2($event)">Select All</mat-checkbox>
                 <mat-option (click)="refresh2()" *ngFor="let result of seriesList2" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">{{result}}</mat-option>
               </mat-select>
             </mat-form-field>
-            <mat-form-field style="width:450px; margin-left: 10px"  appearance="fill" *ngIf="showLineCharts2||showBarCharts2">
+            <mat-form-field style="width:450px; margin-left: 10px"  appearance="standard" *ngIf="showLineCharts2||showBarCharts2">
               <mat-label>Filter CCG/TRUST</mat-label>
               <mat-select style="width:430px" [formControl]="ccgValues2" multiple [(value)]="selectedCCG2">
                 <mat-checkbox class="mat-option" [(ngModel)]="selectAll2" (change)="toggleSelection2($event)">Select All</mat-checkbox>
@@ -216,7 +216,7 @@
               <mat-checkbox *ngIf="showLineCharts2" class="checkbox" (change)="refresh2()" [(ngModel)]="combineSeries2">Combine series</mat-checkbox>
               <button class="download" mat-flat-button color="primary" (click)="download2()">Download</button>
             </div>
-            <mat-form-field style="width:550px;"  appearance="fill" *ngIf="showTables2 && tableData2">
+            <mat-form-field style="width:550px;"  appearance="standard" *ngIf="showTables2 && tableData2">
               <mat-label>Output Types</mat-label>
               <mat-select (selectionChange)="refresh2()" style="width:530px" [(value)]="tableOutput2">
                 <mat-option *ngFor="let result of tableData2.outputTypes" [value]="result">{{result}}</mat-option>
@@ -343,7 +343,7 @@
             <div style="font-size:14px; font-weight: bold;padding: 10px 0px 10px 0px">
               {{chartTitle3}}
             </div>
-            <mat-form-field style="width: 115px" *ngIf="showLineCharts3||showBarCharts3" appearance="fill">
+            <mat-form-field style="width: 115px" *ngIf="showLineCharts3||showBarCharts3" appearance="standard">
               <mat-label>Date from</mat-label>
               <input matInput [matDatepicker]="picker1" placeholder="Date from" [(ngModel)]="dateFrom3" (dateChange)="refresh3()">
               <mat-datepicker-toggle matSuffix [for]="picker1">
@@ -351,7 +351,7 @@
               </mat-datepicker-toggle>
               <mat-datepicker #picker1></mat-datepicker>
             </mat-form-field>
-            <mat-form-field style="width: 115px; margin-left: 10px" *ngIf="showLineCharts3||showBarCharts3" appearance="fill">
+            <mat-form-field style="width: 115px; margin-left: 10px" *ngIf="showLineCharts3||showBarCharts3" appearance="standard">
               <mat-label>Date to</mat-label>
               <input matInput [matDatepicker]="picker2" placeholder="Date to" [(ngModel)]="dateTo3" (dateChange)="refresh3()">
               <mat-datepicker-toggle matSuffix [for]="picker2">
@@ -359,14 +359,14 @@
               </mat-datepicker-toggle>
               <mat-datepicker #picker2></mat-datepicker>
             </mat-form-field>
-            <mat-form-field style="width:650px; margin-left: 10px"  appearance="fill" *ngIf="showLineCharts3||showBarCharts3">
+            <mat-form-field style="width:650px; margin-left: 10px"  appearance="standard" *ngIf="showLineCharts3||showBarCharts3">
               <mat-label>Filter series</mat-label>
               <mat-select style="width:630px" [formControl]="seriesValues3" multiple [(value)]="selectedSeries3">
                 <mat-checkbox class="mat-option" [(ngModel)]="selectAllSeries3" (change)="toggleSelectionSeries3($event)">Select All</mat-checkbox>
                 <mat-option (click)="refresh3()" *ngFor="let result of seriesList3" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">{{result}}</mat-option>
               </mat-select>
             </mat-form-field>
-            <mat-form-field style="width:450px; margin-left: 10px"  appearance="fill" *ngIf="showLineCharts3||showBarCharts3">
+            <mat-form-field style="width:450px; margin-left: 10px"  appearance="standard" *ngIf="showLineCharts3||showBarCharts3">
               <mat-label>Filter CCG/TRUST</mat-label>
               <mat-select style="width:430px" [formControl]="ccgValues3" multiple [(value)]="selectedCCG3">
                 <mat-checkbox class="mat-option" [(ngModel)]="selectAll3" (change)="toggleSelection3($event)">Select All</mat-checkbox>
@@ -384,7 +384,7 @@
               <mat-checkbox *ngIf="showLineCharts3" class="checkbox" (change)="refresh3()" [(ngModel)]="combineSeries3">Combine series</mat-checkbox>
               <button class="download" mat-flat-button color="primary" (click)="download3()">Download</button>
             </div>
-            <mat-form-field style="width:550px;"  appearance="fill" *ngIf="showTables3 && tableData3">
+            <mat-form-field style="width:550px;"  appearance="standard" *ngIf="showTables3 && tableData3">
               <mat-label>Output Types</mat-label>
               <mat-select (selectionChange)="refresh3()" style="width:530px" [(value)]="tableOutput3">
                 <mat-option *ngFor="let result of tableData3.outputTypes" [value]="result">{{result}}</mat-option>
@@ -511,7 +511,7 @@
             <div style="font-size:14px; font-weight: bold;padding: 10px 0px 10px 0px">
               {{chartTitle4}}
             </div>
-            <mat-form-field style="width: 115px" *ngIf="showLineCharts4||showBarCharts4" appearance="fill">
+            <mat-form-field style="width: 115px" *ngIf="showLineCharts4||showBarCharts4" appearance="standard">
               <mat-label>Date from</mat-label>
               <input matInput [matDatepicker]="picker1" placeholder="Date from" [(ngModel)]="dateFrom4" (dateChange)="refresh4()">
               <mat-datepicker-toggle matSuffix [for]="picker1">
@@ -519,7 +519,7 @@
               </mat-datepicker-toggle>
               <mat-datepicker #picker1></mat-datepicker>
             </mat-form-field>
-            <mat-form-field style="width: 115px; margin-left: 10px" *ngIf="showLineCharts4||showBarCharts4" appearance="fill">
+            <mat-form-field style="width: 115px; margin-left: 10px" *ngIf="showLineCharts4||showBarCharts4" appearance="standard">
               <mat-label>Date to</mat-label>
               <input matInput [matDatepicker]="picker2" placeholder="Date to" [(ngModel)]="dateTo4" (dateChange)="refresh4()">
               <mat-datepicker-toggle matSuffix [for]="picker2">
@@ -527,14 +527,14 @@
               </mat-datepicker-toggle>
               <mat-datepicker #picker2></mat-datepicker>
             </mat-form-field>
-            <mat-form-field style="width:650px; margin-left: 10px"  appearance="fill" *ngIf="showLineCharts4||showBarCharts4">
+            <mat-form-field style="width:650px; margin-left: 10px"  appearance="standard" *ngIf="showLineCharts4||showBarCharts4">
               <mat-label>Filter series</mat-label>
               <mat-select style="width:630px" [formControl]="seriesValues4" multiple [(value)]="selectedSeries4">
                 <mat-checkbox class="mat-option" [(ngModel)]="selectAllSeries4" (change)="toggleSelectionSeries4($event)">Select All</mat-checkbox>
                 <mat-option (click)="refresh4()" *ngFor="let result of seriesList4" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">{{result}}</mat-option>
               </mat-select>
             </mat-form-field>
-            <mat-form-field style="width:450px; margin-left: 10px"  appearance="fill" *ngIf="showLineCharts4||showBarCharts4">
+            <mat-form-field style="width:450px; margin-left: 10px"  appearance="standard" *ngIf="showLineCharts4||showBarCharts4">
               <mat-label>Filter CCG/TRUST</mat-label>
               <mat-select style="width:430px" [formControl]="ccgValues4" multiple [(value)]="selectedCCG4">
                 <mat-checkbox class="mat-option" [(ngModel)]="selectAll4" (change)="toggleSelection4($event)">Select All</mat-checkbox>
@@ -552,7 +552,7 @@
               <mat-checkbox *ngIf="showLineCharts4" class="checkbox" (change)="refresh4()" [(ngModel)]="combineSeries4">Combine series</mat-checkbox>
               <button class="download" mat-flat-button color="primary" (click)="download4()">Download</button>
             </div>
-            <mat-form-field style="width:550px;"  appearance="fill" *ngIf="showTables4 && tableData4">
+            <mat-form-field style="width:550px;"  appearance="standard" *ngIf="showTables4 && tableData4">
               <mat-label>Output Types</mat-label>
               <mat-select (selectionChange)="refresh4()" style="width:530px" [(value)]="tableOutput4">
                 <mat-option *ngFor="let result of tableData4.outputTypes" [value]="result">{{result}}</mat-option>
