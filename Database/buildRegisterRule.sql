@@ -16,7 +16,7 @@ BEGIN
     BEGIN
       GET DIAGNOSTICS CONDITION 1
         @code = RETURNED_SQLSTATE, @msg = MESSAGE_TEXT;
-        CALL log_errors(p_query_id,'buildRegisterRule', @code, @msg, now());
+        CALL log_errors(p_query_id, 'buildRegisterRule', @code, @msg, now());
         RESIGNAL; -- rethrow the error
     END;
 
@@ -41,13 +41,21 @@ BEGIN
     PREPARE stmt FROM @sql;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt; 
-    
-    -- insert a record into the temporary rule table
-    SET @sql = CONCAT("INSERT INTO ", p_ruleTab," (id, query_id, selectReject, matching, queryExpression) 
-    VALUES ( 1 ",",", p_query_id,", 'REGISTER', ", QUOTE(p_matching),", ", QUOTE(p_queryExpression),") ");
-    PREPARE stmt FROM @sql;
-    EXECUTE stmt;
-    DEALLOCATE PREPARE stmt;
+
+    IF LENGTH(TRIM(p_queryExpression)) != 0 OR p_queryExpression IS NOT NULL THEN
+        -- insert a record into the temporary rule table
+        SET @sql = CONCAT("INSERT INTO ", p_ruleTab," (id, query_id, selectReject, matching, queryExpression) 
+        VALUES ( 1 ",",", p_query_id,", 'REGISTER', ", QUOTE(p_matching),", ", QUOTE(p_queryExpression),") ");
+        PREPARE stmt FROM @sql;
+        EXECUTE stmt;
+        DEALLOCATE PREPARE stmt;
+    ELSE
+        SET @sql = CONCAT("INSERT INTO ", p_ruleTab," (id, query_id, selectReject, matching, queryExpression) 
+        VALUES ( 1 ",",", p_query_id,", 'REGISTER', 'MATCHING', 'R') ");
+        PREPARE stmt FROM @sql;
+        EXECUTE stmt;
+        DEALLOCATE PREPARE stmt;
+    END IF;
 
 END //
 DELIMITER ;

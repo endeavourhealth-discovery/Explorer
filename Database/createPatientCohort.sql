@@ -9,8 +9,6 @@ CREATE PROCEDURE createPatientCohort(
      p_ageRange VARCHAR(255),
      p_genderRange VARCHAR(255),
      p_postcodeRange VARCHAR(255),
-     p_regPeriodRange VARCHAR(500), 
-     p_regIncludeExclude VARCHAR(10),
      p_practiceCohortTab VARCHAR(64),
      p_schema VARCHAR(255)
 )
@@ -18,13 +16,17 @@ CREATE PROCEDURE createPatientCohort(
 BEGIN
 
    DECLARE p_death VARCHAR(100) DEFAULT NULL;
-   DECLARE where_clause_1 VARCHAR(1000) DEFAULT NULL;
+   -- DECLARE where_clause_1 VARCHAR(1000) DEFAULT NULL;
    DECLARE regstatus_1 VARCHAR(255) DEFAULT NULL;
    DECLARE regstatus_2 VARCHAR(255) DEFAULT NULL;
 
-
-   SET p_regIncludeExclude = UPPER(p_regIncludeExclude);
-   SET p_regIncludeExclude = IF(p_regIncludeExclude = 'EXCLUDE','NOT EXISTS', IF(p_regIncludeExclude = 'INCLUDE','EXISTS',''));
+   DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+      GET DIAGNOSTICS CONDITION 1
+        @code = RETURNED_SQLSTATE, @msg = MESSAGE_TEXT;
+        CALL log_errors(p_query_id, 'createPatientCohort',@code,@msg,now());
+        RESIGNAL; -- rethrow the error
+   END;
 
    IF p_regStatus <> '1' THEN
     SET p_death = 'p.date_of_death IS NULL';
@@ -80,22 +82,6 @@ BEGIN
    ALTER TABLE qry_tmp ADD INDEX pat_idx(patient_id);
    ALTER TABLE qry_tmp ADD INDEX org_idx(organization_id);
   
-   IF p_regPeriodRange <> '1' THEN 
-
-        DROP TEMPORARY TABLE IF EXISTS qry_tmp_2;
-        -- filter patients by registration date range
-        SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp_2 AS 
-        SELECT DISTINCT c.person_id, c.patient_id, c.organization_id 
-        FROM qry_tmp c 
-        WHERE ', p_regPeriodRange);
-        PREPARE stmt FROM @sql;
-        EXECUTE stmt;
-        DEALLOCATE PREPARE stmt;
-        -- set where clause
-        SET where_clause_1 = CONCAT(p_regIncludeExclude,' (SELECT 1 FROM qry_tmp_2 c2 WHERE c2.patient_id = c.patient_id AND c2.organization_id = c.organization_id) ');
-   ELSE
-        SET where_clause_1 = '1';
-   END IF;
 
    SET @sql = CONCAT('DROP TABLE IF EXISTS ', p_practiceCohortTab);
    PREPARE stmt FROM @sql;
@@ -104,9 +90,10 @@ BEGIN
 
    -- filter patients to create the patient cohort
    SET @sql = CONCAT('CREATE TABLE ', p_practiceCohortTab, ' 
-   AS SELECT DISTINCT c.person_id, c.patient_id, c.organization_id 
-   FROM qry_tmp c 
-   WHERE ', where_clause_1);
+   AS SELECT DISTINCT c.person_id, c.patient_id, c.organization_id, c.date_registered, c.age 
+   FROM qry_tmp c ');
+
+   -- WHERE ', where_clause_1);
 
    PREPARE stmt FROM @sql;
    EXECUTE stmt;
@@ -121,7 +108,6 @@ BEGIN
    PREPARE stmt FROM @sql;
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;
-   
 
 
 END//

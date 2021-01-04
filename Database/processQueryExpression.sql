@@ -45,7 +45,7 @@ BEGIN
     BEGIN
       GET DIAGNOSTICS CONDITION 1
         @code = RETURNED_SQLSTATE, @msg = MESSAGE_TEXT;
-        CALL log_errors(p_query_id,'processQueryExpression', @code, @msg, now());
+        CALL log_errors(p_query_id, 'processQueryExpression', @code, @msg, now());
         RESIGNAL; -- rethrow the error
     END;
 
@@ -162,56 +162,43 @@ BEGIN
 
             END IF;
 
-            SET l_rejecttab = CONCAT('reject_tmp_', l_id,'_', l_query_id);
-            SET l_cohort = l_rejecttab;
+                SET l_rejecttab = CONCAT('reject_tmp_', l_id,'_', l_query_id);
+                SET l_cohort = l_rejecttab;
 
-            SET @sql = CONCAT('DROP TABLE IF EXISTS ', l_rejecttab);
-            PREPARE stmt FROM @sql;
-            EXECUTE stmt;
-            DEALLOCATE PREPARE stmt;          
+                SET @sql = CONCAT('DROP TABLE IF EXISTS ', l_rejecttab);
+                PREPARE stmt FROM @sql;
+                EXECUTE stmt;
+                DEALLOCATE PREPARE stmt;          
 
-            SET @sql = CONCAT('CREATE TABLE ', l_rejecttab,' AS 
-            SELECT * FROM ', @queryTable,'  
-            WHERE patient_id NOT IN (SELECT patient_id FROM ', l_selecttab,' )');
-            PREPARE stmt FROM @sql;
-            EXECUTE stmt;
-            DEALLOCATE PREPARE stmt;   
+                SET @sql = CONCAT('CREATE TABLE ', l_rejecttab,' AS 
+                SELECT patient_id, person_id, organization_id , date_registered, age FROM ', @queryTable,'  
+                WHERE patient_id NOT IN (SELECT patient_id FROM ', l_selecttab,' )');
+                PREPARE stmt FROM @sql;
+                EXECUTE stmt;
+                DEALLOCATE PREPARE stmt;   
 
-            IF l_selectReject = 'SELECT' THEN
+                IF l_selectReject = 'SELECT' THEN
 
-                  SET @sql = CONCAT('UPDATE ', p_ruleTab,' SET queryTable = ', QUOTE(l_rejecttab),' , selectTable = ', QUOTE(l_selecttab),' WHERE id  =  ', l_id,' AND query_id = ', l_query_id);
-                  PREPARE stmt FROM @sql;
-                  EXECUTE stmt;
-                  DEALLOCATE PREPARE stmt;
-
-                  SET l_tmp = CONCAT(l_tmp, l_rejecttab);
-                  SET l_tmp = CONCAT(l_tmp, CASE WHEN LENGTH(l_rejecttab)>0 THEN ',' ELSE '' END);
-
-            ELSEIF l_selectReject = 'REJECT' THEN
-
-                      -- check if this is the last id
-                      SET @id = 0;
-          
-                      SET @sql = CONCAT('SELECT id INTO @id FROM ', p_ruleTab,' WHERE query_id = ', l_query_id,' ORDER BY id DESC LIMIT 1');  
+                      SET @sql = CONCAT('UPDATE ', p_ruleTab,' SET queryTable = ', QUOTE(l_rejecttab),' , selectTable = ', QUOTE(l_selecttab),' WHERE id  =  ', l_id,' AND query_id = ', l_query_id);
                       PREPARE stmt FROM @sql;
                       EXECUTE stmt;
                       DEALLOCATE PREPARE stmt;
 
-                      IF counter = @id THEN 
-                            SET @sql = CONCAT('UPDATE ', p_ruleTab,' SET queryTable = NULL , selectTable = ', QUOTE(l_rejecttab),' WHERE id  =  ', l_id,' AND query_id = ', l_query_id);
-                            PREPARE stmt FROM @sql;
-                            EXECUTE stmt;
-                            DEALLOCATE PREPARE stmt;
-                      ELSE
-                            SET @sql = CONCAT('UPDATE ', p_ruleTab,' SET queryTable = ', QUOTE(l_rejecttab),' , selectTable = NULL WHERE id  =  ', l_id,' AND query_id = ', l_query_id);
-                            PREPARE stmt FROM @sql;
-                            EXECUTE stmt;
-                            DEALLOCATE PREPARE stmt;
+                      SET l_tmp = CONCAT(l_tmp, l_rejecttab);
+                      SET l_tmp = CONCAT(l_tmp, CASE WHEN LENGTH(l_rejecttab)>0 THEN ',' ELSE '' END);
 
-                            SET l_tmp = CONCAT(l_tmp, l_rejecttab);
-                            SET l_tmp = CONCAT(l_tmp, CASE WHEN LENGTH(l_rejecttab)>0 THEN ',' ELSE '' END);
-                      END IF;
-            END IF;
+                ELSEIF l_selectReject = 'REJECT' THEN
+
+                      SET @sql = CONCAT('UPDATE ', p_ruleTab,' SET queryTable = ', QUOTE(l_rejecttab),' , selectTable = NULL WHERE id  =  ', l_id,' AND query_id = ', l_query_id);
+                      PREPARE stmt FROM @sql;
+                      EXECUTE stmt;
+                      DEALLOCATE PREPARE stmt;
+
+                      SET l_tmp = CONCAT(l_tmp, l_rejecttab);
+                      SET l_tmp = CONCAT(l_tmp, CASE WHEN LENGTH(l_rejecttab)>0 THEN ',' ELSE '' END);
+
+                END IF;
+
         END IF;
 
     END WHILE processQueryExpression;
