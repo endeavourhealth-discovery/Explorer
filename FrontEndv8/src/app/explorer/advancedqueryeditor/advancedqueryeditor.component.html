@@ -139,50 +139,6 @@
       </table>
 
       <br/>
-
-      <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-        <mat-form-field appearance="standard" style="width: 110px">
-          <mat-label>Include/Exclude</mat-label>
-          <mat-select [(ngModel)]="registrationExclude" formControlName="control5" (ngModelChange)="formChanged()">
-            <mat-option *ngFor="let value of exclude" [value]="value.exclude">
-              {{value.exclude}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-        <p style="margin-left: 15px; margin-top: 28px"> patients who registered within the last</p>
-        <mat-form-field appearance="standard" style="width: 50px; margin-left: 15px">
-          <mat-label>Period</mat-label>
-          <input matInput placeholder="Value" [(ngModel)]="registrationPeriodValue" formControlName="control5a" (keydown.enter)="stepper.next()">
-        </mat-form-field>
-        <mat-form-field appearance="standard" style="width: 125px; margin-left: 10px">
-          <mat-label>Days/Weeks/Months</mat-label>
-          <mat-select [(ngModel)]="registrationPeriodType" formControlName="control5b" (ngModelChange)="formChanged()">
-            <mat-option *ngFor="let value of period" [value]="value.period">
-              {{value.period}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-        <p style="margin-left: 15px; margin-top: 28px"> or within the registration date range from</p>
-        <mat-form-field class="example-full-width" appearance="standard" style="width: 135px; margin-left: 15px">
-          <mat-label>Date range from</mat-label>
-          <input matInput [matDatepicker]="valuepicker1" placeholder="Date from" [(ngModel)]="registrationDateFrom" formControlName="control20">
-          <mat-datepicker-toggle matSuffix [for]="valuepicker1">
-            <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
-          </mat-datepicker-toggle>
-          <mat-datepicker #valuepicker1></mat-datepicker>
-        </mat-form-field>
-        <p style="margin-left: 15px; margin-top: 28px"> to</p>
-        <mat-form-field class="example-full-width" appearance="standard" style="width: 130px; margin-left: 15px">
-          <mat-label>Date range to</mat-label>
-          <input matInput [matDatepicker]="valuepicker2" placeholder="Date to" [(ngModel)]="registrationDateTo" formControlName="control21">
-          <mat-datepicker-toggle matSuffix [for]="valuepicker2">
-            <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
-          </mat-datepicker-toggle>
-          <mat-datepicker #valuepicker2></mat-datepicker>
-        </mat-form-field>
-        <p style="margin-left: 5px; margin-top: 28px">.</p>
-      </div>
-      <br/>
       <div class="flex" fxLayout.xs="column"  fxLayoutAlign="start">
         <mat-form-field appearance="outline" style="width: 140px">
           <mat-label>Age range from</mat-label>
@@ -215,7 +171,7 @@
 
       <span style="margin-left: 5px; color: gray">*Required</span>
 
-      <div style="margin-top: 120px" mat-dialog-actions align="end">
+      <div style="margin-top: 200px" mat-dialog-actions align="end">
         <button style="margin-right: 15px" mat-button color="accent" (click)="onCancelClick()">Cancel</button>
         <button style="margin-right: 15px" mat-button color="accent" matStepperPrevious>Back</button>
         <button style="margin-right: 15px" mat-flat-button color="accent" (click)="stepper.next()">Next</button>
@@ -228,7 +184,54 @@
     <form [formGroup]="thirdFormGroup">
       <ng-template matStepLabel>Query criteria</ng-template>
       <div class="criteria-container">
+        <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+          <p style="margin-left: 10px"><b style="font-size: 16px">Q0. </b>
+            <mat-form-field appearance="standard" style="width: 130px">
+            <mat-label>Include/Exclude</mat-label>
+            <mat-select [(ngModel)]="registrationExclude" formControlName="control5" (ngModelChange)="formChanged()">
+              <mat-option *ngFor="let value of exclude" [value]="value.exclude">
+                {{value.exclude}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <p style="margin-left: 10px; margin-top: 42px"> patients who registered within the last</p>
+          <mat-form-field appearance="standard" style="width: 50px; margin-left: 10px; margin-top: 12px">
+            <mat-label>Period</mat-label>
+            <input matInput placeholder="Value" [(ngModel)]="registrationPeriodValue" formControlName="control5a" (keydown.enter)="stepper.next()">
+          </mat-form-field>
+          <mat-form-field appearance="standard" style="width: 150px; margin-left: 10px; margin-top: 12px">
+            <mat-label>Days/Weeks/Months</mat-label>
+            <mat-select [(ngModel)]="registrationPeriodType" formControlName="control5b" (ngModelChange)="formChanged()">
+              <mat-option *ngFor="let value of period" [value]="value.period">
+                {{value.period}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <p style="margin-left: 10px; margin-top: 42px"> or within the date range from</p>
+          <mat-form-field class="example-full-width" appearance="standard" style="width: 135px; margin-left: 10px; margin-top: 12px">
+            <mat-label>Date from</mat-label>
+            <input matInput [matDatepicker]="valuepicker1" placeholder="Date from" [(ngModel)]="registrationDateFrom" formControlName="control20">
+            <mat-datepicker-toggle matSuffix [for]="valuepicker1">
+              <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+            </mat-datepicker-toggle>
+            <mat-datepicker #valuepicker1></mat-datepicker>
+          </mat-form-field>
+          <p style="margin-left: 10px; margin-top: 42px"> to</p>
+          <mat-form-field class="example-full-width" appearance="standard" style="width: 130px; margin-left: 10px; margin-top: 12px">
+            <mat-label>Date to</mat-label>
+            <input matInput [matDatepicker]="valuepicker2" placeholder="Date to" [(ngModel)]="registrationDateTo" formControlName="control21">
+            <mat-datepicker-toggle matSuffix [for]="valuepicker2">
+              <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+            </mat-datepicker-toggle>
+            <mat-datepicker #valuepicker2></mat-datepicker>
+          </mat-form-field>
+
+        </div>
+
         <br/>
+        <mat-divider></mat-divider>
+        <br/>
+
         <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
           <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q1. </b>Identify patients
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
