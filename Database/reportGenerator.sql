@@ -13,11 +13,7 @@ DECLARE targetPercentage VARCHAR(10) DEFAULT NULL;
 DECLARE providerOrganisation VARCHAR(5000) DEFAULT NULL;
 DECLARE includedOrganisation VARCHAR(5000) DEFAULT NULL; 
 DECLARE registrationStatus VARCHAR(255) DEFAULT NULL; 
-DECLARE registrationExclude VARCHAR(10) DEFAULT NULL; 
-DECLARE registrationDateFrom VARCHAR(20) DEFAULT NULL;   
-DECLARE registrationDateTo VARCHAR(20) DEFAULT NULL;   
-DECLARE registrationPeriodValue VARCHAR(10) DEFAULT NULL; 
-DECLARE registrationPeriodType VARCHAR(20) DEFAULT NULL; 
+
 DECLARE ageFrom VARCHAR(20) DEFAULT NULL;   
 DECLARE ageTo VARCHAR(20) DEFAULT NULL;  
 DECLARE postcode VARCHAR(20) DEFAULT NULL; 
@@ -166,6 +162,8 @@ DECLARE Q4 VARCHAR(64) DEFAULT NULL;
 DECLARE Q5 VARCHAR(64) DEFAULT NULL;
 DECLARE Q5A VARCHAR(64) DEFAULT NULL;
 
+DECLARE Q0 VARCHAR(64) DEFAULT NULL;
+
 DECLARE encounterValueSet_tmp VARCHAR(64) DEFAULT NULL;
 DECLARE medicationValueSet_tmp VARCHAR(64) DEFAULT NULL;
 DECLARE clinicalEventValueSet_tmp VARCHAR(64) DEFAULT NULL;
@@ -194,11 +192,7 @@ SET targetPercentage = JSON_UNQUOTE(JSON_EXTRACT(query,'$.targetPercentage'));
 SET providerOrganisation = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.providerOrganisation'),'[',''),']',''),'"','');
 SET includedOrganisation = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.includedOrganisation'),'[',''),']',''),'"','');
 SET registrationStatus = JSON_UNQUOTE(JSON_EXTRACT(query,'$.registrationStatus'));
-SET registrationExclude = JSON_UNQUOTE(JSON_EXTRACT(query,'$.registrationExclude')); 
-SET registrationDateFrom = JSON_UNQUOTE(JSON_EXTRACT(query,'$.registrationDateFrom'));   
-SET registrationDateTo = JSON_UNQUOTE(JSON_EXTRACT(query,'$.registrationDateTo')); 
-SET registrationPeriodValue = JSON_UNQUOTE(JSON_EXTRACT(query,'$.registrationPeriodValue'));
-SET registrationPeriodType = JSON_UNQUOTE(JSON_EXTRACT(query,'$.registrationPeriodType')); 
+
 SET ageFrom = JSON_UNQUOTE(JSON_EXTRACT(query,'$.ageFrom'));
 SET ageTo = JSON_UNQUOTE(JSON_EXTRACT(query,'$.ageTo'));  
 SET gender = LOWER(JSON_UNQUOTE(JSON_EXTRACT(query,'$.gender'))); 
@@ -342,6 +336,8 @@ SET Q4 = CONCAT('Q4_',query_id);
 SET Q5 = CONCAT('Q5_',query_id);
 SET Q5A = CONCAT('Q5A_',query_id);
 
+SET Q0 = CONCAT('Q0_',query_id);
+
 SET all_valueset_tmp = CONCAT('all_valueset_tmp_',query_id);
 SET all_concept_tmp = CONCAT('all_concept_tmp_',query_id);
 SET practiceCohort_tmp  = CONCAT('practiceCohort_tmp_',query_id);
@@ -373,42 +369,38 @@ SET rule_tmp = CONCAT('rule_tmp_',query_id);
 SET rule_det_tmp = CONCAT('rule_det_tmp_',query_id);
 
 -- build practice cohort -- 
-CALL buildCohortDefinition(query_id, providerOrganisation, includedOrganisation, registrationStatus, ageFrom, ageTo, gender, postcode, 
-registrationExclude, registrationDateFrom, registrationDateTo, registrationPeriodValue, registrationPeriodType, org_tmp, practiceCohort_tmp, 
-store_tmp, sourceSchema);
+CALL buildCohortDefinition(query_id, providerOrganisation, includedOrganisation, registrationStatus, ageFrom, ageTo, gender, postcode, org_tmp, practiceCohort_tmp, store_tmp, sourceSchema);
 -- build observation cohort for all valuesets to be used in the advance queries --
 CALL createValueSet('1', all_valueset_tmp);
 CALL createConcept(all_concept_tmp, all_valueset_tmp, sourceSchema);
 CALL createObservationCohort(observationCohort_tmp, practiceCohort_tmp, all_concept_tmp, sourceSchema);
 
-IF LENGTH(TRIM(queryExpression1)) != 0 OR queryExpression1 IS NOT NULL THEN  -- check if register expression exists
-    -- build register rule
-    CALL buildRegisterRule(query_id, matching1, queryExpression1, rule_tmp);
-    -- build rules 
-    SET selectRejects = CONCAT(selectReject2,',',selectReject3,',',selectReject4,',',selectReject5,',',selectReject6,',',selectReject7,',',selectReject8,',',selectReject9,',',
-    selectReject10,',',selectReject11,',',selectReject12,',',selectReject13,',',selectReject14,',',selectReject15,',',selectReject16);
-    SET matchings = CONCAT(matching2,',',matching3,',',matching4,',',matching5,',',matching6,',',matching7,',',matching8,',',matching9,',',
-    matching10,',',matching11,',',matching12,',',matching13,',',matching14,',',matching15,',',matching16);
-    SET queryExpressions = CONCAT(queryExpression2,',',queryExpression3,',',queryExpression4,',',queryExpression5,',',queryExpression6,',',queryExpression7,',',queryExpression8,',',queryExpression9,',',
-    queryExpression10,',',queryExpression11,',',queryExpression12,',',queryExpression13,',',queryExpression14,',',queryExpression15,',',queryExpression16);
-    SET ruleNumbers = CONCAT(ruleNumber2,',',ruleNumber3,',',ruleNumber4,',',ruleNumber5,',',ruleNumber6,',',ruleNumber7,',',ruleNumber8,',',ruleNumber9,',',
-    ruleNumber10,',',ruleNumber11,',',ruleNumber12,',',ruleNumber13,',',ruleNumber14,',',ruleNumber15,',',ruleNumber16);
-    -- populate rules into a table
-    CALL populateRules(query_id, selectRejects, matchings, queryExpressions, ruleNumbers, rule_tmp);
-    -- split query expression
-    CALL splitQueryExpression(query_id, rule_tmp, rule_det_tmp);
-    -- build query for rules
-    CALL buildQueryExpression(query_id, rule_tmp, rule_det_tmp, practiceCohort_tmp);
-    -- process the rules
-    CALL processQueryExpression(query_id, query, rule_tmp, practiceCohort_tmp, registerCohort_tmp, observationCohort_tmp, store_tmp, sourceSchema);
-END IF;
+-- build register rule
+CALL buildRegisterRule(query_id, matching1, queryExpression1, rule_tmp);
+-- build rules 
+SET selectRejects = CONCAT(selectReject2,',',selectReject3,',',selectReject4,',',selectReject5,',',selectReject6,',',selectReject7,',',selectReject8,',',selectReject9,',',
+selectReject10,',',selectReject11,',',selectReject12,',',selectReject13,',',selectReject14,',',selectReject15,',',selectReject16);
+SET matchings = CONCAT(matching2,',',matching3,',',matching4,',',matching5,',',matching6,',',matching7,',',matching8,',',matching9,',',
+matching10,',',matching11,',',matching12,',',matching13,',',matching14,',',matching15,',',matching16);
+SET queryExpressions = CONCAT(queryExpression2,',',queryExpression3,',',queryExpression4,',',queryExpression5,',',queryExpression6,',',queryExpression7,',',queryExpression8,',',queryExpression9,',',
+queryExpression10,',',queryExpression11,',',queryExpression12,',',queryExpression13,',',queryExpression14,',',queryExpression15,',',queryExpression16);
+SET ruleNumbers = CONCAT(ruleNumber2,',',ruleNumber3,',',ruleNumber4,',',ruleNumber5,',',ruleNumber6,',',ruleNumber7,',',ruleNumber8,',',ruleNumber9,',',
+ruleNumber10,',',ruleNumber11,',',ruleNumber12,',',ruleNumber13,',',ruleNumber14,',',ruleNumber15,',',ruleNumber16);
+-- populate rules into a table
+CALL populateRules(query_id, selectRejects, matchings, queryExpressions, ruleNumbers, rule_tmp);
+-- split query expression
+CALL splitQueryExpression(query_id, rule_tmp, rule_det_tmp);
+-- build query for rules
+CALL buildQueryExpression(query_id, rule_tmp, rule_det_tmp, practiceCohort_tmp);
+-- process the rules
+CALL processQueryExpression(query_id, query, rule_tmp, practiceCohort_tmp, registerCohort_tmp, observationCohort_tmp, store_tmp, sourceSchema);
 
 -- build final patient cohort
 CALL buildFinalPatientCohort(query_id, patientCohort_tmp, practiceCohort_tmp, rule_tmp, sourceSchema);
 
 -- remove tmp tables
 SET tempTables = CONCAT(org_tmp,',',observationCohort_tmp,',',practiceCohort_tmp,',',registerCohort_tmp,',',Q1,',',Q1A,',',Q1B,',',Q1C,',',
-Q1D,',',Q2,',',Q2A,',',Q3,',',Q3A,',',Q4,',',Q5,',',Q5A,',',all_valueset_tmp,',', all_concept_tmp);
+Q1D,',',Q2,',',Q2A,',',Q3,',',Q3A,',',Q4,',',Q5,',',Q5A,',',Q0,',',rule_tmp,',',rule_det_tmp,',',all_valueset_tmp,',', all_concept_tmp);
 
 CALL dropTempTables(tempTables);
 

@@ -32,6 +32,11 @@ IN p_includedFollowedByValuesettab VARCHAR(64),
 IN p_includedFollowedByConcepttab VARCHAR(64),
 IN p_greaterless VARCHAR(50), 
 IN p_greaterlessvalue VARCHAR(20), 
+IN p_registrationExclude VARCHAR(10),
+IN p_registrationDateFrom VARCHAR(20),  
+IN p_registrationDateTo VARCHAR(20),  
+IN p_registrationPeriodValue VARCHAR(10),
+IN p_registrationPeriodType VARCHAR(20),
 IN p_schema VARCHAR(255),
 IN p_storetab VARCHAR(64),
 IN p_cohort VARCHAR(64),
@@ -43,6 +48,7 @@ DECLARE includedValueSetString VARCHAR(255);
 DECLARE includedTestedValueSetString VARCHAR(255);
 DECLARE includedFollowedByValueSetString VARCHAR(255);
 DECLARE timeperioddaterange VARCHAR(255);
+DECLARE regPeriodRange VARCHAR(500) DEFAULT NULL;
 
   DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -92,8 +98,9 @@ SET p_greaterlessvalue = IF(p_greaterlessvalue = '', NULL, p_greaterlessvalue);
       -- get time period date range string
       SET timeperioddaterange = getTimePeriodDateRange(p_includedDateFrom, p_includedDateTo, p_includedPeriodValue, p_includedPeriodType, p_includedPeriodOperator);    
       -- build include exclude string
-      CALL runBuildQuery(p_query_id, p_withWithout, p_includedAnyAll, timeperioddaterange, p_includeConcepttab, p_observationCohortTab, 
-      NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, p_cohort, p_queryNumber);
+      CALL runBuildQuery(p_query_id, p_withWithout, p_includedAnyAll, timeperioddaterange, p_includeConcepttab, p_observationCohortTab, NULL, NULL, NULL, NULL, 
+      NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 
+      p_cohort, p_queryNumber);
 
     END IF;
 
@@ -115,8 +122,9 @@ SET p_greaterlessvalue = IF(p_greaterlessvalue = '', NULL, p_greaterlessvalue);
       -- get time period date range string
       SET timeperioddaterange = getTimePeriodDateRange(p_includedDateFrom, p_includedDateTo, p_includedPeriodValue, p_includedPeriodType, p_includedPeriodOperator);
       -- build include exclude string
-      CALL runBuildQuery(p_query_id, p_withWithout, p_includedAnyAll, timeperioddaterange, p_includeConcepttab, p_observationCohortTab, 
-      p_observation_tmp, p_includedEarliestLatest, p_includedOperator, p_includedEntryValue, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, p_cohort, p_queryNumber);
+      CALL runBuildQuery(p_query_id, p_withWithout, p_includedAnyAll, timeperioddaterange, p_includeConcepttab, p_observationCohortTab, p_observation_tmp, p_includedEarliestLatest, p_includedOperator, p_includedEntryValue, 
+      NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, 
+      p_cohort, p_queryNumber);
 
     END IF;
 
@@ -146,8 +154,9 @@ SET p_greaterlessvalue = IF(p_greaterlessvalue = '', NULL, p_greaterlessvalue);
       -- get time period date range string
       SET timeperioddaterange = getTimePeriodDateRange(p_includedDateFrom, p_includedDateTo, p_includedPeriodValue, p_includedPeriodType, p_includedPeriodOperator);
       -- build include exclude string
-      CALL runBuildQuery(p_query_id, p_withWithout, p_includedAnyAll, timeperioddaterange, p_includeConcepttab, p_observationCohortTab, 
-      p_observation_tmp, p_includedEarliestLatest, NULL, NULL, p_includedAnyAllTested, p_includeTestedConcepttab, NULL, NULL, NULL, NULL, NULL, 3, p_cohort, p_queryNumber);
+      CALL runBuildQuery(p_query_id, p_withWithout, p_includedAnyAll, timeperioddaterange, p_includeConcepttab, p_observationCohortTab, p_observation_tmp, p_includedEarliestLatest, NULL, NULL, 
+      p_includedAnyAllTested, p_includeTestedConcepttab, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3, 
+      p_cohort, p_queryNumber);
 
     END IF;
 
@@ -177,8 +186,9 @@ SET p_greaterlessvalue = IF(p_greaterlessvalue = '', NULL, p_greaterlessvalue);
       -- get time period date range string
       SET timeperioddaterange = getTimePeriodDateRange(p_includedDateFrom, p_includedDateTo, p_includedPeriodValue, p_includedPeriodType, p_includedPeriodOperator);
       -- build include exclude string
-      CALL runBuildQuery(p_query_id, p_withWithout, p_includedAnyAll, timeperioddaterange, p_includeConcepttab, p_observationCohortTab, 
-      p_observation_tmp, NULL, NULL, NULL, NULL, NULL, p_includedAreNot, p_includedAnyAllFollowedBy, p_includedFollowedByConcepttab, NULL, NULL, 4, p_cohort, p_queryNumber);
+      CALL runBuildQuery(p_query_id, p_withWithout, p_includedAnyAll, timeperioddaterange, p_includeConcepttab, p_observationCohortTab, p_observation_tmp, NULL, NULL, NULL, 
+      NULL, NULL, p_includedAreNot, p_includedAnyAllFollowedBy, p_includedFollowedByConcepttab, NULL, NULL, NULL, NULL, 4, 
+      p_cohort, p_queryNumber);
 
     END IF;
     
@@ -199,10 +209,33 @@ SET p_greaterlessvalue = IF(p_greaterlessvalue = '', NULL, p_greaterlessvalue);
       -- get time period date range string
       SET timeperioddaterange = getTimePeriodDateRange(p_includedDateFrom, p_includedDateTo, p_includedPeriodValue, p_includedPeriodType, p_includedPeriodOperator);
       -- build include exclude string
-      CALL runBuildQuery(p_query_id, p_withWithout, p_includedAnyAll, timeperioddaterange, p_includeConcepttab, p_observationCohortTab, 
-      p_observation_tmp, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, p_greaterless, p_greaterlessvalue, 5, p_cohort, p_queryNumber);
+      CALL runBuildQuery(p_query_id, p_withWithout, p_includedAnyAll, timeperioddaterange, p_includeConcepttab, p_observationCohortTab, p_observation_tmp, NULL, NULL, NULL, 
+      NULL, NULL, NULL, NULL, NULL, p_greaterless, p_greaterlessvalue, NULL, NULL, 5, 
+      p_cohort, p_queryNumber);
 
     END IF;   
+
+ ELSEIF p_queryType = 0 THEN 
+
+  SET p_registrationExclude = UPPER(p_registrationExclude);
+  SET p_registrationExclude = IF(p_registrationExclude = 'EXCLUDE','NOT EXISTS', IF(p_registrationExclude = 'INCLUDE','EXISTS',''));
+
+  -- get registration time period
+  SET p_registrationDateFrom = IF(p_registrationDateFrom = '', NULL, p_registrationDateFrom);
+  SET p_registrationDateTo = IF(p_registrationDateTo = '', NULL, p_registrationDateTo);
+  SET p_registrationPeriodType = IF(p_registrationPeriodType = 'Days','DAY', IF(p_registrationPeriodType = 'Weeks','WEEK', IF(p_registrationPeriodType = 'Months', 'MONTH', NULL)));
+
+  IF (p_registrationExclude IS NOT NULL AND (
+     (p_registrationDateFrom IS NOT NULL OR p_registrationDateTo IS NOT NULL) OR 
+     (p_registrationPeriodValue IS NOT NULL AND p_registrationPeriodType IS NOT NULL))) THEN 
+     SET regPeriodRange = getAgeDateRangeString(NULL, NULL, p_registrationDateFrom, p_registrationDateTo, p_registrationPeriodValue, p_registrationPeriodType, 2);
+  ELSE
+     SET regPeriodRange = '1';
+  END IF;
+
+  CALL runBuildQuery(p_query_id, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
+  NULL, NULL, NULL, NULL, NULL, NULL, NULL, regPeriodRange, p_registrationExclude, 0, 
+  p_cohort, p_queryNumber);
 
  END IF;
 

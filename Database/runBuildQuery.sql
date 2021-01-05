@@ -21,6 +21,8 @@ CREATE PROCEDURE runBuildQuery(
   IN p_includedFollowedByConcepttab VARCHAR(64),
   IN p_greaterless VARCHAR(50), 
   IN p_greaterlessvalue VARCHAR(20), 
+  IN p_regPeriodRange VARCHAR(500), 
+  IN p_regIncludeExclude VARCHAR(10),
   IN p_queryType INT,
   IN p_cohort VARCHAR(64),
   IN p_queryNumber VARCHAR(20)
@@ -34,10 +36,9 @@ DECLARE p_whereString VARCHAR(255) DEFAULT NULL;
     BEGIN
       GET DIAGNOSTICS CONDITION 1
         @code = RETURNED_SQLSTATE, @msg = MESSAGE_TEXT;
-        CALL log_errors(p_query_id,'runBuildQuery', @code, @msg, now());
+        CALL log_errors(p_query_id, 'runBuildQuery', @code, @msg, now());
         RESIGNAL; -- rethrow the error
     END;
-
 
 SET p_withWithout = UPPER(p_withWithout);
 SET p_withWithout = IF(p_withWithout = 'WITHOUT','NOT EXISTS',IF(p_withWithout = 'WITH','EXISTS',''));
@@ -285,6 +286,44 @@ ELSEIF p_queryType = 5 THEN
    PREPARE stmt FROM @sql;
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;
+
+ELSEIF p_queryType = 0 THEN
+
+   IF p_regPeriodRange <> '1' THEN 
+
+        DROP TEMPORARY TABLE IF EXISTS qry_tmp;
+        -- filter patients by registration date range
+        SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp AS 
+        SELECT DISTINCT c.person_id, c.patient_id, c.organization_id 
+        FROM ', p_cohort,' c WHERE ', p_regPeriodRange);
+        PREPARE stmt FROM @sql;
+        EXECUTE stmt;
+        DEALLOCATE PREPARE stmt;
+        -- set where clause
+        SET p_whereString = CONCAT(p_regIncludeExclude,' (SELECT 1 FROM qry_tmp c2 WHERE c2.patient_id = c.patient_id AND c2.organization_id = c.organization_id) ');
+   ELSE
+        SET p_whereString = '1';
+   END IF;
+
+
+   SET @sql = CONCAT('DROP TABLE IF EXISTS Q', p_queryNumber,'_',p_query_id);
+   PREPARE stmt FROM @sql;
+   EXECUTE stmt;
+   DEALLOCATE PREPARE stmt;
+
+   SET @sql = CONCAT('CREATE TABLE Q', p_queryNumber, '_', p_query_id,' AS 
+   SELECT DISTINCT c.patient_id, c.person_id, c.organization_id
+   FROM ', p_cohort,' c 
+   WHERE ', p_whereString);
+   PREPARE stmt FROM @sql;
+   EXECUTE stmt;
+   DEALLOCATE PREPARE stmt;
+
+   SET @sql = CONCAT('ALTER TABLE Q', p_queryNumber,'_',p_query_id,' ADD INDEX pat_idx(patient_id)');
+   PREPARE stmt FROM @sql;
+   EXECUTE stmt;
+   DEALLOCATE PREPARE stmt;
+   
 
 END IF;
 

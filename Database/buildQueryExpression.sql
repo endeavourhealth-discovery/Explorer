@@ -96,7 +96,7 @@ BEGIN
                 OPEN c_get_dets;
 
                 SET l_string = ' ';
-                SET l_main = CONCAT('SELECT patient_id, person_id, organization_id FROM ', l_tab,' WHERE 1 AND ');
+                SET l_main = CONCAT('SELECT patient_id, person_id, organization_id , date_registered, age FROM ', l_tab,' WHERE 1 AND ');
                 SET l_sql = '';
                 SET l_previousExpression = '';
                 SET l_qryNo = '';
@@ -112,8 +112,15 @@ BEGIN
                   
                   SET @exp = NULL;
                   SET @exp2 = NULL;
-                  
-                  IF  l_queryExpression_det LIKE 'Q%' THEN
+
+                  IF l_queryExpression_det = 'R' THEN
+
+                     IF l_seq_id_det = 1 THEN
+                         SET l_sql = CONCAT(l_main,' 1 ');
+                         SET l_string = CONCAT(l_string, l_sql);
+                     END IF;
+
+                  ELSEIF  l_queryExpression_det LIKE 'Q%' THEN
                     
                         SET @sql = CONCAT('SELECT queryExpression INTO @exp FROM ', p_ruleDetailTab,' WHERE seq_id = ', l_seq_id_det + 1,' AND rule_id = ',l_rule_id_det);
                         PREPARE stmt FROM @sql;
