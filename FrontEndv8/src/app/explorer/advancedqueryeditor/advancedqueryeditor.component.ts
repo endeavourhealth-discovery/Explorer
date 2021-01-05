@@ -361,8 +361,8 @@ export class AdvancedQueryEditorComponent implements OnInit {
   selectedIncludedOrganisation: string = '';
   selectedRegistration: string = '';
   registrationExclude: string = '';
-  registrationDateFrom: string = this.formatDate(new Date());
-  registrationDateTo: string = this.formatDate(new Date());
+  registrationDateFrom: string = '';
+  registrationDateTo: string = '';
   registrationPeriodValue: string= '';
   registrationPeriodType: string= '';
   ageFrom: string = '';
@@ -562,12 +562,12 @@ export class AdvancedQueryEditorComponent implements OnInit {
   seriesTableMedication: boolean = false;
   seriesTableObservation: boolean = false;
 
-  dateFromEncounters: string = this.formatDate(new Date());
-  dateToEncounters: string = this.formatDate(new Date());
-  dateFromMedication: string = this.formatDate(new Date());
-  dateToMedication: string = this.formatDate(new Date());
-  dateFromClinicalEvents: string = this.formatDate(new Date());
-  dateToClinicalEvents: string = this.formatDate(new Date());
+  dateFromEncounters: string = '';
+  dateToEncounters: string = '';
+  dateFromMedication: string = '';
+  dateToMedication: string = '';
+  dateFromClinicalEvents: string = '';
+  dateToClinicalEvents: string = '';
   demographicsFieldList = [];
   clinicalEventFieldList = [];
   encounterFieldList = [];
@@ -1115,9 +1115,10 @@ export class AdvancedQueryEditorComponent implements OnInit {
       control1: ['', Validators.required], control2: ['', Validators.required], control157: [''], control158: [''], control159: ['']
     });
     this.secondFormGroup = this._formBuilder.group({
-      control17: [''], control3: ['', Validators.required], control4: ['', Validators.required], control5: [''], control5a: [''], control5b: [''], control20: [''], control21: [''], control6: [''], control7: [''], control8: [''], control9: ['']
+      control17: [''], control3: ['', Validators.required], control4: ['', Validators.required], control6: [''], control7: [''], control8: [''], control9: ['']
     });
     this.thirdFormGroup = this._formBuilder.group({
+      control5: [''], control5a: [''], control5b: [''], control20: [''], control21: [''],
       control22: [''], control23: [''], control24: [''], control25: [''],
       control22a: [''], control23a: [''], control24a: [''], control25a: [''],
       control46a: [''], control47a: [''], control48a: [''],
