@@ -72,6 +72,7 @@ BEGIN
 
         OPEN c_get_selectTables;
         SET l_qryString = '';
+        SET l_tmp = '';
 
         processSelects: 
         WHILE (done = 0) DO
