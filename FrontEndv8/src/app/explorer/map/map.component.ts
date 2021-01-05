@@ -99,11 +99,12 @@ export class MapComponent implements OnInit {
                 this.layers.forEach( (item, index) => {
                   layer[index] = L.geoJSON([JSON.parse(item.geoJson)], {
                     style: function (feature) {
-                      return { color: item.color, fill: false, weight: 3 };
+                      return { color: item.color, fill: false, weight: 0 };
                     }
                   });
                   layer[index].addTo(this.buildingLayers);
-                  this.map.fitBounds(this.buildingLayers.getBounds());
+                  //this.map.fitBounds(this.buildingLayers.getBounds());
+                  this.map.setView([51.505, -0.09], 10.5);
                 });
                 this.createMap();
 
@@ -213,7 +214,7 @@ export class MapComponent implements OnInit {
     this.layers.forEach( (item, index) => {
       layer = L.geoJSON([JSON.parse(item.geoJson)], {
         style: function (feature) {
-          return { color: 'black', fillColor: item.color, fillOpacity: 1, weight: 1.5 };
+          return { color: item.color, fillColor: item.color, fillOpacity: .5, weight: 1.5 };
         }
       }).bindPopup(function (layer) {
         return item.description;
@@ -227,7 +228,7 @@ export class MapComponent implements OnInit {
     this.layers.forEach( (item, index) => {
       layer = L.geoJSON([JSON.parse(item.geoJson)], {
         style: function (feature) {
-          return { color: 'black', fillColor: item.color, fillOpacity: 1, weight: 1.5 };
+          return { color: item.color, fillColor: item.color, fillOpacity: .5, weight: 1.5 };
         }
       }).bindPopup(function (layer) {
         return item.description;
@@ -241,7 +242,7 @@ export class MapComponent implements OnInit {
     this.layers.forEach( (item, index) => {
       layer = L.geoJSON([JSON.parse(item.geoJson)], {
         style: function (feature) {
-          return { color: 'black', fillColor: item.color, fillOpacity: 1, weight: 1.5 };
+          return { color: item.color, fillColor: item.color, fillOpacity: .5, weight: 1.5 };
         }
       }).bindPopup(function (layer) {
         return item.description;
@@ -255,7 +256,7 @@ export class MapComponent implements OnInit {
     this.layers.forEach( (item, index) => {
       layer = L.geoJSON([JSON.parse(item.geoJson)], {
         style: function (feature) {
-          return { color: 'black', fillColor: item.color, fillOpacity: 1, weight: 1.5 };
+          return { color: item.color, fillColor: item.color, fillOpacity: .5, weight: 1.5 };
         }
       }).bindPopup(function (layer) {
         return item.description;
@@ -269,7 +270,7 @@ export class MapComponent implements OnInit {
     this.layers.forEach( (item, index) => {
       layer = L.geoJSON([JSON.parse(item.geoJson)], {
         style: function (feature) {
-          return { color: 'black', fillColor: item.color, fillOpacity: 1, weight: 1.5 };
+          return { color: item.color, fillColor: item.color, fillOpacity: .5, weight: 1.5 };
         }
       }).bindPopup(function (layer) {
         return item.description;
@@ -279,7 +280,7 @@ export class MapComponent implements OnInit {
       count++;
     });
 
-    L.tileLayer(this.url, { maxZoom: 18, attribution: this.attribution, id: 'mapbox/streets-v11', tileSize: 512, zoomOffset: -1 }).addTo(this.map);
+    L.tileLayer(this.url, { maxZoom: 100, attribution: this.attribution, id: 'mapbox/streets-v11', tileSize: 512, zoomOffset: -1 }).addTo(this.map);
     if (this.isCovidQuery) {
       this.display = this.selectedDate;
     } else {
@@ -328,7 +329,7 @@ export class MapComponent implements OnInit {
       this.layers.forEach( (item, index) => {
         layer = L.geoJSON([JSON.parse(item.geoJson)], {
           style: function (feature) {
-            return { color: 'black', fillColor: item.color, fillOpacity: 1, weight: 1 };
+            return { color: item.color, fillColor: item.color, fillOpacity: .5, weight: 1.5 };
           }
         }).bindPopup(function (layer) {
           return item.description;

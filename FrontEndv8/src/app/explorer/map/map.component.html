@@ -47,25 +47,24 @@
             <button [disabled]="form.invalid" mat-flat-button color="accent" (click)="recompute()">Recompute</button>
           </div>
           <br/>
-          <div>
-            <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Legend</b>
+          <br/>
+          <div style="text-align: center;">
+            <b>Legend</b>
           </div>
-          <div>
-            &nbsp;
-          </div>
-          <div layout="row" *ngFor="let item of levels;  let i = index">
+          <br/>
+          <div layout="row" style="text-align: left;" *ngFor="let item of levels;  let i = index">
             <button mat-button (click)="refreshLayer(mapResults.descriptions[i])" *ngIf="mapResults && i!=4" >
               <mat-icon [ngStyle]="{'color': mapResults.colors[i]}">label</mat-icon>
               {{mapResults.lowerLimits[i]}} - {{mapResults.upperLimits[i]}}
             </button>
           </div>
-          <div layout="row">
+          <div layout="row" style="text-align: left;">
             <button mat-button (click)="refreshLayer(mapResults.descriptions[4])" *ngIf="mapResults" >
               <mat-icon [ngStyle]="{'color': mapResults.colors[4]}">label</mat-icon>
               {{mapResults.lowerLimits[4]}} and above
             </button>
           </div>
-          <div layout="row">
+          <div layout="row" style="text-align: left;">
             <button mat-button (click)="refreshLayer('All levels')">
               <mat-icon [ngStyle]="{'color': 'blue'}">label</mat-icon>
               All levels
