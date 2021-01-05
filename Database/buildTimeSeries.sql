@@ -38,13 +38,13 @@ BEGIN
     BEGIN
       GET DIAGNOSTICS CONDITION 1
         @code = RETURNED_SQLSTATE, @msg = MESSAGE_TEXT;
-        CALL log_errors(p_query_id,'buildTimeSeries',@code,@msg,now());
+        CALL log_errors(p_query_id, 'buildTimeSeries', @code, @msg, now());
         RESIGNAL; -- rethrow the error
     END;
 
   -- check date format passed
-  SET p_fromDate = IF(p_fromDate = 'NaN-NaN-NaN', NULL, IF(p_fromDate = '', NULL, SUBSTRING(p_fromDate, 1, 10)));
-  SET p_toDate = IF(p_toDate = 'NaN-NaN-NaN', NULL, IF(p_toDate = '', NULL, SUBSTRING(p_toDate, 1, 10)));
+  SET p_fromDate = IF(p_fromDate = '', NULL, SUBSTRING(p_fromDate, 1, 10));
+  SET p_toDate = IF(p_toDate = '', NULL, SUBSTRING(p_toDate, 1, 10));
 
   SET p_seriesTable = IF(p_seriesTable = '', NULL, p_seriesTable);
   SET p_seriesField = IF(p_seriesField = '', NULL, p_seriesField);
@@ -74,7 +74,7 @@ IF p_timeSeries = 'TRUE' AND
       SET sourceTab = 'encounter';
    END IF;
    -- get time series date range string
-   SET seriesDateRange = getTimePeriodDateRange(p_fromDate, p_toDate, p_periodValue, p_periodType, p_periodOperator);    
+   SET seriesDateRange = getTimePeriodDateRange(p_fromDate, p_toDate, p_periodValue, p_periodType, p_periodOperator,'Y');    
    -- get time series value set string
    CALL getValueSetString(seriesValueSet, p_storetab, @seriesValueSetString);
    SET seriesValueSetString = @seriesValueSetString;
