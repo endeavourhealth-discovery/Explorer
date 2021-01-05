@@ -42,7 +42,7 @@ export class MapComponent implements OnInit {
   covidQuery2: string = "Shielded Covid-19 patients";
   covidQuery3: string = "Confirmed Covid-19 cases";
   isCovidQuery: boolean = true;
-  isLevelOpaque: boolean = false;
+  isLevelTransparent: boolean = false;
 
   constructor(private explorerService: ExplorerService,
               private log: LoggerService,
@@ -212,7 +212,7 @@ export class MapComponent implements OnInit {
     let layer = L.geoJSON();
     let count = 0;
     this.layers  = this.mapResults.layers['Level 1'];
-    if (this.isLevelOpaque) {
+    if (this.isLevelTransparent) {
       this.layers.forEach( (item, index) => {
         layer = L.geoJSON([JSON.parse(item.geoJson)], {
           style: function (feature) {
@@ -398,7 +398,7 @@ export class MapComponent implements OnInit {
       let layer = L.geoJSON();
       let count = 0;
       this.layers  = this.mapResults.layers[this.selectedLayer];
-      if (this.isLevelOpaque) {
+      if (this.isLevelTransparent) {
         this.layers.forEach( (item, index) => {
           layer = L.geoJSON([JSON.parse(item.geoJson)], {
             style: function (feature) {
@@ -429,9 +429,9 @@ export class MapComponent implements OnInit {
     L.tileLayer(this.url, { maxZoom: 18, attribution: this.attribution, id: 'mapbox/streets-v11', tileSize: 512, zoomOffset: -1 }).addTo(this.map);
   }
 
-  toggleOpaque(selected, checked: boolean) {
+  toggleTransparent(selected, checked: boolean) {
 
-    this.isLevelOpaque = checked;
+    this.isLevelTransparent = checked;
     this.selectedLayer = selected;
 
     //this.map.fitBounds(this.buildingLayers.getBounds());
@@ -443,7 +443,7 @@ export class MapComponent implements OnInit {
       let layer = L.geoJSON();
       let count = 0;
       this.layers  = this.mapResults.layers[this.selectedLayer];
-      if (this.isLevelOpaque) {
+      if (this.isLevelTransparent) {
         this.layers.forEach( (item, index) => {
           layer = L.geoJSON([JSON.parse(item.geoJson)], {
             style: function (feature) {
