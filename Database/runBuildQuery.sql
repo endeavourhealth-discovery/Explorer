@@ -222,7 +222,7 @@ ELSEIF p_queryType = 4 THEN
    DROP TEMPORARY TABLE IF EXISTS qry_tmp_3;
 
    -- create a temporary patient cohort where one value set is compared to another over a time period
-   SET @sql = CONCAT('CREATE TABLE qry_tmp_3 AS 
+   SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp_3 AS 
    SELECT DISTINCT o.patient_id 
    FROM ', p_observation_tmp,' o WHERE ', p_includedAreNot, '(SELECT 1 FROM qry_tmp_2 o2 WHERE o2.patient_id = o.patient_id AND ', p_timeperioddaterange,')');
    PREPARE stmt FROM @sql;
