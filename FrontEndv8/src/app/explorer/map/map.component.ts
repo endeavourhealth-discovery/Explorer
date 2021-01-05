@@ -42,6 +42,7 @@ export class MapComponent implements OnInit {
   covidQuery2: string = "Shielded Covid-19 patients";
   covidQuery3: string = "Confirmed Covid-19 cases";
   isCovidQuery: boolean = true;
+  isLevelOpaque: boolean = false;
 
   constructor(private explorerService: ExplorerService,
               private log: LoggerService,
@@ -211,74 +212,145 @@ export class MapComponent implements OnInit {
     let layer = L.geoJSON();
     let count = 0;
     this.layers  = this.mapResults.layers['Level 1'];
-    this.layers.forEach( (item, index) => {
-      layer = L.geoJSON([JSON.parse(item.geoJson)], {
-        style: function (feature) {
-          return { color: item.color, fillColor: item.color, fillOpacity: .5, weight: 1.5 };
-        }
-      }).bindPopup(function (layer) {
-        return item.description;
+    if (this.isLevelOpaque) {
+      this.layers.forEach( (item, index) => {
+        layer = L.geoJSON([JSON.parse(item.geoJson)], {
+          style: function (feature) {
+            return { color: item.color, fillColor: item.color, fillOpacity: .5, weight: 1.5 };
+          }
+        }).bindPopup(function (layer) {
+          return item.description;
+        });
+        layer.addTo(this.map);
+        this.layersToRemove[count] = layer;
+        count++;
       });
-      layer.addTo(this.map);
-      this.layersToRemove[count] = layer;
-      count++;
-    });
 
-    this.layers  = this.mapResults.layers['Level 2'];
-    this.layers.forEach( (item, index) => {
-      layer = L.geoJSON([JSON.parse(item.geoJson)], {
-        style: function (feature) {
-          return { color: item.color, fillColor: item.color, fillOpacity: .5, weight: 1.5 };
-        }
-      }).bindPopup(function (layer) {
-        return item.description;
+      this.layers  = this.mapResults.layers['Level 2'];
+      this.layers.forEach( (item, index) => {
+        layer = L.geoJSON([JSON.parse(item.geoJson)], {
+          style: function (feature) {
+            return { color: item.color, fillColor: item.color, fillOpacity: .5, weight: 1.5 };
+          }
+        }).bindPopup(function (layer) {
+          return item.description;
+        });
+        layer.addTo(this.map);
+        this.layersToRemove[count] = layer;
+        count++;
       });
-      layer.addTo(this.map);
-      this.layersToRemove[count] = layer;
-      count++;
-    });
 
-    this.layers  = this.mapResults.layers['Level 3'];
-    this.layers.forEach( (item, index) => {
-      layer = L.geoJSON([JSON.parse(item.geoJson)], {
-        style: function (feature) {
-          return { color: item.color, fillColor: item.color, fillOpacity: .5, weight: 1.5 };
-        }
-      }).bindPopup(function (layer) {
-        return item.description;
+      this.layers  = this.mapResults.layers['Level 3'];
+      this.layers.forEach( (item, index) => {
+        layer = L.geoJSON([JSON.parse(item.geoJson)], {
+          style: function (feature) {
+            return { color: item.color, fillColor: item.color, fillOpacity: .5, weight: 1.5 };
+          }
+        }).bindPopup(function (layer) {
+          return item.description;
+        });
+        layer.addTo(this.map);
+        this.layersToRemove[count] = layer;
+        count++;
       });
-      layer.addTo(this.map);
-      this.layersToRemove[count] = layer;
-      count++;
-    });
 
-    this.layers  = this.mapResults.layers['Level 4'];
-    this.layers.forEach( (item, index) => {
-      layer = L.geoJSON([JSON.parse(item.geoJson)], {
-        style: function (feature) {
-          return { color: item.color, fillColor: item.color, fillOpacity: .5, weight: 1.5 };
-        }
-      }).bindPopup(function (layer) {
-        return item.description;
+      this.layers  = this.mapResults.layers['Level 4'];
+      this.layers.forEach( (item, index) => {
+        layer = L.geoJSON([JSON.parse(item.geoJson)], {
+          style: function (feature) {
+            return { color: item.color, fillColor: item.color, fillOpacity: .5, weight: 1.5 };
+          }
+        }).bindPopup(function (layer) {
+          return item.description;
+        });
+        layer.addTo(this.map);
+        this.layersToRemove[count] = layer;
+        count++;
       });
-      layer.addTo(this.map);
-      this.layersToRemove[count] = layer;
-      count++;
-    });
 
-    this.layers  = this.mapResults.layers['Level 5'];
-    this.layers.forEach( (item, index) => {
-      layer = L.geoJSON([JSON.parse(item.geoJson)], {
-        style: function (feature) {
-          return { color: item.color, fillColor: item.color, fillOpacity: .5, weight: 1.5 };
-        }
-      }).bindPopup(function (layer) {
-        return item.description;
+      this.layers  = this.mapResults.layers['Level 5'];
+      this.layers.forEach( (item, index) => {
+        layer = L.geoJSON([JSON.parse(item.geoJson)], {
+          style: function (feature) {
+            return { color: item.color, fillColor: item.color, fillOpacity: .5, weight: 1.5 };
+          }
+        }).bindPopup(function (layer) {
+          return item.description;
+        });
+        layer.addTo(this.map);
+        this.layersToRemove[count] = layer;
+        count++;
       });
-      layer.addTo(this.map);
-      this.layersToRemove[count] = layer;
-      count++;
-    });
+    } else {
+      this.layers.forEach( (item, index) => {
+        layer = L.geoJSON([JSON.parse(item.geoJson)], {
+          style: function (feature) {
+            return { color: 'black', fillColor: item.color, fillOpacity: 1, weight: 1.5 };
+          }
+        }).bindPopup(function (layer) {
+          return item.description;
+        });
+        layer.addTo(this.map);
+        this.layersToRemove[count] = layer;
+        count++;
+      });
+
+      this.layers  = this.mapResults.layers['Level 2'];
+      this.layers.forEach( (item, index) => {
+        layer = L.geoJSON([JSON.parse(item.geoJson)], {
+          style: function (feature) {
+            return { color: 'black', fillColor: item.color, fillOpacity: 1, weight: 1.5 };
+          }
+        }).bindPopup(function (layer) {
+          return item.description;
+        });
+        layer.addTo(this.map);
+        this.layersToRemove[count] = layer;
+        count++;
+      });
+
+      this.layers  = this.mapResults.layers['Level 3'];
+      this.layers.forEach( (item, index) => {
+        layer = L.geoJSON([JSON.parse(item.geoJson)], {
+          style: function (feature) {
+            return { color: 'black', fillColor: item.color, fillOpacity: 1, weight: 1.5 };
+          }
+        }).bindPopup(function (layer) {
+          return item.description;
+        });
+        layer.addTo(this.map);
+        this.layersToRemove[count] = layer;
+        count++;
+      });
+
+      this.layers  = this.mapResults.layers['Level 4'];
+      this.layers.forEach( (item, index) => {
+        layer = L.geoJSON([JSON.parse(item.geoJson)], {
+          style: function (feature) {
+            return { color: 'black', fillColor: item.color, fillOpacity: 1, weight: 1.5 };
+          }
+        }).bindPopup(function (layer) {
+          return item.description;
+        });
+        layer.addTo(this.map);
+        this.layersToRemove[count] = layer;
+        count++;
+      });
+
+      this.layers  = this.mapResults.layers['Level 5'];
+      this.layers.forEach( (item, index) => {
+        layer = L.geoJSON([JSON.parse(item.geoJson)], {
+          style: function (feature) {
+            return { color: 'black', fillColor: item.color, fillOpacity: 1, weight: 1.5 };
+          }
+        }).bindPopup(function (layer) {
+          return item.description;
+        });
+        layer.addTo(this.map);
+        this.layersToRemove[count] = layer;
+        count++;
+      });
+    }
 
     L.tileLayer(this.url, { maxZoom: 100, attribution: this.attribution, id: 'mapbox/streets-v11', tileSize: 512, zoomOffset: -1 }).addTo(this.map);
     if (this.isCovidQuery) {
@@ -326,18 +398,78 @@ export class MapComponent implements OnInit {
       let layer = L.geoJSON();
       let count = 0;
       this.layers  = this.mapResults.layers[this.selectedLayer];
-      this.layers.forEach( (item, index) => {
-        layer = L.geoJSON([JSON.parse(item.geoJson)], {
-          style: function (feature) {
-            return { color: item.color, fillColor: item.color, fillOpacity: .5, weight: 1.5 };
-          }
-        }).bindPopup(function (layer) {
-          return item.description;
+      if (this.isLevelOpaque) {
+        this.layers.forEach( (item, index) => {
+          layer = L.geoJSON([JSON.parse(item.geoJson)], {
+            style: function (feature) {
+              return { color: item.color, fillColor: item.color, fillOpacity: .5, weight: 1.5 };
+            }
+          }).bindPopup(function (layer) {
+            return item.description;
+          });
+          layer.addTo(this.map);
+          this.layersToRemove[count] = layer;
+          count++;
         });
-        layer.addTo(this.map);
-        this.layersToRemove[count] = layer;
-        count++;
-      });
+      } else {
+        this.layers.forEach( (item, index) => {
+          layer = L.geoJSON([JSON.parse(item.geoJson)], {
+            style: function (feature) {
+              return { color: 'black', fillColor: item.color, fillOpacity: 1, weight: 1.5 };
+            }
+          }).bindPopup(function (layer) {
+            return item.description;
+          });
+          layer.addTo(this.map);
+          this.layersToRemove[count] = layer;
+          count++;
+        });
+      }
+    }
+    L.tileLayer(this.url, { maxZoom: 18, attribution: this.attribution, id: 'mapbox/streets-v11', tileSize: 512, zoomOffset: -1 }).addTo(this.map);
+  }
+
+  toggleOpaque(selected, checked: boolean) {
+
+    this.isLevelOpaque = checked;
+    this.selectedLayer = selected;
+
+    //this.map.fitBounds(this.buildingLayers.getBounds());
+
+    if (this.selectedLayer == "All levels") {
+      this.createMap();
+    } else {
+      this.clearLayers();
+      let layer = L.geoJSON();
+      let count = 0;
+      this.layers  = this.mapResults.layers[this.selectedLayer];
+      if (this.isLevelOpaque) {
+        this.layers.forEach( (item, index) => {
+          layer = L.geoJSON([JSON.parse(item.geoJson)], {
+            style: function (feature) {
+              return { color: item.color, fillColor: item.color, fillOpacity: .5, weight: 1.5 };
+            }
+          }).bindPopup(function (layer) {
+            return item.description;
+          });
+          layer.addTo(this.map);
+          this.layersToRemove[count] = layer;
+          count++;
+        });
+      } else {
+        this.layers.forEach( (item, index) => {
+          layer = L.geoJSON([JSON.parse(item.geoJson)], {
+            style: function (feature) {
+              return { color: 'black', fillColor: item.color, fillOpacity: 1, weight: 1.5 };
+            }
+          }).bindPopup(function (layer) {
+            return item.description;
+          });
+          layer.addTo(this.map);
+          this.layersToRemove[count] = layer;
+          count++;
+        });
+      }
     }
     L.tileLayer(this.url, { maxZoom: 18, attribution: this.attribution, id: 'mapbox/streets-v11', tileSize: 512, zoomOffset: -1 }).addTo(this.map);
   }
