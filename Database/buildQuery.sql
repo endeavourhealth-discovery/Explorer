@@ -96,7 +96,7 @@ SET p_greaterlessvalue = IF(p_greaterlessvalue = '', NULL, p_greaterlessvalue);
       -- create concept from includeexclude valueset
       CALL createConcept(p_includeConcepttab, p_includeValuesettab, p_schema);
       -- get time period date range string
-      SET timeperioddaterange = getTimePeriodDateRange(p_includedDateFrom, p_includedDateTo, p_includedPeriodValue, p_includedPeriodType, p_includedPeriodOperator);    
+      SET timeperioddaterange = getTimePeriodDateRange(p_includedDateFrom, p_includedDateTo, p_includedPeriodValue, p_includedPeriodType, p_includedPeriodOperator,'Y');    
       -- build include exclude string
       CALL runBuildQuery(p_query_id, p_withWithout, p_includedAnyAll, timeperioddaterange, p_includeConcepttab, p_observationCohortTab, NULL, NULL, NULL, NULL, 
       NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 
@@ -120,7 +120,7 @@ SET p_greaterlessvalue = IF(p_greaterlessvalue = '', NULL, p_greaterlessvalue);
       -- create concept from includeexclude valueset
       CALL createConcept(p_includeConcepttab, p_includeValuesettab, p_schema);
       -- get time period date range string
-      SET timeperioddaterange = getTimePeriodDateRange(p_includedDateFrom, p_includedDateTo, p_includedPeriodValue, p_includedPeriodType, p_includedPeriodOperator);
+      SET timeperioddaterange = getTimePeriodDateRange(p_includedDateFrom, p_includedDateTo, p_includedPeriodValue, p_includedPeriodType, p_includedPeriodOperator,'Y');
       -- build include exclude string
       CALL runBuildQuery(p_query_id, p_withWithout, p_includedAnyAll, timeperioddaterange, p_includeConcepttab, p_observationCohortTab, p_observation_tmp, p_includedEarliestLatest, p_includedOperator, p_includedEntryValue, 
       NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, 
@@ -152,7 +152,7 @@ SET p_greaterlessvalue = IF(p_greaterlessvalue = '', NULL, p_greaterlessvalue);
       -- create concept from includeexclude valueset
       CALL createConcept(p_includeTestedConcepttab, p_includeTestedValuesettab, p_schema);
       -- get time period date range string
-      SET timeperioddaterange = getTimePeriodDateRange(p_includedDateFrom, p_includedDateTo, p_includedPeriodValue, p_includedPeriodType, p_includedPeriodOperator);
+      SET timeperioddaterange = getTimePeriodDateRange(p_includedDateFrom, p_includedDateTo, p_includedPeriodValue, p_includedPeriodType, p_includedPeriodOperator,'Y');
       -- build include exclude string
       CALL runBuildQuery(p_query_id, p_withWithout, p_includedAnyAll, timeperioddaterange, p_includeConcepttab, p_observationCohortTab, p_observation_tmp, p_includedEarliestLatest, NULL, NULL, 
       p_includedAnyAllTested, p_includeTestedConcepttab, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3, 
@@ -184,7 +184,7 @@ SET p_greaterlessvalue = IF(p_greaterlessvalue = '', NULL, p_greaterlessvalue);
       -- create concept from includeexclude valueset
       CALL createConcept(p_includedFollowedByConcepttab, p_includedFollowedByValuesettab, p_schema);
       -- get time period date range string
-      SET timeperioddaterange = getTimePeriodDateRange(p_includedDateFrom, p_includedDateTo, p_includedPeriodValue, p_includedPeriodType, p_includedPeriodOperator);
+      SET timeperioddaterange = getTimePeriodDateRange(p_includedDateFrom, p_includedDateTo, p_includedPeriodValue, p_includedPeriodType, p_includedPeriodOperator,'N');
       -- build include exclude string
       CALL runBuildQuery(p_query_id, p_withWithout, p_includedAnyAll, timeperioddaterange, p_includeConcepttab, p_observationCohortTab, p_observation_tmp, NULL, NULL, NULL, 
       NULL, NULL, p_includedAreNot, p_includedAnyAllFollowedBy, p_includedFollowedByConcepttab, NULL, NULL, NULL, NULL, 4, 
@@ -207,7 +207,7 @@ SET p_greaterlessvalue = IF(p_greaterlessvalue = '', NULL, p_greaterlessvalue);
       -- create concept from includeexclude valueset
       CALL createConcept(p_includeConcepttab, p_includeValuesettab, p_schema);
       -- get time period date range string
-      SET timeperioddaterange = getTimePeriodDateRange(p_includedDateFrom, p_includedDateTo, p_includedPeriodValue, p_includedPeriodType, p_includedPeriodOperator);
+      SET timeperioddaterange = getTimePeriodDateRange(p_includedDateFrom, p_includedDateTo, p_includedPeriodValue, p_includedPeriodType, p_includedPeriodOperator,'Y');
       -- build include exclude string
       CALL runBuildQuery(p_query_id, p_withWithout, p_includedAnyAll, timeperioddaterange, p_includeConcepttab, p_observationCohortTab, p_observation_tmp, NULL, NULL, NULL, 
       NULL, NULL, NULL, NULL, NULL, p_greaterless, p_greaterlessvalue, NULL, NULL, 5, 
