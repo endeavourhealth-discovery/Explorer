@@ -1585,13 +1585,13 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         String sql = "";
         if ("Suspected and confirmed Covid-19 cases".equalsIgnoreCase(query)) {
             sql = "select distinct date_format(covid_date, '%Y-%m-%d') as date " +
-                    "from dashboards.lsoa_covid order by covid_date";
+                    "from dashboards.lsoa_covid where covid_date <= now() order by covid_date";
         } else if ("Confirmed Covid-19 cases".equalsIgnoreCase(query)) {
             sql = "select distinct date_format(covid_date, '%Y-%m-%d') as date " +
-                        "from dashboards.lsoa_covid where corona_status = 'Confirmed Covid 19' order by covid_date";
+                    "from dashboards.lsoa_covid where covid_date <= now() and corona_status = 'Confirmed Covid 19' order by covid_date";
         } else if ("Shielded Covid-19 patients".equalsIgnoreCase(query)) {
             sql = "select distinct date_format(covid_date, '%Y-%m-%d') as date " +
-                    "from dashboards.lsoa_covid_shielded order by covid_date";
+                    "from dashboards.lsoa_covid_shielded where covid_date <= now() order by covid_date";
         } else {
             sql = "select id from dashboards.query_library where name = ? ";
             String queryId = null;
