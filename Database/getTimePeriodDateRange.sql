@@ -17,17 +17,30 @@ BEGIN
 
 DECLARE daterange VARCHAR(255);
 DECLARE effectiveDate VARCHAR(30);
+DECLARE signString VARCHAR(3);
 
 IF p_runDate = 'Y' THEN
-  SET effectiveDate = 'NOW()';
-ELSEIF p_runDate = 'N' THEN
-  SET effectiveDate = 'o.clinical_effective_date';
-END IF;
 
-IF UPPER(p_includedPeriodOperator) = 'WITHIN' OR UPPER(p_includedPeriodOperator) IS NULL THEN
-   SET p_includedPeriodOperator = '>=';
-ELSEIF UPPER(p_includedPeriodOperator) = 'BEFORE' THEN
-   SET p_includedPeriodOperator = '<=';
+  SET effectiveDate = 'CURDATE()';
+  SET signString = '';
+
+ IF UPPER(p_includedPeriodOperator) = 'WITHIN' OR UPPER(p_includedPeriodOperator) IS NULL THEN
+       SET p_includedPeriodOperator = '>=';
+       ELSEIF UPPER(p_includedPeriodOperator) = 'BEFORE' THEN
+       SET p_includedPeriodOperator = '<=';
+ END IF;
+
+ELSEIF p_runDate = 'N' THEN
+
+  SET effectiveDate = 'o.clinical_effective_date';
+  SET signString = '-';
+
+ IF UPPER(p_includedPeriodOperator) = 'WITHIN' OR UPPER(p_includedPeriodOperator) IS NULL THEN
+       SET p_includedPeriodOperator = '<=';
+       ELSEIF UPPER(p_includedPeriodOperator) = 'BEFORE' THEN
+       SET p_includedPeriodOperator = '>=';
+ END IF;
+
 END IF;
 
 
@@ -44,17 +57,17 @@ END IF;
 
 IF p_includedDateFrom IS NOT NULL AND p_includedDateTo IS NOT NULL AND p_includedPeriodValue IS NOT NULL THEN
 
-       SET daterange = CONCAT('((o2.clinical_effective_date ', p_includedPeriodOperator,' DATE_SUB( ', effectiveDate,' , INTERVAL ', p_includedPeriodValue,' ', p_includedPeriodType,')) 
+       SET daterange = CONCAT('((o2.clinical_effective_date ', p_includedPeriodOperator,' DATE_SUB( ', effectiveDate,' , INTERVAL ', signString,' ',p_includedPeriodValue,' ', p_includedPeriodType,')) 
        OR (o2.clinical_effective_date BETWEEN ', QUOTE(p_includedDateFrom),' AND ', QUOTE(p_includedDateTo),') )' );
 
 ELSEIF p_includedDateFrom IS NOT NULL AND p_includedDateTo IS NULL AND p_includedPeriodValue IS NOT NULL THEN
 
-       SET daterange = CONCAT('((o2.clinical_effective_date ', p_includedPeriodOperator,' DATE_SUB( ', effectiveDate,' , INTERVAL ', p_includedPeriodValue,' ', p_includedPeriodType,')) 
+       SET daterange = CONCAT('((o2.clinical_effective_date ', p_includedPeriodOperator,' DATE_SUB( ', effectiveDate,' , INTERVAL ', signString,' ',p_includedPeriodValue,' ', p_includedPeriodType,')) 
        OR (o2.clinical_effective_date >= ', QUOTE(p_includedDateFrom), ') )' );
 
 ELSEIF p_includedDateFrom IS NULL AND p_includedDateTo IS NOT NULL AND p_includedPeriodValue IS NOT NULL THEN
 
-       SET daterange = CONCAT('((o2.clinical_effective_date ', p_includedPeriodOperator,' DATE_SUB( ', effectiveDate,' , INTERVAL ', p_includedPeriodValue,' ', p_includedPeriodType,')) 
+       SET daterange = CONCAT('((o2.clinical_effective_date ', p_includedPeriodOperator,' DATE_SUB( ', effectiveDate,' , INTERVAL ', signString,' ',p_includedPeriodValue,' ', p_includedPeriodType,')) 
        OR (o2.clinical_effective_date <= ', QUOTE(p_includedDateTo), ') )' );
 
 ELSEIF p_includedDateFrom IS NOT NULL AND p_includedDateTo IS NOT NULL AND p_includedPeriodValue IS NULL THEN
@@ -71,7 +84,7 @@ ELSEIF p_includedDateFrom IS NULL AND p_includedDateTo IS NOT NULL AND p_include
 
 ELSEIF p_includedDateFrom IS NULL AND p_includedDateTo IS NULL AND p_includedPeriodValue IS NOT NULL THEN
 
-       SET daterange = CONCAT('o2.clinical_effective_date ', p_includedPeriodOperator,' DATE_SUB( ', effectiveDate,' , INTERVAL ', p_includedPeriodValue,' ', p_includedPeriodType,')');
+       SET daterange = CONCAT('o2.clinical_effective_date ', p_includedPeriodOperator,' DATE_SUB( ', effectiveDate,' , INTERVAL ', signString,' ',p_includedPeriodValue,' ', p_includedPeriodType,')');
 
 ELSEIF p_includedDateFrom IS NULL AND p_includedDateTo IS NULL AND p_includedPeriodValue IS NULL THEN 
 
