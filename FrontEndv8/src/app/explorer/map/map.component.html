@@ -13,7 +13,7 @@
         &nbsp;
       </div>
       <div>
-        <mat-label style="font-size:16px;" ><b>{{ display }} : (rate per 1,000 registered patients)</b></mat-label><br>
+        <mat-label style="font-size:16px;" ><b>{{query}} per 1,000 registered patients per day - {{display}}</b></mat-label><br>
         <mat-slider *ngIf="isCovidQuery" [disabled]="form.invalid" (input)="onInputChange($event)" [(ngModel)]="sliderValue" min="0" max="{{max-1}}" step="1" (change)="updateDate($event)" [tickInterval]="1" name="sliderDate"></mat-slider>
       </div>
       <div *ngIf="!isCovidQuery">

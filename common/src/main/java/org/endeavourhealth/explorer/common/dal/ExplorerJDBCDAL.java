@@ -1769,11 +1769,13 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                     BigDecimal ratio = resultSet.getBigDecimal("ratio");
                     float ratioFloat = ratio.floatValue();
                     String description = "";
+                    int rate = 0;
 
                     layer.setAreaCode(resultSet.getString("lsoa_code"));
+                    rate = Math.round((resultSet.getFloat("patients") / resultSet.getFloat("reg_patients")) * 1000);
                     description = layer.getAreaCode() + ": " +
                             resultSet.getInt("patients") + " of " +
-                            resultSet.getInt("reg_patients");
+                            resultSet.getInt("reg_patients") + " (" + rate + " per 1,000 per day)";
                     layer.setDescription(description);
                     layer.setGeoJson(resultSet.getString("geo_json"));
 

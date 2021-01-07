@@ -14,6 +14,7 @@ import {UserProfile} from "dds-angular8/user-manager/models/UserProfile";
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss']
 })
+
 export class MapComponent implements OnInit {
 
   query: string;
@@ -43,6 +44,9 @@ export class MapComponent implements OnInit {
   covidQuery3: string = "Confirmed Covid-19 cases";
   isCovidQuery: boolean = true;
   isLevelTransparent: boolean = false;
+
+  patients: string[];
+  regPatients: string[];
 
   constructor(private explorerService: ExplorerService,
               private log: LoggerService,
@@ -108,7 +112,6 @@ export class MapComponent implements OnInit {
                   this.map.setView([51.505, -0.09], 10.5);
                 });
                 this.createMap();
-
               },
               (error) => this.log.error(error)
             );
@@ -212,6 +215,7 @@ export class MapComponent implements OnInit {
     let layer = L.geoJSON();
     let count = 0;
     this.layers  = this.mapResults.layers['Level 1'];
+
     if (this.isLevelTransparent) {
       this.layers.forEach( (item, index) => {
         layer = L.geoJSON([JSON.parse(item.geoJson)], {
@@ -354,15 +358,13 @@ export class MapComponent implements OnInit {
 
     L.tileLayer(this.url, { maxZoom: 100, attribution: this.attribution, id: 'mapbox/streets-v11', tileSize: 512, zoomOffset: -1 }).addTo(this.map);
     if (this.isCovidQuery) {
-      this.display = this.selectedDate;
+      this.display = this.formatDate(this.selectedDate);
     } else {
       this.display = "";
     }
-
   }
 
-  refreshMap() {
-    this.explorerService.getMaps(this.query, this.selectedDate, this.levels)
+  refreshMap() {this.explorerService.getMaps(this.query, this.selectedDate, this.levels)
       .subscribe(
         (result) =>{
           this.mapResults = result;
@@ -511,5 +513,19 @@ export class MapComponent implements OnInit {
       this.isCovidQuery = false;
       this.refreshMap();
     }
+  }
+
+  formatDate(date) {
+    var d = new Date(date),
+      month = '' + (d.getMonth() + 1),
+      day = '' + d.getDate(),
+      year = d.getFullYear();
+
+    if (month.length < 2)
+      month = '0' + month;
+    if (day.length < 2)
+      day = '0' + day;
+
+    return [day, month, year].join('-');
   }
 }
