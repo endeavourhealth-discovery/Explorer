@@ -154,6 +154,15 @@ DECLARE Q1A VARCHAR(64) DEFAULT NULL;
 DECLARE Q1B VARCHAR(64) DEFAULT NULL;
 DECLARE Q1C VARCHAR(64) DEFAULT NULL;
 DECLARE Q1D VARCHAR(64) DEFAULT NULL;
+DECLARE Q1E VARCHAR(64) DEFAULT NULL;
+DECLARE Q1F VARCHAR(64) DEFAULT NULL;
+DECLARE Q1G VARCHAR(64) DEFAULT NULL;
+DECLARE Q1H VARCHAR(64) DEFAULT NULL;
+DECLARE Q1I VARCHAR(64) DEFAULT NULL;
+DECLARE Q1J VARCHAR(64) DEFAULT NULL;
+DECLARE Q1K VARCHAR(64) DEFAULT NULL;
+DECLARE Q1L VARCHAR(64) DEFAULT NULL;
+
 DECLARE Q2 VARCHAR(64) DEFAULT NULL;
 DECLARE Q2A VARCHAR(64) DEFAULT NULL;
 DECLARE Q3 VARCHAR(64) DEFAULT NULL;
@@ -201,83 +210,83 @@ SET org_tmp = CONCAT('org_tmp_',query_id);
 SET store_tmp = CONCAT('store_tmp_',query_id);
 
 -- Set Variables for Query expression --
-SET matching1 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.matching1'));
-SET queryExpression1 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.queryExpression1')); 
+SET matching1 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.matching1')),'');
+SET queryExpression1 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.queryExpression1')),''); 
 
-SET selectReject2 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.selectReject2'));
-SET matching2 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.matching2'));
-SET queryExpression2 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.queryExpression2')); 
-SET ruleNumber2 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.ruleNumber2'));
+SET selectReject2 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.selectReject2')),'');
+SET matching2 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.matching2')),'');
+SET queryExpression2 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.queryExpression2')),''); 
+SET ruleNumber2 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.ruleNumber2')),'');
 
-SET selectReject3 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.selectReject3'));
-SET matching3 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.matching3'));
-SET queryExpression3 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.queryExpression3')); 
-SET ruleNumber3 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.ruleNumber3'));
+SET selectReject3 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.selectReject3')),'');
+SET matching3 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.matching3')),'');
+SET queryExpression3 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.queryExpression3')),''); 
+SET ruleNumber3 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.ruleNumber3')),'');
 
-SET selectReject4 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.selectReject4'));
-SET matching4 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.matching4'));
-SET queryExpression4 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.queryExpression4')); 
-SET ruleNumber4 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.ruleNumber4'));
+SET selectReject4 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.selectReject4')),'');
+SET matching4 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.matching4')),'');
+SET queryExpression4 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.queryExpression4')),''); 
+SET ruleNumber4 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.ruleNumber4')),'');
 
-SET selectReject5 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.selectReject5'));
-SET matching5 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.matching5'));
-SET queryExpression5 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.queryExpression5'));
-SET ruleNumber5 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.ruleNumber5'));
+SET selectReject5 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.selectReject5')),'');
+SET matching5 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.matching5')),'');
+SET queryExpression5 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.queryExpression5')),'');
+SET ruleNumber5 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.ruleNumber5')),'');
 
-SET selectReject6 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.selectReject6'));
-SET matching6 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.matching6'));
-SET queryExpression6 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.queryExpression6')); 
-SET ruleNumber6 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.ruleNumber6'));
+SET selectReject6 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.selectReject6')),'');
+SET matching6 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.matching6')),'');
+SET queryExpression6 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.queryExpression6')),''); 
+SET ruleNumber6 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.ruleNumber6')),'');
 
-SET selectReject7 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.selectReject7'));
-SET matching7 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.matching7'));
-SET queryExpression7 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.queryExpression7')); 
-SET ruleNumber7 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.ruleNumber7'));
+SET selectReject7 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.selectReject7')),'');
+SET matching7 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.matching7')),'');
+SET queryExpression7 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.queryExpression7')),''); 
+SET ruleNumber7 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.ruleNumber7')),'');
 
-SET selectReject8 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.selectReject8'));
-SET matching8 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.matching8'));
-SET queryExpression8 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.queryExpression8')); 
-SET ruleNumber8 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.ruleNumber8'));
+SET selectReject8 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.selectReject8')),'');
+SET matching8 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.matching8')),'');
+SET queryExpression8 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.queryExpression8')),''); 
+SET ruleNumber8 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.ruleNumber8')),'');
 
-SET selectReject9 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.selectReject9'));
-SET matching9 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.matching9'));
-SET queryExpression9 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.queryExpression9')); 
-SET ruleNumber9 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.ruleNumber9'));
+SET selectReject9 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.selectReject9')),'');
+SET matching9 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.matching9')),'');
+SET queryExpression9 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.queryExpression9')),''); 
+SET ruleNumber9 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.ruleNumber9')),'');
 
-SET selectReject10 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.selectReject10'));
-SET matching10 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.matching10'));
-SET queryExpression10 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.queryExpression10')); 
-SET ruleNumber10 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.ruleNumber10'));
+SET selectReject10 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.selectReject10')),'');
+SET matching10 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.matching10')),'');
+SET queryExpression10 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.queryExpression10')),''); 
+SET ruleNumber10 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.ruleNumber10')),'');
 
-SET selectReject11 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.selectReject11'));
-SET matching11 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.matching11'));
-SET queryExpression11 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.queryExpression11')); 
-SET ruleNumber11 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.ruleNumber11'));
+SET selectReject11 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.selectReject11')),'');
+SET matching11 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.matching11')),'');
+SET queryExpression11 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.queryExpression11')),''); 
+SET ruleNumber11 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.ruleNumber11')),'');
 
-SET selectReject12 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.selectReject12'));
-SET matching12 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.matching12'));
-SET queryExpression12 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.queryExpression12')); 
-SET ruleNumber12 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.ruleNumber12'));
+SET selectReject12 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.selectReject12')),'');
+SET matching12 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.matching12')),'');
+SET queryExpression12 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.queryExpression12')),''); 
+SET ruleNumber12 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.ruleNumber12')),'');
 
-SET selectReject13 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.selectReject13'));
-SET matching13 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.matching13'));
-SET queryExpression13 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.queryExpression13')); 
-SET ruleNumber13 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.ruleNumber13'));
+SET selectReject13 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.selectReject13')),'');
+SET matching13 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.matching13')),'');
+SET queryExpression13 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.queryExpression13')),''); 
+SET ruleNumber13 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.ruleNumber13')),'');
 
-SET selectReject14 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.selectReject14'));
-SET matching14 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.matching14'));
-SET queryExpression14 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.queryExpression14')); 
-SET ruleNumber14 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.ruleNumber14'));
+SET selectReject14 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.selectReject14')),'');
+SET matching14 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.matching14')),'');
+SET queryExpression14 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.queryExpression14')),''); 
+SET ruleNumber14 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.ruleNumber14')),'');
 
-SET selectReject15 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.selectReject15'));
-SET matching15 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.matching15'));
-SET queryExpression15 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.queryExpression15'));
-SET ruleNumber15 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.ruleNumber15'));
+SET selectReject15 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.selectReject15')),'');
+SET matching15 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.matching15')),'');
+SET queryExpression15 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.queryExpression15')),'');
+SET ruleNumber15 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.ruleNumber15')),'');
 
-SET selectReject16 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.selectReject16'));
-SET matching16 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.matching16'));
-SET queryExpression16 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.queryExpression16'));
-SET ruleNumber16 = JSON_UNQUOTE(JSON_EXTRACT(query,'$.ruleNumber16'));
+SET selectReject16 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.selectReject16')),'');
+SET matching16 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.matching16')),'');
+SET queryExpression16 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.queryExpression16')),'');
+SET ruleNumber16 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.ruleNumber16')),'');
 
 -- Set Variables for Events --
 SET demographics = UPPER(JSON_EXTRACT(query,'$.demographics')); 
@@ -328,6 +337,16 @@ SET Q1A = CONCAT('Q1A_',query_id);
 SET Q1B = CONCAT('Q1B_',query_id);
 SET Q1C = CONCAT('Q1C_',query_id);
 SET Q1D = CONCAT('Q1D_',query_id);
+
+SET Q1E = CONCAT('Q1E_',query_id);
+SET Q1F = CONCAT('Q1F_',query_id);
+SET Q1G = CONCAT('Q1G_',query_id);
+SET Q1H = CONCAT('Q1H_',query_id);
+SET Q1I = CONCAT('Q1I_',query_id);
+SET Q1J = CONCAT('Q1J_',query_id);
+SET Q1K = CONCAT('Q1K_',query_id);
+SET Q1L = CONCAT('Q1L_',query_id);
+
 SET Q2 = CONCAT('Q2_',query_id);
 SET Q2A = CONCAT('Q2A_',query_id);
 SET Q3 = CONCAT('Q3_',query_id);
@@ -400,7 +419,8 @@ CALL buildFinalPatientCohort(query_id, patientCohort_tmp, practiceCohort_tmp, ru
 
 -- remove tmp tables
 SET tempTables = CONCAT(org_tmp,',',observationCohort_tmp,',',practiceCohort_tmp,',',registerCohort_tmp,',',Q1,',',Q1A,',',Q1B,',',Q1C,',',
-Q1D,',',Q2,',',Q2A,',',Q3,',',Q3A,',',Q4,',',Q5,',',Q5A,',',Q0,',',rule_tmp,',',rule_det_tmp,',',all_valueset_tmp,',', all_concept_tmp);
+Q1D,',',Q1E,',',Q1F,',',Q1G,',',Q1H,',',Q1I,',',Q1J,',',Q1K,',',Q1L,',',Q2,',',Q2A,',',Q3,',',Q3A,',',Q4,',',Q5,',',Q5A,',',Q0,',',rule_tmp,',',
+rule_det_tmp,',',all_valueset_tmp,',', all_concept_tmp);
 
 CALL dropTempTables(tempTables);
 

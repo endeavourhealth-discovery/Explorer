@@ -36,7 +36,7 @@ BEGIN
 
      DROP TEMPORARY TABLE IF EXISTS qry_tmp;
      SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp AS 
-     SELECT o2.id, o2.patient_id, o2.clinical_effective_date, o2.result_value, o2.non_core_concept_id, c.value_set_code_type 
+     SELECT o2.id, o2.patient_id, o2.clinical_effective_date, o2.result_value, o2.non_core_concept_id, o2.organization_id, c.value_set_code_type 
      FROM ', p_observationcohorttab,' o2 JOIN ', p_concepttab,' c ON o2.non_core_concept_id = c.non_core_concept_id 
      WHERE ', p_timeperioddaterange);
      PREPARE stmt FROM @sql;
@@ -50,6 +50,7 @@ BEGIN
           ob.clinical_effective_date,
           ob.result_value,
           ob.non_core_concept_id,
+          ob.organization_id,
           ob.value_set_code_type,
           ob.rnk 
      FROM ( 
@@ -59,6 +60,7 @@ BEGIN
           o2.clinical_effective_date,
           o2.result_value,
           o2.non_core_concept_id,
+          o2.organization_id,
           o2.value_set_code_type,
           @currank := IF(@curpatient = BINARY o2.patient_id, @currank + 1, 1) AS rnk,
           @curpatient := o2.patient_id AS cur_patient
@@ -75,7 +77,7 @@ BEGIN
 
      DROP TEMPORARY TABLE IF EXISTS qry_tmp;
      SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp AS 
-     SELECT o2.id, o2.patient_id, o2.clinical_effective_date, o2.result_value, o2.non_core_concept_id, c.value_set_code_type 
+     SELECT o2.id, o2.patient_id, o2.clinical_effective_date, o2.result_value, o2.non_core_concept_id, o2.organization_id, c.value_set_code_type 
      FROM ', p_observationcohorttab,' o2 JOIN ', p_concepttab,' c ON o2.non_core_concept_id = c.non_core_concept_id 
      WHERE ', p_timeperioddaterange);
      PREPARE stmt FROM @sql;
@@ -89,6 +91,7 @@ BEGIN
           ob.clinical_effective_date,
           ob.result_value,
           ob.non_core_concept_id,
+          ob.organization_id,
           ob.value_set_code_type,
           ob.rnk  
      FROM (
@@ -98,6 +101,7 @@ BEGIN
           o2.clinical_effective_date,
           o2.result_value,
           o2.non_core_concept_id,
+          o2.organization_id,
           o2.value_set_code_type,
           @currank := IF(@curpatient = BINARY o2.patient_id, @currank + 1, 1) AS rnk,
           @curpatient := o2.patient_id AS cur_patient

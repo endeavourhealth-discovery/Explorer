@@ -63,6 +63,81 @@ DECLARE includedPeriodOperator1d VARCHAR(50) DEFAULT NULL;
 DECLARE includedPeriodValue1d VARCHAR(10) DEFAULT NULL; 
 DECLARE includedPeriodType1d VARCHAR(20) DEFAULT NULL; 
 
+
+
+
+DECLARE withWithout1e VARCHAR(10) DEFAULT NULL; 
+DECLARE includedAnyAll1e VARCHAR(10) DEFAULT NULL; 
+DECLARE includedValueSet1e VARCHAR(1000) DEFAULT NULL; 
+DECLARE includedDateFrom1e VARCHAR(30) DEFAULT NULL; 
+DECLARE includedDateTo1e VARCHAR(30) DEFAULT NULL; 
+DECLARE includedPeriodOperator1e VARCHAR(50) DEFAULT NULL;
+DECLARE includedPeriodValue1e VARCHAR(10) DEFAULT NULL; 
+DECLARE includedPeriodType1e VARCHAR(20) DEFAULT NULL; 
+
+DECLARE withWithout1f VARCHAR(10) DEFAULT NULL; 
+DECLARE includedAnyAll1f VARCHAR(10) DEFAULT NULL; 
+DECLARE includedValueSet1f VARCHAR(1000) DEFAULT NULL; 
+DECLARE includedDateFrom1f VARCHAR(30) DEFAULT NULL; 
+DECLARE includedDateTo1f VARCHAR(30) DEFAULT NULL; 
+DECLARE includedPeriodOperator1f VARCHAR(50) DEFAULT NULL;
+DECLARE includedPeriodValue1f VARCHAR(10) DEFAULT NULL; 
+DECLARE includedPeriodType1f VARCHAR(20) DEFAULT NULL; 
+
+DECLARE withWithout1g VARCHAR(10) DEFAULT NULL; 
+DECLARE includedAnyAll1g VARCHAR(10) DEFAULT NULL; 
+DECLARE includedValueSet1g VARCHAR(1000) DEFAULT NULL; 
+DECLARE includedDateFrom1g VARCHAR(30) DEFAULT NULL; 
+DECLARE includedDateTo1g VARCHAR(30) DEFAULT NULL; 
+DECLARE includedPeriodOperator1g VARCHAR(50) DEFAULT NULL;
+DECLARE includedPeriodValue1g VARCHAR(10) DEFAULT NULL; 
+DECLARE includedPeriodType1g VARCHAR(20) DEFAULT NULL; 
+
+DECLARE withWithout1h VARCHAR(10) DEFAULT NULL; 
+DECLARE includedAnyAll1h VARCHAR(10) DEFAULT NULL; 
+DECLARE includedValueSet1h VARCHAR(1000) DEFAULT NULL; 
+DECLARE includedDateFrom1h VARCHAR(30) DEFAULT NULL; 
+DECLARE includedDateTo1h VARCHAR(30) DEFAULT NULL; 
+DECLARE includedPeriodOperator1h VARCHAR(50) DEFAULT NULL;
+DECLARE includedPeriodValue1h VARCHAR(10) DEFAULT NULL; 
+DECLARE includedPeriodType1h VARCHAR(20) DEFAULT NULL; 
+
+DECLARE withWithout1i VARCHAR(10) DEFAULT NULL; 
+DECLARE includedAnyAll1i VARCHAR(10) DEFAULT NULL; 
+DECLARE includedValueSet1i VARCHAR(1000) DEFAULT NULL; 
+DECLARE includedDateFrom1i VARCHAR(30) DEFAULT NULL; 
+DECLARE includedDateTo1i VARCHAR(30) DEFAULT NULL; 
+DECLARE includedPeriodOperator1i VARCHAR(50) DEFAULT NULL;
+DECLARE includedPeriodValue1i VARCHAR(10) DEFAULT NULL; 
+DECLARE includedPeriodType1i VARCHAR(20) DEFAULT NULL; 
+
+DECLARE withWithout1j VARCHAR(10) DEFAULT NULL; 
+DECLARE includedAnyAll1j VARCHAR(10) DEFAULT NULL; 
+DECLARE includedValueSet1j VARCHAR(1000) DEFAULT NULL; 
+DECLARE includedDateFrom1j VARCHAR(30) DEFAULT NULL; 
+DECLARE includedDateTo1j VARCHAR(30) DEFAULT NULL; 
+DECLARE includedPeriodOperator1j VARCHAR(50) DEFAULT NULL;
+DECLARE includedPeriodValue1j VARCHAR(10) DEFAULT NULL; 
+DECLARE includedPeriodType1j VARCHAR(20) DEFAULT NULL; 
+
+DECLARE withWithout1k VARCHAR(10) DEFAULT NULL; 
+DECLARE includedAnyAll1k VARCHAR(10) DEFAULT NULL; 
+DECLARE includedValueSet1k VARCHAR(1000) DEFAULT NULL; 
+DECLARE includedDateFrom1k VARCHAR(30) DEFAULT NULL; 
+DECLARE includedDateTo1k VARCHAR(30) DEFAULT NULL; 
+DECLARE includedPeriodOperator1k VARCHAR(50) DEFAULT NULL;
+DECLARE includedPeriodValue1k VARCHAR(10) DEFAULT NULL; 
+DECLARE includedPeriodType1k VARCHAR(20) DEFAULT NULL; 
+
+DECLARE withWithout1l VARCHAR(10) DEFAULT NULL; 
+DECLARE includedAnyAll1l VARCHAR(10) DEFAULT NULL; 
+DECLARE includedValueSet1l VARCHAR(1000) DEFAULT NULL; 
+DECLARE includedDateFrom1l VARCHAR(30) DEFAULT NULL; 
+DECLARE includedDateTo1l VARCHAR(30) DEFAULT NULL; 
+DECLARE includedPeriodOperator1l VARCHAR(50) DEFAULT NULL;
+DECLARE includedPeriodValue1l VARCHAR(10) DEFAULT NULL; 
+DECLARE includedPeriodType1l VARCHAR(20) DEFAULT NULL; 
+
 DECLARE withWithout2 VARCHAR(10) DEFAULT NULL; 
 DECLARE includedAnyAll2 VARCHAR(10) DEFAULT NULL; 
 DECLARE includedValueSet2 VARCHAR(1000) DEFAULT NULL; 
@@ -177,6 +252,38 @@ DECLARE observation1c_tmp VARCHAR(64) DEFAULT NULL;
 DECLARE incValueSet1d_tmp VARCHAR(64) DEFAULT NULL;
 DECLARE incConcept1d_tmp VARCHAR(64) DEFAULT NULL;
 DECLARE observation1d_tmp VARCHAR(64) DEFAULT NULL;
+
+DECLARE incValueSet1e_tmp VARCHAR(64) DEFAULT NULL;
+DECLARE incConcept1e_tmp VARCHAR(64) DEFAULT NULL;
+DECLARE observation1e_tmp VARCHAR(64) DEFAULT NULL;
+
+DECLARE incValueSet1f_tmp VARCHAR(64) DEFAULT NULL;
+DECLARE incConcept1f_tmp VARCHAR(64) DEFAULT NULL;
+DECLARE observation1f_tmp VARCHAR(64) DEFAULT NULL;
+
+DECLARE incValueSet1g_tmp VARCHAR(64) DEFAULT NULL;
+DECLARE incConcept1g_tmp VARCHAR(64) DEFAULT NULL;
+DECLARE observation1g_tmp VARCHAR(64) DEFAULT NULL;
+
+DECLARE incValueSet1h_tmp VARCHAR(64) DEFAULT NULL;
+DECLARE incConcept1h_tmp VARCHAR(64) DEFAULT NULL;
+DECLARE observation1h_tmp VARCHAR(64) DEFAULT NULL;
+
+DECLARE incValueSet1i_tmp VARCHAR(64) DEFAULT NULL;
+DECLARE incConcept1i_tmp VARCHAR(64) DEFAULT NULL;
+DECLARE observation1i_tmp VARCHAR(64) DEFAULT NULL;
+
+DECLARE incValueSet1j_tmp VARCHAR(64) DEFAULT NULL;
+DECLARE incConcept1j_tmp VARCHAR(64) DEFAULT NULL;
+DECLARE observation1j_tmp VARCHAR(64) DEFAULT NULL;
+
+DECLARE incValueSet1k_tmp VARCHAR(64) DEFAULT NULL;
+DECLARE incConcept1k_tmp VARCHAR(64) DEFAULT NULL;
+DECLARE observation1k_tmp VARCHAR(64) DEFAULT NULL;
+
+DECLARE incValueSet1l_tmp VARCHAR(64) DEFAULT NULL;
+DECLARE incConcept1l_tmp VARCHAR(64) DEFAULT NULL;
+DECLARE observation1l_tmp VARCHAR(64) DEFAULT NULL;
 
 DECLARE incValueSet2_tmp VARCHAR(64) DEFAULT NULL;
 DECLARE incConcept2_tmp VARCHAR(64) DEFAULT NULL;
@@ -353,6 +460,206 @@ DECLARE tempTables VARCHAR(5000);
 
         -- remove tmp tables
         SET tempTables = CONCAT(incValueSet1d_tmp,',',incConcept1d_tmp,',', observation1d_tmp);
+        CALL dropTempTables(tempTables);
+
+    ELSEIF p_queryNumber = '1E' THEN
+
+        SET withWithout1e = JSON_UNQUOTE(JSON_EXTRACT(query,'$.withWithout1e'));  
+        SET includedAnyAll1e = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedAnyAll1e')); 
+        SET includedValueSet1e = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.includedValueSet1e'),'[',''),']',''),'"','');
+        SET includedDateFrom1e = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedDateFrom1e')); 
+        SET includedDateTo1e = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedDateTo1e'));  
+        SET includedPeriodOperator1e = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodOperator1e'));
+        SET includedPeriodValue1e = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodValue1e'));
+        SET includedPeriodType1e = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodType1e')); 
+        -- 1e
+        SET incValueSet1e_tmp = CONCAT('incValueSet1e_tmp_',p_query_id);
+        SET incConcept1e_tmp = CONCAT('incConcept1e_tmp_',p_query_id);
+        SET observation1e_tmp = CONCAT('observation1e_tmp_',p_query_id);
+
+    -- Q1e --
+        CALL buildQuery(p_query_id, withWithout1e, includedAnyAll1e, includedValueSet1e, includedDateFrom1e, includedDateTo1e, includedPeriodOperator1e,
+        includedPeriodValue1e,includedPeriodType1e, incValueSet1e_tmp, incConcept1e_tmp, p_observationCohort_tmp, 
+        1, NULL, NULL, NULL, observation1e_tmp, NULL, NULL, NULL, NULL, NULL, 
+        NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, p_schema, p_store_tmp, p_cohortTab, p_queryNumber);
+
+        -- remove tmp tables
+        SET tempTables = CONCAT(incValueSet1e_tmp,',',incConcept1e_tmp,',', observation1e_tmp);
+        CALL dropTempTables(tempTables);
+
+    ELSEIF p_queryNumber = '1F' THEN
+
+        SET withWithout1f = JSON_UNQUOTE(JSON_EXTRACT(query,'$.withWithout1f'));  
+        SET includedAnyAll1f = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedAnyAll1f')); 
+        SET includedValueSet1f = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.includedValueSet1f'),'[',''),']',''),'"','');
+        SET includedDateFrom1f = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedDateFrom1f')); 
+        SET includedDateTo1f = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedDateTo1f'));  
+        SET includedPeriodOperator1f = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodOperator1f'));
+        SET includedPeriodValue1f = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodValue1f'));
+        SET includedPeriodType1f = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodType1f')); 
+        -- 1f
+        SET incValueSet1f_tmp = CONCAT('incValueSet1f_tmp_',p_query_id);
+        SET incConcept1f_tmp = CONCAT('incConcept1f_tmp_',p_query_id);
+        SET observation1f_tmp = CONCAT('observation1f_tmp_',p_query_id);
+
+    -- Q1f --
+        CALL buildQuery(p_query_id, withWithout1f, includedAnyAll1f, includedValueSet1f, includedDateFrom1f, includedDateTo1f, includedPeriodOperator1f,
+        includedPeriodValue1f,includedPeriodType1f, incValueSet1f_tmp, incConcept1f_tmp, p_observationCohort_tmp, 
+        1, NULL, NULL, NULL, observation1f_tmp, NULL, NULL, NULL, NULL, NULL, 
+        NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, p_schema, p_store_tmp, p_cohortTab, p_queryNumber);
+
+        -- remove tmp tables
+        SET tempTables = CONCAT(incValueSet1f_tmp,',',incConcept1f_tmp,',', observation1f_tmp);
+        CALL dropTempTables(tempTables);
+
+    ELSEIF p_queryNumber = '1G' THEN
+
+        SET withWithout1g = JSON_UNQUOTE(JSON_EXTRACT(query,'$.withWithout1g'));  
+        SET includedAnyAll1g = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedAnyAll1g')); 
+        SET includedValueSet1g = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.includedValueSet1g'),'[',''),']',''),'"','');
+        SET includedDateFrom1g = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedDateFrom1g')); 
+        SET includedDateTo1g = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedDateTo1g'));  
+        SET includedPeriodOperator1g = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodOperator1g'));
+        SET includedPeriodValue1g = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodValue1g'));
+        SET includedPeriodType1g = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodType1g')); 
+        -- 1g
+        SET incValueSet1g_tmp = CONCAT('incValueSet1g_tmp_',p_query_id);
+        SET incConcept1g_tmp = CONCAT('incConcept1g_tmp_',p_query_id);
+        SET observation1g_tmp = CONCAT('observation1g_tmp_',p_query_id);
+
+    -- Q1g --
+        CALL buildQuery(p_query_id, withWithout1g, includedAnyAll1g, includedValueSet1g, includedDateFrom1g, includedDateTo1g, includedPeriodOperator1g,
+        includedPeriodValue1g,includedPeriodType1g, incValueSet1g_tmp, incConcept1g_tmp, p_observationCohort_tmp, 
+        1, NULL, NULL, NULL, observation1g_tmp, NULL, NULL, NULL, NULL, NULL, 
+        NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, p_schema, p_store_tmp, p_cohortTab, p_queryNumber);
+
+        -- remove tmp tables
+        SET tempTables = CONCAT(incValueSet1g_tmp,',',incConcept1g_tmp,',', observation1g_tmp);
+        CALL dropTempTables(tempTables);
+
+    ELSEIF p_queryNumber = '1H' THEN
+
+        SET withWithout1h = JSON_UNQUOTE(JSON_EXTRACT(query,'$.withWithout1h'));  
+        SET includedAnyAll1h = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedAnyAll1h')); 
+        SET includedValueSet1h = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.includedValueSet1h'),'[',''),']',''),'"','');
+        SET includedDateFrom1h = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedDateFrom1h')); 
+        SET includedDateTo1h = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedDateTo1h'));  
+        SET includedPeriodOperator1h = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodOperator1h'));
+        SET includedPeriodValue1h = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodValue1h'));
+        SET includedPeriodType1h = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodType1h')); 
+        -- 1h
+        SET incValueSet1h_tmp = CONCAT('incValueSet1h_tmp_',p_query_id);
+        SET incConcept1h_tmp = CONCAT('incConcept1h_tmp_',p_query_id);
+        SET observation1h_tmp = CONCAT('observation1h_tmp_',p_query_id);
+
+    -- Q1h --
+        CALL buildQuery(p_query_id, withWithout1h, includedAnyAll1h, includedValueSet1h, includedDateFrom1h, includedDateTo1h, includedPeriodOperator1h,
+        includedPeriodValue1h,includedPeriodType1h, incValueSet1h_tmp, incConcept1h_tmp, p_observationCohort_tmp, 
+        1, NULL, NULL, NULL, observation1h_tmp, NULL, NULL, NULL, NULL, NULL, 
+        NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, p_schema, p_store_tmp, p_cohortTab, p_queryNumber);
+
+        -- remove tmp tables
+        SET tempTables = CONCAT(incValueSet1h_tmp,',',incConcept1h_tmp,',', observation1h_tmp);
+        CALL dropTempTables(tempTables);
+
+    ELSEIF p_queryNumber = '1I' THEN
+
+        SET withWithout1i = JSON_UNQUOTE(JSON_EXTRACT(query,'$.withWithout1i'));  
+        SET includedAnyAll1i = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedAnyAll1i')); 
+        SET includedValueSet1i = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.includedValueSet1i'),'[',''),']',''),'"','');
+        SET includedDateFrom1i = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedDateFrom1i')); 
+        SET includedDateTo1i = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedDateTo1i'));  
+        SET includedPeriodOperator1i = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodOperator1i'));
+        SET includedPeriodValue1i = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodValue1i'));
+        SET includedPeriodType1i = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodType1i')); 
+        -- 1i
+        SET incValueSet1i_tmp = CONCAT('incValueSet1i_tmp_',p_query_id);
+        SET incConcept1i_tmp = CONCAT('incConcept1i_tmp_',p_query_id);
+        SET observation1i_tmp = CONCAT('observation1i_tmp_',p_query_id);
+
+    -- Q1i --
+        CALL buildQuery(p_query_id, withWithout1i, includedAnyAll1i, includedValueSet1i, includedDateFrom1i, includedDateTo1i, includedPeriodOperator1i,
+        includedPeriodValue1i,includedPeriodType1i, incValueSet1i_tmp, incConcept1i_tmp, p_observationCohort_tmp, 
+        1, NULL, NULL, NULL, observation1i_tmp, NULL, NULL, NULL, NULL, NULL, 
+        NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, p_schema, p_store_tmp, p_cohortTab, p_queryNumber);
+
+        -- remove tmp tables
+        SET tempTables = CONCAT(incValueSet1i_tmp,',',incConcept1i_tmp,',', observation1i_tmp);
+        CALL dropTempTables(tempTables);
+
+    ELSEIF p_queryNumber = '1J' THEN
+
+        SET withWithout1j = JSON_UNQUOTE(JSON_EXTRACT(query,'$.withWithout1j'));  
+        SET includedAnyAll1j = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedAnyAll1j')); 
+        SET includedValueSet1j = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.includedValueSet1j'),'[',''),']',''),'"','');
+        SET includedDateFrom1j = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedDateFrom1j')); 
+        SET includedDateTo1j = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedDateTo1j'));  
+        SET includedPeriodOperator1j = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodOperator1j'));
+        SET includedPeriodValue1j = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodValue1j'));
+        SET includedPeriodType1j = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodType1j')); 
+        -- 1j
+        SET incValueSet1j_tmp = CONCAT('incValueSet1j_tmp_',p_query_id);
+        SET incConcept1j_tmp = CONCAT('incConcept1j_tmp_',p_query_id);
+        SET observation1j_tmp = CONCAT('observation1j_tmp_',p_query_id);
+
+    -- Q1j --
+        CALL buildQuery(p_query_id, withWithout1j, includedAnyAll1j, includedValueSet1j, includedDateFrom1j, includedDateTo1j, includedPeriodOperator1j,
+        includedPeriodValue1j,includedPeriodType1j, incValueSet1j_tmp, incConcept1j_tmp, p_observationCohort_tmp, 
+        1, NULL, NULL, NULL, observation1j_tmp, NULL, NULL, NULL, NULL, NULL, 
+        NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, p_schema, p_store_tmp, p_cohortTab, p_queryNumber);
+
+        -- remove tmp tables
+        SET tempTables = CONCAT(incValueSet1j_tmp,',',incConcept1j_tmp,',', observation1j_tmp);
+        CALL dropTempTables(tempTables);
+
+    ELSEIF p_queryNumber = '1K' THEN
+
+        SET withWithout1k = JSON_UNQUOTE(JSON_EXTRACT(query,'$.withWithout1k'));  
+        SET includedAnyAll1k = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedAnyAll1k')); 
+        SET includedValueSet1k = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.includedValueSet1k'),'[',''),']',''),'"','');
+        SET includedDateFrom1k = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedDateFrom1k')); 
+        SET includedDateTo1k = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedDateTo1k'));  
+        SET includedPeriodOperator1k = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodOperator1k'));
+        SET includedPeriodValue1k = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodValue1k'));
+        SET includedPeriodType1k = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodType1k')); 
+        -- 1k
+        SET incValueSet1k_tmp = CONCAT('incValueSet1k_tmp_',p_query_id);
+        SET incConcept1k_tmp = CONCAT('incConcept1k_tmp_',p_query_id);
+        SET observation1k_tmp = CONCAT('observation1k_tmp_',p_query_id);
+
+    -- Q1k --
+        CALL buildQuery(p_query_id, withWithout1k, includedAnyAll1k, includedValueSet1k, includedDateFrom1k, includedDateTo1k, includedPeriodOperator1k,
+        includedPeriodValue1k,includedPeriodType1k, incValueSet1k_tmp, incConcept1k_tmp, p_observationCohort_tmp, 
+        1, NULL, NULL, NULL, observation1k_tmp, NULL, NULL, NULL, NULL, NULL, 
+        NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, p_schema, p_store_tmp, p_cohortTab, p_queryNumber);
+
+        -- remove tmp tables
+        SET tempTables = CONCAT(incValueSet1k_tmp,',',incConcept1k_tmp,',', observation1k_tmp);
+        CALL dropTempTables(tempTables);
+
+    ELSEIF p_queryNumber = '1L' THEN
+
+        SET withWithout1l = JSON_UNQUOTE(JSON_EXTRACT(query,'$.withWithout1l'));  
+        SET includedAnyAll1l = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedAnyAll1l')); 
+        SET includedValueSet1l = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.includedValueSet1l'),'[',''),']',''),'"','');
+        SET includedDateFrom1l = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedDateFrom1l')); 
+        SET includedDateTo1l = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedDateTo1l'));  
+        SET includedPeriodOperator1l = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodOperator1l'));
+        SET includedPeriodValue1l = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodValue1l'));
+        SET includedPeriodType1l = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodType1l')); 
+        -- 1l
+        SET incValueSet1l_tmp = CONCAT('incValueSet1l_tmp_',p_query_id);
+        SET incConcept1l_tmp = CONCAT('incConcept1l_tmp_',p_query_id);
+        SET observation1l_tmp = CONCAT('observation1l_tmp_',p_query_id);
+
+    -- Q1l --
+        CALL buildQuery(p_query_id, withWithout1l, includedAnyAll1l, includedValueSet1l, includedDateFrom1l, includedDateTo1l, includedPeriodOperator1l,
+        includedPeriodValue1l,includedPeriodType1l, incValueSet1l_tmp, incConcept1l_tmp, p_observationCohort_tmp, 
+        1, NULL, NULL, NULL, observation1l_tmp, NULL, NULL, NULL, NULL, NULL, 
+        NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, p_schema, p_store_tmp, p_cohortTab, p_queryNumber);
+
+        -- remove tmp tables
+        SET tempTables = CONCAT(incValueSet1l_tmp,',',incConcept1l_tmp,',', observation1l_tmp);
         CALL dropTempTables(tempTables);
 
     ELSEIF p_queryNumber = '2' THEN 
