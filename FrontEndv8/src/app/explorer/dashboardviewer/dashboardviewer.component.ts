@@ -1054,15 +1054,19 @@ export class DashboardViewerComponent implements OnInit {
     }
   }
 
-  formatXAxis(val: any): String {
-    this.months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    var month = (val.toLocaleString()).substring(3, 5);
-    var monthName = this.months[(Number(month) - 1)];
-    var day = (val.toLocaleString()).substring(0, 2);
-    var year = (val.toLocaleString()).substring(6, 10);
-    val = (day + " " + monthName + " " + year);
+  formatXAxis(date) {
+    var d = new Date(date),
+      month = '' + (d.getMonth()),
+      day = '' + d.getDate(),
+      year = d.getFullYear();
 
-    return val.toLocaleString();
+    if (day.length < 2)
+      day = '0' + day;
+
+    let months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    var monthName = months[(Number(month))];
+
+    return [day, monthName, year].join('-');
   }
 
   onSelectLine1(data): void {

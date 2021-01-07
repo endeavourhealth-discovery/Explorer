@@ -1773,9 +1773,9 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
                     layer.setAreaCode(resultSet.getString("lsoa_code"));
                     rate = Math.round((resultSet.getFloat("patients") / resultSet.getFloat("reg_patients")) * 1000);
-                    description = layer.getAreaCode() + ": " +
+                    description = "LSOA "+layer.getAreaCode() + ": " +
                             resultSet.getInt("patients") + " of " +
-                            resultSet.getInt("reg_patients") + " (" + rate + " per 1,000 per day)";
+                            resultSet.getInt("reg_patients") + " registered cases (" + rate + " per 1,000 per day)";
                     layer.setDescription(description);
                     layer.setGeoJson(resultSet.getString("geo_json"));
 

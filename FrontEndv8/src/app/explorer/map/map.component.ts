@@ -45,9 +45,6 @@ export class MapComponent implements OnInit {
   isCovidQuery: boolean = true;
   isLevelTransparent: boolean = false;
 
-  patients: string[];
-  regPatients: string[];
-
   constructor(private explorerService: ExplorerService,
               private log: LoggerService,
               private cookieService: CookieService,
@@ -483,7 +480,7 @@ export class MapComponent implements OnInit {
   }
 
   onInputChange(event: MatSliderChange) {
-    this.display = this.dates[event.value];
+    this.display = this.formatDate(this.dates[event.value]);
   }
 
   recompute() {
@@ -517,15 +514,18 @@ export class MapComponent implements OnInit {
 
   formatDate(date) {
     var d = new Date(date),
-      month = '' + (d.getMonth() + 1),
+      month = '' + (d.getMonth()),
       day = '' + d.getDate(),
       year = d.getFullYear();
 
-    if (month.length < 2)
-      month = '0' + month;
     if (day.length < 2)
       day = '0' + day;
 
-    return [day, month, year].join('-');
+    let months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    var monthName = months[(Number(month))];
+
+    return [day, monthName, year].join('-');
   }
+
+
 }
