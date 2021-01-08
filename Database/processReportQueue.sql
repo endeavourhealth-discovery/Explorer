@@ -42,11 +42,12 @@ FROM queue
 WHERE status = 'N' 
 AND next_run_date = CURDATE()
 AND 2 >= (SELECT COUNT(*) FROM queue WHERE status = 'A')  -- less than 3 query ids to process
+ORDER BY query_id ASC -- to ensure numerator fetches first
 LIMIT 1;
 
 -- check for parent ids
 CALL getNextQueryIdToProcess(queryid,  @next_query_id);
--- if found, override query id with the latest parent ancestor id
+-- if found, override the query id with the latest parent ancestor query id
 SET queryid = @next_query_id;
 
   -- check if the parent id is already running
