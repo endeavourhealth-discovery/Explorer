@@ -27,6 +27,14 @@ interface savedQuery {
   registrationStatus: string;
   ageFrom: string;
   ageTo: string;
+  ageFrom1: string;
+  ageTo1: string;
+  ageFrom2: string;
+  ageTo2: string;
+  ageFrom3: string;
+  ageTo3: string;
+  ageFrom4: string;
+  ageTo4: string;
   gender: string;
   postcode: string;
   registrationExclude: string;
@@ -173,6 +181,11 @@ interface savedQuery {
   includedPeriodOperator3: string;
   includedPeriodValue3: string;
   includedPeriodType3: string;
+  includedDob3: string;
+  includedDiagnosisAnyAll3: string;
+  includedDiagnosisValueSet3: string;
+  includedDiagnosisAgeFrom3: string;
+  includedDiagnosisAgeTo3: string;
   withWithout3a: string;
   includedValueSet3a: string;
   includedEarliestLatest3a: string;
@@ -184,6 +197,92 @@ interface savedQuery {
   includedPeriodOperator3a: string;
   includedPeriodValue3a: string;
   includedPeriodType3a: string;
+  includedDob3a: string;
+  includedDiagnosisAnyAll3a: string;
+  includedDiagnosisValueSet3a: string;
+  includedDiagnosisAgeFrom3a: string;
+  includedDiagnosisAgeTo3a: string;
+  withWithout3b: string;
+  includedValueSet3b: string;
+  includedEarliestLatest3b: string;
+  includedTestedValueSet3b: string;
+  includedAnyAll3b: string;
+  includedAnyAllTested3b: string;
+  includedDateFrom3b: string;
+  includedDateTo3b: string;
+  includedPeriodOperator3b: string;
+  includedPeriodValue3b: string;
+  includedPeriodType3b: string;
+  includedDob3b: string;
+  includedDiagnosisAnyAll3b: string;
+  includedDiagnosisValueSet3b: string;
+  includedDiagnosisAgeFrom3b: string;
+  includedDiagnosisAgeTo3b: string;
+  withWithout3c: string;
+  includedValueSet3c: string;
+  includedEarliestLatest3c: string;
+  includedTestedValueSet3c: string;
+  includedAnyAll3c: string;
+  includedAnyAllTested3c: string;
+  includedDateFrom3c: string;
+  includedDateTo3c: string;
+  includedPeriodOperator3c: string;
+  includedPeriodValue3c: string;
+  includedPeriodType3c: string;
+  includedDob3c: string;
+  includedDiagnosisAnyAll3c: string;
+  includedDiagnosisValueSet3c: string;
+  includedDiagnosisAgeFrom3c: string;
+  includedDiagnosisAgeTo3c: string;
+  withWithout3d: string;
+  includedValueSet3d: string;
+  includedEarliestLatest3d: string;
+  includedTestedValueSet3d: string;
+  includedAnyAll3d: string;
+  includedAnyAllTested3d: string;
+  includedDateFrom3d: string;
+  includedDateTo3d: string;
+  includedPeriodOperator3d: string;
+  includedPeriodValue3d: string;
+  includedPeriodType3d: string;
+  includedDob3d: string;
+  includedDiagnosisAnyAll3d: string;
+  includedDiagnosisValueSet3d: string;
+  includedDiagnosisAgeFrom3d: string;
+  includedDiagnosisAgeTo3d: string;
+  withWithout3e: string;
+  includedValueSet3e: string;
+  includedEarliestLatest3e: string;
+  includedTestedValueSet3e: string;
+  includedAnyAll3e: string;
+  includedAnyAllTested3e: string;
+  includedDateFrom3e: string;
+  includedDateTo3e: string;
+  includedPeriodOperator3e: string;
+  includedPeriodValue3e: string;
+  includedPeriodType3e: string;
+  includedDob3e: string;
+  includedDiagnosisAnyAll3e: string;
+  includedDiagnosisValueSet3e: string;
+  includedDiagnosisAgeFrom3e: string;
+  includedDiagnosisAgeTo3e: string;
+  withWithout3f: string;
+  includedValueSet3f: string;
+  includedEarliestLatest3f: string;
+  includedTestedValueSet3f: string;
+  includedAnyAll3f: string;
+  includedAnyAllTested3f: string;
+  includedDateFrom3f: string;
+  includedDateTo3f: string;
+  includedPeriodOperator3f: string;
+  includedPeriodValue3f: string;
+  includedPeriodType3f: string;
+  includedDob3f: string;
+  includedDiagnosisAnyAll3f: string;
+  includedDiagnosisValueSet3f: string;
+  includedDiagnosisAgeFrom3f: string;
+  includedDiagnosisAgeTo3f: string;
+
   withWithout4: string;
   includedValueSet4: string;
   includedFollowedByValueSet4: string;
@@ -431,6 +530,14 @@ export class AdvancedQueryEditorComponent implements OnInit {
   registrationPeriodType: string= '';
   ageFrom: string = '';
   ageTo: string = '';
+  ageFrom1: string = '';
+  ageTo1: string = '';
+  ageFrom2: string = '';
+  ageTo2: string = '';
+  ageFrom3: string = '';
+  ageTo3: string = '';
+  ageFrom4: string = '';
+  ageTo4: string = '';
   selectedGender: string = '';
   postcode: string = '';
 
@@ -571,6 +678,11 @@ export class AdvancedQueryEditorComponent implements OnInit {
   includedPeriodOperator3: string = '';
   includedPeriodValue3: string = '';
   includedPeriodType3: string = '';
+  includedDob3: string = '';
+  includedDiagnosisAnyAll3: string = '';
+  includedDiagnosisValueSet3: string = '';
+  includedDiagnosisAgeFrom3: string = '';
+  includedDiagnosisAgeTo3: string = '';
   withWithout3a: string = '';
   includedValueSet3a: string = '';
   includedEarliestLatest3a: string = '';
@@ -582,6 +694,91 @@ export class AdvancedQueryEditorComponent implements OnInit {
   includedPeriodOperator3a: string = '';
   includedPeriodValue3a: string = '';
   includedPeriodType3a: string = '';
+  includedDob3a: string = '';
+  includedDiagnosisAnyAll3a: string = '';
+  includedDiagnosisValueSet3a: string = '';
+  includedDiagnosisAgeFrom3a: string = '';
+  includedDiagnosisAgeTo3a: string = '';
+  withWithout3b: string = '';
+  includedValueSet3b: string = '';
+  includedEarliestLatest3b: string = '';
+  includedTestedValueSet3b: string = '';
+  includedAnyAll3b: string = '';
+  includedAnyAllTested3b: string = '';
+  includedDateFrom3b: string = '';
+  includedDateTo3b: string = '';
+  includedPeriodOperator3b: string = '';
+  includedPeriodValue3b: string = '';
+  includedPeriodType3b: string = '';
+  includedDob3b: string = '';
+  includedDiagnosisAnyAll3b: string = '';
+  includedDiagnosisValueSet3b: string = '';
+  includedDiagnosisAgeFrom3b: string = '';
+  includedDiagnosisAgeTo3b: string = '';
+  withWithout3c: string = '';
+  includedValueSet3c: string = '';
+  includedEarliestLatest3c: string = '';
+  includedTestedValueSet3c: string = '';
+  includedAnyAll3c: string = '';
+  includedAnyAllTested3c: string = '';
+  includedDateFrom3c: string = '';
+  includedDateTo3c: string = '';
+  includedPeriodOperator3c: string = '';
+  includedPeriodValue3c: string = '';
+  includedPeriodType3c: string = '';
+  includedDob3c: string = '';
+  includedDiagnosisAnyAll3c: string = '';
+  includedDiagnosisValueSet3c: string = '';
+  includedDiagnosisAgeFrom3c: string = '';
+  includedDiagnosisAgeTo3c: string = '';
+  withWithout3d: string = '';
+  includedValueSet3d: string = '';
+  includedEarliestLatest3d: string = '';
+  includedTestedValueSet3d: string = '';
+  includedAnyAll3d: string = '';
+  includedAnyAllTested3d: string = '';
+  includedDateFrom3d: string = '';
+  includedDateTo3d: string = '';
+  includedPeriodOperator3d: string = '';
+  includedPeriodValue3d: string = '';
+  includedPeriodType3d: string = '';
+  includedDob3d: string = '';
+  includedDiagnosisAnyAll3d: string = '';
+  includedDiagnosisValueSet3d: string = '';
+  includedDiagnosisAgeFrom3d: string = '';
+  includedDiagnosisAgeTo3d: string = '';
+  withWithout3e: string = '';
+  includedValueSet3e: string = '';
+  includedEarliestLatest3e: string = '';
+  includedTestedValueSet3e: string = '';
+  includedAnyAll3e: string = '';
+  includedAnyAllTested3e: string = '';
+  includedDateFrom3e: string = '';
+  includedDateTo3e: string = '';
+  includedPeriodOperator3e: string = '';
+  includedPeriodValue3e: string = '';
+  includedPeriodType3e: string = '';
+  includedDob3e: string = '';
+  includedDiagnosisAnyAll3e: string = '';
+  includedDiagnosisValueSet3e: string = '';
+  includedDiagnosisAgeFrom3e: string = '';
+  includedDiagnosisAgeTo3e: string = '';
+  withWithout3f: string = '';
+  includedValueSet3f: string = '';
+  includedEarliestLatest3f: string = '';
+  includedTestedValueSet3f: string = '';
+  includedAnyAll3f: string = '';
+  includedAnyAllTested3f: string = '';
+  includedDateFrom3f: string = '';
+  includedDateTo3f: string = '';
+  includedPeriodOperator3f: string = '';
+  includedPeriodValue3f: string = '';
+  includedPeriodType3f: string = '';
+  includedDob3f: string = '';
+  includedDiagnosisAnyAll3f: string = '';
+  includedDiagnosisValueSet3f: string = '';
+  includedDiagnosisAgeFrom3f: string = '';
+  includedDiagnosisAgeTo3f: string = '';
   withWithout4: string = '';
   includedValueSet4: string = '';
   includedFollowedByValueSet4: string = '';
@@ -796,6 +993,16 @@ export class AdvancedQueryEditorComponent implements OnInit {
   addQuery2: boolean = true;
   select3a: boolean = false;
   addQuery3: boolean = true;
+  select3b: boolean = false;
+  addQuery3b: boolean = true;
+  select3c: boolean = false;
+  addQuery3c: boolean = true;
+  select3d: boolean = false;
+  addQuery3d: boolean = true;
+  select3e: boolean = false;
+  addQuery3e: boolean = true;
+  select3f: boolean = false;
+  addQuery3f: boolean = true;
   select5a: boolean = false;
   addQuery5: boolean = true;
 
@@ -940,6 +1147,14 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.selectedRegistration = query.registrationStatus;
       this.ageFrom = query.ageFrom;
       this.ageTo = query.ageTo;
+      this.ageFrom1 = query.ageFrom1;
+      this.ageTo1 = query.ageTo1;
+      this.ageFrom2 = query.ageFrom2;
+      this.ageTo2 = query.ageTo2;
+      this.ageFrom3 = query.ageFrom3;
+      this.ageTo3 = query.ageTo3;
+      this.ageFrom4 = query.ageFrom4;
+      this.ageTo4 = query.ageTo4;
       this.selectedGender = query.gender;
       this.postcode = query.postcode;
       this.registrationExclude = query.registrationExclude;
@@ -1086,6 +1301,11 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.includedPeriodOperator3 = query.includedPeriodOperator3;
       this.includedPeriodValue3 = query.includedPeriodValue3;
       this.includedPeriodType3 = query.includedPeriodType3;
+      this.includedDob3 = query.includedDob3;
+      this.includedDiagnosisAnyAll3 = query.includedDiagnosisAnyAll3;
+      this.includedDiagnosisValueSet3 = query.includedDiagnosisValueSet3;
+      this.includedDiagnosisAgeFrom3 = query.includedDiagnosisAgeFrom3;
+      this.includedDiagnosisAgeTo3 = query.includedDiagnosisAgeTo3;
       this.withWithout3a = query.withWithout3a;
       this.includedValueSet3a = query.includedValueSet3a;
       this.includedEarliestLatest3a = query.includedEarliestLatest3a;
@@ -1097,6 +1317,91 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.includedPeriodOperator3a = query.includedPeriodOperator3a;
       this.includedPeriodValue3a = query.includedPeriodValue3a;
       this.includedPeriodType3a = query.includedPeriodType3a;
+      this.includedDob3a = query.includedDob3a;
+      this.includedDiagnosisAnyAll3a = query.includedDiagnosisAnyAll3a;
+      this.includedDiagnosisValueSet3a = query.includedDiagnosisValueSet3a;
+      this.includedDiagnosisAgeFrom3a = query.includedDiagnosisAgeFrom3a;
+      this.includedDiagnosisAgeTo3a = query.includedDiagnosisAgeTo3a;
+      this.withWithout3b = query.withWithout3b;
+      this.includedValueSet3b = query.includedValueSet3b;
+      this.includedEarliestLatest3b = query.includedEarliestLatest3b;
+      this.includedTestedValueSet3b = query.includedTestedValueSet3b;
+      this.includedAnyAll3b = query.includedAnyAll3b;
+      this.includedAnyAllTested3b = query.includedAnyAllTested3b;
+      this.includedDateFrom3b = query.includedDateFrom3b;
+      this.includedDateTo3b = query.includedDateTo3b;
+      this.includedPeriodOperator3b = query.includedPeriodOperator3b;
+      this.includedPeriodValue3b = query.includedPeriodValue3b;
+      this.includedPeriodType3b = query.includedPeriodType3b;
+      this.includedDob3b = query.includedDob3b;
+      this.includedDiagnosisAnyAll3b = query.includedDiagnosisAnyAll3b;
+      this.includedDiagnosisValueSet3b = query.includedDiagnosisValueSet3b;
+      this.includedDiagnosisAgeFrom3b = query.includedDiagnosisAgeFrom3b;
+      this.includedDiagnosisAgeTo3b = query.includedDiagnosisAgeTo3b;
+      this.withWithout3c = query.withWithout3c;
+      this.includedValueSet3c = query.includedValueSet3c;
+      this.includedEarliestLatest3c = query.includedEarliestLatest3c;
+      this.includedTestedValueSet3c = query.includedTestedValueSet3c;
+      this.includedAnyAll3c = query.includedAnyAll3c;
+      this.includedAnyAllTested3c = query.includedAnyAllTested3c;
+      this.includedDateFrom3c = query.includedDateFrom3c;
+      this.includedDateTo3c = query.includedDateTo3c;
+      this.includedPeriodOperator3c = query.includedPeriodOperator3c;
+      this.includedPeriodValue3c = query.includedPeriodValue3c;
+      this.includedPeriodType3c = query.includedPeriodType3c;
+      this.includedDob3c = query.includedDob3c;
+      this.includedDiagnosisAnyAll3c = query.includedDiagnosisAnyAll3c;
+      this.includedDiagnosisValueSet3c = query.includedDiagnosisValueSet3c;
+      this.includedDiagnosisAgeFrom3c = query.includedDiagnosisAgeFrom3c;
+      this.includedDiagnosisAgeTo3c = query.includedDiagnosisAgeTo3c;
+      this.withWithout3d = query.withWithout3d;
+      this.includedValueSet3d = query.includedValueSet3d;
+      this.includedEarliestLatest3d = query.includedEarliestLatest3d;
+      this.includedTestedValueSet3d = query.includedTestedValueSet3d;
+      this.includedAnyAll3d = query.includedAnyAll3d;
+      this.includedAnyAllTested3d = query.includedAnyAllTested3d;
+      this.includedDateFrom3d = query.includedDateFrom3d;
+      this.includedDateTo3d = query.includedDateTo3d;
+      this.includedPeriodOperator3d = query.includedPeriodOperator3d;
+      this.includedPeriodValue3d = query.includedPeriodValue3d;
+      this.includedPeriodType3d = query.includedPeriodType3d;
+      this.includedDob3d = query.includedDob3d;
+      this.includedDiagnosisAnyAll3d = query.includedDiagnosisAnyAll3d;
+      this.includedDiagnosisValueSet3d = query.includedDiagnosisValueSet3d;
+      this.includedDiagnosisAgeFrom3d = query.includedDiagnosisAgeFrom3d;
+      this.includedDiagnosisAgeTo3d = query.includedDiagnosisAgeTo3d;
+      this.withWithout3e = query.withWithout3e;
+      this.includedValueSet3e = query.includedValueSet3e;
+      this.includedEarliestLatest3e = query.includedEarliestLatest3e;
+      this.includedTestedValueSet3e = query.includedTestedValueSet3e;
+      this.includedAnyAll3e = query.includedAnyAll3e;
+      this.includedAnyAllTested3e = query.includedAnyAllTested3e;
+      this.includedDateFrom3e = query.includedDateFrom3e;
+      this.includedDateTo3e = query.includedDateTo3e;
+      this.includedPeriodOperator3e = query.includedPeriodOperator3e;
+      this.includedPeriodValue3e = query.includedPeriodValue3e;
+      this.includedPeriodType3e = query.includedPeriodType3e;
+      this.includedDob3e = query.includedDob3e;
+      this.includedDiagnosisAnyAll3e = query.includedDiagnosisAnyAll3e;
+      this.includedDiagnosisValueSet3e = query.includedDiagnosisValueSet3e;
+      this.includedDiagnosisAgeFrom3e = query.includedDiagnosisAgeFrom3e;
+      this.includedDiagnosisAgeTo3e = query.includedDiagnosisAgeTo3e;
+      this.withWithout3f = query.withWithout3f;
+      this.includedValueSet3f = query.includedValueSet3f;
+      this.includedEarliestLatest3f = query.includedEarliestLatest3f;
+      this.includedTestedValueSet3f = query.includedTestedValueSet3f;
+      this.includedAnyAll3f = query.includedAnyAll3f;
+      this.includedAnyAllTested3f = query.includedAnyAllTested3f;
+      this.includedDateFrom3f = query.includedDateFrom3f;
+      this.includedDateTo3f = query.includedDateTo3f;
+      this.includedPeriodOperator3f = query.includedPeriodOperator3f;
+      this.includedPeriodValue3f = query.includedPeriodValue3f;
+      this.includedPeriodType3f = query.includedPeriodType3f;
+      this.includedDob3f = query.includedDob3f;
+      this.includedDiagnosisAnyAll3f = query.includedDiagnosisAnyAll3f;
+      this.includedDiagnosisValueSet3f = query.includedDiagnosisValueSet3f;
+      this.includedDiagnosisAgeFrom3f = query.includedDiagnosisAgeFrom3f;
+      this.includedDiagnosisAgeTo3f = query.includedDiagnosisAgeTo3f;
       this.withWithout4 = query.withWithout4;
       this.includedValueSet4 = query.includedValueSet4;
       this.includedFollowedByValueSet4 = query.includedFollowedByValueSet4;
@@ -1292,6 +1597,26 @@ export class AdvancedQueryEditorComponent implements OnInit {
         this.select3a = true;
         this.addQuery3 = false;
       }
+      if (this.withWithout3b != "" && this.withWithout3b!=undefined) {
+        this.select3b = true;
+        this.addQuery3b = false;
+      }
+      if (this.withWithout3c != "" && this.withWithout3c!=undefined) {
+        this.select3c = true;
+        this.addQuery3c = false;
+      }
+      if (this.withWithout3d != "" && this.withWithout3d!=undefined) {
+        this.select3d = true;
+        this.addQuery3d = false;
+      }
+      if (this.withWithout3e != "" && this.withWithout3e!=undefined) {
+        this.select3e = true;
+        this.addQuery3e = false;
+      }
+      if (this.withWithout3f != "" && this.withWithout3f!=undefined) {
+        this.select3f = true;
+        this.addQuery3f = false;
+      }
       if (this.withWithout5a != "" && this.withWithout5a!=undefined) {
         this.select5a = true;
         this.addQuery5 = false;
@@ -1363,9 +1688,14 @@ export class AdvancedQueryEditorComponent implements OnInit {
       control1: ['', Validators.required], control2: ['', Validators.required], control157: [''], control158: [''], control159: ['']
     });
     this.secondFormGroup = this._formBuilder.group({
-      control17: [''], control3: ['', Validators.required], control4: ['', Validators.required], control6: [''], control7: [''], control8: [''], control9: ['']
+      control17: [''], control3: ['', Validators.required], control4: ['', Validators.required], control8: [''], control9: ['']
     });
     this.thirdFormGroup = this._formBuilder.group({
+      control6: [''], control7: [''],
+      control6a: [''], control7a: [''],
+      control6b: [''], control7b: [''],
+      control6c: [''], control7c: [''],
+      control6d: [''], control7d: [''],
       control5: [''], control5a: [''], control5b: [''], control20: [''], control21: [''],
       control22: [''], control23: [''], control24: [''], control25: [''],
       control22a: [''], control23a: [''], control24a: [''], control25a: [''],
@@ -1414,21 +1744,132 @@ export class AdvancedQueryEditorComponent implements OnInit {
 
 
       control26: [''], control27: [''], control28: [''], control29: [''],
-      control30: [''], control31: [''], control32: [''], control33: [''],
-      control34: [''], control35: [''], control36: [''], control37: [''],
+      control30: [''],
+      control35: [''], control36: [''], control37: [''],
       control38: [''], control39: [''], control40: [''], control41: [''],
       control42: [''], control43: [''], control44: [''], control45: [''],
       control26a: [''], control27a: [''], control28a: [''], control29a: [''],
       control30a: [''], control46: [''], control47: [''], control48: [''],
-      control49: [''], control50: [''], control51: [''], control52: [''],
+      control49: [''], control50: [''],
       control53: [''], control54: [''], control55: [''], control56: [''],
       control57: [''], control58: [''], control59: [''], control60: [''],
       control61: [''], control62: [''], control63: [''], control64: [''],
       control61a: [''], control62a: [''], control63a: [''], control64a: [''],
-      control65: [''], control66: [''], control67: [''], control68: [''], control69: [''],
-      control31a: [''],control51a: [''],control32a: [''],control33a: [''],control52a: [''],control34a: [''],control65a: [''],control66a: [''],control69a: [''],control67a: [''], control68a: [''],
       control40a: [''],control56a: [''],control41a: [''],control42a: [''],control43a: [''],control44a: [''],control45a: [''],control57a: [''],control58a: [''],
-      control152: [''],control153: [''],control154: [''],control155: [''],control156: ['']
+      control152: [''],control153: [''],control154: [''],control155: [''],control156: [''],
+      withWithout3: [''],
+      includedAnyAll3: [''],
+      includedValueSet3: [''],
+      includedEarliestLatest3: [''],
+      includedAnyAllTested3: [''],
+      includedDateFrom3: [''],
+      includedDateTo3: [''],
+      includedPeriodOperator3: [''],
+      includedPeriodValue3: [''],
+      includedPeriodType3: [''],
+      includedTestedValueSet3: [''],
+      includedDob3: [''],
+      includedDiagnosisAnyAll3: [''],
+      includedDiagnosisValueSet3: [''],
+      includedDiagnosisAgeFrom3: [''],
+      includedDiagnosisAgeTo3: [''],
+      withWithout3a: [''],
+      includedAnyAll3a: [''],
+      includedValueSet3a: [''],
+      includedEarliestLatest3a: [''],
+      includedAnyAllTested3a: [''],
+      includedDateFrom3a: [''],
+      includedDateTo3a: [''],
+      includedPeriodOperator3a: [''],
+      includedPeriodValue3a: [''],
+      includedPeriodType3a: [''],
+      includedTestedValueSet3a: [''],
+      includedDob3a: [''],
+      includedDiagnosisAnyAll3a: [''],
+      includedDiagnosisValueSet3a: [''],
+      includedDiagnosisAgeFrom3a: [''],
+      includedDiagnosisAgeTo3a: [''],
+      withWithout3b: [''],
+      includedAnyAll3b: [''],
+      includedValueSet3b: [''],
+      includedEarliestLatest3b: [''],
+      includedAnyAllTested3b: [''],
+      includedDateFrom3b: [''],
+      includedDateTo3b: [''],
+      includedPeriodOperator3b: [''],
+      includedPeriodValue3b: [''],
+      includedPeriodType3b: [''],
+      includedTestedValueSet3b: [''],
+      includedDob3b: [''],
+      includedDiagnosisAnyAll3b: [''],
+      includedDiagnosisValueSet3b: [''],
+      includedDiagnosisAgeFrom3b: [''],
+      includedDiagnosisAgeTo3b: [''],
+      withWithout3c: [''],
+      includedAnyAll3c: [''],
+      includedValueSet3c: [''],
+      includedEarliestLatest3c: [''],
+      includedAnyAllTested3c: [''],
+      includedDateFrom3c: [''],
+      includedDateTo3c: [''],
+      includedPeriodOperator3c: [''],
+      includedPeriodValue3c: [''],
+      includedPeriodType3c: [''],
+      includedTestedValueSet3c: [''],
+      includedDob3c: [''],
+      includedDiagnosisAnyAll3c: [''],
+      includedDiagnosisValueSet3c: [''],
+      includedDiagnosisAgeFrom3c: [''],
+      includedDiagnosisAgeTo3c: [''],
+      withWithout3d: [''],
+      includedAnyAll3d: [''],
+      includedValueSet3d: [''],
+      includedEarliestLatest3d: [''],
+      includedAnyAllTested3d: [''],
+      includedDateFrom3d: [''],
+      includedDateTo3d: [''],
+      includedPeriodOperator3d: [''],
+      includedPeriodValue3d: [''],
+      includedPeriodType3d: [''],
+      includedTestedValueSet3d: [''],
+      includedDob3d: [''],
+      includedDiagnosisAnyAll3d: [''],
+      includedDiagnosisValueSet3d: [''],
+      includedDiagnosisAgeFrom3d: [''],
+      includedDiagnosisAgeTo3d: [''],
+      withWithout3e: [''],
+      includedAnyAll3e: [''],
+      includedValueSet3e: [''],
+      includedEarliestLatest3e: [''],
+      includedAnyAllTested3e: [''],
+      includedDateFrom3e: [''],
+      includedDateTo3e: [''],
+      includedPeriodOperator3e: [''],
+      includedPeriodValue3e: [''],
+      includedPeriodType3e: [''],
+      includedTestedValueSet3e: [''],
+      includedDob3e: [''],
+      includedDiagnosisAnyAll3e: [''],
+      includedDiagnosisValueSet3e: [''],
+      includedDiagnosisAgeFrom3e: [''],
+      includedDiagnosisAgeTo3e: [''],
+      withWithout3f: [''],
+      includedAnyAll3f: [''],
+      includedValueSet3f: [''],
+      includedEarliestLatest3f: [''],
+      includedAnyAllTested3f: [''],
+      includedDateFrom3f: [''],
+      includedDateTo3f: [''],
+      includedPeriodOperator3f: [''],
+      includedPeriodValue3f: [''],
+      includedPeriodType3f: [''],
+      includedTestedValueSet3f: [''],
+      includedDob3f: [''],
+      includedDiagnosisAnyAll3f: [''],
+      includedDiagnosisValueSet3f: [''],
+      includedDiagnosisAgeFrom3f: [''],
+      includedDiagnosisAgeTo3f: ['']
+
     });
     this.fourthFormGroup = this._formBuilder.group({
       control170: [''], control171: [''],
@@ -1741,6 +2182,14 @@ export class AdvancedQueryEditorComponent implements OnInit {
       registrationPeriodType: this.registrationPeriodType,
       ageFrom: this.ageFrom,
       ageTo: this.ageTo,
+      ageFrom1: this.ageFrom1,
+      ageTo1: this.ageTo1,
+      ageFrom2: this.ageFrom2,
+      ageTo2: this.ageTo2,
+      ageFrom3: this.ageFrom3,
+      ageTo3: this.ageTo3,
+      ageFrom4: this.ageFrom4,
+      ageTo4: this.ageTo4,
       gender: this.selectedGender,
       postcode: this.postcode,
       withWithout1: this.withWithout1,
@@ -1880,6 +2329,11 @@ export class AdvancedQueryEditorComponent implements OnInit {
       includedPeriodValue3: this.includedPeriodValue3,
       includedPeriodType3: this.includedPeriodType3,
       includedTestedValueSet3: this.includedTestedValueSet3,
+      includedDob3 : this.includedDob3,
+      includedDiagnosisAnyAll3 : this.includedDiagnosisAnyAll3,
+      includedDiagnosisValueSet3 : this.includedDiagnosisValueSet3,
+      includedDiagnosisAgeFrom3 : this.includedDiagnosisAgeFrom3,
+      includedDiagnosisAgeTo3 : this.includedDiagnosisAgeTo3,
       withWithout3a: this.withWithout3a,
       includedAnyAll3a: this.includedAnyAll3a,
       includedValueSet3a: this.includedValueSet3a,
@@ -1891,6 +2345,91 @@ export class AdvancedQueryEditorComponent implements OnInit {
       includedPeriodValue3a: this.includedPeriodValue3a,
       includedPeriodType3a: this.includedPeriodType3a,
       includedTestedValueSet3a: this.includedTestedValueSet3a,
+      includedDob3a : this.includedDob3a,
+      includedDiagnosisAnyAll3a : this.includedDiagnosisAnyAll3a,
+      includedDiagnosisValueSet3a : this.includedDiagnosisValueSet3a,
+      includedDiagnosisAgeFrom3a : this.includedDiagnosisAgeFrom3a,
+      includedDiagnosisAgeTo3a : this.includedDiagnosisAgeTo3a,
+      withWithout3b: this.withWithout3b,
+      includedAnyAll3b: this.includedAnyAll3b,
+      includedValueSet3b: this.includedValueSet3b,
+      includedEarliestLatest3b: this.includedEarliestLatest3b,
+      includedAnyAllTested3b: this.includedAnyAllTested3b,
+      includedDateFrom3b: this.formatDate(this.includedDateFrom3b),
+      includedDateTo3b: this.formatDate(this.includedDateTo3b),
+      includedPeriodOperator3b: this.includedPeriodOperator3b,
+      includedPeriodValue3b: this.includedPeriodValue3b,
+      includedPeriodType3b: this.includedPeriodType3b,
+      includedTestedValueSet3b: this.includedTestedValueSet3b,
+      includedDob3b : this.includedDob3b,
+      includedDiagnosisAnyAll3b : this.includedDiagnosisAnyAll3b,
+      includedDiagnosisValueSet3b : this.includedDiagnosisValueSet3b,
+      includedDiagnosisAgeFrom3b : this.includedDiagnosisAgeFrom3b,
+      includedDiagnosisAgeTo3b : this.includedDiagnosisAgeTo3b,
+      withWithout3c: this.withWithout3c,
+      includedAnyAll3c: this.includedAnyAll3c,
+      includedValueSet3c: this.includedValueSet3c,
+      includedEarliestLatest3c: this.includedEarliestLatest3c,
+      includedAnyAllTested3c: this.includedAnyAllTested3c,
+      includedDateFrom3c: this.formatDate(this.includedDateFrom3c),
+      includedDateTo3c: this.formatDate(this.includedDateTo3c),
+      includedPeriodOperator3c: this.includedPeriodOperator3c,
+      includedPeriodValue3c: this.includedPeriodValue3c,
+      includedPeriodType3c: this.includedPeriodType3c,
+      includedTestedValueSet3c: this.includedTestedValueSet3c,
+      includedDob3c : this.includedDob3c,
+      includedDiagnosisAnyAll3c : this.includedDiagnosisAnyAll3c,
+      includedDiagnosisValueSet3c : this.includedDiagnosisValueSet3c,
+      includedDiagnosisAgeFrom3c : this.includedDiagnosisAgeFrom3c,
+      includedDiagnosisAgeTo3c : this.includedDiagnosisAgeTo3c,
+      withWithout3d: this.withWithout3d,
+      includedAnyAll3d: this.includedAnyAll3d,
+      includedValueSet3d: this.includedValueSet3d,
+      includedEarliestLatest3d: this.includedEarliestLatest3d,
+      includedAnyAllTested3d: this.includedAnyAllTested3d,
+      includedDateFrom3d: this.formatDate(this.includedDateFrom3d),
+      includedDateTo3d: this.formatDate(this.includedDateTo3d),
+      includedPeriodOperator3d: this.includedPeriodOperator3d,
+      includedPeriodValue3d: this.includedPeriodValue3d,
+      includedPeriodType3d: this.includedPeriodType3d,
+      includedTestedValueSet3d: this.includedTestedValueSet3d,
+      includedDob3d : this.includedDob3d,
+      includedDiagnosisAnyAll3d : this.includedDiagnosisAnyAll3d,
+      includedDiagnosisValueSet3d : this.includedDiagnosisValueSet3d,
+      includedDiagnosisAgeFrom3d : this.includedDiagnosisAgeFrom3d,
+      includedDiagnosisAgeTo3d : this.includedDiagnosisAgeTo3d,
+      withWithout3e: this.withWithout3e,
+      includedAnyAll3e: this.includedAnyAll3e,
+      includedValueSet3e: this.includedValueSet3e,
+      includedEarliestLatest3e: this.includedEarliestLatest3e,
+      includedAnyAllTested3e: this.includedAnyAllTested3e,
+      includedDateFrom3e: this.formatDate(this.includedDateFrom3e),
+      includedDateTo3e: this.formatDate(this.includedDateTo3e),
+      includedPeriodOperator3e: this.includedPeriodOperator3e,
+      includedPeriodValue3e: this.includedPeriodValue3e,
+      includedPeriodType3e: this.includedPeriodType3e,
+      includedTestedValueSet3e: this.includedTestedValueSet3e,
+      includedDob3e : this.includedDob3e,
+      includedDiagnosisAnyAll3e : this.includedDiagnosisAnyAll3e,
+      includedDiagnosisValueSet3e : this.includedDiagnosisValueSet3e,
+      includedDiagnosisAgeFrom3e : this.includedDiagnosisAgeFrom3e,
+      includedDiagnosisAgeTo3e : this.includedDiagnosisAgeTo3e,
+      withWithout3f: this.withWithout3f,
+      includedAnyAll3f: this.includedAnyAll3f,
+      includedValueSet3f: this.includedValueSet3f,
+      includedEarliestLatest3f: this.includedEarliestLatest3f,
+      includedAnyAllTested3f: this.includedAnyAllTested3f,
+      includedDateFrom3f: this.formatDate(this.includedDateFrom3f),
+      includedDateTo3f: this.formatDate(this.includedDateTo3f),
+      includedPeriodOperator3f: this.includedPeriodOperator3f,
+      includedPeriodValue3f: this.includedPeriodValue3f,
+      includedPeriodType3f: this.includedPeriodType3f,
+      includedTestedValueSet3f: this.includedTestedValueSet3f,
+      includedDob3f : this.includedDob3f,
+      includedDiagnosisAnyAll3f : this.includedDiagnosisAnyAll3f,
+      includedDiagnosisValueSet3f : this.includedDiagnosisValueSet3f,
+      includedDiagnosisAgeFrom3f : this.includedDiagnosisAgeFrom3f,
+      includedDiagnosisAgeTo3f : this.includedDiagnosisAgeTo3f,
       withWithout4: this.withWithout4,
       includedAnyAll4: this.includedAnyAll4,
       includedValueSet4: this.includedValueSet4,
@@ -2157,6 +2696,21 @@ export class AdvancedQueryEditorComponent implements OnInit {
 
   addSameQuery3() {
     this.select3a = true;
+  }
+  addSameQuery3b() {
+    this.select3b = true;
+  }
+  addSameQuery3c() {
+    this.select3c = true;
+  }
+  addSameQuery3d() {
+    this.select3d = true;
+  }
+  addSameQuery3e() {
+    this.select3e = true;
+  }
+  addSameQuery3f() {
+    this.select3f = true;
   }
 
   addSameQuery5() {

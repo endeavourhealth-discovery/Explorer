@@ -140,18 +140,6 @@
 
       <br/>
       <div class="flex" fxLayout.xs="column"  fxLayoutAlign="start">
-        <mat-form-field appearance="outline" style="width: 140px">
-          <mat-label>Age range from</mat-label>
-          <input matInput placeholder="Age" [(ngModel)]="ageFrom" formControlName="control6" (keydown.enter)="stepper.next()">
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" style="width: 140px; margin-left: 10px">
-          <mat-label>Age range to</mat-label>
-          <input matInput placeholder="Age" [(ngModel)]="ageTo" formControlName="control7" (keydown.enter)="stepper.next()">
-        </mat-form-field>
-      </div>
-      <br/>
-      <div class="flex" fxLayout.xs="column"  fxLayoutAlign="start">
         <mat-form-field appearance="outline" style="width: 100px">
           <mat-label>Gender</mat-label>
           <mat-select [(ngModel)]="selectedGender" formControlName="control8">
@@ -184,6 +172,58 @@
     <form [formGroup]="thirdFormGroup">
       <ng-template matStepLabel>Query criteria</ng-template>
       <div class="criteria-container">
+        <div class="flex" fxLayout.xs="column"  fxLayoutAlign="start">
+          <p style="margin-left: 10px"><b style="font-size: 16px">A1. </b>
+          <mat-form-field appearance="standard" style="width: 80px">
+            <mat-label>Age from</mat-label>
+            <input matInput placeholder="Age" [(ngModel)]="ageFrom" formControlName="control6" (keydown.enter)="stepper.next()">
+          </mat-form-field>
+
+          <mat-form-field appearance="standard" style="width: 80px; margin-left: 10px">
+            <mat-label>Age to</mat-label>
+            <input matInput placeholder="Age" [(ngModel)]="ageTo" formControlName="control7" (keydown.enter)="stepper.next()">
+          </mat-form-field>
+          <p style="margin-left: 10px"><b style="font-size: 16px">A2. </b>
+            <mat-form-field appearance="standard" style="width: 80px">
+              <mat-label>Age from</mat-label>
+              <input matInput placeholder="Age" [(ngModel)]="ageFrom1" formControlName="control6a" (keydown.enter)="stepper.next()">
+            </mat-form-field>
+
+            <mat-form-field appearance="standard" style="width: 80px; margin-left: 10px">
+              <mat-label>Age to</mat-label>
+              <input matInput placeholder="Age" [(ngModel)]="ageTo1" formControlName="control7a" (keydown.enter)="stepper.next()">
+            </mat-form-field>
+          <p style="margin-left: 10px"><b style="font-size: 16px">A3. </b>
+            <mat-form-field appearance="standard" style="width: 80px">
+              <mat-label>Age from</mat-label>
+              <input matInput placeholder="Age" [(ngModel)]="ageFrom2" formControlName="control6b"b (keydown.enter)="stepper.next()">
+            </mat-form-field>
+
+            <mat-form-field appearance="standard" style="width: 80px; margin-left: 10px">
+              <mat-label>Age to</mat-label>
+              <input matInput placeholder="Age" [(ngModel)]="ageTo2" formControlName="control7b" (keydown.enter)="stepper.next()">
+            </mat-form-field>
+          <p style="margin-left: 10px"><b style="font-size: 16px">A4. </b>
+            <mat-form-field appearance="standard" style="width: 80px">
+              <mat-label>Age from</mat-label>
+              <input matInput placeholder="Age" [(ngModel)]="ageFrom3" formControlName="control6c" (keydown.enter)="stepper.next()">
+            </mat-form-field>
+
+            <mat-form-field appearance="standard" style="width: 80px; margin-left: 10px">
+              <mat-label>Age to</mat-label>
+              <input matInput placeholder="Age" [(ngModel)]="ageTo3" formControlName="control7c" (keydown.enter)="stepper.next()">
+            </mat-form-field>
+          <p style="margin-left: 10px"><b style="font-size: 16px">A5. </b>
+            <mat-form-field appearance="standard" style="width: 80px">
+              <mat-label>Age from</mat-label>
+              <input matInput placeholder="Age" [(ngModel)]="ageFrom4" formControlName="control6d" (keydown.enter)="stepper.next()">
+            </mat-form-field>
+
+            <mat-form-field appearance="standard" style="width: 80px; margin-left: 10px">
+              <mat-label>Age to</mat-label>
+              <input matInput placeholder="Age" [(ngModel)]="ageTo4" formControlName="control7d" (keydown.enter)="stepper.next()">
+            </mat-form-field>
+        </div>
         <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
           <p style="margin-left: 10px"><b style="font-size: 16px">Q0. </b>
             <mat-form-field appearance="standard" style="width: 130px">
@@ -1487,7 +1527,7 @@
           <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q3. </b>Identify patients
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
               <mat-label>With/Without</mat-label>
-              <mat-select [(ngModel)]="withWithout3" formControlName="control31" (ngModelChange)="formChanged()">
+              <mat-select [(ngModel)]="withWithout3" formControlName="withWithout3" (ngModelChange)="formChanged()">
                 <mat-option *ngFor="let value of without" [value]="value.without">
                   {{value.without}}
                 </mat-option>
@@ -1496,7 +1536,7 @@
             records containing <span style="color: blue">concepts</span> matching
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 70px">
               <mat-label>Any/All</mat-label>
-              <mat-select [(ngModel)]="includedAnyAll3" formControlName="control51" (ngModelChange)="formChanged()">
+              <mat-select [(ngModel)]="includedAnyAll3" formControlName="includedAnyAll3" (ngModelChange)="formChanged()">
                 <mat-option *ngFor="let value of anyAll" [value]="value.anyAll">
                   {{value.anyAll}}
                 </mat-option>
@@ -1505,7 +1545,7 @@
             of the <span style="color: blue">value set(s)</span>
             <mat-form-field appearance="standard" style="width: 440px; margin-left: 10px">
               <mat-label>Cohort value set</mat-label>
-              <mat-select multiple [(ngModel)]="includedValueSet3" formControlName="control32" (ngModelChange)="formChanged()">
+              <mat-select multiple [(ngModel)]="includedValueSet3" formControlName="includedValueSet3" (ngModelChange)="formChanged()">
                 <mat-select-search [formControl]="filterCtrl"></mat-select-search>
                 <mat-option *ngFor="let result of filteredValueset | async" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
                   {{result}}
@@ -1517,7 +1557,7 @@
             <p style="margin-left: 10px; margin-top: 28px">and the <span style="color: blue">value</span> of the</p>
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 120px">
               <mat-label>Earliest/Latest</mat-label>
-              <mat-select [(ngModel)]="includedEarliestLatest3" formControlName="control33" (ngModelChange)="formChanged()">
+              <mat-select [(ngModel)]="includedEarliestLatest3" formControlName="includedEarliestLatest3" (ngModelChange)="formChanged()">
                 <mat-option *ngFor="let value of earliestLatest" [value]="value.earliestLatest">
                   {{value.earliestLatest}}
                 </mat-option>
@@ -1526,7 +1566,7 @@
             <p style="margin-left: 10px; margin-top: 28px"><span style="color: blue">entry concept</span> is</p>
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 70px">
               <mat-label>Any/All</mat-label>
-              <mat-select [(ngModel)]="includedAnyAllTested3" formControlName="control52" (ngModelChange)="formChanged()">
+              <mat-select [(ngModel)]="includedAnyAllTested3" formControlName="includedAnyAllTested3" (ngModelChange)="formChanged()">
                 <mat-option *ngFor="let value of anyAll" [value]="value.anyAll">
                   {{value.anyAll}}
                 </mat-option>
@@ -1535,7 +1575,7 @@
             <p style="margin-left: 10px; margin-top: 28px">of the <span style="color: blue">value set(s)</span></p>
             <mat-form-field appearance="standard" style="width: 440px; margin-left: 10px">
               <mat-label>Cohort value set</mat-label>
-              <mat-select multiple [(ngModel)]="includedTestedValueSet3" formControlName="control34" (ngModelChange)="formChanged()">
+              <mat-select multiple [(ngModel)]="includedTestedValueSet3" formControlName="includedTestedValueSet3" (ngModelChange)="formChanged()">
                 <mat-select-search [formControl]="filterCtrl"></mat-select-search>
                 <mat-option *ngFor="let result of filteredValueset | async" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
                   {{result}}
@@ -1548,7 +1588,7 @@
             <p style="margin-left: 10px; margin-top: 28px">within the <span style="color: blue">time period</span></p>
             <mat-form-field class="example-full-width" appearance="standard" style="margin-left: 10px; width: 120px">
               <mat-label>Date from</mat-label>
-              <input matInput [matDatepicker]="picker93" placeholder="Date from" [(ngModel)]="includedDateFrom3" formControlName="control65">
+              <input matInput [matDatepicker]="picker93" placeholder="Date from" [(ngModel)]="includedDateFrom3" formControlName="includedDateFrom3">
               <mat-datepicker-toggle matSuffix [for]="picker93">
                 <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
               </mat-datepicker-toggle>
@@ -1557,7 +1597,7 @@
             <p style="margin-left: 10px; margin-top: 28px">to</p>
             <mat-form-field class="example-full-width" appearance="standard" style="margin-left: 10px; width: 120px">
               <mat-label>Date to</mat-label>
-              <input matInput [matDatepicker]="picker103" placeholder="Date to" [(ngModel)]="includedDateTo3" formControlName="control66">
+              <input matInput [matDatepicker]="picker103" placeholder="Date to" [(ngModel)]="includedDateTo3" formControlName="includedDateTo3">
               <mat-datepicker-toggle matSuffix [for]="picker103">
                 <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
               </mat-datepicker-toggle>
@@ -1568,7 +1608,7 @@
               <p style="margin-left: 10px; margin-top: 28px">/ </p>
               <mat-form-field appearance="standard" style="margin-left: 10px; width: 130px">
                 <mat-label>Within/Before</mat-label>
-                <mat-select [(ngModel)]="includedPeriodOperator3" formControlName="control69" (ngModelChange)="formChanged()">
+                <mat-select [(ngModel)]="includedPeriodOperator3" formControlName="includedPeriodOperator3" (ngModelChange)="formChanged()">
                   <mat-option *ngFor="let value of withinBefore" [value]="value.withinBefore">
                     {{value.withinBefore}}
                   </mat-option>
@@ -1576,19 +1616,56 @@
               </mat-form-field>
               <mat-form-field appearance="standard" style="margin-left: 10px; width: 60px">
                 <mat-label>Period</mat-label>
-                <input matInput placeholder="Value" [(ngModel)]="includedPeriodValue3" formControlName="control67" (keydown.enter)="stepper.next()">
+                <input matInput placeholder="Value" [(ngModel)]="includedPeriodValue3" formControlName="includedPeriodValue3" (keydown.enter)="stepper.next()">
               </mat-form-field>
               <mat-form-field appearance="standard" style="margin-left: 10px; width: 160px">
                 <mat-label>Days/Weeks/Months</mat-label>
-                <mat-select [(ngModel)]="includedPeriodType3" formControlName="control68" (ngModelChange)="formChanged()">
+                <mat-select [(ngModel)]="includedPeriodType3" formControlName="includedPeriodType3" (ngModelChange)="formChanged()">
                   <mat-option *ngFor="let value of period" [value]="value.period">
                     {{value.period}}
                   </mat-option>
                 </mat-select>
               </mat-form-field><p style="margin-left: 10px; margin-top: 28px"> of the run date</p>
             </div>
-            <div mat-dialog-actions style="margin-bottom: 10px; margin-left: 20px" *ngIf="addQuery3">
-              <button mat-flat-button color="accent" (click)="addSameQuery3()">Add same query type</button>
+            <br/>
+            <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <p style="margin-left: 10px; margin-top: 28px">and this date was recorded after the patient's</p>
+              <mat-form-field appearance="standard" style="width: 60px;margin-left: 10px">
+                <mat-label>Years</mat-label>
+                <input matInput placeholder="Years" [(ngModel)]="includedDob3" formControlName="includedDob3" (keydown.enter)="stepper.next()">
+              </mat-form-field>
+              <p style="margin-left: 10px; margin-top: 28px">birthday, and this date was recorded on or after the patient's diagnosis of <span style="color: blue">concepts</span> matching</p>
+                <mat-form-field appearance="standard" style="margin-left: 10px; width: 70px">
+                  <mat-label>Any/All</mat-label>
+                  <mat-select [(ngModel)]="includedDiagnosisAnyAll3" formControlName="includedDiagnosisAnyAll3" (ngModelChange)="formChanged()">
+                    <mat-option *ngFor="let value of anyAll" [value]="value.anyAll">
+                      {{value.anyAll}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              <p style="margin-left: 10px; margin-top: 28px">of the <span style="color: blue">value set(s)</span></p>
+                <mat-form-field appearance="standard" style="width: 440px; margin-left: 10px">
+                  <mat-label>Cohort value set</mat-label>
+                  <mat-select multiple [(ngModel)]="includedDiagnosisValueSet3" formControlName="includedDiagnosisValueSet3" (ngModelChange)="formChanged()">
+                    <mat-select-search [formControl]="filterCtrl"></mat-select-search>
+                    <mat-option *ngFor="let result of filteredValueset | async" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
+                      {{result}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              <p style="margin-left: 10px; margin-top: 28px">in patient's aged</p>
+              <mat-form-field appearance="standard" style="width: 80px;margin-left: 10px">
+                <mat-label>Age from</mat-label>
+                <input matInput placeholder="Age" [(ngModel)]="includedDiagnosisAgeFrom3" formControlName="includedDiagnosisAgeFrom3" (keydown.enter)="stepper.next()">
+              </mat-form-field>
+
+              <mat-form-field appearance="standard" style="width: 80px; margin-left: 10px">
+                <mat-label>Age to</mat-label>
+                <input matInput placeholder="Age" [(ngModel)]="includedDiagnosisAgeTo3" formControlName="includedDiagnosisAgeTo3" (keydown.enter)="stepper.next()">
+              </mat-form-field>
+              <div mat-dialog-actions style="margin-bottom: 10px; margin-left: 20px" *ngIf="addQuery3">
+                <button mat-flat-button color="accent" (click)="addSameQuery3()">Add same query type</button>
+              </div>
             </div>
           </div>
         </div>
@@ -1601,7 +1678,7 @@
           <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q3a. </b>Identify patients
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
               <mat-label>With/Without</mat-label>
-              <mat-select [(ngModel)]="withWithout3a" formControlName="control31a" (ngModelChange)="formChanged()">
+              <mat-select [(ngModel)]="withWithout3a" formControlName="withWithout3a" (ngModelChange)="formChanged()">
                 <mat-option *ngFor="let value of without" [value]="value.without">
                   {{value.without}}
                 </mat-option>
@@ -1610,7 +1687,7 @@
             records containing <span style="color: blue">concepts</span> matching
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 70px">
               <mat-label>Any/All</mat-label>
-              <mat-select [(ngModel)]="includedAnyAll3a" formControlName="control51a" (ngModelChange)="formChanged()">
+              <mat-select [(ngModel)]="includedAnyAll3a" formControlName="includedAnyAll3a" (ngModelChange)="formChanged()">
                 <mat-option *ngFor="let value of anyAll" [value]="value.anyAll">
                   {{value.anyAll}}
                 </mat-option>
@@ -1619,7 +1696,7 @@
             of the <span style="color: blue">value set(s)</span>
             <mat-form-field appearance="standard" style="width: 440px; margin-left: 10px">
               <mat-label>Cohort value set</mat-label>
-              <mat-select multiple [(ngModel)]="includedValueSet3a" formControlName="control32a" (ngModelChange)="formChanged()">
+              <mat-select multiple [(ngModel)]="includedValueSet3a" formControlName="includedValueSet3a" (ngModelChange)="formChanged()">
                 <mat-select-search [formControl]="filterCtrl"></mat-select-search>
                 <mat-option *ngFor="let result of filteredValueset | async" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
                   {{result}}
@@ -1631,7 +1708,7 @@
             <p style="margin-left: 10px; margin-top: 28px">and the <span style="color: blue">value</span> of the</p>
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 120px">
               <mat-label>Earliest/Latest</mat-label>
-              <mat-select [(ngModel)]="includedEarliestLatest3a" formControlName="control33a" (ngModelChange)="formChanged()">
+              <mat-select [(ngModel)]="includedEarliestLatest3a" formControlName="includedEarliestLatest3a" (ngModelChange)="formChanged()">
                 <mat-option *ngFor="let value of earliestLatest" [value]="value.earliestLatest">
                   {{value.earliestLatest}}
                 </mat-option>
@@ -1640,7 +1717,7 @@
             <p style="margin-left: 10px; margin-top: 28px"><span style="color: blue">entry concept</span> is</p>
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 70px">
               <mat-label>Any/All</mat-label>
-              <mat-select [(ngModel)]="includedAnyAllTested3a" formControlName="control52a" (ngModelChange)="formChanged()">
+              <mat-select [(ngModel)]="includedAnyAllTested3a" formControlName="includedAnyAllTested3a" (ngModelChange)="formChanged()">
                 <mat-option *ngFor="let value of anyAll" [value]="value.anyAll">
                   {{value.anyAll}}
                 </mat-option>
@@ -1649,7 +1726,7 @@
             <p style="margin-left: 10px; margin-top: 28px">of the <span style="color: blue">value set(s)</span></p>
             <mat-form-field appearance="standard" style="width: 440px; margin-left: 10px">
               <mat-label>Cohort value set</mat-label>
-              <mat-select multiple [(ngModel)]="includedTestedValueSet3a" formControlName="control34a" (ngModelChange)="formChanged()">
+              <mat-select multiple [(ngModel)]="includedTestedValueSet3a" formControlName="includedTestedValueSet3a" (ngModelChange)="formChanged()">
                 <mat-select-search [formControl]="filterCtrl"></mat-select-search>
                 <mat-option *ngFor="let result of filteredValueset | async" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
                   {{result}}
@@ -1662,7 +1739,7 @@
             <p style="margin-left: 10px; margin-top: 28px">within the <span style="color: blue">time period</span></p>
             <mat-form-field class="example-full-width" appearance="standard" style="margin-left: 10px; width: 120px">
               <mat-label>Date from</mat-label>
-              <input matInput [matDatepicker]="picker93a" placeholder="Date from" [(ngModel)]="includedDateFrom3a" formControlName="control65a">
+              <input matInput [matDatepicker]="picker93a" placeholder="Date from" [(ngModel)]="includedDateFrom3a" formControlName="includedDateFrom3a">
               <mat-datepicker-toggle matSuffix [for]="picker93a">
                 <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
               </mat-datepicker-toggle>
@@ -1671,7 +1748,7 @@
             <p style="margin-left: 10px; margin-top: 28px">to</p>
             <mat-form-field class="example-full-width" appearance="standard" style="margin-left: 10px; width: 120px">
               <mat-label>Date to</mat-label>
-              <input matInput [matDatepicker]="picker103a" placeholder="Date to" [(ngModel)]="includedDateTo3a" formControlName="control66a">
+              <input matInput [matDatepicker]="picker103a" placeholder="Date to" [(ngModel)]="includedDateTo3a" formControlName="includedDateTo3a">
               <mat-datepicker-toggle matSuffix [for]="picker103a">
                 <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
               </mat-datepicker-toggle>
@@ -1682,7 +1759,7 @@
               <p style="margin-left: 10px; margin-top: 28px">/ </p>
               <mat-form-field appearance="standard" style="margin-left: 10px; width: 130px">
                 <mat-label>Within/Before</mat-label>
-                <mat-select [(ngModel)]="includedPeriodOperator3a" formControlName="control69a" (ngModelChange)="formChanged()">
+                <mat-select [(ngModel)]="includedPeriodOperator3a" formControlName="includedPeriodOperator3a" (ngModelChange)="formChanged()">
                   <mat-option *ngFor="let value of withinBefore" [value]="value.withinBefore">
                     {{value.withinBefore}}
                   </mat-option>
@@ -1691,16 +1768,56 @@
 
               <mat-form-field appearance="standard" style="margin-left: 10px; width: 60px">
                 <mat-label>Period</mat-label>
-                <input matInput placeholder="Value" [(ngModel)]="includedPeriodValue3a" formControlName="control67a" (keydown.enter)="stepper.next()">
+                <input matInput placeholder="Value" [(ngModel)]="includedPeriodValue3a" formControlName="includedPeriodValue3a" (keydown.enter)="stepper.next()">
               </mat-form-field>
               <mat-form-field appearance="standard" style="margin-left: 10px; width: 160px">
                 <mat-label>Days/Weeks/Months</mat-label>
-                <mat-select [(ngModel)]="includedPeriodType3a" formControlName="control68a" (ngModelChange)="formChanged()">
+                <mat-select [(ngModel)]="includedPeriodType3a" formControlName="includedPeriodType3a" (ngModelChange)="formChanged()">
                   <mat-option *ngFor="let value of period" [value]="value.period">
                     {{value.period}}
                   </mat-option>
                 </mat-select>
               </mat-form-field><p style="margin-left: 10px; margin-top: 28px"> of the run date</p>
+            </div>
+            <br/>
+            <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <p style="margin-left: 10px; margin-top: 28px">and this date was recorded after the patient's</p>
+              <mat-form-field appearance="standard" style="width: 60px;margin-left: 10px">
+                <mat-label>Years</mat-label>
+                <input matInput placeholder="Years" [(ngModel)]="includedDob3a" formControlName="includedDob3a" (keydown.enter)="stepper.next()">
+              </mat-form-field>
+              <p style="margin-left: 10px; margin-top: 28px">birthday, and this date was recorded on or after the patient's diagnosis of <span style="color: blue">concepts</span> matching</p>
+              <mat-form-field appearance="standard" style="margin-left: 10px; width: 70px">
+                <mat-label>Any/All</mat-label>
+                <mat-select [(ngModel)]="includedDiagnosisAnyAll3a" formControlName="includedDiagnosisAnyAll3a" (ngModelChange)="formChanged()">
+                  <mat-option *ngFor="let value of anyAll" [value]="value.anyAll">
+                    {{value.anyAll}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <p style="margin-left: 10px; margin-top: 28px">of the <span style="color: blue">value set(s)</span></p>
+              <mat-form-field appearance="standard" style="width: 440px; margin-left: 10px">
+                <mat-label>Cohort value set</mat-label>
+                <mat-select multiple [(ngModel)]="includedDiagnosisValueSet3a" formControlName="includedDiagnosisValueSet3a" (ngModelChange)="formChanged()">
+                  <mat-select-search [formControl]="filterCtrl"></mat-select-search>
+                  <mat-option *ngFor="let result of filteredValueset | async" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
+                    {{result}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <p style="margin-left: 10px; margin-top: 28px">in patient's aged</p>
+              <mat-form-field appearance="standard" style="width: 80px;margin-left: 10px">
+                <mat-label>Age from</mat-label>
+                <input matInput placeholder="Age" [(ngModel)]="includedDiagnosisAgeFrom3a" formControlName="includedDiagnosisAgeFrom3a" (keydown.enter)="stepper.next()">
+              </mat-form-field>
+
+              <mat-form-field appearance="standard" style="width: 80px; margin-left: 10px">
+                <mat-label>Age to</mat-label>
+                <input matInput placeholder="Age" [(ngModel)]="includedDiagnosisAgeTo3a" formControlName="includedDiagnosisAgeTo3a" (keydown.enter)="stepper.next()">
+              </mat-form-field>
+              <div mat-dialog-actions style="margin-bottom: 10px; margin-left: 20px" *ngIf="addQuery3b">
+                <button mat-flat-button color="accent" (click)="addSameQuery3b()">Add same query type</button>
+              </div>
             </div>
           </div>
         </div>
@@ -1708,6 +1825,763 @@
         <br *ngIf="select3a"/>
         <mat-divider *ngIf="select3a"></mat-divider>
         <br *ngIf="select3a"/>
+
+        <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start" *ngIf="select3b">
+          <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q3b. </b>Identify patients
+            <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
+              <mat-label>With/Without</mat-label>
+              <mat-select [(ngModel)]="withWithout3b" formControlName="withWithout3b" (ngModelChange)="formChanged()">
+                <mat-option *ngFor="let value of without" [value]="value.without">
+                  {{value.without}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            records containing <span style="color: blue">concepts</span> matching
+            <mat-form-field appearance="standard" style="margin-left: 10px; width: 70px">
+              <mat-label>Any/All</mat-label>
+              <mat-select [(ngModel)]="includedAnyAll3b" formControlName="includedAnyAll3b" (ngModelChange)="formChanged()">
+                <mat-option *ngFor="let value of anyAll" [value]="value.anyAll">
+                  {{value.anyAll}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            of the <span style="color: blue">value set(s)</span>
+            <mat-form-field appearance="standard" style="width: 440px; margin-left: 10px">
+              <mat-label>Cohort value set</mat-label>
+              <mat-select multiple [(ngModel)]="includedValueSet3b" formControlName="includedValueSet3b" (ngModelChange)="formChanged()">
+                <mat-select-search [formControl]="filterCtrl"></mat-select-search>
+                <mat-option *ngFor="let result of filteredValueset | async" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
+                  {{result}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field></p>
+          <br/>
+          <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <p style="margin-left: 10px; margin-top: 28px">and the <span style="color: blue">value</span> of the</p>
+            <mat-form-field appearance="standard" style="margin-left: 10px; width: 120px">
+              <mat-label>Earliest/Latest</mat-label>
+              <mat-select [(ngModel)]="includedEarliestLatest3b" formControlName="includedEarliestLatest3b" (ngModelChange)="formChanged()">
+                <mat-option *ngFor="let value of earliestLatest" [value]="value.earliestLatest">
+                  {{value.earliestLatest}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <p style="margin-left: 10px; margin-top: 28px"><span style="color: blue">entry concept</span> is</p>
+            <mat-form-field appearance="standard" style="margin-left: 10px; width: 70px">
+              <mat-label>Any/All</mat-label>
+              <mat-select [(ngModel)]="includedAnyAllTested3b" formControlName="includedAnyAllTested3b" (ngModelChange)="formChanged()">
+                <mat-option *ngFor="let value of anyAll" [value]="value.anyAll">
+                  {{value.anyAll}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <p style="margin-left: 10px; margin-top: 28px">of the <span style="color: blue">value set(s)</span></p>
+            <mat-form-field appearance="standard" style="width: 440px; margin-left: 10px">
+              <mat-label>Cohort value set</mat-label>
+              <mat-select multiple [(ngModel)]="includedTestedValueSet3b" formControlName="includedTestedValueSet3b" (ngModelChange)="formChanged()">
+                <mat-select-search [formControl]="filterCtrl"></mat-select-search>
+                <mat-option *ngFor="let result of filteredValueset | async" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
+                  {{result}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <br/>
+          <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <p style="margin-left: 10px; margin-top: 28px">within the <span style="color: blue">time period</span></p>
+            <mat-form-field class="example-full-width" appearance="standard" style="margin-left: 10px; width: 120px">
+              <mat-label>Date from</mat-label>
+              <input matInput [matDatepicker]="picker93b" placeholder="Date from" [(ngModel)]="includedDateFrom3b" formControlName="includedDateFrom3b">
+              <mat-datepicker-toggle matSuffix [for]="picker93b">
+                <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+              </mat-datepicker-toggle>
+              <mat-datepicker #picker93b></mat-datepicker>
+            </mat-form-field>
+            <p style="margin-left: 10px; margin-top: 28px">to</p>
+            <mat-form-field class="example-full-width" appearance="standard" style="margin-left: 10px; width: 120px">
+              <mat-label>Date to</mat-label>
+              <input matInput [matDatepicker]="picker103b" placeholder="Date to" [(ngModel)]="includedDateTo3b" formControlName="includedDateTo3b">
+              <mat-datepicker-toggle matSuffix [for]="picker103b">
+                <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+              </mat-datepicker-toggle>
+              <mat-datepicker #picker103b></mat-datepicker>
+            </mat-form-field>
+            <br/>
+            <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <p style="margin-left: 10px; margin-top: 28px">/ </p>
+              <mat-form-field appearance="standard" style="margin-left: 10px; width: 130px">
+                <mat-label>Within/Before</mat-label>
+                <mat-select [(ngModel)]="includedPeriodOperator3b" formControlName="includedPeriodOperator3b" (ngModelChange)="formChanged()">
+                  <mat-option *ngFor="let value of withinBefore" [value]="value.withinBefore">
+                    {{value.withinBefore}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field appearance="standard" style="margin-left: 10px; width: 60px">
+                <mat-label>Period</mat-label>
+                <input matInput placeholder="Value" [(ngModel)]="includedPeriodValue3b" formControlName="includedPeriodValue3b" (keydown.enter)="stepper.next()">
+              </mat-form-field>
+              <mat-form-field appearance="standard" style="margin-left: 10px; width: 160px">
+                <mat-label>Days/Weeks/Months</mat-label>
+                <mat-select [(ngModel)]="includedPeriodType3b" formControlName="includedPeriodType3b" (ngModelChange)="formChanged()">
+                  <mat-option *ngFor="let value of period" [value]="value.period">
+                    {{value.period}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field><p style="margin-left: 10px; margin-top: 28px"> of the run date</p>
+            </div>
+            <br/>
+            <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <p style="margin-left: 10px; margin-top: 28px">and this date was recorded after the patient's</p>
+              <mat-form-field appearance="standard" style="width: 60px;margin-left: 10px">
+                <mat-label>Years</mat-label>
+                <input matInput placeholder="Years" [(ngModel)]="includedDob3b" formControlName="includedDob3b" (keydown.enter)="stepper.next()">
+              </mat-form-field>
+              <p style="margin-left: 10px; margin-top: 28px">birthday, and this date was recorded on or after the patient's diagnosis of <span style="color: blue">concepts</span> matching</p>
+              <mat-form-field appearance="standard" style="margin-left: 10px; width: 70px">
+                <mat-label>Any/All</mat-label>
+                <mat-select [(ngModel)]="includedDiagnosisAnyAll3b" formControlName="includedDiagnosisAnyAll3b" (ngModelChange)="formChanged()">
+                  <mat-option *ngFor="let value of anyAll" [value]="value.anyAll">
+                    {{value.anyAll}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <p style="margin-left: 10px; margin-top: 28px">of the <span style="color: blue">value set(s)</span></p>
+              <mat-form-field appearance="standard" style="width: 440px; margin-left: 10px">
+                <mat-label>Cohort value set</mat-label>
+                <mat-select multiple [(ngModel)]="includedDiagnosisValueSet3b" formControlName="includedDiagnosisValueSet3b" (ngModelChange)="formChanged()">
+                  <mat-select-search [formControl]="filterCtrl"></mat-select-search>
+                  <mat-option *ngFor="let result of filteredValueset | async" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
+                    {{result}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <p style="margin-left: 10px; margin-top: 28px">in patient's aged</p>
+              <mat-form-field appearance="standard" style="width: 80px;margin-left: 10px">
+                <mat-label>Age from</mat-label>
+                <input matInput placeholder="Age" [(ngModel)]="includedDiagnosisAgeFrom3b" formControlName="includedDiagnosisAgeFrom3b" (keydown.enter)="stepper.next()">
+              </mat-form-field>
+
+              <mat-form-field appearance="standard" style="width: 80px; margin-left: 10px">
+                <mat-label>Age to</mat-label>
+                <input matInput placeholder="Age" [(ngModel)]="includedDiagnosisAgeTo3b" formControlName="includedDiagnosisAgeTo3b" (keydown.enter)="stepper.next()">
+              </mat-form-field>
+              <div mat-dialog-actions style="margin-bottom: 10px; margin-left: 20px" *ngIf="addQuery3c">
+                <button mat-flat-button color="accent" (click)="addSameQuery3c()">Add same query type</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <br *ngIf="select3b"/>
+        <mat-divider *ngIf="select3b"></mat-divider>
+        <br *ngIf="select3b"/>
+
+        <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start" *ngIf="select3c">
+          <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q3c. </b>Identify patients
+            <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
+              <mat-label>With/Without</mat-label>
+              <mat-select [(ngModel)]="withWithout3c" formControlName="withWithout3c" (ngModelChange)="formChanged()">
+                <mat-option *ngFor="let value of without" [value]="value.without">
+                  {{value.without}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            records containing <span style="color: blue">concepts</span> matching
+            <mat-form-field appearance="standard" style="margin-left: 10px; width: 70px">
+              <mat-label>Any/All</mat-label>
+              <mat-select [(ngModel)]="includedAnyAll3c" formControlName="includedAnyAll3c" (ngModelChange)="formChanged()">
+                <mat-option *ngFor="let value of anyAll" [value]="value.anyAll">
+                  {{value.anyAll}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            of the <span style="color: blue">value set(s)</span>
+            <mat-form-field appearance="standard" style="width: 440px; margin-left: 10px">
+              <mat-label>Cohort value set</mat-label>
+              <mat-select multiple [(ngModel)]="includedValueSet3c" formControlName="includedValueSet3c" (ngModelChange)="formChanged()">
+                <mat-select-search [formControl]="filterCtrl"></mat-select-search>
+                <mat-option *ngFor="let result of filteredValueset | async" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
+                  {{result}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field></p>
+          <br/>
+          <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <p style="margin-left: 10px; margin-top: 28px">and the <span style="color: blue">value</span> of the</p>
+            <mat-form-field appearance="standard" style="margin-left: 10px; width: 120px">
+              <mat-label>Earliest/Latest</mat-label>
+              <mat-select [(ngModel)]="includedEarliestLatest3c" formControlName="includedEarliestLatest3c" (ngModelChange)="formChanged()">
+                <mat-option *ngFor="let value of earliestLatest" [value]="value.earliestLatest">
+                  {{value.earliestLatest}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <p style="margin-left: 10px; margin-top: 28px"><span style="color: blue">entry concept</span> is</p>
+            <mat-form-field appearance="standard" style="margin-left: 10px; width: 70px">
+              <mat-label>Any/All</mat-label>
+              <mat-select [(ngModel)]="includedAnyAllTested3c" formControlName="includedAnyAllTested3c" (ngModelChange)="formChanged()">
+                <mat-option *ngFor="let value of anyAll" [value]="value.anyAll">
+                  {{value.anyAll}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <p style="margin-left: 10px; margin-top: 28px">of the <span style="color: blue">value set(s)</span></p>
+            <mat-form-field appearance="standard" style="width: 440px; margin-left: 10px">
+              <mat-label>Cohort value set</mat-label>
+              <mat-select multiple [(ngModel)]="includedTestedValueSet3c" formControlName="includedTestedValueSet3c" (ngModelChange)="formChanged()">
+                <mat-select-search [formControl]="filterCtrl"></mat-select-search>
+                <mat-option *ngFor="let result of filteredValueset | async" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
+                  {{result}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <br/>
+          <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <p style="margin-left: 10px; margin-top: 28px">within the <span style="color: blue">time period</span></p>
+            <mat-form-field class="example-full-width" appearance="standard" style="margin-left: 10px; width: 120px">
+              <mat-label>Date from</mat-label>
+              <input matInput [matDatepicker]="picker93c" placeholder="Date from" [(ngModel)]="includedDateFrom3c" formControlName="includedDateFrom3c">
+              <mat-datepicker-toggle matSuffix [for]="picker93c">
+                <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+              </mat-datepicker-toggle>
+              <mat-datepicker #picker93c></mat-datepicker>
+            </mat-form-field>
+            <p style="margin-left: 10px; margin-top: 28px">to</p>
+            <mat-form-field class="example-full-width" appearance="standard" style="margin-left: 10px; width: 120px">
+              <mat-label>Date to</mat-label>
+              <input matInput [matDatepicker]="picker103c" placeholder="Date to" [(ngModel)]="includedDateTo3c" formControlName="includedDateTo3c">
+              <mat-datepicker-toggle matSuffix [for]="picker103c">
+                <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+              </mat-datepicker-toggle>
+              <mat-datepicker #picker103c></mat-datepicker>
+            </mat-form-field>
+            <br/>
+            <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <p style="margin-left: 10px; margin-top: 28px">/ </p>
+              <mat-form-field appearance="standard" style="margin-left: 10px; width: 130px">
+                <mat-label>Within/Before</mat-label>
+                <mat-select [(ngModel)]="includedPeriodOperator3c" formControlName="includedPeriodOperator3c" (ngModelChange)="formChanged()">
+                  <mat-option *ngFor="let value of withinBefore" [value]="value.withinBefore">
+                    {{value.withinBefore}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field appearance="standard" style="margin-left: 10px; width: 60px">
+                <mat-label>Period</mat-label>
+                <input matInput placeholder="Value" [(ngModel)]="includedPeriodValue3c" formControlName="includedPeriodValue3c" (keydown.enter)="stepper.next()">
+              </mat-form-field>
+              <mat-form-field appearance="standard" style="margin-left: 10px; width: 160px">
+                <mat-label>Days/Weeks/Months</mat-label>
+                <mat-select [(ngModel)]="includedPeriodType3c" formControlName="includedPeriodType3c" (ngModelChange)="formChanged()">
+                  <mat-option *ngFor="let value of period" [value]="value.period">
+                    {{value.period}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field><p style="margin-left: 10px; margin-top: 28px"> of the run date</p>
+            </div>
+            <br/>
+            <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <p style="margin-left: 10px; margin-top: 28px">and this date was recorded after the patient's</p>
+              <mat-form-field appearance="standard" style="width: 60px;margin-left: 10px">
+                <mat-label>Years</mat-label>
+                <input matInput placeholder="Years" [(ngModel)]="includedDob3c" formControlName="includedDob3c" (keydown.enter)="stepper.next()">
+              </mat-form-field>
+              <p style="margin-left: 10px; margin-top: 28px">birthday, and this date was recorded on or after the patient's diagnosis of <span style="color: blue">concepts</span> matching</p>
+              <mat-form-field appearance="standard" style="margin-left: 10px; width: 70px">
+                <mat-label>Any/All</mat-label>
+                <mat-select [(ngModel)]="includedDiagnosisAnyAll3c" formControlName="includedDiagnosisAnyAll3c" (ngModelChange)="formChanged()">
+                  <mat-option *ngFor="let value of anyAll" [value]="value.anyAll">
+                    {{value.anyAll}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <p style="margin-left: 10px; margin-top: 28px">of the <span style="color: blue">value set(s)</span></p>
+              <mat-form-field appearance="standard" style="width: 440px; margin-left: 10px">
+                <mat-label>Cohort value set</mat-label>
+                <mat-select multiple [(ngModel)]="includedDiagnosisValueSet3c" formControlName="includedDiagnosisValueSet3c" (ngModelChange)="formChanged()">
+                  <mat-select-search [formControl]="filterCtrl"></mat-select-search>
+                  <mat-option *ngFor="let result of filteredValueset | async" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
+                    {{result}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <p style="margin-left: 10px; margin-top: 28px">in patient's aged</p>
+              <mat-form-field appearance="standard" style="width: 80px;margin-left: 10px">
+                <mat-label>Age from</mat-label>
+                <input matInput placeholder="Age" [(ngModel)]="includedDiagnosisAgeFrom3c" formControlName="includedDiagnosisAgeFrom3c" (keydown.enter)="stepper.next()">
+              </mat-form-field>
+
+              <mat-form-field appearance="standard" style="width: 80px; margin-left: 10px">
+                <mat-label>Age to</mat-label>
+                <input matInput placeholder="Age" [(ngModel)]="includedDiagnosisAgeTo3c" formControlName="includedDiagnosisAgeTo3c" (keydown.enter)="stepper.next()">
+              </mat-form-field>
+              <div mat-dialog-actions style="margin-bottom: 10px; margin-left: 20px" *ngIf="addQuery3d">
+                <button mat-flat-button color="accent" (click)="addSameQuery3d()">Add same query type</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <br *ngIf="select3c"/>
+        <mat-divider *ngIf="select3c"></mat-divider>
+        <br *ngIf="select3c"/>
+
+        <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start" *ngIf="select3d">
+          <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q3d. </b>Identify patients
+            <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
+              <mat-label>With/Without</mat-label>
+              <mat-select [(ngModel)]="withWithout3d" formControlName="withWithout3d" (ngModelChange)="formChanged()">
+                <mat-option *ngFor="let value of without" [value]="value.without">
+                  {{value.without}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            records containing <span style="color: blue">concepts</span> matching
+            <mat-form-field appearance="standard" style="margin-left: 10px; width: 70px">
+              <mat-label>Any/All</mat-label>
+              <mat-select [(ngModel)]="includedAnyAll3d" formControlName="includedAnyAll3d" (ngModelChange)="formChanged()">
+                <mat-option *ngFor="let value of anyAll" [value]="value.anyAll">
+                  {{value.anyAll}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            of the <span style="color: blue">value set(s)</span>
+            <mat-form-field appearance="standard" style="width: 440px; margin-left: 10px">
+              <mat-label>Cohort value set</mat-label>
+              <mat-select multiple [(ngModel)]="includedValueSet3d" formControlName="includedValueSet3d" (ngModelChange)="formChanged()">
+                <mat-select-search [formControl]="filterCtrl"></mat-select-search>
+                <mat-option *ngFor="let result of filteredValueset | async" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
+                  {{result}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field></p>
+          <br/>
+          <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <p style="margin-left: 10px; margin-top: 28px">and the <span style="color: blue">value</span> of the</p>
+            <mat-form-field appearance="standard" style="margin-left: 10px; width: 120px">
+              <mat-label>Earliest/Latest</mat-label>
+              <mat-select [(ngModel)]="includedEarliestLatest3d" formControlName="includedEarliestLatest3d" (ngModelChange)="formChanged()">
+                <mat-option *ngFor="let value of earliestLatest" [value]="value.earliestLatest">
+                  {{value.earliestLatest}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <p style="margin-left: 10px; margin-top: 28px"><span style="color: blue">entry concept</span> is</p>
+            <mat-form-field appearance="standard" style="margin-left: 10px; width: 70px">
+              <mat-label>Any/All</mat-label>
+              <mat-select [(ngModel)]="includedAnyAllTested3d" formControlName="includedAnyAllTested3d" (ngModelChange)="formChanged()">
+                <mat-option *ngFor="let value of anyAll" [value]="value.anyAll">
+                  {{value.anyAll}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <p style="margin-left: 10px; margin-top: 28px">of the <span style="color: blue">value set(s)</span></p>
+            <mat-form-field appearance="standard" style="width: 440px; margin-left: 10px">
+              <mat-label>Cohort value set</mat-label>
+              <mat-select multiple [(ngModel)]="includedTestedValueSet3d" formControlName="includedTestedValueSet3d" (ngModelChange)="formChanged()">
+                <mat-select-search [formControl]="filterCtrl"></mat-select-search>
+                <mat-option *ngFor="let result of filteredValueset | async" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
+                  {{result}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <br/>
+          <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <p style="margin-left: 10px; margin-top: 28px">within the <span style="color: blue">time period</span></p>
+            <mat-form-field class="example-full-width" appearance="standard" style="margin-left: 10px; width: 120px">
+              <mat-label>Date from</mat-label>
+              <input matInput [matDatepicker]="picker93d" placeholder="Date from" [(ngModel)]="includedDateFrom3d" formControlName="includedDateFrom3d">
+              <mat-datepicker-toggle matSuffix [for]="picker93d">
+                <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+              </mat-datepicker-toggle>
+              <mat-datepicker #picker93d></mat-datepicker>
+            </mat-form-field>
+            <p style="margin-left: 10px; margin-top: 28px">to</p>
+            <mat-form-field class="example-full-width" appearance="standard" style="margin-left: 10px; width: 120px">
+              <mat-label>Date to</mat-label>
+              <input matInput [matDatepicker]="picker103d" placeholder="Date to" [(ngModel)]="includedDateTo3d" formControlName="includedDateTo3d">
+              <mat-datepicker-toggle matSuffix [for]="picker103d">
+                <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+              </mat-datepicker-toggle>
+              <mat-datepicker #picker103d></mat-datepicker>
+            </mat-form-field>
+            <br/>
+            <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <p style="margin-left: 10px; margin-top: 28px">/ </p>
+              <mat-form-field appearance="standard" style="margin-left: 10px; width: 130px">
+                <mat-label>Within/Before</mat-label>
+                <mat-select [(ngModel)]="includedPeriodOperator3d" formControlName="includedPeriodOperator3d" (ngModelChange)="formChanged()">
+                  <mat-option *ngFor="let value of withinBefore" [value]="value.withinBefore">
+                    {{value.withinBefore}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field appearance="standard" style="margin-left: 10px; width: 60px">
+                <mat-label>Period</mat-label>
+                <input matInput placeholder="Value" [(ngModel)]="includedPeriodValue3d" formControlName="includedPeriodValue3d" (keydown.enter)="stepper.next()">
+              </mat-form-field>
+              <mat-form-field appearance="standard" style="margin-left: 10px; width: 160px">
+                <mat-label>Days/Weeks/Months</mat-label>
+                <mat-select [(ngModel)]="includedPeriodType3d" formControlName="includedPeriodType3d" (ngModelChange)="formChanged()">
+                  <mat-option *ngFor="let value of period" [value]="value.period">
+                    {{value.period}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field><p style="margin-left: 10px; margin-top: 28px"> of the run date</p>
+            </div>
+            <br/>
+            <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <p style="margin-left: 10px; margin-top: 28px">and this date was recorded after the patient's</p>
+              <mat-form-field appearance="standard" style="width: 60px;margin-left: 10px">
+                <mat-label>Years</mat-label>
+                <input matInput placeholder="Years" [(ngModel)]="includedDob3d" formControlName="includedDob3d" (keydown.enter)="stepper.next()">
+              </mat-form-field>
+              <p style="margin-left: 10px; margin-top: 28px">birthday, and this date was recorded on or after the patient's diagnosis of <span style="color: blue">concepts</span> matching</p>
+              <mat-form-field appearance="standard" style="margin-left: 10px; width: 70px">
+                <mat-label>Any/All</mat-label>
+                <mat-select [(ngModel)]="includedDiagnosisAnyAll3d" formControlName="includedDiagnosisAnyAll3d" (ngModelChange)="formChanged()">
+                  <mat-option *ngFor="let value of anyAll" [value]="value.anyAll">
+                    {{value.anyAll}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <p style="margin-left: 10px; margin-top: 28px">of the <span style="color: blue">value set(s)</span></p>
+              <mat-form-field appearance="standard" style="width: 440px; margin-left: 10px">
+                <mat-label>Cohort value set</mat-label>
+                <mat-select multiple [(ngModel)]="includedDiagnosisValueSet3d" formControlName="includedDiagnosisValueSet3d" (ngModelChange)="formChanged()">
+                  <mat-select-search [formControl]="filterCtrl"></mat-select-search>
+                  <mat-option *ngFor="let result of filteredValueset | async" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
+                    {{result}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <p style="margin-left: 10px; margin-top: 28px">in patient's aged</p>
+              <mat-form-field appearance="standard" style="width: 80px;margin-left: 10px">
+                <mat-label>Age from</mat-label>
+                <input matInput placeholder="Age" [(ngModel)]="includedDiagnosisAgeFrom3d" formControlName="includedDiagnosisAgeFrom3d" (keydown.enter)="stepper.next()">
+              </mat-form-field>
+
+              <mat-form-field appearance="standard" style="width: 80px; margin-left: 10px">
+                <mat-label>Age to</mat-label>
+                <input matInput placeholder="Age" [(ngModel)]="includedDiagnosisAgeTo3d" formControlName="includedDiagnosisAgeTo3d" (keydown.enter)="stepper.next()">
+              </mat-form-field>
+              <div mat-dialog-actions style="margin-bottom: 10px; margin-left: 20px" *ngIf="addQuery3e">
+                <button mat-flat-button color="accent" (click)="addSameQuery3e()">Add same query type</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <br *ngIf="select3d"/>
+        <mat-divider *ngIf="select3d"></mat-divider>
+        <br *ngIf="select3d"/>
+
+        <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start" *ngIf="select3e">
+          <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q3e. </b>Identify patients
+            <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
+              <mat-label>With/Without</mat-label>
+              <mat-select [(ngModel)]="withWithout3e" formControlName="withWithout3e" (ngModelChange)="formChanged()">
+                <mat-option *ngFor="let value of without" [value]="value.without">
+                  {{value.without}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            records containing <span style="color: blue">concepts</span> matching
+            <mat-form-field appearance="standard" style="margin-left: 10px; width: 70px">
+              <mat-label>Any/All</mat-label>
+              <mat-select [(ngModel)]="includedAnyAll3e" formControlName="includedAnyAll3e" (ngModelChange)="formChanged()">
+                <mat-option *ngFor="let value of anyAll" [value]="value.anyAll">
+                  {{value.anyAll}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            of the <span style="color: blue">value set(s)</span>
+            <mat-form-field appearance="standard" style="width: 440px; margin-left: 10px">
+              <mat-label>Cohort value set</mat-label>
+              <mat-select multiple [(ngModel)]="includedValueSet3e" formControlName="includedValueSet3e" (ngModelChange)="formChanged()">
+                <mat-select-search [formControl]="filterCtrl"></mat-select-search>
+                <mat-option *ngFor="let result of filteredValueset | async" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
+                  {{result}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field></p>
+          <br/>
+          <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <p style="margin-left: 10px; margin-top: 28px">and the <span style="color: blue">value</span> of the</p>
+            <mat-form-field appearance="standard" style="margin-left: 10px; width: 120px">
+              <mat-label>Earliest/Latest</mat-label>
+              <mat-select [(ngModel)]="includedEarliestLatest3e" formControlName="includedEarliestLatest3e" (ngModelChange)="formChanged()">
+                <mat-option *ngFor="let value of earliestLatest" [value]="value.earliestLatest">
+                  {{value.earliestLatest}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <p style="margin-left: 10px; margin-top: 28px"><span style="color: blue">entry concept</span> is</p>
+            <mat-form-field appearance="standard" style="margin-left: 10px; width: 70px">
+              <mat-label>Any/All</mat-label>
+              <mat-select [(ngModel)]="includedAnyAllTested3e" formControlName="includedAnyAllTested3e" (ngModelChange)="formChanged()">
+                <mat-option *ngFor="let value of anyAll" [value]="value.anyAll">
+                  {{value.anyAll}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <p style="margin-left: 10px; margin-top: 28px">of the <span style="color: blue">value set(s)</span></p>
+            <mat-form-field appearance="standard" style="width: 440px; margin-left: 10px">
+              <mat-label>Cohort value set</mat-label>
+              <mat-select multiple [(ngModel)]="includedTestedValueSet3e" formControlName="includedTestedValueSet3e" (ngModelChange)="formChanged()">
+                <mat-select-search [formControl]="filterCtrl"></mat-select-search>
+                <mat-option *ngFor="let result of filteredValueset | async" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
+                  {{result}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <br/>
+          <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <p style="margin-left: 10px; margin-top: 28px">within the <span style="color: blue">time period</span></p>
+            <mat-form-field class="example-full-width" appearance="standard" style="margin-left: 10px; width: 120px">
+              <mat-label>Date from</mat-label>
+              <input matInput [matDatepicker]="picker93e" placeholder="Date from" [(ngModel)]="includedDateFrom3e" formControlName="includedDateFrom3e">
+              <mat-datepicker-toggle matSuffix [for]="picker93e">
+                <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+              </mat-datepicker-toggle>
+              <mat-datepicker #picker93e></mat-datepicker>
+            </mat-form-field>
+            <p style="margin-left: 10px; margin-top: 28px">to</p>
+            <mat-form-field class="example-full-width" appearance="standard" style="margin-left: 10px; width: 120px">
+              <mat-label>Date to</mat-label>
+              <input matInput [matDatepicker]="picker103e" placeholder="Date to" [(ngModel)]="includedDateTo3e" formControlName="includedDateTo3e">
+              <mat-datepicker-toggle matSuffix [for]="picker103e">
+                <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+              </mat-datepicker-toggle>
+              <mat-datepicker #picker103e></mat-datepicker>
+            </mat-form-field>
+            <br/>
+            <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <p style="margin-left: 10px; margin-top: 28px">/ </p>
+              <mat-form-field appearance="standard" style="margin-left: 10px; width: 130px">
+                <mat-label>Within/Before</mat-label>
+                <mat-select [(ngModel)]="includedPeriodOperator3e" formControlName="includedPeriodOperator3e" (ngModelChange)="formChanged()">
+                  <mat-option *ngFor="let value of withinBefore" [value]="value.withinBefore">
+                    {{value.withinBefore}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field appearance="standard" style="margin-left: 10px; width: 60px">
+                <mat-label>Period</mat-label>
+                <input matInput placeholder="Value" [(ngModel)]="includedPeriodValue3e" formControlName="includedPeriodValue3e" (keydown.enter)="stepper.next()">
+              </mat-form-field>
+              <mat-form-field appearance="standard" style="margin-left: 10px; width: 160px">
+                <mat-label>Days/Weeks/Months</mat-label>
+                <mat-select [(ngModel)]="includedPeriodType3e" formControlName="includedPeriodType3e" (ngModelChange)="formChanged()">
+                  <mat-option *ngFor="let value of period" [value]="value.period">
+                    {{value.period}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field><p style="margin-left: 10px; margin-top: 28px"> of the run date</p>
+            </div>
+            <br/>
+            <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <p style="margin-left: 10px; margin-top: 28px">and this date was recorded after the patient's</p>
+              <mat-form-field appearance="standard" style="width: 60px;margin-left: 10px">
+                <mat-label>Years</mat-label>
+                <input matInput placeholder="Years" [(ngModel)]="includedDob3e" formControlName="includedDob3e" (keydown.enter)="stepper.next()">
+              </mat-form-field>
+              <p style="margin-left: 10px; margin-top: 28px">birthday, and this date was recorded on or after the patient's diagnosis of <span style="color: blue">concepts</span> matching</p>
+              <mat-form-field appearance="standard" style="margin-left: 10px; width: 70px">
+                <mat-label>Any/All</mat-label>
+                <mat-select [(ngModel)]="includedDiagnosisAnyAll3e" formControlName="includedDiagnosisAnyAll3e" (ngModelChange)="formChanged()">
+                  <mat-option *ngFor="let value of anyAll" [value]="value.anyAll">
+                    {{value.anyAll}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <p style="margin-left: 10px; margin-top: 28px">of the <span style="color: blue">value set(s)</span></p>
+              <mat-form-field appearance="standard" style="width: 440px; margin-left: 10px">
+                <mat-label>Cohort value set</mat-label>
+                <mat-select multiple [(ngModel)]="includedDiagnosisValueSet3e" formControlName="includedDiagnosisValueSet3e" (ngModelChange)="formChanged()">
+                  <mat-select-search [formControl]="filterCtrl"></mat-select-search>
+                  <mat-option *ngFor="let result of filteredValueset | async" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
+                    {{result}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <p style="margin-left: 10px; margin-top: 28px">in patient's aged</p>
+              <mat-form-field appearance="standard" style="width: 80px;margin-left: 10px">
+                <mat-label>Age from</mat-label>
+                <input matInput placeholder="Age" [(ngModel)]="includedDiagnosisAgeFrom3e" formControlName="includedDiagnosisAgeFrom3e" (keydown.enter)="stepper.next()">
+              </mat-form-field>
+
+              <mat-form-field appearance="standard" style="width: 80px; margin-left: 10px">
+                <mat-label>Age to</mat-label>
+                <input matInput placeholder="Age" [(ngModel)]="includedDiagnosisAgeTo3e" formControlName="includedDiagnosisAgeTo3e" (keydown.enter)="stepper.next()">
+              </mat-form-field>
+              <div mat-dialog-actions style="margin-bottom: 10px; margin-left: 20px" *ngIf="addQuery3f">
+                <button mat-flat-button color="accent" (click)="addSameQuery3f()">Add same query type</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <br *ngIf="select3e"/>
+        <mat-divider *ngIf="select3e"></mat-divider>
+        <br *ngIf="select3e"/>
+
+        <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start" *ngIf="select3f">
+          <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q3f. </b>Identify patients
+            <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
+              <mat-label>With/Without</mat-label>
+              <mat-select [(ngModel)]="withWithout3f" formControlName="withWithout3f" (ngModelChange)="formChanged()">
+                <mat-option *ngFor="let value of without" [value]="value.without">
+                  {{value.without}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            records containing <span style="color: blue">concepts</span> matching
+            <mat-form-field appearance="standard" style="margin-left: 10px; width: 70px">
+              <mat-label>Any/All</mat-label>
+              <mat-select [(ngModel)]="includedAnyAll3f" formControlName="includedAnyAll3f" (ngModelChange)="formChanged()">
+                <mat-option *ngFor="let value of anyAll" [value]="value.anyAll">
+                  {{value.anyAll}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            of the <span style="color: blue">value set(s)</span>
+            <mat-form-field appearance="standard" style="width: 440px; margin-left: 10px">
+              <mat-label>Cohort value set</mat-label>
+              <mat-select multiple [(ngModel)]="includedValueSet3f" formControlName="includedValueSet3f" (ngModelChange)="formChanged()">
+                <mat-select-search [formControl]="filterCtrl"></mat-select-search>
+                <mat-option *ngFor="let result of filteredValueset | async" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
+                  {{result}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field></p>
+          <br/>
+          <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <p style="margin-left: 10px; margin-top: 28px">and the <span style="color: blue">value</span> of the</p>
+            <mat-form-field appearance="standard" style="margin-left: 10px; width: 120px">
+              <mat-label>Earliest/Latest</mat-label>
+              <mat-select [(ngModel)]="includedEarliestLatest3f" formControlName="includedEarliestLatest3f" (ngModelChange)="formChanged()">
+                <mat-option *ngFor="let value of earliestLatest" [value]="value.earliestLatest">
+                  {{value.earliestLatest}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <p style="margin-left: 10px; margin-top: 28px"><span style="color: blue">entry concept</span> is</p>
+            <mat-form-field appearance="standard" style="margin-left: 10px; width: 70px">
+              <mat-label>Any/All</mat-label>
+              <mat-select [(ngModel)]="includedAnyAllTested3f" formControlName="includedAnyAllTested3f" (ngModelChange)="formChanged()">
+                <mat-option *ngFor="let value of anyAll" [value]="value.anyAll">
+                  {{value.anyAll}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <p style="margin-left: 10px; margin-top: 28px">of the <span style="color: blue">value set(s)</span></p>
+            <mat-form-field appearance="standard" style="width: 440px; margin-left: 10px">
+              <mat-label>Cohort value set</mat-label>
+              <mat-select multiple [(ngModel)]="includedTestedValueSet3f" formControlName="includedTestedValueSet3f" (ngModelChange)="formChanged()">
+                <mat-select-search [formControl]="filterCtrl"></mat-select-search>
+                <mat-option *ngFor="let result of filteredValueset | async" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
+                  {{result}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <br/>
+          <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <p style="margin-left: 10px; margin-top: 28px">within the <span style="color: blue">time period</span></p>
+            <mat-form-field class="example-full-width" appearance="standard" style="margin-left: 10px; width: 120px">
+              <mat-label>Date from</mat-label>
+              <input matInput [matDatepicker]="picker93f" placeholder="Date from" [(ngModel)]="includedDateFrom3f" formControlName="includedDateFrom3f">
+              <mat-datepicker-toggle matSuffix [for]="picker93f">
+                <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+              </mat-datepicker-toggle>
+              <mat-datepicker #picker93f></mat-datepicker>
+            </mat-form-field>
+            <p style="margin-left: 10px; margin-top: 28px">to</p>
+            <mat-form-field class="example-full-width" appearance="standard" style="margin-left: 10px; width: 120px">
+              <mat-label>Date to</mat-label>
+              <input matInput [matDatepicker]="picker103f" placeholder="Date to" [(ngModel)]="includedDateTo3f" formControlName="includedDateTo3f">
+              <mat-datepicker-toggle matSuffix [for]="picker103f">
+                <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+              </mat-datepicker-toggle>
+              <mat-datepicker #picker103f></mat-datepicker>
+            </mat-form-field>
+            <br/>
+            <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <p style="margin-left: 10px; margin-top: 28px">/ </p>
+              <mat-form-field appearance="standard" style="margin-left: 10px; width: 130px">
+                <mat-label>Within/Before</mat-label>
+                <mat-select [(ngModel)]="includedPeriodOperator3f" formControlName="includedPeriodOperator3f" (ngModelChange)="formChanged()">
+                  <mat-option *ngFor="let value of withinBefore" [value]="value.withinBefore">
+                    {{value.withinBefore}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field appearance="standard" style="margin-left: 10px; width: 60px">
+                <mat-label>Period</mat-label>
+                <input matInput placeholder="Value" [(ngModel)]="includedPeriodValue3f" formControlName="includedPeriodValue3f" (keydown.enter)="stepper.next()">
+              </mat-form-field>
+              <mat-form-field appearance="standard" style="margin-left: 10px; width: 160px">
+                <mat-label>Days/Weeks/Months</mat-label>
+                <mat-select [(ngModel)]="includedPeriodType3f" formControlName="includedPeriodType3f" (ngModelChange)="formChanged()">
+                  <mat-option *ngFor="let value of period" [value]="value.period">
+                    {{value.period}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field><p style="margin-left: 10px; margin-top: 28px"> of the run date</p>
+            </div>
+            <br/>
+            <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <p style="margin-left: 10px; margin-top: 28px">and this date was recorded after the patient's</p>
+              <mat-form-field appearance="standard" style="width: 60px;margin-left: 10px">
+                <mat-label>Years</mat-label>
+                <input matInput placeholder="Years" [(ngModel)]="includedDob3f" formControlName="includedDob3f" (keydown.enter)="stepper.next()">
+              </mat-form-field>
+              <p style="margin-left: 10px; margin-top: 28px">birthday, and this date was recorded on or after the patient's diagnosis of <span style="color: blue">concepts</span> matching</p>
+              <mat-form-field appearance="standard" style="margin-left: 10px; width: 70px">
+                <mat-label>Any/All</mat-label>
+                <mat-select [(ngModel)]="includedDiagnosisAnyAll3f" formControlName="includedDiagnosisAnyAll3f" (ngModelChange)="formChanged()">
+                  <mat-option *ngFor="let value of anyAll" [value]="value.anyAll">
+                    {{value.anyAll}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <p style="margin-left: 10px; margin-top: 28px">of the <span style="color: blue">value set(s)</span></p>
+              <mat-form-field appearance="standard" style="width: 440px; margin-left: 10px">
+                <mat-label>Cohort value set</mat-label>
+                <mat-select multiple [(ngModel)]="includedDiagnosisValueSet3f" formControlName="includedDiagnosisValueSet3f" (ngModelChange)="formChanged()">
+                  <mat-select-search [formControl]="filterCtrl"></mat-select-search>
+                  <mat-option *ngFor="let result of filteredValueset | async" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
+                    {{result}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <p style="margin-left: 10px; margin-top: 28px">in patient's aged</p>
+              <mat-form-field appearance="standard" style="width: 80px;margin-left: 10px">
+                <mat-label>Age from</mat-label>
+                <input matInput placeholder="Age" [(ngModel)]="includedDiagnosisAgeFrom3f" formControlName="includedDiagnosisAgeFrom3f" (keydown.enter)="stepper.next()">
+              </mat-form-field>
+
+              <mat-form-field appearance="standard" style="width: 80px; margin-left: 10px">
+                <mat-label>Age to</mat-label>
+                <input matInput placeholder="Age" [(ngModel)]="includedDiagnosisAgeTo3f" formControlName="includedDiagnosisAgeTo3f" (keydown.enter)="stepper.next()">
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+
+        <br *ngIf="select3f"/>
+        <mat-divider *ngIf="select3f"></mat-divider>
+        <br *ngIf="select3f"/>
 
         <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
           <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q4. </b>Identify patients
