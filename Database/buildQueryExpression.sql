@@ -96,7 +96,7 @@ BEGIN
                 OPEN c_get_dets;
 
                 SET l_string = ' ';
-                SET l_main = CONCAT('SELECT patient_id, person_id, organization_id , date_registered, age FROM ', l_tab,' WHERE 1 AND ');
+                SET l_main = CONCAT('SELECT patient_id, person_id, organization_id, date_registered, age, date_of_birth, date_of_death FROM ', l_tab, ' WHERE 1 AND ');
                 SET l_sql = '';
                 SET l_previousExpression = '';
                 SET l_qryNo = '';
@@ -120,9 +120,9 @@ BEGIN
                          SET l_string = CONCAT(l_string, l_sql);
                      END IF;
 
-                  ELSEIF  l_queryExpression_det LIKE 'Q%' THEN
+                  ELSEIF  l_queryExpression_det LIKE 'Q%' OR l_queryExpression_det REGEXP '^A[12345]' THEN
                     
-                        SET @sql = CONCAT('SELECT queryExpression INTO @exp FROM ', p_ruleDetailTab,' WHERE seq_id = ', l_seq_id_det + 1,' AND rule_id = ',l_rule_id_det);
+                        SET @sql = CONCAT('SELECT queryExpression INTO @exp FROM ', p_ruleDetailTab,' WHERE seq_id = ', l_seq_id_det + 1, ' AND rule_id = ', l_rule_id_det);
                         PREPARE stmt FROM @sql;
                         EXECUTE stmt;
                         DEALLOCATE PREPARE stmt;   
@@ -130,10 +130,10 @@ BEGIN
                               IF l_seq_id_det = 1 THEN
 
                                     IF @exp = 'AND' OR @exp IS NULL OR @exp = 'OR' THEN
-                                          SET l_sql = CONCAT(l_main,' patient_id', inNotIn,' (SELECT patient_id FROM ', l_queryExpression_det,'_',l_query_id,')');
+                                          SET l_sql = CONCAT(l_main,' patient_id', inNotIn,' (SELECT patient_id FROM ', l_queryExpression_det, '_', l_query_id, ')');
                                           SET l_string = CONCAT(l_string, l_sql);
                                     ELSE
-                                          SET l_sql = CONCAT(l_main,' ( patient_id ', inNotIn,' (SELECT patient_id FROM ', l_queryExpression_det,'_',l_query_id,')');
+                                          SET l_sql = CONCAT(l_main,' ( patient_id ', inNotIn,' (SELECT patient_id FROM ', l_queryExpression_det, '_', l_query_id, ')');
                                           SET l_string = CONCAT(l_string, l_sql);
                                     END IF;
 
@@ -141,32 +141,37 @@ BEGIN
 
                                     IF l_previousExpression = 'OR' AND @exp IS NULL THEN
                                     
-                                          SET @sql = CONCAT('SELECT queryExpression INTO @exp2 FROM ', p_ruleDetailTab,' WHERE seq_id = ', l_seq_id_det - 2,' AND rule_id = ',l_rule_id_det);
+                                          SET @sql = CONCAT('SELECT queryExpression INTO @exp2 FROM ', p_ruleDetailTab,' WHERE seq_id = ', l_seq_id_det - 2,' AND rule_id = ', l_rule_id_det);
                                           PREPARE stmt FROM @sql;
                                           EXECUTE stmt;
                                           DEALLOCATE PREPARE stmt;   
                                     
                                           IF @exp2 = ')' THEN
-                                                SET l_sql = CONCAT(' patient_id ', inNotIn,' (SELECT patient_id FROM ', l_queryExpression_det,'_',l_query_id,')');
+                                                SET l_sql = CONCAT(' patient_id ', inNotIn,' (SELECT patient_id FROM ', l_queryExpression_det, '_', l_query_id, ')');
                                                 SET l_string = CONCAT(l_string, l_sql);  
                                           ELSEIF @exp IS NULL THEN
-                                                SET l_sql = CONCAT(' patient_id ', inNotIn,' (SELECT patient_id FROM ', l_queryExpression_det,'_',l_query_id,')');
+                                                SET l_sql = CONCAT(' patient_id ', inNotIn,' (SELECT patient_id FROM ', l_queryExpression_det, '_', l_query_id, ')');
                                                 SET l_string = CONCAT(l_string, l_sql);  
                                           ELSE
-                                                SET l_sql = CONCAT(' patient_id ', inNotIn,' (SELECT patient_id FROM ', l_queryExpression_det,'_',l_query_id,') )');
+                                                SET l_sql = CONCAT(' patient_id ', inNotIn,' (SELECT patient_id FROM ', l_queryExpression_det, '_', l_query_id, ') )');
                                                 SET l_string = CONCAT(l_string, l_sql);  
                                           END IF;
                                     ELSE
-                                          SET l_sql = CONCAT(' patient_id ', inNotIn,' (SELECT patient_id FROM ', l_queryExpression_det,'_',l_query_id,')');
+                                          SET l_sql = CONCAT(' patient_id ', inNotIn,' (SELECT patient_id FROM ', l_queryExpression_det, '_', l_query_id, ')');
                                           SET l_string = CONCAT(l_string, l_sql);  
                                     END IF;
 
                               END IF;
 
                               -- build qry number list
-                              SET l_qryNo =  CONCAT(l_qryNo, SUBSTRING(l_queryExpression_det,2) );        
-                              SET l_qryNo =  CONCAT(l_qryNo,CASE WHEN LENGTH(l_qryNo)>0 THEN ',' ELSE '' END);
-  
+                              IF l_queryExpression_det LIKE 'Q%' THEN
+                                    SET l_qryNo =  CONCAT(l_qryNo, SUBSTRING(l_queryExpression_det, 2) );        
+                                    SET l_qryNo =  CONCAT(l_qryNo, CASE WHEN LENGTH(l_qryNo)>0 THEN ',' ELSE '' END);
+                              ELSEIF l_queryExpression_det LIKE 'A%' THEN 
+                                    SET l_qryNo =  CONCAT(l_qryNo, SUBSTRING(l_queryExpression_det, 1) );        
+                                    SET l_qryNo =  CONCAT(l_qryNo, CASE WHEN LENGTH(l_qryNo)>0 THEN ',' ELSE '' END);
+                              END IF;
+
                   ELSEIF  l_queryExpression_det = 'AND' THEN
                          SET l_string = CONCAT(l_string, ' AND ');
                   ELSEIF  l_queryExpression_det = 'OR' THEN
@@ -194,7 +199,7 @@ BEGIN
               -- remove the last comma in the string
               SET l_qryNo = SUBSTRING(l_qryNo, 1, LENGTH(l_qryNo)-1);
 
-              SET @sql = CONCAT('UPDATE ', p_ruleTab,' SET query = ', QUOTE(l_string),' , queryNumber = ', QUOTE(l_qryNo),' WHERE id = ', l_id);
+              SET @sql = CONCAT('UPDATE ', p_ruleTab,' SET query = ', QUOTE(l_string), ' , queryNumber = ', QUOTE(l_qryNo), ' WHERE id = ', l_id);
               PREPARE stmt FROM @sql;
               EXECUTE stmt;
               DEALLOCATE PREPARE stmt; 

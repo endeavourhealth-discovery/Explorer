@@ -75,7 +75,7 @@ BEGIN
 
              IF LENGTH(TRIM(l_queryExpression)) = 0 OR l_queryExpression IS NULL THEN
                  SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Query expression not found';
-                 CALL log_errors(l_query_id,'splitQueryExpression', '45000', MESSAGE_TEXT, now());
+                 CALL log_errors(l_query_id, 'splitQueryExpression', '45000', MESSAGE_TEXT, now());
                  RESIGNAL; -- rethrow the error
              END IF;
 
@@ -94,7 +94,7 @@ BEGIN
                      SET TempValue = TRIM(front);
                      SET TempValue = UPPER(TempValue);
 
-                     IF TempValue IN ('AND','OR','(',')') OR TempValue Like 'Q%' THEN 
+                     IF TempValue IN ('AND','OR','(',')') OR TempValue Like 'Q%' OR TempValue REGEXP '^A[12345]' THEN 
                         SET l_expression = QUOTE(TempValue);
                         SET insFlag = 'Y';
                      ELSE

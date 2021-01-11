@@ -14,8 +14,6 @@ DECLARE providerOrganisation VARCHAR(5000) DEFAULT NULL;
 DECLARE includedOrganisation VARCHAR(5000) DEFAULT NULL; 
 DECLARE registrationStatus VARCHAR(255) DEFAULT NULL; 
 
-DECLARE ageFrom VARCHAR(20) DEFAULT NULL;   
-DECLARE ageTo VARCHAR(20) DEFAULT NULL;  
 DECLARE postcode VARCHAR(20) DEFAULT NULL; 
 DECLARE gender VARCHAR(20) DEFAULT NULL;  
 
@@ -167,11 +165,25 @@ DECLARE Q2 VARCHAR(64) DEFAULT NULL;
 DECLARE Q2A VARCHAR(64) DEFAULT NULL;
 DECLARE Q3 VARCHAR(64) DEFAULT NULL;
 DECLARE Q3A VARCHAR(64) DEFAULT NULL;
+DECLARE Q3B VARCHAR(64) DEFAULT NULL;
+DECLARE Q3C VARCHAR(64) DEFAULT NULL;
+DECLARE Q3D VARCHAR(64) DEFAULT NULL;
+DECLARE Q3E VARCHAR(64) DEFAULT NULL;
+DECLARE Q3F VARCHAR(64) DEFAULT NULL;
+DECLARE Q3G VARCHAR(64) DEFAULT NULL;
+DECLARE Q3H VARCHAR(64) DEFAULT NULL;
+
 DECLARE Q4 VARCHAR(64) DEFAULT NULL;
 DECLARE Q5 VARCHAR(64) DEFAULT NULL;
 DECLARE Q5A VARCHAR(64) DEFAULT NULL;
 
 DECLARE Q0 VARCHAR(64) DEFAULT NULL;
+
+DECLARE A1 VARCHAR(64) DEFAULT NULL;
+DECLARE A2 VARCHAR(64) DEFAULT NULL;
+DECLARE A3 VARCHAR(64) DEFAULT NULL;
+DECLARE A4 VARCHAR(64) DEFAULT NULL;
+DECLARE A5 VARCHAR(64) DEFAULT NULL;
 
 DECLARE encounterValueSet_tmp VARCHAR(64) DEFAULT NULL;
 DECLARE medicationValueSet_tmp VARCHAR(64) DEFAULT NULL;
@@ -202,8 +214,6 @@ SET providerOrganisation = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.provide
 SET includedOrganisation = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.includedOrganisation'),'[',''),']',''),'"','');
 SET registrationStatus = JSON_UNQUOTE(JSON_EXTRACT(query,'$.registrationStatus'));
 
-SET ageFrom = JSON_UNQUOTE(JSON_EXTRACT(query,'$.ageFrom'));
-SET ageTo = JSON_UNQUOTE(JSON_EXTRACT(query,'$.ageTo'));  
 SET gender = LOWER(JSON_UNQUOTE(JSON_EXTRACT(query,'$.gender'))); 
 SET postcode = JSON_UNQUOTE(JSON_EXTRACT(query,'$.postcode'));
 SET org_tmp = CONCAT('org_tmp_',query_id);
@@ -331,13 +341,12 @@ SET seriesPeriodType = JSON_UNQUOTE(JSON_EXTRACT(query,'$.seriesPeriodType'));
 SET schedule = JSON_UNQUOTE(JSON_EXTRACT(query,'$.schedule')); 
 SET delivery = JSON_UNQUOTE(JSON_EXTRACT(query,'$.delivery')); 
 
--- Set Variables for Query tmp tables --
+-- Set Variables for Query tables --
 SET Q1 = CONCAT('Q1_',query_id);
 SET Q1A = CONCAT('Q1A_',query_id);
 SET Q1B = CONCAT('Q1B_',query_id);
 SET Q1C = CONCAT('Q1C_',query_id);
 SET Q1D = CONCAT('Q1D_',query_id);
-
 SET Q1E = CONCAT('Q1E_',query_id);
 SET Q1F = CONCAT('Q1F_',query_id);
 SET Q1G = CONCAT('Q1G_',query_id);
@@ -346,16 +355,26 @@ SET Q1I = CONCAT('Q1I_',query_id);
 SET Q1J = CONCAT('Q1J_',query_id);
 SET Q1K = CONCAT('Q1K_',query_id);
 SET Q1L = CONCAT('Q1L_',query_id);
-
 SET Q2 = CONCAT('Q2_',query_id);
 SET Q2A = CONCAT('Q2A_',query_id);
 SET Q3 = CONCAT('Q3_',query_id);
 SET Q3A = CONCAT('Q3A_',query_id);
+SET Q3B = CONCAT('Q3B_',query_id);
+SET Q3C = CONCAT('Q3C_',query_id);
+SET Q3D = CONCAT('Q3D_',query_id);
+SET Q3E = CONCAT('Q3E_',query_id);
+SET Q3F = CONCAT('Q3F_',query_id);
+SET Q3G = CONCAT('Q3G_',query_id);
+SET Q3H = CONCAT('Q3H_',query_id);
 SET Q4 = CONCAT('Q4_',query_id);
 SET Q5 = CONCAT('Q5_',query_id);
 SET Q5A = CONCAT('Q5A_',query_id);
-
 SET Q0 = CONCAT('Q0_',query_id);
+SET A1 = CONCAT('A1_',query_id);
+SET A2 = CONCAT('A2_',query_id);
+SET A3 = CONCAT('A3_',query_id);
+SET A4 = CONCAT('A4_',query_id);
+SET A5 = CONCAT('A5_',query_id);
 
 SET all_valueset_tmp = CONCAT('all_valueset_tmp_',query_id);
 SET all_concept_tmp = CONCAT('all_concept_tmp_',query_id);
@@ -388,7 +407,7 @@ SET rule_tmp = CONCAT('rule_tmp_',query_id);
 SET rule_det_tmp = CONCAT('rule_det_tmp_',query_id);
 
 -- build practice cohort -- 
-CALL buildCohortDefinition(query_id, providerOrganisation, includedOrganisation, registrationStatus, ageFrom, ageTo, gender, postcode, org_tmp, practiceCohort_tmp, store_tmp, sourceSchema);
+CALL buildCohortDefinition(query_id, providerOrganisation, includedOrganisation, registrationStatus, gender, postcode, org_tmp, practiceCohort_tmp, store_tmp, sourceSchema);
 -- build observation cohort for all valuesets to be used in the advance queries --
 CALL createValueSet('1', all_valueset_tmp);
 CALL createConcept(all_concept_tmp, all_valueset_tmp, sourceSchema);
@@ -413,21 +432,21 @@ CALL splitQueryExpression(query_id, rule_tmp, rule_det_tmp);
 CALL buildQueryExpression(query_id, rule_tmp, rule_det_tmp, practiceCohort_tmp);
 -- process the rules
 CALL processQueryExpression(query_id, query, rule_tmp, practiceCohort_tmp, registerCohort_tmp, observationCohort_tmp, store_tmp, sourceSchema);
-
 -- build final patient cohort
 CALL buildFinalPatientCohort(query_id, patientCohort_tmp, practiceCohort_tmp, rule_tmp, sourceSchema);
 
 -- remove tmp tables
 SET tempTables = CONCAT(org_tmp,',',observationCohort_tmp,',',practiceCohort_tmp,',',registerCohort_tmp,',',Q1,',',Q1A,',',Q1B,',',Q1C,',',
-Q1D,',',Q1E,',',Q1F,',',Q1G,',',Q1H,',',Q1I,',',Q1J,',',Q1K,',',Q1L,',',Q2,',',Q2A,',',Q3,',',Q3A,',',Q4,',',Q5,',',Q5A,',',Q0,',',rule_tmp,',',
-rule_det_tmp,',',all_valueset_tmp,',', all_concept_tmp);
+Q1D,',',Q1E,',',Q1F,',',Q1G,',',Q1H,',',Q1I,',',Q1J,',',Q1K,',',Q1L,',',Q2,',',Q2A,',',
+Q3,',',Q3A,',',Q3B,',',Q3C,',',Q3D,',',Q3E,',',Q3F,',',Q3G,',',Q3H,',',
+Q4,',',Q5,',',Q5A,',',Q0,',',A1,',',A2,',',A3,',',A4,',',A5,',',rule_tmp,',',rule_det_tmp,',',all_valueset_tmp,',', all_concept_tmp);
 
 CALL dropTempTables(tempTables);
 
 -- build result datasets
 CALL buildResultDatasets(query_id, patientCohort_tmp, demographics, encounters, medication, currentMedication, clinicalEvents, activeProblems, 
 dateFromEncounters, dateToEncounters, dateFromMedication, dateToMedication, dateFromClinicalEvents, dateToClinicalEvents, selectedClinicalTypes, 
-selectedEncounterValueSet, selectedMedicationValueSet, selectedClinicalEventValueSet, procedure_req_tmp, diagnostic_tmp, warning_tmp ,allergy_tmp,referral_req_tmp,
+selectedEncounterValueSet, selectedMedicationValueSet, selectedClinicalEventValueSet, procedure_req_tmp, diagnostic_tmp, warning_tmp , allergy_tmp, referral_req_tmp,
 encounterValueSet_tmp, encounterConcept_tmp, medicationValueSet_tmp, medicationConcept_tmp, clinicalEventValueSet_tmp, clinicalEventConcept_tmp, 
 sourceSchema, store_tmp, @eventTypes);
 SET eventTypes = @eventTypes;
@@ -437,7 +456,7 @@ CALL buildRegistries(query_id, patientCohort_tmp, targetPercentage);
 
 -- build dataset outputs
 CALL buildDatasetOutputTables(selectedDemographicFields, selectedEncounterFields, selectedMedicationFields, selectedClinicalEventFields, 
-eventTypes, store_tmp, sourceSchema, query_id, patientCohort_tmp,procedure_req_tmp,diagnostic_tmp,warning_tmp,allergy_tmp,referral_req_tmp);
+eventTypes, store_tmp, sourceSchema, query_id, patientCohort_tmp, procedure_req_tmp, diagnostic_tmp, warning_tmp, allergy_tmp, referral_req_tmp);
   
 -- build time series
 CALL buildTimeSeries(timeSeries, seriesTable, seriesField, seriesEncounterValueSet, seriesMedicationValueSet, seriesClinicalEventValueSet, 

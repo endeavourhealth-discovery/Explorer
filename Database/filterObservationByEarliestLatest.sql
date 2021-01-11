@@ -116,7 +116,12 @@ BEGIN
 
   END IF;
 
-     SET @sql = CONCAT('ALTER TABLE ', p_earliestlatestobservationtab,' ADD INDEX pat_idx(patient_id)');
+     SET @sql = CONCAT('ALTER TABLE ', p_earliestlatestobservationtab,' ADD INDEX pat_idx (patient_id)');
+     PREPARE stmt FROM @sql;
+     EXECUTE stmt;
+     DEALLOCATE PREPARE stmt;
+
+     SET @sql = CONCAT('ALTER TABLE ', p_earliestlatestobservationtab,' ADD INDEX org_idx (organization_id)');
      PREPARE stmt FROM @sql;
      EXECUTE stmt;
      DEALLOCATE PREPARE stmt;

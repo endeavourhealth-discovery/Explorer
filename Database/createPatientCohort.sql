@@ -6,7 +6,6 @@ DELIMITER //
 CREATE PROCEDURE createPatientCohort(
      p_org VARCHAR(255),
      p_regStatus VARCHAR(255),
-     p_ageRange VARCHAR(255),
      p_genderRange VARCHAR(255),
      p_postcodeRange VARCHAR(255),
      p_practiceCohortTab VARCHAR(64),
@@ -16,7 +15,6 @@ CREATE PROCEDURE createPatientCohort(
 BEGIN
 
    DECLARE p_death VARCHAR(100) DEFAULT NULL;
-   -- DECLARE where_clause_1 VARCHAR(1000) DEFAULT NULL;
    DECLARE regstatus_1 VARCHAR(255) DEFAULT NULL;
    DECLARE regstatus_2 VARCHAR(255) DEFAULT NULL;
 
@@ -24,19 +22,19 @@ BEGIN
     BEGIN
       GET DIAGNOSTICS CONDITION 1
         @code = RETURNED_SQLSTATE, @msg = MESSAGE_TEXT;
-        CALL log_errors(p_query_id, 'createPatientCohort',@code,@msg,now());
+        CALL log_errors(p_query_id, 'createPatientCohort', @code, @msg, now());
         RESIGNAL; -- rethrow the error
    END;
 
    IF p_regStatus <> '1' THEN
-    SET p_death = 'p.date_of_death IS NULL';
-    SET regstatus_1 = p_regStatus;
-    SET regstatus_2 = REPLACE(p_regStatus,'e.','e2.');
-    SET regstatus_2 = REPLACE(regstatus_2,'c.','c3.');
+      SET p_death = 'p.date_of_death IS NULL';
+      SET regstatus_1 = p_regStatus;
+      SET regstatus_2 = REPLACE(p_regStatus,'e.','e2.');
+      SET regstatus_2 = REPLACE(regstatus_2,'c.','c3.');
    ELSE
-    SET p_death = '1';
-    SET regstatus_1 = '1';
-    SET regstatus_2 = '1';
+      SET p_death = '1';
+      SET regstatus_1 = '1';
+      SET regstatus_2 = '1';
    END IF;
 
    DROP TEMPORARY TABLE IF EXISTS qry_tmp;
@@ -70,7 +68,6 @@ BEGIN
                   WHERE ',regstatus_2,' 
                   AND e2.person_id = e.person_id AND e2.organization_id = e.organization_id) 
      AND ',p_org,' 
-     AND ',p_ageRange,' 
      AND ',p_genderRange,' 
      AND ',p_postcodeRange,' 
      AND ',p_death);
@@ -79,36 +76,30 @@ BEGIN
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;
 
-   ALTER TABLE qry_tmp ADD INDEX pat_idx(patient_id);
-   ALTER TABLE qry_tmp ADD INDEX org_idx(organization_id);
+   ALTER TABLE qry_tmp ADD INDEX pat_idx (patient_id);
+   ALTER TABLE qry_tmp ADD INDEX org_idx (organization_id);
   
-
    SET @sql = CONCAT('DROP TABLE IF EXISTS ', p_practiceCohortTab);
    PREPARE stmt FROM @sql;
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;
 
-   -- filter patients to create the patient cohort
+   -- filter patients to create the practice cohort
    SET @sql = CONCAT('CREATE TABLE ', p_practiceCohortTab, ' 
-   AS SELECT DISTINCT c.person_id, c.patient_id, c.organization_id, c.date_registered, c.age 
-   FROM qry_tmp c ');
-
-   -- WHERE ', where_clause_1);
-
+   AS SELECT DISTINCT c.person_id, c.patient_id, c.organization_id, c.date_registered, c.age, c.date_of_birth, c.date_of_death FROM qry_tmp c ');
    PREPARE stmt FROM @sql;
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;
 
-   SET @sql = CONCAT('ALTER TABLE ', p_practiceCohortTab, ' ADD INDEX pat_idx(patient_id)');
+   SET @sql = CONCAT('ALTER TABLE ', p_practiceCohortTab, ' ADD INDEX pat_idx (patient_id)');
    PREPARE stmt FROM @sql;
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;
 
-   SET @sql = CONCAT('ALTER TABLE ', p_practiceCohortTab, ' ADD INDEX org_idx(organization_id)');
+   SET @sql = CONCAT('ALTER TABLE ', p_practiceCohortTab, ' ADD INDEX org_idx (organization_id)');
    PREPARE stmt FROM @sql;
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;
-
 
 END//
 DELIMITER ;

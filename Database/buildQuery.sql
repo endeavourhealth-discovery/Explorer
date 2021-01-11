@@ -16,7 +16,7 @@ IN p_includedPeriodType VARCHAR(20),
 IN p_includeValuesettab VARCHAR(64),
 IN p_includeConcepttab VARCHAR(64),
 IN p_observationCohortTab VARCHAR(64),
-IN p_queryType INT,
+IN p_queryType VARCHAR(2),
 IN p_includedEarliestLatest VARCHAR(20), 
 IN p_includedOperator VARCHAR(50), 
 IN p_includedEntryValue VARCHAR(20), 
@@ -37,9 +37,17 @@ IN p_registrationDateFrom VARCHAR(20),
 IN p_registrationDateTo VARCHAR(20),  
 IN p_registrationPeriodValue VARCHAR(10),
 IN p_registrationPeriodType VARCHAR(20),
+IN p_ageFrom VARCHAR(20),
+IN p_ageTo VARCHAR(20),
+IN p_includedDob VARCHAR(20), 
+IN p_includedDiagnosisAnyAll VARCHAR(10), 
+IN p_includedDiagnosisValueSet VARCHAR(1000),
+IN p_incDiagnosisValueSetTab VARCHAR(64), 
+IN p_incDiagnosisConceptTab VARCHAR(64), 
+IN p_diagnosis_tmp VARCHAR(64),  
 IN p_schema VARCHAR(255),
 IN p_storetab VARCHAR(64),
-IN p_cohort VARCHAR(64),
+IN p_queryCohort VARCHAR(64),
 IN p_queryNumber VARCHAR(20)
 )
 BEGIN
@@ -47,14 +55,16 @@ BEGIN
 DECLARE includedValueSetString VARCHAR(255);
 DECLARE includedTestedValueSetString VARCHAR(255);
 DECLARE includedFollowedByValueSetString VARCHAR(255);
+DECLARE includedDiagnosisValueSetString VARCHAR(255);
 DECLARE timeperioddaterange VARCHAR(255);
 DECLARE regPeriodRange VARCHAR(500) DEFAULT NULL;
+DECLARE agerange VARCHAR(500) DEFAULT NULL;
 
   DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
       GET DIAGNOSTICS CONDITION 1
         @code = RETURNED_SQLSTATE, @msg = MESSAGE_TEXT;
-        CALL log_errors(p_query_id,'buildQuery',@code,@msg,now());
+        CALL log_errors(p_query_id, 'buildQuery', @code, @msg, now());
         RESIGNAL; -- rethrow the error
     END;
 
@@ -80,10 +90,13 @@ SET p_includedAreNot = IF(p_includedAreNot = '', NULL, p_includedAreNot);
 SET p_includedAnyAllFollowedBy = IF(p_includedAnyAllFollowedBy = '', NULL, p_includedAnyAllFollowedBy);  
 SET p_includedFollowedByValueSet = IF(p_includedFollowedByValueSet = '', NULL, p_includedFollowedByValueSet);  
 
+SET p_includedDiagnosisAnyAll = IF(p_includedDiagnosisAnyAll = '', NULL, p_includedDiagnosisAnyAll); 
+SET p_includedDiagnosisValueSet = IF(p_includedDiagnosisValueSet = '', NULL, p_includedDiagnosisValueSet);  
+
 SET p_greaterless = IF(p_greaterless = '', NULL, p_greaterless);  
 SET p_greaterlessvalue = IF(p_greaterlessvalue = '', NULL, p_greaterlessvalue);  
 
- IF p_queryType = 1 THEN -- filter by query type 1
+ IF p_queryType = '1' THEN -- filter by query type 1
 
     IF p_withWithout IS NOT NULL AND
        p_includedAnyAll IS NOT NULL AND
@@ -91,20 +104,20 @@ SET p_greaterlessvalue = IF(p_greaterlessvalue = '', NULL, p_greaterlessvalue);
       
       CALL getValueSetString(p_includedValueSet, p_storetab, @includedValueSetString);
       SET includedValueSetString = @includedValueSetString;
-      -- create includeexclude valueset
+      -- create valueset
       CALL createValueSet(includedValueSetString, p_includeValuesettab);
-      -- create concept from includeexclude valueset
+      -- create concept from valueset
       CALL createConcept(p_includeConcepttab, p_includeValuesettab, p_schema);
-      -- get time period date range string
+      -- get date range string
       SET timeperioddaterange = getTimePeriodDateRange(p_includedDateFrom, p_includedDateTo, p_includedPeriodValue, p_includedPeriodType, p_includedPeriodOperator,'Y');    
-      -- build include exclude string
+      -- build query expression table
       CALL runBuildQuery(p_query_id, p_withWithout, p_includedAnyAll, timeperioddaterange, p_includeConcepttab, p_observationCohortTab, NULL, NULL, NULL, NULL, 
-      NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 
-      p_cohort, p_queryNumber);
+      NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
+      NULL, NULL, NULL, NULL, '1', p_queryCohort, p_queryNumber);
 
     END IF;
 
- ELSEIF p_queryType = 2 THEN -- filter by query type 2
+ ELSEIF p_queryType = '2' THEN -- filter by query type 2
 
     IF p_withWithout IS NOT NULL AND
        p_includedAnyAll IS NOT NULL AND
@@ -115,20 +128,20 @@ SET p_greaterlessvalue = IF(p_greaterlessvalue = '', NULL, p_greaterlessvalue);
 
       CALL getValueSetString(p_includedValueSet, p_storetab, @includedValueSetString);
       SET includedValueSetString = @includedValueSetString;
-      -- create includeexclude valueset
+      -- create valueset
       CALL createValueSet(includedValueSetString, p_includeValuesettab);
-      -- create concept from includeexclude valueset
+      -- create concept from valueset
       CALL createConcept(p_includeConcepttab, p_includeValuesettab, p_schema);
-      -- get time period date range string
+      -- get date range string
       SET timeperioddaterange = getTimePeriodDateRange(p_includedDateFrom, p_includedDateTo, p_includedPeriodValue, p_includedPeriodType, p_includedPeriodOperator,'Y');
-      -- build include exclude string
+      -- build query expression table
       CALL runBuildQuery(p_query_id, p_withWithout, p_includedAnyAll, timeperioddaterange, p_includeConcepttab, p_observationCohortTab, p_observation_tmp, p_includedEarliestLatest, p_includedOperator, p_includedEntryValue, 
-      NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, 
-      p_cohort, p_queryNumber);
+      NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+      NULL, NULL, NULL, NULL, '2', p_queryCohort, p_queryNumber);
 
     END IF;
 
- ELSEIF p_queryType = 3 THEN -- filter by query type 3
+ ELSEIF p_queryType = '3' THEN -- filter by query type 3
 
     IF p_withWithout IS NOT NULL AND
        p_includedAnyAll IS NOT NULL AND
@@ -140,27 +153,53 @@ SET p_greaterlessvalue = IF(p_greaterlessvalue = '', NULL, p_greaterlessvalue);
       -- valueset
       CALL getValueSetString(p_includedValueSet, p_storetab, @includedValueSetString);
       SET includedValueSetString = @includedValueSetString;
-      -- create includeexclude valueset
+      -- create valueset
       CALL createValueSet(includedValueSetString, p_includeValuesettab);
-      -- create concept from includeexclude valueset
+      -- create concept from valueset
       CALL createConcept(p_includeConcepttab, p_includeValuesettab, p_schema);
       -- tested valueset
       CALL getValueSetString(p_includedTestedValueSet, p_storetab, @includedTestedValueSetString);
       SET includedTestedValueSetString = @includedTestedValueSetString;
-      -- create includeexclude valueset
+      -- create valueset
       CALL createValueSet(includedTestedValueSetString, p_includeTestedValuesettab);
-      -- create concept from includeexclude valueset
+      -- create concept from valueset
       CALL createConcept(p_includeTestedConcepttab, p_includeTestedValuesettab, p_schema);
-      -- get time period date range string
+
+      IF p_includedDiagnosisValueSet IS NOT NULL THEN 
+            -- diagnosis value set
+            CALL getValueSetString(p_includedDiagnosisValueSet, p_storetab, @includedDiagnosisValueSetString);
+            SET includedDiagnosisValueSetString = @includedDiagnosisValueSetString;
+            -- create diagnosis valueset
+            CALL createValueSet(includedDiagnosisValueSetString, p_incDiagnosisValueSetTab);
+            -- create diagnosis concept from valueset
+            CALL createConcept(p_incDiagnosisConceptTab, p_incDiagnosisValueSetTab, p_schema);
+      ELSE
+            SET p_incDiagnosisConceptTab = NULL;
+      END IF; 
+
+      -- get patient's age
+      SET p_ageFrom = IF(p_ageFrom = '', NULL, p_ageFrom);
+      SET p_ageTo = IF(p_ageTo = '', NULL, p_ageTo);
+
+      IF (p_ageFrom IS NOT NULL) OR (p_ageTo IS NOT NULL) THEN
+         SET agerange = getAgeDateRangeString(p_ageFrom, p_ageTo, NULL, NULL, NULL, NULL, 1);
+      ELSE
+         SET agerange = NULL;
+      END IF;
+
+      -- include dob year
+      SET p_includedDob = IF(p_includedDob = '', NULL, p_includedDob);
+
+      -- get date range string
       SET timeperioddaterange = getTimePeriodDateRange(p_includedDateFrom, p_includedDateTo, p_includedPeriodValue, p_includedPeriodType, p_includedPeriodOperator,'Y');
-      -- build include exclude string
+      -- build query expression table
       CALL runBuildQuery(p_query_id, p_withWithout, p_includedAnyAll, timeperioddaterange, p_includeConcepttab, p_observationCohortTab, p_observation_tmp, p_includedEarliestLatest, NULL, NULL, 
-      p_includedAnyAllTested, p_includeTestedConcepttab, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3, 
-      p_cohort, p_queryNumber);
+      p_includedAnyAllTested, p_includeTestedConcepttab, NULL, NULL, NULL, NULL, NULL, NULL, NULL, agerange, 
+      p_includedDiagnosisAnyAll, p_includedDob, p_incDiagnosisConceptTab, p_diagnosis_tmp, '3', p_queryCohort, p_queryNumber);
 
     END IF;
 
- ELSEIF p_queryType = 4 THEN -- filter by query type 4
+ ELSEIF p_queryType = '4' THEN -- filter by query type 4
 
     IF p_withWithout IS NOT NULL AND
        p_includedAnyAll IS NOT NULL AND
@@ -172,27 +211,27 @@ SET p_greaterlessvalue = IF(p_greaterlessvalue = '', NULL, p_greaterlessvalue);
       -- valueset
       CALL getValueSetString(p_includedValueSet, p_storetab, @includedValueSetString);
       SET includedValueSetString = @includedValueSetString;
-      -- create includeexclude valueset
+      -- create valueset
       CALL createValueSet(includedValueSetString, p_includeValuesettab);
-      -- create concept from includeexclude valueset
+      -- create concept from valueset
       CALL createConcept(p_includeConcepttab, p_includeValuesettab, p_schema);
       -- followed by valueset
       CALL getValueSetString(p_includedFollowedByValueSet, p_storetab, @includedFollowedByValueSetString);
       SET includedFollowedByValueSetString = @includedFollowedByValueSetString;
-      -- create includeexclude valueset
+      -- create valueset
       CALL createValueSet(includedFollowedByValueSetString, p_includedFollowedByValuesettab);
-      -- create concept from includeexclude valueset
+      -- create concept from valueset
       CALL createConcept(p_includedFollowedByConcepttab, p_includedFollowedByValuesettab, p_schema);
-      -- get time period date range string
+      -- get date range string
       SET timeperioddaterange = getTimePeriodDateRange(p_includedDateFrom, p_includedDateTo, p_includedPeriodValue, p_includedPeriodType, p_includedPeriodOperator,'N');
-      -- build include exclude string
+      -- build query expression table
       CALL runBuildQuery(p_query_id, p_withWithout, p_includedAnyAll, timeperioddaterange, p_includeConcepttab, p_observationCohortTab, p_observation_tmp, NULL, NULL, NULL, 
-      NULL, NULL, p_includedAreNot, p_includedAnyAllFollowedBy, p_includedFollowedByConcepttab, NULL, NULL, NULL, NULL, 4, 
-      p_cohort, p_queryNumber);
+      NULL, NULL, p_includedAreNot, p_includedAnyAllFollowedBy, p_includedFollowedByConcepttab, NULL, NULL, NULL, NULL, NULL, 
+      NULL, NULL, NULL, NULL, '4', p_queryCohort, p_queryNumber);
 
     END IF;
     
- ELSEIF p_queryType = 5 THEN -- filter by query type 5
+ ELSEIF p_queryType = '5' THEN -- filter by query type 5
     
     IF p_withWithout IS NOT NULL AND
        p_includedAnyAll IS NOT NULL AND
@@ -202,20 +241,20 @@ SET p_greaterlessvalue = IF(p_greaterlessvalue = '', NULL, p_greaterlessvalue);
 
       CALL getValueSetString(p_includedValueSet, p_storetab, @includedValueSetString);
       SET includedValueSetString = @includedValueSetString;
-      -- create includeexclude valueset
+      -- create valueset
       CALL createValueSet(includedValueSetString, p_includeValuesettab);
-      -- create concept from includeexclude valueset
+      -- create concept from valueset
       CALL createConcept(p_includeConcepttab, p_includeValuesettab, p_schema);
-      -- get time period date range string
+      -- get date range string
       SET timeperioddaterange = getTimePeriodDateRange(p_includedDateFrom, p_includedDateTo, p_includedPeriodValue, p_includedPeriodType, p_includedPeriodOperator,'Y');
-      -- build include exclude string
+      -- build query expression table
       CALL runBuildQuery(p_query_id, p_withWithout, p_includedAnyAll, timeperioddaterange, p_includeConcepttab, p_observationCohortTab, p_observation_tmp, NULL, NULL, NULL, 
-      NULL, NULL, NULL, NULL, NULL, p_greaterless, p_greaterlessvalue, NULL, NULL, 5, 
-      p_cohort, p_queryNumber);
+      NULL, NULL, NULL, NULL, NULL, p_greaterless, p_greaterlessvalue, NULL, NULL, NULL, 
+      NULL, NULL, NULL, NULL, '5', p_queryCohort, p_queryNumber);
 
     END IF;   
 
- ELSEIF p_queryType = 0 THEN 
+ ELSEIF p_queryType = '0' THEN 
 
   SET p_registrationExclude = UPPER(p_registrationExclude);
   SET p_registrationExclude = IF(p_registrationExclude = 'EXCLUDE','NOT EXISTS', IF(p_registrationExclude = 'INCLUDE','EXISTS',''));
@@ -233,9 +272,27 @@ SET p_greaterlessvalue = IF(p_greaterlessvalue = '', NULL, p_greaterlessvalue);
      SET regPeriodRange = '1';
   END IF;
 
+  -- build query expression table
   CALL runBuildQuery(p_query_id, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
-  NULL, NULL, NULL, NULL, NULL, NULL, NULL, regPeriodRange, p_registrationExclude, 0, 
-  p_cohort, p_queryNumber);
+  NULL, NULL, NULL, NULL, NULL, NULL, NULL, regPeriodRange, p_registrationExclude, NULL, 
+  NULL, NULL, NULL, NULL, '0', p_queryCohort, p_queryNumber);
+
+ ELSEIF p_queryType = 'A' THEN 
+
+  -- get age or date range
+  SET p_ageFrom = IF(p_ageFrom = '', NULL, p_ageFrom);
+  SET p_ageTo = IF(p_ageTo = '', NULL, p_ageTo);
+
+  IF (p_ageFrom IS NOT NULL) OR (p_ageTo IS NOT NULL) THEN
+     SET agerange = getAgeDateRangeString(p_ageFrom, p_ageTo, NULL, NULL, NULL, NULL, 1);
+  ELSE
+    SET agerange = '1';
+  END IF;
+
+  -- build query expression table
+  CALL runBuildQuery(p_query_id, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
+  NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, agerange, 
+  NULL, NULL, NULL, NULL, 'A', p_queryCohort, p_queryNumber);
 
  END IF;
 

@@ -23,7 +23,7 @@ BEGIN
     BEGIN
       GET DIAGNOSTICS CONDITION 1
         @code = RETURNED_SQLSTATE, @msg = MESSAGE_TEXT;
-        CALL log_errors(p_query_id,'populateRules', @code, @msg, now());
+        CALL log_errors(p_query_id, 'populateRules', @code, @msg, now());
         RESIGNAL; -- rethrow the error
     END;
 

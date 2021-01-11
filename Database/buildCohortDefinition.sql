@@ -8,8 +8,6 @@ CREATE PROCEDURE buildCohortDefinition(
      p_providerOrganisation VARCHAR(5000),
      p_includedOrganisation VARCHAR(5000),
      p_registrationStatus VARCHAR(255),
-     p_ageFrom VARCHAR(20),
-     p_ageTo VARCHAR(20),
      p_gender VARCHAR(20),
      p_postcode VARCHAR(20),
      p_organisationTab VARCHAR(64),
@@ -20,12 +18,10 @@ CREATE PROCEDURE buildCohortDefinition(
 
 BEGIN
 
-  DECLARE agerange VARCHAR(500) DEFAULT NULL;
   DECLARE orgrange VARCHAR(255) DEFAULT NULL;
   DECLARE regstatus VARCHAR(255) DEFAULT NULL;
   DECLARE genderrange VARCHAR(255) DEFAULT NULL;
   DECLARE postcoderange VARCHAR(255) DEFAULT NULL;
---  DECLARE regPeriodRange VARCHAR(500) DEFAULT NULL;
 
   DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -50,19 +46,11 @@ BEGIN
   IF p_registrationStatus IS NOT NULL THEN
       SET regstatus = getRegStatusString(p_registrationStatus);
   END IF;
-  
-  -- get age or date range
-  SET p_ageFrom = IF(p_ageFrom = '', NULL, p_ageFrom);
-  SET p_ageTo = IF(p_ageTo = '', NULL, p_ageTo);
 
-  IF (p_ageFrom IS NOT NULL) OR (p_ageTo IS NOT NULL) THEN
-     SET agerange = getAgeDateRangeString(p_ageFrom, p_ageTo, NULL, NULL, NULL, NULL, 1);
-  ELSE
-    SET agerange = '1';
-  END IF;
   -- get gender
   SET p_gender = IF(p_gender = '', NULL, p_gender);
   SET genderrange = getGenderString(p_gender); 
+
   -- get postcode
   SET p_postcode = IF(p_postcode = '', NULL, p_postcode);
   IF p_postcode IS NOT NULL THEN
@@ -70,8 +58,9 @@ BEGIN
   ELSE
     SET postcoderange = '1';
   END IF;
+  
   -- create the practice patient cohort
-  CALL createPatientCohort(orgrange, regstatus, agerange, genderrange, postcoderange, p_practiceCohortTab, p_schema);
+  CALL createPatientCohort(orgrange, regstatus, genderrange, postcoderange, p_practiceCohortTab, p_schema);
 
 END//
 DELIMITER ;
