@@ -29,11 +29,20 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
     public void deleteValueSetCode(String id) throws Exception {
 
-        id = "WHERE id in ("+id+")";
+        String ids[] = id.split(",");
 
-        String sql = "DELETE FROM dashboards.value_set_codes " +id;
+        StringBuilder builder = new StringBuilder();
+
+        for( int i = 0 ; i < ids.length; i++ ) {
+            builder.append("?,");
+        }
+
+        String sql = "DELETE FROM dashboards.value_set_codes WHERE id in ("+builder.deleteCharAt( builder.length() -1 ).toString()+")";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            for (int i = 1; i <= ids.length; i++) {
+                stmt.setInt(i, Integer.parseInt(ids[i-1]));
+            }
             stmt.executeUpdate();
         }
     }
@@ -94,13 +103,23 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
     public void deleteDashboard(String dashboardId) throws Exception {
 
-        dashboardId = "WHERE dashboard_id in ("+dashboardId+")";
+        String ids[] = dashboardId.split(",");
 
-        String sql = "DELETE FROM dashboards.dashboard_library " +dashboardId;
+        StringBuilder builder = new StringBuilder();
+
+        for( int i = 0 ; i < ids.length; i++ ) {
+            builder.append("?,");
+        }
+
+        String sql = "DELETE FROM dashboards.dashboard_library WHERE dashboard_id in ("+builder.deleteCharAt( builder.length() -1 ).toString()+")";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            for (int i = 1; i <= ids.length; i++) {
+                stmt.setInt(i, Integer.parseInt(ids[i-1]));
+            }
             stmt.executeUpdate();
         }
+
     }
 
     public void saveDashboard(String type, String name, String dashboardId, String jsonQuery) throws Exception {
@@ -144,11 +163,20 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
     public void deleteQuery(String id) throws Exception {
 
-        id = "WHERE id in ("+id+")";
+        String ids[] = id.split(",");
 
-        String sql = "DELETE FROM dashboards.query_library " +id;
+        StringBuilder builder = new StringBuilder();
+
+        for( int i = 0 ; i < ids.length; i++ ) {
+            builder.append("?,");
+        }
+
+        String sql = "DELETE FROM dashboards.query_library WHERE id in ("+builder.deleteCharAt( builder.length() -1 ).toString()+")";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            for (int i = 1; i <= ids.length; i++) {
+                stmt.setInt(i, Integer.parseInt(ids[i-1]));
+            }
             stmt.executeUpdate();
         }
     }
@@ -197,16 +225,31 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
     }
 
     public void deleteValueSet(String id) throws Exception {
+        String ids[] = id.split(",");
 
-        String sql = "DELETE FROM dashboards.value_sets WHERE id in ("+id+")";
+        StringBuilder builder = new StringBuilder();
+
+        for( int i = 0 ; i < ids.length; i++ ) {
+            builder.append("?,");
+        }
+
+        String params = builder.deleteCharAt( builder.length() -1 ).toString();
+
+        String sql = "DELETE FROM dashboards.value_sets WHERE id in ("+params+")";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            for (int i = 1; i <= ids.length; i++) {
+                stmt.setInt(i, Integer.parseInt(ids[i-1]));
+            }
             stmt.executeUpdate();
         }
 
-        sql = "DELETE FROM dashboards.value_set_codes WHERE value_set_id in ("+id+")";
+        sql = "DELETE FROM dashboards.value_set_codes WHERE value_set_id in ("+params+")";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            for (int i = 1; i <= ids.length; i++) {
+                stmt.setInt(i, Integer.parseInt(ids[i-1]));
+            }
             stmt.executeUpdate();
         }
 
@@ -464,29 +507,38 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
     public QueryLibraryResult getQueryLibrary(String selectedTypeString) throws Exception {
         QueryLibraryResult result = new QueryLibraryResult();
 
-        selectedTypeString = selectedTypeString.replaceAll(",","','");
-        selectedTypeString = "'" + selectedTypeString + "'";
-        selectedTypeString = "WHERE type in ("+selectedTypeString+")";
+        String ids[] = selectedTypeString.split(",");
+
+        StringBuilder builder = new StringBuilder();
+
+        for( int i = 0 ; i < ids.length; i++ ) {
+            builder.append("?,");
+        }
 
         String sql = "";
         String sqlCount = "";
+        String params = builder.deleteCharAt( builder.length() -1 ).toString();
 
         sql = "SELECT id, type, name, registry_name, denominator_query, updated, query " +
-                "FROM dashboards.query_library " +
-                 selectedTypeString+
-                "order by type,name";
+                "FROM dashboards.query_library WHERE type in ("+params+")"+
+                " order by type,name";
 
         sqlCount = "SELECT count(1) " +
-                "FROM dashboards.query_library " +
-                 selectedTypeString;
+                "FROM dashboards.query_library WHERE type in ("+params+")";
 
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            for (int i = 1; i <= ids.length; i++) {
+                statement.setString(i, ids[i-1]);
+            }
             try (ResultSet resultSet = statement.executeQuery()) {
                 result.setResults(getQueryLibraryList(resultSet));
             }
         }
 
         try (PreparedStatement statement = conn.prepareStatement(sqlCount)) {
+            for (int i = 1; i <= ids.length; i++) {
+                statement.setString(i, ids[i-1]);
+            }
             try (ResultSet resultSet = statement.executeQuery()) {
                 resultSet.next();
                 result.setLength(resultSet.getInt(1));
@@ -525,23 +577,31 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         String sql = "";
         String sqlCount = "";
 
-        selectedTypeString = selectedTypeString.replaceAll(",","','");
-        selectedTypeString = "'" + selectedTypeString + "'";
-        selectedTypeString = "AND type in ("+selectedTypeString+")";
+        String ids[] = selectedTypeString.split(",");
+
+        StringBuilder builder = new StringBuilder();
+
+        for( int i = 0 ; i < ids.length; i++ ) {
+            builder.append("?,");
+        }
+
+        String params = builder.deleteCharAt( builder.length() -1 ).toString();
+
 
         sql = "SELECT type, data_type, original_code, original_term, snomed_id, updated, id " +
                 "FROM dashboards.value_set_codes " +
-                "WHERE value_set_id = ? " +
-                selectedTypeString +
+                "WHERE value_set_id = ? and type in ("+params+")"+
                 " order by type, original_term";
 
         sqlCount = "SELECT count(1) " +
                 "FROM dashboards.value_set_codes " +
-                "WHERE value_set_id = ? " +
-                selectedTypeString;
+                "WHERE value_set_id = ? and type in ("+params+")";
 
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
             statement.setString(1, valueSetId);
+            for (int i = 1; i <= ids.length; i++) {
+                statement.setString(i+1, ids[i-1]);
+            }
             try (ResultSet resultSet = statement.executeQuery()) {
                 result.setResults(getValueSetList(resultSet));
             }
@@ -549,6 +609,9 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
         try (PreparedStatement statement = conn.prepareStatement(sqlCount)) {
             statement.setString(1, valueSetId);
+            for (int i = 1; i <= ids.length; i++) {
+                statement.setString(i+1, ids[i-1]);
+            }
             try (ResultSet resultSet = statement.executeQuery()) {
                 resultSet.next();
                 result.setLength(resultSet.getInt(1));
@@ -584,29 +647,40 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
     public ValueSetLibraryResult getValueSetLibrary(String selectedTypeString) throws Exception {
         ValueSetLibraryResult result = new ValueSetLibraryResult();
 
-        selectedTypeString = selectedTypeString.replaceAll(",","','");
-        selectedTypeString = "'" + selectedTypeString + "'";
-        selectedTypeString = "WHERE type in ("+selectedTypeString+")";
+        String ids[] = selectedTypeString.split(",");
+
+        StringBuilder builder = new StringBuilder();
+
+        for( int i = 0 ; i < ids.length; i++ ) {
+            builder.append("?,");
+        }
+
+        String params = builder.deleteCharAt( builder.length() -1 ).toString();
 
         String sql = "";
         String sqlCount = "";
 
         sql = "SELECT id, type, name, updated " +
-                "FROM dashboards.value_sets " +
-                selectedTypeString+
-                "order by type,name";
+                "FROM dashboards.value_sets where type in ("+params+")"+
+                " order by type,name";
 
         sqlCount = "SELECT count(1) " +
-                "FROM dashboards.value_sets " +
-                selectedTypeString;
+                "FROM dashboards.value_sets where type in ("+params+")";
 
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            for (int i = 1; i <= ids.length; i++) {
+                statement.setString(i, ids[i-1]);
+            }
+
             try (ResultSet resultSet = statement.executeQuery()) {
                 result.setResults(getValueSetLibraryList(resultSet));
             }
         }
 
         try (PreparedStatement statement = conn.prepareStatement(sqlCount)) {
+            for (int i = 1; i <= ids.length; i++) {
+                statement.setString(i, ids[i-1]);
+            }
             try (ResultSet resultSet = statement.executeQuery()) {
                 resultSet.next();
                 result.setLength(resultSet.getInt(1));
@@ -639,29 +713,38 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
     public DashboardLibraryResult getDashboardLibrary(String selectedTypeString) throws Exception {
         DashboardLibraryResult result = new DashboardLibraryResult();
 
-        selectedTypeString = selectedTypeString.replaceAll(",","','");
-        selectedTypeString = "'" + selectedTypeString + "'";
-        selectedTypeString = "WHERE type in ("+selectedTypeString+")";
+        String ids[] = selectedTypeString.split(",");
+
+        StringBuilder builder = new StringBuilder();
+
+        for( int i = 0 ; i < ids.length; i++ ) {
+            builder.append("?,");
+        }
 
         String sql = "";
         String sqlCount = "";
+        String params = builder.deleteCharAt( builder.length() -1 ).toString();
 
         sql = "SELECT dashboard_id, name, updated, type, query " +
-                "FROM dashboards.dashboard_library " +
-                 selectedTypeString+
+                "FROM dashboards.dashboard_library WHERE type in ("+params+")"+
                 " order by type,name";
 
         sqlCount = "SELECT count(1) " +
-                " FROM dashboards.dashboard_library "+
-                 selectedTypeString;
+                " FROM dashboards.dashboard_library WHERE type in ("+params+")";
 
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            for (int i = 1; i <= ids.length; i++) {
+                statement.setString(i, ids[i-1]);
+            }
             try (ResultSet resultSet = statement.executeQuery()) {
                 result.setResults(getDashboardList(resultSet));
             }
         }
 
         try (PreparedStatement statement = conn.prepareStatement(sqlCount)) {
+            for (int i = 1; i <= ids.length; i++) {
+                statement.setString(i, ids[i-1]);
+            }
             try (ResultSet resultSet = statement.executeQuery()) {
                 resultSet.next();
                 result.setLength(resultSet.getInt(1));
@@ -697,11 +780,18 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
         List<String> charts = Arrays.asList(chartName.split("\\s*,\\s*"));
 
+        String ids[] = grouping.split(",");
+
+        StringBuilder builder = new StringBuilder();
+
+        for( int i = 0 ; i < ids.length; i++ ) {
+            builder.append("?,");
+        }
+
+        String params = builder.deleteCharAt( builder.length() -1 ).toString();
+
         if (!grouping.isEmpty()) {
-            grouping = grouping.replaceAll(",","','");
-            grouping = "'" + grouping + "'";
             ccg = grouping;
-            grouping = " and `grouping` in ("+grouping+")";
         }
 
         ChartResult result = new ChartResult();
@@ -720,6 +810,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
         List<Chart> chart = new ArrayList<>();
         Chart chartItem = null;
+        String ids2[] = new String[0];
 
         for (String chart_name : charts) {
 
@@ -727,6 +818,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
             chartItem.setName(chart_name);
 
             String temp = "";
+            String params2 = "";
 
             if (rate.equals("1")) {
                 if (chart_name.contains("(") && !chart_name.contains("CCG")) {
@@ -735,12 +827,23 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                 } else
                 if (chart_name.contains("(") && chart_name.contains("CCG")) {
                     temp = chart_name.substring(chart_name.indexOf("("));
-                    temp = temp.replaceFirst("\\(", "\\'");
-                    temp = temp.replaceAll("\\)$", "\\'");
+                    temp = temp.replaceFirst("\\(", "");
+                    temp = temp.replaceAll("\\)$", "");
                 } else
                 {
                     temp = ccg;
                 }
+
+                ids2 = temp.split(",");
+
+                builder = new StringBuilder();
+
+                for( int i = 0 ; i < ids2.length; i++ ) {
+                    builder.append("?,");
+                }
+
+                params2 = builder.deleteCharAt( builder.length() -1 ).toString();
+
             }
 
             if (cumulative.equals("1")) {
@@ -748,10 +851,10 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                     sql = "SELECT t.series_name," +
                             "floor(@running_total:=@running_total + t.series_value) as series_value " +
                             "FROM " +
-                            "( SELECT name,series_name,sum(series_value/((select sum(list_size) as list_size from dashboards.ccg_list_sizes where ccg in ("+temp+"))/100000)) as series_value "+
+                            "( SELECT name,series_name,sum(series_value/((select sum(list_size) as list_size from dashboards.ccg_list_sizes where ccg in ("+params2+"))/100000)) as series_value "+
                             "FROM dashboards.`dashboard_results_" + queryId + "` r " +
                             "where name = ? "+
-                            "and series_name between ? and ? "+grouping+" group by series_name) t " +
+                            "and series_name between ? and ? and `grouping` in ("+params+") group by series_name) t " +
                             "JOIN (SELECT @running_total:=0) r " +
                             "ORDER BY t.series_name";
                 } else {
@@ -760,7 +863,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                             "FROM " +
                             "( SELECT name,series_name,sum(series_value) as series_value "+
                             "FROM dashboards.`dashboard_results_" + queryId + "` " +
-                            "where name = ? and series_name between ? and ? "+grouping+" group by series_name) t " +
+                            "where name = ? and series_name between ? and ? and `grouping` in ("+params+") group by series_name) t " +
                             "JOIN (SELECT @running_total:=0) r " +
                             "ORDER BY t.series_name";
                 }
@@ -769,36 +872,42 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                 if (weekly.equals("1")) {
                     if (rate.equals("1")) {
                         sql = "SELECT FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) AS series_name, " +
-                                "floor(SUM(series_value/((select sum(list_size) as list_size from dashboards.ccg_list_sizes where ccg in ("+temp+"))/100000))) AS series_value " +
+                                "floor(SUM(series_value/((select sum(list_size) as list_size from dashboards.ccg_list_sizes where ccg in ("+params2+"))/100000))) AS series_value " +
                                 "FROM dashboards.`dashboard_results_" + queryId + "` r " +
                                 "where name = ? "+
-                                "and series_name between ? and ? "+grouping+
+                                "and series_name between ? and ? and `grouping` in ("+params+")"+
                                 " GROUP BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) " +
                                 "ORDER BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7))";
                     } else {
                         sql = "SELECT FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) AS series_name, " +
                                 "SUM(series_value) AS series_value " +
                                 "from dashboards.`dashboard_results_" + queryId + "` where name = ? " +
-                                "and series_name between ? and ? "+grouping+
+                                "and series_name between ? and ? and `grouping` in ("+params+")"+
                                 " GROUP BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) " +
                                 "ORDER BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7))";
                     }
                 } else {
                     if (rate.equals("1")) {
-                        sql = "SELECT series_name,floor(sum(series_value/((select sum(list_size) as list_size from dashboards.ccg_list_sizes where ccg in ("+temp+"))/100000))) as series_value from dashboards.`dashboard_results_" + queryId + "` r "+
+                        sql = "SELECT series_name,floor(sum(series_value/((select sum(list_size) as list_size from dashboards.ccg_list_sizes where ccg in ("+params2+"))/100000))) as series_value from dashboards.`dashboard_results_" + queryId + "` r "+
                                 "where name = ? "+
-                                "and series_name between ? and ? "+grouping+" group by series_name order by series_name";
+                                "and series_name between ? and ? and `grouping` in ("+params+") group by series_name order by series_name";
                     } else {
                         sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` where name = ? " +
-                                "and series_name between ? and ? " + grouping + " group by series_name order by series_name";
+                                "and series_name between ? and ? and `grouping` in ("+params+") group by series_name order by series_name";
                     }
                 }
 
             }
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
-                statement.setString(1, chart_name);
-                statement.setString(2, dateFrom);
-                statement.setString(3, dateTo);
+                for (int i = 1; i <= ids2.length; i++) {
+                    statement.setString(i, ids2[i-1]);
+                }
+                statement.setString(1+ids2.length, chart_name);
+                statement.setString(2+ids2.length, dateFrom);
+                statement.setString(3+ids2.length, dateTo);
+                for (int i = 1; i <= ids.length; i++) {
+                    statement.setString(i+3+ids2.length, ids[i-1]);
+                }
                 try (ResultSet resultSet = statement.executeQuery()) {
                     chartItem.setSeries(getSeriesFromResultSet(resultSet));
                 }
@@ -814,17 +923,33 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
     public ChartResult getDashboardCombine(String query, String chartName, String dateFrom, String dateTo, String cumulative, String grouping, String weekly, String rate) throws Exception {
         String ccg = "";
-        String seriesSQL = "";
         List<String> charts = Arrays.asList(chartName.split("\\s*,\\s*"));
-        if (!grouping.isEmpty()) {
-            grouping = grouping.replaceAll(",","','");
-            grouping = "'" + grouping + "'";
-            ccg = grouping;
-            grouping = " and `grouping` in ("+grouping+")";
+        String ids[] = grouping.split(",");
+
+        StringBuilder builder = new StringBuilder();
+
+        for( int i = 0 ; i < ids.length; i++ ) {
+            builder.append("?,");
         }
-        seriesSQL = chartName.replaceAll(",","','");
-        seriesSQL = "'" + seriesSQL + "'";
-        seriesSQL = " name in ("+seriesSQL+") ";
+
+        String params = builder.deleteCharAt( builder.length() -1 ).toString();
+
+        if (!grouping.isEmpty()) {
+            ccg = grouping;
+        }
+
+        String ids2[] = chartName.split(",");
+
+        builder = new StringBuilder();
+
+        for( int i = 0 ; i < ids2.length; i++ ) {
+            builder.append("?,");
+        }
+
+        String params2 = builder.deleteCharAt( builder.length() -1 ).toString();
+
+        String params3 = "";
+
         ChartResult result = new ChartResult();
         String sql = "";
         sql = "select id from dashboards.query_library where name = ? ";
@@ -843,6 +968,9 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         chartItem.setName(chartName);
         String ccgs = "";
         String temp = "";
+
+        String ids3[] = new String[0];
+
         if (rate.equals("1")) {
             for (String chart_name : charts) {
                 if (chart_name.contains("(") && !chart_name.contains("CCG")) {
@@ -851,8 +979,8 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                 } else
                 if (chart_name.contains("(") && chart_name.contains("CCG")) {
                     ccgs = chart_name.substring(chart_name.indexOf("("));
-                    ccgs = ccgs.replaceFirst("\\(", "\\'");
-                    ccgs = ccgs.replaceAll("\\)$", "\\'");
+                    ccgs = ccgs.replaceFirst("\\(", "");
+                    ccgs = ccgs.replaceAll("\\)$", "");
                 } else
                 {
                     ccgs = ccg;
@@ -860,16 +988,28 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                 temp+=','+ccgs;
             }
             temp = temp.replaceFirst(",","");
+
+            ids3 = temp.split(",");
+
+            builder = new StringBuilder();
+
+            for( int i = 0 ; i < ids3.length; i++ ) {
+                builder.append("?,");
+            }
+
+            params3 = builder.deleteCharAt( builder.length() -1 ).toString();
         }
+
+
         if (cumulative.equals("1")) {
             if (rate.equals("1")) {
                 sql = "SELECT t.series_name," +
                         "floor(@running_total:=@running_total + t.series_value) as series_value " +
                         "FROM " +
-                        "( SELECT name,series_name,sum(series_value/((select sum(list_size) as list_size from dashboards.ccg_list_sizes where ccg in ("+temp+"))/100000)) as series_value "+
+                        "( SELECT name,series_name,sum(series_value/((select sum(list_size) as list_size from dashboards.ccg_list_sizes where ccg in ("+params3+"))/100000)) as series_value "+
                         "FROM dashboards.`dashboard_results_" + queryId + "` r " +
-                        "where "+seriesSQL+
-                        "and series_name between ? and ? "+grouping+" group by series_name) t " +
+                        "where name in ("+params2+")"+
+                        " and series_name between ? and ? and `grouping` in ("+params+") group by series_name) t " +
                         "JOIN (SELECT @running_total:=0) r " +
                         "ORDER BY t.series_name";
             } else {
@@ -878,7 +1018,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                         "FROM " +
                         "( SELECT name,series_name,sum(series_value) as series_value "+
                         "FROM dashboards.`dashboard_results_" + queryId + "` " +
-                        "where "+seriesSQL+" and series_name between ? and ? "+grouping+" group by series_name) t " +
+                        "where name in ("+params2+") and series_name between ? and ? and `grouping` in ("+params+") group by series_name) t " +
                         "JOIN (SELECT @running_total:=0) r " +
                         "ORDER BY t.series_name";
             }
@@ -886,38 +1026,48 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
             if (weekly.equals("1")) {
                 if (rate.equals("1")) {
                     sql = "SELECT FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) AS series_name, " +
-                            "floor(SUM(series_value/((select sum(list_size) as list_size from dashboards.ccg_list_sizes where ccg in ("+temp+"))/100000))) AS series_value " +
+                            "floor(SUM(series_value/((select sum(list_size) as list_size from dashboards.ccg_list_sizes where ccg in ("+params3+"))/100000))) AS series_value " +
                             "FROM dashboards.`dashboard_results_" + queryId + "` r " +
-                            "where "+seriesSQL+
-                            "and series_name between ? and ? "+grouping+
+                            "where name in ("+params2+")"+
+                            " and series_name between ? and ? and `grouping` in ("+params+")"+
                             " GROUP BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) " +
                             "ORDER BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7))";
                 } else {
                     sql = "SELECT FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) AS series_name, " +
                             "SUM(series_value) AS series_value " +
-                            "from dashboards.`dashboard_results_" + queryId + "` where "+seriesSQL+
-                            "and series_name between ? and ? "+grouping+
+                            "from dashboards.`dashboard_results_" + queryId + "` where name in ("+params2+")"+
+                            " and series_name between ? and ? and `grouping` in ("+params+")"+
                             " GROUP BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) " +
                             "ORDER BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7))";
                 }
             } else {
                 if (rate.equals("1")) {
-                    sql = "SELECT series_name,floor(sum(series_value/((select sum(list_size) as list_size from dashboards.ccg_list_sizes where ccg in ("+temp+"))/100000))) as series_value from dashboards.`dashboard_results_" + queryId + "` r "+
-                            "where "+seriesSQL+
-                            "and series_name between ? and ? "+grouping+" group by series_name order by series_name";
+                    sql = "SELECT series_name,floor(sum(series_value/((select sum(list_size) as list_size from dashboards.ccg_list_sizes where ccg in ("+params3+"))/100000))) as series_value from dashboards.`dashboard_results_" + queryId + "` r "+
+                            "where name in ("+params2+")"+
+                            " and series_name between ? and ? and `grouping` in ("+params+") group by series_name order by series_name";
                 } else {
-                    sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` where "+seriesSQL+
-                            "and series_name between ? and ? " + grouping + " group by series_name order by series_name";
+                    sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` where name in ("+params2+")"+
+                            " and series_name between ? and ? and `grouping` in ("+params+") group by series_name order by series_name";
                 }
             }
         }
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
-            statement.setString(1, dateFrom);
-            statement.setString(2, dateTo);
+            for (int i = 1; i <= ids3.length; i++) {
+                statement.setString(i, ids3[i-1]);
+            }
+            for (int i = 1; i <= ids2.length; i++) {
+                statement.setString(i+ids3.length, ids2[i-1]);
+            }
+            statement.setString(1+ids3.length+ids2.length, dateFrom);
+            statement.setString(2+ids3.length+ids2.length, dateTo);
+            for (int i = 1; i <= ids.length; i++) {
+                statement.setString(i+2+ids3.length+ids2.length, ids[i-1]);
+            }
             try (ResultSet resultSet = statement.executeQuery()) {
                 chartItem.setSeries(getSeriesFromResultSet(resultSet));
             }
         }
+
         chart.add(chartItem);
         result.setResults(chart);
         return result;
@@ -925,9 +1075,15 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
     public Chart getDashboardSingle(String query, String chartName, String dateFrom, String dateTo, String grouping) throws Exception {
 
-        grouping = grouping.replaceAll(",","','");
-        grouping = "'" + grouping + "'";
-        grouping = " and `grouping` in ("+grouping+")";
+        String ids[] = grouping.split(",");
+
+        StringBuilder builder = new StringBuilder();
+
+        for( int i = 0 ; i < ids.length; i++ ) {
+            builder.append("?,");
+        }
+
+        String params = builder.deleteCharAt( builder.length() -1 ).toString();
 
         Chart chartItem = new Chart();
         chartItem.setName(chartName);
@@ -946,23 +1102,29 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         }
 
         sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` where name = ? "+
-                "and series_name between ? and ? "+grouping+" group by series_name order by series_name";
+                "and series_name between ? and ? and `grouping` in ("+params+") group by series_name order by series_name";
 
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
             statement.setString(1, chartName);
             statement.setString(2, dateFrom);
             statement.setString(3, dateTo);
+            for (int i = 1; i <= ids.length; i++) {
+                statement.setString(i+3, ids[i-1]);
+            }
             try (ResultSet resultSet = statement.executeQuery()) {
                 chartItem.setSeries(getSeriesFromResultSet(resultSet));
             }
         }
 
         if (chartItem.getSeries().size()==0) {
-            sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` where name = ? "+grouping+
+            sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` where name = ? and `grouping` in ("+params+")"+
                     " group by series_name order by series_name";
 
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
                 statement.setString(1, chartName);
+                for (int i = 1; i <= ids.length; i++) {
+                    statement.setString(i+1, ids[i-1]);
+                }
                 try (ResultSet resultSet = statement.executeQuery()) {
                     chartItem.setSeries(getSeriesFromResultSet(resultSet));
                 }
@@ -974,9 +1136,15 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
     public Chart getDashboardSingle(String query, String chartName, String grouping) throws Exception {
 
-        grouping = grouping.replaceAll(",","','");
-        grouping = "'" + grouping + "'";
-        grouping = " and `grouping` in ("+grouping+")";
+        String ids[] = grouping.split(",");
+
+        StringBuilder builder = new StringBuilder();
+
+        for( int i = 0 ; i < ids.length; i++ ) {
+            builder.append("?,");
+        }
+
+        String params = builder.deleteCharAt( builder.length() -1 ).toString();
 
         Chart chartItem = new Chart();
         chartItem.setName(chartName);
@@ -994,11 +1162,14 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
             }
         }
 
-        sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` where name = ? "+grouping+
+        sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` where name = ? and `grouping` in ("+params+")"+
                 " group by series_name order by series_name";
 
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
             statement.setString(1, chartName);
+            for (int i = 1; i <= ids.length; i++) {
+                statement.setString(i+1, ids[i-1]);
+            }
             try (ResultSet resultSet = statement.executeQuery()) {
                 chartItem.setSeries(getSeriesFromResultSet(resultSet));
             }
@@ -1028,11 +1199,15 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
         List<String> charts = Arrays.asList(organisations.split("\\s*,\\s*"));
 
-        if (!registries.isEmpty()) {
-            registries = registries.replaceAll(",","','");
-            registries = "'" + registries + "'";
-            registries = " and registry in ("+registries+")";
+        String ids[] = registries.split(",");
+
+        StringBuilder builder = new StringBuilder();
+
+        for( int i = 0 ; i < ids.length; i++ ) {
+            builder.append("?,");
         }
+
+        String params = builder.deleteCharAt( builder.length() -1 ).toString();
 
         ChartResult result = new ChartResult();
         String sql = "";
@@ -1047,14 +1222,17 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
             String temp = "";
 
             if (organisations.contains("CCG"))
-                sql = "SELECT registry as series_name,sum(registry_size) as series_value FROM dashboards.registries where ccg = ? " + registries +
+                sql = "SELECT registry as series_name,sum(registry_size) as series_value FROM dashboards.registries where ccg = ? and registry in ("+params+")"+
                     " GROUP BY ccg, registry order by registry_size desc";
             else
-                sql = "SELECT registry as series_name,registry_size as series_value FROM dashboards.registries where practice_name = ? " + registries +
+                sql = "SELECT registry as series_name,registry_size as series_value FROM dashboards.registries where practice_name = ? and registry in ("+params+")"+
                         " order by registry_size desc";
 
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
                 statement.setString(1, chart_name);
+                for (int i = 1; i <= ids.length; i++) {
+                    statement.setString(i+1, ids[i-1]);
+                }
                 try (ResultSet resultSet = statement.executeQuery()) {
                     chartItem.setSeries(getSeriesFromResultSet(resultSet));
                 }
@@ -1296,29 +1474,38 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
     public OrganisationGroupsResult getOrganisationGroups(String selectedTypeString) throws Exception {
         OrganisationGroupsResult result = new OrganisationGroupsResult();
 
-        selectedTypeString = selectedTypeString.replaceAll(",","','");
-        selectedTypeString = "'" + selectedTypeString + "'";
-        selectedTypeString = "WHERE type in ("+selectedTypeString+")";
+        String ids[] = selectedTypeString.split(",");
+
+        StringBuilder builder = new StringBuilder();
+
+        for( int i = 0 ; i < ids.length; i++ ) {
+            builder.append("?,");
+        }
 
         String sql = "";
         String sqlCount = "";
+        String params = builder.deleteCharAt( builder.length() -1 ).toString();
 
         sql = "SELECT id, type, name, updated " +
-                "FROM dashboards.organisation_groups " +
-                selectedTypeString+
+                "FROM dashboards.organisation_groups WHERE type in ("+params+")"+
                 "order by type,name";
 
         sqlCount = "SELECT count(1) " +
-                "FROM dashboards.organisation_groups " +
-                selectedTypeString;
+                "FROM dashboards.organisation_groups WHERE type in ("+params+")";
 
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            for (int i = 1; i <= ids.length; i++) {
+                statement.setString(i, ids[i-1]);
+            }
             try (ResultSet resultSet = statement.executeQuery()) {
                 result.setResults(getOrganisationGroupsList(resultSet));
             }
         }
 
         try (PreparedStatement statement = conn.prepareStatement(sqlCount)) {
+            for (int i = 1; i <= ids.length; i++) {
+                statement.setString(i, ids[i-1]);
+            }
             try (ResultSet resultSet = statement.executeQuery()) {
                 resultSet.next();
                 result.setLength(resultSet.getInt(1));
@@ -1430,15 +1617,31 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
     public void deleteOrganisationGroup(String id) throws Exception {
 
-        String sql = "DELETE FROM dashboards.organisation_groups WHERE id in ("+id+")";
+        String ids[] = id.split(",");
+
+        StringBuilder builder = new StringBuilder();
+
+        for( int i = 0 ; i < ids.length; i++ ) {
+            builder.append("?,");
+        }
+
+        String params = builder.deleteCharAt( builder.length() -1 ).toString();
+
+        String sql = "DELETE FROM dashboards.organisation_groups WHERE id in ("+params+")";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            for (int i = 1; i <= ids.length; i++) {
+                stmt.setInt(i, Integer.parseInt(ids[i-1]));
+            }
             stmt.executeUpdate();
         }
 
-        sql = "DELETE FROM dashboards.organisations WHERE organisation_group_id in ("+id+")";
+        sql = "DELETE FROM dashboards.organisations WHERE organisation_group_id in ("+params+")";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            for (int i = 1; i <= ids.length; i++) {
+                stmt.setInt(i, Integer.parseInt(ids[i-1]));
+            }
             stmt.executeUpdate();
         }
 
@@ -1497,13 +1700,25 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
     public void deleteOrganisation(String id) throws Exception {
 
-        id = "WHERE id in ("+id+")";
+        String ids[] = id.split(",");
 
-        String sql = "DELETE FROM dashboards.organisations " +id;
+        StringBuilder builder = new StringBuilder();
+
+        for( int i = 0 ; i < ids.length; i++ ) {
+            builder.append("?,");
+        }
+
+        String params = builder.deleteCharAt( builder.length() -1 ).toString();
+
+        String sql = "DELETE FROM dashboards.organisations WHERE id in ("+params+")";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            for (int i = 1; i <= ids.length; i++) {
+                stmt.setInt(i, Integer.parseInt(ids[i-1]));
+            }
             stmt.executeUpdate();
         }
+
     }
 
     public QueryResult getQuery(String selectedQuery) throws Exception {
@@ -1537,8 +1752,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
     public static Query getQuery(ResultSet resultSet) throws SQLException {
         Query query = new Query();
 
-        query
-                .setQuery(resultSet.getString("query"));
+        query.setQuery(resultSet.getString("query"));
         return query;
     }
 
@@ -2423,10 +2637,8 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
     public static RegistryQuery getRegistryQuery(ResultSet resultSet) throws SQLException {
         RegistryQuery registryQuery = new RegistryQuery();
 
-        registryQuery
-                .setQuery(resultSet.getString("query"));
-        registryQuery
-                .setRegistry(resultSet.getString("registry"));
+        registryQuery.setQuery(resultSet.getString("query"));
+        registryQuery.setRegistry(resultSet.getString("registry"));
 
         return registryQuery;
     }
