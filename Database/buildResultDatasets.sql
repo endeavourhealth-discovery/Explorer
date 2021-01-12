@@ -55,7 +55,7 @@ BEGIN
     BEGIN
       GET DIAGNOSTICS CONDITION 1
         @code = RETURNED_SQLSTATE, @msg = MESSAGE_TEXT;
-        CALL log_errors(p_query_id,'buildResultDatasets',@code,@msg,now());
+        CALL log_errors(p_query_id, 'buildResultDatasets', @code, @msg, now());
         RESIGNAL; -- rethrow the error
     END;  
 
@@ -75,7 +75,7 @@ IF p_encounters = 'TRUE' THEN
     SET eventTypeString = CONCAT(eventTypeString,'ENCOUNTERS,');
     -- get date range string for encounters
     IF p_dateFromEncounters IS NOT NULL OR p_dateToEncounters IS NOT NULL THEN
-        SET encountersDateRangeString = getAgeDateRangeString(NULL, NULL, p_dateFromEncounters, p_dateToEncounters, NULL, NULL, 2); 
+        SET encountersDateRangeString = getAgeDateRangeString(NULL, NULL, p_dateFromEncounters, p_dateToEncounters, NULL, NULL, 3); 
     ELSE
         SET encountersDateRangeString = '1';
     END IF;
@@ -100,7 +100,7 @@ IF p_medication = 'TRUE' THEN
     SET eventTypeString = CONCAT(eventTypeString,'MEDICATION,');
     -- get date range string for medication
     IF p_dateFromMedication IS NOT NULL OR p_dateToMedication IS NOT NULL THEN
-        SET medicationDateRangeString = getAgeDateRangeString(NULL, NULL, p_dateFromMedication, p_dateToMedication, NULL, NULL, 2); 
+        SET medicationDateRangeString = getAgeDateRangeString(NULL, NULL, p_dateFromMedication, p_dateToMedication, NULL, NULL, 3); 
     ELSE
         SET medicationDateRangeString = '1';
     END IF;
@@ -124,7 +124,7 @@ IF p_clinicalEvents = 'TRUE' THEN
     SET eventTypeString = CONCAT(eventTypeString,'CLINICALEVENTS,');
     -- get date range string for clinical events
     IF p_dateFromClinicalEvents IS NOT NULL OR p_dateToClinicalEvents IS NOT NULL THEN
-        SET clinicalEventsDateRangeString = getAgeDateRangeString(NULL, NULL, p_dateFromClinicalEvents, p_dateToClinicalEvents, NULL, NULL, 2); 
+        SET clinicalEventsDateRangeString = getAgeDateRangeString(NULL, NULL, p_dateFromClinicalEvents, p_dateToClinicalEvents, NULL, NULL, 3); 
     ELSE
         SET clinicalEventsDateRangeString = '1';
     END IF;
