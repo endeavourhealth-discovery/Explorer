@@ -158,6 +158,7 @@ export class ValueSetCodeComponent {
 
   add() {
     const dialogRef = this.dialog.open(ValueSetCodeEditorComponent, {
+      disableClose: true,
       height: '550px',
       width: '600px',
       data: {type: "", code: "", term: "", snomed: "", id: "", value_set_id: this.valueSetId}
@@ -195,6 +196,7 @@ export class ValueSetCodeComponent {
 
   edit() {
     const dialogRef = this.dialog.open(ValueSetCodeEditorComponent, {
+      disableClose: true,
       height: '550px',
       width: '600px',
       data: {type:this.selection.selected[0].type, selectedDataType:this.selection.selected[0].dataType, code: this.selection.selected[0].code, term: this.selection.selected[0].term, snomed: this.selection.selected[0].snomed, id: this.selection.selected[0].id, value_set_id: ""}

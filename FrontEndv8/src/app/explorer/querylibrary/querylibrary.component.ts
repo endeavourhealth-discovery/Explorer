@@ -180,6 +180,7 @@ export class QueryLibraryComponent implements OnInit {
 
   add() {
       const dialogRef = this.dialog.open(AdvancedQueryEditorComponent, {
+        disableClose: true,
         height: '950px',
         width: '1275px',
         data: {id: "", name: "", type: "", registryName: "", denominatorQuery: "", query: ""}
@@ -237,6 +238,7 @@ export class QueryLibraryComponent implements OnInit {
     });
 
     const dialogRef = this.dialog.open(AdvancedQueryEditorComponent, {
+      disableClose: true,
       height: '950px',
       width: '1275px',
       data: {

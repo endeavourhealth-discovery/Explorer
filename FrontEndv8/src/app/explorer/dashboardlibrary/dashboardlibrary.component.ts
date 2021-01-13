@@ -184,6 +184,7 @@ export class DashboardLibraryComponent implements OnInit {
 
   add() {
     const dialogRef = this.dialog.open(DashboardEditorComponent, {
+      disableClose: true,
       height: '720px',
       width: '1200px',
       data: {dashboardId: "", name: "", type: "", query: ""}
@@ -228,6 +229,7 @@ export class DashboardLibraryComponent implements OnInit {
     });
 
     const dialogRef = this.dialog.open(DashboardEditorComponent, {
+      disableClose: true,
       height: '720px',
       width: '1200px',
       data: {dashboardId: this.selection.selected[0].dashboardId, name: this.selection.selected[0].name, type:type, query: this.selection.selected[0].jsonQuery}

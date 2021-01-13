@@ -85,6 +85,7 @@ export class OrganisationsComponent {
 
   add() {
     const dialogRef = this.dialog.open(OrganisationsEditorComponent, {
+      disableClose: true,
       height: '500px',
       width: '600px',
       data: {name: "", type: "", code: "", id: "", organisation_group_id: this.organisation_group_id}
@@ -122,6 +123,7 @@ export class OrganisationsComponent {
 
   edit() {
     const dialogRef = this.dialog.open(OrganisationsEditorComponent, {
+      disableClose: true,
       height: '500px',
       width: '600px',
       data: {name:this.selection.selected[0].name, type:this.selection.selected[0].type, code: this.selection.selected[0].code, id: this.selection.selected[0].id, organisation_group_id: ""}

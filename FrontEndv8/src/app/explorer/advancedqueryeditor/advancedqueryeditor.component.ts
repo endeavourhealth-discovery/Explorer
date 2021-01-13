@@ -2236,7 +2236,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
     );
   }
 
-  saveQuery() {
+  saveQuery(close: boolean) {
 
     let query = {
       targetPercentage: this.targetPercentage,
@@ -2654,7 +2654,9 @@ export class AdvancedQueryEditorComponent implements OnInit {
           if (result) {
             this.explorerService.saveQuery(this.type.trim(), this.name.trim(), this.registryName.trim(), this.denominatorQuery.trim(), this.id, this.jsonQuery)
               .subscribe(saved => {
-                  this.dialogRef.close(true);
+                  if (close)
+                    this.dialogRef.close(true);
+                  this.log.success('Query saved.');
                 },
                 error => this.log.error('This query could not be saved.')
               );
@@ -2663,21 +2665,23 @@ export class AdvancedQueryEditorComponent implements OnInit {
     } else {
       this.explorerService.saveQuery(this.type.trim(), this.name.trim(), this.registryName.trim(), this.denominatorQuery.trim(), this.id, this.jsonQuery)
         .subscribe(saved => {
-            this.dialogRef.close(true);
+            if (close)
+              this.dialogRef.close(true);
+            this.log.success('Query saved.');
           },
           error => this.log.error('This query could not be saved.')
         );
     }
   }
 
-  queryEntered(event) {
-    if (event.key === "Enter") {
-      this.saveQuery();
-    }
-  }
-
   onCancelClick(): void {
-    this.dialogRef.close();
+      MessageBoxDialogComponent.open(this.dialog, 'Cancel edit', 'Are you sure you want to cancel this query edit?', 'Yes', 'No')
+        .subscribe(result => {
+          if (result) {
+            this.dialogRef.close();
+          }
+        });
+
   }
 
   formatDate(date) {

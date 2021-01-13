@@ -1103,6 +1103,7 @@ export class DashboardViewerComponent implements OnInit {
 
   patientDialog(chartName: any, seriesName: any, ccgs: any) {
     const dialogRef = this.dialog.open(PatientComponent, {
+      disableClose: true,
       height: '830px',
       width: '1600px',
 

@@ -147,6 +147,7 @@ export class ValueSetLibraryComponent implements OnInit {
 
   valueSetCodeDialog(value_set_id: any) {
     const dialogRef = this.dialog.open(ValueSetCodeComponent, {
+      disableClose: true,
       height: '830px',
       width: '1600px',
       data: {value_set_id: value_set_id}
@@ -155,6 +156,7 @@ export class ValueSetLibraryComponent implements OnInit {
 
   add() {
     const dialogRef = this.dialog.open(ValueSetEditorComponent, {
+      disableClose: true,
       height: '320px',
       width: '600px',
       data: {id: "", name: "", type: ""}
@@ -198,6 +200,7 @@ export class ValueSetLibraryComponent implements OnInit {
     });
 
     const dialogRef = this.dialog.open(ValueSetEditorComponent, {
+      disableClose: true,
       height: '320px',
       width: '600px',
       data: {id: this.selection.selected[0].id, name: this.selection.selected[0].name, type:type}

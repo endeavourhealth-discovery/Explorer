@@ -151,6 +151,7 @@ export class RegistriesComponent implements OnInit {
 
   patientList() {
     const dialogRef = this.dialog.open(PatientComponent, {
+      disableClose: true,
       height: '830px',
       width: '1600px',
 
@@ -202,6 +203,7 @@ export class RegistriesComponent implements OnInit {
     orgs = orgs;
 
     const dialogRef = this.dialog.open(TrendComponent, {
+      disableClose: true,
       height: '900px',
       width: '1300px',
       data: {orgs: orgs}

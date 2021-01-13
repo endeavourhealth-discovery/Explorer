@@ -146,6 +146,7 @@ export class OrganisationGroupsComponent implements OnInit {
 
   organisationsDialog(organisation_group_id: any) {
     const dialogRef = this.dialog.open(OrganisationsComponent, {
+      disableClose: true,
       height: '830px',
       width: '1600px',
       data: {organisation_group_id: organisation_group_id}
@@ -154,6 +155,7 @@ export class OrganisationGroupsComponent implements OnInit {
 
   add() {
     const dialogRef = this.dialog.open(OrganisationGroupsEditorComponent, {
+      disableClose: true,
       height: '320px',
       width: '600px',
       data: {id: "", name: "", type: ""}
@@ -196,6 +198,7 @@ export class OrganisationGroupsComponent implements OnInit {
     });
 
     const dialogRef = this.dialog.open(OrganisationGroupsEditorComponent, {
+      disableClose: true,
       height: '320px',
       width: '600px',
       data: {id: this.selection.selected[0].id, name: this.selection.selected[0].name, type: type}
