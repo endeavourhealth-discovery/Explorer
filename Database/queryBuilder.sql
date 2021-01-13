@@ -856,6 +856,68 @@ DECLARE tempTables VARCHAR(5000);
         SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp,',', observation_tmp,',',incFollowedByValueSet_tmp,',',incFollowedByConcept_tmp);
         CALL dropTempTables(tempTables);
 
+    ELSEIF p_queryNumber = '4A' THEN 
+
+        SET withWithout = JSON_UNQUOTE(JSON_EXTRACT(query,'$.withWithout4a')); 
+        SET includedAnyAll = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedAnyAll4a'));
+        SET includedValueSet = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.includedValueSet4a'),'[',''),']',''),'"','');
+        SET includedAreNot = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedAreNot4a'));
+        SET includedAnyAllFollowedBy = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedAnyAllFollowedBy4a'));
+        SET includedFollowedByValueSet = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.includedFollowedByValueSet4a'),'[',''),']',''),'"','');
+        SET includedDateFrom = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedDateFrom4a')); 
+        SET includedDateTo = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedDateTo4a')); 
+        SET includedPeriodOperator = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodOperator4a'));
+        SET includedPeriodValue = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodValue4a')); 
+        SET includedPeriodType = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodType4a')); 
+        -- 4a
+        SET incValueSet_tmp = CONCAT('incValueSet4a_tmp_',p_query_id);
+        SET incConcept_tmp = CONCAT('incConcept4a_tmp_',p_query_id);
+        SET observation_tmp = CONCAT('observation4a_tmp_',p_query_id);
+        SET incFollowedByValueSet_tmp = CONCAT('incFollowedByValueSet4a_tmp_',p_query_id);
+        SET incFollowedByConcept_tmp = CONCAT('incFollowedByConcept4a_tmp_',p_query_id);
+
+    -- Q4 --
+        CALL buildQuery(p_query_id, withWithout, includedAnyAll, includedValueSet, includedDateFrom, includedDateTo, includedPeriodOperator, includedPeriodValue, includedPeriodType, incValueSet_tmp, 
+        incConcept_tmp, p_observationCohort_tmp, '4', NULL, NULL, NULL, observation_tmp, NULL, NULL, NULL, 
+        NULL, includedAreNot, includedAnyAllFollowedBy, includedFollowedByValueSet, incFollowedByValueSet_tmp, incFollowedByConcept_tmp, NULL, NULL, NULL, NULL, 
+        NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+        NULL, NULL, NULL, p_schema , p_store_tmp, p_queryCohort, p_queryNumber);
+
+        -- remove tmp tables
+        SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp,',', observation_tmp,',',incFollowedByValueSet_tmp,',',incFollowedByConcept_tmp);
+        CALL dropTempTables(tempTables);
+
+    ELSEIF p_queryNumber = '4B' THEN 
+
+        SET withWithout = JSON_UNQUOTE(JSON_EXTRACT(query,'$.withWithout4b')); 
+        SET includedAnyAll = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedAnyAll4b'));
+        SET includedValueSet = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.includedValueSet4b'),'[',''),']',''),'"','');
+        SET includedAreNot = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedAreNot4b'));
+        SET includedAnyAllFollowedBy = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedAnyAllFollowedBy4b'));
+        SET includedFollowedByValueSet = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.includedFollowedByValueSet4b'),'[',''),']',''),'"','');
+        SET includedDateFrom = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedDateFrom4b')); 
+        SET includedDateTo = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedDateTo4b')); 
+        SET includedPeriodOperator = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodOperator4b'));
+        SET includedPeriodValue = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodValue4b')); 
+        SET includedPeriodType = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodType4b')); 
+        -- 4b
+        SET incValueSet_tmp = CONCAT('incValueSet4b_tmp_',p_query_id);
+        SET incConcept_tmp = CONCAT('incConcept4b_tmp_',p_query_id);
+        SET observation_tmp = CONCAT('observation4b_tmp_',p_query_id);
+        SET incFollowedByValueSet_tmp = CONCAT('incFollowedByValueSet4b_tmp_',p_query_id);
+        SET incFollowedByConcept_tmp = CONCAT('incFollowedByConcept4b_tmp_',p_query_id);
+
+    -- Q4 --
+        CALL buildQuery(p_query_id, withWithout, includedAnyAll, includedValueSet, includedDateFrom, includedDateTo, includedPeriodOperator, includedPeriodValue, includedPeriodType, incValueSet_tmp, 
+        incConcept_tmp, p_observationCohort_tmp, '4', NULL, NULL, NULL, observation_tmp, NULL, NULL, NULL, 
+        NULL, includedAreNot, includedAnyAllFollowedBy, includedFollowedByValueSet, incFollowedByValueSet_tmp, incFollowedByConcept_tmp, NULL, NULL, NULL, NULL, 
+        NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+        NULL, NULL, NULL, p_schema , p_store_tmp, p_queryCohort, p_queryNumber);
+
+        -- remove tmp tables
+        SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp,',', observation_tmp,',',incFollowedByValueSet_tmp,',',incFollowedByConcept_tmp);
+        CALL dropTempTables(tempTables);
+
     ELSEIF p_queryNumber = '5' THEN 
 
         SET withWithout = JSON_UNQUOTE(JSON_EXTRACT(query,'$.withWithout5')); 
