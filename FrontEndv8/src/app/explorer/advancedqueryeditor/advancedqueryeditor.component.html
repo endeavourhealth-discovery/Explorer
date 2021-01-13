@@ -2587,7 +2587,7 @@
           <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q4. </b>Identify patients
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
               <mat-label>With/Without</mat-label>
-              <mat-select [(ngModel)]="withWithout4" formControlName="control35" (ngModelChange)="formChanged()">
+              <mat-select [(ngModel)]="withWithout4" formControlName="withWithout4" (ngModelChange)="formChanged()">
                 <mat-option *ngFor="let value of without" [value]="value.without">
                   {{value.without}}
                 </mat-option>
@@ -2596,7 +2596,7 @@
             records containing <span style="color: blue">concepts</span> matching
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 70px">
               <mat-label>Any/All</mat-label>
-              <mat-select [(ngModel)]="includedAnyAll4" formControlName="control53" (ngModelChange)="formChanged()">
+              <mat-select [(ngModel)]="includedAnyAll4" formControlName="includedAnyAll4" (ngModelChange)="formChanged()">
                 <mat-option *ngFor="let value of anyAll" [value]="value.anyAll">
                   {{value.anyAll}}
                 </mat-option>
@@ -2605,7 +2605,7 @@
             of the <span style="color: blue">value set(s)</span>
             <mat-form-field appearance="standard" style="width: 440px; margin-left: 10px">
               <mat-label>Cohort value set</mat-label>
-              <mat-select multiple [(ngModel)]="includedValueSet4" formControlName="control36" (ngModelChange)="formChanged()">
+              <mat-select multiple [(ngModel)]="includedValueSet4" formControlName="includedValueSet4" (ngModelChange)="formChanged()">
                 <mat-select-search [formControl]="filterCtrl"></mat-select-search>
                 <mat-option *ngFor="let result of filteredValueset | async" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
                   {{result}}
@@ -2615,7 +2615,7 @@
           <p style="margin-left: 10px; margin-top: 28px; display: inline">and those <span style="color: blue">entries</span></p>
           <mat-form-field appearance="standard" style="width: 100px; margin-left: 10px">
             <mat-label>Are/Are not</mat-label>
-            <mat-select [(ngModel)]="includedAreNot4 " formControlName="control54" (ngModelChange)="formChanged()">
+            <mat-select [(ngModel)]="includedAreNot4 " formControlName="includedAreNot4" (ngModelChange)="formChanged()">
               <mat-option *ngFor="let value of areNot" [value]="value.areNot">
                 {{value.areNot}}
               </mat-option>
@@ -2624,7 +2624,7 @@
           <p style="margin-left: 10px; margin-top: 28px; display: inline"><span style="color: blue">followed</span> by <span style="color: blue">entries</span> containing <span style="color: blue">concepts</span> matching </p>
           <mat-form-field appearance="standard" style="margin-left: 10px; width: 70px">
             <mat-label>Any/All</mat-label>
-            <mat-select [(ngModel)]="includedAnyAllFollowedBy4" formControlName="control55" (ngModelChange)="formChanged()">
+            <mat-select [(ngModel)]="includedAnyAllFollowedBy4" formControlName="includedAnyAllFollowedBy4" (ngModelChange)="formChanged()">
               <mat-option *ngFor="let value of anyAll" [value]="value.anyAll">
                 {{value.anyAll}}
               </mat-option>
@@ -2633,7 +2633,7 @@
           <p style="margin-left: 10px; margin-top: 28px">of the <span style="color: blue">value set(s)</span></p>
           <mat-form-field appearance="standard" style="width: 440px; margin-left: 10px">
             <mat-label>Cohort value set</mat-label>
-            <mat-select multiple [(ngModel)]="includedFollowedByValueSet4" formControlName="control37" (ngModelChange)="formChanged()">
+            <mat-select multiple [(ngModel)]="includedFollowedByValueSet4" formControlName="includedFollowedByValueSet4" (ngModelChange)="formChanged()">
               <mat-select-search [formControl]="filterCtrl"></mat-select-search>
               <mat-option *ngFor="let result of filteredValueset | async" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
                 {{result}}
@@ -2645,7 +2645,7 @@
             <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
               <mat-form-field appearance="standard" style="margin-left: 10px; width: 130px">
                 <mat-label>Within/Before</mat-label>
-                <mat-select [(ngModel)]="includedPeriodOperator4" formControlName="control154" (ngModelChange)="formChanged()">
+                <mat-select [(ngModel)]="includedPeriodOperator4" formControlName="includedPeriodOperator4" (ngModelChange)="formChanged()">
                   <mat-option *ngFor="let value of withinBefore" [value]="value.withinBefore">
                     {{value.withinBefore}}
                   </mat-option>
@@ -2653,11 +2653,193 @@
               </mat-form-field>
               <mat-form-field appearance="standard" style="margin-left: 10px; width: 60px">
                 <mat-label>Period</mat-label>
-                <input matInput placeholder="Value" [(ngModel)]="includedPeriodValue4" formControlName="control38" (keydown.enter)="stepper.next()">
+                <input matInput placeholder="Value" [(ngModel)]="includedPeriodValue4" formControlName="includedPeriodValue4" (keydown.enter)="stepper.next()">
               </mat-form-field>
               <mat-form-field appearance="standard" style="margin-left: 10px; width: 160px">
                 <mat-label>Days/Weeks/Months</mat-label>
-                <mat-select [(ngModel)]="includedPeriodType4" formControlName="control39" (ngModelChange)="formChanged()">
+                <mat-select [(ngModel)]="includedPeriodType4" formControlName="includedPeriodType4" (ngModelChange)="formChanged()">
+                  <mat-option *ngFor="let value of period" [value]="value.period">
+                    {{value.period}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <div mat-dialog-actions style="margin-bottom: 10px; margin-left: 20px" *ngIf="addQuery4">
+                <button mat-flat-button color="accent" (click)="addSameQuery4()">Add same query type</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <br/>
+        <mat-divider></mat-divider>
+        <br/>
+
+        <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start" *ngIf="select4a">
+          <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q4a. </b>Identify patients
+            <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
+              <mat-label>With/Without</mat-label>
+              <mat-select [(ngModel)]="withWithout4a" formControlName="withWithout4a" (ngModelChange)="formChanged()">
+                <mat-option *ngFor="let value of without" [value]="value.without">
+                  {{value.without}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            records containing <span style="color: blue">concepts</span> matching
+            <mat-form-field appearance="standard" style="margin-left: 10px; width: 70px">
+              <mat-label>Any/All</mat-label>
+              <mat-select [(ngModel)]="includedAnyAll4a" formControlName="includedAnyAll4a" (ngModelChange)="formChanged()">
+                <mat-option *ngFor="let value of anyAll" [value]="value.anyAll">
+                  {{value.anyAll}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            of the <span style="color: blue">value set(s)</span>
+            <mat-form-field appearance="standard" style="width: 440px; margin-left: 10px">
+              <mat-label>Cohort value set</mat-label>
+              <mat-select multiple [(ngModel)]="includedValueSet4a" formControlName="includedValueSet4a" (ngModelChange)="formChanged()">
+                <mat-select-search [formControl]="filterCtrl"></mat-select-search>
+                <mat-option *ngFor="let result of filteredValueset | async" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
+                  {{result}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field></p>
+          <p style="margin-left: 10px; margin-top: 28px; display: inline">and those <span style="color: blue">entries</span></p>
+          <mat-form-field appearance="standard" style="width: 100px; margin-left: 10px">
+            <mat-label>Are/Are not</mat-label>
+            <mat-select [(ngModel)]="includedAreNot4a " formControlName="includedAreNot4a" (ngModelChange)="formChanged()">
+              <mat-option *ngFor="let value of areNot" [value]="value.areNot">
+                {{value.areNot}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <p style="margin-left: 10px; margin-top: 28px; display: inline"><span style="color: blue">followed</span> by <span style="color: blue">entries</span> containing <span style="color: blue">concepts</span> matching </p>
+          <mat-form-field appearance="standard" style="margin-left: 10px; width: 70px">
+            <mat-label>Any/All</mat-label>
+            <mat-select [(ngModel)]="includedAnyAllFollowedBy4a" formControlName="includedAnyAllFollowedBy4a" (ngModelChange)="formChanged()">
+              <mat-option *ngFor="let value of anyAll" [value]="value.anyAll">
+                {{value.anyAll}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <p style="margin-left: 10px; margin-top: 28px">of the <span style="color: blue">value set(s)</span></p>
+          <mat-form-field appearance="standard" style="width: 440px; margin-left: 10px">
+            <mat-label>Cohort value set</mat-label>
+            <mat-select multiple [(ngModel)]="includedFollowedByValueSet4a" formControlName="includedFollowedByValueSet4a" (ngModelChange)="formChanged()">
+              <mat-select-search [formControl]="filterCtrl"></mat-select-search>
+              <mat-option *ngFor="let result of filteredValueset | async" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
+                {{result}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <br/>
+          <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <mat-form-field appearance="standard" style="margin-left: 10px; width: 130px">
+                <mat-label>Within/Before</mat-label>
+                <mat-select [(ngModel)]="includedPeriodOperator4a" formControlName="includedPeriodOperator4a" (ngModelChange)="formChanged()">
+                  <mat-option *ngFor="let value of withinBefore" [value]="value.withinBefore">
+                    {{value.withinBefore}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field appearance="standard" style="margin-left: 10px; width: 60px">
+                <mat-label>Period</mat-label>
+                <input matInput placeholder="Value" [(ngModel)]="includedPeriodValue4a" formControlName="includedPeriodValue4a" (keydown.enter)="stepper.next()">
+              </mat-form-field>
+              <mat-form-field appearance="standard" style="margin-left: 10px; width: 160px">
+                <mat-label>Days/Weeks/Months</mat-label>
+                <mat-select [(ngModel)]="includedPeriodType4a" formControlName="includedPeriodType4a" (ngModelChange)="formChanged()">
+                  <mat-option *ngFor="let value of period" [value]="value.period">
+                    {{value.period}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <div mat-dialog-actions style="margin-bottom: 10px; margin-left: 20px" *ngIf="addQuery4b">
+                <button mat-flat-button color="accent" (click)="addSameQuery4b()">Add same query type</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <br *ngIf="select4a"/>
+        <mat-divider *ngIf="select4a"></mat-divider>
+        <br *ngIf="select4a"/>
+
+        <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start" *ngIf="select4b">
+          <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q4b. </b>Identify patients
+            <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
+              <mat-label>With/Without</mat-label>
+              <mat-select [(ngModel)]="withWithout4b" formControlName="withWithout4b" (ngModelChange)="formChanged()">
+                <mat-option *ngFor="let value of without" [value]="value.without">
+                  {{value.without}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            records containing <span style="color: blue">concepts</span> matching
+            <mat-form-field appearance="standard" style="margin-left: 10px; width: 70px">
+              <mat-label>Any/All</mat-label>
+              <mat-select [(ngModel)]="includedAnyAll4b" formControlName="includedAnyAll4b" (ngModelChange)="formChanged()">
+                <mat-option *ngFor="let value of anyAll" [value]="value.anyAll">
+                  {{value.anyAll}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            of the <span style="color: blue">value set(s)</span>
+            <mat-form-field appearance="standard" style="width: 440px; margin-left: 10px">
+              <mat-label>Cohort value set</mat-label>
+              <mat-select multiple [(ngModel)]="includedValueSet4b" formControlName="includedValueSet4b" (ngModelChange)="formChanged()">
+                <mat-select-search [formControl]="filterCtrl"></mat-select-search>
+                <mat-option *ngFor="let result of filteredValueset | async" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
+                  {{result}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field></p>
+          <p style="margin-left: 10px; margin-top: 28px; display: inline">and those <span style="color: blue">entries</span></p>
+          <mat-form-field appearance="standard" style="width: 100px; margin-left: 10px">
+            <mat-label>Are/Are not</mat-label>
+            <mat-select [(ngModel)]="includedAreNot4b " formControlName="includedAreNot4b" (ngModelChange)="formChanged()">
+              <mat-option *ngFor="let value of areNot" [value]="value.areNot">
+                {{value.areNot}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <p style="margin-left: 10px; margin-top: 28px; display: inline"><span style="color: blue">followed</span> by <span style="color: blue">entries</span> containing <span style="color: blue">concepts</span> matching </p>
+          <mat-form-field appearance="standard" style="margin-left: 10px; width: 70px">
+            <mat-label>Any/All</mat-label>
+            <mat-select [(ngModel)]="includedAnyAllFollowedBy4b" formControlName="includedAnyAllFollowedBy4b" (ngModelChange)="formChanged()">
+              <mat-option *ngFor="let value of anyAll" [value]="value.anyAll">
+                {{value.anyAll}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <p style="margin-left: 10px; margin-top: 28px">of the <span style="color: blue">value set(s)</span></p>
+          <mat-form-field appearance="standard" style="width: 440px; margin-left: 10px">
+            <mat-label>Cohort value set</mat-label>
+            <mat-select multiple [(ngModel)]="includedFollowedByValueSet4b" formControlName="includedFollowedByValueSet4b" (ngModelChange)="formChanged()">
+              <mat-select-search [formControl]="filterCtrl"></mat-select-search>
+              <mat-option *ngFor="let result of filteredValueset | async" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
+                {{result}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <br/>
+          <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <mat-form-field appearance="standard" style="margin-left: 10px; width: 130px">
+                <mat-label>Within/Before</mat-label>
+                <mat-select [(ngModel)]="includedPeriodOperator4b" formControlName="includedPeriodOperator4b" (ngModelChange)="formChanged()">
+                  <mat-option *ngFor="let value of withinBefore" [value]="value.withinBefore">
+                    {{value.withinBefore}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field appearance="standard" style="margin-left: 10px; width: 60px">
+                <mat-label>Period</mat-label>
+                <input matInput placeholder="Value" [(ngModel)]="includedPeriodValue4b" formControlName="includedPeriodValue4b" (keydown.enter)="stepper.next()">
+              </mat-form-field>
+              <mat-form-field appearance="standard" style="margin-left: 10px; width: 160px">
+                <mat-label>Days/Weeks/Months</mat-label>
+                <mat-select [(ngModel)]="includedPeriodType4b" formControlName="includedPeriodType4b" (ngModelChange)="formChanged()">
                   <mat-option *ngFor="let value of period" [value]="value.period">
                     {{value.period}}
                   </mat-option>
@@ -2667,9 +2849,9 @@
           </div>
         </div>
 
-        <br/>
-        <mat-divider></mat-divider>
-        <br/>
+        <br *ngIf="select4b"/>
+        <mat-divider *ngIf="select4b"></mat-divider>
+        <br *ngIf="select4b"/>
 
         <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
           <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q5. </b>Identify patients

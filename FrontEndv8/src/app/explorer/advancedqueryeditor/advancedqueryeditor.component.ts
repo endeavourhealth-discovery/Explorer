@@ -286,14 +286,30 @@ interface savedQuery {
   withWithout4: string;
   includedValueSet4: string;
   includedFollowedByValueSet4: string;
-  includedDateFrom4: string;
-  includedDateTo4: string;
   includedPeriodOperator4: string;
   includedPeriodValue4: string;
   includedPeriodType4: string;
   includedAnyAll4: string;
   includedAnyAllFollowedBy4: string;
   includedAreNot4: string;
+  withWithout4a: string;
+  includedValueSet4a: string;
+  includedFollowedByValueSet4a: string;
+  includedPeriodOperator4a: string;
+  includedPeriodValue4a: string;
+  includedPeriodType4a: string;
+  includedAnyAll4a: string;
+  includedAnyAllFollowedBy4a: string;
+  includedAreNot4a: string;
+  withWithout4b: string;
+  includedValueSet4b: string;
+  includedFollowedByValueSet4b: string;
+  includedPeriodOperator4b: string;
+  includedPeriodValue4b: string;
+  includedPeriodType4b: string;
+  includedAnyAll4b: string;
+  includedAnyAllFollowedBy4b: string;
+  includedAreNot4b: string;
   withWithout5: string;
   includedValueSet5: string;
   includedOperator5: string;
@@ -782,14 +798,30 @@ export class AdvancedQueryEditorComponent implements OnInit {
   withWithout4: string = '';
   includedValueSet4: string = '';
   includedFollowedByValueSet4: string = '';
-  includedDateFrom4: string = '';
-  includedDateTo4: string = '';
   includedPeriodOperator4: string = '';
   includedPeriodValue4: string = '';
   includedPeriodType4: string = '';
   includedAnyAll4: string = '';
   includedAnyAllFollowedBy4: string = '';
   includedAreNot4: string = '';
+  withWithout4a: string = '';
+  includedValueSet4a: string = '';
+  includedFollowedByValueSet4a: string = '';
+  includedPeriodOperator4a: string = '';
+  includedPeriodValue4a: string = '';
+  includedPeriodType4a: string = '';
+  includedAnyAll4a: string = '';
+  includedAnyAllFollowedBy4a: string = '';
+  includedAreNot4a: string = '';
+  withWithout4b: string = '';
+  includedValueSet4b: string = '';
+  includedFollowedByValueSet4b: string = '';
+  includedPeriodOperator4b: string = '';
+  includedPeriodValue4b: string = '';
+  includedPeriodType4b: string = '';
+  includedAnyAll4b: string = '';
+  includedAnyAllFollowedBy4b: string = '';
+  includedAreNot4b: string = '';
   withWithout5: string = '';
   includedValueSet5: string = '';
   includedOperator5: string = '';
@@ -1003,6 +1035,10 @@ export class AdvancedQueryEditorComponent implements OnInit {
   addQuery3e: boolean = true;
   select3f: boolean = false;
   addQuery3f: boolean = true;
+  select4a: boolean = false;
+  addQuery4: boolean = true;
+  select4b: boolean = false;
+  addQuery4b: boolean = true;
   select5a: boolean = false;
   addQuery5: boolean = true;
 
@@ -1405,14 +1441,30 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.withWithout4 = query.withWithout4;
       this.includedValueSet4 = query.includedValueSet4;
       this.includedFollowedByValueSet4 = query.includedFollowedByValueSet4;
-      this.includedDateFrom4 = query.includedDateFrom4;
-      this.includedDateTo4 = query.includedDateTo4;
       this.includedPeriodOperator4 = query.includedPeriodOperator4;
       this.includedPeriodValue4 = query.includedPeriodValue4;
       this.includedPeriodType4 = query.includedPeriodType4;
       this.includedAnyAll4 = query.includedAnyAll4;
       this.includedAnyAllFollowedBy4 = query.includedAnyAllFollowedBy4;
       this.includedAreNot4 = query.includedAreNot4;
+      this.withWithout4a = query.withWithout4a;
+      this.includedValueSet4a = query.includedValueSet4a;
+      this.includedFollowedByValueSet4a = query.includedFollowedByValueSet4a;
+      this.includedPeriodOperator4a = query.includedPeriodOperator4a;
+      this.includedPeriodValue4a = query.includedPeriodValue4a;
+      this.includedPeriodType4a = query.includedPeriodType4a;
+      this.includedAnyAll4a = query.includedAnyAll4a;
+      this.includedAnyAllFollowedBy4a = query.includedAnyAllFollowedBy4a;
+      this.includedAreNot4a = query.includedAreNot4a;
+      this.withWithout4b = query.withWithout4b;
+      this.includedValueSet4b = query.includedValueSet4b;
+      this.includedFollowedByValueSet4b = query.includedFollowedByValueSet4b;
+      this.includedPeriodOperator4b = query.includedPeriodOperator4b;
+      this.includedPeriodValue4b = query.includedPeriodValue4b;
+      this.includedPeriodType4b = query.includedPeriodType4b;
+      this.includedAnyAll4b = query.includedAnyAll4b;
+      this.includedAnyAllFollowedBy4b = query.includedAnyAllFollowedBy4b;
+      this.includedAreNot4b = query.includedAreNot4b;
       this.withWithout5 = query.withWithout5;
       this.includedValueSet5 = query.includedValueSet5;
       this.includedOperator5 = query.includedOperator5;
@@ -1617,6 +1669,16 @@ export class AdvancedQueryEditorComponent implements OnInit {
         this.select3f = true;
         this.addQuery3f = false;
       }
+      if (this.withWithout4a != "" && this.withWithout4a!=undefined) {
+        this.select4a = true;
+        this.addQuery4 = false;
+      }
+
+      if (this.withWithout4b != "" && this.withWithout4b!=undefined) {
+        this.select4b = true;
+        this.addQuery4b = false;
+      }
+
       if (this.withWithout5a != "" && this.withWithout5a!=undefined) {
         this.select5a = true;
         this.addQuery5 = false;
@@ -1745,18 +1807,24 @@ export class AdvancedQueryEditorComponent implements OnInit {
 
       control26: [''], control27: [''], control28: [''], control29: [''],
       control30: [''],
-      control35: [''], control36: [''], control37: [''],
-      control38: [''], control39: [''], control40: [''], control41: [''],
+      withWithout4: [''], includedValueSet4: [''], includedFollowedByValueSet4: [''],includedPeriodOperator4: [''],
+      includedPeriodValue4: [''], includedPeriodType4: [''], includedAnyAll4: [''], includedAreNot4: [''], includedAnyAllFollowedBy4: [''],
+      withWithout4a: [''], includedValueSet4a: [''], includedFollowedByValueSet4a: [''],includedPeriodOperator4a: [''],
+      includedPeriodValue4a: [''], includedPeriodType4a: [''], includedAnyAll4a: [''], includedAreNot4a: [''], includedAnyAllFollowedBy4a: [''],
+      withWithout4b: [''], includedValueSet4b: [''], includedFollowedByValueSet4b: [''],includedPeriodOperator4b: [''],
+      includedPeriodValue4b: [''], includedPeriodType4b: [''], includedAnyAll4b: [''], includedAreNot4b: [''], includedAnyAllFollowedBy4b: [''],
+      control40: [''], control41: [''],
       control42: [''], control43: [''], control44: [''], control45: [''],
       control26a: [''], control27a: [''], control28a: [''], control29a: [''],
       control30a: [''], control46: [''], control47: [''], control48: [''],
       control49: [''], control50: [''],
-      control53: [''], control54: [''], control55: [''], control56: [''],
+      control56: [''],
       control57: [''], control58: [''], control59: [''], control60: [''],
       control61: [''], control62: [''], control63: [''], control64: [''],
       control61a: [''], control62a: [''], control63a: [''], control64a: [''],
-      control40a: [''],control56a: [''],control41a: [''],control42a: [''],control43a: [''],control44a: [''],control45a: [''],control57a: [''],control58a: [''],
-      control152: [''],control153: [''],control154: [''],control155: [''],control156: [''],
+      control40a: [''],control56a: [''],control41a: [''],control42a: [''],
+      control43a: [''],control44a: [''],control45a: [''],control57a: [''],control58a: [''],
+      control152: [''],control153: [''],control155: [''],control156: [''],
       withWithout3: [''],
       includedAnyAll3: [''],
       includedValueSet3: [''],
@@ -2436,11 +2504,27 @@ export class AdvancedQueryEditorComponent implements OnInit {
       includedAreNot4: this.includedAreNot4,
       includedAnyAllFollowedBy4: this. includedAnyAllFollowedBy4,
       includedFollowedByValueSet4: this.includedFollowedByValueSet4,
-      includedDateFrom4: this.formatDate(this.includedDateFrom4),
-      includedDateTo4: this.formatDate(this.includedDateTo4),
       includedPeriodOperator4: this.includedPeriodOperator4,
       includedPeriodValue4: this.includedPeriodValue4,
       includedPeriodType4: this.includedPeriodType4,
+      withWithout4a: this.withWithout4a,
+      includedAnyAll4a: this.includedAnyAll4a,
+      includedValueSet4a: this.includedValueSet4a,
+      includedAreNot4a: this.includedAreNot4a,
+      includedAnyAllFollowedBy4a: this. includedAnyAllFollowedBy4a,
+      includedFollowedByValueSet4a: this.includedFollowedByValueSet4a,
+      includedPeriodOperator4a: this.includedPeriodOperator4a,
+      includedPeriodValue4a: this.includedPeriodValue4a,
+      includedPeriodType4a: this.includedPeriodType4a,
+      withWithout4b: this.withWithout4b,
+      includedAnyAll4b: this.includedAnyAll4b,
+      includedValueSet4b: this.includedValueSet4b,
+      includedAreNot4b: this.includedAreNot4b,
+      includedAnyAllFollowedBy4b: this. includedAnyAllFollowedBy4b,
+      includedFollowedByValueSet4b: this.includedFollowedByValueSet4b,
+      includedPeriodOperator4b: this.includedPeriodOperator4b,
+      includedPeriodValue4b: this.includedPeriodValue4b,
+      includedPeriodType4b: this.includedPeriodType4b,
       withWithout5: this.withWithout5,
       includedAnyAll5: this.includedAnyAll5,
       includedValueSet5: this.includedValueSet5,
@@ -2711,6 +2795,14 @@ export class AdvancedQueryEditorComponent implements OnInit {
   }
   addSameQuery3f() {
     this.select3f = true;
+  }
+
+  addSameQuery4() {
+    this.select4a = true;
+  }
+
+  addSameQuery4b() {
+    this.select4b = true;
   }
 
   addSameQuery5() {
