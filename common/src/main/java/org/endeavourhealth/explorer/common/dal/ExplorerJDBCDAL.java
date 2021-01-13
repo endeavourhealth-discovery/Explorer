@@ -2179,7 +2179,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
             data.getHeaders().add(header);
         }
 
-        if (StringUtils.isNullOrEmpty(orderColumn)){
+        if (StringUtils.isNullOrEmpty(orderColumn) || !columns.contains(orderColumn)){
             orderColumn = columns.get(0);
         }
 
@@ -2364,6 +2364,11 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         header.setProperty("list_size");
         data.getHeaders().add(header);
 
+        if (!orderColumn.equalsIgnoreCase("ccg")
+                && !orderColumn.equalsIgnoreCase("list_size")) {
+            orderColumn = "ccg";
+        }
+
         JSONObject row = null;
         String order = " asc ";
         if (descending) {
@@ -2469,6 +2474,12 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         header.setLabel("List size");
         header.setProperty("list_size");
         data.getHeaders().add(header);
+
+        if (!orderColumn.equalsIgnoreCase("practice")
+                && !orderColumn.equalsIgnoreCase("ods_code")
+                && !orderColumn.equalsIgnoreCase("list_size")) {
+            orderColumn = "practice";
+        }
 
         JSONObject row = null;
         String order = " asc ";

@@ -93,8 +93,8 @@ export class MapComponent implements OnInit {
                 this.mapResults = result;
                 this.layerIds = this.mapResults.ids;
                 this.selectedLayer = this.layerIds[0];
-                //this.map = L.map('map',{ zoomDelta: 1, zoomSnap: 1 });
-                this.map = L.map('map');
+                this.map = L.map('map',{ zoomDelta: 0.5, zoomSnap: 0.9 });
+                //this.map = L.map('map');
                 this.buildingLayers = new L.FeatureGroup().addTo(this.map);
                 let layer = {};
                 this.layers  = this.mapResults.layers['All levels'];
@@ -106,7 +106,7 @@ export class MapComponent implements OnInit {
                   });
                   layer[index].addTo(this.buildingLayers);
                   //this.map.fitBounds(this.buildingLayers.getBounds());
-                  this.map.setView([51.505, -0.09], 10.5);
+                  this.map.setView([51.465, -0.09], 10.5);
                 });
                 this.createMap();
               },
