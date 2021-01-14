@@ -4,6 +4,7 @@ DROP PROCEDURE IF EXISTS createPatientCohort;
 
 DELIMITER //
 CREATE PROCEDURE createPatientCohort(
+     p_query_id INT,
      p_org VARCHAR(255),
      p_regStatus VARCHAR(255),
      p_genderRange VARCHAR(255),

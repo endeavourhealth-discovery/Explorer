@@ -60,7 +60,7 @@ BEGIN
   END IF;
   
   -- create the practice patient cohort
-  CALL createPatientCohort(orgrange, regstatus, genderrange, postcoderange, p_practiceCohortTab, p_schema);
+  CALL createPatientCohort(p_query_id, orgrange, regstatus, genderrange, postcoderange, p_practiceCohortTab, p_schema);
 
 END//
 DELIMITER ;

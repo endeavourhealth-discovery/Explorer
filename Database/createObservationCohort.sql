@@ -4,6 +4,7 @@ DROP PROCEDURE IF EXISTS createObservationCohort;
 
 DELIMITER //
 CREATE PROCEDURE createObservationCohort(
+   p_query_id INT,
    p_observationTab VARCHAR(64), 
    p_cohortTab VARCHAR(64), 
    p_conceptTab VARCHAR(64), 
@@ -20,7 +21,7 @@ BEGIN
     BEGIN
       GET DIAGNOSTICS CONDITION 1
         @code = RETURNED_SQLSTATE, @msg = MESSAGE_TEXT;
-        CALL log_errors(p_query_id, 'createObservationCohort',@code,@msg,now());
+        CALL log_errors(p_query_id, 'createObservationCohort', @code, @msg, now());
         RESIGNAL; -- rethrow the error
    END;
 

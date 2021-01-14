@@ -415,7 +415,7 @@ CALL buildCohortDefinition(query_id, providerOrganisation, includedOrganisation,
 -- build observation cohort for all valuesets to be used in the advance queries --
 CALL createValueSet('1', all_valueset_tmp);
 CALL createConcept(all_concept_tmp, all_valueset_tmp, sourceSchema);
-CALL createObservationCohort(observationCohort_tmp, practiceCohort_tmp, all_concept_tmp, sourceSchema);
+CALL createObservationCohort(query_id, observationCohort_tmp, practiceCohort_tmp, all_concept_tmp, sourceSchema);
 
 -- build register rule
 CALL buildRegisterRule(query_id, matching1, queryExpression1, rule_tmp);
