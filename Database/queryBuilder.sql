@@ -84,8 +84,8 @@ DECLARE tempTables VARCHAR(5000);
         SET includedPeriodValue = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodValue1')); 
         SET includedPeriodType = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodType1'));
         -- 1
-        SET incValueSet_tmp = CONCAT('incValueSet1_tmp_',p_query_id);
-        SET incConcept_tmp  = CONCAT('incConcept1_tmp_',p_query_id);
+        SET incValueSet_tmp = CONCAT('incvalueset1_tmp_',p_query_id);
+        SET incConcept_tmp  = CONCAT('incconcept1_tmp_',p_query_id);
 
     -- Q1 --
         CALL buildQuery(p_query_id, withWithout, includedAnyAll, includedValueSet, includedDateFrom, includedDateTo, includedPeriodOperator,includedPeriodValue, includedPeriodType, incValueSet_tmp, 
@@ -109,8 +109,8 @@ DECLARE tempTables VARCHAR(5000);
         SET includedPeriodValue = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodValue1a')); 
         SET includedPeriodType = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodType1a'));
         -- 1a
-        SET incValueSet_tmp = CONCAT('incValueSet1a_tmp_',p_query_id);
-        SET incConcept_tmp = CONCAT('incConcept1a_tmp_',p_query_id);
+        SET incValueSet_tmp = CONCAT('incvalueset1a_tmp_',p_query_id);
+        SET incConcept_tmp = CONCAT('incconcept1a_tmp_',p_query_id);
 
     -- Q1a --
         CALL buildQuery(p_query_id, withWithout, includedAnyAll, includedValueSet, includedDateFrom, includedDateTo, includedPeriodOperator,includedPeriodValue, includedPeriodType, incValueSet_tmp, 
@@ -134,8 +134,8 @@ DECLARE tempTables VARCHAR(5000);
         SET includedPeriodValue = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodValue1b'));
         SET includedPeriodType = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodType1b'));
         -- 1b
-        SET incValueSet_tmp = CONCAT('incValueSet1b_tmp_',p_query_id);
-        SET incConcept_tmp = CONCAT('incConcept1b_tmp_',p_query_id);
+        SET incValueSet_tmp = CONCAT('incvalueset1b_tmp_',p_query_id);
+        SET incConcept_tmp = CONCAT('incconcept1b_tmp_',p_query_id);
 
     -- Q1b --
         CALL buildQuery(p_query_id, withWithout, includedAnyAll, includedValueSet, includedDateFrom, includedDateTo, includedPeriodOperator,includedPeriodValue, includedPeriodType, incValueSet_tmp, 
@@ -159,8 +159,8 @@ DECLARE tempTables VARCHAR(5000);
         SET includedPeriodValue = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodValue1c'));
         SET includedPeriodType = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodType1c'));
         -- 1c
-        SET incValueSet_tmp = CONCAT('incValueSet1c_tmp_',p_query_id);
-        SET incConcept_tmp = CONCAT('incConcept1c_tmp_',p_query_id);
+        SET incValueSet_tmp = CONCAT('incvalueset1c_tmp_',p_query_id);
+        SET incConcept_tmp = CONCAT('incconcept1c_tmp_',p_query_id);
 
     -- Q1c --
         CALL buildQuery(p_query_id, withWithout, includedAnyAll, includedValueSet, includedDateFrom, includedDateTo, includedPeriodOperator,includedPeriodValue, includedPeriodType, incValueSet_tmp, 
@@ -184,8 +184,8 @@ DECLARE tempTables VARCHAR(5000);
         SET includedPeriodValue = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodValue1d'));
         SET includedPeriodType = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodType1d')); 
         -- 1d
-        SET incValueSet_tmp = CONCAT('incValueSet1d_tmp_',p_query_id);
-        SET incConcept_tmp = CONCAT('incConcept1d_tmp_',p_query_id);
+        SET incValueSet_tmp = CONCAT('incvalueset1d_tmp_',p_query_id);
+        SET incConcept_tmp = CONCAT('incconcept1d_tmp_',p_query_id);
 
     -- Q1d --
         CALL buildQuery(p_query_id, withWithout, includedAnyAll, includedValueSet, includedDateFrom, includedDateTo, includedPeriodOperator,includedPeriodValue, includedPeriodType, incValueSet_tmp, 
@@ -209,8 +209,8 @@ DECLARE tempTables VARCHAR(5000);
         SET includedPeriodValue = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodValue1e'));
         SET includedPeriodType = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodType1e')); 
         -- 1e
-        SET incValueSet_tmp = CONCAT('incValueSet1e_tmp_',p_query_id);
-        SET incConcept_tmp = CONCAT('incConcept1e_tmp_',p_query_id);
+        SET incValueSet_tmp = CONCAT('incvalueset1e_tmp_',p_query_id);
+        SET incConcept_tmp = CONCAT('incconcept1e_tmp_',p_query_id);
 
     -- Q1e --
         CALL buildQuery(p_query_id, withWithout, includedAnyAll, includedValueSet, includedDateFrom, includedDateTo, includedPeriodOperator,includedPeriodValue, includedPeriodType, incValueSet_tmp, 
@@ -234,8 +234,8 @@ DECLARE tempTables VARCHAR(5000);
         SET includedPeriodValue = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodValue1f'));
         SET includedPeriodType = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodType1f')); 
         -- 1f
-        SET incValueSet_tmp = CONCAT('incValueSet1f_tmp_',p_query_id);
-        SET incConcept_tmp = CONCAT('incConcept1f_tmp_',p_query_id);
+        SET incValueSet_tmp = CONCAT('incvalueset1f_tmp_',p_query_id);
+        SET incConcept_tmp = CONCAT('incconcept1f_tmp_',p_query_id);
 
     -- Q1f --
         CALL buildQuery(p_query_id, withWithout, includedAnyAll, includedValueSet, includedDateFrom, includedDateTo, includedPeriodOperator,includedPeriodValue, includedPeriodType, incValueSet_tmp, 
@@ -259,8 +259,8 @@ DECLARE tempTables VARCHAR(5000);
         SET includedPeriodValue = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodValue1g'));
         SET includedPeriodType = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodType1g')); 
         -- 1g
-        SET incValueSet_tmp = CONCAT('incValueSet1g_tmp_',p_query_id);
-        SET incConcept_tmp = CONCAT('incConcept1g_tmp_',p_query_id);
+        SET incValueSet_tmp = CONCAT('incvalueset1g_tmp_',p_query_id);
+        SET incConcept_tmp = CONCAT('incconcept1g_tmp_',p_query_id);
 
     -- Q1g --
         CALL buildQuery(p_query_id, withWithout, includedAnyAll, includedValueSet, includedDateFrom, includedDateTo, includedPeriodOperator,includedPeriodValue, includedPeriodType, incValueSet_tmp, 
@@ -284,8 +284,8 @@ DECLARE tempTables VARCHAR(5000);
         SET includedPeriodValue = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodValue1h'));
         SET includedPeriodType = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodType1h')); 
         -- 1h
-        SET incValueSet_tmp = CONCAT('incValueSet1h_tmp_',p_query_id);
-        SET incConcept_tmp = CONCAT('incConcept1h_tmp_',p_query_id);
+        SET incValueSet_tmp = CONCAT('incvalueset1h_tmp_',p_query_id);
+        SET incConcept_tmp = CONCAT('incconcept1h_tmp_',p_query_id);
 
     -- Q1h --
         CALL buildQuery(p_query_id, withWithout, includedAnyAll, includedValueSet, includedDateFrom, includedDateTo, includedPeriodOperator,includedPeriodValue, includedPeriodType, incValueSet_tmp, 
@@ -309,8 +309,8 @@ DECLARE tempTables VARCHAR(5000);
         SET includedPeriodValue = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodValue1i'));
         SET includedPeriodType = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodType1i')); 
         -- 1i
-        SET incValueSet_tmp = CONCAT('incValueSet1i_tmp_',p_query_id);
-        SET incConcept_tmp = CONCAT('incConcept1i_tmp_',p_query_id);
+        SET incValueSet_tmp = CONCAT('incvalueset1i_tmp_',p_query_id);
+        SET incConcept_tmp = CONCAT('incconcept1i_tmp_',p_query_id);
 
     -- Q1i --
         CALL buildQuery(p_query_id, withWithout, includedAnyAll, includedValueSet, includedDateFrom, includedDateTo, includedPeriodOperator,includedPeriodValue, includedPeriodType, incValueSet_tmp, 
@@ -334,8 +334,8 @@ DECLARE tempTables VARCHAR(5000);
         SET includedPeriodValue = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodValue1j'));
         SET includedPeriodType = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodType1j')); 
         -- 1j
-        SET incValueSet_tmp = CONCAT('incValueSet1j_tmp_',p_query_id);
-        SET incConcept_tmp = CONCAT('incConcept1j_tmp_',p_query_id);
+        SET incValueSet_tmp = CONCAT('incvalueset1j_tmp_',p_query_id);
+        SET incConcept_tmp = CONCAT('incconcept1j_tmp_',p_query_id);
 
     -- Q1j --
         CALL buildQuery(p_query_id, withWithout, includedAnyAll, includedValueSet, includedDateFrom, includedDateTo, includedPeriodOperator,includedPeriodValue, includedPeriodType, incValueSet_tmp, 
@@ -359,8 +359,8 @@ DECLARE tempTables VARCHAR(5000);
         SET includedPeriodValue = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodValue1k'));
         SET includedPeriodType = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodType1k')); 
         -- 1k
-        SET incValueSet_tmp = CONCAT('incValueSet1k_tmp_',p_query_id);
-        SET incConcept_tmp = CONCAT('incConcept1k_tmp_',p_query_id);
+        SET incValueSet_tmp = CONCAT('incvalueset1k_tmp_',p_query_id);
+        SET incConcept_tmp = CONCAT('incconcept1k_tmp_',p_query_id);
 
     -- Q1k --
         CALL buildQuery(p_query_id, withWithout, includedAnyAll, includedValueSet, includedDateFrom, includedDateTo, includedPeriodOperator,includedPeriodValue, includedPeriodType, incValueSet_tmp, 
@@ -384,8 +384,8 @@ DECLARE tempTables VARCHAR(5000);
         SET includedPeriodValue = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodValue1l'));
         SET includedPeriodType = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodType1l')); 
         -- 1l
-        SET incValueSet_tmp = CONCAT('incValueSet1l_tmp_',p_query_id);
-        SET incConcept_tmp = CONCAT('incConcept1l_tmp_',p_query_id);
+        SET incValueSet_tmp = CONCAT('incvalueset1l_tmp_',p_query_id);
+        SET incConcept_tmp = CONCAT('incconcept1l_tmp_',p_query_id);
 
     -- Q1l --
         CALL buildQuery(p_query_id, withWithout, includedAnyAll, includedValueSet, includedDateFrom, includedDateTo, includedPeriodOperator,includedPeriodValue, includedPeriodType, incValueSet_tmp, 
@@ -412,8 +412,8 @@ DECLARE tempTables VARCHAR(5000);
         SET includedPeriodValue = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodValue2')); 
         SET includedPeriodType = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodType2'));  
         -- 2
-        SET incValueSet_tmp = CONCAT('incValueSet2_tmp_',p_query_id);
-        SET incConcept_tmp = CONCAT('incConcept2_tmp_',p_query_id);
+        SET incValueSet_tmp = CONCAT('incvalueset2_tmp_',p_query_id);
+        SET incConcept_tmp = CONCAT('incconcept2_tmp_',p_query_id);
         SET observation_tmp = CONCAT('observation2_tmp_',p_query_id);
 
     -- Q2 -- 
@@ -441,8 +441,8 @@ DECLARE tempTables VARCHAR(5000);
         SET includedPeriodValue = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodValue2a'));
         SET includedPeriodType = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodType2a'));
         -- 2a
-        SET incValueSet_tmp = CONCAT('incValueSet2a_tmp_',p_query_id);
-        SET incConcept_tmp = CONCAT('incConcept2a_tmp_',p_query_id);
+        SET incValueSet_tmp = CONCAT('incvalueset2a_tmp_',p_query_id);
+        SET incConcept_tmp = CONCAT('incconcept2a_tmp_',p_query_id);
         SET observation_tmp = CONCAT('observation2a_tmp_',p_query_id);
 
     -- Q2a --
@@ -477,13 +477,13 @@ DECLARE tempTables VARCHAR(5000);
         SET includedDiagnosisAgeTo = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedDiagnosisAgeTo3')); 
 
         -- 3
-        SET incValueSet_tmp = CONCAT('incValueSet3_tmp_',p_query_id);
-        SET incConcept_tmp = CONCAT('incConcept3_tmp_',p_query_id);
+        SET incValueSet_tmp = CONCAT('incvalueset3_tmp_',p_query_id);
+        SET incConcept_tmp = CONCAT('incconcept3_tmp_',p_query_id);
         SET observation_tmp = CONCAT('observation3_tmp_',p_query_id);
-        SET incTestedValueset_tmp = CONCAT('incTestedValueset3_tmp_',p_query_id);
-        SET incTestedConcept_tmp = CONCAT('incTestedConcept3_tmp_',p_query_id);
-        SET incDiagnosisValueSet_tmp = CONCAT('incDiagnosisValueSet3_tmp_',p_query_id);
-        SET incDiagnosisConcept_tmp = CONCAT('incDiagnosisConcept3_tmp_',p_query_id);
+        SET incTestedValueset_tmp = CONCAT('inctestedvalueset3_tmp_',p_query_id);
+        SET incTestedConcept_tmp = CONCAT('inctestedconcept3_tmp_',p_query_id);
+        SET incDiagnosisValueSet_tmp = CONCAT('incdiagnosisvalueset3_tmp_',p_query_id);
+        SET incDiagnosisConcept_tmp = CONCAT('incdiagnosisconcept3_tmp_',p_query_id);
         SET diagnosis_tmp = CONCAT('diagnosis3_tmp_',p_query_id);
 
     -- Q3 --
@@ -518,13 +518,13 @@ DECLARE tempTables VARCHAR(5000);
         SET includedDiagnosisAgeTo = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedDiagnosisAgeTo3a')); 
 
         -- 3a
-        SET incValueSet_tmp = CONCAT('incValueSet3a_tmp_',p_query_id);
-        SET incConcept_tmp = CONCAT('incConcept3a_tmp_',p_query_id);
+        SET incValueSet_tmp = CONCAT('incvalueset3a_tmp_',p_query_id);
+        SET incConcept_tmp = CONCAT('incconcept3a_tmp_',p_query_id);
         SET observation_tmp = CONCAT('observation3a_tmp_',p_query_id);
-        SET incTestedValueset_tmp = CONCAT('incTestedValueset3a_tmp_',p_query_id);
-        SET incTestedConcept_tmp = CONCAT('incTestedConcept3a_tmp_',p_query_id);
-        SET incDiagnosisValueSet_tmp = CONCAT('incDiagnosisValueSet3a_tmp_',p_query_id);
-        SET incDiagnosisConcept_tmp = CONCAT('incDiagnosisConcept3a_tmp_',p_query_id);
+        SET incTestedValueset_tmp = CONCAT('inctestedvalueset3a_tmp_',p_query_id);
+        SET incTestedConcept_tmp = CONCAT('inctestedconcept3a_tmp_',p_query_id);
+        SET incDiagnosisValueSet_tmp = CONCAT('incdiagnosisvalueset3a_tmp_',p_query_id);
+        SET incDiagnosisConcept_tmp = CONCAT('incdiagnosisconcept3a_tmp_',p_query_id);
         SET diagnosis_tmp = CONCAT('diagnosis3a_tmp_',p_query_id);
 
     -- Q3a --
@@ -559,13 +559,13 @@ DECLARE tempTables VARCHAR(5000);
         SET includedDiagnosisAgeTo = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedDiagnosisAgeTo3b')); 
 
         -- 3b
-        SET incValueSet_tmp = CONCAT('incValueSet3b_tmp_',p_query_id);
-        SET incConcept_tmp = CONCAT('incConcept3b_tmp_',p_query_id);
+        SET incValueSet_tmp = CONCAT('incvalueset3b_tmp_',p_query_id);
+        SET incConcept_tmp = CONCAT('incconcept3b_tmp_',p_query_id);
         SET observation_tmp = CONCAT('observation3b_tmp_',p_query_id);
-        SET incTestedValueset_tmp = CONCAT('incTestedValueset3b_tmp_',p_query_id);
-        SET incTestedConcept_tmp = CONCAT('incTestedConcept3b_tmp_',p_query_id);
-        SET incDiagnosisValueSet_tmp = CONCAT('incDiagnosisValueSet3b_tmp_',p_query_id);
-        SET incDiagnosisConcept_tmp = CONCAT('incDiagnosisConcept3b_tmp_',p_query_id);
+        SET incTestedValueset_tmp = CONCAT('inctestedvalueset3b_tmp_',p_query_id);
+        SET incTestedConcept_tmp = CONCAT('inctestedconcept3b_tmp_',p_query_id);
+        SET incDiagnosisValueSet_tmp = CONCAT('incdiagnosisvalueset3b_tmp_',p_query_id);
+        SET incDiagnosisConcept_tmp = CONCAT('incdiagnosisconcept3b_tmp_',p_query_id);
         SET diagnosis_tmp = CONCAT('diagnosis3b_tmp_',p_query_id);
 
     -- Q3b --
@@ -600,13 +600,13 @@ DECLARE tempTables VARCHAR(5000);
         SET includedDiagnosisAgeTo = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedDiagnosisAgeTo3c')); 
 
         -- 3c
-        SET incValueSet_tmp = CONCAT('incValueSet3c_tmp_',p_query_id);
-        SET incConcept_tmp = CONCAT('incConcept3c_tmp_',p_query_id);
+        SET incValueSet_tmp = CONCAT('incvalueset3c_tmp_',p_query_id);
+        SET incConcept_tmp = CONCAT('incconcept3c_tmp_',p_query_id);
         SET observation_tmp = CONCAT('observation3c_tmp_',p_query_id);
-        SET incTestedValueset_tmp = CONCAT('incTestedValueset3c_tmp_',p_query_id);
-        SET incTestedConcept_tmp = CONCAT('incTestedConcept3c_tmp_',p_query_id);
-        SET incDiagnosisValueSet_tmp = CONCAT('incDiagnosisValueSet3c_tmp_',p_query_id);
-        SET incDiagnosisConcept_tmp = CONCAT('incDiagnosisConcept3c_tmp_',p_query_id);
+        SET incTestedValueset_tmp = CONCAT('inctestedvalueset3c_tmp_',p_query_id);
+        SET incTestedConcept_tmp = CONCAT('inctestedconcept3c_tmp_',p_query_id);
+        SET incDiagnosisValueSet_tmp = CONCAT('incdiagnosisvalueset3c_tmp_',p_query_id);
+        SET incDiagnosisConcept_tmp = CONCAT('incdiagnosisconcept3c_tmp_',p_query_id);
         SET diagnosis_tmp = CONCAT('diagnosis3c_tmp_',p_query_id);
 
     -- Q3c --
@@ -641,13 +641,13 @@ DECLARE tempTables VARCHAR(5000);
         SET includedDiagnosisAgeTo = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedDiagnosisAgeTo3d')); 
 
         -- 3d
-        SET incValueSet_tmp = CONCAT('incValueSet3d_tmp_',p_query_id);
-        SET incConcept_tmp = CONCAT('incConcept3d_tmp_',p_query_id);
+        SET incValueSet_tmp = CONCAT('incvalueset3d_tmp_',p_query_id);
+        SET incConcept_tmp = CONCAT('incconcept3d_tmp_',p_query_id);
         SET observation_tmp = CONCAT('observation3d_tmp_',p_query_id);
-        SET incTestedValueset_tmp = CONCAT('incTestedValueset3d_tmp_',p_query_id);
-        SET incTestedConcept_tmp = CONCAT('incTestedConcept3d_tmp_',p_query_id);
-        SET incDiagnosisValueSet_tmp = CONCAT('incDiagnosisValueSet3d_tmp_',p_query_id);
-        SET incDiagnosisConcept_tmp = CONCAT('incDiagnosisConcept3d_tmp_',p_query_id);
+        SET incTestedValueset_tmp = CONCAT('inctestedvalueset3d_tmp_',p_query_id);
+        SET incTestedConcept_tmp = CONCAT('inctestedconcept3d_tmp_',p_query_id);
+        SET incDiagnosisValueSet_tmp = CONCAT('incdiagnosisvalueset3d_tmp_',p_query_id);
+        SET incDiagnosisConcept_tmp = CONCAT('incdiagnosisconcept3d_tmp_',p_query_id);
         SET diagnosis_tmp = CONCAT('diagnosis3d_tmp_',p_query_id);
 
     -- Q3d --
@@ -682,13 +682,13 @@ DECLARE tempTables VARCHAR(5000);
         SET includedDiagnosisAgeTo = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedDiagnosisAgeTo3e')); 
 
         -- 3e
-        SET incValueSet_tmp = CONCAT('incValueSet3e_tmp_',p_query_id);
-        SET incConcept_tmp = CONCAT('incConcept3e_tmp_',p_query_id);
+        SET incValueSet_tmp = CONCAT('incvalueset3e_tmp_',p_query_id);
+        SET incConcept_tmp = CONCAT('incconcept3e_tmp_',p_query_id);
         SET observation_tmp = CONCAT('observation3e_tmp_',p_query_id);
-        SET incTestedValueset_tmp = CONCAT('incTestedValueset3e_tmp_',p_query_id);
-        SET incTestedConcept_tmp = CONCAT('incTestedConcept3e_tmp_',p_query_id);
-        SET incDiagnosisValueSet_tmp = CONCAT('incDiagnosisValueSet3e_tmp_',p_query_id);
-        SET incDiagnosisConcept_tmp = CONCAT('incDiagnosisConcept3e_tmp_',p_query_id);
+        SET incTestedValueset_tmp = CONCAT('inctestedvalueset3e_tmp_',p_query_id);
+        SET incTestedConcept_tmp = CONCAT('inctestedconcept3e_tmp_',p_query_id);
+        SET incDiagnosisValueSet_tmp = CONCAT('incdiagnosisvalueset3e_tmp_',p_query_id);
+        SET incDiagnosisConcept_tmp = CONCAT('incdiagnosisconcept3e_tmp_',p_query_id);
         SET diagnosis_tmp = CONCAT('diagnosis3e_tmp_',p_query_id);
 
     -- Q3e --
@@ -723,13 +723,13 @@ DECLARE tempTables VARCHAR(5000);
         SET includedDiagnosisAgeTo = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedDiagnosisAgeTo3f')); 
 
         -- 3f
-        SET incValueSet_tmp = CONCAT('incValueSet3f_tmp_',p_query_id);
-        SET incConcept_tmp = CONCAT('incConcept3f_tmp_',p_query_id);
+        SET incValueSet_tmp = CONCAT('incvalueset3f_tmp_',p_query_id);
+        SET incConcept_tmp = CONCAT('incconcept3f_tmp_',p_query_id);
         SET observation_tmp = CONCAT('observation3f_tmp_',p_query_id);
-        SET incTestedValueset_tmp = CONCAT('incTestedValueset3f_tmp_',p_query_id);
-        SET incTestedConcept_tmp = CONCAT('incTestedConcept3f_tmp_',p_query_id);
-        SET incDiagnosisValueSet_tmp = CONCAT('incDiagnosisValueSet3f_tmp_',p_query_id);
-        SET incDiagnosisConcept_tmp = CONCAT('incDiagnosisConcept3f_tmp_',p_query_id);
+        SET incTestedValueset_tmp = CONCAT('inctestedvalueset3f_tmp_',p_query_id);
+        SET incTestedConcept_tmp = CONCAT('inctestedconcept3f_tmp_',p_query_id);
+        SET incDiagnosisValueSet_tmp = CONCAT('incdiagnosisvalueset3f_tmp_',p_query_id);
+        SET incDiagnosisConcept_tmp = CONCAT('incdiagnosisconcept3f_tmp_',p_query_id);
         SET diagnosis_tmp = CONCAT('diagnosis3f_tmp_',p_query_id);
 
     -- Q3f --
@@ -764,13 +764,13 @@ DECLARE tempTables VARCHAR(5000);
         SET includedDiagnosisAgeTo = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedDiagnosisAgeTo3g')); 
 
         -- 3g
-        SET incValueSet_tmp = CONCAT('incValueSet3g_tmp_',p_query_id);
-        SET incConcept_tmp = CONCAT('incConcept3g_tmp_',p_query_id);
+        SET incValueSet_tmp = CONCAT('incvalueset3g_tmp_',p_query_id);
+        SET incConcept_tmp = CONCAT('incconcept3g_tmp_',p_query_id);
         SET observation_tmp = CONCAT('observation3g_tmp_',p_query_id);
-        SET incTestedValueset_tmp = CONCAT('incTestedValueset3g_tmp_',p_query_id);
-        SET incTestedConcept_tmp = CONCAT('incTestedConcept3g_tmp_',p_query_id);
-        SET incDiagnosisValueSet_tmp = CONCAT('incDiagnosisValueSet3g_tmp_',p_query_id);
-        SET incDiagnosisConcept_tmp = CONCAT('incDiagnosisConcept3g_tmp_',p_query_id);
+        SET incTestedValueset_tmp = CONCAT('inctestedvalueset3g_tmp_',p_query_id);
+        SET incTestedConcept_tmp = CONCAT('inctestedconcept3g_tmp_',p_query_id);
+        SET incDiagnosisValueSet_tmp = CONCAT('incdiagnosisvalueset3g_tmp_',p_query_id);
+        SET incDiagnosisConcept_tmp = CONCAT('incdiagnosisconcept3g_tmp_',p_query_id);
         SET diagnosis_tmp = CONCAT('diagnosis3g_tmp_',p_query_id);
 
     -- Q3g --
@@ -805,13 +805,13 @@ DECLARE tempTables VARCHAR(5000);
         SET includedDiagnosisAgeTo = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedDiagnosisAgeTo3h')); 
 
         -- 3h
-        SET incValueSet_tmp = CONCAT('incValueSet3h_tmp_',p_query_id);
-        SET incConcept_tmp = CONCAT('incConcept3h_tmp_',p_query_id);
+        SET incValueSet_tmp = CONCAT('incvalueset3h_tmp_',p_query_id);
+        SET incConcept_tmp = CONCAT('incconcept3h_tmp_',p_query_id);
         SET observation_tmp = CONCAT('observation3h_tmp_',p_query_id);
-        SET incTestedValueset_tmp = CONCAT('incTestedValueset3h_tmp_',p_query_id);
-        SET incTestedConcept_tmp = CONCAT('incTestedConcept3h_tmp_',p_query_id);
-        SET incDiagnosisValueSet_tmp = CONCAT('incDiagnosisValueSet3h_tmp_',p_query_id);
-        SET incDiagnosisConcept_tmp = CONCAT('incDiagnosisConcept3h_tmp_',p_query_id);
+        SET incTestedValueset_tmp = CONCAT('inctestedvalueset3h_tmp_',p_query_id);
+        SET incTestedConcept_tmp = CONCAT('inctestedconcept3h_tmp_',p_query_id);
+        SET incDiagnosisValueSet_tmp = CONCAT('incdiagnosisvalueset3h_tmp_',p_query_id);
+        SET incDiagnosisConcept_tmp = CONCAT('incdiagnosisconcept3h_tmp_',p_query_id);
         SET diagnosis_tmp = CONCAT('diagnosis3h_tmp_',p_query_id);
 
     -- Q3h --
@@ -839,11 +839,11 @@ DECLARE tempTables VARCHAR(5000);
         SET includedPeriodValue = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodValue4')); 
         SET includedPeriodType = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodType4')); 
         -- 4
-        SET incValueSet_tmp = CONCAT('incValueSet4_tmp_',p_query_id);
-        SET incConcept_tmp = CONCAT('incConcept4_tmp_',p_query_id);
+        SET incValueSet_tmp = CONCAT('incvalueset4_tmp_',p_query_id);
+        SET incConcept_tmp = CONCAT('incconcept4_tmp_',p_query_id);
         SET observation_tmp = CONCAT('observation4_tmp_',p_query_id);
-        SET incFollowedByValueSet_tmp = CONCAT('incFollowedByValueSet4_tmp_',p_query_id);
-        SET incFollowedByConcept_tmp = CONCAT('incFollowedByConcept4_tmp_',p_query_id);
+        SET incFollowedByValueSet_tmp = CONCAT('incfollowedbyvalueset4_tmp_',p_query_id);
+        SET incFollowedByConcept_tmp = CONCAT('incfollowedbyconcept4_tmp_',p_query_id);
 
     -- Q4 --
         CALL buildQuery(p_query_id, withWithout, includedAnyAll, includedValueSet, includedDateFrom, includedDateTo, includedPeriodOperator, includedPeriodValue, includedPeriodType, incValueSet_tmp, 
@@ -870,11 +870,11 @@ DECLARE tempTables VARCHAR(5000);
         SET includedPeriodValue = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodValue4a')); 
         SET includedPeriodType = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodType4a')); 
         -- 4a
-        SET incValueSet_tmp = CONCAT('incValueSet4a_tmp_',p_query_id);
-        SET incConcept_tmp = CONCAT('incConcept4a_tmp_',p_query_id);
+        SET incValueSet_tmp = CONCAT('incvalueset4a_tmp_',p_query_id);
+        SET incConcept_tmp = CONCAT('incconcept4a_tmp_',p_query_id);
         SET observation_tmp = CONCAT('observation4a_tmp_',p_query_id);
-        SET incFollowedByValueSet_tmp = CONCAT('incFollowedByValueSet4a_tmp_',p_query_id);
-        SET incFollowedByConcept_tmp = CONCAT('incFollowedByConcept4a_tmp_',p_query_id);
+        SET incFollowedByValueSet_tmp = CONCAT('incfollowedbyvalueset4a_tmp_',p_query_id);
+        SET incFollowedByConcept_tmp = CONCAT('incfollowedbyconcept4a_tmp_',p_query_id);
 
     -- Q4 --
         CALL buildQuery(p_query_id, withWithout, includedAnyAll, includedValueSet, includedDateFrom, includedDateTo, includedPeriodOperator, includedPeriodValue, includedPeriodType, incValueSet_tmp, 
@@ -901,11 +901,11 @@ DECLARE tempTables VARCHAR(5000);
         SET includedPeriodValue = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodValue4b')); 
         SET includedPeriodType = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodType4b')); 
         -- 4b
-        SET incValueSet_tmp = CONCAT('incValueSet4b_tmp_',p_query_id);
-        SET incConcept_tmp = CONCAT('incConcept4b_tmp_',p_query_id);
+        SET incValueSet_tmp = CONCAT('incvalueset4b_tmp_',p_query_id);
+        SET incConcept_tmp = CONCAT('incconcept4b_tmp_',p_query_id);
         SET observation_tmp = CONCAT('observation4b_tmp_',p_query_id);
-        SET incFollowedByValueSet_tmp = CONCAT('incFollowedByValueSet4b_tmp_',p_query_id);
-        SET incFollowedByConcept_tmp = CONCAT('incFollowedByConcept4b_tmp_',p_query_id);
+        SET incFollowedByValueSet_tmp = CONCAT('incfollowedbyvalueset4b_tmp_',p_query_id);
+        SET incFollowedByConcept_tmp = CONCAT('incfollowedbyconcept4b_tmp_',p_query_id);
 
     -- Q4 --
         CALL buildQuery(p_query_id, withWithout, includedAnyAll, includedValueSet, includedDateFrom, includedDateTo, includedPeriodOperator, includedPeriodValue, includedPeriodType, incValueSet_tmp, 
@@ -931,8 +931,8 @@ DECLARE tempTables VARCHAR(5000);
         SET includedPeriodValue = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodValue5')); 
         SET includedPeriodType = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodType5')); 
         -- 5
-        SET incValueSet_tmp = CONCAT('incValueSet5_tmp_',p_query_id);
-        SET incConcept_tmp = CONCAT('incConcept5_tmp_',p_query_id);
+        SET incValueSet_tmp = CONCAT('incvalueset5_tmp_',p_query_id);
+        SET incConcept_tmp = CONCAT('incconcept5_tmp_',p_query_id);
         SET observation_tmp = CONCAT('observation5_tmp_',p_query_id);
 
     -- Q5 --
@@ -959,8 +959,8 @@ DECLARE tempTables VARCHAR(5000);
         SET includedPeriodValue = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodValue5a')); 
         SET includedPeriodType = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodType5a'));
         -- 5a
-        SET incValueSet_tmp = CONCAT('incValueSet5a_tmp_',p_query_id);
-        SET incConcept_tmp = CONCAT('incConcept5a_tmp_',p_query_id);
+        SET incValueSet_tmp = CONCAT('incvalueset5a_tmp_',p_query_id);
+        SET incConcept_tmp = CONCAT('incconcept5a_tmp_',p_query_id);
         SET observation_tmp = CONCAT('observation5a_tmp_',p_query_id);
 
     -- Q5a --

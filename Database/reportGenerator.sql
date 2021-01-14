@@ -382,18 +382,18 @@ SET A5 = CONCAT('A5_',query_id);
 
 SET all_valueset_tmp = CONCAT('all_valueset_tmp_',query_id);
 SET all_concept_tmp = CONCAT('all_concept_tmp_',query_id);
-SET practiceCohort_tmp  = CONCAT('practiceCohort_tmp_',query_id);
-SET registerCohort_tmp  = CONCAT('registerCohort_tmp_',query_id);
-SET observationCohort_tmp = CONCAT('observationCohort_tmp_',query_id);
+SET practiceCohort_tmp  = CONCAT('practicecohort_tmp_',query_id);
+SET registerCohort_tmp  = CONCAT('registercohort_tmp_',query_id);
+SET observationCohort_tmp = CONCAT('observationcohort_tmp_',query_id);
 
 -- event valuesets and concept tmp tables --
-SET encounterValueSet_tmp = CONCAT('encounterValueSet_tmp_',query_id);
-SET medicationValueSet_tmp = CONCAT('medicationValueSet_tmp_',query_id);
-SET clinicalEventValueSet_tmp = CONCAT('clinicalEventValueSet_tmp_',query_id);
+SET encounterValueSet_tmp = CONCAT('encountervalueset_tmp_',query_id);
+SET medicationValueSet_tmp = CONCAT('medicationvalueset_tmp_',query_id);
+SET clinicalEventValueSet_tmp = CONCAT('clinicaleventvalueset_tmp_',query_id);
 
-SET encounterConcept_tmp  = CONCAT('encounterConcept_tmp_',query_id);
-SET medicationConcept_tmp  = CONCAT('medicationConcept_tmp_',query_id);
-SET clinicalEventConcept_tmp  = CONCAT('clinicalEventConcept_tmp_',query_id);
+SET encounterConcept_tmp  = CONCAT('encounterconcept_tmp_',query_id);
+SET medicationConcept_tmp  = CONCAT('medicationconcept_tmp_',query_id);
+SET clinicalEventConcept_tmp  = CONCAT('clinicaleventconcept_tmp_',query_id);
 
 SET procedure_req_tmp = CONCAT('procedure_req_tmp_',query_id);
 SET diagnostic_tmp = CONCAT('diagnostic_tmp_',query_id);
@@ -402,10 +402,10 @@ SET allergy_tmp = CONCAT('allergy_tmp_',query_id);
 SET referral_req_tmp = CONCAT('referral_req_tmp_',query_id);
 
 -- time series value set and concept tmp tables --
-SET seriesValueset_tmp = CONCAT('seriesValueset_tmp_',query_id); 
-SET seriesConcept_tmp = CONCAT('seriesConcept_tmp_',query_id);
+SET seriesValueset_tmp = CONCAT('seriesvalueset_tmp_',query_id); 
+SET seriesConcept_tmp = CONCAT('seriesconcept_tmp_',query_id);
 
-SET patientCohort_tmp = CONCAT('patientCohort_tmp_',query_id);
+SET patientCohort_tmp = CONCAT('patientcohort_tmp_',query_id);
 
 SET rule_tmp = CONCAT('rule_tmp_',query_id);
 SET rule_det_tmp = CONCAT('rule_det_tmp_',query_id);
