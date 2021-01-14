@@ -1436,14 +1436,12 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
     public RegistriesResult getRegistries(String ccg, String registry) throws Exception {
         RegistriesResult result = new RegistriesResult();
 
-        String sql = "";
+        String sql = "{ call dashboards.getRegistries(?,?) }";
 
-        sql = "call dashboards.getRegistries(?,?)";
-
-        try (PreparedStatement statement = conn.prepareStatement(sql)) {
-            statement.setString(1, ccg);
-            statement.setString(2, registry);
-            try (ResultSet resultSet = statement.executeQuery()) {
+        try (CallableStatement cs = conn.prepareCall(sql);) {
+            cs.setString(1, ccg);
+            cs.setString(2, registry);
+            try (ResultSet resultSet = cs.executeQuery()) {
                 result.setResults(getRegistriesList(resultSet));
             }
         }
