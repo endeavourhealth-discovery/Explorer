@@ -25,7 +25,7 @@ BEGIN
       SET frontlen = LENGTH(front);
       SET TempValue = TRIM(front);
 
-              SET @sql = CONCAT('DROP TABLE IF EXISTS ', TempValue);
+              SET @sql = CONCAT('DROP TABLE IF EXISTS `', TempValue,'`');
 
               PREPARE stmt FROM @sql;
               EXECUTE stmt;
