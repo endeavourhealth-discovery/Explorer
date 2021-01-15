@@ -46,18 +46,6 @@ BEGIN
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;
 
-processloop:
-LOOP 
-
-      IF LENGTH(TRIM(data_types)) = 0 OR data_types IS NULL THEN
-         LEAVE processloop;
-      END IF;
-
-      -- retrieve the table name from a comma separated list
-      SET front = SUBSTRING_INDEX(data_types, ',', 1);
-      SET frontlen = LENGTH(front);
-      SET TempValue = TRIM(front);
-
    -- create a temporary table to hold the patient details
    DROP TEMPORARY TABLE IF EXISTS qry_tmp;
 
@@ -70,9 +58,24 @@ LOOP
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;
 
+   ALTER TABLE qry_tmp ADD INDEX pat_idx (patient_id);
+
+processloop:
+LOOP 
+
+      IF LENGTH(TRIM(data_types)) = 0 OR data_types IS NULL THEN
+         LEAVE processloop;
+      END IF;
+
+      -- retrieve the table name from a comma separated list
+      SET front = SUBSTRING_INDEX(data_types, ',', 1);
+      SET frontlen = LENGTH(front);
+      SET TempValue = TRIM(front);
+
+
    SET @row_id = 0;
 
-   WHILE EXISTS (SELECT row_id from qry_tmp WHERE row_id > @row_id AND row_id <= @row_id + 10000) DO
+   WHILE EXISTS (SELECT row_id from qry_tmp WHERE row_id > @row_id AND row_id <= @row_id + 5000) DO
 
       IF TempValue = 'Observation' THEN  
 
@@ -81,7 +84,7 @@ LOOP
          FROM qry_tmp q JOIN ", p_schema,".observation o ON q.patient_id = o.patient_id AND q.organization_id = o.organization_id 
          JOIN ", p_conceptTab," c ON c.non_core_concept_id = o.non_core_concept_id  
          WHERE c.data_type = 'Observation' 
-         AND q.row_id > @row_id AND q.row_id <= @row_id + 10000");
+         AND q.row_id > @row_id AND q.row_id <= @row_id + 5000");
 
       ELSEIF TempValue = 'Medication' THEN  
 
@@ -90,7 +93,7 @@ LOOP
          FROM qry_tmp q JOIN ", p_schema,".medication_statement m ON q.patient_id = m.patient_id AND q.organization_id = m.organization_id 
          JOIN ", p_conceptTab," c ON c.non_core_concept_id = m.non_core_concept_id  
          WHERE c.data_type = 'Medication' 
-         AND q.row_id > @row_id AND q.row_id <= @row_id + 10000");
+         AND q.row_id > @row_id AND q.row_id <= @row_id + 5000");
 
       ELSEIF TempValue = 'Encounter' THEN
 
@@ -99,7 +102,7 @@ LOOP
          FROM qry_tmp q JOIN ", p_schema,".encounter en ON q.patient_id = en.patient_id AND q.organization_id = en.organization_id 
          JOIN ", p_conceptTab," c ON c.non_core_concept_id = en.non_core_concept_id  
          WHERE c.data_type = 'Encounter' 
-         AND q.row_id > @row_id AND q.row_id <= @row_id + 10000");
+         AND q.row_id > @row_id AND q.row_id <= @row_id + 5000");
 
       ELSEIF TempValue = 'Ethnicity' THEN
 
@@ -108,7 +111,7 @@ LOOP
          FROM qry_tmp q JOIN ", p_schema,".patient p ON q.patient_id = p.id AND q.organization_id = p.organization_id 
          JOIN ", p_conceptTab," c ON c.non_core_concept_id = p.ethnic_code_concept_id  
          WHERE c.data_type = 'Ethnicity' 
-         AND q.row_id > @row_id AND q.row_id <= @row_id + 10000");
+         AND q.row_id > @row_id AND q.row_id <= @row_id + 5000");
 
       END IF;
 
@@ -116,7 +119,7 @@ LOOP
       EXECUTE stmt;
       DEALLOCATE PREPARE stmt;
    
-      SET @row_id = @row_id + 10000; 
+      SET @row_id = @row_id + 5000; 
 
    END WHILE; 
 
@@ -127,15 +130,15 @@ END LOOP;
 
    DROP TEMPORARY TABLE IF EXISTS qry_tmp;
 
-   SET @sql = CONCAT('ALTER TABLE ', p_observationTab, ' ADD INDEX pat_idx(patient_id)');
+   SET @sql = CONCAT('ALTER TABLE ', p_observationTab, ' ADD INDEX pat_idx (patient_id)');
    PREPARE stmt FROM @sql;
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;
 
-   SET @sql = CONCAT('ALTER TABLE ', p_observationTab, ' ADD INDEX org_idx(organization_id)');
+   SET @sql = CONCAT('ALTER TABLE ', p_observationTab, ' ADD INDEX org_idx (organization_id)');
    PREPARE stmt FROM @sql;
    EXECUTE stmt;
-   DEALLOCATE PREPARE stmt;
+   DEALLOCATE PREPARE stmt;  
 
 END//
 DELIMITER ;
