@@ -301,7 +301,7 @@ BEGIN
          SET @row_id = 0;
 
          -- loop through the ids and insert data into the output table in batches
-         WHILE EXISTS (SELECT row_id from qry_output_tmp WHERE row_id > @row_id AND row_id <= @row_id + 5000) DO
+         WHILE EXISTS (SELECT row_id from qry_output_tmp WHERE row_id > @row_id AND row_id <= @row_id + 10000) DO
 
                SET @ins = CONCAT("INSERT INTO  ", output_table, " 
                SELECT q.id AS Id, ", BINARY l_sql , " FROM ", p_schema,".", event_table," t 
@@ -312,13 +312,13 @@ BEGIN
                , join_clause_3," "
                , join_clause_4," "
                , join_clause_5," "
-               , join_clause_6," WHERE q.row_id > @row_id AND q.row_id <= @row_id + 5000");
+               , join_clause_6," WHERE q.row_id > @row_id AND q.row_id <= @row_id + 10000");
 
                PREPARE stmt FROM @ins;
                EXECUTE stmt;
                DEALLOCATE PREPARE stmt;
 
-               SET @row_id = @row_id + 5000; 
+               SET @row_id = @row_id + 10000; 
 
          END WHILE; 
 
@@ -461,16 +461,16 @@ BEGIN
                                     SET @row_id = 0;
 
                                     -- loop through the row ids and insert the clinical type table data into the output table in batches
-                                    WHILE EXISTS (SELECT row_id from qry_clinicalTypeTab_tmp WHERE row_id > @row_id AND row_id <= @row_id + 5000) DO
+                                    WHILE EXISTS (SELECT row_id from qry_clinicalTypeTab_tmp WHERE row_id > @row_id AND row_id <= @row_id + 10000) DO
 
                                           SET @ins = CONCAT("INSERT INTO  ", output_table, "(", BINARY l_sql," )  
                                           SELECT ", BINARY l_sql , " FROM qry_clinicalTypeTab_tmp 
-                                          WHERE row_id > @row_id AND row_id <= @row_id + 5000");
+                                          WHERE row_id > @row_id AND row_id <= @row_id + 10000");
                                           PREPARE stmt FROM @ins;
                                           EXECUTE stmt;
                                           DEALLOCATE PREPARE stmt;
 
-                                          SET @row_id = @row_id + 5000; 
+                                          SET @row_id = @row_id + 10000; 
 
                                     END WHILE; 
 
