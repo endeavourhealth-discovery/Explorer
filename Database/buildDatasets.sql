@@ -41,25 +41,25 @@ BEGIN
     BEGIN
       GET DIAGNOSTICS CONDITION 1
         @code = RETURNED_SQLSTATE, @msg = MESSAGE_TEXT;
-        CALL log_errors(p_query_id,'buildDatasets',@code,@msg,now());
+        CALL log_errors(p_query_id, 'buildDatasets', @code, @msg, now());
         RESIGNAL; -- rethrow the error
     END;  
 
 CREATE TABLE IF NOT EXISTS person_dataset (
   query_id INT(11) NOT NULL, patient_id BIGINT(20) NOT NULL,
-  PRIMARY KEY (query_id, patient_id) ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  PRIMARY KEY (query_id, patient_id), INDEX pat_idx (patient_id) ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE IF NOT EXISTS observation_dataset (
   query_id INT(11) NOT NULL, observation_id BIGINT(20) NOT NULL,
-  PRIMARY KEY (query_id, observation_id) ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  PRIMARY KEY (query_id, observation_id), INDEX obs_idx (observation_id)  ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE IF NOT EXISTS medication_dataset (
   query_id INT(11) NOT NULL, medication_statement_id BIGINT(20) NOT NULL,
-  PRIMARY KEY (query_id, medication_statement_id) ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  PRIMARY KEY (query_id, medication_statement_id), INDEX med_idx (medication_statement_id)  ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE IF NOT EXISTS encounter_dataset (
   query_id INT(11) NOT NULL, encounter_id BIGINT(20) NOT NULL, 
-  PRIMARY KEY (query_id, encounter_id) ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  PRIMARY KEY (query_id, encounter_id), INDEX enc_idx (encounter_id)  ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
   
     -- remove previous query id data
     SET @sql = CONCAT('DELETE FROM person_dataset WHERE query_id = ', p_query_id);
