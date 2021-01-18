@@ -105,13 +105,13 @@ CREATE TABLE IF NOT EXISTS encounter_dataset (
 
          -- process each event type if exists
          IF TempValue = 'DEMOGRAPHICS'THEN
-            SET sourcetab = CONCAT(p_schema,'.patient');
+            SET sourcetab ='patient';
             SET activeString = '1';  -- not applicable
             SET datasettab = 'person_dataset';
             SET datasetconcepttab = NULL;  -- no valueset for patient
             SET daterange = '1';  -- no valueset date range for patient
          ELSEIF TempValue = 'CLINICALEVENTS' THEN
-            SET sourcetab = CONCAT(p_schema,'.observation');
+            SET sourcetab ='observation';
             IF p_activeProblems = 'TRUE' THEN
                SET activeString = 'o.problem_end_date IS NULL';
             ELSE
@@ -121,7 +121,7 @@ CREATE TABLE IF NOT EXISTS encounter_dataset (
             SET datasetconcepttab = p_clinicalEventConcept_tmp;
             SET daterange = p_clinicalEventsDateRangeString;
          ELSEIF TempValue = 'MEDICATION' THEN
-            SET sourcetab = CONCAT(p_schema,'.medication_statement');
+            SET sourcetab ='medication_statement';
             IF p_currentMedication = 'TRUE' THEN
                SET activeString = 'o.cancellation_date is NULL';
             ELSE
@@ -131,7 +131,7 @@ CREATE TABLE IF NOT EXISTS encounter_dataset (
             SET datasetconcepttab = p_medicationConcept_tmp;
             SET daterange = p_medicationDateRangeString;
          ELSEIF TempValue = 'ENCOUNTERS' THEN
-            SET sourcetab = CONCAT(p_schema,'.encounter');
+            SET sourcetab ='encounter';
             SET activeString = '1';  -- not applicable
             SET datasettab = 'encounter_dataset';
             SET datasetconcepttab = p_encounterConcept_tmp;
