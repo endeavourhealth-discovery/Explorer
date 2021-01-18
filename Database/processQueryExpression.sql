@@ -171,7 +171,7 @@ BEGIN
                 DEALLOCATE PREPARE stmt;          
 
                 SET @sql = CONCAT('CREATE TABLE ', l_rejecttab,' AS 
-                SELECT patient_id, person_id, organization_id , date_registered, age FROM ', @queryTable,'  
+                SELECT patient_id, person_id, organization_id , date_registered, age, date_of_birth, date_of_death FROM ', @queryTable,'  
                 WHERE patient_id NOT IN (SELECT patient_id FROM ', l_selecttab,' )');
                 PREPARE stmt FROM @sql;
                 EXECUTE stmt;
