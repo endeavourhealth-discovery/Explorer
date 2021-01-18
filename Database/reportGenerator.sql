@@ -208,6 +208,9 @@ DECLARE tempTables VARCHAR(5000);
 DECLARE rule_tmp VARCHAR(64) DEFAULT NULL; 
 DECLARE rule_det_tmp VARCHAR(64) DEFAULT NULL; 
 
+-- Set Debug Mode
+SET @enabled = FALSE;
+
 -- Set Variables for Cohort definition -- 
 SET sourceSchema = 'subscriber_pi_rv';
 
@@ -410,44 +413,59 @@ SET patientCohort_tmp = CONCAT('patientcohort_tmp_',query_id);
 SET rule_tmp = CONCAT('rule_tmp_',query_id);
 SET rule_det_tmp = CONCAT('rule_det_tmp_',query_id);
 
+CALL debug_msg(@enabled, CONCAT(NOW(),' - start'));
+CALL debug_msg(@enabled, CONCAT(NOW(),' - buildCohortDefinition'));
 -- build practice cohort -- 
 CALL buildCohortDefinition(query_id, providerOrganisation, includedOrganisation, registrationStatus, gender, postcode, org_tmp, practiceCohort_tmp, store_tmp, sourceSchema);
 -- build observation cohort for all valuesets to be used in the advance queries --
+CALL debug_msg(@enabled, CONCAT(NOW(),' - createValueSet'));
 CALL createValueSet('1', all_valueset_tmp);
+CALL debug_msg(@enabled, CONCAT(NOW(),' - createConcept'));
 CALL createConcept(all_concept_tmp, all_valueset_tmp, sourceSchema);
+CALL debug_msg(@enabled, CONCAT(NOW(),' - createObservationCohort'));
 CALL createObservationCohort(query_id, observationCohort_tmp, practiceCohort_tmp, all_concept_tmp, sourceSchema);
-
+CALL debug_msg(@enabled, CONCAT(NOW(),' - buildRegisterRule'));
 -- build register rule
 CALL buildRegisterRule(query_id, matching1, queryExpression1, rule_tmp);
 -- build rules 
+CALL debug_msg(@enabled, CONCAT(NOW(),' - selectRejects'));
 SET selectRejects = CONCAT(selectReject2,',',selectReject3,',',selectReject4,',',selectReject5,',',selectReject6,',',selectReject7,',',selectReject8,',',selectReject9,',',
 selectReject10,',',selectReject11,',',selectReject12,',',selectReject13,',',selectReject14,',',selectReject15,',',selectReject16);
+CALL debug_msg(@enabled, CONCAT(NOW(),' - matchings'));
 SET matchings = CONCAT(matching2,',',matching3,',',matching4,',',matching5,',',matching6,',',matching7,',',matching8,',',matching9,',',
 matching10,',',matching11,',',matching12,',',matching13,',',matching14,',',matching15,',',matching16);
+CALL debug_msg(@enabled, CONCAT(NOW(),' - queryExpressions'));
 SET queryExpressions = CONCAT(queryExpression2,',',queryExpression3,',',queryExpression4,',',queryExpression5,',',queryExpression6,',',queryExpression7,',',queryExpression8,',',queryExpression9,',',
 queryExpression10,',',queryExpression11,',',queryExpression12,',',queryExpression13,',',queryExpression14,',',queryExpression15,',',queryExpression16);
+CALL debug_msg(@enabled, CONCAT(NOW(),' - ruleNumbers'));
 SET ruleNumbers = CONCAT(ruleNumber2,',',ruleNumber3,',',ruleNumber4,',',ruleNumber5,',',ruleNumber6,',',ruleNumber7,',',ruleNumber8,',',ruleNumber9,',',
 ruleNumber10,',',ruleNumber11,',',ruleNumber12,',',ruleNumber13,',',ruleNumber14,',',ruleNumber15,',',ruleNumber16);
 -- populate rules into a table
+CALL debug_msg(@enabled, CONCAT(NOW(),' - populateRules'));
 CALL populateRules(query_id, selectRejects, matchings, queryExpressions, ruleNumbers, rule_tmp);
 -- split query expression
+CALL debug_msg(@enabled, CONCAT(NOW(),' - splitQueryExpression'));
 CALL splitQueryExpression(query_id, rule_tmp, rule_det_tmp);
 -- build query for rules
+CALL debug_msg(@enabled, CONCAT(NOW(),' - buildQueryExpression'));
 CALL buildQueryExpression(query_id, rule_tmp, rule_det_tmp, practiceCohort_tmp);
 -- process the rules
+CALL debug_msg(@enabled, CONCAT(NOW(),' - processQueryExpression'));
 CALL processQueryExpression(query_id, query, rule_tmp, practiceCohort_tmp, registerCohort_tmp, observationCohort_tmp, store_tmp, sourceSchema);
 -- build final patient cohort
+CALL debug_msg(@enabled, CONCAT(NOW(),' - buildFinalPatientCohort'));
 CALL buildFinalPatientCohort(query_id, patientCohort_tmp, practiceCohort_tmp, rule_tmp, sourceSchema);
-
+CALL debug_msg(@enabled, CONCAT(NOW(),' - tempTables'));
 -- remove tmp tables
 SET tempTables = CONCAT(org_tmp,',',observationCohort_tmp,',',practiceCohort_tmp,',',registerCohort_tmp,',',Q1,',',Q1A,',',Q1B,',',Q1C,',',
 Q1D,',',Q1E,',',Q1F,',',Q1G,',',Q1H,',',Q1I,',',Q1J,',',Q1K,',',Q1L,',',Q2,',',Q2A,',',
 Q3,',',Q3A,',',Q3B,',',Q3C,',',Q3D,',',Q3E,',',Q3F,',',Q3G,',',Q3H,',',
 Q4,',',Q4A,',',Q4B,',',Q5,',',Q5A,',',Q0,',',A1,',',A2,',',A3,',',A4,',',A5,',',rule_tmp,',',rule_det_tmp,',',all_valueset_tmp,',', all_concept_tmp);
-
+CALL debug_msg(@enabled, CONCAT(NOW(),' - dropTempTables'));
 CALL dropTempTables(tempTables);
 
 -- build result datasets
+CALL debug_msg(@enabled, CONCAT(NOW(),' - buildResultDatasets'));
 CALL buildResultDatasets(query_id, patientCohort_tmp, demographics, encounters, medication, currentMedication, clinicalEvents, activeProblems, 
 dateFromEncounters, dateToEncounters, dateFromMedication, dateToMedication, dateFromClinicalEvents, dateToClinicalEvents, selectedClinicalTypes, 
 selectedEncounterValueSet, selectedMedicationValueSet, selectedClinicalEventValueSet, procedure_req_tmp, diagnostic_tmp, warning_tmp , allergy_tmp, referral_req_tmp,
@@ -456,26 +474,32 @@ sourceSchema, store_tmp, @eventTypes);
 SET eventTypes = @eventTypes;
 
 -- update registries
+CALL debug_msg(@enabled, CONCAT(NOW(),' - buildRegistries'));
 CALL buildRegistries(query_id, patientCohort_tmp, targetPercentage);
 
 -- build dataset outputs
+CALL debug_msg(@enabled, CONCAT(NOW(),' - buildDatasetOutputTables'));
 CALL buildDatasetOutputTables(selectedDemographicFields, selectedEncounterFields, selectedMedicationFields, selectedClinicalEventFields, 
 eventTypes, store_tmp, sourceSchema, query_id, patientCohort_tmp, procedure_req_tmp, diagnostic_tmp, warning_tmp, allergy_tmp, referral_req_tmp);
   
 -- build time series
+CALL debug_msg(@enabled, CONCAT(NOW(),' - buildTimeSeries'));
 CALL buildTimeSeries(timeSeries, seriesTable, seriesField, seriesEncounterValueSet, seriesMedicationValueSet, seriesClinicalEventValueSet, 
 seriesDateFrom, seriesDateTo, seriesPeriodOperator, seriesPeriodValue, seriesPeriodType, store_tmp, seriesValueset_tmp, seriesConcept_tmp, 
 sourceSchema, query_id, patientCohort_tmp); 
 
 -- update queue for next run date
+CALL debug_msg(@enabled, CONCAT(NOW(),' - updateQueue'));
 CALL updateQueue(query_id, schedule);
 
 -- remove temp tables
 SET tempTables = CONCAT(store_tmp,',',encounterValueSet_tmp,',',encounterConcept_tmp,',',
 medicationValueSet_tmp,',',medicationConcept_tmp,',',clinicalEventValueSet_tmp,',',clinicalEventConcept_tmp,',',
 seriesValueset_tmp,',',seriesConcept_tmp,',',patientCohort_tmp,',',procedure_req_tmp,',',diagnostic_tmp,',',warning_tmp,',',allergy_tmp,',',referral_req_tmp);
-
+CALL debug_msg(@enabled, CONCAT(NOW(),' - dropTempTables'));
 CALL dropTempTables(tempTables);
+
+CALL debug_msg(@enabled, CONCAT(NOW(),' - end'));
 
 END//
 DELIMITER ;
