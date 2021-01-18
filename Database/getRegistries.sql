@@ -6,8 +6,9 @@ DELIMITER //
 CREATE PROCEDURE getRegistries(IN filter_ccg VARCHAR(255),
   IN filter_registry VARCHAR(255))
 
-BEGIN
+sp: BEGIN
 
+DECLARE counter DECIMAL DEFAULT 0;
 
 drop table if exists dashboards.temp;
 drop temporary table if exists tmp1;
@@ -75,6 +76,12 @@ IF filter_ccg='' and filter_registry = '' THEN
 
 elseif filter_ccg != '' and filter_registry	 = '' THEN
 
+	SELECT count(distinct(ccg)) into counter FROM dashboards.practice_list_sizes where ccg in (filter_ccg);
+
+	if counter = 0 then
+		leave sp;
+	end if;
+
 	SELECT
 	  GROUP_CONCAT(DISTINCT
 		CONCAT(
@@ -126,6 +133,12 @@ elseif filter_ccg != '' and filter_registry	 = '' THEN
 	INTO @sql;
 
 elseif filter_ccg='' and filter_registry != '' THEN
+
+	SELECT count(distinct(registry)) into counter FROM dashboards.registries where registry in (filter_registry);
+
+	if counter = 0 then
+		leave sp;
+	end if;
 
 	SELECT
 	  GROUP_CONCAT(DISTINCT
@@ -192,6 +205,19 @@ SELECT
 	INTO @sql;
 
 elseif filter_ccg != '' and filter_registry	 != '' THEN
+
+	SELECT count(distinct(ccg)) into counter FROM dashboards.practice_list_sizes where ccg in (filter_ccg);
+
+	if counter = 0 then
+		leave sp;
+	end if;
+
+	SELECT count(distinct(registry)) into counter FROM dashboards.registries where registry in (filter_registry);
+
+	if counter = 0 then
+		leave sp;
+	end if;
+
 
 	SELECT
 	  GROUP_CONCAT(DISTINCT
