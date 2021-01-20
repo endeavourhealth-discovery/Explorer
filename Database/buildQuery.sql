@@ -20,7 +20,6 @@ IN p_queryType VARCHAR(2),
 IN p_includedEarliestLatest VARCHAR(20), 
 IN p_includedOperator VARCHAR(50), 
 IN p_includedEntryValue VARCHAR(20), 
-IN p_observation_tmp VARCHAR(64),
 IN p_includedAnyAllTested VARCHAR(10),
 IN p_includedTestedValueSet VARCHAR(1000), 
 IN p_includeTestedValuesettab VARCHAR(64),
@@ -44,7 +43,6 @@ IN p_includedDiagnosisAnyAll VARCHAR(10),
 IN p_includedDiagnosisValueSet VARCHAR(1000),
 IN p_incDiagnosisValueSetTab VARCHAR(64), 
 IN p_incDiagnosisConceptTab VARCHAR(64), 
-IN p_diagnosis_tmp VARCHAR(64),  
 IN p_schema VARCHAR(255),
 IN p_storetab VARCHAR(64),
 IN p_queryCohort VARCHAR(64),
@@ -111,9 +109,9 @@ SET p_greaterlessvalue = IF(p_greaterlessvalue = '', NULL, p_greaterlessvalue);
       -- get date range string
       SET timeperioddaterange = getTimePeriodDateRange(p_includedDateFrom, p_includedDateTo, p_includedPeriodValue, p_includedPeriodType, p_includedPeriodOperator,'Y');    
       -- build query expression table
-      CALL runBuildQuery(p_query_id, p_withWithout, p_includedAnyAll, timeperioddaterange, p_includeConcepttab, p_observationCohortTab, NULL, NULL, NULL, NULL, 
+      CALL runBuildQuery(p_query_id, p_withWithout, p_includedAnyAll, timeperioddaterange, p_includeConcepttab, p_observationCohortTab, NULL, NULL, NULL, 
       NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
-      NULL, NULL, NULL, NULL, '1', p_queryCohort, p_queryNumber);
+      NULL, NULL, NULL, '1', p_queryCohort, p_queryNumber);
 
     END IF;
 
@@ -135,9 +133,9 @@ SET p_greaterlessvalue = IF(p_greaterlessvalue = '', NULL, p_greaterlessvalue);
       -- get date range string
       SET timeperioddaterange = getTimePeriodDateRange(p_includedDateFrom, p_includedDateTo, p_includedPeriodValue, p_includedPeriodType, p_includedPeriodOperator,'Y');
       -- build query expression table
-      CALL runBuildQuery(p_query_id, p_withWithout, p_includedAnyAll, timeperioddaterange, p_includeConcepttab, p_observationCohortTab, p_observation_tmp, p_includedEarliestLatest, p_includedOperator, p_includedEntryValue, 
+      CALL runBuildQuery(p_query_id, p_withWithout, p_includedAnyAll, timeperioddaterange, p_includeConcepttab, p_observationCohortTab, p_includedEarliestLatest, p_includedOperator, p_includedEntryValue, 
       NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-      NULL, NULL, NULL, NULL, '2', p_queryCohort, p_queryNumber);
+      NULL, NULL, NULL, '2', p_queryCohort, p_queryNumber);
 
     END IF;
 
@@ -193,9 +191,9 @@ SET p_greaterlessvalue = IF(p_greaterlessvalue = '', NULL, p_greaterlessvalue);
       -- get date range string
       SET timeperioddaterange = getTimePeriodDateRange(p_includedDateFrom, p_includedDateTo, p_includedPeriodValue, p_includedPeriodType, p_includedPeriodOperator,'Y');
       -- build query expression table
-      CALL runBuildQuery(p_query_id, p_withWithout, p_includedAnyAll, timeperioddaterange, p_includeConcepttab, p_observationCohortTab, p_observation_tmp, p_includedEarliestLatest, NULL, NULL, 
+      CALL runBuildQuery(p_query_id, p_withWithout, p_includedAnyAll, timeperioddaterange, p_includeConcepttab, p_observationCohortTab, p_includedEarliestLatest, NULL, NULL, 
       p_includedAnyAllTested, p_includeTestedConcepttab, NULL, NULL, NULL, NULL, NULL, NULL, NULL, agerange, 
-      p_includedDiagnosisAnyAll, p_includedDob, p_incDiagnosisConceptTab, p_diagnosis_tmp, '3', p_queryCohort, p_queryNumber);
+      p_includedDiagnosisAnyAll, p_includedDob, p_incDiagnosisConceptTab, '3', p_queryCohort, p_queryNumber);
 
     END IF;
 
@@ -225,9 +223,9 @@ SET p_greaterlessvalue = IF(p_greaterlessvalue = '', NULL, p_greaterlessvalue);
       -- get date range string
       SET timeperioddaterange = getTimePeriodDateRange(p_includedDateFrom, p_includedDateTo, p_includedPeriodValue, p_includedPeriodType, p_includedPeriodOperator,'N');
       -- build query expression table
-      CALL runBuildQuery(p_query_id, p_withWithout, p_includedAnyAll, timeperioddaterange, p_includeConcepttab, p_observationCohortTab, p_observation_tmp, NULL, NULL, NULL, 
+      CALL runBuildQuery(p_query_id, p_withWithout, p_includedAnyAll, timeperioddaterange, p_includeConcepttab, p_observationCohortTab, NULL, NULL, NULL, 
       NULL, NULL, p_includedAreNot, p_includedAnyAllFollowedBy, p_includedFollowedByConcepttab, NULL, NULL, NULL, NULL, NULL, 
-      NULL, NULL, NULL, NULL, '4', p_queryCohort, p_queryNumber);
+      NULL, NULL, NULL, '4', p_queryCohort, p_queryNumber);
 
     END IF;
     
@@ -248,9 +246,9 @@ SET p_greaterlessvalue = IF(p_greaterlessvalue = '', NULL, p_greaterlessvalue);
       -- get date range string
       SET timeperioddaterange = getTimePeriodDateRange(p_includedDateFrom, p_includedDateTo, p_includedPeriodValue, p_includedPeriodType, p_includedPeriodOperator,'Y');
       -- build query expression table
-      CALL runBuildQuery(p_query_id, p_withWithout, p_includedAnyAll, timeperioddaterange, p_includeConcepttab, p_observationCohortTab, p_observation_tmp, NULL, NULL, NULL, 
+      CALL runBuildQuery(p_query_id, p_withWithout, p_includedAnyAll, timeperioddaterange, p_includeConcepttab, p_observationCohortTab, NULL, NULL, NULL, 
       NULL, NULL, NULL, NULL, NULL, p_greaterless, p_greaterlessvalue, NULL, NULL, NULL, 
-      NULL, NULL, NULL, NULL, '5', p_queryCohort, p_queryNumber);
+      NULL, NULL, NULL, '5', p_queryCohort, p_queryNumber);
 
     END IF;   
 
@@ -273,9 +271,9 @@ SET p_greaterlessvalue = IF(p_greaterlessvalue = '', NULL, p_greaterlessvalue);
   END IF;
 
   -- build query expression table
-  CALL runBuildQuery(p_query_id, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
+  CALL runBuildQuery(p_query_id, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
   NULL, NULL, NULL, NULL, NULL, NULL, NULL, regPeriodRange, p_registrationExclude, NULL, 
-  NULL, NULL, NULL, NULL, '0', p_queryCohort, p_queryNumber);
+  NULL, NULL, NULL, '0', p_queryCohort, p_queryNumber);
 
  ELSEIF p_queryType = 'A' THEN 
 
@@ -290,9 +288,9 @@ SET p_greaterlessvalue = IF(p_greaterlessvalue = '', NULL, p_greaterlessvalue);
   END IF;
 
   -- build query expression table
-  CALL runBuildQuery(p_query_id, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
+  CALL runBuildQuery(p_query_id, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
   NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, agerange, 
-  NULL, NULL, NULL, NULL, 'A', p_queryCohort, p_queryNumber);
+  NULL, NULL, NULL, 'A', p_queryCohort, p_queryNumber);
 
  END IF;
 

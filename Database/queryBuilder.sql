@@ -43,14 +43,14 @@ DECLARE includedFollowedByValueSet VARCHAR(1000) DEFAULT NULL;
 
 DECLARE incValueSet_tmp VARCHAR(64) DEFAULT NULL;
 DECLARE incConcept_tmp VARCHAR(64) DEFAULT NULL;
-DECLARE observation_tmp VARCHAR(64) DEFAULT NULL;
+
 DECLARE incTestedValueset_tmp VARCHAR(64) DEFAULT NULL;
 DECLARE incTestedConcept_tmp VARCHAR(64) DEFAULT NULL;
 DECLARE incFollowedByValueSet_tmp VARCHAR(64) DEFAULT NULL;
 DECLARE incFollowedByConcept_tmp VARCHAR(64) DEFAULT NULL;
 DECLARE incDiagnosisValueSet_tmp VARCHAR(64) DEFAULT NULL;
 DECLARE incDiagnosisConcept_tmp VARCHAR(64) DEFAULT NULL;
-DECLARE diagnosis_tmp VARCHAR(64) DEFAULT NULL; 
+
 
 -- registration period
 DECLARE registrationExclude VARCHAR(10) DEFAULT NULL; 
@@ -89,10 +89,10 @@ DECLARE tempTables VARCHAR(5000);
 
     -- Q1 --
         CALL buildQuery(p_query_id, withWithout, includedAnyAll, includedValueSet, includedDateFrom, includedDateTo, includedPeriodOperator,includedPeriodValue, includedPeriodType, incValueSet_tmp, 
-        incConcept_tmp, p_observationCohort_tmp, '1', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
+        incConcept_tmp, p_observationCohort_tmp, '1', NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-        NULL, p_schema, p_store_tmp, p_queryCohort, p_queryNumber);
+        p_schema, p_store_tmp, p_queryCohort, p_queryNumber);
 
     -- remove tmp tables
     SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp);
@@ -114,10 +114,10 @@ DECLARE tempTables VARCHAR(5000);
 
     -- Q1a --
         CALL buildQuery(p_query_id, withWithout, includedAnyAll, includedValueSet, includedDateFrom, includedDateTo, includedPeriodOperator,includedPeriodValue, includedPeriodType, incValueSet_tmp, 
-        incConcept_tmp, p_observationCohort_tmp, '1', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
+        incConcept_tmp, p_observationCohort_tmp, '1', NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-        NULL, p_schema, p_store_tmp, p_queryCohort, p_queryNumber);
+        p_schema, p_store_tmp, p_queryCohort, p_queryNumber);
 
         -- remove tmp tables
         SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp);
@@ -139,10 +139,10 @@ DECLARE tempTables VARCHAR(5000);
 
     -- Q1b --
         CALL buildQuery(p_query_id, withWithout, includedAnyAll, includedValueSet, includedDateFrom, includedDateTo, includedPeriodOperator,includedPeriodValue, includedPeriodType, incValueSet_tmp, 
-        incConcept_tmp, p_observationCohort_tmp, '1', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
+        incConcept_tmp, p_observationCohort_tmp, '1', NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-        NULL, p_schema, p_store_tmp, p_queryCohort, p_queryNumber);
+        p_schema, p_store_tmp, p_queryCohort, p_queryNumber);
 
         -- remove tmp tables
         SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp);
@@ -164,10 +164,10 @@ DECLARE tempTables VARCHAR(5000);
 
     -- Q1c --
         CALL buildQuery(p_query_id, withWithout, includedAnyAll, includedValueSet, includedDateFrom, includedDateTo, includedPeriodOperator,includedPeriodValue, includedPeriodType, incValueSet_tmp, 
-        incConcept_tmp, p_observationCohort_tmp, '1', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
+        incConcept_tmp, p_observationCohort_tmp, '1', NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-        NULL, p_schema, p_store_tmp, p_queryCohort, p_queryNumber);
+        p_schema, p_store_tmp, p_queryCohort, p_queryNumber);
 
         -- remove tmp tables
         SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp);
@@ -189,10 +189,10 @@ DECLARE tempTables VARCHAR(5000);
 
     -- Q1d --
         CALL buildQuery(p_query_id, withWithout, includedAnyAll, includedValueSet, includedDateFrom, includedDateTo, includedPeriodOperator,includedPeriodValue, includedPeriodType, incValueSet_tmp, 
-        incConcept_tmp, p_observationCohort_tmp, '1', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
+        incConcept_tmp, p_observationCohort_tmp, '1', NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-        NULL, p_schema, p_store_tmp, p_queryCohort, p_queryNumber);
+        p_schema, p_store_tmp, p_queryCohort, p_queryNumber);
 
         -- remove tmp tables
         SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp);
@@ -214,10 +214,10 @@ DECLARE tempTables VARCHAR(5000);
 
     -- Q1e --
         CALL buildQuery(p_query_id, withWithout, includedAnyAll, includedValueSet, includedDateFrom, includedDateTo, includedPeriodOperator,includedPeriodValue, includedPeriodType, incValueSet_tmp, 
-        incConcept_tmp, p_observationCohort_tmp, '1', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
+        incConcept_tmp, p_observationCohort_tmp, '1', NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-        NULL, p_schema, p_store_tmp, p_queryCohort, p_queryNumber);
+        p_schema, p_store_tmp, p_queryCohort, p_queryNumber);
 
         -- remove tmp tables
         SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp);
@@ -239,10 +239,10 @@ DECLARE tempTables VARCHAR(5000);
 
     -- Q1f --
         CALL buildQuery(p_query_id, withWithout, includedAnyAll, includedValueSet, includedDateFrom, includedDateTo, includedPeriodOperator,includedPeriodValue, includedPeriodType, incValueSet_tmp, 
-        incConcept_tmp, p_observationCohort_tmp, '1', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
+        incConcept_tmp, p_observationCohort_tmp, '1', NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-        NULL, p_schema, p_store_tmp, p_queryCohort, p_queryNumber);
+        p_schema, p_store_tmp, p_queryCohort, p_queryNumber);
 
         -- remove tmp tables
         SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp);
@@ -264,10 +264,10 @@ DECLARE tempTables VARCHAR(5000);
 
     -- Q1g --
         CALL buildQuery(p_query_id, withWithout, includedAnyAll, includedValueSet, includedDateFrom, includedDateTo, includedPeriodOperator,includedPeriodValue, includedPeriodType, incValueSet_tmp, 
-        incConcept_tmp, p_observationCohort_tmp, '1', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
+        incConcept_tmp, p_observationCohort_tmp, '1', NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-        NULL, p_schema, p_store_tmp, p_queryCohort, p_queryNumber);
+        p_schema, p_store_tmp, p_queryCohort, p_queryNumber);
 
         -- remove tmp tables
         SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp);
@@ -289,10 +289,10 @@ DECLARE tempTables VARCHAR(5000);
 
     -- Q1h --
         CALL buildQuery(p_query_id, withWithout, includedAnyAll, includedValueSet, includedDateFrom, includedDateTo, includedPeriodOperator,includedPeriodValue, includedPeriodType, incValueSet_tmp, 
-        incConcept_tmp, p_observationCohort_tmp, '1', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
+        incConcept_tmp, p_observationCohort_tmp, '1', NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-        NULL, p_schema, p_store_tmp, p_queryCohort, p_queryNumber);
+        p_schema, p_store_tmp, p_queryCohort, p_queryNumber);
 
         -- remove tmp tables
         SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp);
@@ -314,10 +314,10 @@ DECLARE tempTables VARCHAR(5000);
 
     -- Q1i --
         CALL buildQuery(p_query_id, withWithout, includedAnyAll, includedValueSet, includedDateFrom, includedDateTo, includedPeriodOperator,includedPeriodValue, includedPeriodType, incValueSet_tmp, 
-        incConcept_tmp, p_observationCohort_tmp, '1', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
+        incConcept_tmp, p_observationCohort_tmp, '1', NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-        NULL, p_schema, p_store_tmp, p_queryCohort, p_queryNumber);
+        p_schema, p_store_tmp, p_queryCohort, p_queryNumber);
 
         -- remove tmp tables
         SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp);
@@ -339,10 +339,10 @@ DECLARE tempTables VARCHAR(5000);
 
     -- Q1j --
         CALL buildQuery(p_query_id, withWithout, includedAnyAll, includedValueSet, includedDateFrom, includedDateTo, includedPeriodOperator,includedPeriodValue, includedPeriodType, incValueSet_tmp, 
-        incConcept_tmp, p_observationCohort_tmp, '1', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
+        incConcept_tmp, p_observationCohort_tmp, '1', NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-        NULL, p_schema, p_store_tmp, p_queryCohort, p_queryNumber);
+        p_schema, p_store_tmp, p_queryCohort, p_queryNumber);
 
         -- remove tmp tables
         SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp);
@@ -364,10 +364,10 @@ DECLARE tempTables VARCHAR(5000);
 
     -- Q1k --
         CALL buildQuery(p_query_id, withWithout, includedAnyAll, includedValueSet, includedDateFrom, includedDateTo, includedPeriodOperator,includedPeriodValue, includedPeriodType, incValueSet_tmp, 
-        incConcept_tmp, p_observationCohort_tmp, '1', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
+        incConcept_tmp, p_observationCohort_tmp, '1', NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-        NULL, p_schema, p_store_tmp, p_queryCohort, p_queryNumber);
+        p_schema, p_store_tmp, p_queryCohort, p_queryNumber);
 
         -- remove tmp tables
         SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp);
@@ -389,10 +389,10 @@ DECLARE tempTables VARCHAR(5000);
 
     -- Q1l --
         CALL buildQuery(p_query_id, withWithout, includedAnyAll, includedValueSet, includedDateFrom, includedDateTo, includedPeriodOperator,includedPeriodValue, includedPeriodType, incValueSet_tmp, 
-        incConcept_tmp, p_observationCohort_tmp, '1', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
+        incConcept_tmp, p_observationCohort_tmp, '1', NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-        NULL, p_schema, p_store_tmp, p_queryCohort, p_queryNumber);
+        p_schema, p_store_tmp, p_queryCohort, p_queryNumber);
 
         -- remove tmp tables
         SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp);
@@ -414,17 +414,16 @@ DECLARE tempTables VARCHAR(5000);
         -- 2
         SET incValueSet_tmp = CONCAT('incvalueset2_tmp_',p_query_id);
         SET incConcept_tmp = CONCAT('incconcept2_tmp_',p_query_id);
-        SET observation_tmp = CONCAT('observation2_tmp_',p_query_id);
 
     -- Q2 -- 
         CALL buildQuery(p_query_id, withWithout, includedAnyAll, includedValueSet, includedDateFrom, includedDateTo, includedPeriodOperator, includedPeriodValue,includedPeriodType, incValueSet_tmp, 
-        incConcept_tmp, p_observationCohort_tmp, '2', includedEarliestLatest, includedOperator, includedEntryValue, observation_tmp,  NULL, NULL, NULL, 
+        incConcept_tmp, p_observationCohort_tmp, '2', includedEarliestLatest, includedOperator, includedEntryValue, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
-        NULL, p_schema, p_store_tmp, p_queryCohort, p_queryNumber);
+        p_schema, p_store_tmp, p_queryCohort, p_queryNumber);
 
         -- remove tmp tables
-        SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp,',', observation_tmp);
+        SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp);
         CALL dropTempTables(tempTables);
 
     ELSEIF p_queryNumber = '2A' THEN 
@@ -443,17 +442,16 @@ DECLARE tempTables VARCHAR(5000);
         -- 2a
         SET incValueSet_tmp = CONCAT('incvalueset2a_tmp_',p_query_id);
         SET incConcept_tmp = CONCAT('incconcept2a_tmp_',p_query_id);
-        SET observation_tmp = CONCAT('observation2a_tmp_',p_query_id);
 
     -- Q2a --
         CALL buildQuery(p_query_id, withWithout, includedAnyAll, includedValueSet, includedDateFrom, includedDateTo, includedPeriodOperator, includedPeriodValue,includedPeriodType, incValueSet_tmp, 
-        incConcept_tmp, p_observationCohort_tmp, '2', includedEarliestLatest, includedOperator, includedEntryValue, observation_tmp,  NULL, NULL, NULL, 
+        incConcept_tmp, p_observationCohort_tmp, '2', includedEarliestLatest, includedOperator, includedEntryValue, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
-        NULL, p_schema, p_store_tmp, p_queryCohort, p_queryNumber);
+        p_schema, p_store_tmp, p_queryCohort, p_queryNumber);
 
         -- remove tmp tables
-        SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp,',', observation_tmp);
+        SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp);
         CALL dropTempTables(tempTables);
 
     ELSEIF p_queryNumber = '3' THEN 
@@ -479,22 +477,21 @@ DECLARE tempTables VARCHAR(5000);
         -- 3
         SET incValueSet_tmp = CONCAT('incvalueset3_tmp_',p_query_id);
         SET incConcept_tmp = CONCAT('incconcept3_tmp_',p_query_id);
-        SET observation_tmp = CONCAT('observation3_tmp_',p_query_id);
         SET incTestedValueset_tmp = CONCAT('inctestedvalueset3_tmp_',p_query_id);
         SET incTestedConcept_tmp = CONCAT('inctestedconcept3_tmp_',p_query_id);
         SET incDiagnosisValueSet_tmp = CONCAT('incdiagnosisvalueset3_tmp_',p_query_id);
         SET incDiagnosisConcept_tmp = CONCAT('incdiagnosisconcept3_tmp_',p_query_id);
-        SET diagnosis_tmp = CONCAT('diagnosis3_tmp_',p_query_id);
+
 
     -- Q3 --
         CALL buildQuery(p_query_id, withWithout, includedAnyAll, includedValueSet, includedDateFrom, includedDateTo, includedPeriodOperator, includedPeriodValue, includedPeriodType, incValueSet_tmp, 
-        incConcept_tmp, p_observationCohort_tmp, '3', includedEarliestLatest, NULL, NULL, observation_tmp, includedAnyAllTested, includedTestedValueSet, incTestedValueset_tmp, 
+        incConcept_tmp, p_observationCohort_tmp, '3', includedEarliestLatest, NULL, NULL, includedAnyAllTested, includedTestedValueSet, incTestedValueset_tmp, 
         incTestedConcept_tmp, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, includedDiagnosisAgeFrom, includedDiagnosisAgeTo, includedDob, includedDiagnosisAnyAll, includedDiagnosisValueSet,
-        incDiagnosisValueSet_tmp, incDiagnosisConcept_tmp, diagnosis_tmp, p_schema, p_store_tmp, p_queryCohort, p_queryNumber);
+        incDiagnosisValueSet_tmp, incDiagnosisConcept_tmp, p_schema, p_store_tmp, p_queryCohort, p_queryNumber);
 
         -- remove tmp tables
-        SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp,',', observation_tmp,',',incTestedValueset_tmp,',',incTestedConcept_tmp,',',incDiagnosisValueSet_tmp,',',incDiagnosisConcept_tmp,',',diagnosis_tmp);
+        SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp,',',incTestedValueset_tmp,',',incTestedConcept_tmp,',',incDiagnosisValueSet_tmp,',',incDiagnosisConcept_tmp);
         CALL dropTempTables(tempTables);
 
     ELSEIF p_queryNumber = '3A' THEN 
@@ -520,22 +517,20 @@ DECLARE tempTables VARCHAR(5000);
         -- 3a
         SET incValueSet_tmp = CONCAT('incvalueset3a_tmp_',p_query_id);
         SET incConcept_tmp = CONCAT('incconcept3a_tmp_',p_query_id);
-        SET observation_tmp = CONCAT('observation3a_tmp_',p_query_id);
         SET incTestedValueset_tmp = CONCAT('inctestedvalueset3a_tmp_',p_query_id);
         SET incTestedConcept_tmp = CONCAT('inctestedconcept3a_tmp_',p_query_id);
         SET incDiagnosisValueSet_tmp = CONCAT('incdiagnosisvalueset3a_tmp_',p_query_id);
         SET incDiagnosisConcept_tmp = CONCAT('incdiagnosisconcept3a_tmp_',p_query_id);
-        SET diagnosis_tmp = CONCAT('diagnosis3a_tmp_',p_query_id);
 
     -- Q3a --
         CALL buildQuery(p_query_id, withWithout, includedAnyAll, includedValueSet, includedDateFrom, includedDateTo, includedPeriodOperator, includedPeriodValue, includedPeriodType, incValueSet_tmp, 
-        incConcept_tmp, p_observationCohort_tmp, '3', includedEarliestLatest, NULL, NULL, observation_tmp, includedAnyAllTested, includedTestedValueSet, incTestedValueset_tmp, 
+        incConcept_tmp, p_observationCohort_tmp, '3', includedEarliestLatest, NULL, NULL, includedAnyAllTested, includedTestedValueSet, incTestedValueset_tmp, 
         incTestedConcept_tmp, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, includedDiagnosisAgeFrom, includedDiagnosisAgeTo, includedDob, includedDiagnosisAnyAll, includedDiagnosisValueSet,
-        incDiagnosisValueSet_tmp, incDiagnosisConcept_tmp, diagnosis_tmp, p_schema, p_store_tmp, p_queryCohort, p_queryNumber);
+        incDiagnosisValueSet_tmp, incDiagnosisConcept_tmp, p_schema, p_store_tmp, p_queryCohort, p_queryNumber);
 
         -- remove tmp tables
-        SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp,',', observation_tmp,',',incTestedValueset_tmp,',',incTestedConcept_tmp,',',incDiagnosisValueSet_tmp,',',incDiagnosisConcept_tmp,',',diagnosis_tmp);
+        SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp,',',incTestedValueset_tmp,',',incTestedConcept_tmp,',',incDiagnosisValueSet_tmp,',',incDiagnosisConcept_tmp);
         CALL dropTempTables(tempTables);
 
     ELSEIF p_queryNumber = '3B' THEN 
@@ -561,22 +556,20 @@ DECLARE tempTables VARCHAR(5000);
         -- 3b
         SET incValueSet_tmp = CONCAT('incvalueset3b_tmp_',p_query_id);
         SET incConcept_tmp = CONCAT('incconcept3b_tmp_',p_query_id);
-        SET observation_tmp = CONCAT('observation3b_tmp_',p_query_id);
         SET incTestedValueset_tmp = CONCAT('inctestedvalueset3b_tmp_',p_query_id);
         SET incTestedConcept_tmp = CONCAT('inctestedconcept3b_tmp_',p_query_id);
         SET incDiagnosisValueSet_tmp = CONCAT('incdiagnosisvalueset3b_tmp_',p_query_id);
         SET incDiagnosisConcept_tmp = CONCAT('incdiagnosisconcept3b_tmp_',p_query_id);
-        SET diagnosis_tmp = CONCAT('diagnosis3b_tmp_',p_query_id);
 
     -- Q3b --
         CALL buildQuery(p_query_id, withWithout, includedAnyAll, includedValueSet, includedDateFrom, includedDateTo, includedPeriodOperator, includedPeriodValue, includedPeriodType, incValueSet_tmp, 
-        incConcept_tmp, p_observationCohort_tmp, '3', includedEarliestLatest, NULL, NULL, observation_tmp, includedAnyAllTested, includedTestedValueSet, incTestedValueset_tmp, 
+        incConcept_tmp, p_observationCohort_tmp, '3', includedEarliestLatest, NULL, NULL, includedAnyAllTested, includedTestedValueSet, incTestedValueset_tmp, 
         incTestedConcept_tmp, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, includedDiagnosisAgeFrom, includedDiagnosisAgeTo, includedDob, includedDiagnosisAnyAll, includedDiagnosisValueSet,
-        incDiagnosisValueSet_tmp, incDiagnosisConcept_tmp, diagnosis_tmp, p_schema, p_store_tmp, p_queryCohort, p_queryNumber);
+        incDiagnosisValueSet_tmp, incDiagnosisConcept_tmp, p_schema, p_store_tmp, p_queryCohort, p_queryNumber);
 
         -- remove tmp tables
-        SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp,',', observation_tmp,',',incTestedValueset_tmp,',',incTestedConcept_tmp,',',incDiagnosisValueSet_tmp,',',incDiagnosisConcept_tmp,',',diagnosis_tmp);
+        SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp,',',incTestedValueset_tmp,',',incTestedConcept_tmp,',',incDiagnosisValueSet_tmp,',',incDiagnosisConcept_tmp);
         CALL dropTempTables(tempTables);
 
     ELSEIF p_queryNumber = '3C' THEN 
@@ -602,22 +595,20 @@ DECLARE tempTables VARCHAR(5000);
         -- 3c
         SET incValueSet_tmp = CONCAT('incvalueset3c_tmp_',p_query_id);
         SET incConcept_tmp = CONCAT('incconcept3c_tmp_',p_query_id);
-        SET observation_tmp = CONCAT('observation3c_tmp_',p_query_id);
         SET incTestedValueset_tmp = CONCAT('inctestedvalueset3c_tmp_',p_query_id);
         SET incTestedConcept_tmp = CONCAT('inctestedconcept3c_tmp_',p_query_id);
         SET incDiagnosisValueSet_tmp = CONCAT('incdiagnosisvalueset3c_tmp_',p_query_id);
         SET incDiagnosisConcept_tmp = CONCAT('incdiagnosisconcept3c_tmp_',p_query_id);
-        SET diagnosis_tmp = CONCAT('diagnosis3c_tmp_',p_query_id);
 
     -- Q3c --
         CALL buildQuery(p_query_id, withWithout, includedAnyAll, includedValueSet, includedDateFrom, includedDateTo, includedPeriodOperator, includedPeriodValue, includedPeriodType, incValueSet_tmp, 
-        incConcept_tmp, p_observationCohort_tmp, '3', includedEarliestLatest, NULL, NULL, observation_tmp, includedAnyAllTested, includedTestedValueSet, incTestedValueset_tmp, 
+        incConcept_tmp, p_observationCohort_tmp, '3', includedEarliestLatest, NULL, NULL, includedAnyAllTested, includedTestedValueSet, incTestedValueset_tmp, 
         incTestedConcept_tmp, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, includedDiagnosisAgeFrom, includedDiagnosisAgeTo, includedDob, includedDiagnosisAnyAll, includedDiagnosisValueSet,
-        incDiagnosisValueSet_tmp, incDiagnosisConcept_tmp, diagnosis_tmp, p_schema, p_store_tmp, p_queryCohort, p_queryNumber);
+        incDiagnosisValueSet_tmp, incDiagnosisConcept_tmp, p_schema, p_store_tmp, p_queryCohort, p_queryNumber);
 
         -- remove tmp tables
-        SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp,',', observation_tmp,',',incTestedValueset_tmp,',',incTestedConcept_tmp,',',incDiagnosisValueSet_tmp,',',incDiagnosisConcept_tmp,',',diagnosis_tmp);
+        SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp,',',incTestedValueset_tmp,',',incTestedConcept_tmp,',',incDiagnosisValueSet_tmp,',',incDiagnosisConcept_tmp);
         CALL dropTempTables(tempTables);
 
     ELSEIF p_queryNumber = '3D' THEN 
@@ -643,22 +634,20 @@ DECLARE tempTables VARCHAR(5000);
         -- 3d
         SET incValueSet_tmp = CONCAT('incvalueset3d_tmp_',p_query_id);
         SET incConcept_tmp = CONCAT('incconcept3d_tmp_',p_query_id);
-        SET observation_tmp = CONCAT('observation3d_tmp_',p_query_id);
         SET incTestedValueset_tmp = CONCAT('inctestedvalueset3d_tmp_',p_query_id);
         SET incTestedConcept_tmp = CONCAT('inctestedconcept3d_tmp_',p_query_id);
         SET incDiagnosisValueSet_tmp = CONCAT('incdiagnosisvalueset3d_tmp_',p_query_id);
         SET incDiagnosisConcept_tmp = CONCAT('incdiagnosisconcept3d_tmp_',p_query_id);
-        SET diagnosis_tmp = CONCAT('diagnosis3d_tmp_',p_query_id);
 
     -- Q3d --
         CALL buildQuery(p_query_id, withWithout, includedAnyAll, includedValueSet, includedDateFrom, includedDateTo, includedPeriodOperator, includedPeriodValue, includedPeriodType, incValueSet_tmp, 
-        incConcept_tmp, p_observationCohort_tmp, '3', includedEarliestLatest, NULL, NULL, observation_tmp, includedAnyAllTested, includedTestedValueSet, incTestedValueset_tmp, 
+        incConcept_tmp, p_observationCohort_tmp, '3', includedEarliestLatest, NULL, NULL, includedAnyAllTested, includedTestedValueSet, incTestedValueset_tmp, 
         incTestedConcept_tmp, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, includedDiagnosisAgeFrom, includedDiagnosisAgeTo, includedDob, includedDiagnosisAnyAll, includedDiagnosisValueSet,
-        incDiagnosisValueSet_tmp, incDiagnosisConcept_tmp, diagnosis_tmp, p_schema, p_store_tmp, p_queryCohort, p_queryNumber);
+        incDiagnosisValueSet_tmp, incDiagnosisConcept_tmp, p_schema, p_store_tmp, p_queryCohort, p_queryNumber);
 
         -- remove tmp tables
-        SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp,',', observation_tmp,',',incTestedValueset_tmp,',',incTestedConcept_tmp,',',incDiagnosisValueSet_tmp,',',incDiagnosisConcept_tmp,',',diagnosis_tmp);
+        SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp,',',incTestedValueset_tmp,',',incTestedConcept_tmp,',',incDiagnosisValueSet_tmp,',',incDiagnosisConcept_tmp);
         CALL dropTempTables(tempTables);
 
     ELSEIF p_queryNumber = '3E' THEN 
@@ -684,22 +673,20 @@ DECLARE tempTables VARCHAR(5000);
         -- 3e
         SET incValueSet_tmp = CONCAT('incvalueset3e_tmp_',p_query_id);
         SET incConcept_tmp = CONCAT('incconcept3e_tmp_',p_query_id);
-        SET observation_tmp = CONCAT('observation3e_tmp_',p_query_id);
         SET incTestedValueset_tmp = CONCAT('inctestedvalueset3e_tmp_',p_query_id);
         SET incTestedConcept_tmp = CONCAT('inctestedconcept3e_tmp_',p_query_id);
         SET incDiagnosisValueSet_tmp = CONCAT('incdiagnosisvalueset3e_tmp_',p_query_id);
         SET incDiagnosisConcept_tmp = CONCAT('incdiagnosisconcept3e_tmp_',p_query_id);
-        SET diagnosis_tmp = CONCAT('diagnosis3e_tmp_',p_query_id);
 
     -- Q3e --
         CALL buildQuery(p_query_id, withWithout, includedAnyAll, includedValueSet, includedDateFrom, includedDateTo, includedPeriodOperator, includedPeriodValue, includedPeriodType, incValueSet_tmp, 
-        incConcept_tmp, p_observationCohort_tmp, '3', includedEarliestLatest, NULL, NULL, observation_tmp, includedAnyAllTested, includedTestedValueSet, incTestedValueset_tmp, 
+        incConcept_tmp, p_observationCohort_tmp, '3', includedEarliestLatest, NULL, NULL, includedAnyAllTested, includedTestedValueSet, incTestedValueset_tmp, 
         incTestedConcept_tmp, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, includedDiagnosisAgeFrom, includedDiagnosisAgeTo, includedDob, includedDiagnosisAnyAll, includedDiagnosisValueSet,
-        incDiagnosisValueSet_tmp, incDiagnosisConcept_tmp, diagnosis_tmp, p_schema, p_store_tmp, p_queryCohort, p_queryNumber);
+        incDiagnosisValueSet_tmp, incDiagnosisConcept_tmp, p_schema, p_store_tmp, p_queryCohort, p_queryNumber);
 
         -- remove tmp tables
-        SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp,',', observation_tmp,',',incTestedValueset_tmp,',',incTestedConcept_tmp,',',incDiagnosisValueSet_tmp,',',incDiagnosisConcept_tmp,',',diagnosis_tmp);
+        SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp,',',incTestedValueset_tmp,',',incTestedConcept_tmp,',',incDiagnosisValueSet_tmp,',',incDiagnosisConcept_tmp);
         CALL dropTempTables(tempTables);
 
     ELSEIF p_queryNumber = '3F' THEN 
@@ -725,22 +712,20 @@ DECLARE tempTables VARCHAR(5000);
         -- 3f
         SET incValueSet_tmp = CONCAT('incvalueset3f_tmp_',p_query_id);
         SET incConcept_tmp = CONCAT('incconcept3f_tmp_',p_query_id);
-        SET observation_tmp = CONCAT('observation3f_tmp_',p_query_id);
         SET incTestedValueset_tmp = CONCAT('inctestedvalueset3f_tmp_',p_query_id);
         SET incTestedConcept_tmp = CONCAT('inctestedconcept3f_tmp_',p_query_id);
         SET incDiagnosisValueSet_tmp = CONCAT('incdiagnosisvalueset3f_tmp_',p_query_id);
         SET incDiagnosisConcept_tmp = CONCAT('incdiagnosisconcept3f_tmp_',p_query_id);
-        SET diagnosis_tmp = CONCAT('diagnosis3f_tmp_',p_query_id);
 
     -- Q3f --
         CALL buildQuery(p_query_id, withWithout, includedAnyAll, includedValueSet, includedDateFrom, includedDateTo, includedPeriodOperator, includedPeriodValue, includedPeriodType, incValueSet_tmp, 
-        incConcept_tmp, p_observationCohort_tmp, '3', includedEarliestLatest, NULL, NULL, observation_tmp, includedAnyAllTested, includedTestedValueSet, incTestedValueset_tmp, 
+        incConcept_tmp, p_observationCohort_tmp, '3', includedEarliestLatest, NULL, NULL, includedAnyAllTested, includedTestedValueSet, incTestedValueset_tmp, 
         incTestedConcept_tmp, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, includedDiagnosisAgeFrom, includedDiagnosisAgeTo, includedDob, includedDiagnosisAnyAll, includedDiagnosisValueSet,
-        incDiagnosisValueSet_tmp, incDiagnosisConcept_tmp, diagnosis_tmp, p_schema, p_store_tmp, p_queryCohort, p_queryNumber);
+        incDiagnosisValueSet_tmp, incDiagnosisConcept_tmp, p_schema, p_store_tmp, p_queryCohort, p_queryNumber);
 
         -- remove tmp tables
-        SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp,',', observation_tmp,',',incTestedValueset_tmp,',',incTestedConcept_tmp,',',incDiagnosisValueSet_tmp,',',incDiagnosisConcept_tmp,',',diagnosis_tmp);
+        SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp,',',incTestedValueset_tmp,',',incTestedConcept_tmp,',',incDiagnosisValueSet_tmp,',',incDiagnosisConcept_tmp);
         CALL dropTempTables(tempTables);
 
     ELSEIF p_queryNumber = '3G' THEN 
@@ -766,22 +751,20 @@ DECLARE tempTables VARCHAR(5000);
         -- 3g
         SET incValueSet_tmp = CONCAT('incvalueset3g_tmp_',p_query_id);
         SET incConcept_tmp = CONCAT('incconcept3g_tmp_',p_query_id);
-        SET observation_tmp = CONCAT('observation3g_tmp_',p_query_id);
         SET incTestedValueset_tmp = CONCAT('inctestedvalueset3g_tmp_',p_query_id);
         SET incTestedConcept_tmp = CONCAT('inctestedconcept3g_tmp_',p_query_id);
         SET incDiagnosisValueSet_tmp = CONCAT('incdiagnosisvalueset3g_tmp_',p_query_id);
         SET incDiagnosisConcept_tmp = CONCAT('incdiagnosisconcept3g_tmp_',p_query_id);
-        SET diagnosis_tmp = CONCAT('diagnosis3g_tmp_',p_query_id);
 
     -- Q3g --
         CALL buildQuery(p_query_id, withWithout, includedAnyAll, includedValueSet, includedDateFrom, includedDateTo, includedPeriodOperator, includedPeriodValue, includedPeriodType, incValueSet_tmp, 
-        incConcept_tmp, p_observationCohort_tmp, '3', includedEarliestLatest, NULL, NULL, observation_tmp, includedAnyAllTested, includedTestedValueSet, incTestedValueset_tmp, 
+        incConcept_tmp, p_observationCohort_tmp, '3', includedEarliestLatest, NULL, NULL, includedAnyAllTested, includedTestedValueSet, incTestedValueset_tmp, 
         incTestedConcept_tmp, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, includedDiagnosisAgeFrom, includedDiagnosisAgeTo, includedDob, includedDiagnosisAnyAll, includedDiagnosisValueSet,
-        incDiagnosisValueSet_tmp, incDiagnosisConcept_tmp, diagnosis_tmp, p_schema, p_store_tmp, p_queryCohort, p_queryNumber);
+        incDiagnosisValueSet_tmp, incDiagnosisConcept_tmp, p_schema, p_store_tmp, p_queryCohort, p_queryNumber);
 
         -- remove tmp tables
-        SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp,',', observation_tmp,',',incTestedValueset_tmp,',',incTestedConcept_tmp,',',incDiagnosisValueSet_tmp,',',incDiagnosisConcept_tmp,',',diagnosis_tmp);
+        SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp,',',incTestedValueset_tmp,',',incTestedConcept_tmp,',',incDiagnosisValueSet_tmp,',',incDiagnosisConcept_tmp);
         CALL dropTempTables(tempTables);
 
     ELSEIF p_queryNumber = '3H' THEN 
@@ -807,22 +790,20 @@ DECLARE tempTables VARCHAR(5000);
         -- 3h
         SET incValueSet_tmp = CONCAT('incvalueset3h_tmp_',p_query_id);
         SET incConcept_tmp = CONCAT('incconcept3h_tmp_',p_query_id);
-        SET observation_tmp = CONCAT('observation3h_tmp_',p_query_id);
         SET incTestedValueset_tmp = CONCAT('inctestedvalueset3h_tmp_',p_query_id);
         SET incTestedConcept_tmp = CONCAT('inctestedconcept3h_tmp_',p_query_id);
         SET incDiagnosisValueSet_tmp = CONCAT('incdiagnosisvalueset3h_tmp_',p_query_id);
         SET incDiagnosisConcept_tmp = CONCAT('incdiagnosisconcept3h_tmp_',p_query_id);
-        SET diagnosis_tmp = CONCAT('diagnosis3h_tmp_',p_query_id);
 
     -- Q3h --
         CALL buildQuery(p_query_id, withWithout, includedAnyAll, includedValueSet, includedDateFrom, includedDateTo, includedPeriodOperator, includedPeriodValue, includedPeriodType, incValueSet_tmp, 
-        incConcept_tmp, p_observationCohort_tmp, '3', includedEarliestLatest, NULL, NULL, observation_tmp, includedAnyAllTested, includedTestedValueSet, incTestedValueset_tmp, 
+        incConcept_tmp, p_observationCohort_tmp, '3', includedEarliestLatest, NULL, NULL, includedAnyAllTested, includedTestedValueSet, incTestedValueset_tmp, 
         incTestedConcept_tmp, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, includedDiagnosisAgeFrom, includedDiagnosisAgeTo, includedDob, includedDiagnosisAnyAll, includedDiagnosisValueSet,
-        incDiagnosisValueSet_tmp, incDiagnosisConcept_tmp, diagnosis_tmp, p_schema, p_store_tmp, p_queryCohort, p_queryNumber);
+        incDiagnosisValueSet_tmp, incDiagnosisConcept_tmp, p_schema, p_store_tmp, p_queryCohort, p_queryNumber);
 
         -- remove tmp tables
-        SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp,',', observation_tmp,',',incTestedValueset_tmp,',',incTestedConcept_tmp,',',incDiagnosisValueSet_tmp,',',incDiagnosisConcept_tmp,',',diagnosis_tmp);
+        SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp,',',incTestedValueset_tmp,',',incTestedConcept_tmp,',',incDiagnosisValueSet_tmp,',',incDiagnosisConcept_tmp);
         CALL dropTempTables(tempTables);
 
     ELSEIF p_queryNumber = '4' THEN 
@@ -841,19 +822,18 @@ DECLARE tempTables VARCHAR(5000);
         -- 4
         SET incValueSet_tmp = CONCAT('incvalueset4_tmp_',p_query_id);
         SET incConcept_tmp = CONCAT('incconcept4_tmp_',p_query_id);
-        SET observation_tmp = CONCAT('observation4_tmp_',p_query_id);
         SET incFollowedByValueSet_tmp = CONCAT('incfollowedbyvalueset4_tmp_',p_query_id);
         SET incFollowedByConcept_tmp = CONCAT('incfollowedbyconcept4_tmp_',p_query_id);
 
     -- Q4 --
         CALL buildQuery(p_query_id, withWithout, includedAnyAll, includedValueSet, includedDateFrom, includedDateTo, includedPeriodOperator, includedPeriodValue, includedPeriodType, incValueSet_tmp, 
-        incConcept_tmp, p_observationCohort_tmp, '4', NULL, NULL, NULL, observation_tmp, NULL, NULL, NULL, 
+        incConcept_tmp, p_observationCohort_tmp, '4', NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, includedAreNot, includedAnyAllFollowedBy, includedFollowedByValueSet, incFollowedByValueSet_tmp, incFollowedByConcept_tmp, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-        NULL, NULL, NULL, p_schema , p_store_tmp, p_queryCohort, p_queryNumber);
+        NULL, NULL, p_schema , p_store_tmp, p_queryCohort, p_queryNumber);
 
         -- remove tmp tables
-        SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp,',', observation_tmp,',',incFollowedByValueSet_tmp,',',incFollowedByConcept_tmp);
+        SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp,',',incFollowedByValueSet_tmp,',',incFollowedByConcept_tmp);
         CALL dropTempTables(tempTables);
 
     ELSEIF p_queryNumber = '4A' THEN 
@@ -872,19 +852,18 @@ DECLARE tempTables VARCHAR(5000);
         -- 4a
         SET incValueSet_tmp = CONCAT('incvalueset4a_tmp_',p_query_id);
         SET incConcept_tmp = CONCAT('incconcept4a_tmp_',p_query_id);
-        SET observation_tmp = CONCAT('observation4a_tmp_',p_query_id);
         SET incFollowedByValueSet_tmp = CONCAT('incfollowedbyvalueset4a_tmp_',p_query_id);
         SET incFollowedByConcept_tmp = CONCAT('incfollowedbyconcept4a_tmp_',p_query_id);
 
     -- Q4 --
         CALL buildQuery(p_query_id, withWithout, includedAnyAll, includedValueSet, includedDateFrom, includedDateTo, includedPeriodOperator, includedPeriodValue, includedPeriodType, incValueSet_tmp, 
-        incConcept_tmp, p_observationCohort_tmp, '4', NULL, NULL, NULL, observation_tmp, NULL, NULL, NULL, 
+        incConcept_tmp, p_observationCohort_tmp, '4', NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, includedAreNot, includedAnyAllFollowedBy, includedFollowedByValueSet, incFollowedByValueSet_tmp, incFollowedByConcept_tmp, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-        NULL, NULL, NULL, p_schema , p_store_tmp, p_queryCohort, p_queryNumber);
+        NULL, NULL, p_schema , p_store_tmp, p_queryCohort, p_queryNumber);
 
         -- remove tmp tables
-        SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp,',', observation_tmp,',',incFollowedByValueSet_tmp,',',incFollowedByConcept_tmp);
+        SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp,',',incFollowedByValueSet_tmp,',',incFollowedByConcept_tmp);
         CALL dropTempTables(tempTables);
 
     ELSEIF p_queryNumber = '4B' THEN 
@@ -903,19 +882,18 @@ DECLARE tempTables VARCHAR(5000);
         -- 4b
         SET incValueSet_tmp = CONCAT('incvalueset4b_tmp_',p_query_id);
         SET incConcept_tmp = CONCAT('incconcept4b_tmp_',p_query_id);
-        SET observation_tmp = CONCAT('observation4b_tmp_',p_query_id);
         SET incFollowedByValueSet_tmp = CONCAT('incfollowedbyvalueset4b_tmp_',p_query_id);
         SET incFollowedByConcept_tmp = CONCAT('incfollowedbyconcept4b_tmp_',p_query_id);
 
     -- Q4 --
         CALL buildQuery(p_query_id, withWithout, includedAnyAll, includedValueSet, includedDateFrom, includedDateTo, includedPeriodOperator, includedPeriodValue, includedPeriodType, incValueSet_tmp, 
-        incConcept_tmp, p_observationCohort_tmp, '4', NULL, NULL, NULL, observation_tmp, NULL, NULL, NULL, 
+        incConcept_tmp, p_observationCohort_tmp, '4', NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, includedAreNot, includedAnyAllFollowedBy, includedFollowedByValueSet, incFollowedByValueSet_tmp, incFollowedByConcept_tmp, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-        NULL, NULL, NULL, p_schema , p_store_tmp, p_queryCohort, p_queryNumber);
+        NULL, NULL, p_schema , p_store_tmp, p_queryCohort, p_queryNumber);
 
         -- remove tmp tables
-        SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp,',', observation_tmp,',',incFollowedByValueSet_tmp,',',incFollowedByConcept_tmp);
+        SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp,',',incFollowedByValueSet_tmp,',',incFollowedByConcept_tmp);
         CALL dropTempTables(tempTables);
 
     ELSEIF p_queryNumber = '5' THEN 
@@ -933,17 +911,16 @@ DECLARE tempTables VARCHAR(5000);
         -- 5
         SET incValueSet_tmp = CONCAT('incvalueset5_tmp_',p_query_id);
         SET incConcept_tmp = CONCAT('incconcept5_tmp_',p_query_id);
-        SET observation_tmp = CONCAT('observation5_tmp_',p_query_id);
 
     -- Q5 --
         CALL buildQuery(p_query_id, withWithout, includedAnyAll, includedValueSet, includedDateFrom, includedDateTo, includedPeriodOperator, includedPeriodValue, includedPeriodType, incValueSet_tmp, 
-        incConcept_tmp, p_observationCohort_tmp, '5', NULL, NULL, NULL, observation_tmp, NULL, NULL, NULL, 
+        incConcept_tmp, p_observationCohort_tmp, '5', NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, includedOperator, includedEntryValue, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-        NULL, NULL, NULL, p_schema , p_store_tmp, p_queryCohort, p_queryNumber);
+        NULL, NULL, p_schema , p_store_tmp, p_queryCohort, p_queryNumber);
 
         -- remove tmp tables
-        SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp,',', observation_tmp);
+        SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp);
         CALL dropTempTables(tempTables);
 
     ELSEIF p_queryNumber = '5A' THEN 
@@ -961,17 +938,16 @@ DECLARE tempTables VARCHAR(5000);
         -- 5a
         SET incValueSet_tmp = CONCAT('incvalueset5a_tmp_',p_query_id);
         SET incConcept_tmp = CONCAT('incconcept5a_tmp_',p_query_id);
-        SET observation_tmp = CONCAT('observation5a_tmp_',p_query_id);
 
     -- Q5a --
         CALL buildQuery(p_query_id, withWithout, includedAnyAll, includedValueSet, includedDateFrom, includedDateTo, includedPeriodOperator, includedPeriodValue, includedPeriodType, incValueSet_tmp, 
-        incConcept_tmp, p_observationCohort_tmp, '5', NULL, NULL, NULL, observation_tmp, NULL, NULL, NULL, 
+        incConcept_tmp, p_observationCohort_tmp, '5', NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, includedOperator, includedEntryValue, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
-        NULL, NULL, NULL, p_schema , p_store_tmp, p_queryCohort, p_queryNumber);
+        NULL, NULL, p_schema , p_store_tmp, p_queryCohort, p_queryNumber);
 
         -- remove tmp tables
-        SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp,',', observation_tmp);
+        SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp);
         CALL dropTempTables(tempTables);
 
     ELSEIF p_queryNumber = '0' THEN -- registration date range
@@ -983,10 +959,10 @@ DECLARE tempTables VARCHAR(5000);
         SET registrationPeriodType = JSON_UNQUOTE(JSON_EXTRACT(query,'$.registrationPeriodType'));
     -- Q0 --
         CALL buildQuery(p_query_id, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
-        NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
+        NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, registrationExclude, registrationDateFrom, 
         registrationDateTo, registrationPeriodValue, registrationPeriodType, NULL, NULL, NULL, NULL, NULL, 
-        NULL, NULL, NULL, p_schema, NULL, p_queryCohort, p_queryNumber);
+        NULL, NULL, p_schema, NULL, p_queryCohort, p_queryNumber);
 
     ELSEIF p_queryNumber = 'A1' THEN 
 
@@ -995,10 +971,10 @@ DECLARE tempTables VARCHAR(5000);
 
     -- A1 --
         CALL buildQuery(p_query_id, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
-        NULL, NULL, 'A', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
+        NULL, NULL, 'A', NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, ageFrom, ageTo, NULL, NULL, NULL,
-        NULL, NULL, NULL, p_schema, NULL, p_queryCohort, p_queryNumber);
+        NULL, NULL, p_schema, NULL, p_queryCohort, p_queryNumber);
 
     ELSEIF p_queryNumber = 'A2' THEN 
 
@@ -1007,10 +983,10 @@ DECLARE tempTables VARCHAR(5000);
 
     -- A2 --
         CALL buildQuery(p_query_id, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
-        NULL, NULL, 'A', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
+        NULL, NULL, 'A', NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, ageFrom, ageTo, NULL, NULL, NULL,
-        NULL, NULL, NULL, p_schema, NULL, p_queryCohort, p_queryNumber);
+        NULL, NULL, p_schema, NULL, p_queryCohort, p_queryNumber);
 
     ELSEIF p_queryNumber = 'A3' THEN 
 
@@ -1019,10 +995,10 @@ DECLARE tempTables VARCHAR(5000);
 
     -- A3 --
         CALL buildQuery(p_query_id, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
-        NULL, NULL, 'A', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
+        NULL, NULL, 'A', NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, ageFrom, ageTo, NULL, NULL, NULL,
-        NULL, NULL, NULL, p_schema, NULL, p_queryCohort, p_queryNumber);
+        NULL, NULL, p_schema, NULL, p_queryCohort, p_queryNumber);
 
     ELSEIF p_queryNumber = 'A4' THEN 
 
@@ -1031,10 +1007,10 @@ DECLARE tempTables VARCHAR(5000);
 
     -- A4 --
         CALL buildQuery(p_query_id, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
-        NULL, NULL, 'A', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
+        NULL, NULL, 'A', NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, ageFrom, ageTo, NULL, NULL, NULL,
-        NULL, NULL, NULL, p_schema, NULL, p_queryCohort, p_queryNumber);
+        NULL, NULL, p_schema, NULL, p_queryCohort, p_queryNumber);
 
     ELSEIF p_queryNumber = 'A5' THEN 
 
@@ -1043,10 +1019,10 @@ DECLARE tempTables VARCHAR(5000);
 
     -- A5 --
         CALL buildQuery(p_query_id, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
-        NULL, NULL, 'A', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
+        NULL, NULL, 'A', NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, ageFrom, ageTo, NULL, NULL, NULL,
-        NULL, NULL, NULL, p_schema, NULL, p_queryCohort, p_queryNumber);
+        NULL, NULL, p_schema, NULL, p_queryCohort, p_queryNumber);
 
     END IF;
 

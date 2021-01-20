@@ -27,7 +27,7 @@ BEGIN
 
    SET p_timeperioddaterange = IF(p_timeperioddaterange IS NULL,'1',p_timeperioddaterange);
 
-   SET @sql = CONCAT('DROP TABLE IF EXISTS ', p_earliestlatestobservationtab);
+   SET @sql = CONCAT('DROP TEMPORARY TABLE IF EXISTS ', p_earliestlatestobservationtab);
    PREPARE stmt FROM @sql;
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;
@@ -43,7 +43,7 @@ BEGIN
      EXECUTE stmt;
      DEALLOCATE PREPARE stmt;
 
-     SET @sql = CONCAT('CREATE TABLE ', p_earliestlatestobservationtab,' AS 
+     SET @sql = CONCAT('CREATE TEMPORARY TABLE ', p_earliestlatestobservationtab,' AS 
      SELECT 
           ob.id,
           ob.patient_id,
@@ -84,7 +84,7 @@ BEGIN
      EXECUTE stmt;
      DEALLOCATE PREPARE stmt;
 
-     SET @sql = CONCAT('CREATE TABLE ', p_earliestlatestobservationtab,' AS 
+     SET @sql = CONCAT('CREATE TEMPORARY TABLE ', p_earliestlatestobservationtab,' AS 
      SELECT 
           ob.id,
           ob.patient_id,
