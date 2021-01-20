@@ -1,5 +1,5 @@
 import {Component, Inject} from '@angular/core';
-import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {MatDialogRef, MAT_DIALOG_DATA, MatDialog} from '@angular/material/dialog';
 import {ExplorerService} from '../explorer.service';
 import {LoggerService} from 'dds-angular8';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
@@ -7,6 +7,7 @@ import {STEPPER_GLOBAL_OPTIONS} from "@angular/cdk/stepper";
 import {CdkDragDrop, transferArrayItem} from "@angular/cdk/drag-drop";
 import {ReplaySubject, Subject} from "rxjs";
 import {takeUntil} from "rxjs/operators";
+import {MessageBoxDialogComponent} from "../message-box-dialog/message-box-dialog.component";
 
 export interface DialogData {
   dashboardId: string;
@@ -104,7 +105,8 @@ export class DashboardEditorComponent {
     private explorerService: ExplorerService,
     private log: LoggerService,
     private _formBuilder: FormBuilder,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData) {
+    @Inject(MAT_DIALOG_DATA) public data: DialogData,
+    private dialog: MatDialog) {
     this.disableForm = true;
     this.dashboardId = data.dashboardId;
     this.name = data.name;
@@ -150,7 +152,7 @@ export class DashboardEditorComponent {
     });
   }
 
-  saveDashboard() {
+  saveDashboard(close: boolean) {
     let query = {
       selectedVisualisation1: this.selectedVisualisation1,
       selectedSeries1: this.selectedSeries1,
@@ -178,20 +180,20 @@ export class DashboardEditorComponent {
 
     this.explorerService.saveDashboard(this.type, this.name, this.dashboardId, this.jsonQuery)
       .subscribe(saved => {
+          if (close)
           this.dialogRef.close(true);
         },
         error => this.log.error('This dashboard could not be saved.')
       );
   }
 
-  dashboardEntered(event) {
-    if (event.key === "Enter") {
-      this.saveDashboard();
-    }
-  }
-
   onCancelClick(): void {
-    this.dialogRef.close();
+    MessageBoxDialogComponent.open(this.dialog, 'Cancel edit', 'Are you sure you want to cancel this dashboard edit?', 'Yes', 'No')
+      .subscribe(result => {
+        if (result) {
+          this.dialogRef.close();
+        }
+      });
   }
 
   formChanged() {

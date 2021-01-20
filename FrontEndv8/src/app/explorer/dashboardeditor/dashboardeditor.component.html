@@ -38,7 +38,8 @@
       <div style="margin-top: 300px" mat-dialog-actions align="end">
         <button style="margin-right: 15px" mat-button color="accent" (click)="onCancelClick()">Cancel</button>
         <button style="margin-right: 15px" mat-flat-button color="accent" (click)="stepper.next()">Next</button>
-        <button style="margin-right: 15px" mat-flat-button color="accent" [disabled]="disableForm" (click)="saveDashboard()">Save</button>
+        <button style="margin-right: 15px" mat-flat-button color="accent" [disabled]="disableForm" (click)="saveDashboard(false)">Save</button>
+        <button style="margin-right: 15px" mat-flat-button color="accent" [disabled]="disableForm" (click)="saveDashboard(true)">Save & Close</button>
       </div>
     </form>
   </mat-step>
@@ -278,7 +279,8 @@
         <button style="margin-right: 15px" mat-button color="accent" (click)="onCancelClick()">Cancel</button>
         <button style="margin-right: 15px" mat-button color="accent" matStepperPrevious>Back</button>
         <button style="margin-right: 15px" mat-flat-button color="accent" (click)="stepper.next()">Next</button>
-        <button style="margin-right: 15px" mat-flat-button color="accent" [disabled]="disableForm" (click)="saveDashboard()">Save</button>
+        <button style="margin-right: 15px" mat-flat-button color="accent" [disabled]="disableForm" (click)="saveDashboard(false)">Save</button>
+        <button style="margin-right: 15px" mat-flat-button color="accent" [disabled]="disableForm" (click)="saveDashboard(true)">Save & Close</button>
       </div>
 
     </form>
@@ -340,7 +342,8 @@
       <div style="margin-top: 55px" mat-dialog-actions align="end">
         <button style="margin-right: 15px" mat-button color="accent" (click)="onCancelClick()">Cancel</button>
         <button style="margin-right: 15px" mat-button color="accent" matStepperPrevious>Back</button>
-        <button style="margin-right: 15px" mat-flat-button color="accent" [disabled]="disableForm" (click)="saveDashboard()">Save</button>
+        <button style="margin-right: 15px" mat-flat-button color="accent" [disabled]="disableForm" (click)="saveDashboard(false)">Save</button>
+        <button style="margin-right: 15px" mat-flat-button color="accent" [disabled]="disableForm" (click)="saveDashboard(true)">Save & Close</button>
       </div>
 
     </form>
