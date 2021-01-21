@@ -26,6 +26,7 @@ CREATE PROCEDURE createDataset (
 BEGIN 
 
 DECLARE clinicalTypeString VARCHAR(1000);
+DECLARE whereString VARCHAR(1000);
 
 DECLARE front VARCHAR(500) DEFAULT NULL;
 DECLARE frontlen INT DEFAULT NULL;
@@ -136,7 +137,13 @@ DECLARE clinicalType VARCHAR(100);
                               EXECUTE stmt;
                               DEALLOCATE PREPARE stmt;
 
-                              ALTER TABLE qry_concept ADD INDEX cpt_idx(non_core_concept_id);
+                              ALTER TABLE qry_concept ADD INDEX cpt_idx (non_core_concept_id);
+
+                              IF clinicalType = 'Diagnostics' THEN 
+                                 SET whereString = ' (o.result_value_units IS NOT NULL OR o.result_value IS NOT NULL OR o.result_date IS NOT NULL OR o.result_text IS NOT NULL OR o.result_concept_id IS NOT NULL) ';
+                              ELSE
+                                 SET whereString = '1';
+                              END IF;
 
                               -- insert observation results into a temporary table
                               SET @sql = CONCAT('INSERT INTO qry_dataset 
@@ -144,7 +151,9 @@ DECLARE clinicalType VARCHAR(100);
                               FROM ', p_schema, '.', p_sourcetab,' o JOIN ', p_patientcohorttab,' p ON o.patient_id = p.patient_id 
                               AND o.organization_id = p.organization_id 
                               JOIN qry_concept cpt ON o.non_core_concept_id = cpt.non_core_concept_id 
-                              WHERE o.non_core_concept_id IS NOT NULL AND ', p_daterange,' AND ', p_activeString); 
+                              WHERE ', whereString,' 
+                              AND o.non_core_concept_id IS NOT NULL 
+                              AND ', p_daterange,' AND ', p_activeString); 
                               PREPARE stmt FROM @sql;
                               EXECUTE stmt;
                               DEALLOCATE PREPARE stmt;
@@ -156,26 +165,31 @@ DECLARE clinicalType VARCHAR(100);
                               SELECT cv.code_category_id, COALESCE(cm.legacy, cv.concept_dbid) non_core_concept_id 
                               FROM qry_code_cat cv JOIN ", p_schema,".concept c ON c.dbid = cv.concept_dbid 
                               LEFT JOIN qry_cpt_map cm ON cv.concept_dbid = cm.core 
-                              WHERE cv.code_category_id IN (17,21,37) "); -- Family history, Immunisations, Procedure code
+                              WHERE cv.code_category_id IN (17, 21, 37) "); -- Family history, Immunisations, Procedure code
                               PREPARE stmt FROM @sql;
                               EXECUTE stmt;
                               DEALLOCATE PREPARE stmt;
 
-                              ALTER TABLE qry_concept ADD INDEX cpt_idx(non_core_concept_id);
+                              ALTER TABLE qry_concept ADD INDEX cpt_idx (non_core_concept_id);
 
                               SET @sql = CONCAT("INSERT INTO qry_dataset 
                               SELECT DISTINCT p.query_id, o.id 
-                              FROM ", p_schema, '.', p_sourcetab," o JOIN ", p_patientcohorttab," p ON o.patient_id = p.patient_id 
-                              AND o.organization_id = p.organization_id 
-                              JOIN ", p_schema,".concept cpt ON o.non_core_concept_id = cpt.dbid
-                              WHERE ( cpt.name NOT LIKE '%procedure%' 
+                              FROM ", p_schema, '.', p_sourcetab," o JOIN ", p_patientcohorttab," p ON o.patient_id = p.patient_id AND o.organization_id = p.organization_id  
+                              JOIN ", p_schema,".concept cpt ON o.non_core_concept_id = cpt.dbid 
+                              WHERE o.result_value_units IS NULL 
+                              AND o.result_value IS NULL 
+                              AND o.result_date IS NULL 
+                              AND o.result_text IS NULL 
+                              AND o.result_concept_id IS NULL 
+                              AND cpt.name NOT LIKE '%procedure%' 
                               AND cpt.name NOT LIKE '%family history%' 
                               AND cpt.name NOT LIKE '%FH:%'  
                               AND cpt.name NOT LIKE '%immunisation%' 
                               AND cpt.name NOT LIKE '%vaccination%' 
-                              OR NOT EXISTS (SELECT 1 FROM qry_concept q WHERE q.non_core_concept_id = o.non_core_concept_id) )
+                              AND NOT EXISTS (SELECT 1 FROM qry_concept q WHERE q.non_core_concept_id = o.non_core_concept_id) 
                               AND o.is_problem = 0 
-                              AND o.non_core_concept_id IS NOT NULL AND ", p_daterange," AND ", p_activeString); 
+                              AND o.non_core_concept_id IS NOT NULL 
+                              AND ", p_daterange," AND ", p_activeString); 
                               PREPARE stmt FROM @sql;
                               EXECUTE stmt;
                               DEALLOCATE PREPARE stmt;
@@ -186,10 +200,11 @@ DECLARE clinicalType VARCHAR(100);
                               SELECT DISTINCT p.query_id, o.id 
                               FROM ", p_schema, '.', p_sourcetab," o JOIN ", p_patientcohorttab," p ON o.patient_id = p.patient_id 
                               AND o.organization_id = p.organization_id 
-                              JOIN ", p_schema,".concept cpt ON o.non_core_concept_id = cpt.dbid
+                              JOIN ", p_schema,".concept cpt ON o.non_core_concept_id = cpt.dbid 
                               WHERE o.is_problem = 1 
                               AND o.is_review = 0 
-                              AND o.non_core_concept_id IS NOT NULL AND ", p_daterange," AND ", p_activeString); 
+                              AND o.non_core_concept_id IS NOT NULL 
+                              AND ", p_daterange," AND ", p_activeString); 
                               PREPARE stmt FROM @sql;
                               EXECUTE stmt;
                               DEALLOCATE PREPARE stmt;
@@ -206,7 +221,7 @@ DECLARE clinicalType VARCHAR(100);
                               EXECUTE stmt;
                               DEALLOCATE PREPARE stmt;
 
-                              ALTER TABLE qry_concept ADD INDEX cpt_idx(non_core_concept_id);
+                              ALTER TABLE qry_concept ADD INDEX cpt_idx (non_core_concept_id);
                                  
                               SET @sql = CONCAT("INSERT INTO qry_dataset 
                               SELECT DISTINCT p.query_id, o.id 
@@ -232,7 +247,7 @@ DECLARE clinicalType VARCHAR(100);
                               EXECUTE stmt;
                               DEALLOCATE PREPARE stmt;
 
-                              ALTER TABLE qry_concept ADD INDEX cpt_idx(non_core_concept_id);
+                              ALTER TABLE qry_concept ADD INDEX cpt_idx (non_core_concept_id);
                                  
                               SET @sql = CONCAT("INSERT INTO qry_dataset 
                               SELECT DISTINCT p.query_id, o.id 
@@ -258,7 +273,7 @@ DECLARE clinicalType VARCHAR(100);
                               EXECUTE stmt;
                               DEALLOCATE PREPARE stmt;
 
-                              ALTER TABLE qry_concept ADD INDEX cpt_idx(non_core_concept_id);
+                              ALTER TABLE qry_concept ADD INDEX cpt_idx (non_core_concept_id);
             
                               SET @sql = CONCAT("INSERT INTO qry_dataset 
                               SELECT DISTINCT p.query_id, o.id 
