@@ -61,6 +61,7 @@ export class MapComponent implements OnInit {
           this.userService.getUserProfile(true).then(
             result => {
               this.user = result;
+              console.log(this.user);
               this.init();
             }
           );
