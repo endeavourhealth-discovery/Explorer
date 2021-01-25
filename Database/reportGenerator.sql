@@ -215,8 +215,8 @@ SET @enabled = FALSE;
 SET sourceSchema = 'subscriber_pi_rv';
 
 SET targetPercentage = JSON_UNQUOTE(JSON_EXTRACT(query,'$.targetPercentage')); 
-SET providerOrganisation = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.providerOrganisation'),'[',''),']',''),'"','');
-SET includedOrganisation = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.includedOrganisation'),'[',''),']',''),'"','');
+SET providerOrganisation = UPPER(REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.providerOrganisation'),'[',''),']',''),'"',''));
+SET includedOrganisation = UPPER(REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.includedOrganisation'),'[',''),']',''),'"',''));
 SET registrationStatus = JSON_UNQUOTE(JSON_EXTRACT(query,'$.registrationStatus'));
 
 SET gender = LOWER(JSON_UNQUOTE(JSON_EXTRACT(query,'$.gender'))); 

@@ -14,11 +14,11 @@ BEGIN
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;
 
-   SET @sql = CONCAT("CREATE TABLE ",p_org_tab_name," AS 
+   SET @sql = CONCAT("CREATE TABLE ", p_org_tab_name," AS 
    SELECT org.ods_code 
    FROM organisation_groups org_grp 
    JOIN organisations org ON org_grp.id = org.organisation_group_id 
-   WHERE EXISTS (SELECT 1 FROM ", p_storetab," s WHERE s.code = org_grp.name)");
+   WHERE EXISTS (SELECT 1 FROM ", p_storetab," s WHERE s.code = UPPER(org_grp.name))");
 
    PREPARE stmt FROM @sql;
    EXECUTE stmt;
