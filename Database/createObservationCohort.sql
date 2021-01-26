@@ -51,7 +51,7 @@ BEGIN
 
    SET @sql = CONCAT("
    CREATE TEMPORARY TABLE qry_tmp (
-   row_id INT, id BIGINT, patient_id BIGINT, person_id BIGINT, organization_id BIGINT, PRIMARY KEY (row_id) ) AS 
+   row_id INT, patient_id BIGINT, person_id BIGINT, organization_id BIGINT, PRIMARY KEY (row_id) ) AS 
    SELECT (@row_no := @row_no + 1) AS row_id, c.patient_id, c.person_id, c.organization_id 
    FROM ", p_cohortTab," c JOIN (SELECT @row_no := 0) t "); 
    PREPARE stmt FROM @sql;
