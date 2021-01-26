@@ -75,6 +75,23 @@ public class DashboardEndpoint {
     }
 
     @GET
+    @Path("/covidlibrary")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getCovidLibrary(@Context SecurityContext sc) throws Exception {
+        LOG.debug("getCovidLibrary");
+
+        try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
+            CovidLibraryResult result = viewerDAL.getCovidLibrary();
+
+            return Response
+                    .ok()
+                    .entity(result)
+                    .build();
+        }
+    }
+
+    @GET
     @Path("/dashboard")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -97,6 +114,42 @@ public class DashboardEndpoint {
             } else {
                 result = viewerDAL.getDashboard(query, chartName, dateFrom, dateTo, cumulative, grouping, weekly, rate);
             }
+            return Response
+                    .ok()
+                    .entity(result)
+                    .build();
+        }
+    }
+
+    @GET
+    @Path("/dashboardcovid")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getDashboardCovid(@Context SecurityContext sc,
+                            @QueryParam("dashboardId") String dashboardId,
+                            @QueryParam("series") String series,
+                            @QueryParam("dateFrom") String dateFrom,
+                            @QueryParam("dateTo") String dateTo,
+                            @QueryParam("stp")String stp,
+                            @QueryParam("ccg")String ccg,
+                            @QueryParam("pcn")String pcn,
+                            @QueryParam("practice")String practice,
+                            @QueryParam("ethnic")String ethnic,
+                            @QueryParam("age")String age,
+                            @QueryParam("sex")String sex,
+                            @QueryParam("cumulative") String cumulative,
+                            @QueryParam("weekly") String weekly,
+                            @QueryParam("rate") String rate,
+                            @QueryParam("combineSeries") String combineSeries,
+                            @QueryParam("combineEthnic") String combineEthnic,
+                            @QueryParam("combineAge") String combineAge,
+                            @QueryParam("combineSex") String combineSex) throws Exception {
+        LOG.debug("getDashboardCovid");
+        try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
+            ChartResult result = null;
+
+            result = viewerDAL.getDashboardCovid(dashboardId, series, dateFrom, dateTo, stp, ccg, pcn, practice, ethnic, age, sex, cumulative, weekly, rate, combineSeries, combineEthnic, combineAge, combineSex);
+
             return Response
                     .ok()
                     .entity(result)
@@ -611,6 +664,24 @@ public class DashboardEndpoint {
     }
 
     @GET
+    @Path("/seriesFromDashboardId")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getSeriesFromDashboardId(@Context SecurityContext sc,
+                                       @QueryParam("dashboardId") String dashboardId) throws Exception {
+        LOG.debug("getSeriesFromDashboardId");
+
+        try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
+            SeriesResult result = viewerDAL.getSeriesFromDashboardId(dashboardId);
+
+            return Response
+                    .ok()
+                    .entity(result)
+                    .build();
+        }
+    }
+
+    @GET
     @Path("/dashboardview")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -620,6 +691,24 @@ public class DashboardEndpoint {
 
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
             DashboardViewResult result = viewerDAL.getDashboardView(dashboardNumber);
+
+            return Response
+                    .ok()
+                    .entity(result)
+                    .build();
+        }
+    }
+
+    @GET
+    @Path("/covidview")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getCovidDashboardView(@Context SecurityContext sc,
+                                     @QueryParam("dashboardNumber") String dashboardNumber) throws Exception {
+        LOG.debug("getCovidDashboardView");
+
+        try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
+            DashboardViewResult result = viewerDAL.getCovidDashboardView(dashboardNumber);
 
             return Response
                     .ok()

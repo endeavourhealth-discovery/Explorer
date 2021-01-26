@@ -58,6 +58,8 @@ import {TrendComponent} from "./trend/trend.component";
 import {OrganisationListSizesComponent} from './organisationlistsizes/organisationlistsizes.component';
 import { PracticeListSizesComponent } from './practicelistsizes/practicelistsizes.component';
 import {GraphicalComparisonComponent} from "./graphicalcomparison/graphicalcomparison.component";
+import {CovidLibraryComponent} from "./covidlibrary/covidlibrary.component";
+import {CovidViewerComponent} from "./covidviewer/covidviewer.component";
 
 @NgModule({
   declarations: [
@@ -82,7 +84,9 @@ import {GraphicalComparisonComponent} from "./graphicalcomparison/graphicalcompa
     TrendComponent,
     OrganisationListSizesComponent,
     PracticeListSizesComponent,
-    GraphicalComparisonComponent
+    GraphicalComparisonComponent,
+    CovidLibraryComponent,
+    CovidViewerComponent
   ],
     imports: [
         BrowserModule,
@@ -124,7 +128,8 @@ import {GraphicalComparisonComponent} from "./graphicalcomparison/graphicalcompa
         MatTabsModule,
         MatSelectSearchModule,
         MatSliderModule,
-        GenericTableModule
+        GenericTableModule,
+        MatTreeModule
     ],
 
   entryComponents: [

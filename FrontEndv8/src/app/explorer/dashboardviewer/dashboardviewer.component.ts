@@ -17,22 +17,18 @@ interface widget {
 
 interface dashboardQuery {
   selectedVisualisation1: string;
-  selectedOutputField1: string;
   selectedSeries1: string;
   xAxisLabel1: string;
   yAxisLabel1: string;
   selectedVisualisation2: string;
-  selectedOutputField2: string;
   selectedSeries2: string;
   xAxisLabel2: string;
   yAxisLabel2: string;
   selectedVisualisation3: string;
-  selectedOutputField3: string;
   selectedSeries3: string;
   xAxisLabel3: string;
   yAxisLabel3: string;
   selectedVisualisation4: string;
-  selectedOutputField4: string;
   selectedSeries4: string;
   xAxisLabel4: string;
   yAxisLabel4: string;
@@ -195,22 +191,18 @@ export class DashboardViewerComponent implements OnInit {
   selectedQuery3: string;
   selectedQuery4: string;
   selectedVisualisation1: string;
-  selectedOutputField1: string;
   selectedSeries1: any = [];
   xAxisLabel1: string;
   yAxisLabel1: string;
   selectedVisualisation2: string;
-  selectedOutputField2: string;
   selectedSeries2: any = [];
   xAxisLabel2: string;
   yAxisLabel2: string;
   selectedVisualisation3: string;
-  selectedOutputField3: string;
   selectedSeries3: any = [];
   xAxisLabel3: string;
   yAxisLabel3: string;
   selectedVisualisation4: string;
-  selectedOutputField4: string;
   selectedSeries4: any = [];
   xAxisLabel4: string;
   yAxisLabel4: string;
@@ -705,7 +697,6 @@ export class DashboardViewerComponent implements OnInit {
         let query: dashboardQuery = JSON.parse(e.jsonQuery);
 
         this.selectedVisualisation1 = query.selectedVisualisation1;
-        this.selectedOutputField1 = query.selectedOutputField1;
 
         this.selectedQuery1 = query.selectedSeries1;
 
@@ -719,7 +710,6 @@ export class DashboardViewerComponent implements OnInit {
         this.yAxisLabel1 = query.yAxisLabel1;
 
         this.selectedVisualisation2 = query.selectedVisualisation2;
-        this.selectedOutputField2 = query.selectedOutputField2;
 
         this.selectedQuery2 = query.selectedSeries2;
 
@@ -733,7 +723,6 @@ export class DashboardViewerComponent implements OnInit {
         this.yAxisLabel2 = query.yAxisLabel2;
 
         this.selectedVisualisation3 = query.selectedVisualisation3;
-        this.selectedOutputField3 = query.selectedOutputField3;
 
         this.selectedQuery3 = query.selectedSeries3;
 
@@ -747,7 +736,6 @@ export class DashboardViewerComponent implements OnInit {
         this.yAxisLabel3 = query.yAxisLabel3;
 
         this.selectedVisualisation4 = query.selectedVisualisation4;
-        this.selectedOutputField4 = query.selectedOutputField4;
 
         this.selectedQuery4 = query.selectedSeries4;
 
@@ -1070,35 +1058,35 @@ export class DashboardViewerComponent implements OnInit {
   }
 
   onSelectLine1(data): void {
-    this.patientDialog(data.series, data.name, this.selectedCCG1.toString());
+    // this.patientDialog(data.series, data.name, this.selectedCCG1.toString());
   }
 
   onSelectBar1(data): void {
-    this.patientDialog(this.selectedSeries1, data.name, this.selectedCCG1.toString());
+    // this.patientDialog(this.selectedSeries1, data.name, this.selectedCCG1.toString());
   }
 
   onSelectLine2(data): void {
-    this.patientDialog(data.series, data.name, this.selectedCCG2.toString());
+    // this.patientDialog(data.series, data.name, this.selectedCCG2.toString());
   }
 
   onSelectBar2(data): void {
-    this.patientDialog(this.selectedSeries2, data.name, this.selectedCCG2.toString());
+    // this.patientDialog(this.selectedSeries2, data.name, this.selectedCCG2.toString());
   }
 
   onSelectLine3(data): void {
-    this.patientDialog(data.series, data.name, this.selectedCCG3.toString());
+    // this.patientDialog(data.series, data.name, this.selectedCCG3.toString());
   }
 
   onSelectBar3(data): void {
-    this.patientDialog(this.selectedSeries3, data.name, this.selectedCCG3.toString());
+    // this.patientDialog(this.selectedSeries3, data.name, this.selectedCCG3.toString());
   }
 
   onSelectLine4(data): void {
-    this.patientDialog(data.series, data.name, this.selectedCCG4.toString());
+    // this.patientDialog(data.series, data.name, this.selectedCCG4.toString());
   }
 
   onSelectBar4(data): void {
-    this.patientDialog(this.selectedSeries4, data.name, this.selectedCCG4.toString());
+    // this.patientDialog(this.selectedSeries4, data.name, this.selectedCCG4.toString());
   }
 
   patientDialog(chartName: any, seriesName: any, ccgs: any) {

@@ -1,0 +1,212 @@
+
+    <table>
+      <tr>
+        <td style="vertical-align: top;">
+          <div class="filter-background">
+            <div style="font-size:16px; font-weight: bold;padding: 0px 0px 10px 0px">
+              {{chartTitle1}} - (BETA)
+            </div>
+            <mat-form-field style="width:550px"  appearance="standard" *ngIf="showLineCharts1||showBarCharts1">
+              <mat-label>Filter by series</mat-label>
+              <mat-select style="width:550px" [formControl]="seriesValues1" multiple [(value)]="selectedSeries1">
+                <mat-checkbox class="mat-option" [(ngModel)]="combineSeries1" (change)="refreshDashboard()">Combine selections</mat-checkbox>
+                <mat-checkbox class="mat-option" [(ngModel)]="selectAllSeries1" (change)="toggleSeriesSelection1($event)">Select All</mat-checkbox>
+                <mat-option (click)="refreshDashboard()" *ngFor="let result of seriesList1" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">{{result}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field style="width:250px"  appearance="standard" *ngIf="showLineCharts1||showBarCharts1">
+              <mat-label>Filter by ethnicity</mat-label>
+              <mat-select style="width:250px" [formControl]="ethnicValues1" multiple [(value)]="selectedethnic1">
+                <mat-checkbox class="mat-option" [(ngModel)]="combineEthnic1" (change)="refreshDashboard()">Combine selections</mat-checkbox>
+                <mat-checkbox class="mat-option" [(ngModel)]="selectAllEthnic1" (change)="toggleEthnicSelection1($event)">Select All</mat-checkbox>
+                <mat-option (click)="refreshDashboard()" *ngFor="let result of ethnicList1" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">{{result}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field style="width:200px;"  appearance="standard" *ngIf="showLineCharts1||showBarCharts1">
+              <mat-label>Filter by age</mat-label>
+              <mat-select style="width:200px" [formControl]="ageValues1" multiple [(value)]="selectedage1">
+                <mat-checkbox class="mat-option" [(ngModel)]="combineAge1" (change)="refreshDashboard()">Combine selections</mat-checkbox>
+                <mat-checkbox class="mat-option" [(ngModel)]="selectAllAge1" (change)="toggleAgeSelection1($event)">Select All</mat-checkbox>
+                <mat-option (click)="refreshDashboard()" *ngFor="let result of ageList1" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">{{result}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field style="width:200px;"  appearance="standard" *ngIf="showLineCharts1||showBarCharts1">
+              <mat-label>Filter by sex</mat-label>
+              <mat-select style="width:200px" [formControl]="sexValues1" multiple [(value)]="selectedsex1">
+                <mat-checkbox class="mat-option" [(ngModel)]="combineSex1" (change)="refreshDashboard()">Combine selections</mat-checkbox>
+                <mat-checkbox class="mat-option" [(ngModel)]="selectAllSex1" (change)="toggleSexSelection1($event)">Select All</mat-checkbox>
+                <mat-option (click)="refreshDashboard()" *ngFor="let result of sexList1" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">{{result}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field style="width: 115px" *ngIf="showLineCharts1||showBarCharts1" appearance="standard">
+              <mat-label>Date from</mat-label>
+              <input matInput [matDatepicker]="picker1" placeholder="Date from" [(ngModel)]="dateFrom1" (dateChange)="refreshDashboard()">
+              <mat-datepicker-toggle matSuffix [for]="picker1">
+                <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+              </mat-datepicker-toggle>
+              <mat-datepicker #picker1></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field style="width: 115px; margin-left: 10px" *ngIf="showLineCharts1||showBarCharts1" appearance="standard">
+              <mat-label>Date to</mat-label>
+              <input matInput [matDatepicker]="picker2" placeholder="Date to" [(ngModel)]="dateTo1" (dateChange)="refreshDashboard()">
+              <mat-datepicker-toggle matSuffix [for]="picker2">
+                <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+              </mat-datepicker-toggle>
+              <mat-datepicker #picker2></mat-datepicker>
+            </mat-form-field>
+            <button class="download" mat-flat-button color="primary" (click)="download1()">Download as CSV</button>
+          </div>
+        </td>
+        <td style="vertical-align: top;">
+          <div class="filter-background">
+            <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+              <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding>
+                <button mat-icon-button disabled></button>
+                <mat-checkbox class="checklist-leaf-node"
+                              [checked]="checklistSelection.isSelected(node)"
+                              (change)="OrgLeafItemSelectionToggle(node)">{{node.item}}</mat-checkbox>
+              </mat-tree-node>
+
+              <mat-tree-node *matTreeNodeDef="let node; when: hasNoContent" matTreeNodePadding>
+                <button mat-icon-button disabled></button>
+
+              </mat-tree-node>
+
+              <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
+                <button mat-icon-button matTreeNodeToggle
+                        [attr.aria-label]="'Toggle ' + node.item">
+                  <mat-icon class="mat-icon-rtl-mirror">
+                    {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+                  </mat-icon>
+                </button>
+                <mat-checkbox [checked]="descendantsAllSelected(node)"
+                              [indeterminate]="descendantsPartiallySelected(node)"
+                              (change)="OrgItemSelectionToggle(node)">{{node.item}}</mat-checkbox>
+
+              </mat-tree-node>
+            </mat-tree>
+            <div style="margin-top: 10px" *ngIf="showLineCharts1||showBarCharts1">
+              <mat-checkbox *ngIf="showLineCharts1" class="checkbox" [(ngModel)]="showAreaChart1">Show area chart</mat-checkbox>
+              <mat-checkbox class="checkbox" [(ngModel)]="gradient1">Gradient fill</mat-checkbox>
+              <mat-checkbox *ngIf="showLineCharts1" class="checkbox" (change)="refreshDashboard()" [(ngModel)]="logarithmic1">Logarithmic</mat-checkbox>
+              <mat-checkbox *ngIf="showLineCharts1" class="checkbox" (change)="refreshDashboard()" [(ngModel)]="cumulative1">Cumulative</mat-checkbox>
+              <mat-checkbox *ngIf="showLineCharts1" class="checkbox" (change)="refreshDashboard()" [(ngModel)]="weekly1">Weekly</mat-checkbox>
+              <mat-checkbox *ngIf="showLineCharts1" class="checkbox" (change)="refreshDashboard()" [(ngModel)]="rate1">Rate per 100,000 patients</mat-checkbox>
+
+            </div>
+
+          </div>
+        </td>
+      </tr>
+      <tr *ngIf="showPrompt">
+        <td colspan="2" style="text-align: center;padding-top: 300px">
+          Please select organisations to view the chart data.
+        </td>
+      </tr>
+      <tr *ngIf="showWait">
+        <td colspan="2" class="blink_me">
+          Retrieving data and building the chart.....
+        </td>
+      </tr>
+      <tr *ngIf="showCharts">
+        <td colspan="2">
+          <div *ngIf="showLineCharts1">
+            <div *ngIf="!showAreaChart1" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start" class="map-margin">
+              <ngx-charts-line-chart
+                [view]="view1"
+                [scheme]="colorScheme"
+                [legend]="legend"
+                [showXAxisLabel]="showXAxisLabel"
+                [showYAxisLabel]="showYAxisLabel"
+                [animations]="animations"
+                [showGridLines]="true"
+                [xAxis]="xAxis"
+                [yAxis]="yAxis"
+                [xAxisLabel]="xAxisLabel1"
+                [yAxisLabel]="yAxisLabel1"
+                [timeline]="timeline"
+                [results]="chartResults1"
+                [legendPosition]="legendPosition"
+                [gradient]="gradient1"
+                [xAxisTickFormatting]="formatXAxis"
+                [yAxisTickFormatting]="formatYAxis"
+                [showRefLines]="showRefLines1"
+                [referenceLines]="refLines1"
+                (select)="onSelectLine1($event)"
+              >
+                <ng-template #tooltipTemplate let-model="model">
+                  <span class="tooltip-label">{{formatXAxis(model.name)}} •  {{model.series}} • Patients: {{formatTooltipYAxis1(model.value)}}</span>
+                </ng-template>
+                <ng-template #seriesTooltipTemplate let-model="model">
+                <span class="tooltip-label" *ngFor="let series of model">
+                <span class="tooltip-label">{{formatXAxis(series.name)}} •  {{series.series}} • Patients: {{formatTooltipYAxis1(series.value)}}</span>
+                </span>
+                </ng-template>
+              </ngx-charts-line-chart>
+            </div>
+
+            <div *ngIf="showAreaChart1" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start" class="map-margin">
+              <ngx-charts-area-chart
+                [view]="view1"
+                [scheme]="colorScheme"
+                [legend]="legend"
+                [showXAxisLabel]="showXAxisLabel"
+                [showYAxisLabel]="showYAxisLabel"
+                [animations]="animations"
+                [showGridLines]="true"
+                [xAxis]="xAxis"
+                [yAxis]="yAxis"
+                [xAxisLabel]="xAxisLabel1"
+                [yAxisLabel]="yAxisLabel1"
+                [timeline]="timeline"
+                [results]="chartResults1"
+                [legendPosition]="legendPosition"
+                [gradient]="gradient1"
+                [xAxisTickFormatting]="formatXAxis"
+                [yAxisTickFormatting]="formatYAxis"
+                (select)="onSelectLine1($event)"
+              >
+                <ng-template #tooltipTemplate let-model="model">
+                  <span class="tooltip-label">{{formatXAxis(model.name)}} •  {{model.series}} • Patients: {{formatTooltipYAxis1(model.value)}}</span>
+                </ng-template>
+                <ng-template #seriesTooltipTemplate let-model="model">
+                <span class="tooltip-label" *ngFor="let series of model">
+                <span class="tooltip-label">{{formatXAxis(series.name)}} •  {{series.series}} • Patients: {{formatTooltipYAxis1(series.value)}}</span>
+                </span>
+                </ng-template>
+              </ngx-charts-area-chart>
+            </div>
+          </div>
+          <div *ngIf="showBarCharts1" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start" class="map-margin">
+            <ngx-charts-bar-vertical
+              [view]="view1"
+              [scheme]="colorScheme"
+              [legend]="legend"
+              [showXAxisLabel]="showXAxisLabel"
+              [showYAxisLabel]="showYAxisLabel"
+              [animations]="animations"
+              [showGridLines]="true"
+              [xAxis]="xAxis"
+              [yAxis]="yAxis"
+              [xAxisLabel]="xAxisLabel1"
+              [yAxisLabel]="yAxisLabel1"
+              [results]="chartResultsSingle1"
+              [legendPosition]="legendPosition"
+              [gradient]="gradient1"
+              (select)="onSelectBar1($event)"
+            >
+              <ng-template #tooltipTemplate let-model="model">
+                <span class="tooltip-label">{{model.name}} • Patients: {{model.value}}</span>
+              </ng-template>
+            </ngx-charts-bar-vertical>
+          </div>
+        </td>
+      </tr>
+    </table>
+
+
+
+
+
+

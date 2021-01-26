@@ -435,6 +435,30 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                 sqlCount = "SELECT count(distinct(practice_name)) " +
                         " FROM dashboards.registries";
                 break;
+            case "19":
+                sql = "SELECT distinct(type) as type " +
+                        "FROM dashboards.value_set_codes where value_set_id = 4 " +
+                        " order by type";
+
+                sqlCount = "SELECT count(distinct(type)) " +
+                        " FROM dashboards.value_set_codes where value_set_id = 4";
+                break;
+            case "20":
+                sql = "SELECT distinct(original_code) as type " +
+                        "FROM dashboards.value_set_codes where value_set_id = 95 " +
+                        " order by type";
+
+                sqlCount = "SELECT count(distinct(original_code)) " +
+                        " FROM dashboards.value_set_codes where value_set_id = 95";
+                break;
+            case "21":
+                sql = "SELECT distinct(original_code) as type " +
+                        "FROM dashboards.value_set_codes where value_set_id = 96 " +
+                        " order by type";
+
+                sqlCount = "SELECT count(distinct(original_code)) " +
+                        " FROM dashboards.value_set_codes where value_set_id = 96";
+                break;
             default:
                 break;
         }
@@ -775,6 +799,56 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         return dashboardLibrary;
     }
 
+    public CovidLibraryResult getCovidLibrary() throws Exception {
+        CovidLibraryResult result = new CovidLibraryResult();
+
+        String sql = "";
+        String sqlCount = "";
+
+        sql = "SELECT dashboard_id, name, updated, type, query " +
+                "FROM dashboards.covid_library "+
+                " order by type,name";
+
+        sqlCount = "SELECT count(1) " +
+                " FROM dashboards.covid_library";
+
+        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                result.setResults(getCovidList(resultSet));
+            }
+        }
+
+        try (PreparedStatement statement = conn.prepareStatement(sqlCount)) {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                resultSet.next();
+                result.setLength(resultSet.getInt(1));
+            }
+        }
+
+        return result;
+    }
+
+    private List<CovidLibrary> getCovidList(ResultSet resultSet) throws SQLException {
+        List<CovidLibrary> result = new ArrayList<>();
+        while (resultSet.next()) {
+            result.add(getCovid(resultSet));
+        }
+
+        return result;
+    }
+
+    public static CovidLibrary getCovid(ResultSet resultSet) throws SQLException {
+        CovidLibrary covidLibrary = new CovidLibrary();
+
+        covidLibrary
+                .setDashboardId(resultSet.getInt("dashboard_id"))
+                .setName(resultSet.getString("name"))
+                .setUpdated(resultSet.getDate("updated"))
+                .setType(resultSet.getString("type"))
+                .setJsonQuery(resultSet.getString("query"));
+        return covidLibrary;
+    }
+
     public ChartResult getDashboard(String query, String chartName, String dateFrom, String dateTo, String cumulative, String grouping, String weekly, String rate) throws Exception {
         String ccg = "";
 
@@ -899,14 +973,15 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
             }
             try (PreparedStatement statement = conn.prepareStatement(sql)) {
+                int p = 1;
                 for (int i = 1; i <= ids2.length; i++) {
-                    statement.setString(i, ids2[i-1]);
+                    statement.setString(p++, ids2[i-1]);
                 }
-                statement.setString(1+ids2.length, chart_name);
-                statement.setString(2+ids2.length, dateFrom);
-                statement.setString(3+ids2.length, dateTo);
+                statement.setString(p++, chart_name);
+                statement.setString(p++, dateFrom);
+                statement.setString(p++, dateTo);
                 for (int i = 1; i <= ids.length; i++) {
-                    statement.setString(i+3+ids2.length, ids[i-1]);
+                    statement.setString(p++, ids[i-1]);
                 }
                 try (ResultSet resultSet = statement.executeQuery()) {
                     chartItem.setSeries(getSeriesFromResultSet(resultSet));
@@ -914,6 +989,268 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
             }
 
             chart.add(chartItem);
+        }
+
+        result.setResults(chart);
+
+        return result;
+    }
+
+    public ChartResult getDashboardCovid(String dashboardId, String series, String dateFrom, String dateTo, String stp, String ccg, String pcn, String practice, String ethnic, String age, String sex,
+                                         String cumulative, String weekly, String rate,String combineSeries, String combineEthnic, String combineAge, String combineSex) throws Exception {
+
+        List<String> orgs = null;
+
+        if (!stp.equals(""))
+            orgs = Arrays.asList(stp.split("\\s*,\\s*"));
+        else if (!ccg.equals(""))
+            orgs = Arrays.asList(ccg.split("\\s*,\\s*"));
+        else if (!pcn.equals(""))
+            orgs = Arrays.asList(pcn.split("\\s*,\\s*"));
+        else if (!practice.equals(""))
+            orgs = Arrays.asList(practice.split("\\s*,\\s*"));
+
+        List<String> charts = Arrays.asList(series.split("\\s*,\\s*"));
+        List<String> ethnics = Arrays.asList(ethnic.split("\\s*,\\s*"));
+        List<String> ages = Arrays.asList(age.split("\\s*,\\s*"));
+        List<String> sexes = Arrays.asList(sex.split("\\s*,\\s*"));
+
+        String seriesArray[] = series.split(",");
+        StringBuilder builder = new StringBuilder();
+        for( int i = 0 ; i < seriesArray.length; i++ ) {
+            builder.append("?,");
+        }
+        String seriesParams = builder.deleteCharAt( builder.length() -1 ).toString();
+
+        String ethnicArray[] = ethnic.split(",");
+        builder = new StringBuilder();
+        for( int i = 0 ; i < ethnicArray.length; i++ ) {
+            builder.append("?,");
+        }
+        String ethnicParams = builder.deleteCharAt( builder.length() -1 ).toString();
+
+        String ageArray[] = age.split(",");
+        builder = new StringBuilder();
+        for( int i = 0 ; i < ageArray.length; i++ ) {
+            builder.append("?,");
+        }
+        String ageParams = builder.deleteCharAt( builder.length() -1 ).toString();
+
+        String sexArray[] = sex.split(",");
+        builder = new StringBuilder();
+        for( int i = 0 ; i < sexArray.length; i++ ) {
+            builder.append("?,");
+        }
+        String sexParams = builder.deleteCharAt( builder.length() -1 ).toString();
+
+        ChartResult result = new ChartResult();
+        String sql = "";
+
+        List<Chart> chart = new ArrayList<>();
+        Chart chartItem = null;
+
+        if (combineSeries.equals("false")) {
+            seriesParams = "?";
+        } else {
+            charts = Arrays.asList("Combine");
+        }
+
+        if (combineEthnic.equals("false")) {
+            ethnicParams = "?";
+        } else {
+            ethnics = Arrays.asList("Combine");
+        }
+
+        if (combineAge.equals("false")) {
+            ageParams = "?";
+        } else {
+            ages = Arrays.asList("Combine");
+        }
+
+        if (combineSex.equals("false")) {
+            sexParams = "?";
+        } else {
+            sexes = Arrays.asList("Combine");
+        }
+
+        String seriesSQL = "and name in ("+seriesParams+")";
+
+        String orgSQL = "";
+
+        if (!stp.equals(""))
+            orgSQL = " stp in (?)";
+        else if (!ccg.equals(""))
+            orgSQL = " ccg in (?)";
+        else if (!pcn.equals(""))
+            orgSQL = " pcn in (?)";
+        else if (!practice.equals(""))
+            orgSQL = " practice in (?)";
+
+        String ethnicSQL = "and ethnic in ("+ethnicParams+")";
+        String ageSQL = "and age in ("+ageParams+")";
+        String sexSQL = "and sex in ("+sexParams+")";
+
+        if (series.equals("All")) {
+            seriesArray = new String[0];
+            seriesSQL = "";
+        }
+
+        if (ethnic.equals("All")) {
+            ethnicArray = new String[0];
+            ethnicSQL = "";
+        }
+
+        if (age.equals("All")) {
+            ageArray = new String[0];
+            ageSQL = "";
+        }
+
+        if (sex.equals("All")) {
+            sexArray = new String[0];
+            sexSQL = "";
+        }
+
+        for (String seriesName : charts) {
+            for (String orgName : orgs) {
+                for (String ethnicName : ethnics) {
+                    for (String ageGroup : ages) {
+                        for (String sexGroup : sexes) {
+                            chartItem = new Chart();
+                            chartItem.setName(seriesName + " | " + orgName + " | Ethnicity: " + ethnicName + " | Age: " + ageGroup+ " | Sex: " + sexGroup);
+
+                            if (cumulative.equals("1")) {
+                                if (rate.equals("1")) {
+                                    sql = "SELECT t.series_name," +
+                                            "floor(@running_total:=@running_total + t.series_value) as series_value " +
+                                            "FROM " +
+                                            "( SELECT name,series_name,sum(series_value/((select sum(list_size) as list_size from dashboards.population_denominators where " + orgSQL + " " + ethnicSQL + " " + ageSQL+ " " + sexSQL + ")/100000)) as series_value " +
+                                            "FROM dashboards.`covid_results_" + dashboardId + "` r " +
+                                            "where series_name between ? and ? " + seriesSQL + " and " + orgSQL + " " + ethnicSQL + " " + ageSQL+ " " + sexSQL + " group by series_name) t " +
+                                            "JOIN (SELECT @running_total:=0) r " +
+                                            "ORDER BY t.series_name";
+                                } else {
+                                    sql = "SELECT t.series_name," +
+                                            "@running_total:=@running_total + t.series_value as series_value " +
+                                            "FROM " +
+                                            "( SELECT name,series_name,sum(series_value) as series_value " +
+                                            "FROM dashboards.`covid_results_" + dashboardId + "` " +
+                                            "where series_name between ? and ? " + seriesSQL + " and " + orgSQL + " " + ethnicSQL + " " + ageSQL+ " " + sexSQL + " group by series_name) t " +
+                                            "JOIN (SELECT @running_total:=0) r " +
+                                            "ORDER BY t.series_name";
+                                }
+
+                            } else {
+                                if (weekly.equals("1")) {
+                                    if (rate.equals("1")) {
+                                        sql = "SELECT FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) AS series_name, " +
+                                                "floor(SUM(series_value/((select sum(list_size) as list_size from dashboards.population_denominators where " + orgSQL + " " + ethnicSQL + " " + ageSQL+ " " + sexSQL + ")/100000))) AS series_value " +
+                                                "FROM dashboards.`covid_results_" + dashboardId + "` r " +
+                                                "where series_name between ? and ? " + seriesSQL + " and " + orgSQL + " " + ethnicSQL + " " + ageSQL + " " +sexSQL + " " +
+                                                " GROUP BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) " +
+                                                "ORDER BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7))";
+                                    } else {
+                                        sql = "SELECT FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) AS series_name, " +
+                                                "SUM(series_value) AS series_value " +
+                                                "from dashboards.`covid_results_" + dashboardId + "` where " +
+                                                "series_name between ? and ? " + seriesSQL + " and " + orgSQL + " " + ethnicSQL + " " + ageSQL + " " +sexSQL + " " +
+                                                " GROUP BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) " +
+                                                "ORDER BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7))";
+                                    }
+                                } else {
+                                    if (rate.equals("1")) {
+                                        sql = "SELECT series_name,floor(sum(series_value/((select sum(list_size) as list_size from dashboards.population_denominators where " + orgSQL + " " + ethnicSQL + " " + ageSQL+ " " + sexSQL + ")/100000))) as series_value "+
+                                                "from dashboards.`covid_results_" + dashboardId + "` r " +
+                                                "where series_name between ? and ? " + seriesSQL + " and " + orgSQL + " " + ethnicSQL + " " + ageSQL+ " " + sexSQL + " group by series_name order by series_name";
+                                    } else {
+                                        sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`covid_results_" + dashboardId + "` where " +
+                                                "series_name between ? and ? " + seriesSQL + " and " + orgSQL + " " + ethnicSQL + " " + ageSQL+ " " + sexSQL + " group by series_name order by series_name";
+                                    }
+                                }
+
+                            }
+
+                            try (PreparedStatement statement = conn.prepareStatement(sql)) {
+                                int p = 1;
+                                if (rate.equals("1")) {
+                                    if (!orgSQL.equals(""))
+                                        statement.setString(p++, orgName);
+                                    if (!ethnic.equals("All")) {
+                                        if (combineEthnic.equals("false")) {
+                                            statement.setString(p++, ethnicName);
+                                        } else {
+                                            for (int i = 1; i <= ethnicArray.length; i++) {
+                                                statement.setString(p++, ethnicArray[i - 1]);
+                                            }
+                                        }
+                                    }
+                                    if (!age.equals("All")) {
+                                        if (combineAge.equals("false")) {
+                                            statement.setString(p++, ageGroup);
+                                        } else {
+                                            for (int i = 1; i <= ageArray.length; i++) {
+                                                statement.setString(p++, ageArray[i - 1]);
+                                            }
+                                        }
+                                    }
+                                    if (!sex.equals("All")) {
+                                        if (combineSex.equals("false")) {
+                                            statement.setString(p++, sexGroup);
+                                        } else {
+                                            for (int i = 1; i <= sexArray.length; i++) {
+                                                statement.setString(p++, sexArray[i - 1]);
+                                            }
+                                        }
+                                    }
+                                }
+                                statement.setString(p++, dateFrom);
+                                statement.setString(p++, dateTo);
+                                if (!series.equals("All")) {
+                                    if (combineSeries.equals("false")) {
+                                        statement.setString(p++, seriesName);
+                                    } else {
+                                        for (int i = 1; i <= seriesArray.length; i++) {
+                                            statement.setString(p++, seriesArray[i - 1]);
+                                        }
+                                    }
+                                }
+                                statement.setString(p++, orgName);
+                                if (!ethnic.equals("All")) {
+                                    if (combineEthnic.equals("false")) {
+                                        statement.setString(p++, ethnicName);
+                                    } else {
+                                        for (int i = 1; i <= ethnicArray.length; i++) {
+                                            statement.setString(p++, ethnicArray[i - 1]);
+                                        }
+                                    }
+                                }
+                                if (!age.equals("All")) {
+                                    if (combineAge.equals("false")) {
+                                        statement.setString(p++, ageGroup);
+                                    } else {
+                                        for (int i = 1; i <= ageArray.length; i++) {
+                                            statement.setString(p++, ageArray[i - 1]);
+                                        }
+                                    }
+                                }
+                                if (!sex.equals("All")) {
+                                    if (combineSex.equals("false")) {
+                                        statement.setString(p++, sexGroup);
+                                    } else {
+                                        for (int i = 1; i <= sexArray.length; i++) {
+                                            statement.setString(p++, sexArray[i - 1]);
+                                        }
+                                    }
+                                }
+                                try (ResultSet resultSet = statement.executeQuery()) {
+                                    chartItem.setSeries(getSeriesFromResultSet(resultSet));
+                                }
+                            }
+
+                            chart.add(chartItem);
+                        }
+                    }
+                }
+            }
         }
 
         result.setResults(chart);
@@ -1052,16 +1389,17 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
             }
         }
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            int p = 1;
             for (int i = 1; i <= ids3.length; i++) {
-                statement.setString(i, ids3[i-1]);
+                statement.setString(p++, ids3[i-1]);
             }
             for (int i = 1; i <= ids2.length; i++) {
-                statement.setString(i+ids3.length, ids2[i-1]);
+                statement.setString(p++, ids2[i-1]);
             }
-            statement.setString(1+ids3.length+ids2.length, dateFrom);
-            statement.setString(2+ids3.length+ids2.length, dateTo);
+            statement.setString(p++, dateFrom);
+            statement.setString(p++, dateTo);
             for (int i = 1; i <= ids.length; i++) {
-                statement.setString(i+2+ids3.length+ids2.length, ids[i-1]);
+                statement.setString(p++, ids[i-1]);
             }
             try (ResultSet resultSet = statement.executeQuery()) {
                 chartItem.setSeries(getSeriesFromResultSet(resultSet));
@@ -1761,6 +2099,25 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
         sql = "SELECT type, name, query " +
                 "FROM dashboards.dashboard_library " +
+                "WHERE dashboard_id = ?";
+
+        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            statement.setString(1, dashboardNumber);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                result.setResults(getDashboardViewList(resultSet));
+            }
+        }
+
+        return result;
+    }
+
+    public DashboardViewResult getCovidDashboardView(String dashboardNumber) throws Exception {
+        DashboardViewResult result = new DashboardViewResult();
+
+        String sql = "";
+
+        sql = "SELECT type, name, query " +
+                "FROM dashboards.covid_library " +
                 "WHERE dashboard_id = ?";
 
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
@@ -2569,6 +2926,34 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
         sql = "SELECT distinct name " +
                 "FROM dashboards.`dashboard_results_" + queryId + "`"+
+                " order by name";
+
+        sqlCount = "SELECT 1";
+
+        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                result.setResults(getSeriesList(resultSet));
+            }
+        }
+
+        try (PreparedStatement statement = conn.prepareStatement(sqlCount)) {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                resultSet.next();
+                result.setLength(resultSet.getInt(1));
+            }
+        }
+
+        return result;
+    }
+
+    public SeriesResult getSeriesFromDashboardId(String dashboardId) throws Exception {
+        SeriesResult result = new SeriesResult();
+
+        String sql = "";
+        String sqlCount = "";
+
+        sql = "SELECT distinct name " +
+                "FROM dashboards.`covid_results_" + dashboardId + "`"+
                 " order by name";
 
         sqlCount = "SELECT 1";

@@ -12,6 +12,8 @@ import {MapComponent} from "./explorer/map/map.component";
 import {OrganisationListSizesComponent} from "./explorer/organisationlistsizes/organisationlistsizes.component";
 import {PracticeListSizesComponent} from "./explorer/practicelistsizes/practicelistsizes.component";
 import {GraphicalComparisonComponent} from "./explorer/graphicalcomparison/graphicalcomparison.component";
+import {CovidLibraryComponent} from "./explorer/covidlibrary/covidlibrary.component";
+import {CovidViewerComponent} from "./explorer/covidviewer/covidviewer.component";
 
 @Injectable()
 export class AppMenuService implements  AbstractMenuProvider {
@@ -19,8 +21,10 @@ export class AppMenuService implements  AbstractMenuProvider {
     return [
       {path: '', redirectTo: '/dashboardlibrary', pathMatch: 'full'},
       {path: 'dashboardviewer', component: DashboardViewerComponent, data: {role: 'explorer'}},
+      {path: 'covidviewer', component: CovidViewerComponent, data: {role: 'explorer'}},
       {path: 'registries', component: RegistriesComponent, data: {role: 'explorer'}},
       {path: 'dashboardlibrary', component: DashboardLibraryComponent, data: {role: 'explorer'}},
+      {path: 'covidlibrary', component: CovidLibraryComponent, data: {role: 'explorer'}},
       {path: 'querylibrary', component: QueryLibraryComponent, data: {role: 'explorer'}},
       {path: 'valuesetlibrary', component: ValueSetLibraryComponent, data: {role: 'explorer'}},
       {path: 'organisationgroups', component: OrganisationGroupsComponent, data: {role: 'explorer'}},
@@ -42,6 +46,7 @@ export class AppMenuService implements  AbstractMenuProvider {
 
   getMenuOptions(): MenuOption[] {
     return [
+      {icon: 'fas fa-virus', caption: 'Covid library (BETA)', state: 'covidlibrary'},
       {icon: 'fas fa-analytics', caption: 'Dashboard library', state: 'dashboardlibrary'},
       {icon: 'fas fa-map-marked-alt', caption: 'Maps', state: 'map'},
       {icon: 'fas fa-notes-medical', caption: 'Patient registries', state: 'registries'},

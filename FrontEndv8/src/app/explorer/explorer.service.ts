@@ -45,10 +45,36 @@ export class ExplorerService {
     return this.http.get('api/events/dashboard', {params});
   }
 
-  getDashboardSingle(query: string, chart: string, dateFrom: string, dateTo: string, ignoreDateRange: number, grouping: string): Observable<any> {
+  getDashboardCovid(dashboardId: string, series: string, dateFrom: string, dateTo: string, stp: string, ccg: string, pcn: string, practice: string, ethnic: string,
+                    age: string, sex: string, cumulative: string, weekly: string, rate: string, combineSeries: any, combineEthnic: any, combineAge: any, combineSex: any): Observable<any> {
     let params = new HttpParams();
 
-    params = params.append('query', query);
+    params = params.append('dashboardId', dashboardId);
+    params = params.append('series', series);
+    params = params.append('dateFrom', dateFrom);
+    params = params.append('dateTo', dateTo);
+    params = params.append('stp', stp);
+    params = params.append('ccg', ccg);
+    params = params.append('pcn', pcn);
+    params = params.append('practice', practice);
+    params = params.append('ethnic', ethnic);
+    params = params.append('age', age);
+    params = params.append('sex', sex);
+    params = params.append('cumulative', cumulative);
+    params = params.append('weekly', weekly);
+    params = params.append('rate', rate);
+    params = params.append('combineSeries', combineSeries);
+    params = params.append('combineEthnic', combineEthnic);
+    params = params.append('combineAge', combineAge);
+    params = params.append('combineSex', combineSex);
+
+    return this.http.get('api/events/dashboardcovid', {params});
+  }
+
+  getDashboardSingle(dashboardId: string, chart: string, dateFrom: string, dateTo: string, ignoreDateRange: number, grouping: string): Observable<any> {
+    let params = new HttpParams();
+
+    params = params.append('dashboardId', dashboardId);
     params = params.append('chartName', chart);
     params = params.append('dateFrom', dateFrom);
     params = params.append('dateTo', dateTo);
@@ -75,6 +101,11 @@ export class ExplorerService {
     params = params.append('selectedTypeString', selectedTypeString);
 
     return this.http.get('api/events/dashboardlibrary', {params});
+  }
+
+  getCovidLibrary(): Observable<any> {
+
+    return this.http.get('api/events/covidlibrary');
   }
 
   getValueSetLibrary(selectedTypeString?: string): Observable<any> {
@@ -328,12 +359,28 @@ export class ExplorerService {
     return this.http.get('api/events/seriesFromQuery', {params});
   }
 
+  getSeriesFromDashboardId(dashboardId?: string): Observable<any> {
+
+    let params = new HttpParams();
+    params = params.append('dashboardId', dashboardId);
+
+    return this.http.get('api/events/seriesFromDashboardId', {params});
+  }
+
   getDashboardView(dashboardNumber: string): Observable<any> {
     let params = new HttpParams();
 
     params = params.append('dashboardNumber', dashboardNumber);
 
     return this.http.get('api/events/dashboardview', {params});
+  }
+
+  getCovidView(dashboardNumber: string): Observable<any> {
+    let params = new HttpParams();
+
+    params = params.append('dashboardNumber', dashboardNumber);
+
+    return this.http.get('api/events/covidview', {params});
   }
 
   getMapDates(query: string): Observable<any> {
