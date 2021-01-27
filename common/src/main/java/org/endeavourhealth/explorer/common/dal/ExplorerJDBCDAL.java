@@ -997,7 +997,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
     }
 
     public ChartResult getDashboardCovid(String dashboardId, String series, String dateFrom, String dateTo, String stp, String ccg, String pcn, String practice, String ethnic, String age, String sex,
-                                         String cumulative, String weekly, String rate,String combineSeries, String combineEthnic, String combineAge, String combineSex) throws Exception {
+                                         String cumulative, String weekly, String rate,String combineSeries, String combineEthnic, String combineAge, String combineSex, String combineSTP) throws Exception {
 
         List<String> orgs = null;
 
@@ -1048,6 +1048,10 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
         List<Chart> chart = new ArrayList<>();
         Chart chartItem = null;
+
+        if (combineSTP.equals("true")) {
+            orgs = Arrays.asList("Combine");
+        }
 
         if (combineSeries.equals("false")) {
             seriesParams = "?";
@@ -1108,6 +1112,10 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         if (sex.equals("All")) {
             sexArray = new String[0];
             sexSQL = "";
+        }
+
+        if (combineSTP.equals("true")) {
+            orgSQL = "1=1";
         }
 
         for (String seriesName : charts) {
@@ -1172,7 +1180,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                             try (PreparedStatement statement = conn.prepareStatement(sql)) {
                                 int p = 1;
                                 if (rate.equals("1")) {
-                                    if (!orgSQL.equals(""))
+                                    if (!orgSQL.equals("") && !orgSQL.equals("1=1"))
                                         statement.setString(p++, orgName);
                                     if (!ethnic.equals("All")) {
                                         if (combineEthnic.equals("false")) {
@@ -1213,7 +1221,8 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                                         }
                                     }
                                 }
-                                statement.setString(p++, orgName);
+                                if (!orgSQL.equals("1=1"))
+                                    statement.setString(p++, orgName);
                                 if (!ethnic.equals("All")) {
                                     if (combineEthnic.equals("false")) {
                                         statement.setString(p++, ethnicName);

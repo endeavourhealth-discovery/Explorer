@@ -1300,6 +1300,8 @@ export class CovidViewerComponent implements OnInit {
   showPrompt: boolean = true;
   showWait: boolean = false;
   showCharts: boolean = false;
+  combineSTP: boolean = false;
+  showTree: boolean = true;
 
   // options
   legend: boolean = true;
@@ -1413,6 +1415,9 @@ export class CovidViewerComponent implements OnInit {
   }
 
   refreshDashboard() {
+
+    this.showTree = !this.combineSTP;
+
     let series = this.selectedSeries1.toString();
 
     this.showLineCharts1 = this.selectedWidgets[0].name=='Line chart';
@@ -1454,7 +1459,7 @@ export class CovidViewerComponent implements OnInit {
       practice = "";
     }
 
-    if (series==''||(stp==''&&ccg==''&&pcn==''&&practice==''))
+    if (!this.combineSTP && series==''||(stp==''&&ccg==''&&pcn==''&&practice==''&&!this.combineSTP))
       return;
 
     let ethnic = this.selectedethnic1.toString();
@@ -1496,7 +1501,7 @@ export class CovidViewerComponent implements OnInit {
       this.showWait = true;
       this.showCharts = false;
 
-      this.explorerService.getDashboardCovid(this.dashboardId, series, this.formatDate(this.dateFrom1), this.formatDate(this.dateTo1), stp, ccg, pcn, practice, ethnic, age, sex, cumulative, weekly, rate, this.combineSeries1, this.combineEthnic1, this.combineAge1, this.combineSex1)
+      this.explorerService.getDashboardCovid(this.dashboardId, series, this.formatDate(this.dateFrom1), this.formatDate(this.dateTo1), stp, ccg, pcn, practice, ethnic, age, sex, cumulative, weekly, rate, this.combineSeries1, this.combineEthnic1, this.combineAge1, this.combineSex1, this.combineSTP)
         .subscribe(result => {
 
           this.showPrompt = false;
