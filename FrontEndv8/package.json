@@ -1,6 +1,5 @@
 {
   "name": "front-endv8",
-  "sideEffects": false,
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
