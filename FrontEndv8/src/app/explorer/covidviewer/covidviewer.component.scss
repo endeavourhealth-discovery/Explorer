@@ -47,6 +47,8 @@
 
 .mat-tree-node {
   font-size: 12px;
+  min-height: 2em !important;
+  height: 2em;
 }
 
 /* Makes the chart container expand to the full width of the parent container*/
