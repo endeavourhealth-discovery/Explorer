@@ -1283,7 +1283,7 @@ export class CovidViewerComponent implements OnInit {
   selectAllSeries1: boolean = true;
   selectAllAge1: boolean = true;
   selectAllSex1: boolean = true;
-  view1: any[] = [1250, 650];
+  view1: any[] = [1250, 620];
   chartResults1: any[];
   chartResultsSingle1: any[];
   dateFrom1: string = '2020-01-01';
@@ -1904,7 +1904,7 @@ export class CovidViewerComponent implements OnInit {
     if (nodeSelected && !descAllSelected) {
       this.checklistSelection.deselect(node);
     } else if (!nodeSelected && descAllSelected) {
-      this.checklistSelection.select(node);
+      //this.checklistSelection.select(node);
     }
   }
 

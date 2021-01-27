@@ -4,18 +4,30 @@
 
 .filter-background
 {
-  background-color: transparent;
-  font-size: 14px;
+  padding: 10px;
+  background-color:whitesmoke;
+  border: 1px solid black;
+  font-size: 12px;
   vertical-align: top;
-  margin-top: 10px;
+}
 
+.tree-background
+{
+  padding: 10px;
+  background-color:whitesmoke;
+  border: 1px solid black;
+  font-size: 12px;
+  vertical-align: top;
+  height: 214px;
+  overflow: auto;
+  width:750px;
 }
 
 .download {
   margin-left: 10px;
   font-size: 12px;
   padding: 0px;
-  width: 150px;
+  width: 120px;
 }
 
 .map-margin {
@@ -29,6 +41,8 @@
 .mat-tree {
   background-color: transparent;
   width:750px;
+  border-radius: 0px;
+  box-shadow: 0 0px 0px -0px rgba(0, 0, 0, 0.2), 0 0px 0px 0 rgba(0, 0, 0, 0.14), 0 0px 0px 0 rgba(0, 0, 0, 0.12);
 }
 
 .mat-tree-node {
