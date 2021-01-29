@@ -454,6 +454,62 @@ DECLARE tempTables VARCHAR(5000);
         SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp);
         CALL dropTempTables(tempTables);
 
+    ELSEIF p_queryNumber = '2B' THEN
+
+        SET withWithout = JSON_UNQUOTE(JSON_EXTRACT(query,'$.withWithout2b')); 
+        SET includedAnyAll = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedAnyAll2b'));
+        SET includedValueSet = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.includedValueSet2b'),'[',''),']',''),'"','');
+        SET includedEarliestLatest = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedEarliestLatest2b'));
+        SET includedOperator = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedOperator2b'));
+        SET includedEntryValue = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedEntryValue2b')); 
+        SET includedDateFrom = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedDateFrom2b')); 
+        SET includedDateTo = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedDateTo2b'));  
+        SET includedPeriodOperator = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodOperator2b'));
+        SET includedPeriodValue = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodValue2b'));
+        SET includedPeriodType = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodType2b'));
+        -- 2b
+        SET incValueSet_tmp = CONCAT('incvalueset2b_tmp_',p_query_id);
+        SET incConcept_tmp = CONCAT('incconcept2b_tmp_',p_query_id);
+
+    -- Q2b --
+        CALL buildQuery(p_query_id, withWithout, includedAnyAll, includedValueSet, includedDateFrom, includedDateTo, includedPeriodOperator, includedPeriodValue,includedPeriodType, incValueSet_tmp, 
+        incConcept_tmp, p_observationCohort_tmp, '2', includedEarliestLatest, includedOperator, includedEntryValue, NULL, NULL, NULL, 
+        NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
+        NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
+        p_schema, p_store_tmp, p_queryCohort, p_queryNumber);
+
+        -- remove tmp tables
+        SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp);
+        CALL dropTempTables(tempTables);
+
+    ELSEIF p_queryNumber = '2C' THEN
+
+        SET withWithout = JSON_UNQUOTE(JSON_EXTRACT(query,'$.withWithout2c')); 
+        SET includedAnyAll = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedAnyAll2c'));
+        SET includedValueSet = REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.includedValueSet2c'),'[',''),']',''),'"','');
+        SET includedEarliestLatest = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedEarliestLatest2c'));
+        SET includedOperator = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedOperator2c'));
+        SET includedEntryValue = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedEntryValue2c')); 
+        SET includedDateFrom = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedDateFrom2c')); 
+        SET includedDateTo = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedDateTo2c'));  
+        SET includedPeriodOperator = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodOperator2c'));
+        SET includedPeriodValue = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodValue2c'));
+        SET includedPeriodType = JSON_UNQUOTE(JSON_EXTRACT(query,'$.includedPeriodType2c'));
+        -- 2c
+        SET incValueSet_tmp = CONCAT('incvalueset2c_tmp_',p_query_id);
+        SET incConcept_tmp = CONCAT('incconcept2c_tmp_',p_query_id);
+
+    -- Q2c --
+        CALL buildQuery(p_query_id, withWithout, includedAnyAll, includedValueSet, includedDateFrom, includedDateTo, includedPeriodOperator, includedPeriodValue,includedPeriodType, incValueSet_tmp, 
+        incConcept_tmp, p_observationCohort_tmp, '2', includedEarliestLatest, includedOperator, includedEntryValue, NULL, NULL, NULL, 
+        NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
+        NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
+        p_schema, p_store_tmp, p_queryCohort, p_queryNumber);
+
+        -- remove tmp tables
+        SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp);
+        CALL dropTempTables(tempTables);
+
     ELSEIF p_queryNumber = '3' THEN 
 
         SET withWithout = JSON_UNQUOTE(JSON_EXTRACT(query,'$.withWithout3')); 
@@ -481,7 +537,6 @@ DECLARE tempTables VARCHAR(5000);
         SET incTestedConcept_tmp = CONCAT('inctestedconcept3_tmp_',p_query_id);
         SET incDiagnosisValueSet_tmp = CONCAT('incdiagnosisvalueset3_tmp_',p_query_id);
         SET incDiagnosisConcept_tmp = CONCAT('incdiagnosisconcept3_tmp_',p_query_id);
-
 
     -- Q3 --
         CALL buildQuery(p_query_id, withWithout, includedAnyAll, includedValueSet, includedDateFrom, includedDateTo, includedPeriodOperator, includedPeriodValue, includedPeriodType, incValueSet_tmp, 
@@ -966,8 +1021,8 @@ DECLARE tempTables VARCHAR(5000);
 
     ELSEIF p_queryNumber = 'A1' THEN 
 
-        SET ageFrom = JSON_UNQUOTE(JSON_EXTRACT(query,'$.ageFrom1'));
-        SET ageTo = JSON_UNQUOTE(JSON_EXTRACT(query,'$.ageTo1'));  
+        SET ageFrom = JSON_UNQUOTE(JSON_EXTRACT(query,'$.ageFrom'));
+        SET ageTo = JSON_UNQUOTE(JSON_EXTRACT(query,'$.ageTo'));  
 
     -- A1 --
         CALL buildQuery(p_query_id, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
@@ -978,8 +1033,8 @@ DECLARE tempTables VARCHAR(5000);
 
     ELSEIF p_queryNumber = 'A2' THEN 
 
-        SET ageFrom = JSON_UNQUOTE(JSON_EXTRACT(query,'$.ageFrom2'));
-        SET ageTo = JSON_UNQUOTE(JSON_EXTRACT(query,'$.ageTo2'));  
+        SET ageFrom = JSON_UNQUOTE(JSON_EXTRACT(query,'$.ageFrom1'));
+        SET ageTo = JSON_UNQUOTE(JSON_EXTRACT(query,'$.ageTo1'));  
 
     -- A2 --
         CALL buildQuery(p_query_id, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
@@ -990,8 +1045,8 @@ DECLARE tempTables VARCHAR(5000);
 
     ELSEIF p_queryNumber = 'A3' THEN 
 
-        SET ageFrom = JSON_UNQUOTE(JSON_EXTRACT(query,'$.ageFrom3'));
-        SET ageTo = JSON_UNQUOTE(JSON_EXTRACT(query,'$.ageTo3'));  
+        SET ageFrom = JSON_UNQUOTE(JSON_EXTRACT(query,'$.ageFrom2'));
+        SET ageTo = JSON_UNQUOTE(JSON_EXTRACT(query,'$.ageTo2'));  
 
     -- A3 --
         CALL buildQuery(p_query_id, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
@@ -1002,8 +1057,8 @@ DECLARE tempTables VARCHAR(5000);
 
     ELSEIF p_queryNumber = 'A4' THEN 
 
-        SET ageFrom = JSON_UNQUOTE(JSON_EXTRACT(query,'$.ageFrom4'));
-        SET ageTo = JSON_UNQUOTE(JSON_EXTRACT(query,'$.ageTo4'));  
+        SET ageFrom = JSON_UNQUOTE(JSON_EXTRACT(query,'$.ageFrom3'));
+        SET ageTo = JSON_UNQUOTE(JSON_EXTRACT(query,'$.ageTo3'));  
 
     -- A4 --
         CALL buildQuery(p_query_id, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
@@ -1014,8 +1069,8 @@ DECLARE tempTables VARCHAR(5000);
 
     ELSEIF p_queryNumber = 'A5' THEN 
 
-        SET ageFrom = JSON_UNQUOTE(JSON_EXTRACT(query,'$.ageFrom5'));
-        SET ageTo = JSON_UNQUOTE(JSON_EXTRACT(query,'$.ageTo5'));  
+        SET ageFrom = JSON_UNQUOTE(JSON_EXTRACT(query,'$.ageFrom4'));
+        SET ageTo = JSON_UNQUOTE(JSON_EXTRACT(query,'$.ageTo4'));  
 
     -- A5 --
         CALL buildQuery(p_query_id, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
