@@ -1881,8 +1881,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
       control22l: [''], control23l: [''], control24l: [''], control25l: [''],
       control46l: [''], control47l: [''], control48l: [''],
       control147l: [''],control148l: [''],control149l: [''],control150l: [''],control151l: [''],
-
-
+      
       withWithout2: [''], includedAnyAll2: [''], includedValueSet2: [''], includedEarliestLatest2: [''], includedOperator2: [''],
       includedEntryValue2: [''], includedDateFrom2: [''], includedDateTo2: [''],
       includedPeriodOperator2: [''], includedPeriodValue2: [''], includedPeriodType2: [''],
