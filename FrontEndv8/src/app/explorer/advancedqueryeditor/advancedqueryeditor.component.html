@@ -1317,7 +1317,7 @@
           <p style="margin-left: 10px; margin-top: 29px"><b style="font-size: 16px">Q2. </b>Identify patients
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
               <mat-label>With/Without</mat-label>
-              <mat-select [(ngModel)]="withWithout2" formControlName="control26" (ngModelChange)="formChanged()">
+              <mat-select [(ngModel)]="withWithout2" formControlName="withWithout2" (ngModelChange)="formChanged()">
                 <mat-option *ngFor="let value of without" [value]="value.without">
                   {{value.without}}
                 </mat-option>
@@ -1326,7 +1326,7 @@
             records containing <span style="color: blue">concepts</span> matching
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 70px">
               <mat-label>Any/All</mat-label>
-              <mat-select [(ngModel)]="includedAnyAll2" formControlName="control49" (ngModelChange)="formChanged()">
+              <mat-select [(ngModel)]="includedAnyAll2" formControlName="includedAnyAll2" (ngModelChange)="formChanged()">
                 <mat-option *ngFor="let value of anyAll" [value]="value.anyAll">
                   {{value.anyAll}}
                 </mat-option>
@@ -1335,7 +1335,7 @@
             of the <span style="color: blue">value set(s)</span>
             <mat-form-field appearance="standard" style="width: 440px; margin-left: 10px">
               <mat-label>Cohort value set</mat-label>
-              <mat-select multiple [(ngModel)]="includedValueSet2" formControlName="control27" (ngModelChange)="formChanged()">
+              <mat-select multiple [(ngModel)]="includedValueSet2" formControlName="includedValueSet2" (ngModelChange)="formChanged()">
                 <mat-select-search [formControl]="filterCtrl"></mat-select-search>
                 <mat-option *ngFor="let result of filteredValueset | async" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
                   {{result}}
@@ -1347,7 +1347,7 @@
             <p style="margin-left: 10px; margin-top: 29px">and the <span style="color: blue">value</span> of the</p>
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 120px">
               <mat-label>Earliest/Latest</mat-label>
-              <mat-select [(ngModel)]="includedEarliestLatest2" formControlName="control28" (ngModelChange)="formChanged()">
+              <mat-select [(ngModel)]="includedEarliestLatest2" formControlName="includedEarliestLatest2" (ngModelChange)="formChanged()">
                 <mat-option *ngFor="let value of earliestLatest" [value]="value.earliestLatest">
                   {{value.earliestLatest}}
                 </mat-option>
@@ -1356,7 +1356,7 @@
             <p style="margin-left: 10px; margin-top: 28px"><span style="color: blue">entry</span> is</p>
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 110px">
               <mat-label>Less/Greater</mat-label>
-              <mat-select [(ngModel)]="includedOperator2" formControlName="control29" (ngModelChange)="formChanged()">
+              <mat-select [(ngModel)]="includedOperator2" formControlName="includedOperator2" (ngModelChange)="formChanged()">
                 <mat-option *ngFor="let value of operator" [value]="value.operator">
                   {{value.operator}}
                 </mat-option>
@@ -1364,7 +1364,7 @@
             </mat-form-field>
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 100px">
               <mat-label>Entry value</mat-label>
-              <input matInput placeholder="Value" [(ngModel)]="includedEntryValue2" formControlName="control30" (keydown.enter)="stepper.next()">
+              <input matInput placeholder="Value" [(ngModel)]="includedEntryValue2" formControlName="includedEntryValue2" (keydown.enter)="stepper.next()">
             </mat-form-field>
           </div>
           <br/>
@@ -1372,27 +1372,27 @@
             <p style="margin-left: 10px; margin-top: 28px">within the <span style="color: blue">time period</span></p>
             <mat-form-field class="example-full-width" appearance="standard" style="margin-left: 10px; width: 120px">
               <mat-label>Date from</mat-label>
-              <input matInput [matDatepicker]="picker9" placeholder="Date from" [(ngModel)]="includedDateFrom2" formControlName="control61">
-              <mat-datepicker-toggle matSuffix [for]="picker9">
+              <input matInput [matDatepicker]="picker_includedDateFrom2" placeholder="Date from" [(ngModel)]="includedDateFrom2" formControlName="includedDateFrom2">
+              <mat-datepicker-toggle matSuffix [for]="picker_includedDateFrom2">
                 <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
               </mat-datepicker-toggle>
-              <mat-datepicker #picker9></mat-datepicker>
+              <mat-datepicker #picker_includedDateFrom2></mat-datepicker>
             </mat-form-field>
             <p style="margin-left: 10px; margin-top: 28px">to</p>
             <mat-form-field class="example-full-width" appearance="standard" style="margin-left: 10px; width: 120px">
               <mat-label>Date to</mat-label>
-              <input matInput [matDatepicker]="picker10" placeholder="Date to" [(ngModel)]="includedDateTo2" formControlName="control62">
-              <mat-datepicker-toggle matSuffix [for]="picker10">
+              <input matInput [matDatepicker]="picker_includedDateTo2" placeholder="Date to" [(ngModel)]="includedDateTo2" formControlName="includedDateTo2">
+              <mat-datepicker-toggle matSuffix [for]="picker_includedDateTo2">
                 <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
               </mat-datepicker-toggle>
-              <mat-datepicker #picker10></mat-datepicker>
+              <mat-datepicker #picker_includedDateTo2></mat-datepicker>
             </mat-form-field>
             <br/>
             <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
               <p style="margin-left: 10px; margin-top: 28px">/ </p>
               <mat-form-field appearance="standard" style="margin-left: 10px; width: 130px">
                 <mat-label>Within/Before</mat-label>
-                <mat-select [(ngModel)]="includedPeriodOperator2" formControlName="control152" (ngModelChange)="formChanged()">
+                <mat-select [(ngModel)]="includedPeriodOperator2" formControlName="includedPeriodOperator2" (ngModelChange)="formChanged()">
                   <mat-option *ngFor="let value of withinBefore" [value]="value.withinBefore">
                     {{value.withinBefore}}
                   </mat-option>
@@ -1400,11 +1400,11 @@
               </mat-form-field>
               <mat-form-field appearance="standard" style="margin-left: 10px; width: 60px">
                 <mat-label>Period</mat-label>
-                <input matInput placeholder="Value" [(ngModel)]="includedPeriodValue2" formControlName="control63" (keydown.enter)="stepper.next()">
+                <input matInput placeholder="Value" [(ngModel)]="includedPeriodValue2" formControlName="includedPeriodValue2" (keydown.enter)="stepper.next()">
               </mat-form-field>
               <mat-form-field appearance="standard" style="margin-left: 10px; width: 160px">
                 <mat-label>Days/Weeks/Months</mat-label>
-                <mat-select [(ngModel)]="includedPeriodType2" formControlName="control64" (ngModelChange)="formChanged()">
+                <mat-select [(ngModel)]="includedPeriodType2" formControlName="includedPeriodType2" (ngModelChange)="formChanged()">
                   <mat-option *ngFor="let value of period" [value]="value.period">
                     {{value.period}}
                   </mat-option>
@@ -1426,7 +1426,7 @@
           <p style="margin-left: 10px; margin-top: 29px"><b style="font-size: 16px">Q2a. </b>Identify patients
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
               <mat-label>With/Without</mat-label>
-              <mat-select [(ngModel)]="withWithout2a" formControlName="control26a" (ngModelChange)="formChanged()">
+              <mat-select [(ngModel)]="withWithout2a" formControlName="withWithout2a" (ngModelChange)="formChanged()">
                 <mat-option *ngFor="let value of without" [value]="value.without">
                   {{value.without}}
                 </mat-option>
@@ -1435,7 +1435,7 @@
             records containing <span style="color: blue">concepts</span> matching
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 70px">
               <mat-label>Any/All</mat-label>
-              <mat-select [(ngModel)]="includedAnyAll2a" formControlName="control50" (ngModelChange)="formChanged()">
+              <mat-select [(ngModel)]="includedAnyAll2a" formControlName="includedAnyAll2a" (ngModelChange)="formChanged()">
                 <mat-option *ngFor="let value of anyAll" [value]="value.anyAll">
                   {{value.anyAll}}
                 </mat-option>
@@ -1444,7 +1444,7 @@
             of the <span style="color: blue">value set(s)</span>
             <mat-form-field appearance="standard" style="width: 440px; margin-left: 10px">
               <mat-label>Cohort value set</mat-label>
-              <mat-select multiple [(ngModel)]="includedValueSet2a" formControlName="control27a" (ngModelChange)="formChanged()">
+              <mat-select multiple [(ngModel)]="includedValueSet2a" formControlName="includedValueSet2a" (ngModelChange)="formChanged()">
                 <mat-select-search [formControl]="filterCtrl"></mat-select-search>
                 <mat-option *ngFor="let result of filteredValueset | async" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
                   {{result}}
@@ -1456,7 +1456,7 @@
             <p style="margin-left: 10px; margin-top: 28px">and the <span style="color: blue">value</span> of the</p>
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 120px">
               <mat-label>Earliest/Latest</mat-label>
-              <mat-select [(ngModel)]="includedEarliestLatest2a" formControlName="control28a" (ngModelChange)="formChanged()">
+              <mat-select [(ngModel)]="includedEarliestLatest2a" formControlName="includedEarliestLatest2a" (ngModelChange)="formChanged()">
                 <mat-option *ngFor="let value of earliestLatest" [value]="value.earliestLatest">
                   {{value.earliestLatest}}
                 </mat-option>
@@ -1465,7 +1465,7 @@
             <p style="margin-left: 10px; margin-top: 28px"><span style="color: blue">entry</span> is</p>
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 110px">
               <mat-label>Less/Greater</mat-label>
-              <mat-select [(ngModel)]="includedOperator2a" formControlName="control29a" (ngModelChange)="formChanged()">
+              <mat-select [(ngModel)]="includedOperator2a" formControlName="includedOperator2a" (ngModelChange)="formChanged()">
                 <mat-option *ngFor="let value of operator" [value]="value.operator">
                   {{value.operator}}
                 </mat-option>
@@ -1473,7 +1473,7 @@
             </mat-form-field>
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 100px">
               <mat-label>Entry value</mat-label>
-              <input matInput placeholder="Value" [(ngModel)]="includedEntryValue2a" formControlName="control30a" (keydown.enter)="stepper.next()">
+              <input matInput placeholder="Value" [(ngModel)]="includedEntryValue2a" formControlName="includedEntryValue2a" (keydown.enter)="stepper.next()">
             </mat-form-field>
           </div>
           <br/>
@@ -1481,27 +1481,27 @@
             <p style="margin-left: 10px; margin-top: 28px">within the <span style="color: blue">time period</span></p>
             <mat-form-field class="example-full-width" appearance="standard" style="margin-left: 10px; width: 120px">
               <mat-label>Date from</mat-label>
-              <input matInput [matDatepicker]="picker9a" placeholder="Date from" [(ngModel)]="includedDateFrom2a" formControlName="control61a">
-              <mat-datepicker-toggle matSuffix [for]="picker9a">
+              <input matInput [matDatepicker]="picker_includedDateFrom2a" placeholder="Date from" [(ngModel)]="includedDateFrom2a" formControlName="includedDateFrom2a">
+              <mat-datepicker-toggle matSuffix [for]="picker_includedDateFrom2a">
                 <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
               </mat-datepicker-toggle>
-              <mat-datepicker #picker9a></mat-datepicker>
+              <mat-datepicker #picker_includedDateFrom2a></mat-datepicker>
             </mat-form-field>
             <p style="margin-left: 10px; margin-top: 28px">to</p>
             <mat-form-field class="example-full-width" appearance="standard" style="margin-left: 10px; width: 120px">
               <mat-label>Date to</mat-label>
-              <input matInput [matDatepicker]="picker10a" placeholder="Date to" [(ngModel)]="includedDateTo2a" formControlName="control62a">
-              <mat-datepicker-toggle matSuffix [for]="picker10a">
+              <input matInput [matDatepicker]="picker_includedDateTo2a" placeholder="Date to" [(ngModel)]="includedDateTo2a" formControlName="includedDateTo2a">
+              <mat-datepicker-toggle matSuffix [for]="picker_includedDateTo2a">
                 <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
               </mat-datepicker-toggle>
-              <mat-datepicker #picker10a></mat-datepicker>
+              <mat-datepicker #picker_includedDateTo2a></mat-datepicker>
             </mat-form-field>
             <br/>
             <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
               <p style="margin-left: 10px; margin-top: 28px">/ </p>
               <mat-form-field appearance="standard" style="margin-left: 10px; width: 130px">
                 <mat-label>Within/Before</mat-label>
-                <mat-select [(ngModel)]="includedPeriodOperator2a" formControlName="control153" (ngModelChange)="formChanged()">
+                <mat-select [(ngModel)]="includedPeriodOperator2a" formControlName="includedPeriodOperator2a" (ngModelChange)="formChanged()">
                   <mat-option *ngFor="let value of withinBefore" [value]="value.withinBefore">
                     {{value.withinBefore}}
                   </mat-option>
@@ -1509,11 +1509,229 @@
               </mat-form-field>
               <mat-form-field appearance="standard" style="margin-left: 10px; width: 60px">
                 <mat-label>Period</mat-label>
-                <input matInput placeholder="Value" [(ngModel)]="includedPeriodValue2a" formControlName="control63a" (keydown.enter)="stepper.next()">
+                <input matInput placeholder="Value" [(ngModel)]="includedPeriodValue2a" formControlName="includedPeriodValue2a" (keydown.enter)="stepper.next()">
               </mat-form-field>
               <mat-form-field appearance="standard" style="margin-left: 10px; width: 160px">
                 <mat-label>Days/Weeks/Months</mat-label>
-                <mat-select [(ngModel)]="includedPeriodType2a" formControlName="control64a" (ngModelChange)="formChanged()">
+                <mat-select [(ngModel)]="includedPeriodType2a" formControlName="includedPeriodType2a" (ngModelChange)="formChanged()">
+                  <mat-option *ngFor="let value of period" [value]="value.period">
+                    {{value.period}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field><p style="margin-left: 10px; margin-top: 28px"> of the run date</p>
+              <div mat-dialog-actions style="margin-bottom: 10px; margin-left: 20px" *ngIf="addQuery2b">
+                <button mat-flat-button color="accent" (click)="addSameQuery2b()">Add same query type</button>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <br *ngIf="select2a"/>
+        <mat-divider *ngIf="select2a"></mat-divider>
+        <br *ngIf="select2a"/>
+
+        <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start" *ngIf="select2b">
+          <p style="margin-left: 10px; margin-top: 29px"><b style="font-size: 16px">Q2b. </b>Identify patients
+            <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
+              <mat-label>With/Without</mat-label>
+              <mat-select [(ngModel)]="withWithout2b" formControlName="withWithout2b" (ngModelChange)="formChanged()">
+                <mat-option *ngFor="let value of without" [value]="value.without">
+                  {{value.without}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            records containing <span style="color: blue">concepts</span> matching
+            <mat-form-field appearance="standard" style="margin-left: 10px; width: 70px">
+              <mat-label>Any/All</mat-label>
+              <mat-select [(ngModel)]="includedAnyAll2b" formControlName="includedAnyAll2b" (ngModelChange)="formChanged()">
+                <mat-option *ngFor="let value of anyAll" [value]="value.anyAll">
+                  {{value.anyAll}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            of the <span style="color: blue">value set(s)</span>
+            <mat-form-field appearance="standard" style="width: 440px; margin-left: 10px">
+              <mat-label>Cohort value set</mat-label>
+              <mat-select multiple [(ngModel)]="includedValueSet2b" formControlName="includedValueSet2b" (ngModelChange)="formChanged()">
+                <mat-select-search [formControl]="filterCtrl"></mat-select-search>
+                <mat-option *ngFor="let result of filteredValueset | async" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
+                  {{result}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field></p>
+          <br/>
+          <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <p style="margin-left: 10px; margin-top: 28px">and the <span style="color: blue">value</span> of the</p>
+            <mat-form-field appearance="standard" style="margin-left: 10px; width: 120px">
+              <mat-label>Earliest/Latest</mat-label>
+              <mat-select [(ngModel)]="includedEarliestLatest2b" formControlName="includedEarliestLatest2b" (ngModelChange)="formChanged()">
+                <mat-option *ngFor="let value of earliestLatest" [value]="value.earliestLatest">
+                  {{value.earliestLatest}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <p style="margin-left: 10px; margin-top: 28px"><span style="color: blue">entry</span> is</p>
+            <mat-form-field appearance="standard" style="margin-left: 10px; width: 110px">
+              <mat-label>Less/Greater</mat-label>
+              <mat-select [(ngModel)]="includedOperator2b" formControlName="includedOperator2b" (ngModelChange)="formChanged()">
+                <mat-option *ngFor="let value of operator" [value]="value.operator">
+                  {{value.operator}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="standard" style="margin-left: 10px; width: 100px">
+              <mat-label>Entry value</mat-label>
+              <input matInput placeholder="Value" [(ngModel)]="includedEntryValue2b" formControlName="includedEntryValue2b" (keydown.enter)="stepper.next()">
+            </mat-form-field>
+          </div>
+          <br/>
+          <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <p style="margin-left: 10px; margin-top: 28px">within the <span style="color: blue">time period</span></p>
+            <mat-form-field class="example-full-width" appearance="standard" style="margin-left: 10px; width: 120px">
+              <mat-label>Date from</mat-label>
+              <input matInput [matDatepicker]="picker_includedDateFrom2b" placeholder="Date from" [(ngModel)]="includedDateFrom2b" formControlName="includedDateFrom2b">
+              <mat-datepicker-toggle matSuffix [for]="picker_includedDateFrom2b">
+                <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+              </mat-datepicker-toggle>
+              <mat-datepicker #picker_includedDateFrom2b></mat-datepicker>
+            </mat-form-field>
+            <p style="margin-left: 10px; margin-top: 28px">to</p>
+            <mat-form-field class="example-full-width" appearance="standard" style="margin-left: 10px; width: 120px">
+              <mat-label>Date to</mat-label>
+              <input matInput [matDatepicker]="picker_includedDateTo2b" placeholder="Date to" [(ngModel)]="includedDateTo2b" formControlName="includedDateTo2b">
+              <mat-datepicker-toggle matSuffix [for]="picker_includedDateTo2b">
+                <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+              </mat-datepicker-toggle>
+              <mat-datepicker #picker_includedDateTo2b></mat-datepicker>
+            </mat-form-field>
+            <br/>
+            <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <p style="margin-left: 10px; margin-top: 28px">/ </p>
+              <mat-form-field appearance="standard" style="margin-left: 10px; width: 130px">
+                <mat-label>Within/Before</mat-label>
+                <mat-select [(ngModel)]="includedPeriodOperator2b" formControlName="includedPeriodOperator2b" (ngModelChange)="formChanged()">
+                  <mat-option *ngFor="let value of withinBefore" [value]="value.withinBefore">
+                    {{value.withinBefore}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field appearance="standard" style="margin-left: 10px; width: 60px">
+                <mat-label>Period</mat-label>
+                <input matInput placeholder="Value" [(ngModel)]="includedPeriodValue2b" formControlName="includedPeriodValue2b" (keydown.enter)="stepper.next()">
+              </mat-form-field>
+              <mat-form-field appearance="standard" style="margin-left: 10px; width: 160px">
+                <mat-label>Days/Weeks/Months</mat-label>
+                <mat-select [(ngModel)]="includedPeriodType2b" formControlName="includedPeriodType2b" (ngModelChange)="formChanged()">
+                  <mat-option *ngFor="let value of period" [value]="value.period">
+                    {{value.period}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field><p style="margin-left: 10px; margin-top: 28px"> of the run date</p>
+              <div mat-dialog-actions style="margin-bottom: 10px; margin-left: 20px" *ngIf="addQuery2c">
+                <button mat-flat-button color="accent" (click)="addSameQuery2c()">Add same query type</button>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <br *ngIf="select2b"/>
+        <mat-divider *ngIf="select2b"></mat-divider>
+        <br *ngIf="select2b"/>
+
+        <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start" *ngIf="select2c">
+          <p style="margin-left: 10px; margin-top: 29px"><b style="font-size: 16px">Q2c. </b>Identify patients
+            <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
+              <mat-label>With/Without</mat-label>
+              <mat-select [(ngModel)]="withWithout2c" formControlName="withWithout2c" (ngModelChange)="formChanged()">
+                <mat-option *ngFor="let value of without" [value]="value.without">
+                  {{value.without}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            records containing <span style="color: blue">concepts</span> matching
+            <mat-form-field appearance="standard" style="margin-left: 10px; width: 70px">
+              <mat-label>Any/All</mat-label>
+              <mat-select [(ngModel)]="includedAnyAll2c" formControlName="includedAnyAll2c" (ngModelChange)="formChanged()">
+                <mat-option *ngFor="let value of anyAll" [value]="value.anyAll">
+                  {{value.anyAll}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            of the <span style="color: blue">value set(s)</span>
+            <mat-form-field appearance="standard" style="width: 440px; margin-left: 10px">
+              <mat-label>Cohort value set</mat-label>
+              <mat-select multiple [(ngModel)]="includedValueSet2c" formControlName="includedValueSet2c" (ngModelChange)="formChanged()">
+                <mat-select-search [formControl]="filterCtrl"></mat-select-search>
+                <mat-option *ngFor="let result of filteredValueset | async" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
+                  {{result}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field></p>
+          <br/>
+          <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <p style="margin-left: 10px; margin-top: 28px">and the <span style="color: blue">value</span> of the</p>
+            <mat-form-field appearance="standard" style="margin-left: 10px; width: 120px">
+              <mat-label>Earliest/Latest</mat-label>
+              <mat-select [(ngModel)]="includedEarliestLatest2c" formControlName="includedEarliestLatest2c" (ngModelChange)="formChanged()">
+                <mat-option *ngFor="let value of earliestLatest" [value]="value.earliestLatest">
+                  {{value.earliestLatest}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <p style="margin-left: 10px; margin-top: 28px"><span style="color: blue">entry</span> is</p>
+            <mat-form-field appearance="standard" style="margin-left: 10px; width: 110px">
+              <mat-label>Less/Greater</mat-label>
+              <mat-select [(ngModel)]="includedOperator2c" formControlName="includedOperator2c" (ngModelChange)="formChanged()">
+                <mat-option *ngFor="let value of operator" [value]="value.operator">
+                  {{value.operator}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="standard" style="margin-left: 10px; width: 100px">
+              <mat-label>Entry value</mat-label>
+              <input matInput placeholder="Value" [(ngModel)]="includedEntryValue2c" formControlName="includedEntryValue2c" (keydown.enter)="stepper.next()">
+            </mat-form-field>
+          </div>
+          <br/>
+          <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+            <p style="margin-left: 10px; margin-top: 28px">within the <span style="color: blue">time period</span></p>
+            <mat-form-field class="example-full-width" appearance="standard" style="margin-left: 10px; width: 120px">
+              <mat-label>Date from</mat-label>
+              <input matInput [matDatepicker]="picker_includedDateFrom2c" placeholder="Date from" [(ngModel)]="includedDateFrom2c" formControlName="includedDateFrom2c">
+              <mat-datepicker-toggle matSuffix [for]="picker_includedDateFrom2c">
+                <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+              </mat-datepicker-toggle>
+              <mat-datepicker #picker_includedDateFrom2c></mat-datepicker>
+            </mat-form-field>
+            <p style="margin-left: 10px; margin-top: 28px">to</p>
+            <mat-form-field class="example-full-width" appearance="standard" style="margin-left: 10px; width: 120px">
+              <mat-label>Date to</mat-label>
+              <input matInput [matDatepicker]="picker_includedDateTo2c" placeholder="Date to" [(ngModel)]="includedDateTo2c" formControlName="includedDateTo2c">
+              <mat-datepicker-toggle matSuffix [for]="picker_includedDateTo2c">
+                <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+              </mat-datepicker-toggle>
+              <mat-datepicker #picker_includedDateTo2c></mat-datepicker>
+            </mat-form-field>
+            <br/>
+            <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <p style="margin-left: 10px; margin-top: 28px">/ </p>
+              <mat-form-field appearance="standard" style="margin-left: 10px; width: 130px">
+                <mat-label>Within/Before</mat-label>
+                <mat-select [(ngModel)]="includedPeriodOperator2c" formControlName="includedPeriodOperator2c" (ngModelChange)="formChanged()">
+                  <mat-option *ngFor="let value of withinBefore" [value]="value.withinBefore">
+                    {{value.withinBefore}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field appearance="standard" style="margin-left: 10px; width: 60px">
+                <mat-label>Period</mat-label>
+                <input matInput placeholder="Value" [(ngModel)]="includedPeriodValue2c" formControlName="includedPeriodValue2c" (keydown.enter)="stepper.next()">
+              </mat-form-field>
+              <mat-form-field appearance="standard" style="margin-left: 10px; width: 160px">
+                <mat-label>Days/Weeks/Months</mat-label>
+                <mat-select [(ngModel)]="includedPeriodType2c" formControlName="includedPeriodType2c" (ngModelChange)="formChanged()">
                   <mat-option *ngFor="let value of period" [value]="value.period">
                     {{value.period}}
                   </mat-option>
@@ -1523,9 +1741,9 @@
           </div>
         </div>
 
-        <br *ngIf="select2a"/>
-        <mat-divider *ngIf="select2a"></mat-divider>
-        <br *ngIf="select2a"/>
+        <br *ngIf="select2c"/>
+        <mat-divider *ngIf="select2c"></mat-divider>
+        <br *ngIf="select2c"/>
 
         <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
           <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q3. </b>Identify patients
