@@ -462,7 +462,10 @@ Q1D,',',Q1E,',',Q1F,',',Q1G,',',Q1H,',',Q1I,',',Q1J,',',Q1K,',',Q1L,',',Q2,',',Q
 Q3,',',Q3A,',',Q3B,',',Q3C,',',Q3D,',',Q3E,',',Q3F,',',Q3G,',',Q3H,',',
 Q4,',',Q4A,',',Q4B,',',Q5,',',Q5A,',',Q0,',',A1,',',A2,',',A3,',',A4,',',A5,',',rule_tmp,',',rule_det_tmp,',',all_valueset_tmp,',', all_concept_tmp);
 CALL debug_msg(@enabled, CONCAT(NOW(),' - dropTempTables'));
-CALL dropTempTables(tempTables);
+
+IF @enabled = FALSE THEN
+  CALL dropTempTables(tempTables);
+END IF;
 
 -- build result datasets
 CALL debug_msg(@enabled, CONCAT(NOW(),' - buildResultDatasets'));
@@ -497,7 +500,10 @@ SET tempTables = CONCAT(store_tmp,',',encounterValueSet_tmp,',',encounterConcept
 medicationValueSet_tmp,',',medicationConcept_tmp,',',clinicalEventValueSet_tmp,',',clinicalEventConcept_tmp,',',
 seriesValueset_tmp,',',seriesConcept_tmp,',',patientCohort_tmp,',',procedure_req_tmp,',',diagnostic_tmp,',',warning_tmp,',',allergy_tmp,',',referral_req_tmp);
 CALL debug_msg(@enabled, CONCAT(NOW(),' - dropTempTables'));
-CALL dropTempTables(tempTables);
+
+IF @enabled = FALSE THEN
+  CALL dropTempTables(tempTables);
+END IF;
 
 CALL debug_msg(@enabled, CONCAT(NOW(),' - end'));
 
