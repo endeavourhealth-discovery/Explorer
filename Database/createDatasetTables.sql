@@ -26,8 +26,8 @@ CREATE TABLE observation_dataset (
 DROP TABLE IF EXISTS medication_dataset;
 
 CREATE TABLE medication_dataset (
-  query_id INT(11) NOT NULL, medication_id BIGINT(20) NOT NULL,
-  PRIMARY KEY (query_id, medication_id), INDEX med_idx (medication_statement_id) 
+  query_id INT(11) NOT NULL, medication_statement_id BIGINT(20) NOT NULL,
+  PRIMARY KEY (query_id, medication_statement_id), INDEX med_idx (medication_statement_id) 
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 DROP TABLE IF EXISTS encounter_dataset;
