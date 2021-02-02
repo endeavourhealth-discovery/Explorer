@@ -407,25 +407,23 @@ SET referral_req_tmp = CONCAT('referral_req_tmp_',query_id);
 -- time series value set and concept tmp tables --
 SET seriesValueset_tmp = CONCAT('seriesvalueset_tmp_',query_id); 
 SET seriesConcept_tmp = CONCAT('seriesconcept_tmp_',query_id);
-
+-- patient cohort tmp table
 SET patientCohort_tmp = CONCAT('patientcohort_tmp_',query_id);
-
+-- rule tmp tables
 SET rule_tmp = CONCAT('rule_tmp_',query_id);
 SET rule_det_tmp = CONCAT('rule_det_tmp_',query_id);
-
+-- debug starts
 CALL debug_msg(@enabled, CONCAT(NOW(),' - start'));
 CALL debug_msg(@enabled, CONCAT(NOW(),' - buildCohortDefinition'));
 -- build practice cohort -- 
 CALL buildCohortDefinition(query_id, providerOrganisation, includedOrganisation, registrationStatus, gender, postcode, org_tmp, practiceCohort_tmp, store_tmp, sourceSchema);
--- build observation cohort for all valuesets to be used in the advance queries --
+-- build concept cohort for all valuesets to be used in the advance queries --
 CALL debug_msg(@enabled, CONCAT(NOW(),' - createValueSet'));
 CALL createValueSet('1', all_valueset_tmp);
 CALL debug_msg(@enabled, CONCAT(NOW(),' - createConcept'));
 CALL createConcept(all_concept_tmp, all_valueset_tmp, sourceSchema);
-CALL debug_msg(@enabled, CONCAT(NOW(),' - createObservationCohort'));
-CALL createObservationCohort(query_id, observationCohort_tmp, practiceCohort_tmp, all_concept_tmp, sourceSchema);
-CALL debug_msg(@enabled, CONCAT(NOW(),' - buildRegisterRule'));
 -- build register rule
+CALL debug_msg(@enabled, CONCAT(NOW(),' - buildRegisterRule'));
 CALL buildRegisterRule(query_id, matching1, queryExpression1, rule_tmp);
 -- build rules 
 CALL debug_msg(@enabled, CONCAT(NOW(),' - selectRejects'));
@@ -451,7 +449,7 @@ CALL debug_msg(@enabled, CONCAT(NOW(),' - buildQueryExpression'));
 CALL buildQueryExpression(query_id, rule_tmp, rule_det_tmp, practiceCohort_tmp);
 -- process the rules
 CALL debug_msg(@enabled, CONCAT(NOW(),' - processQueryExpression'));
-CALL processQueryExpression(query_id, query, rule_tmp, practiceCohort_tmp, registerCohort_tmp, observationCohort_tmp, store_tmp, sourceSchema);
+CALL processQueryExpression(query_id, query, rule_tmp, practiceCohort_tmp, registerCohort_tmp, observationCohort_tmp, store_tmp, all_concept_tmp, sourceSchema);
 -- build final patient cohort
 CALL debug_msg(@enabled, CONCAT(NOW(),' - buildFinalPatientCohort'));
 CALL buildFinalPatientCohort(query_id, patientCohort_tmp, practiceCohort_tmp, rule_tmp, sourceSchema);
@@ -475,26 +473,21 @@ selectedEncounterValueSet, selectedMedicationValueSet, selectedClinicalEventValu
 encounterValueSet_tmp, encounterConcept_tmp, medicationValueSet_tmp, medicationConcept_tmp, clinicalEventValueSet_tmp, clinicalEventConcept_tmp, 
 sourceSchema, store_tmp, @eventTypes);
 SET eventTypes = @eventTypes;
-
 -- update registries
 CALL debug_msg(@enabled, CONCAT(NOW(),' - buildRegistries'));
 CALL buildRegistries(query_id, patientCohort_tmp, targetPercentage);
-
 -- build dataset outputs
 CALL debug_msg(@enabled, CONCAT(NOW(),' - buildDatasetOutputTables'));
 CALL buildDatasetOutputTables(selectedDemographicFields, selectedEncounterFields, selectedMedicationFields, selectedClinicalEventFields, 
 eventTypes, store_tmp, sourceSchema, query_id, patientCohort_tmp, procedure_req_tmp, diagnostic_tmp, warning_tmp, allergy_tmp, referral_req_tmp);
-  
 -- build time series
 CALL debug_msg(@enabled, CONCAT(NOW(),' - buildTimeSeries'));
 CALL buildTimeSeries(timeSeries, seriesTable, seriesField, seriesEncounterValueSet, seriesMedicationValueSet, seriesClinicalEventValueSet, 
 seriesDateFrom, seriesDateTo, seriesPeriodOperator, seriesPeriodValue, seriesPeriodType, store_tmp, seriesValueset_tmp, seriesConcept_tmp, 
 sourceSchema, query_id, patientCohort_tmp); 
-
 -- update queue for next run date
 CALL debug_msg(@enabled, CONCAT(NOW(),' - updateQueue'));
 CALL updateQueue(query_id, schedule);
-
 -- remove temp tables
 SET tempTables = CONCAT(store_tmp,',',encounterValueSet_tmp,',',encounterConcept_tmp,',',
 medicationValueSet_tmp,',',medicationConcept_tmp,',',clinicalEventValueSet_tmp,',',clinicalEventConcept_tmp,',',

@@ -28,7 +28,9 @@ CREATE PROCEDURE runBuildQuery(
   IN p_incDiagnosisConceptTab VARCHAR(64),
   IN p_queryType VARCHAR(2),
   IN p_queryCohort VARCHAR(64),
-  IN p_queryNumber VARCHAR(20)
+  IN p_queryNumber VARCHAR(20),
+  IN p_concept_all_tmp VARCHAR(64), 
+  IN p_filter INT
 )
 
 BEGIN
@@ -60,11 +62,27 @@ IF p_queryType = '1' THEN
 
    DROP TEMPORARY TABLE IF EXISTS qry_tmp;
    -- create an obervation cohort for any or all the selected valuesets in the selected time period if applicable
-   SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp AS 
-   SELECT DISTINCT o2.patient_id, o2.organization_id 
-   FROM ', p_observationCohortTab,' o2 JOIN ', p_queryCohort,' p ON p.patient_id = o2.patient_id AND p.organization_id = o2.organization_id 
-   WHERE o2.value_set_code_type = ', p_includedAnyAll, ' (SELECT DISTINCT c.value_set_code_type FROM ', p_concepttab,' c ) 
-   AND ', p_timeperioddaterange);
+   
+   IF p_filter = 1 THEN 
+   
+      SET @sql = CONCAT("CREATE TEMPORARY TABLE qry_tmp AS 
+      SELECT DISTINCT o2.patient_id, o2.organization_id 
+      FROM ", p_observationCohortTab," o2 JOIN ", p_queryCohort," p ON p.patient_id = o2.patient_id AND p.organization_id = o2.organization_id 
+      JOIN ", p_concept_all_tmp," cpt ON cpt.non_core_concept_id = o2.non_core_concept_id 
+      WHERE cpt.data_type = 'Observation' AND cpt.value_set_code_type = ", p_includedAnyAll, " (SELECT DISTINCT c.value_set_code_type FROM ", p_concepttab," c ) 
+      AND ", p_timeperioddaterange);
+
+   ELSE
+
+      SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp AS 
+      SELECT DISTINCT o2.patient_id, o2.organization_id 
+      FROM ', p_observationCohortTab,' o2 JOIN ', p_queryCohort,' p ON p.patient_id = o2.patient_id AND p.organization_id = o2.organization_id 
+      WHERE o2.value_set_code_type = ', p_includedAnyAll, ' (SELECT DISTINCT c.value_set_code_type FROM ', p_concepttab,' c ) 
+      AND ', p_timeperioddaterange);
+
+   END IF;
+
+
    PREPARE stmt FROM @sql;
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;
@@ -95,11 +113,25 @@ ELSEIF p_queryType = '2' THEN
 
    DROP TEMPORARY TABLE IF EXISTS qry_tmp_1;
    -- create an observation cohort containing any or all of the selected valuesets
-   SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp_1 AS 
-   SELECT o1.id, o1.patient_id, o1.clinical_effective_date, o1.result_value, 
-          o1.non_core_concept_id, o1.organization_id, o1.value_set_code_type 
-   FROM ', p_observationCohortTab,' o1 JOIN ', p_queryCohort,' p ON p.patient_id = o1.patient_id AND p.organization_id = o1.organization_id 
-   WHERE o1.value_set_code_type = ', p_includedAnyAll, ' (SELECT DISTINCT c.value_set_code_type FROM ', p_concepttab, ' c )');
+
+   IF p_filter = 1 THEN
+
+      SET @sql = CONCAT("CREATE TEMPORARY TABLE qry_tmp_1 AS 
+      SELECT o1.id, o1.patient_id, o1.clinical_effective_date, o1.result_value, o1.non_core_concept_id, o1.organization_id, cpt.value_set_code_type 
+      FROM ", p_observationCohortTab," o1 JOIN ", p_queryCohort," p ON p.patient_id = o1.patient_id AND p.organization_id = o1.organization_id 
+      JOIN ", p_concept_all_tmp," cpt ON cpt.non_core_concept_id = o1.non_core_concept_id 
+      WHERE cpt.data_type = 'Observation' AND cpt.value_set_code_type = ", p_includedAnyAll, " (SELECT DISTINCT c.value_set_code_type FROM ", p_concepttab, " c ) ");
+
+   ELSE
+
+      SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp_1 AS 
+      SELECT o1.id, o1.patient_id, o1.clinical_effective_date, o1.result_value, 
+            o1.non_core_concept_id, o1.organization_id, o1.value_set_code_type 
+      FROM ', p_observationCohortTab,' o1 JOIN ', p_queryCohort,' p ON p.patient_id = o1.patient_id AND p.organization_id = o1.organization_id 
+      WHERE o1.value_set_code_type = ', p_includedAnyAll, ' (SELECT DISTINCT c.value_set_code_type FROM ', p_concepttab, ' c ) ');
+
+   END IF;
+
    PREPARE stmt FROM @sql;
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;
@@ -136,16 +168,36 @@ ELSEIF p_queryType = '3' THEN
 
    DROP TEMPORARY TABLE IF EXISTS qry_tmp_1;
    -- create a temporary patient observation cohort containing any or all of the selected value sets
-   SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp_1 AS 
-   SELECT o1.id, 
-          o1.patient_id, 
-          o1.clinical_effective_date, 
-          o1.result_value, 
-          o1.non_core_concept_id, 
-          o1.organization_id,
-          o1.value_set_code_type 
-   FROM ', p_observationCohortTab,' o1 JOIN ', p_queryCohort,' p ON p.patient_id = o1.patient_id AND p.organization_id = o1.organization_id 
-   WHERE o1.value_set_code_type = ', p_includedAnyAll,' (SELECT DISTINCT c.value_set_code_type FROM ', p_concepttab,' c)');
+
+   IF p_filter = 1 THEN
+
+      SET @sql = CONCAT("CREATE TEMPORARY TABLE qry_tmp_1 AS 
+      SELECT o1.id, 
+            o1.patient_id, 
+            o1.clinical_effective_date, 
+            o1.result_value, 
+            o1.non_core_concept_id, 
+            o1.organization_id,
+            cpt.value_set_code_type 
+      FROM ", p_observationCohortTab," o1 JOIN ", p_queryCohort," p ON p.patient_id = o1.patient_id AND p.organization_id = o1.organization_id 
+      JOIN ", p_concept_all_tmp," cpt ON cpt.non_core_concept_id = o1.non_core_concept_id 
+      WHERE cpt.data_type = 'Observation' AND cpt.value_set_code_type = ", p_includedAnyAll," (SELECT DISTINCT c.value_set_code_type FROM ", p_concepttab," c) ");
+
+   ELSE
+
+      SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp_1 AS 
+      SELECT o1.id, 
+            o1.patient_id, 
+            o1.clinical_effective_date, 
+            o1.result_value, 
+            o1.non_core_concept_id, 
+            o1.organization_id,
+            o1.value_set_code_type 
+      FROM ', p_observationCohortTab,' o1 JOIN ', p_queryCohort,' p ON p.patient_id = o1.patient_id AND p.organization_id = o1.organization_id 
+      WHERE o1.value_set_code_type = ', p_includedAnyAll,' (SELECT DISTINCT c.value_set_code_type FROM ', p_concepttab,' c) ');
+
+   END IF;
+
    PREPARE stmt FROM @sql;
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;
@@ -161,7 +213,7 @@ ELSEIF p_queryType = '3' THEN
    SELECT o1.id, o1.patient_id, o1.clinical_effective_date, o1.result_value, 
           o1.non_core_concept_id, o1.organization_id, o1.value_set_code_type 
    FROM qry_observation_tmp o1 
-   WHERE o1.value_set_code_type = ', p_includedAnyAllTested,' (SELECT DISTINCT c.value_set_code_type FROM ', p_includedAnyAllTestedConcepttab,' c)');
+   WHERE o1.value_set_code_type = ', p_includedAnyAllTested,' (SELECT DISTINCT c.value_set_code_type FROM ', p_includedAnyAllTestedConcepttab,' c) ');
    PREPARE stmt FROM @sql;
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;
@@ -169,11 +221,26 @@ ELSEIF p_queryType = '3' THEN
    IF p_incDiagnosisConceptTab IS NOT NULL THEN 
       -- filter out patients with diagnosis value sets
       DROP TEMPORARY TABLE IF EXISTS qry_tmp_2;
-      SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp_2 AS 
-      SELECT o1.id, o1.patient_id, o1.clinical_effective_date, o1.result_value, 
-             o1.non_core_concept_id, o1.organization_id, o1.value_set_code_type 
-      FROM ', p_observationCohortTab,' o1 JOIN qry_tmp_1 p ON p.patient_id = o1.patient_id AND p.organization_id = o1.organization_id 
-      WHERE o1.value_set_code_type = ', p_diagnosisAnyAll,' (SELECT DISTINCT c.value_set_code_type FROM ', p_incDiagnosisConceptTab,' c)');
+
+      IF p_filter = 1 THEN 
+
+         SET @sql = CONCAT("CREATE TEMPORARY TABLE qry_tmp_2 AS 
+         SELECT o1.id, o1.patient_id, o1.clinical_effective_date, o1.result_value, o1.non_core_concept_id, o1.organization_id, cpt.value_set_code_type 
+         FROM ", p_observationCohortTab," o1 JOIN qry_tmp_1 p ON p.patient_id = o1.patient_id AND p.organization_id = o1.organization_id 
+         JOIN ", p_concept_all_tmp," cpt ON cpt.non_core_concept_id = o1.non_core_concept_id 
+         WHERE cpt.data_type = 'Observation' 
+         AND cpt.value_set_code_type = ", p_diagnosisAnyAll," (SELECT DISTINCT c.value_set_code_type FROM ", p_incDiagnosisConceptTab," c) ");
+      
+      ELSE
+
+         SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp_2 AS 
+         SELECT o1.id, o1.patient_id, o1.clinical_effective_date, o1.result_value, 
+               o1.non_core_concept_id, o1.organization_id, o1.value_set_code_type 
+         FROM ', p_observationCohortTab,' o1 JOIN qry_tmp_1 p ON p.patient_id = o1.patient_id AND p.organization_id = o1.organization_id 
+         WHERE o1.value_set_code_type = ', p_diagnosisAnyAll,' (SELECT DISTINCT c.value_set_code_type FROM ', p_incDiagnosisConceptTab,' c) ');
+
+      END IF;
+
       PREPARE stmt FROM @sql;
       EXECUTE stmt;
       DEALLOCATE PREPARE stmt;
@@ -257,11 +324,25 @@ ELSEIF p_queryType = '4' THEN
 
    DROP TEMPORARY TABLE IF EXISTS qry_tmp_1;
    -- create a temporary patient observation cohort containing any or all of the selected value sets
-   SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp_1 AS 
-   SELECT o1.id, o1.patient_id, o1.clinical_effective_date, o1.result_value, 
-          o1.non_core_concept_id, o1.organization_id, o1.value_set_code_type 
-   FROM ', p_observationCohortTab,' o1 JOIN ', p_queryCohort,' p ON p.patient_id = o1.patient_id AND p.organization_id = o1.organization_id  
-   WHERE o1.value_set_code_type = ', p_includedAnyAll,' (SELECT DISTINCT c.value_set_code_type FROM ', p_concepttab,' c )');
+   IF p_filter = 1 THEN
+
+      SET @sql = CONCAT("CREATE TEMPORARY TABLE qry_tmp_1 AS 
+      SELECT o1.id, o1.patient_id, o1.clinical_effective_date, o1.result_value, o1.non_core_concept_id, o1.organization_id, cpt.value_set_code_type 
+      FROM ", p_observationCohortTab," o1 JOIN ", p_queryCohort," p ON p.patient_id = o1.patient_id AND p.organization_id = o1.organization_id  
+      JOIN ", p_concept_all_tmp," cpt ON cpt.non_core_concept_id = o1.non_core_concept_id 
+      WHERE cpt.data_type = 'Observation' 
+      AND cpt.value_set_code_type = ", p_includedAnyAll," (SELECT DISTINCT c.value_set_code_type FROM ", p_concepttab," c ) ");
+
+   ELSE
+
+      SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp_1 AS 
+      SELECT o1.id, o1.patient_id, o1.clinical_effective_date, o1.result_value, 
+            o1.non_core_concept_id, o1.organization_id, o1.value_set_code_type 
+      FROM ', p_observationCohortTab,' o1 JOIN ', p_queryCohort,' p ON p.patient_id = o1.patient_id AND p.organization_id = o1.organization_id  
+      WHERE o1.value_set_code_type = ', p_includedAnyAll,' (SELECT DISTINCT c.value_set_code_type FROM ', p_concepttab,' c ) ');
+
+   END IF;
+
    PREPARE stmt FROM @sql;
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;
@@ -274,10 +355,24 @@ ELSEIF p_queryType = '4' THEN
 
    DROP TEMPORARY TABLE IF EXISTS qry_tmp_2;
    -- create a temporary patient observation cohort containing any or all of the followed by value sets
-   SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp_2 AS 
-   SELECT o2.patient_id, o2.clinical_effective_date, o2.organization_id 
-   FROM ', p_observationCohortTab,' o2 JOIN ', p_queryCohort,' p ON p.patient_id = o2.patient_id AND p.organization_id = o2.organization_id  
-   WHERE o2.value_set_code_type = ', p_includedAnyAllFollowedBy, ' (SELECT DISTINCT c.value_set_code_type FROM ', p_includedFollowedByConcepttab,' c ) ');
+   IF p_filter = 1 THEN
+
+      SET @sql = CONCAT("CREATE TEMPORARY TABLE qry_tmp_2 AS 
+      SELECT o2.patient_id, o2.clinical_effective_date, o2.organization_id 
+      FROM ", p_observationCohortTab," o2 JOIN ", p_queryCohort," p ON p.patient_id = o2.patient_id AND p.organization_id = o2.organization_id  
+      JOIN ", p_concept_all_tmp," cpt ON cpt.non_core_concept_id = o2.non_core_concept_id 
+      WHERE cpt.data_type = 'Observation' 
+      AND cpt.value_set_code_type = ", p_includedAnyAllFollowedBy, " (SELECT DISTINCT c.value_set_code_type FROM ", p_includedFollowedByConcepttab," c ) ");
+
+   ELSE
+
+      SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp_2 AS 
+      SELECT o2.patient_id, o2.clinical_effective_date, o2.organization_id 
+      FROM ', p_observationCohortTab,' o2 JOIN ', p_queryCohort,' p ON p.patient_id = o2.patient_id AND p.organization_id = o2.organization_id  
+      WHERE o2.value_set_code_type = ', p_includedAnyAllFollowedBy, ' (SELECT DISTINCT c.value_set_code_type FROM ', p_includedFollowedByConcepttab,' c ) ');
+   
+   END IF;
+   
    PREPARE stmt FROM @sql;
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt; 
@@ -318,11 +413,26 @@ ELSEIF p_queryType = '5' THEN
 
    DROP TEMPORARY TABLE IF EXISTS qry_tmp;
    -- create a temporary patient observation cohort containing any or all of the selected value sets within the selected time period if applicable
-   SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp AS 
-   SELECT DISTINCT o2.patient_id, o2.value_set_code_type, o2.non_core_concept_id, o2.clinical_effective_date, o2.organization_id  
-   FROM ', p_observationCohortTab,' o2 JOIN ', p_queryCohort,' p ON p.patient_id = o2.patient_id AND p.organization_id = o2.organization_id    
-   WHERE o2.value_set_code_type = ', p_includedAnyAll,' (SELECT DISTINCT c.value_set_code_type FROM ', p_concepttab,' c) 
-   AND ', p_timeperioddaterange);
+   IF p_filter = 1 THEN
+
+      SET @sql = CONCAT("CREATE TEMPORARY TABLE qry_tmp AS 
+      SELECT DISTINCT o2.patient_id, o2.value_set_code_type, o2.non_core_concept_id, o2.clinical_effective_date, o2.organization_id  
+      FROM ", p_observationCohortTab," o2 JOIN ", p_queryCohort," p ON p.patient_id = o2.patient_id AND p.organization_id = o2.organization_id    
+      JOIN ", p_concept_all_tmp," cpt ON cpt.non_core_concept_id = o2.non_core_concept_id 
+      WHERE cpt.data_type = 'Observation' 
+      AND cpt.value_set_code_type = ", p_includedAnyAll," (SELECT DISTINCT c.value_set_code_type FROM ", p_concepttab," c ) 
+      AND ", p_timeperioddaterange);
+
+   ELSE
+
+      SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp AS 
+      SELECT DISTINCT o2.patient_id, o2.value_set_code_type, o2.non_core_concept_id, o2.clinical_effective_date, o2.organization_id  
+      FROM ', p_observationCohortTab,' o2 JOIN ', p_queryCohort,' p ON p.patient_id = o2.patient_id AND p.organization_id = o2.organization_id    
+      WHERE o2.value_set_code_type = ', p_includedAnyAll,' (SELECT DISTINCT c.value_set_code_type FROM ', p_concepttab,' c ) 
+      AND ', p_timeperioddaterange);
+
+   END IF;
+   
    PREPARE stmt FROM @sql;
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;
@@ -383,7 +493,7 @@ ELSEIF p_queryType = '0' THEN
    DEALLOCATE PREPARE stmt;
 
    SET @sql = CONCAT('CREATE TABLE Q', p_queryNumber, '_', p_query_id,' AS 
-   SELECT DISTINCT c.patient_id, c.person_id, c.organization_id
+   SELECT DISTINCT c.patient_id, c.person_id, c.organization_id 
    FROM ', p_queryCohort,' c 
    WHERE ', p_whereString);
    PREPARE stmt FROM @sql;
@@ -404,7 +514,7 @@ ELSEIF p_queryType = 'A' THEN
 
    SET @sql = CONCAT('CREATE TABLE ', p_queryNumber, '_', p_query_id,' AS 
    SELECT DISTINCT p.patient_id, p.person_id, p.organization_id 
-   FROM ', p_queryCohort,' p WHERE ', p_ageRange);
+   FROM ', p_queryCohort,' p WHERE ', p_ageRange); 
    PREPARE stmt FROM @sql;
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;

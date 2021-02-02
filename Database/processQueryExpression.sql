@@ -12,6 +12,7 @@ CREATE PROCEDURE processQueryExpression(
   IN p_registerCohortTab VARCHAR(64),
   IN p_observationCohort_tmp VARCHAR(64), 
   IN p_store_tmp VARCHAR(64),
+  IN p_conceptAllTab VARCHAR(64), 
   IN p_schema VARCHAR(255)
 )
 
@@ -29,6 +30,7 @@ BEGIN
   DECLARE l_cohort VARCHAR(64) DEFAULT NULL;
   DECLARE l_selecttab VARCHAR(64) DEFAULT NULL;
   DECLARE l_rejecttab VARCHAR(64) DEFAULT NULL;
+  DECLARE l_observationtab VARCHAR(64) DEFAULT NULL;
 
   DECLARE counter INT DEFAULT 0;
   DECLARE l_tmp VARCHAR(1000) DEFAULT NULL;
@@ -51,7 +53,7 @@ BEGIN
 
   DROP TEMPORARY TABLE IF EXISTS qry_rules;
   SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_rules AS 
-  SELECT id, query_id, selectReject, matching, ruleNumber , query, queryNumber FROM ', p_ruleTab);
+  SELECT id, query_id, selectReject, matching, ruleNumber, query, queryNumber FROM ', p_ruleTab);
   PREPARE stmt FROM @sql;
   EXECUTE stmt;
   DEALLOCATE PREPARE stmt; 
@@ -90,7 +92,16 @@ BEGIN
                   SET frontlen = LENGTH(front);
                   SET TempValue = TRIM(front); 
 
-                  CALL queryBuilder(l_query_id, jsonQuery, TempValue, l_cohort, p_observationCohort_tmp, p_store_tmp, p_schema);
+                  IF l_id = 1 AND l_selectReject = 'REGISTER' THEN
+
+                        SET l_observationtab = CONCAT(p_schema,'.observation');
+                        CALL queryBuilder(l_query_id, jsonQuery, TempValue, l_cohort, l_observationtab, p_store_tmp, p_conceptAllTab, p_schema, 1);
+
+                  ELSE 
+                        SET l_observationtab = p_observationCohort_tmp;
+                        CALL queryBuilder(l_query_id, jsonQuery, TempValue, l_cohort, l_observationtab, p_store_tmp, NULL, p_schema, 2);
+
+                  END IF;                  
 
                   -- fetch the next query number
                   SET l_queryNumber = INSERT(l_queryNumber, 1, frontlen + 1, '');
@@ -120,6 +131,9 @@ BEGIN
           DEALLOCATE PREPARE stmt;
 
           SET l_cohort = l_selecttab;
+
+          -- build observation cohort 
+          CALL createObservationCohort(l_query_id, p_observationCohort_tmp, l_selecttab, p_conceptAllTab, p_schema);
 
         ELSEIF l_id > 1 AND l_selectReject IN ('SELECT', 'REJECT') THEN
 
