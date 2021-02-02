@@ -19,7 +19,7 @@ import {CovidViewerComponent} from "./explorer/covidviewer/covidviewer.component
 export class AppMenuService implements  AbstractMenuProvider {
   static getRoutes(): Routes {
     return [
-      {path: '', redirectTo: '/dashboardlibrary', pathMatch: 'full'},
+      {path: '', redirectTo: '/covidlibrary', pathMatch: 'full'},
       {path: 'dashboardviewer', component: DashboardViewerComponent, data: {role: 'explorer'}},
       {path: 'covidviewer', component: CovidViewerComponent, data: {role: 'explorer'}},
       {path: 'registries', component: RegistriesComponent, data: {role: 'explorer'}},
