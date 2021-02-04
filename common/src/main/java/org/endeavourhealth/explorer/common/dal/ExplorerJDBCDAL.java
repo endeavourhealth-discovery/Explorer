@@ -2334,6 +2334,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                     "GROUP BY PERSON.`LSOA code` " +
                     "ORDER BY PERSON.`LSOA code` ";
         }
+        
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
             if(queryId == null) {
                 statement.setString(1, date);
