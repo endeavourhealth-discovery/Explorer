@@ -59,7 +59,7 @@ BEGIN
    JOIN ',p_schema,'.organization org on org.id = e.organization_id 
    JOIN ',p_schema,'.concept c ON c.dbid = e.registration_type_concept_id 
    JOIN ',p_schema,'.patient p ON p.id = e.patient_id 
-   JOIN ',p_schema,'.concept c2 ON c2.dbid = p.gender_concept_id 
+   JOIN ',p_schema,'.concept c2 ON c2.dbid = p.gender_concept_id ', p_org, ' 
    LEFT JOIN ',p_schema,'.patient_address pa ON p.current_address_id = pa.id AND p.id = pa.patient_id 
    WHERE ',regstatus_1, 
    ' AND e.id >= (SELECT MAX(e2.id) 
@@ -68,7 +68,6 @@ BEGIN
                   JOIN ',p_schema,'.concept c3 ON c3.dbid = e2.registration_type_concept_id 
                   WHERE ',regstatus_2,' 
                   AND e2.person_id = e.person_id AND e2.organization_id = e.organization_id) 
-     AND ',p_org,' 
      AND ',p_genderRange,' 
      AND ',p_postcodeRange,' 
      AND ',p_death);

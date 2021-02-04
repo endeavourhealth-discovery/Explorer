@@ -61,7 +61,7 @@ BEGIN
   ALTER TABLE qry_reg ADD INDEX ods_idx(ods_code);
 
   -- delete previous entries if exist
-  SET @sql = CONCAT("DELETE FROM registries reg 
+  SET @sql = CONCAT("DELETE reg FROM registries reg 
                     WHERE reg.query = ", QUOTE(query)," AND reg.registry = ", QUOTE(registry_name)," AND ", parent_registry,
                     " AND EXISTS (SELECT 1 FROM qry_reg q WHERE reg.ods_code = q.ods_code)");
   PREPARE stmt FROM @sql;
@@ -90,8 +90,8 @@ BEGIN
   ELSE
           -- add new entries to registries
           INSERT INTO registries (registry, query, ccg, practice_name, ods_code, list_size, registry_size, updated, parent_registry, target_percentage) 
-          SELECT registry_name, query, q.ccg, q.registered_practice, q.ods_code, pls.list_size, q.registry_size, now(), parentregistry, targetPercentage  
-          FROM qry_reg q LEFT JOIN practice_list_sizes pls ON q.ods_code = pls.ods_code;
+          SELECT registry_name, query, q.ccg, q.registered_practice, q.ods_code, MAX(pls.list_size), q.registry_size, now(), parentregistry, targetPercentage  
+          FROM qry_reg q LEFT JOIN practice_list_sizes pls ON q.ods_code = pls.ods_code GROUP BY registry_name, query, q.ccg, q.registered_practice, q.ods_code, q.registry_size, now(), parentregistry, targetPercentage;
   END IF;
 
   -- add a new entry for registry trend

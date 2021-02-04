@@ -29,7 +29,9 @@ BEGIN
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;
 
-   SET p_orgstring = CONCAT('EXISTS (SELECT 1 FROM ', p_org_tab_name,' ot WHERE ot.ods_code = org.ods_code)');
+   -- SET p_orgstring = CONCAT('EXISTS (SELECT 1 FROM ', p_org_tab_name,' ot WHERE ot.ods_code = org.ods_code)');
+
+   SET p_orgstring = CONCAT('JOIN ', p_org_tab_name, ' ot ON ot.ods_code = org.ods_code ');
 
 END//
 DELIMITER ;

@@ -132,8 +132,16 @@ BEGIN
 
           SET l_cohort = l_selecttab;
 
-          -- build observation cohort 
-          CALL createObservationCohort(l_query_id, p_observationCohort_tmp, l_selecttab, p_conceptAllTab, p_schema);
+          SET @cnt = 0;
+          SET @sql = CONCAT('SELECT COUNT(*) INTO @cnt FROM ', p_ruleTab);
+          PREPARE stmt FROM @sql;
+          EXECUTE stmt;
+          DEALLOCATE PREPARE stmt; 
+
+          IF @cnt > 1 THEN 
+            -- build observation cohort 
+            CALL createObservationCohort(l_query_id, p_observationCohort_tmp, l_selecttab, p_conceptAllTab, p_schema);
+          END IF;
 
         ELSEIF l_id > 1 AND l_selectReject IN ('SELECT', 'REJECT') THEN
 

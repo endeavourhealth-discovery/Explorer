@@ -67,8 +67,8 @@ IF p_queryType = '1' THEN
    
       SET @sql = CONCAT("CREATE TEMPORARY TABLE qry_tmp AS 
       SELECT DISTINCT o2.patient_id, o2.organization_id 
-      FROM ", p_observationCohortTab," o2 JOIN ", p_queryCohort," p ON p.patient_id = o2.patient_id AND p.organization_id = o2.organization_id 
-      JOIN ", p_concept_all_tmp," cpt ON cpt.non_core_concept_id = o2.non_core_concept_id 
+      FROM ", p_queryCohort," p JOIN ", p_observationCohortTab," o2 FORCE INDEX FOR JOIN (ix_observation_index_2, ix_observation_index_5) ON p.patient_id = o2.patient_id AND p.organization_id = o2.organization_id 
+      JOIN ", p_concept_all_tmp," cpt FORCE INDEX FOR JOIN (non_cpt_idx, data_type_idx, value_set_code_type_idx) ON cpt.non_core_concept_id = o2.non_core_concept_id 
       WHERE cpt.data_type = 'Observation' AND cpt.value_set_code_type = ", p_includedAnyAll, " (SELECT DISTINCT c.value_set_code_type FROM ", p_concepttab," c ) 
       AND ", p_timeperioddaterange);
 
@@ -118,8 +118,8 @@ ELSEIF p_queryType = '2' THEN
 
       SET @sql = CONCAT("CREATE TEMPORARY TABLE qry_tmp_1 AS 
       SELECT o1.id, o1.patient_id, o1.clinical_effective_date, o1.result_value, o1.non_core_concept_id, o1.organization_id, cpt.value_set_code_type 
-      FROM ", p_observationCohortTab," o1 JOIN ", p_queryCohort," p ON p.patient_id = o1.patient_id AND p.organization_id = o1.organization_id 
-      JOIN ", p_concept_all_tmp," cpt ON cpt.non_core_concept_id = o1.non_core_concept_id 
+      FROM ", p_queryCohort," p JOIN ", p_observationCohortTab," o1 FORCE INDEX FOR JOIN (ix_observation_index_2, ix_observation_index_5) ON p.patient_id = o1.patient_id AND p.organization_id = o1.organization_id 
+      JOIN ", p_concept_all_tmp," cpt FORCE INDEX FOR JOIN (non_cpt_idx, data_type_idx, value_set_code_type_idx) ON cpt.non_core_concept_id = o1.non_core_concept_id 
       WHERE cpt.data_type = 'Observation' AND cpt.value_set_code_type = ", p_includedAnyAll, " (SELECT DISTINCT c.value_set_code_type FROM ", p_concepttab, " c ) ");
 
    ELSE
@@ -179,8 +179,8 @@ ELSEIF p_queryType = '3' THEN
             o1.non_core_concept_id, 
             o1.organization_id,
             cpt.value_set_code_type 
-      FROM ", p_observationCohortTab," o1 JOIN ", p_queryCohort," p ON p.patient_id = o1.patient_id AND p.organization_id = o1.organization_id 
-      JOIN ", p_concept_all_tmp," cpt ON cpt.non_core_concept_id = o1.non_core_concept_id 
+      FROM ", p_queryCohort," p JOIN ", p_observationCohortTab," o1 FORCE INDEX FOR JOIN (ix_observation_index_2, ix_observation_index_5) ON p.patient_id = o1.patient_id AND p.organization_id = o1.organization_id 
+      JOIN ", p_concept_all_tmp," cpt FORCE INDEX FOR JOIN (non_cpt_idx, data_type_idx, value_set_code_type_idx) ON cpt.non_core_concept_id = o1.non_core_concept_id 
       WHERE cpt.data_type = 'Observation' AND cpt.value_set_code_type = ", p_includedAnyAll," (SELECT DISTINCT c.value_set_code_type FROM ", p_concepttab," c) ");
 
    ELSE
@@ -226,8 +226,8 @@ ELSEIF p_queryType = '3' THEN
 
          SET @sql = CONCAT("CREATE TEMPORARY TABLE qry_tmp_2 AS 
          SELECT o1.id, o1.patient_id, o1.clinical_effective_date, o1.result_value, o1.non_core_concept_id, o1.organization_id, cpt.value_set_code_type 
-         FROM ", p_observationCohortTab," o1 JOIN qry_tmp_1 p ON p.patient_id = o1.patient_id AND p.organization_id = o1.organization_id 
-         JOIN ", p_concept_all_tmp," cpt ON cpt.non_core_concept_id = o1.non_core_concept_id 
+         FROM qry_tmp_1 p JOIN ", p_observationCohortTab," o1 FORCE INDEX FOR JOIN (ix_observation_index_2, ix_observation_index_5) ON p.patient_id = o1.patient_id AND p.organization_id = o1.organization_id 
+         JOIN ", p_concept_all_tmp," cpt FORCE INDEX FOR JOIN (non_cpt_idx, data_type_idx, value_set_code_type_idx) ON cpt.non_core_concept_id = o1.non_core_concept_id 
          WHERE cpt.data_type = 'Observation' 
          AND cpt.value_set_code_type = ", p_diagnosisAnyAll," (SELECT DISTINCT c.value_set_code_type FROM ", p_incDiagnosisConceptTab," c) ");
       
@@ -328,8 +328,8 @@ ELSEIF p_queryType = '4' THEN
 
       SET @sql = CONCAT("CREATE TEMPORARY TABLE qry_tmp_1 AS 
       SELECT o1.id, o1.patient_id, o1.clinical_effective_date, o1.result_value, o1.non_core_concept_id, o1.organization_id, cpt.value_set_code_type 
-      FROM ", p_observationCohortTab," o1 JOIN ", p_queryCohort," p ON p.patient_id = o1.patient_id AND p.organization_id = o1.organization_id  
-      JOIN ", p_concept_all_tmp," cpt ON cpt.non_core_concept_id = o1.non_core_concept_id 
+      FROM ", p_queryCohort," p JOIN ", p_observationCohortTab," o1 FORCE INDEX FOR JOIN (ix_observation_index_2, ix_observation_index_5) ON p.patient_id = o1.patient_id AND p.organization_id = o1.organization_id  
+      JOIN ", p_concept_all_tmp," cpt FORCE INDEX FOR JOIN (non_cpt_idx, data_type_idx, value_set_code_type_idx) ON cpt.non_core_concept_id = o1.non_core_concept_id 
       WHERE cpt.data_type = 'Observation' 
       AND cpt.value_set_code_type = ", p_includedAnyAll," (SELECT DISTINCT c.value_set_code_type FROM ", p_concepttab," c ) ");
 
@@ -359,8 +359,8 @@ ELSEIF p_queryType = '4' THEN
 
       SET @sql = CONCAT("CREATE TEMPORARY TABLE qry_tmp_2 AS 
       SELECT o2.patient_id, o2.clinical_effective_date, o2.organization_id 
-      FROM ", p_observationCohortTab," o2 JOIN ", p_queryCohort," p ON p.patient_id = o2.patient_id AND p.organization_id = o2.organization_id  
-      JOIN ", p_concept_all_tmp," cpt ON cpt.non_core_concept_id = o2.non_core_concept_id 
+      FROM ", p_queryCohort," p JOIN ", p_observationCohortTab," o2 FORCE INDEX FOR JOIN (ix_observation_index_2, ix_observation_index_5) ON p.patient_id = o2.patient_id AND p.organization_id = o2.organization_id  
+      JOIN ", p_concept_all_tmp," cpt FORCE INDEX FOR JOIN (non_cpt_idx, data_type_idx, value_set_code_type_idx) ON cpt.non_core_concept_id = o2.non_core_concept_id 
       WHERE cpt.data_type = 'Observation' 
       AND cpt.value_set_code_type = ", p_includedAnyAllFollowedBy, " (SELECT DISTINCT c.value_set_code_type FROM ", p_includedFollowedByConcepttab," c ) ");
 
@@ -417,8 +417,8 @@ ELSEIF p_queryType = '5' THEN
 
       SET @sql = CONCAT("CREATE TEMPORARY TABLE qry_tmp AS 
       SELECT DISTINCT o2.patient_id, o2.value_set_code_type, o2.non_core_concept_id, o2.clinical_effective_date, o2.organization_id  
-      FROM ", p_observationCohortTab," o2 JOIN ", p_queryCohort," p ON p.patient_id = o2.patient_id AND p.organization_id = o2.organization_id    
-      JOIN ", p_concept_all_tmp," cpt ON cpt.non_core_concept_id = o2.non_core_concept_id 
+      FROM ", p_queryCohort," p JOIN ", p_observationCohortTab," o2 FORCE INDEX FOR JOIN (ix_observation_index_2, ix_observation_index_5) ON p.patient_id = o2.patient_id AND p.organization_id = o2.organization_id    
+      JOIN ", p_concept_all_tmp," cpt FORCE INDEX FOR JOIN (non_cpt_idx, data_type_idx, value_set_code_type_idx) ON cpt.non_core_concept_id = o2.non_core_concept_id 
       WHERE cpt.data_type = 'Observation' 
       AND cpt.value_set_code_type = ", p_includedAnyAll," (SELECT DISTINCT c.value_set_code_type FROM ", p_concepttab," c ) 
       AND ", p_timeperioddaterange);

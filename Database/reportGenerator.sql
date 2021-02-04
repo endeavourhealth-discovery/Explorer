@@ -163,6 +163,8 @@ DECLARE Q1L VARCHAR(64) DEFAULT NULL;
 
 DECLARE Q2 VARCHAR(64) DEFAULT NULL;
 DECLARE Q2A VARCHAR(64) DEFAULT NULL;
+DECLARE Q2B VARCHAR(64) DEFAULT NULL;
+DECLARE Q2C VARCHAR(64) DEFAULT NULL;
 DECLARE Q3 VARCHAR(64) DEFAULT NULL;
 DECLARE Q3A VARCHAR(64) DEFAULT NULL;
 DECLARE Q3B VARCHAR(64) DEFAULT NULL;
@@ -362,6 +364,8 @@ SET Q1K = CONCAT('Q1K_',query_id);
 SET Q1L = CONCAT('Q1L_',query_id);
 SET Q2 = CONCAT('Q2_',query_id);
 SET Q2A = CONCAT('Q2A_',query_id);
+SET Q2B = CONCAT('Q2B_',query_id);
+SET Q2C = CONCAT('Q2C_',query_id);
 SET Q3 = CONCAT('Q3_',query_id);
 SET Q3A = CONCAT('Q3A_',query_id);
 SET Q3B = CONCAT('Q3B_',query_id);
@@ -456,7 +460,7 @@ CALL buildFinalPatientCohort(query_id, patientCohort_tmp, practiceCohort_tmp, ru
 CALL debug_msg(@enabled, CONCAT(NOW(),' - tempTables'));
 -- remove tmp tables
 SET tempTables = CONCAT(org_tmp,',',observationCohort_tmp,',',practiceCohort_tmp,',',registerCohort_tmp,',',Q1,',',Q1A,',',Q1B,',',Q1C,',',
-Q1D,',',Q1E,',',Q1F,',',Q1G,',',Q1H,',',Q1I,',',Q1J,',',Q1K,',',Q1L,',',Q2,',',Q2A,',',
+Q1D,',',Q1E,',',Q1F,',',Q1G,',',Q1H,',',Q1I,',',Q1J,',',Q1K,',',Q1L,',',Q2,',',Q2A,',',Q2B,',',Q2C,',',
 Q3,',',Q3A,',',Q3B,',',Q3C,',',Q3D,',',Q3E,',',Q3F,',',Q3G,',',Q3H,',',
 Q4,',',Q4A,',',Q4B,',',Q5,',',Q5A,',',Q0,',',A1,',',A2,',',A3,',',A4,',',A5,',',rule_tmp,',',rule_det_tmp,',',all_valueset_tmp,',', all_concept_tmp);
 CALL debug_msg(@enabled, CONCAT(NOW(),' - dropTempTables'));

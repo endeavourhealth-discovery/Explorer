@@ -38,6 +38,11 @@ BEGIN
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;
 
+   SET @sql = CONCAT('ALTER TABLE ', p_concepttab, ' ADD INDEX value_set_code_type_idx (value_set_code_type)');
+   PREPARE stmt FROM @sql;
+   EXECUTE stmt;
+   DEALLOCATE PREPARE stmt;
+
 
 END//
 DELIMITER ;
