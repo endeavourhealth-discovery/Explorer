@@ -2265,7 +2265,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
             if ("Suspected and confirmed Covid-19 cases".equalsIgnoreCase(query))
                 sql = "SELECT COUNT(covid.lsoa_code) AS patients, " +
                         "regs.reg_count AS reg_patients, " +
-                        "ROUND(((COUNT(covid.lsoa_code) * 1000) / regs.reg_count),1) AS ratio, " +
+                        "ROUND(((COUNT(covid.lsoa_code) * 100000) / regs.reg_count),1) AS ratio, " +
                         "covid.lsoa_code AS lsoa_code, " +
                         "map.geo_json " +
                         "FROM dashboards.lsoa_covid covid, " +
@@ -2282,7 +2282,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
             else if ("Confirmed Covid-19 cases".equalsIgnoreCase(query))
                 sql = "SELECT COUNT(covid.lsoa_code) AS patients, " +
                         "regs.reg_count AS reg_patients, " +
-                        "ROUND(((COUNT(covid.lsoa_code) * 1000) / regs.reg_count),1) AS ratio, " +
+                        "ROUND(((COUNT(covid.lsoa_code) * 100000) / regs.reg_count),1) AS ratio, " +
                         "covid.lsoa_code AS lsoa_code, " +
                         "map.geo_json " +
                         "FROM dashboards.lsoa_covid covid, " +
@@ -2300,7 +2300,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
             else if ("Shielded Covid-19 patients".equalsIgnoreCase(query))
                 sql = "SELECT COUNT(covid.lsoa_code) AS patients, " +
                         "regs.reg_count AS reg_patients, " +
-                        "ROUND(((COUNT(covid.lsoa_code) * 1000) / regs.reg_count),1) AS ratio, " +
+                        "ROUND(((COUNT(covid.lsoa_code) * 100000) / regs.reg_count),1) AS ratio, " +
                         "covid.lsoa_code AS lsoa_code, " +
                         "map.geo_json " +
                         "FROM dashboards.lsoa_covid_shielded covid, " +
@@ -2318,7 +2318,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         } else {
             sql = "SELECT COUNT(PERSON.`LSOA code`) as patients, " +
                     "REGS.reg_count as reg_patients, " +
-                    "ROUND(((COUNT(PERSON.`LSOA code`) * 1000) / REGS.reg_count),1) AS ratio, " +
+                    "ROUND(((COUNT(PERSON.`LSOA code`) * 100000) / REGS.reg_count),1) AS ratio, " +
                     "PERSON.`LSOA code` as lsoa_code, " +
                     "MAP.geo_json " +
                     "FROM  dashboards.person_output_" + queryId + " PERSON, " +
@@ -2334,7 +2334,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                     "GROUP BY PERSON.`LSOA code` " +
                     "ORDER BY PERSON.`LSOA code` ";
         }
-        
+
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
             if(queryId == null) {
                 statement.setString(1, date);
@@ -2348,10 +2348,10 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                     int rate = 0;
 
                     layer.setAreaCode(resultSet.getString("lsoa_code"));
-                    rate = Math.round((resultSet.getFloat("patients") / resultSet.getFloat("reg_patients")) * 1000);
+                    rate = Math.round((resultSet.getFloat("patients") / resultSet.getFloat("reg_patients")) * 100000);
                     description = "LSOA "+layer.getAreaCode() + ": " +
                             resultSet.getInt("patients") + " of " +
-                            resultSet.getInt("reg_patients") + " registered cases (" + rate + " per 1,000 per day)";
+                            resultSet.getInt("reg_patients") + " registered cases (" + rate + " per 100,000 per day)";
                     layer.setDescription(description);
                     layer.setGeoJson(resultSet.getString("geo_json"));
 
