@@ -2276,8 +2276,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                         ") regs, dashboards.maps map " +
                         "WHERE covid.lsoa_code = regs.lsoa_code " +
                         "AND covid.lsoa_code = map.area_code " +
-                        "AND covid.covid_date >= '" + minDate + "' " +
-                        "AND covid.covid_date <= ? " +
+                        "AND covid.covid_date = ? " +
                         "GROUP BY covid.lsoa_code " +
                         "ORDER BY covid.lsoa_code ";
             else if ("Confirmed Covid-19 cases".equalsIgnoreCase(query))
@@ -2294,8 +2293,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                         ") regs, dashboards.maps map " +
                         "WHERE covid.lsoa_code = regs.lsoa_code " +
                         "AND covid.lsoa_code = map.area_code " +
-                        "AND covid.covid_date >= '" + minDate + "' " +
-                        "AND covid.covid_date <= ? " +
+                        "AND covid.covid_date = ? " +
                         "AND corona_status = 'Confirmed Covid 19' "+
                         "GROUP BY covid.lsoa_code " +
                         "ORDER BY covid.lsoa_code ";
@@ -2313,8 +2311,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                         ") regs, dashboards.maps map " +
                         "WHERE covid.lsoa_code = regs.lsoa_code " +
                         "AND covid.lsoa_code = map.area_code " +
-                        "AND covid.covid_date >= '" + minDate + "' " +
-                        "AND covid.covid_date <= ? " +
+                        "AND covid.covid_date = ? " +
                         "GROUP BY covid.lsoa_code " +
                         "ORDER BY covid.lsoa_code ";
 
