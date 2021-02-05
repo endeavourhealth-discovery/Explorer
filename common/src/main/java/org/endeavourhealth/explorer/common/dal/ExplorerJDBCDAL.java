@@ -2391,7 +2391,6 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         layers.put(descriptions.get(4), layer5);
 
         MapResult result = new MapResult();
-        
         result.setIds(ids);
         result.setLayers(layers);
 
