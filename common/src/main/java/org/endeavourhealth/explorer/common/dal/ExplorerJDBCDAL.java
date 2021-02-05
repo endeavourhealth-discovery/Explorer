@@ -3046,4 +3046,58 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         return registryQuery;
     }
 
+    public PopulationResult getPopulation() throws Exception {
+        PopulationResult result = new PopulationResult();
+
+        String sql = "";
+        String sqlCount = "";
+
+        sql = "SELECT stp,ccg,pcn,practice,ethnic,age,sex,sum(list_size) as list_size " +
+        "FROM dashboards.population_denominators " +
+        "group by stp,ccg,pcn,practice,ethnic,age,sex " +
+        "with rollup";
+
+        sqlCount = "SELECT count(1) " +
+                "FROM dashboards.population_denominators";
+
+        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                result.setResults(getPopulationList(resultSet));
+            }
+        }
+
+        try (PreparedStatement statement = conn.prepareStatement(sqlCount)) {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                resultSet.next();
+                result.setLength(resultSet.getInt(1));
+            }
+        }
+
+        return result;
+    }
+
+    private List<Population> getPopulationList(ResultSet resultSet) throws SQLException {
+        List<Population> result = new ArrayList<>();
+        while (resultSet.next()) {
+            result.add(getPopulation(resultSet));
+        }
+
+        return result;
+    }
+
+    public static Population getPopulation(ResultSet resultSet) throws SQLException {
+        Population population = new Population();
+
+        population
+                .setStp(resultSet.getString("stp"))
+                .setCcg(resultSet.getString("ccg"))
+                .setPcn(resultSet.getString("pcn"))
+                .setPractice(resultSet.getString("practice"))
+                .setEthnic(resultSet.getString("ethnic"))
+                .setAge(resultSet.getString("age"))
+                .setSex(resultSet.getString("sex"))
+                .setListSize(resultSet.getString("list_size"));
+        return population;
+    }
+
 }

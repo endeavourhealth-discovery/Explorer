@@ -60,6 +60,7 @@ import { PracticeListSizesComponent } from './practicelistsizes/practicelistsize
 import {GraphicalComparisonComponent} from "./graphicalcomparison/graphicalcomparison.component";
 import {CovidLibraryComponent} from "./covidlibrary/covidlibrary.component";
 import {CovidViewerComponent} from "./covidviewer/covidviewer.component";
+import {PopulationsComponent} from "./populations/populations.component";
 
 @NgModule({
   declarations: [
@@ -86,7 +87,8 @@ import {CovidViewerComponent} from "./covidviewer/covidviewer.component";
     PracticeListSizesComponent,
     GraphicalComparisonComponent,
     CovidLibraryComponent,
-    CovidViewerComponent
+    CovidViewerComponent,
+    PopulationsComponent
   ],
     imports: [
         BrowserModule,

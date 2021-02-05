@@ -14,6 +14,7 @@ import {PracticeListSizesComponent} from "./explorer/practicelistsizes/practicel
 import {GraphicalComparisonComponent} from "./explorer/graphicalcomparison/graphicalcomparison.component";
 import {CovidLibraryComponent} from "./explorer/covidlibrary/covidlibrary.component";
 import {CovidViewerComponent} from "./explorer/covidviewer/covidviewer.component";
+import {PopulationsComponent} from "./explorer/populations/populations.component";
 
 @Injectable()
 export class AppMenuService implements  AbstractMenuProvider {
@@ -32,7 +33,8 @@ export class AppMenuService implements  AbstractMenuProvider {
       {path: 'practicelistsizes/:ccg', component: PracticeListSizesComponent, data: {role: 'explorer'}},
       {path: 'map', component: MapComponent, data: {role: 'explorer'}},
       {path: 'tutorials', component: TutorialsComponent, data: {role: 'explorer'}},
-      {path: 'graphicalcomparison', component: GraphicalComparisonComponent, data: {role: 'explorer'}}
+      {path: 'graphicalcomparison', component: GraphicalComparisonComponent, data: {role: 'explorer'}},
+      {path: 'populations', component: PopulationsComponent, data: {role: 'explorer'}}
     ];
   }
 
@@ -54,6 +56,7 @@ export class AppMenuService implements  AbstractMenuProvider {
       {icon: 'fas fa-list-ol', caption: 'Value set library', state: 'valuesetlibrary'},
       {icon: 'fas fa-clinic-medical', caption: 'Organisation groups', state: 'organisationgroups'},
       {icon: 'fas fa-hospital', caption: 'Organisation list sizes', state: 'organisationlistsizes'},
+      {icon: 'fas fa-users', caption: 'Populations', state: 'populations'},
       {icon: 'fas fa-video-plus', caption: 'Tutorials', state: 'tutorials'}
     ];
   }

@@ -946,4 +946,21 @@ public class DashboardEndpoint {
                     .build();
         }
     }
+
+    @GET
+    @Path("/population")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getPopulation(@Context SecurityContext sc) throws Exception {
+        LOG.debug("getPopulation");
+
+        try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
+            PopulationResult result = viewerDAL.getPopulation();
+
+            return Response
+                    .ok()
+                    .entity(result)
+                    .build();
+        }
+    }
 }

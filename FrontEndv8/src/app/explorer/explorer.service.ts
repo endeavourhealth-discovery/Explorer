@@ -481,4 +481,11 @@ export class ExplorerService {
     return this.http.get('api/events/dashboardRegistries', {params});
   }
 
+  getPopulation(): Observable<any> {
+
+    let params = new HttpParams();
+
+    return this.http.get('api/events/population', {params});
+  }
+
 }

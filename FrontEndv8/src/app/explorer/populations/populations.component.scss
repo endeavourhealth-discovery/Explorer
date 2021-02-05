@@ -1,0 +1,15 @@
+tr.expanded-detail-row {
+  height: 0;
+}
+
+tr.expanded-element-row:not(.expanded-expanded-row):hover {
+  background: lightgray;
+}
+
+tr.expanded-element-row:not(.expanded-expanded-row):active {
+  background: #efefef;
+}
+
+mat-paginator {
+  width: 100%;
+}
