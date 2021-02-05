@@ -101,24 +101,23 @@ export class PopulationsComponent implements OnInit {
   displayEvents(events: any) {
     this.events = events;
 
-    this.originalData = JSON.parse(JSON.stringify(events.results));
-
-    let typeList = [];
-
-    let prevFolder = '';
-    let thisFolder = '';
-
     events.results.forEach( (item, index) => {
-      thisFolder = events.results[index].type;
-      if (thisFolder==prevFolder) {
-        events.results[index].type = '↳';
-      }
-      typeList.push(events.results[index]);
-      if (events.results[index].type != '↳')
-        prevFolder = thisFolder;
+      if (events.results[index].ccg == undefined)
+        events.results[index].ccg = '(STP Sub Total)';
+      else if (events.results[index].pcn == undefined)
+        events.results[index].pcn = '(CCG Sub Total)';
+      else if (events.results[index].practice == undefined)
+        events.results[index].practice = '(PCN Sub Total)';
+      else if (events.results[index].ethnic == undefined)
+        events.results[index].ethnic = '(Practice Sub Total)';
+      else if (events.results[index].age == undefined)
+        events.results[index].age = '(Ethnic Sub Total)';
+      else if (events.results[index].sex == undefined)
+        events.results[index].sex = '(Age Sub Total)';
     });
 
-    this.dataSource = new MatTableDataSource(typeList);
+    this.dataSource = new MatTableDataSource(events.results);
+
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
