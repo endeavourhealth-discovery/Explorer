@@ -11,6 +11,7 @@ import {MessageBoxDialogComponent} from "../message-box-dialog/message-box-dialo
 import {FormControl} from "@angular/forms";
 import {ValueSetCodeComponent} from "../valuesetcode/valuesetcode.component";
 import {MatSort} from "@angular/material/sort";
+import {ngxCsv} from "ngx-csv";
 
 @Component({
   selector: 'app-valuesetlibrary',
@@ -48,6 +49,26 @@ export class PopulationsComponent implements OnInit {
         (result) => this.displayEvents(result),
         (error) => this.log.error(error)
       );
+  }
+
+  onDownloadClick() {
+    let values:any = this.dataSource.filteredData;
+    //remove id from the data to be saved to csv
+    let exportData = values.map(({stp, ccg, pcn, practice, ethnic, age, sex, listSize}) => ({stp, ccg, pcn, practice, ethnic, age, sex, listSize}));
+    if (exportData) {
+      let options = {
+        fieldSeparator: ',',
+        quoteStrings: '"',
+        decimalseparator: '.',
+        showLabels: true,
+        headers: ['stp', 'ccg', 'pcn', 'practice', 'ethnic','age', 'sex', 'listSize'],
+        showTitle: false,
+        title: 'Population counts',
+        useTextFile: false,
+        useBom: false,
+      };
+      new ngxCsv(exportData, 'population_counts', options);
+    }
   }
 
   displayEvents(events: any) {
