@@ -55,8 +55,6 @@ import {DashboardViewerComponent} from "./dashboardviewer/dashboardviewer.compon
 import {MapComponent} from './map/map.component';
 import {MatSliderModule} from "@angular/material/slider";
 import {TrendComponent} from "./trend/trend.component";
-import {OrganisationListSizesComponent} from './organisationlistsizes/organisationlistsizes.component';
-import { PracticeListSizesComponent } from './practicelistsizes/practicelistsizes.component';
 import {GraphicalComparisonComponent} from "./graphicalcomparison/graphicalcomparison.component";
 import {CovidLibraryComponent} from "./covidlibrary/covidlibrary.component";
 import {CovidViewerComponent} from "./covidviewer/covidviewer.component";
@@ -83,8 +81,6 @@ import {PopulationsComponent} from "./populations/populations.component";
     DashboardViewerComponent,
     MapComponent,
     TrendComponent,
-    OrganisationListSizesComponent,
-    PracticeListSizesComponent,
     GraphicalComparisonComponent,
     CovidLibraryComponent,
     CovidViewerComponent,

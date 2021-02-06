@@ -430,42 +430,6 @@ export class ExplorerService {
     return this.http.get('api/events/mapQueries', {params});
   }
 
-  searchOrganisations(searchData: string, pageNumber: number, pageSize: number,
-                      orderColumn: string, descending: boolean): Observable<any> {
-    let params = new HttpParams();
-    if (searchData) params = params.append('search_data', searchData);
-    if (pageNumber) params = params.append('page_number', pageNumber.toString());
-    if (pageSize) params = params.append('page_size', pageSize.toString());
-    if (orderColumn) params = params.append('order_column', orderColumn);
-    if (descending) params = params.append('descending', descending.toString());
-    return this.http.get('api/events/searchOrganisations', {params});
-  }
-
-  getOrganisationsTotalCount(searchData: string): Observable<any> {
-    let params = new HttpParams();
-    if (searchData) params = params.append('search_data', searchData);
-    return this.http.get('api/events/organisationsTotalCount', {params});
-  }
-
-  searchPractices(ccg:string, searchData: string, pageNumber: number, pageSize: number,
-                      orderColumn: string, descending: boolean): Observable<any> {
-    let params = new HttpParams();
-    if (ccg) params = params.append('ccg', ccg);
-    if (searchData) params = params.append('search_data', searchData);
-    if (pageNumber) params = params.append('page_number', pageNumber.toString());
-    if (pageSize) params = params.append('page_size', pageSize.toString());
-    if (orderColumn) params = params.append('order_column', orderColumn);
-    if (descending) params = params.append('descending', descending.toString());
-    return this.http.get('api/events/searchPractices', {params});
-  }
-
-  getPracticesTotalCount(ccg:string, searchData: string): Observable<any> {
-    let params = new HttpParams();
-    if (ccg) params = params.append('ccg', ccg);
-    if (searchData) params = params.append('search_data', searchData);
-    return this.http.get('api/events/practicesTotalCount', {params});
-  }
-
   getRegistryQueries(): Observable<any> {
     let params = new HttpParams();
 
