@@ -48,7 +48,6 @@ export class PopulationsComponent implements OnInit {
         (result) => this.displayEvents(result),
         (error) => this.log.error(error)
       );
-
   }
 
   displayEvents(events: any) {
