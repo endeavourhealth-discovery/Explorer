@@ -997,18 +997,34 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
     }
 
     public ChartResult getDashboardCovid(String dashboardId, String series, String dateFrom, String dateTo, String stp, String ccg, String pcn, String practice, String ethnic, String age, String sex,
-                                         String cumulative, String weekly, String rate,String combineSeries, String combineEthnic, String combineAge, String combineSex, String combineSTP) throws Exception {
+                                         String cumulative, String weekly, String rate,String combineSeries, String combineEthnic, String combineAge, String combineSex, String combineOrgs) throws Exception {
 
         List<String> orgs = null;
+        String orgParams = "";
+        String orgArray[] = new String[0];
 
-        if (!stp.equals(""))
+        if (!stp.equals("")) {
             orgs = Arrays.asList(stp.split("\\s*,\\s*"));
-        else if (!ccg.equals(""))
+            orgArray = stp.split(",");
+        }
+        else if (!ccg.equals("")) {
             orgs = Arrays.asList(ccg.split("\\s*,\\s*"));
-        else if (!pcn.equals(""))
+            orgArray = ccg.split(",");
+        }
+        else if (!pcn.equals("")) {
             orgs = Arrays.asList(pcn.split("\\s*,\\s*"));
-        else if (!practice.equals(""))
+            orgArray = pcn.split(",");
+        }
+        else if (!practice.equals("")) {
             orgs = Arrays.asList(practice.split("\\s*,\\s*"));
+            orgArray = practice.split(",");
+        }
+
+        StringBuilder builder = new StringBuilder();
+        for( int i = 0 ; i < orgArray.length; i++ ) {
+            builder.append("?,");
+        }
+        orgParams = builder.deleteCharAt( builder.length() -1 ).toString();
 
         List<String> charts = Arrays.asList(series.split("\\s*,\\s*"));
         List<String> ethnics = Arrays.asList(ethnic.split("\\s*,\\s*"));
@@ -1016,7 +1032,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         List<String> sexes = Arrays.asList(sex.split("\\s*,\\s*"));
 
         String seriesArray[] = series.split(",");
-        StringBuilder builder = new StringBuilder();
+        builder = new StringBuilder();
         for( int i = 0 ; i < seriesArray.length; i++ ) {
             builder.append("?,");
         }
@@ -1049,7 +1065,9 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         List<Chart> chart = new ArrayList<>();
         Chart chartItem = null;
 
-        if (combineSTP.equals("true")) {
+        if (combineOrgs.equals("false")) {
+            orgParams = "?";
+        } else {
             orgs = Arrays.asList("Combine");
         }
 
@@ -1082,13 +1100,13 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         String orgSQL = "";
 
         if (!stp.equals(""))
-            orgSQL = " stp in (?)";
+            orgSQL = " stp in ("+orgParams+")";
         else if (!ccg.equals(""))
-            orgSQL = " ccg in (?)";
+            orgSQL = " ccg in ("+orgParams+")";
         else if (!pcn.equals(""))
-            orgSQL = " pcn in (?)";
+            orgSQL = " pcn in ("+orgParams+")";
         else if (!practice.equals(""))
-            orgSQL = " practice in (?)";
+            orgSQL = " practice in ("+orgParams+")";
 
         String ethnicSQL = "and ethnic in ("+ethnicParams+")";
         String ageSQL = "and age in ("+ageParams+")";
@@ -1112,10 +1130,6 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         if (sex.equals("All")) {
             sexArray = new String[0];
             sexSQL = "";
-        }
-
-        if (combineSTP.equals("true")) {
-            orgSQL = "1=1";
         }
 
         for (String seriesName : charts) {
@@ -1180,8 +1194,13 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                             try (PreparedStatement statement = conn.prepareStatement(sql)) {
                                 int p = 1;
                                 if (rate.equals("1")) {
-                                    if (!orgSQL.equals("") && !orgSQL.equals("1=1"))
+                                    if (combineOrgs.equals("false")) {
                                         statement.setString(p++, orgName);
+                                    } else {
+                                        for (int i = 1; i <= orgArray.length; i++) {
+                                            statement.setString(p++, orgArray[i - 1]);
+                                        }
+                                    }
                                     if (!ethnic.equals("All")) {
                                         if (combineEthnic.equals("false")) {
                                             statement.setString(p++, ethnicName);
@@ -1221,8 +1240,13 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                                         }
                                     }
                                 }
-                                if (!orgSQL.equals("1=1"))
+                                if (combineOrgs.equals("false")) {
                                     statement.setString(p++, orgName);
+                                } else {
+                                    for (int i = 1; i <= orgArray.length; i++) {
+                                        statement.setString(p++, orgArray[i - 1]);
+                                    }
+                                }
                                 if (!ethnic.equals("All")) {
                                     if (combineEthnic.equals("false")) {
                                         statement.setString(p++, ethnicName);

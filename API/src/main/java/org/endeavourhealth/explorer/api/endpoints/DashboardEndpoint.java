@@ -144,12 +144,12 @@ public class DashboardEndpoint {
                             @QueryParam("combineEthnic") String combineEthnic,
                             @QueryParam("combineAge") String combineAge,
                             @QueryParam("combineSex") String combineSex,
-                            @QueryParam("combineSTP") String combineSTP) throws Exception {
+                            @QueryParam("combineOrgs") String combineOrgs) throws Exception {
         LOG.debug("getDashboardCovid");
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
             ChartResult result = null;
 
-            result = viewerDAL.getDashboardCovid(dashboardId, series, dateFrom, dateTo, stp, ccg, pcn, practice, ethnic, age, sex, cumulative, weekly, rate, combineSeries, combineEthnic, combineAge, combineSex, combineSTP);
+            result = viewerDAL.getDashboardCovid(dashboardId, series, dateFrom, dateTo, stp, ccg, pcn, practice, ethnic, age, sex, cumulative, weekly, rate, combineSeries, combineEthnic, combineAge, combineSex, combineOrgs);
 
             return Response
                     .ok()

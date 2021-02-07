@@ -47,7 +47,7 @@ export class ExplorerService {
 
   getDashboardCovid(dashboardId: string, series: string, dateFrom: string, dateTo: string, stp: string, ccg: string, pcn: string, practice: string, ethnic: string,
                     age: string, sex: string, cumulative: string, weekly: string, rate: string,
-                    combineSeries: any, combineEthnic: any, combineAge: any, combineSex: any, combineSTP: any): Observable<any> {
+                    combineSeries: any, combineEthnic: any, combineAge: any, combineSex: any, combineOrgs: any): Observable<any> {
     let params = new HttpParams();
 
     params = params.append('dashboardId', dashboardId);
@@ -68,7 +68,7 @@ export class ExplorerService {
     params = params.append('combineEthnic', combineEthnic);
     params = params.append('combineAge', combineAge);
     params = params.append('combineSex', combineSex);
-    params = params.append('combineSTP', combineSTP);
+    params = params.append('combineOrgs', combineOrgs);
 
     return this.http.get('api/events/dashboardcovid', {params});
   }
