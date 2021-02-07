@@ -24,6 +24,7 @@ export class PopulationsComponent implements OnInit {
   selection = new SelectionModel<any>(true, []);
 
   filterText: string;
+  wait: boolean = true;
 
   events: any;
   dataSource: MatTableDataSource<any>;
@@ -93,6 +94,8 @@ export class PopulationsComponent implements OnInit {
 
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+
+    this.wait = false;
   }
 
   applyFilter(event: Event) {
