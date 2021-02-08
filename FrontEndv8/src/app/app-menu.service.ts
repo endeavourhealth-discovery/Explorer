@@ -44,7 +44,7 @@ export class AppMenuService implements  AbstractMenuProvider {
 
   getMenuOptions(): MenuOption[] {
     return [
-      {icon: 'fas fa-virus', caption: 'Covid library (BETA)', state: 'covidlibrary'},
+      {icon: 'fas fa-virus', caption: 'Covid library', state: 'covidlibrary'},
       {icon: 'fas fa-analytics', caption: 'Dashboard library', state: 'dashboardlibrary'},
       {icon: 'fas fa-map-marked-alt', caption: 'Maps', state: 'map'},
       {icon: 'fas fa-notes-medical', caption: 'Patient registries', state: 'registries'},

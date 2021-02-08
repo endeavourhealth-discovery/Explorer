@@ -3,9 +3,9 @@
       <tr>
         <td style="vertical-align: top;">
           <div class="filter-background">
-            <div style="font-size:16px; font-weight: bold;padding: 0px 0px 10px 0px">
-              {{chartTitle1}} - (BETA)
-            </div>
+            <!--<div style="font-size:16px; font-weight: bold;padding: 0px 0px 10px 0px">
+              {{chartTitle1}}
+            </div>-->
             <mat-form-field style="width:450px"  appearance="standard" *ngIf="showLineCharts1||showBarCharts1">
               <mat-label>Filter by series</mat-label>
               <mat-select style="width:450px" [formControl]="seriesValues1" multiple [(value)]="selectedSeries1">
@@ -67,7 +67,6 @@
               <mat-checkbox *ngIf="showLineCharts1" class="checkbox" (change)="refreshDashboard()" [(ngModel)]="rate1">Rate per 100,000 patients</mat-checkbox>
             </div>
           </div>
-
         </td>
         <td style="vertical-align: top;">
           <div class="tree-background">
@@ -109,6 +108,16 @@
       <tr *ngIf="showWait">
         <td colspan="2" class="blink_me">
           Retrieving data and building the chart.....
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <div style="font-size:14px; font-weight: bold;margin: 10px 0px 10px 0px">
+            <div style="color: blue; display: inline">{{chartSelections1}}</div>
+            <div style="color: red; display: inline">{{chartSelections2}}</div>
+            <div style="color: green; display: inline">{{chartSelections3}}</div>
+            <div style="color: darkslategray; display: inline">{{chartSelections4}}</div>
+          </div>
         </td>
       </tr>
       <tr *ngIf="showCharts">

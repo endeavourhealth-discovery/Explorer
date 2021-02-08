@@ -1313,6 +1313,11 @@ export class CovidViewerComponent implements OnInit {
   chartTitle1: string = "Chart Title";
   xAxisLabel1: string = 'Date';
   yAxisLabel1: string = 'People with indicator';
+  yAxisLabel: string;
+  chartSelections1: string = '';
+  chartSelections2: string = '';
+  chartSelections3: string = '';
+  chartSelections4: string = '';
   timeline: boolean = true;
   showAreaChart1: boolean = false;
   gradient1: boolean = false;
@@ -1455,7 +1460,7 @@ export class CovidViewerComponent implements OnInit {
       practice = "";
     }
 
-    if (series==''&&stp==''&&ccg==''&&pcn==''&&practice=='')
+    if (series==''||(stp==''&&ccg==''&&pcn==''&&practice==''))
       return;
 
     let ethnic = this.selectedethnic1.toString();
@@ -1484,18 +1489,36 @@ export class CovidViewerComponent implements OnInit {
         rate = "1";
       }
 
-      let yAxis = this.yAxisLabel1;
-
-      if (rate == '1') {
-        this.yAxisLabel1 = 'Rate per 100,000 patients';
-      }
-      else {
-        this.yAxisLabel1 = yAxis;
-      }
-
       this.showPrompt = false;
       this.showWait = true;
       this.showCharts = false;
+
+      let cumulativeText = '';
+      if (cumulative=="1")
+        cumulativeText+='cumulative ';
+
+      if (weekly=="1") {
+        this.chartSelections1='Weekly '+cumulativeText+'trend'
+      }
+      else {
+        this.chartSelections1='Daily '+cumulativeText+'trend'
+      }
+
+      if (rate == '1') {
+        this.yAxisLabel1 = 'Rate per 100,000 patients';
+      } else
+        this.yAxisLabel1 = this.yAxisLabel;
+
+      this.xAxisLabel1 = this.chartSelections1;
+      this.chartSelections2 = ' of '+series;
+      this.chartSelections3 = ' in '+stp+ccg+pcn+practice;
+      this.chartSelections4 =' (Ethnic groups: '+ethnic+'. Age groups: '+age+'. Sex groups: '+sex+')';
+
+      let re = /\,/gi;
+
+      this.chartSelections2 = this.chartSelections2.replace(re, ", ");
+      this.chartSelections3 = this.chartSelections3.replace(re, ", ");
+      this.chartSelections4 = this.chartSelections4.replace(re, ", ");
 
       this.explorerService.getDashboardCovid(this.dashboardId, series, this.formatDate(this.dateFrom1), this.formatDate(this.dateTo1), stp, ccg, pcn, practice, ethnic, age, sex, cumulative, weekly, rate, this.combineSeries1, this.combineEthnic1, this.combineAge1, this.combineSex1, this.combineOrgs)
         .subscribe(result => {
@@ -1599,7 +1622,7 @@ export class CovidViewerComponent implements OnInit {
 
         this.chartTitle1 = query.selectedVisualisation1;
         this.xAxisLabel1 = query.xAxisLabel1;
-        this.yAxisLabel1 = query.yAxisLabel1;
+        this.yAxisLabel = query.yAxisLabel1;
         this.selectedWidgets = query.visualType;
 
         this.loadSeries();
