@@ -1512,7 +1512,14 @@ export class CovidViewerComponent implements OnInit {
       this.xAxisLabel1 = this.chartSelections1;
       this.chartSelections2 = ' of '+series;
       this.chartSelections3 = ' in '+stp+ccg+pcn+practice;
-      this.chartSelections4 =' (Ethnic groups: '+ethnic+'. Age groups: '+age+'. Sex groups: '+sex+')';
+      this.chartSelections4 = '';
+
+      if (ethnic!='All')
+        this.chartSelections4 += ' filtered by '+ethnic+' ethnic groups';
+      if (age!='All')
+        this.chartSelections4 += ' filtered by '+age+' age groups';
+      if (sex!='All')
+        this.chartSelections4 += ' filtered by '+sex+' genders';
 
       let re = /\,/gi;
 

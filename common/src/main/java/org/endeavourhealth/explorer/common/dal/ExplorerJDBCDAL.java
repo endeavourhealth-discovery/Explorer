@@ -1138,7 +1138,17 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                     for (String ageGroup : ages) {
                         for (String sexGroup : sexes) {
                             chartItem = new Chart();
-                            chartItem.setName(seriesName + " | " + orgName + " | Ethnicity: " + ethnicName + " | Age: " + ageGroup+ " | Sex: " + sexGroup);
+                            String legend = seriesName;
+                            if (!orgName.equals("All")&&!orgName.equals("Combine"))
+                                legend += " in " +orgName;
+                            if (!ageGroup.equals("All")&&!ageGroup.equals("Combine"))
+                                legend += " " +ageGroup;
+                            if (!ethnicName.equals("All")&&!ethnicName.equals("Combine"))
+                                legend += " " +ethnicName;
+                            if (!sexGroup.equals("All")&&!sexGroup.equals("Combine"))
+                                legend += " " +sexGroup;
+
+                            chartItem.setName(legend);
 
                             if (cumulative.equals("1")) {
                                 if (rate.equals("1")) {
