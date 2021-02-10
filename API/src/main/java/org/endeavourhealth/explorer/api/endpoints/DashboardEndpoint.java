@@ -32,6 +32,9 @@ public class DashboardEndpoint {
 
         UserProjectEntity up = UserCache.getUserProject(userProjectId);
 
+        LOG.info("userProjectId: "+userProjectId);
+        LOG.info("projectId: "+up.getProjectId());
+
         List<String> orgList = ProjectCache.getAllPublishersForValidProject(up.getProjectId(), true);
 
         ProjectEntity project = ProjectCache.getProjectDetails(up.getProjectId());
@@ -42,6 +45,9 @@ public class DashboardEndpoint {
 
         validOrgs = orgList;
 
+        for (String org : orgList) {
+            LOG.info(org);
+        }
     }
 
     @GET

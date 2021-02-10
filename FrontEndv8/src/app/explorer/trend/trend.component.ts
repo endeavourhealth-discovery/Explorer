@@ -76,7 +76,7 @@ export class TrendComponent {
   ngOnInit() {
     this.showLineCharts = true;
 
-    this.explorerService.getLookupLists('7','')
+    this.explorerService.getLookupLists('17','')
         .subscribe(
             (result) => this.loadList(result),
             (error) => this.log.error(error)

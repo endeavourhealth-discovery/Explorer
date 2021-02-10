@@ -48,6 +48,9 @@ public class ExplorerJDBCDAL implements AutoCloseable {
             if (wrapper.hasDatabaseConnection()) {
 
                 connection = wrapper.getConnection();
+
+                LOG.info("Schema for: "+configName+" = "+connection.getSchema());
+
                 break;
             }
         }
@@ -358,22 +361,6 @@ public class ExplorerJDBCDAL implements AutoCloseable {
 
                 sqlCount = "SELECT count(distinct(ccg)) " +
                         " FROM dashboards.registries";
-                break;
-            case "6":
-                sql = "SELECT distinct(registry) as type " +
-                        "FROM dashboards.registries WHERE parent_registry = ''" +
-                        " order by registry";
-
-                sqlCount = "SELECT count(distinct(registry)) " +
-                        " FROM dashboards.registries WHERE parent_registry = ''";
-                break;
-            case "7":
-                sql = "SELECT distinct(registry) as type " +
-                        "FROM dashboards.registries WHERE parent_registry != ''" +
-                        " order by registry";
-
-                sqlCount = "SELECT count(distinct(registry)) " +
-                        " FROM dashboards.registries WHERE parent_registry != ''";
                 break;
             case "8":
                 sql = "SELECT distinct(type) " +
