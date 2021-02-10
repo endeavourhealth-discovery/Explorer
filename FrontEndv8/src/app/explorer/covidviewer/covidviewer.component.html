@@ -6,7 +6,7 @@
             <!--<div style="font-size:16px; font-weight: bold;padding: 0px 0px 10px 0px">
               {{chartTitle1}}
             </div>-->
-            <mat-form-field style="width:450px"  appearance="standard" *ngIf="showLineCharts1||showBarCharts1">
+            <mat-form-field style="width:450px"  appearance="standard" >
               <mat-label>Filter by series</mat-label>
               <mat-select style="width:450px" [formControl]="seriesValues1" multiple [(value)]="selectedSeries1">
                 <mat-checkbox class="mat-option" [(ngModel)]="combineSeries1" (change)="refreshDashboard()">Combine selections</mat-checkbox>
@@ -15,7 +15,7 @@
               </mat-select>
             </mat-form-field>
 
-            <mat-form-field style="width:300px"  appearance="standard" *ngIf="showLineCharts1||showBarCharts1">
+            <mat-form-field style="width:300px"  appearance="standard" >
               <mat-label>Filter by ethnicity</mat-label>
               <mat-select style="width:300px" [formControl]="ethnicValues1" multiple [(value)]="selectedethnic1">
                 <mat-checkbox class="mat-option" [(ngModel)]="combineEthnic1" (change)="refreshDashboard()">Combine selections</mat-checkbox>
@@ -23,7 +23,7 @@
                 <mat-option (click)="refreshDashboard()" *ngFor="let result of ethnicList1" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">{{result}}</mat-option>
               </mat-select>
             </mat-form-field>
-            <mat-form-field style="width:190px;"  appearance="standard" *ngIf="showLineCharts1||showBarCharts1">
+            <mat-form-field style="width:190px;"  appearance="standard" >
               <mat-label>Filter by age</mat-label>
               <mat-select style="width:190px" [formControl]="ageValues1" multiple [(value)]="selectedage1">
                 <mat-checkbox class="mat-option" [(ngModel)]="combineAge1" (change)="refreshDashboard()">Combine selections</mat-checkbox>
@@ -31,7 +31,7 @@
                 <mat-option (click)="refreshDashboard()" *ngFor="let result of ageList1" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">{{result}}</mat-option>
               </mat-select>
             </mat-form-field>
-            <mat-form-field style="width:190px;"  appearance="standard" *ngIf="showLineCharts1||showBarCharts1">
+            <mat-form-field style="width:190px;"  appearance="standard" >
               <mat-label>Filter by sex</mat-label>
               <mat-select style="width:190px" [formControl]="sexValues1" multiple [(value)]="selectedsex1">
                 <mat-checkbox class="mat-option" [(ngModel)]="combineSex1" (change)="refreshDashboard()">Combine selections</mat-checkbox>
@@ -39,7 +39,7 @@
                 <mat-option (click)="refreshDashboard()" *ngFor="let result of sexList1" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">{{result}}</mat-option>
               </mat-select>
             </mat-form-field>
-            <mat-form-field style="width: 115px" *ngIf="showLineCharts1||showBarCharts1" appearance="standard">
+            <mat-form-field style="width: 115px"  appearance="standard">
               <mat-label>Date from</mat-label>
               <input matInput [matDatepicker]="picker1" placeholder="Date from" [(ngModel)]="dateFrom1" (dateChange)="refreshDashboard()">
               <mat-datepicker-toggle matSuffix [for]="picker1">
@@ -47,7 +47,7 @@
               </mat-datepicker-toggle>
               <mat-datepicker #picker1></mat-datepicker>
             </mat-form-field>
-            <mat-form-field style="width: 115px; margin-left: 10px" *ngIf="showLineCharts1||showBarCharts1" appearance="standard">
+            <mat-form-field style="width: 115px; margin-left: 10px"  appearance="standard">
               <mat-label>Date to</mat-label>
               <input matInput [matDatepicker]="picker2" placeholder="Date to" [(ngModel)]="dateTo1" (dateChange)="refreshDashboard()">
               <mat-datepicker-toggle matSuffix [for]="picker2">
@@ -58,7 +58,7 @@
             <button class="download" mat-flat-button color="primary" (click)="download1()">Download as CSV</button>
           </div>
           <div class="filter-background">
-            <div style="margin-top: 10px" *ngIf="showLineCharts1||showBarCharts1">
+            <div style="margin-top: 10px" >
               <mat-checkbox *ngIf="showLineCharts1" class="checkbox" [(ngModel)]="showAreaChart1">Show area chart</mat-checkbox>
               <mat-checkbox class="checkbox" [(ngModel)]="gradient1">Gradient fill</mat-checkbox>
               <mat-checkbox *ngIf="showLineCharts1" class="checkbox" (change)="refreshDashboard()" [(ngModel)]="logarithmic1">Logarithmic</mat-checkbox>
@@ -189,29 +189,7 @@
               </ngx-charts-area-chart>
             </div>
           </div>
-          <div *ngIf="showBarCharts1" class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start" class="map-margin">
-            <ngx-charts-bar-vertical
-              [view]="view1"
-              [scheme]="colorScheme"
-              [legend]="legend"
-              [showXAxisLabel]="showXAxisLabel"
-              [showYAxisLabel]="showYAxisLabel"
-              [animations]="animations"
-              [showGridLines]="true"
-              [xAxis]="xAxis"
-              [yAxis]="yAxis"
-              [xAxisLabel]="xAxisLabel1"
-              [yAxisLabel]="yAxisLabel1"
-              [results]="chartResultsSingle1"
-              [legendPosition]="legendPosition"
-              [gradient]="gradient1"
-              (select)="onSelectBar1($event)"
-            >
-              <ng-template #tooltipTemplate let-model="model">
-                <span class="tooltip-label">{{model.name}} • Patients: {{model.value}}</span>
-              </ng-template>
-            </ngx-charts-bar-vertical>
-          </div>
+
         </td>
       </tr>
     </table>

@@ -32,9 +32,6 @@ public class DashboardEndpoint {
 
         UserProjectEntity up = UserCache.getUserProject(userProjectId);
 
-        LOG.info("userProjectId: "+userProjectId);
-        LOG.info("projectId: "+up.getProjectId());
-
         List<String> orgList = ProjectCache.getAllPublishersForValidProject(up.getProjectId(), true);
 
         ProjectEntity project = ProjectCache.getProjectDetails(up.getProjectId());
@@ -44,10 +41,6 @@ public class DashboardEndpoint {
         }
 
         validOrgs = orgList;
-
-        for (String org : orgList) {
-            LOG.info(org);
-        }
     }
 
     @GET
@@ -158,9 +151,8 @@ public class DashboardEndpoint {
                                  @QueryParam("dateTo") String dateTo,
                                  @QueryParam("cumulative") String cumulative,
                                  @QueryParam("grouping") String grouping,
-                                 @QueryParam("weekly") String weekly,
-                                 @QueryParam("rate") String rate,
-                                 @QueryParam("combineSeries") String combineSeries) throws Exception {
+                                 @QueryParam("weekly") String weekly
+                                 ) throws Exception {
         LOG.debug("getDashboard");
         checkUserAccessToOrganisations(userProjectId);
 
@@ -171,11 +163,8 @@ public class DashboardEndpoint {
 
             ChartResult result = null;
 
-            if (combineSeries.equals("1")) {
-                result = viewerDAL.getDashboardCombine(query, chartName, dateFrom, dateTo, cumulative, grouping, weekly, rate);
-            } else {
-                result = viewerDAL.getDashboard(query, chartName, dateFrom, dateTo, cumulative, grouping, weekly, rate);
-            }
+            result = viewerDAL.getDashboard(query, chartName, dateFrom, dateTo, cumulative, grouping, weekly);
+
             return Response
                     .ok()
                     .entity(result)
@@ -885,6 +874,30 @@ public class DashboardEndpoint {
             viewerDAL.setSubscriberConnection(configName);
 
             SeriesResult result = viewerDAL.getSeriesFromQuery(query);
+
+            return Response
+                    .ok()
+                    .entity(result)
+                    .build();
+        }
+    }
+
+    @GET
+    @Path("/groupingFromQuery")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getGroupingFromQuery(@Context SecurityContext sc, @HeaderParam("userProjectId") String userProjectId,
+                                       @QueryParam("query") String query) throws Exception {
+        LOG.debug("getGroupingFromQuery");
+
+        checkUserAccessToOrganisations(userProjectId);
+
+        try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
+
+            viewerDAL.setValidOrgs(validOrgs);
+            viewerDAL.setSubscriberConnection(configName);
+
+            SeriesResult result = viewerDAL.getGroupingFromQuery(query);
 
             return Response
                     .ok()

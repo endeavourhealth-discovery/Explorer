@@ -15,7 +15,7 @@
               </mat-datepicker-toggle>
               <mat-datepicker #picker1></mat-datepicker>
             </mat-form-field>
-            <mat-form-field style="width: 115px; margin-left: 10px" *ngIf="showLineCharts1||showBarCharts1" appearance="standard">
+            <mat-form-field style="width:100px; margin-left: 10px" *ngIf="showLineCharts1||showBarCharts1" appearance="standard">
               <mat-label>Date to</mat-label>
               <input matInput [matDatepicker]="picker2" placeholder="Date to" [(ngModel)]="dateTo1" (dateChange)="refresh1()">
               <mat-datepicker-toggle matSuffix [for]="picker2">
@@ -23,29 +23,26 @@
               </mat-datepicker-toggle>
               <mat-datepicker #picker2></mat-datepicker>
             </mat-form-field>
-            <mat-form-field style="width:650px; margin-left: 10px"  appearance="standard" *ngIf="showLineCharts1||showBarCharts1">
+            <mat-form-field style="width:200px;; margin-left: 10px"  appearance="standard" *ngIf="showLineCharts1||showBarCharts1">
               <mat-label>Filter series</mat-label>
-              <mat-select style="width:630px" [formControl]="seriesValues1" multiple [(value)]="selectedSeries1">
+              <mat-select style="width:200px;;" [formControl]="seriesValues1" multiple [(value)]="selectedSeries1">
                 <mat-checkbox class="mat-option" [(ngModel)]="selectAllSeries1" (change)="toggleSelectionSeries1($event)">Select All</mat-checkbox>
                 <mat-option (click)="refresh1()" *ngFor="let result of seriesList1" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">{{result}}</mat-option>
               </mat-select>
             </mat-form-field>
-            <mat-form-field style="width:450px; margin-left: 10px"  appearance="standard" *ngIf="showLineCharts1||showBarCharts1">
+            <mat-form-field style="width:200px;; margin-left: 10px"  appearance="standard" *ngIf="showLineCharts1||showBarCharts1">
               <mat-label>Filter CCG/TRUST</mat-label>
-              <mat-select style="width:430px" [formControl]="ccgValues1" multiple [(value)]="selectedCCG1">
+              <mat-select style="width:200px;;" [formControl]="ccgValues1" multiple [(value)]="selectedCCG1">
                 <mat-checkbox class="mat-option" [(ngModel)]="selectAll1" (change)="toggleSelection1($event)">Select All</mat-checkbox>
                 <mat-option (click)="refresh1()" *ngFor="let result of ccgList1" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">{{result}}</mat-option>
               </mat-select>
             </mat-form-field>
             <div style="margin-top: -13px" *ngIf="showLineCharts1||showBarCharts1">
-              <mat-checkbox class="checkbox" [(ngModel)]="showGridLines1">Show gridlines</mat-checkbox>
               <mat-checkbox *ngIf="showLineCharts1" class="checkbox" [(ngModel)]="showAreaChart1">Show area chart</mat-checkbox>
               <mat-checkbox class="checkbox" [(ngModel)]="gradient1">Gradient fill</mat-checkbox>
               <mat-checkbox *ngIf="showLineCharts1" class="checkbox" (change)="refresh1()" [(ngModel)]="logarithmic1">Logarithmic</mat-checkbox>
               <mat-checkbox *ngIf="showLineCharts1" class="checkbox" (change)="refresh1()" [(ngModel)]="cumulative1">Cumulative</mat-checkbox>
               <mat-checkbox *ngIf="showLineCharts1" class="checkbox" (change)="refresh1()" [(ngModel)]="weekly1">Weekly</mat-checkbox>
-              <mat-checkbox *ngIf="showLineCharts1" class="checkbox" (change)="refresh1()" [(ngModel)]="rate1">Rate per 100,000</mat-checkbox>
-              <mat-checkbox *ngIf="showLineCharts1" class="checkbox" (change)="refresh1()" [(ngModel)]="combineSeries1">Combine series</mat-checkbox>
               <button class="download" mat-flat-button color="primary" (click)="download1()">Download</button>
             </div>
             <mat-form-field style="width:550px;"  appearance="standard" *ngIf="showTables1 && tableData1">
@@ -86,7 +83,7 @@
                 [yAxis]="yAxis"
                 [xAxisLabel]="xAxisLabel1"
                 [yAxisLabel]="yAxisLabel1"
-                [timeline]="timeline"
+
                 [results]="chartResults1"
                 [legendPosition]="legendPosition"
                 [gradient]="gradient1"
@@ -120,7 +117,7 @@
                 [yAxis]="yAxis"
                 [xAxisLabel]="xAxisLabel1"
                 [yAxisLabel]="yAxisLabel1"
-                [timeline]="timeline"
+
                 [results]="chartResults1"
                 [legendPosition]="legendPosition"
                 [gradient]="gradient1"
@@ -183,7 +180,7 @@
               </mat-datepicker-toggle>
               <mat-datepicker #picker1></mat-datepicker>
             </mat-form-field>
-            <mat-form-field style="width: 115px; margin-left: 10px" *ngIf="showLineCharts2||showBarCharts2" appearance="standard">
+            <mat-form-field style="width:100px; margin-left: 10px" *ngIf="showLineCharts2||showBarCharts2" appearance="standard">
               <mat-label>Date to</mat-label>
               <input matInput [matDatepicker]="picker2" placeholder="Date to" [(ngModel)]="dateTo2" (dateChange)="refresh2()">
               <mat-datepicker-toggle matSuffix [for]="picker2">
@@ -191,29 +188,26 @@
               </mat-datepicker-toggle>
               <mat-datepicker #picker2></mat-datepicker>
             </mat-form-field>
-            <mat-form-field style="width:650px; margin-left: 10px"  appearance="standard" *ngIf="showLineCharts2||showBarCharts2">
+            <mat-form-field style="width:200px;; margin-left: 10px"  appearance="standard" *ngIf="showLineCharts2||showBarCharts2">
               <mat-label>Filter series</mat-label>
-              <mat-select style="width:630px" [formControl]="seriesValues2" multiple [(value)]="selectedSeries2">
+              <mat-select style="width:200px;;" [formControl]="seriesValues2" multiple [(value)]="selectedSeries2">
                 <mat-checkbox class="mat-option" [(ngModel)]="selectAllSeries2" (change)="toggleSelectionSeries2($event)">Select All</mat-checkbox>
                 <mat-option (click)="refresh2()" *ngFor="let result of seriesList2" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">{{result}}</mat-option>
               </mat-select>
             </mat-form-field>
-            <mat-form-field style="width:450px; margin-left: 10px"  appearance="standard" *ngIf="showLineCharts2||showBarCharts2">
+            <mat-form-field style="width:200px;; margin-left: 10px"  appearance="standard" *ngIf="showLineCharts2||showBarCharts2">
               <mat-label>Filter CCG/TRUST</mat-label>
-              <mat-select style="width:430px" [formControl]="ccgValues2" multiple [(value)]="selectedCCG2">
+              <mat-select style="width:200px;;" [formControl]="ccgValues2" multiple [(value)]="selectedCCG2">
                 <mat-checkbox class="mat-option" [(ngModel)]="selectAll2" (change)="toggleSelection2($event)">Select All</mat-checkbox>
                 <mat-option (click)="refresh2()" *ngFor="let result of ccgList2" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">{{result}}</mat-option>
               </mat-select>
             </mat-form-field>
             <div style="margin-top: -13px" *ngIf="showLineCharts2||showBarCharts2">
-              <mat-checkbox class="checkbox" [(ngModel)]="showGridLines2">Show gridlines</mat-checkbox>
               <mat-checkbox *ngIf="showLineCharts2" class="checkbox" [(ngModel)]="showAreaChart2">Show area chart</mat-checkbox>
               <mat-checkbox class="checkbox" [(ngModel)]="gradient2">Gradient fill</mat-checkbox>
               <mat-checkbox *ngIf="showLineCharts2" class="checkbox" (change)="refresh2()" [(ngModel)]="logarithmic2">Logarithmic</mat-checkbox>
               <mat-checkbox *ngIf="showLineCharts2" class="checkbox" (change)="refresh2()" [(ngModel)]="cumulative2">Cumulative</mat-checkbox>
               <mat-checkbox *ngIf="showLineCharts2" class="checkbox" (change)="refresh2()" [(ngModel)]="weekly2">Weekly</mat-checkbox>
-              <mat-checkbox *ngIf="showLineCharts2" class="checkbox" (change)="refresh2()" [(ngModel)]="rate2">Rate per 100,000</mat-checkbox>
-              <mat-checkbox *ngIf="showLineCharts2" class="checkbox" (change)="refresh2()" [(ngModel)]="combineSeries2">Combine series</mat-checkbox>
               <button class="download" mat-flat-button color="primary" (click)="download2()">Download</button>
             </div>
             <mat-form-field style="width:550px;"  appearance="standard" *ngIf="showTables2 && tableData2">
@@ -254,7 +248,7 @@
                 [yAxis]="yAxis"
                 [xAxisLabel]="xAxisLabel2"
                 [yAxisLabel]="yAxisLabel2"
-                [timeline]="timeline"
+
                 [results]="chartResults2"
                 [legendPosition]="legendPosition"
                 [gradient]="gradient2"
@@ -288,7 +282,7 @@
                 [yAxis]="yAxis"
                 [xAxisLabel]="xAxisLabel2"
                 [yAxisLabel]="yAxisLabel2"
-                [timeline]="timeline"
+
                 [results]="chartResults2"
                 [legendPosition]="legendPosition"
                 [gradient]="gradient2"
@@ -351,7 +345,7 @@
               </mat-datepicker-toggle>
               <mat-datepicker #picker1></mat-datepicker>
             </mat-form-field>
-            <mat-form-field style="width: 115px; margin-left: 10px" *ngIf="showLineCharts3||showBarCharts3" appearance="standard">
+            <mat-form-field style="width:100px; margin-left: 10px" *ngIf="showLineCharts3||showBarCharts3" appearance="standard">
               <mat-label>Date to</mat-label>
               <input matInput [matDatepicker]="picker2" placeholder="Date to" [(ngModel)]="dateTo3" (dateChange)="refresh3()">
               <mat-datepicker-toggle matSuffix [for]="picker2">
@@ -359,29 +353,26 @@
               </mat-datepicker-toggle>
               <mat-datepicker #picker2></mat-datepicker>
             </mat-form-field>
-            <mat-form-field style="width:650px; margin-left: 10px"  appearance="standard" *ngIf="showLineCharts3||showBarCharts3">
+            <mat-form-field style="width:200px;; margin-left: 10px"  appearance="standard" *ngIf="showLineCharts3||showBarCharts3">
               <mat-label>Filter series</mat-label>
-              <mat-select style="width:630px" [formControl]="seriesValues3" multiple [(value)]="selectedSeries3">
+              <mat-select style="width:200px;;" [formControl]="seriesValues3" multiple [(value)]="selectedSeries3">
                 <mat-checkbox class="mat-option" [(ngModel)]="selectAllSeries3" (change)="toggleSelectionSeries3($event)">Select All</mat-checkbox>
                 <mat-option (click)="refresh3()" *ngFor="let result of seriesList3" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">{{result}}</mat-option>
               </mat-select>
             </mat-form-field>
-            <mat-form-field style="width:450px; margin-left: 10px"  appearance="standard" *ngIf="showLineCharts3||showBarCharts3">
+            <mat-form-field style="width:200px;; margin-left: 10px"  appearance="standard" *ngIf="showLineCharts3||showBarCharts3">
               <mat-label>Filter CCG/TRUST</mat-label>
-              <mat-select style="width:430px" [formControl]="ccgValues3" multiple [(value)]="selectedCCG3">
+              <mat-select style="width:200px;;" [formControl]="ccgValues3" multiple [(value)]="selectedCCG3">
                 <mat-checkbox class="mat-option" [(ngModel)]="selectAll3" (change)="toggleSelection3($event)">Select All</mat-checkbox>
                 <mat-option (click)="refresh3()" *ngFor="let result of ccgList3" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">{{result}}</mat-option>
               </mat-select>
             </mat-form-field>
             <div style="margin-top: -13px" *ngIf="showLineCharts3||showBarCharts3">
-              <mat-checkbox class="checkbox" [(ngModel)]="showGridLines3">Show gridlines</mat-checkbox>
               <mat-checkbox *ngIf="showLineCharts3" class="checkbox" [(ngModel)]="showAreaChart3">Show area chart</mat-checkbox>
               <mat-checkbox class="checkbox" [(ngModel)]="gradient3">Gradient fill</mat-checkbox>
               <mat-checkbox *ngIf="showLineCharts3" class="checkbox" (change)="refresh3()" [(ngModel)]="logarithmic3">Logarithmic</mat-checkbox>
               <mat-checkbox *ngIf="showLineCharts3" class="checkbox" (change)="refresh3()" [(ngModel)]="cumulative3">Cumulative</mat-checkbox>
               <mat-checkbox *ngIf="showLineCharts3" class="checkbox" (change)="refresh3()" [(ngModel)]="weekly3">Weekly</mat-checkbox>
-              <mat-checkbox *ngIf="showLineCharts3" class="checkbox" (change)="refresh3()" [(ngModel)]="rate3">Rate per 100,000</mat-checkbox>
-              <mat-checkbox *ngIf="showLineCharts3" class="checkbox" (change)="refresh3()" [(ngModel)]="combineSeries3">Combine series</mat-checkbox>
               <button class="download" mat-flat-button color="primary" (click)="download3()">Download</button>
             </div>
             <mat-form-field style="width:550px;"  appearance="standard" *ngIf="showTables3 && tableData3">
@@ -422,7 +413,7 @@
                 [yAxis]="yAxis"
                 [xAxisLabel]="xAxisLabel3"
                 [yAxisLabel]="yAxisLabel3"
-                [timeline]="timeline"
+
                 [results]="chartResults3"
                 [legendPosition]="legendPosition"
                 [gradient]="gradient3"
@@ -456,7 +447,7 @@
                 [yAxis]="yAxis"
                 [xAxisLabel]="xAxisLabel3"
                 [yAxisLabel]="yAxisLabel3"
-                [timeline]="timeline"
+
                 [results]="chartResults3"
                 [legendPosition]="legendPosition"
                 [gradient]="gradient3"
@@ -519,7 +510,7 @@
               </mat-datepicker-toggle>
               <mat-datepicker #picker1></mat-datepicker>
             </mat-form-field>
-            <mat-form-field style="width: 115px; margin-left: 10px" *ngIf="showLineCharts4||showBarCharts4" appearance="standard">
+            <mat-form-field style="width:100px; margin-left: 10px" *ngIf="showLineCharts4||showBarCharts4" appearance="standard">
               <mat-label>Date to</mat-label>
               <input matInput [matDatepicker]="picker2" placeholder="Date to" [(ngModel)]="dateTo4" (dateChange)="refresh4()">
               <mat-datepicker-toggle matSuffix [for]="picker2">
@@ -527,29 +518,26 @@
               </mat-datepicker-toggle>
               <mat-datepicker #picker2></mat-datepicker>
             </mat-form-field>
-            <mat-form-field style="width:650px; margin-left: 10px"  appearance="standard" *ngIf="showLineCharts4||showBarCharts4">
+            <mat-form-field style="width:200px;; margin-left: 10px"  appearance="standard" *ngIf="showLineCharts4||showBarCharts4">
               <mat-label>Filter series</mat-label>
-              <mat-select style="width:630px" [formControl]="seriesValues4" multiple [(value)]="selectedSeries4">
+              <mat-select style="width:200px;;" [formControl]="seriesValues4" multiple [(value)]="selectedSeries4">
                 <mat-checkbox class="mat-option" [(ngModel)]="selectAllSeries4" (change)="toggleSelectionSeries4($event)">Select All</mat-checkbox>
                 <mat-option (click)="refresh4()" *ngFor="let result of seriesList4" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">{{result}}</mat-option>
               </mat-select>
             </mat-form-field>
-            <mat-form-field style="width:450px; margin-left: 10px"  appearance="standard" *ngIf="showLineCharts4||showBarCharts4">
+            <mat-form-field style="width:200px;; margin-left: 10px"  appearance="standard" *ngIf="showLineCharts4||showBarCharts4">
               <mat-label>Filter CCG/TRUST</mat-label>
-              <mat-select style="width:430px" [formControl]="ccgValues4" multiple [(value)]="selectedCCG4">
+              <mat-select style="width:200px;;" [formControl]="ccgValues4" multiple [(value)]="selectedCCG4">
                 <mat-checkbox class="mat-option" [(ngModel)]="selectAll4" (change)="toggleSelection4($event)">Select All</mat-checkbox>
                 <mat-option (click)="refresh4()" *ngFor="let result of ccgList4" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">{{result}}</mat-option>
               </mat-select>
             </mat-form-field>
             <div style="margin-top: -13px" *ngIf="showLineCharts4||showBarCharts4">
-              <mat-checkbox class="checkbox" [(ngModel)]="showGridLines4">Show gridlines</mat-checkbox>
               <mat-checkbox *ngIf="showLineCharts4" class="checkbox" [(ngModel)]="showAreaChart4">Show area chart</mat-checkbox>
               <mat-checkbox class="checkbox" [(ngModel)]="gradient4">Gradient fill</mat-checkbox>
               <mat-checkbox *ngIf="showLineCharts4" class="checkbox" (change)="refresh4()" [(ngModel)]="logarithmic4">Logarithmic</mat-checkbox>
               <mat-checkbox *ngIf="showLineCharts4" class="checkbox" (change)="refresh4()" [(ngModel)]="cumulative4">Cumulative</mat-checkbox>
               <mat-checkbox *ngIf="showLineCharts4" class="checkbox" (change)="refresh4()" [(ngModel)]="weekly4">Weekly</mat-checkbox>
-              <mat-checkbox *ngIf="showLineCharts4" class="checkbox" (change)="refresh4()" [(ngModel)]="rate4">Rate per 100,000</mat-checkbox>
-              <mat-checkbox *ngIf="showLineCharts4" class="checkbox" (change)="refresh4()" [(ngModel)]="combineSeries4">Combine series</mat-checkbox>
               <button class="download" mat-flat-button color="primary" (click)="download4()">Download</button>
             </div>
             <mat-form-field style="width:550px;"  appearance="standard" *ngIf="showTables4 && tableData4">
@@ -590,7 +578,7 @@
                 [yAxis]="yAxis"
                 [xAxisLabel]="xAxisLabel4"
                 [yAxisLabel]="yAxisLabel4"
-                [timeline]="timeline"
+
                 [results]="chartResults4"
                 [legendPosition]="legendPosition"
                 [gradient]="gradient4"
@@ -624,7 +612,7 @@
                 [yAxis]="yAxis"
                 [xAxisLabel]="xAxisLabel4"
                 [yAxisLabel]="yAxisLabel4"
-                [timeline]="timeline"
+
                 [results]="chartResults4"
                 [legendPosition]="legendPosition"
                 [gradient]="gradient4"

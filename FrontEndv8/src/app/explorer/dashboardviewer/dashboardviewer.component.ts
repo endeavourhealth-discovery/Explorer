@@ -129,7 +129,6 @@ export class DashboardViewerComponent implements OnInit {
   yAxisLab3: string = 'People with indicator';
   xAxisLab4: string = 'Date';
   yAxisLab4: string = 'People with indicator';
-  timeline: boolean = true;
   showGridLines1: boolean = true;
   showAreaChart1: boolean = false;
   gradient1: boolean = false;
@@ -137,8 +136,7 @@ export class DashboardViewerComponent implements OnInit {
   logarithmic1: boolean = false;
   cumulative1: boolean = false;
   weekly1: boolean = false;
-  rate1: boolean = false;
-  combineSeries1: boolean = false;
+
   refLines1 = [{value: 1, name: 'Minimum'}, {value: 2, name: 'Average'}, {value: 3, name: 'Maximum'}];
   ccgList1 = [];
   ccgValues1 = new FormControl(this.ccgList1);
@@ -149,8 +147,7 @@ export class DashboardViewerComponent implements OnInit {
   logarithmic2: boolean = false;
   cumulative2: boolean = false;
   weekly2: boolean = false;
-  rate2: boolean = false;
-  combineSeries2: boolean = false;
+
   refLines2 = [{value: 1, name: 'Minimum'}, {value: 2, name: 'Average'}, {value: 3, name: 'Maximum'}];
   ccgList2 = [];
   ccgValues2 = new FormControl(this.ccgList2);
@@ -161,8 +158,7 @@ export class DashboardViewerComponent implements OnInit {
   logarithmic3: boolean = false;
   cumulative3: boolean = false;
   weekly3: boolean = false;
-  rate3: boolean = false;
-  combineSeries3: boolean = false;
+
   refLines3 = [{value: 1, name: 'Minimum'}, {value: 2, name: 'Average'}, {value: 3, name: 'Maximum'}];
   ccgList3 = [];
   ccgValues3 = new FormControl(this.ccgList3);
@@ -173,8 +169,7 @@ export class DashboardViewerComponent implements OnInit {
   logarithmic4: boolean = false;
   cumulative4: boolean = false;
   weekly4: boolean = false;
-  rate4: boolean = false;
-  combineSeries4: boolean = false;
+
   refLines4 = [{value: 1, name: 'Minimum'}, {value: 2, name: 'Average'}, {value: 3, name: 'Maximum'}];
   ccgList4 = [];
   ccgValues4 = new FormControl(this.ccgList4);
@@ -278,11 +273,17 @@ export class DashboardViewerComponent implements OnInit {
     this.ccgValues4 = new FormControl(this.ccgList4);
     this.selectedCCG4 = this.ccgList4;
 
-    this.explorerService.getLookupLists('3','')
-      .subscribe(
-        (result) => this.loadList(result),
-        (error) => this.log.error(error)
-      );
+    this.route.queryParams
+      .subscribe(params => {
+        this.dashboardNumber = params['dashboardNumber'];
+
+        this.explorerService.getDashboardView(this.dashboardNumber)
+          .subscribe(
+            (result) => this.parseDashboard(result),
+            (error) => this.log.error(error)
+          );
+      });
+
   }
 
   toggleSelection1(event) {
@@ -390,27 +391,9 @@ export class DashboardViewerComponent implements OnInit {
         weekly = "1";
       }
 
-      let rate = "0";
-      if (this.rate1) {
-        rate = "1";
-      }
+      this.yAxisLabel1 = this.yAxisLab1;
 
-      let combineSeries = "0";
-      if (this.combineSeries1) {
-        combineSeries = "1";
-      }
-
-      let yAxis = this.yAxisLab1;
-
-      if (rate == '1') {
-        this.yAxisLabel1 = 'Rate per 100,000 patients';
-      }
-      else {
-        this.yAxisLabel1 = yAxis;
-      }
-
-
-      this.explorerService.getDashboard(this.selectedQuery1, values1, this.formatDate(this.dateFrom1), this.formatDate(this.dateTo1), cumulative, this.selectedCCG1.toString(), weekly, rate, combineSeries)
+      this.explorerService.getDashboard(this.selectedQuery1, values1, this.formatDate(this.dateFrom1), this.formatDate(this.dateTo1), cumulative, this.selectedCCG1.toString(), weekly)
         .subscribe(result => {
           this.chartResults1 = result.results;
 
@@ -464,25 +447,10 @@ export class DashboardViewerComponent implements OnInit {
       if (this.weekly2) {
         weekly = "1";
       }
-      let rate = "0";
-      if (this.rate2) {
-        rate = "1";
-      }
-      let combineSeries = "0";
-      if (this.combineSeries2) {
-        combineSeries = "1";
-      }
 
-      let yAxis = this.yAxisLab2;
+      this.yAxisLabel2 = this.yAxisLab2;
 
-      if (rate == '1') {
-        this.yAxisLabel2 = 'Rate per 100,000 patients';
-      }
-      else {
-        this.yAxisLabel2 = yAxis;
-      }
-
-      this.explorerService.getDashboard(this.selectedQuery2, values2, this.formatDate(this.dateFrom2), this.formatDate(this.dateTo2), cumulative, this.selectedCCG2.toString(), weekly, rate, combineSeries)
+      this.explorerService.getDashboard(this.selectedQuery2, values2, this.formatDate(this.dateFrom2), this.formatDate(this.dateTo2), cumulative, this.selectedCCG2.toString(), weekly)
         .subscribe(result => {
           this.chartResults2 = result.results;
 
@@ -536,25 +504,10 @@ export class DashboardViewerComponent implements OnInit {
       if (this.weekly3) {
         weekly = "1";
       }
-      let rate = "0";
-      if (this.rate3) {
-        rate = "1";
-      }
-      let combineSeries = "0";
-      if (this.combineSeries3) {
-        combineSeries = "1";
-      }
 
-      let yAxis = this.yAxisLab3;
+      this.yAxisLabel3 = this.yAxisLab3;
 
-      if (rate == '1') {
-        this.yAxisLabel3 = 'Rate per 100,000 patients';
-      }
-      else {
-        this.yAxisLabel3 = yAxis;
-      }
-
-      this.explorerService.getDashboard(this.selectedQuery3, values3, this.formatDate(this.dateFrom3), this.formatDate(this.dateTo3), cumulative, this.selectedCCG3.toString(), weekly, rate, combineSeries)
+      this.explorerService.getDashboard(this.selectedQuery3, values3, this.formatDate(this.dateFrom3), this.formatDate(this.dateTo3), cumulative, this.selectedCCG3.toString(), weekly)
         .subscribe(result => {
           this.chartResults3 = result.results;
 
@@ -608,25 +561,10 @@ export class DashboardViewerComponent implements OnInit {
       if (this.weekly4) {
         weekly = "1";
       }
-      let rate = "0";
-      if (this.rate4) {
-        rate = "1";
-      }
-      let combineSeries = "0";
-      if (this.combineSeries4) {
-        combineSeries = "1";
-      }
 
-      let yAxis = this.yAxisLab4;
+      this.yAxisLabel4 = this.yAxisLab4;
 
-      if (rate == '1') {
-        this.yAxisLabel4 = 'Rate per 100,000 patients';
-      }
-      else {
-        this.yAxisLabel4 = yAxis;
-      }
-
-      this.explorerService.getDashboard(this.selectedQuery4, values4, this.formatDate(this.dateFrom4), this.formatDate(this.dateTo4), cumulative, this.selectedCCG4.toString(), weekly, rate, combineSeries)
+      this.explorerService.getDashboard(this.selectedQuery4, values4, this.formatDate(this.dateFrom4), this.formatDate(this.dateTo4), cumulative, this.selectedCCG4.toString(), weekly)
         .subscribe(result => {
           this.chartResults4 = result.results;
 
@@ -662,33 +600,6 @@ export class DashboardViewerComponent implements OnInit {
       this.orderColumn4 = null;
       this.search4();
     }
-  }
-
-  loadList(lists: any) {
-    lists.results.map(
-      e => {
-        this.ccgList1.push(e.type);
-        this.ccgList2.push(e.type);
-        this.ccgList3.push(e.type);
-        this.ccgList4.push(e.type);
-      }
-    )
-    this.ccgValues1 = new FormControl(this.ccgList1);
-    this.ccgValues2 = new FormControl(this.ccgList2);
-    this.ccgValues3 = new FormControl(this.ccgList3);
-    this.ccgValues4 = new FormControl(this.ccgList4);
-
-    this.route.queryParams
-      .subscribe(params => {
-        this.dashboardNumber = params['dashboardNumber'];
-
-        this.explorerService.getDashboardView(this.dashboardNumber)
-          .subscribe(
-            (result) => this.parseDashboard(result),
-            (error) => this.log.error(error)
-          );
-      });
-
   }
 
   parseDashboard (result: any) {
@@ -826,7 +737,6 @@ export class DashboardViewerComponent implements OnInit {
       this.refresh2();
       this.widget3 = true;
       this.refresh3();
-      this.timeline = false;
     }
     if (this.selectedWidgets.length==4) {
       this.cols = "2";
@@ -843,7 +753,6 @@ export class DashboardViewerComponent implements OnInit {
       this.refresh3();
       this.widget4 = true;
       this.refresh4();
-      this.timeline = false;
     }
 
   }
@@ -855,7 +764,7 @@ export class DashboardViewerComponent implements OnInit {
         if (query.timeSeries) {
           this.explorerService.getSeriesFromQuery(queryName)
             .subscribe(
-              (result) => this.loadQuery1Series(result),
+              (result) => this.loadQuery1Series(result, queryName),
               (error) => this.log.error(error)
             );
         }
@@ -863,7 +772,19 @@ export class DashboardViewerComponent implements OnInit {
     )
   }
 
-  loadQuery1Series(result: any) {
+  loadQuery1Grouping(result: any) {
+    result.results.map(
+      e => {
+        this.ccgList1.push(e.grouping);
+      }
+    )
+
+    this.ccgValues1 = new FormControl(this.ccgList1);
+
+    this.refresh1();
+  }
+
+  loadQuery1Series(result: any, queryName: any) {
     let seriesMap = [];
     result.results.map(
       e => {
@@ -875,7 +796,11 @@ export class DashboardViewerComponent implements OnInit {
     this.seriesList1 = this.selectedSeries1;
     this.seriesValues1 = new FormControl(this.seriesList1);
 
-    this.refresh1();
+    this.explorerService.getGroupingFromQuery(queryName)
+      .subscribe(
+        (result) => this.loadQuery1Grouping(result),
+        (error) => this.log.error(error)
+      );
   }
 
   loadQuery2(result: any, queryName: any) {
@@ -885,15 +810,29 @@ export class DashboardViewerComponent implements OnInit {
         if (query.timeSeries) {
           this.explorerService.getSeriesFromQuery(queryName)
             .subscribe(
-              (result) => this.loadQuery2Series(result),
+              (result) => this.loadQuery2Series(result, queryName),
               (error) => this.log.error(error)
             );
+
+
         }
       }
     )
   }
 
-  loadQuery2Series(result: any) {
+  loadQuery2Grouping(result: any) {
+    result.results.map(
+      e => {
+        this.ccgList2.push(e.grouping);
+      }
+    )
+
+    this.ccgValues2 = new FormControl(this.ccgList2);
+
+    this.refresh2();
+  }
+
+  loadQuery2Series(result: any, queryName: any) {
     let seriesMap = [];
     result.results.map(
       e => {
@@ -905,7 +844,11 @@ export class DashboardViewerComponent implements OnInit {
     this.seriesList2 = this.selectedSeries2;
     this.seriesValues2 = new FormControl(this.seriesList2);
 
-    this.refresh2();
+    this.explorerService.getGroupingFromQuery(queryName)
+      .subscribe(
+        (result) => this.loadQuery2Grouping(result),
+        (error) => this.log.error(error)
+      );
   }
 
   loadQuery3(result: any, queryName: any) {
@@ -915,15 +858,29 @@ export class DashboardViewerComponent implements OnInit {
         if (query.timeSeries) {
           this.explorerService.getSeriesFromQuery(queryName)
             .subscribe(
-              (result) => this.loadQuery3Series(result),
+              (result) => this.loadQuery3Series(result, queryName),
               (error) => this.log.error(error)
             );
+
+
         }
       }
     )
   }
 
-  loadQuery3Series(result: any) {
+  loadQuery3Grouping(result: any) {
+    result.results.map(
+      e => {
+        this.ccgList3.push(e.grouping);
+      }
+    )
+
+    this.ccgValues3 = new FormControl(this.ccgList3);
+
+    this.refresh3();
+  }
+
+  loadQuery3Series(result: any, queryName: any) {
     let seriesMap = [];
     result.results.map(
       e => {
@@ -935,7 +892,11 @@ export class DashboardViewerComponent implements OnInit {
     this.seriesList3 = this.selectedSeries3;
     this.seriesValues3 = new FormControl(this.seriesList3);
 
-    this.refresh3();
+    this.explorerService.getGroupingFromQuery(queryName)
+      .subscribe(
+        (result) => this.loadQuery3Grouping(result),
+        (error) => this.log.error(error)
+      );
   }
 
   loadQuery4(result: any, queryName: any) {
@@ -945,15 +906,29 @@ export class DashboardViewerComponent implements OnInit {
         if (query.timeSeries) {
           this.explorerService.getSeriesFromQuery(queryName)
             .subscribe(
-              (result) => this.loadQuery4Series(result),
+              (result) => this.loadQuery4Series(result, queryName),
               (error) => this.log.error(error)
             );
+
+
         }
       }
     )
   }
 
-  loadQuery4Series(result: any) {
+  loadQuery4Grouping(result: any) {
+    result.results.map(
+      e => {
+        this.ccgList4.push(e.grouping);
+      }
+    )
+
+    this.ccgValues4 = new FormControl(this.ccgList4);
+
+    this.refresh4();
+  }
+
+  loadQuery4Series(result: any, queryName: any) {
     let seriesMap = [];
     result.results.map(
       e => {
@@ -965,7 +940,11 @@ export class DashboardViewerComponent implements OnInit {
     this.seriesList4 = this.selectedSeries4;
     this.seriesValues4 = new FormControl(this.seriesList4);
 
-    this.refresh4();
+    this.explorerService.getGroupingFromQuery(queryName)
+      .subscribe(
+        (result) => this.loadQuery4Grouping(result),
+        (error) => this.log.error(error)
+      );
   }
 
   formatTooltipYAxis1(val: number) {

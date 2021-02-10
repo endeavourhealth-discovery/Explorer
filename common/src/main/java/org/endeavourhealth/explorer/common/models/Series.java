@@ -46,6 +46,16 @@ public class Series {
         this.value = value;
     }
 
+    @JsonProperty("grouping")
+    public String getGrouping() {
+        return grouping;
+    }
+
+    @JsonProperty("grouping")
+    public void setGrouping(String grouping) {
+        this.grouping = grouping;
+    }
+
     @JsonAnyGetter
     public Map<String, Object> getAdditionalProperties() {
         return this.additionalProperties;

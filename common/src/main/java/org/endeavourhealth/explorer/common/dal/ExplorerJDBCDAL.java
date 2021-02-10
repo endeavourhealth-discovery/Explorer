@@ -48,9 +48,6 @@ public class ExplorerJDBCDAL implements AutoCloseable {
             if (wrapper.hasDatabaseConnection()) {
 
                 connection = wrapper.getConnection();
-
-                LOG.info("Schema for: "+configName+" = "+connection.getSchema());
-
                 break;
             }
         }
@@ -341,10 +338,6 @@ public class ExplorerJDBCDAL implements AutoCloseable {
 
                 sqlCount = "SELECT count(distinct(type)) " +
                         " FROM dashboards.query_library";
-                break;
-            case "3":
-                sql = "SELECT '"+validOrgs.toString()+ "' as type ";
-                sqlCount = "SELECT 999";
                 break;
             case "4":
                 sql = "SELECT distinct(type) as type " +
@@ -864,153 +857,6 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         return covidLibrary;
     }
 
-    public ChartResult getDashboard(String query, String chartName, String dateFrom, String dateTo, String cumulative, String grouping, String weekly, String rate) throws Exception {
-        String ccg = "";
-
-        List<String> charts = Arrays.asList(chartName.split("\\s*,\\s*"));
-
-        String ids[] = grouping.split(",");
-
-        StringBuilder builder = new StringBuilder();
-
-        for( int i = 0 ; i < ids.length; i++ ) {
-            builder.append("?,");
-        }
-
-        String params = builder.deleteCharAt( builder.length() -1 ).toString();
-
-        if (!grouping.isEmpty()) {
-            ccg = grouping;
-        }
-
-        ChartResult result = new ChartResult();
-        String sql = "";
-
-        sql = "select id from dashboards.query_library where name = ? ";
-        String queryId = null;
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, query);
-            try (ResultSet resultSet = statement.executeQuery()) {
-                while (resultSet.next()) {
-                    queryId = resultSet.getString("id");
-                }
-            }
-        }
-
-        List<Chart> chart = new ArrayList<>();
-        Chart chartItem = null;
-        String ids2[] = new String[0];
-
-        for (String chart_name : charts) {
-
-            chartItem = new Chart();
-            chartItem.setName(chart_name);
-
-            String temp = "";
-            String params2 = "";
-
-            if (rate.equals("1")) {
-                if (chart_name.contains("(") && !chart_name.contains("CCG")) {
-                    temp = chart_name.substring(chart_name.indexOf("("));
-                    temp = ccg.replaceAll("CCG", "CCG " + temp);
-                } else
-                if (chart_name.contains("(") && chart_name.contains("CCG")) {
-                    temp = chart_name.substring(chart_name.indexOf("("));
-                    temp = temp.replaceFirst("\\(", "");
-                    temp = temp.replaceAll("\\)$", "");
-                } else
-                {
-                    temp = ccg;
-                }
-
-                ids2 = temp.split(",");
-
-                builder = new StringBuilder();
-
-                for( int i = 0 ; i < ids2.length; i++ ) {
-                    builder.append("?,");
-                }
-
-                params2 = builder.deleteCharAt( builder.length() -1 ).toString();
-
-            }
-
-            if (cumulative.equals("1")) {
-                if (rate.equals("1")) {
-                    sql = "SELECT t.series_name," +
-                            "floor(@running_total:=@running_total + t.series_value) as series_value " +
-                            "FROM " +
-                            "( SELECT name,series_name,sum(series_value/((select sum(list_size) as list_size from dashboards.ccg_list_sizes where ccg in ("+params2+"))/100000)) as series_value "+
-                            "FROM dashboards.`dashboard_results_" + queryId + "` r " +
-                            "where name = ? "+
-                            "and series_name between ? and ? and `grouping` in ("+params+") group by series_name) t " +
-                            "JOIN (SELECT @running_total:=0) r " +
-                            "ORDER BY t.series_name";
-                } else {
-                    sql = "SELECT t.series_name," +
-                            "@running_total:=@running_total + t.series_value as series_value " +
-                            "FROM " +
-                            "( SELECT name,series_name,sum(series_value) as series_value "+
-                            "FROM dashboards.`dashboard_results_" + queryId + "` " +
-                            "where name = ? and series_name between ? and ? and `grouping` in ("+params+") group by series_name) t " +
-                            "JOIN (SELECT @running_total:=0) r " +
-                            "ORDER BY t.series_name";
-                }
-
-            } else {
-                if (weekly.equals("1")) {
-                    if (rate.equals("1")) {
-                        sql = "SELECT FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) AS series_name, " +
-                                "floor(SUM(series_value/((select sum(list_size) as list_size from dashboards.ccg_list_sizes where ccg in ("+params2+"))/100000))) AS series_value " +
-                                "FROM dashboards.`dashboard_results_" + queryId + "` r " +
-                                "where name = ? "+
-                                "and series_name between ? and ? and `grouping` in ("+params+")"+
-                                " GROUP BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) " +
-                                "ORDER BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7))";
-                    } else {
-                        sql = "SELECT FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) AS series_name, " +
-                                "SUM(series_value) AS series_value " +
-                                "from dashboards.`dashboard_results_" + queryId + "` where name = ? " +
-                                "and series_name between ? and ? and `grouping` in ("+params+")"+
-                                " GROUP BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) " +
-                                "ORDER BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7))";
-                    }
-                } else {
-                    if (rate.equals("1")) {
-                        sql = "SELECT series_name,floor(sum(series_value/((select sum(list_size) as list_size from dashboards.ccg_list_sizes where ccg in ("+params2+"))/100000))) as series_value from dashboards.`dashboard_results_" + queryId + "` r "+
-                                "where name = ? "+
-                                "and series_name between ? and ? and `grouping` in ("+params+") group by series_name order by series_name";
-                    } else {
-                        sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` where name = ? " +
-                                "and series_name between ? and ? and `grouping` in ("+params+") group by series_name order by series_name";
-                    }
-                }
-
-            }
-            try (PreparedStatement statement = connection.prepareStatement(sql)) {
-                int p = 1;
-                for (int i = 1; i <= ids2.length; i++) {
-                    statement.setString(p++, ids2[i-1]);
-                }
-                statement.setString(p++, chart_name);
-                statement.setString(p++, dateFrom);
-                statement.setString(p++, dateTo);
-                for (int i = 1; i <= ids.length; i++) {
-                    statement.setString(p++, ids[i-1]);
-                }
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    chartItem.setSeries(getSeriesFromResultSet(resultSet));
-                }
-            }
-
-            chart.add(chartItem);
-        }
-
-        result.setResults(chart);
-
-        return result;
-    }
-
     public ChartResult getDashboardCovid(String dashboardId, String series, String dateFrom, String dateTo, String stp, String ccg, String pcn, String practice, String ethnic, String age, String sex,
                                          String cumulative, String weekly, String rate,String combineSeries, String combineEthnic, String combineAge, String combineSex, String combineOrgs) throws Exception {
 
@@ -1316,9 +1162,9 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         return result;
     }
 
-    public ChartResult getDashboardCombine(String query, String chartName, String dateFrom, String dateTo, String cumulative, String grouping, String weekly, String rate) throws Exception {
-        String ccg = "";
+    public ChartResult getDashboard(String query, String chartName, String dateFrom, String dateTo, String cumulative, String grouping, String weekly) throws Exception {
         List<String> charts = Arrays.asList(chartName.split("\\s*,\\s*"));
+
         String ids[] = grouping.split(",");
 
         StringBuilder builder = new StringBuilder();
@@ -1329,24 +1175,9 @@ public class ExplorerJDBCDAL implements AutoCloseable {
 
         String params = builder.deleteCharAt( builder.length() -1 ).toString();
 
-        if (!grouping.isEmpty()) {
-            ccg = grouping;
-        }
-
-        String ids2[] = chartName.split(",");
-
-        builder = new StringBuilder();
-
-        for( int i = 0 ; i < ids2.length; i++ ) {
-            builder.append("?,");
-        }
-
-        String params2 = builder.deleteCharAt( builder.length() -1 ).toString();
-
-        String params3 = "";
-
         ChartResult result = new ChartResult();
         String sql = "";
+
         sql = "select id from dashboards.query_library where name = ? ";
         String queryId = null;
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -1357,117 +1188,63 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 }
             }
         }
+
         List<Chart> chart = new ArrayList<>();
         Chart chartItem = null;
-        chartItem = new Chart();
-        chartItem.setName(chartName);
-        String ccgs = "";
-        String temp = "";
+        String ids2[] = new String[0];
 
-        String ids3[] = new String[0];
+        for (String chart_name : charts) {
 
-        if (rate.equals("1")) {
-            for (String chart_name : charts) {
-                if (chart_name.contains("(") && !chart_name.contains("CCG")) {
-                    ccgs = chart_name.substring(chart_name.indexOf("("));
-                    ccgs = ccg.replaceAll("CCG", "CCG " + ccgs);
-                } else
-                if (chart_name.contains("(") && chart_name.contains("CCG")) {
-                    ccgs = chart_name.substring(chart_name.indexOf("("));
-                    ccgs = ccgs.replaceFirst("\\(", "");
-                    ccgs = ccgs.replaceAll("\\)$", "");
-                } else
-                {
-                    ccgs = ccg;
-                }
-                temp+=','+ccgs;
-            }
-            temp = temp.replaceFirst(",","");
+            chartItem = new Chart();
+            chartItem.setName(chart_name);
 
-            ids3 = temp.split(",");
-
-            builder = new StringBuilder();
-
-            for( int i = 0 ; i < ids3.length; i++ ) {
-                builder.append("?,");
-            }
-
-            params3 = builder.deleteCharAt( builder.length() -1 ).toString();
-        }
-
-
-        if (cumulative.equals("1")) {
-            if (rate.equals("1")) {
-                sql = "SELECT t.series_name," +
-                        "floor(@running_total:=@running_total + t.series_value) as series_value " +
-                        "FROM " +
-                        "( SELECT name,series_name,sum(series_value/((select sum(list_size) as list_size from dashboards.ccg_list_sizes where ccg in ("+params3+"))/100000)) as series_value "+
-                        "FROM dashboards.`dashboard_results_" + queryId + "` r " +
-                        "where name in ("+params2+")"+
-                        " and series_name between ? and ? and `grouping` in ("+params+") group by series_name) t " +
-                        "JOIN (SELECT @running_total:=0) r " +
-                        "ORDER BY t.series_name";
-            } else {
+            if (cumulative.equals("1")) {
                 sql = "SELECT t.series_name," +
                         "@running_total:=@running_total + t.series_value as series_value " +
                         "FROM " +
                         "( SELECT name,series_name,sum(series_value) as series_value "+
                         "FROM dashboards.`dashboard_results_" + queryId + "` " +
-                        "where name in ("+params2+") and series_name between ? and ? and `grouping` in ("+params+") group by series_name) t " +
+                        "where name = ? and series_name between ? and ? and `grouping` in ("+params+") group by series_name) t " +
                         "JOIN (SELECT @running_total:=0) r " +
                         "ORDER BY t.series_name";
-            }
-        } else {
-            if (weekly.equals("1")) {
-                if (rate.equals("1")) {
-                    sql = "SELECT FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) AS series_name, " +
-                            "floor(SUM(series_value/((select sum(list_size) as list_size from dashboards.ccg_list_sizes where ccg in ("+params3+"))/100000))) AS series_value " +
-                            "FROM dashboards.`dashboard_results_" + queryId + "` r " +
-                            "where name in ("+params2+")"+
-                            " and series_name between ? and ? and `grouping` in ("+params+")"+
-                            " GROUP BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) " +
-                            "ORDER BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7))";
-                } else {
+            } else {
+                if (weekly.equals("1")) {
                     sql = "SELECT FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) AS series_name, " +
                             "SUM(series_value) AS series_value " +
-                            "from dashboards.`dashboard_results_" + queryId + "` where name in ("+params2+")"+
-                            " and series_name between ? and ? and `grouping` in ("+params+")"+
+                            "from dashboards.`dashboard_results_" + queryId + "` where name = ? " +
+                            "and series_name between ? and ? and `grouping` in ("+params+")"+
                             " GROUP BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) " +
                             "ORDER BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7))";
-                }
-            } else {
-                if (rate.equals("1")) {
-                    sql = "SELECT series_name,floor(sum(series_value/((select sum(list_size) as list_size from dashboards.ccg_list_sizes where ccg in ("+params3+"))/100000))) as series_value from dashboards.`dashboard_results_" + queryId + "` r "+
-                            "where name in ("+params2+")"+
-                            " and series_name between ? and ? and `grouping` in ("+params+") group by series_name order by series_name";
                 } else {
-                    sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` where name in ("+params2+")"+
-                            " and series_name between ? and ? and `grouping` in ("+params+") group by series_name order by series_name";
+                    sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` where name = ? " +
+                            "and series_name between ? and ? and `grouping` in ("+params+") group by series_name order by series_name";
+                }
+
+            }
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                int p = 1;
+                for (int i = 1; i <= ids2.length; i++) {
+                    statement.setString(p++, ids2[i-1]);
+                }
+                statement.setString(p++, chart_name);
+                statement.setString(p++, dateFrom);
+                statement.setString(p++, dateTo);
+                for (int i = 1; i <= ids.length; i++) {
+                    statement.setString(p++, ids[i-1]);
+                }
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    chartItem.setSeries(getSeriesFromResultSet(resultSet));
                 }
             }
-        }
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            int p = 1;
-            for (int i = 1; i <= ids3.length; i++) {
-                statement.setString(p++, ids3[i-1]);
-            }
-            for (int i = 1; i <= ids2.length; i++) {
-                statement.setString(p++, ids2[i-1]);
-            }
-            statement.setString(p++, dateFrom);
-            statement.setString(p++, dateTo);
-            for (int i = 1; i <= ids.length; i++) {
-                statement.setString(p++, ids[i-1]);
-            }
-            try (ResultSet resultSet = statement.executeQuery()) {
-                chartItem.setSeries(getSeriesFromResultSet(resultSet));
-            }
+
+            chart.add(chartItem);
         }
 
-        chart.add(chartItem);
         result.setResults(chart);
+
         return result;
     }
+
 
     public Chart getDashboardSingle(String query, String chartName, String dateFrom, String dateTo, String grouping) throws Exception {
 
@@ -2788,6 +2565,45 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         return sb.toString().trim();
     }
 
+    public SeriesResult getGroupingFromQuery(String queryName) throws Exception {
+        SeriesResult result = new SeriesResult();
+
+        String sql = "";
+        String sqlCount = "";
+
+        sql = "select id from dashboards.query_library where name = ? ";
+        String queryId = null;
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, queryName);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    queryId = resultSet.getString("id");
+                }
+            }
+        }
+
+        sql = "SELECT distinct `grouping` " +
+                "FROM dashboards.`dashboard_results_" + queryId + "`"+
+                " order by `grouping`";
+
+        sqlCount = "SELECT 1";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                result.setResults(getGroupingList(resultSet));
+            }
+        }
+
+        try (PreparedStatement statement = connection.prepareStatement(sqlCount)) {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                resultSet.next();
+                result.setLength(resultSet.getInt(1));
+            }
+        }
+
+        return result;
+    }
+
     public SeriesResult getSeriesFromQuery(String queryName) throws Exception {
         SeriesResult result = new SeriesResult();
 
@@ -2867,8 +2683,24 @@ public class ExplorerJDBCDAL implements AutoCloseable {
     public static Series getSeriesValues(ResultSet resultSet) throws SQLException {
         Series series = new Series();
 
-        series
-                .setName(resultSet.getString("name"));
+        series.setName(resultSet.getString("name"));
+
+        return series;
+    }
+
+    private List<Series> getGroupingList(ResultSet resultSet) throws SQLException {
+        List<Series> result = new ArrayList<>();
+        while (resultSet.next()) {
+            result.add(getGroupingValues(resultSet));
+        }
+
+        return result;
+    }
+
+    public static Series getGroupingValues(ResultSet resultSet) throws SQLException {
+        Series series = new Series();
+
+        series.setGrouping(resultSet.getString("grouping"));
 
         return series;
     }
@@ -2974,7 +2806,6 @@ public class ExplorerJDBCDAL implements AutoCloseable {
 
     @Override
     public void close() throws Exception {
-        LOG.info("closing the JDBCDal");
         if (connection != null) {
             this.connection.close();
         }

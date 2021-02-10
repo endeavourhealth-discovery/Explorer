@@ -29,7 +29,7 @@ export class ExplorerService {
     return this.http.get('api/events/lookuplistbyvalueset', {params});
   }
 
-  getDashboard(query: string, charts: string, dateFrom: string, dateTo: string, cumulative: string, grouping: string, weekly: string, rate: string, combineSeries: string): Observable<any> {
+  getDashboard(query: string, charts: string, dateFrom: string, dateTo: string, cumulative: string, grouping: string, weekly: string): Observable<any> {
     let params = new HttpParams();
 
     params = params.append('query', query);
@@ -39,8 +39,6 @@ export class ExplorerService {
     params = params.append('cumulative', cumulative);
     params = params.append('grouping', grouping);
     params = params.append('weekly', weekly);
-    params = params.append('rate', rate);
-    params = params.append('combineSeries', combineSeries);
 
     return this.http.get('api/events/dashboard', {params});
   }
@@ -73,10 +71,10 @@ export class ExplorerService {
     return this.http.get('api/events/dashboardcovid', {params});
   }
 
-  getDashboardSingle(dashboardId: string, chart: string, dateFrom: string, dateTo: string, ignoreDateRange: number, grouping: string): Observable<any> {
+  getDashboardSingle(query: string, chart: string, dateFrom: string, dateTo: string, ignoreDateRange: number, grouping: string): Observable<any> {
     let params = new HttpParams();
 
-    params = params.append('dashboardId', dashboardId);
+    params = params.append('query', query);
     params = params.append('chartName', chart);
     params = params.append('dateFrom', dateFrom);
     params = params.append('dateTo', dateTo);
@@ -359,6 +357,14 @@ export class ExplorerService {
     params = params.append('query', query);
 
     return this.http.get('api/events/seriesFromQuery', {params});
+  }
+
+  getGroupingFromQuery(query?: string): Observable<any> {
+
+    let params = new HttpParams();
+    params = params.append('query', query);
+
+    return this.http.get('api/events/groupingFromQuery', {params});
   }
 
   getSeriesFromDashboardId(dashboardId?: string): Observable<any> {

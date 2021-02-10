@@ -1291,7 +1291,6 @@ export class CovidViewerComponent implements OnInit {
   dateTo1: string = this.formatDate(new Date());
   dashboardId: string;
   showLineCharts1: boolean = false;
-  showBarCharts1: boolean = false;
   seriesValues1 = new FormControl();
   seriesList1: string = '';
   selectedethnic1: any = [];
@@ -1422,7 +1421,6 @@ export class CovidViewerComponent implements OnInit {
     let series = this.selectedSeries1.toString();
 
     this.showLineCharts1 = this.selectedWidgets[0].name=='Line chart';
-    this.showBarCharts1 = this.selectedWidgets[0].name=='Bar chart';
 
     let stp = "";
     let ccg = "";
@@ -1552,13 +1550,6 @@ export class CovidViewerComponent implements OnInit {
               }
             }
           )
-        });
-    }
-
-    if (this.showBarCharts1) {
-      this.explorerService.getDashboardSingle(this.dashboardId, series, this.formatDate(this.dateFrom1), this.formatDate(this.dateTo1), 0, ccg)
-        .subscribe(result => {
-          this.chartResultsSingle1 = result.series;
         });
     }
 
