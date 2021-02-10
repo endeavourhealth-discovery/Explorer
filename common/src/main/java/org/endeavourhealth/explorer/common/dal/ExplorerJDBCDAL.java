@@ -341,7 +341,6 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 break;
             case "3":
                 sql = "SELECT '"+validOrgs.toString()+ "' as type ";
-
                 sqlCount = "SELECT 999";
                 break;
             case "4":
