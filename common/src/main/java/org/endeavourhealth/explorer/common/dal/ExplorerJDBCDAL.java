@@ -22,10 +22,42 @@ import java.rmi.registry.Registry;
 import java.sql.*;
 import java.text.DecimalFormat;
 import java.util.*;
+import org.endeavourhealth.core.database.rdbms.enterprise.EnterpriseConnector;
+import java.sql.Connection;
 
-public class ExplorerJDBCDAL extends BaseJDBCDAL {
+public class ExplorerJDBCDAL implements AutoCloseable {
 
     private static final Logger LOG = LoggerFactory.getLogger(ExplorerJDBCDAL.class);
+
+    List<String> validOrgs = new ArrayList<>();
+    Connection connection = null;
+
+    public void setValidOrgs(List<String> orgs) {
+        validOrgs = orgs;
+    }
+
+    public void closeSubscriberConnection() throws Exception {
+        this.connection.close();
+    }
+
+    public void setSubscriberConnection(String configName) throws Exception {
+        List<EnterpriseConnector.ConnectionWrapper> connectionWrappers = EnterpriseConnector.openSubscriberConnections(configName);
+
+        for (EnterpriseConnector.ConnectionWrapper wrapper: connectionWrappers) {
+
+            if (wrapper.hasDatabaseConnection()) {
+
+                connection = wrapper.getConnection();
+                break;
+            }
+        }
+
+        if (connection == null) {
+            LOG.info("Connection has not been found");
+            throw new Exception("Connection has not been found");
+        }
+
+    }
 
     public void deleteValueSetCode(String id) throws Exception {
 
@@ -39,7 +71,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
         String sql = "DELETE FROM dashboards.value_set_codes WHERE id in ("+builder.deleteCharAt( builder.length() -1 ).toString()+")";
 
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             for (int i = 1; i <= ids.length; i++) {
                 stmt.setInt(i, Integer.parseInt(ids[i-1]));
             }
@@ -54,7 +86,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         if (id.equals("")) {
             sql = "INSERT INTO dashboards.value_set_codes (type, data_type, original_code, original_term, snomed_id, value_set_id) " +
                     "VALUES (?, ?, ?, ?, ?, ?)";
-            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
                 stmt.setString(1, type);
                 stmt.setString(2, selectedDataType);
                 stmt.setString(3, code);
@@ -68,7 +100,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
             sql = "UPDATE dashboards.value_set_codes SET type = ?, data_type = ?, original_code = ?, original_term = ?, snomed_id = ? " +
                     "WHERE id = ?";
 
-            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
                 stmt.setString(1, type);
                 stmt.setString(2, selectedDataType);
                 stmt.setString(3, code);
@@ -85,7 +117,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         String sql = "insert into dashboards.value_sets (type, name) " +
                 "select type, concat('Copy of ',name) from dashboards.value_sets where id = ?";
 
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, id);
             stmt.executeUpdate();
         }
@@ -95,7 +127,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                 "from dashboards.value_set_codes " +
                 "where value_set_id = ?";
 
-        try (PreparedStatement stmt = conn.prepareStatement(sqlCount)) {
+        try (PreparedStatement stmt = connection.prepareStatement(sqlCount)) {
             stmt.setString(1, id);
             stmt.executeUpdate();
         }
@@ -113,7 +145,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
         String sql = "DELETE FROM dashboards.dashboard_library WHERE dashboard_id in ("+builder.deleteCharAt( builder.length() -1 ).toString()+")";
 
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             for (int i = 1; i <= ids.length; i++) {
                 stmt.setInt(i, Integer.parseInt(ids[i-1]));
             }
@@ -129,7 +161,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         if (dashboardId.equals("")) {
             sql = "INSERT INTO dashboards.dashboard_library (type, name, query) " +
                     "VALUES (?, ?, ?)";
-            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
                 stmt.setString(1, type);
                 stmt.setString(2, name);
                 stmt.setString(3, jsonQuery);
@@ -140,7 +172,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
             sql = "UPDATE dashboards.dashboard_library SET type = ?, name = ?, query = ? " +
                     "WHERE dashboard_id = ?";
 
-            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
                 stmt.setString(1, type);
                 stmt.setString(2, name);
                 stmt.setString(3, jsonQuery);
@@ -155,7 +187,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         String sql = "insert into dashboards.dashboard_library (type, name, query) " +
                 "select type, concat('Copy of ',name), query from dashboards.dashboard_library where dashboard_id = ?";
 
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, id);
             stmt.executeUpdate();
         }
@@ -173,7 +205,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
         String sql = "DELETE FROM dashboards.query_library WHERE id in ("+builder.deleteCharAt( builder.length() -1 ).toString()+")";
 
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             for (int i = 1; i <= ids.length; i++) {
                 stmt.setInt(i, Integer.parseInt(ids[i-1]));
             }
@@ -188,7 +220,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         if (id.equals("")) {
             sql = "INSERT INTO dashboards.query_library (type, name, registry_name, denominator_query, query) " +
                     "VALUES (?, ?, ?, ?, ?)";
-            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
                 stmt.setString(1, type);
                 stmt.setString(2, name);
                 stmt.setString(3, registryName);
@@ -201,7 +233,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
             sql = "UPDATE dashboards.query_library SET type = ?, name = ?, registry_name = ?, denominator_query = ?, query = ? " +
                     "WHERE id = ?";
 
-            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
                 stmt.setString(1, type);
                 stmt.setString(2, name);
                 stmt.setString(3, registryName);
@@ -218,7 +250,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         String sql = "insert into dashboards.query_library (type, name, registry_name, denominator_query, query) " +
                 "select type, concat('Copy of ',name), concat('Copy of ',registry_name), denominator_query, query from dashboards.query_library where id = ?";
 
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, id);
             stmt.executeUpdate();
         }
@@ -237,7 +269,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
         String sql = "DELETE FROM dashboards.value_sets WHERE id in ("+params+")";
 
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             for (int i = 1; i <= ids.length; i++) {
                 stmt.setInt(i, Integer.parseInt(ids[i-1]));
             }
@@ -246,7 +278,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
         sql = "DELETE FROM dashboards.value_set_codes WHERE value_set_id in ("+params+")";
 
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             for (int i = 1; i <= ids.length; i++) {
                 stmt.setInt(i, Integer.parseInt(ids[i-1]));
             }
@@ -262,7 +294,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         if (id.equals("")) {
             sql = "INSERT INTO dashboards.value_sets (type, name) " +
                     "VALUES (?, ?)";
-            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
                 stmt.setString(1, type);
                 stmt.setString(2, name);
                 stmt.executeUpdate();
@@ -272,7 +304,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
             sql = "UPDATE dashboards.value_sets SET type = ?, name = ? " +
                     "WHERE id = ?";
 
-            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
                 stmt.setString(1, type);
                 stmt.setString(2, name);
                 stmt.setString(3, id);
@@ -308,12 +340,9 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                         " FROM dashboards.query_library";
                 break;
             case "3":
-                sql = "SELECT distinct(`grouping`) as type " +
-                        "FROM dashboards.dashboard_results_groups " +
-                        " order by `grouping`";
+                sql = "SELECT '"+validOrgs.toString()+ "' as type ";
 
-                sqlCount = "SELECT count(distinct(`grouping`)) " +
-                        " FROM dashboards.dashboard_results_groups";
+                sqlCount = "SELECT 999";
                 break;
             case "4":
                 sql = "SELECT distinct(type) as type " +
@@ -463,7 +492,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                 break;
         }
 
-        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             if (!type.isEmpty())
                 statement.setString(1, type);
             try (ResultSet resultSet = statement.executeQuery()) {
@@ -471,7 +500,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
             }
         }
 
-        try (PreparedStatement statement = conn.prepareStatement(sqlCount)) {
+        try (PreparedStatement statement = connection.prepareStatement(sqlCount)) {
             try (ResultSet resultSet = statement.executeQuery()) {
                 resultSet.next();
                 result.setLength(resultSet.getInt(1));
@@ -493,14 +522,14 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                 " FROM dashboards.value_set_codes" +
                 " WHERE value_set_id = ? ";
 
-        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, Integer.valueOf(valueSetId));
             try (ResultSet resultSet = statement.executeQuery()) {
                 result.setResults(getLookupList(resultSet));
             }
         }
 
-        try (PreparedStatement statement = conn.prepareStatement(sqlCount)) {
+        try (PreparedStatement statement = connection.prepareStatement(sqlCount)) {
             statement.setInt(1, Integer.valueOf(valueSetId));
             try (ResultSet resultSet = statement.executeQuery()) {
                 resultSet.next();
@@ -550,7 +579,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         sqlCount = "SELECT count(1) " +
                 "FROM dashboards.query_library WHERE type in ("+params+")";
 
-        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             for (int i = 1; i <= ids.length; i++) {
                 statement.setString(i, ids[i-1]);
             }
@@ -559,7 +588,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
             }
         }
 
-        try (PreparedStatement statement = conn.prepareStatement(sqlCount)) {
+        try (PreparedStatement statement = connection.prepareStatement(sqlCount)) {
             for (int i = 1; i <= ids.length; i++) {
                 statement.setString(i, ids[i-1]);
             }
@@ -621,7 +650,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                 "FROM dashboards.value_set_codes " +
                 "WHERE value_set_id = ? and type in ("+params+")";
 
-        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, valueSetId);
             for (int i = 1; i <= ids.length; i++) {
                 statement.setString(i+1, ids[i-1]);
@@ -631,7 +660,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
             }
         }
 
-        try (PreparedStatement statement = conn.prepareStatement(sqlCount)) {
+        try (PreparedStatement statement = connection.prepareStatement(sqlCount)) {
             statement.setString(1, valueSetId);
             for (int i = 1; i <= ids.length; i++) {
                 statement.setString(i+1, ids[i-1]);
@@ -691,7 +720,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         sqlCount = "SELECT count(1) " +
                 "FROM dashboards.value_sets where type in ("+params+")";
 
-        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             for (int i = 1; i <= ids.length; i++) {
                 statement.setString(i, ids[i-1]);
             }
@@ -701,7 +730,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
             }
         }
 
-        try (PreparedStatement statement = conn.prepareStatement(sqlCount)) {
+        try (PreparedStatement statement = connection.prepareStatement(sqlCount)) {
             for (int i = 1; i <= ids.length; i++) {
                 statement.setString(i, ids[i-1]);
             }
@@ -756,7 +785,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         sqlCount = "SELECT count(1) " +
                 " FROM dashboards.dashboard_library WHERE type in ("+params+")";
 
-        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             for (int i = 1; i <= ids.length; i++) {
                 statement.setString(i, ids[i-1]);
             }
@@ -765,7 +794,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
             }
         }
 
-        try (PreparedStatement statement = conn.prepareStatement(sqlCount)) {
+        try (PreparedStatement statement = connection.prepareStatement(sqlCount)) {
             for (int i = 1; i <= ids.length; i++) {
                 statement.setString(i, ids[i-1]);
             }
@@ -812,13 +841,13 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         sqlCount = "SELECT count(1) " +
                 " FROM dashboards.covid_library";
 
-        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             try (ResultSet resultSet = statement.executeQuery()) {
                 result.setResults(getCovidList(resultSet));
             }
         }
 
-        try (PreparedStatement statement = conn.prepareStatement(sqlCount)) {
+        try (PreparedStatement statement = connection.prepareStatement(sqlCount)) {
             try (ResultSet resultSet = statement.executeQuery()) {
                 resultSet.next();
                 result.setLength(resultSet.getInt(1));
@@ -873,7 +902,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
         sql = "select id from dashboards.query_library where name = ? ";
         String queryId = null;
-        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, query);
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
@@ -972,7 +1001,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                 }
 
             }
-            try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
                 int p = 1;
                 for (int i = 1; i <= ids2.length; i++) {
                     statement.setString(p++, ids2[i-1]);
@@ -1201,7 +1230,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
                             }
 
-                            try (PreparedStatement statement = conn.prepareStatement(sql)) {
+                            try (PreparedStatement statement = connection.prepareStatement(sql)) {
                                 int p = 1;
                                 if (rate.equals("1")) {
                                     if (combineOrgs.equals("false")) {
@@ -1334,7 +1363,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         String sql = "";
         sql = "select id from dashboards.query_library where name = ? ";
         String queryId = null;
-        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, query);
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
@@ -1431,7 +1460,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                 }
             }
         }
-        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             int p = 1;
             for (int i = 1; i <= ids3.length; i++) {
                 statement.setString(p++, ids3[i-1]);
@@ -1473,7 +1502,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
         sql = "select id from dashboards.query_library where name = ? ";
         String queryId = null;
-        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, query);
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
@@ -1485,7 +1514,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` where name = ? "+
                 "and series_name between ? and ? and `grouping` in ("+params+") group by series_name order by series_name";
 
-        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, chartName);
             statement.setString(2, dateFrom);
             statement.setString(3, dateTo);
@@ -1501,7 +1530,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
             sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` where name = ? and `grouping` in ("+params+")"+
                     " group by series_name order by series_name";
 
-            try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
                 statement.setString(1, chartName);
                 for (int i = 1; i <= ids.length; i++) {
                     statement.setString(i+1, ids[i-1]);
@@ -1534,7 +1563,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
         sql = "select id from dashboards.query_library where name = ? ";
         String queryId = null;
-        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, query);
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
@@ -1546,7 +1575,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` where name = ? and `grouping` in ("+params+")"+
                 " group by series_name order by series_name";
 
-        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, chartName);
             for (int i = 1; i <= ids.length; i++) {
                 statement.setString(i+1, ids[i-1]);
@@ -1609,7 +1638,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                 sql = "SELECT registry as series_name,registry_size as series_value FROM dashboards.registries where practice_name = ? and registry in ("+params+")"+
                         " order by registry_size desc";
 
-            try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
                 statement.setString(1, chart_name);
                 for (int i = 1; i <= ids.length; i++) {
                     statement.setString(i+1, ids[i-1]);
@@ -1652,7 +1681,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                     "where query_id = ?) " +
                     "LIMIT ?,?";
 
-            try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
                 statement.setString(1, queryId);
                 statement.setInt(2, page * 10);
                 statement.setInt(3, size);
@@ -1673,7 +1702,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                     "(SELECT patient_id FROM dashboards.person_dataset " +
                     "where query_id = ?)";
 
-            try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
                 statement.setString(1, queryId);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     resultSet.next();
@@ -1698,7 +1727,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                     "where query_id = ?) " +
                     "and p.last_name like ? LIMIT ?,?";
 
-            try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
                 statement.setString(1, queryId);
                 statement.setString(2, names[0]+"%");
                 statement.setInt(3, page * 10);
@@ -1721,7 +1750,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                     "where query_id = ?) " +
                     "and p.last_name like ?";
 
-            try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
                 statement.setString(1, queryId);
                 statement.setString(2, names[0]+"%");
                 try (ResultSet resultSet = statement.executeQuery()) {
@@ -1747,7 +1776,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                     "where query_id = ?) " +
                     "and (p.first_names like ? and p.last_name like ?) LIMIT ?,?";
 
-            try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
                 statement.setString(1, queryId);
                 statement.setString(2, names[0]+"%");
                 statement.setString(3, names[1]+"%");
@@ -1771,7 +1800,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                     "where query_id = ?) " +
                     "and (p.first_names like ? and p.last_name like ?)";
 
-            try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
                 statement.setString(1, queryId);
                 statement.setString(2, names[0]+"%");
                 statement.setString(3, names[1]+"%");
@@ -1819,7 +1848,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
         String sql = "{ call dashboards.getRegistries(?,?) }";
 
-        try (CallableStatement cs = conn.prepareCall(sql);) {
+        try (CallableStatement cs = connection.prepareCall(sql);) {
             cs.setString(1, ccg);
             cs.setString(2, registry);
             try (ResultSet resultSet = cs.executeQuery()) {
@@ -1872,7 +1901,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         sqlCount = "SELECT count(1) " +
                 "FROM dashboards.organisation_groups WHERE type in ("+params+")";
 
-        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             for (int i = 1; i <= ids.length; i++) {
                 statement.setString(i, ids[i-1]);
             }
@@ -1881,7 +1910,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
             }
         }
 
-        try (PreparedStatement statement = conn.prepareStatement(sqlCount)) {
+        try (PreparedStatement statement = connection.prepareStatement(sqlCount)) {
             for (int i = 1; i <= ids.length; i++) {
                 statement.setString(i, ids[i-1]);
             }
@@ -1929,14 +1958,14 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                 "FROM dashboards.organisations " +
                 "WHERE organisation_group_id = ?";
 
-        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, organisation_group_id);
             try (ResultSet resultSet = statement.executeQuery()) {
                 result.setResults(getOrganisationsList(resultSet));
             }
         }
 
-        try (PreparedStatement statement = conn.prepareStatement(sqlCount)) {
+        try (PreparedStatement statement = connection.prepareStatement(sqlCount)) {
             statement.setString(1, organisation_group_id);
             try (ResultSet resultSet = statement.executeQuery()) {
                 resultSet.next();
@@ -1975,7 +2004,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         if (id.equals("")) {
             sql = "INSERT INTO dashboards.organisation_groups (type, name) " +
                     "VALUES (?, ?)";
-            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
                 stmt.setString(1, type);
                 stmt.setString(2, name);
                 stmt.executeUpdate();
@@ -1985,7 +2014,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
             sql = "UPDATE dashboards.organisation_groups SET type = ?, name = ? " +
                     "WHERE id = ?";
 
-            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
                 stmt.setString(1, type);
                 stmt.setString(2, name);
                 stmt.setString(3, id);
@@ -2008,7 +2037,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
         String sql = "DELETE FROM dashboards.organisation_groups WHERE id in ("+params+")";
 
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             for (int i = 1; i <= ids.length; i++) {
                 stmt.setInt(i, Integer.parseInt(ids[i-1]));
             }
@@ -2017,7 +2046,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
         sql = "DELETE FROM dashboards.organisations WHERE organisation_group_id in ("+params+")";
 
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             for (int i = 1; i <= ids.length; i++) {
                 stmt.setInt(i, Integer.parseInt(ids[i-1]));
             }
@@ -2031,7 +2060,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         String sql = "insert into dashboards.organisation_groups (type, name) " +
                 "select type, concat('Copy of ',name) from dashboards.organisation_groups where id = ?";
 
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, id);
             stmt.executeUpdate();
         }
@@ -2041,7 +2070,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                 "from dashboards.organisations " +
                 "where organisation_group_id = ?";
 
-        try (PreparedStatement stmt = conn.prepareStatement(sqlCount)) {
+        try (PreparedStatement stmt = connection.prepareStatement(sqlCount)) {
             stmt.setString(1, id);
             stmt.executeUpdate();
         }
@@ -2055,7 +2084,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
             sql = "INSERT INTO dashboards.organisations (name, type, ods_code, organisation_group_id) " +
                     "VALUES (?, ?, ?, ?)";
 
-            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
                 stmt.setString(1, name);
                 stmt.setString(2, type);
                 stmt.setString(3, code);
@@ -2067,7 +2096,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
             sql = "UPDATE dashboards.organisations SET name = ?, type = ?, ods_code = ? " +
                     "WHERE id = ?";
 
-            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
                 stmt.setString(1, name);
                 stmt.setString(2, type);
                 stmt.setString(3, code);
@@ -2091,7 +2120,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
         String sql = "DELETE FROM dashboards.organisations WHERE id in ("+params+")";
 
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             for (int i = 1; i <= ids.length; i++) {
                 stmt.setInt(i, Integer.parseInt(ids[i-1]));
             }
@@ -2109,7 +2138,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                 "FROM dashboards.query_library " +
                 "WHERE name = ?";
 
-        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, selectedQuery);
             try (ResultSet resultSet = statement.executeQuery()) {
                 result.setResults(getQueryList(resultSet));
@@ -2144,7 +2173,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                 "FROM dashboards.dashboard_library " +
                 "WHERE dashboard_id = ?";
 
-        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, dashboardNumber);
             try (ResultSet resultSet = statement.executeQuery()) {
                 result.setResults(getDashboardViewList(resultSet));
@@ -2163,7 +2192,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                 "FROM dashboards.covid_library " +
                 "WHERE dashboard_id = ?";
 
-        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, dashboardNumber);
             try (ResultSet resultSet = statement.executeQuery()) {
                 result.setResults(getDashboardViewList(resultSet));
@@ -2207,7 +2236,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         } else {
             sql = "select id from dashboards.query_library where name = ? ";
             String queryId = null;
-            try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
                 statement.setString(1, query);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
@@ -2221,7 +2250,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         }
 
         ArrayList<String> list = new ArrayList();
-        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
                     String date = resultSet.getString("date");
@@ -2240,7 +2269,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         String queryId = null;
         if (!"Confirmed Covid-19 cases".equalsIgnoreCase(query)&&!"Suspected and confirmed Covid-19 cases".equalsIgnoreCase(query)&&!"Shielded Covid-19 patients".equalsIgnoreCase(query)) {
             String sql = "select id from dashboards.query_library where name = ? ";
-            try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
                 statement.setString(1, query);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
@@ -2254,7 +2283,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         HashMap<String, List<MapLayer>> layers = new HashMap();
 
         String sql = "select * from dashboards.maps WHERE parent_area_code = 'nel_ccg'";
-        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             try (ResultSet resultSet = statement.executeQuery()) {
                 ArrayList<MapLayer> list = new ArrayList();
                 while (resultSet.next()) {
@@ -2281,7 +2310,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         } else {
             sql = "select min(date_format(`Effective date`, '%Y-%m-%d')) as min_date from dashboards.observation_output_" + queryId;
         }
-        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
                     minDate = resultSet.getString("min_date");
@@ -2369,7 +2398,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                     "ORDER BY PERSON.`LSOA code` ";
         }
 
-        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             if(queryId == null) {
                 statement.setString(1, date);
             }
@@ -2439,7 +2468,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         String sql = "select * from dashboards.query_library where name = ? ";
         JsonObject query = null;
         String queryId = null;
-        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, queryName);
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
@@ -2521,7 +2550,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
         sql = "select * from information_schema.tables where table_schema = 'dashboards' and table_name = '" + tableName + "'";
         boolean tableFound = false;
-        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
                     tableFound = true;
@@ -2547,7 +2576,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
         ArrayList<String> columns = new ArrayList();
         ArrayList<String> likeColumns = new ArrayList();
-        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
                     String column = resultSet.getString("column_name");
@@ -2607,7 +2636,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                     " limit " + ((pageNumber - 1)*pageSize) + "," + pageSize;
         }
 
-        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             if (!StringUtils.isNullOrEmpty(searchData)) {
                 for (int i = 0; i < likeColumns.size(); i++) {
                     statement.setString(i+1, "%" + searchData + "%");
@@ -2633,7 +2662,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         String sql = "select * from dashboards.query_library where name = ? ";
         JsonObject query = null;
         String queryId = null;
-        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, queryName);
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
@@ -2666,7 +2695,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
                 " where table_schema='dashboards' and table_name = '" + tableName + "'";
 
         ArrayList<String> likeColumns = new ArrayList();
-        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
                     String column = resultSet.getString("column_name");
@@ -2688,7 +2717,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
             sql += " " + like;
 
         }
-        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             if (!StringUtils.isNullOrEmpty(searchData)) {
                 for (int i = 0; i < likeColumns.size(); i++) {
                     statement.setString(i+1, "%" + searchData + "%");
@@ -2724,7 +2753,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
         HashMap<Integer,String> queryLibrary = new HashMap<>();
         String sql = "select id, name from dashboards.query_library";
-        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
                     queryLibrary.put(resultSet.getInt("id"), resultSet.getString("name"));
@@ -2734,7 +2763,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
         for (Integer id : queryLibrary.keySet()) {
             sql = "select table_name from information_schema.columns where table_name = 'person_output_" + id + "' and column_name = 'LSOA code';";
-            try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
                         list.add(queryLibrary.get(id));
@@ -2781,7 +2810,7 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
         sql = "select id from dashboards.query_library where name = ? ";
         String queryId = null;
-        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, queryName);
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
@@ -2796,13 +2825,13 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
         sqlCount = "SELECT 1";
 
-        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             try (ResultSet resultSet = statement.executeQuery()) {
                 result.setResults(getSeriesList(resultSet));
             }
         }
 
-        try (PreparedStatement statement = conn.prepareStatement(sqlCount)) {
+        try (PreparedStatement statement = connection.prepareStatement(sqlCount)) {
             try (ResultSet resultSet = statement.executeQuery()) {
                 resultSet.next();
                 result.setLength(resultSet.getInt(1));
@@ -2824,13 +2853,13 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
 
         sqlCount = "SELECT 1";
 
-        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             try (ResultSet resultSet = statement.executeQuery()) {
                 result.setResults(getSeriesList(resultSet));
             }
         }
 
-        try (PreparedStatement statement = conn.prepareStatement(sqlCount)) {
+        try (PreparedStatement statement = connection.prepareStatement(sqlCount)) {
             try (ResultSet resultSet = statement.executeQuery()) {
                 resultSet.next();
                 result.setLength(resultSet.getInt(1));
@@ -2869,13 +2898,13 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         sqlCount = "SELECT 999";
 
 
-        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             try (ResultSet resultSet = statement.executeQuery()) {
                 result.setResults(getRegistryQueryList(resultSet));
             }
         }
 
-        try (PreparedStatement statement = conn.prepareStatement(sqlCount)) {
+        try (PreparedStatement statement = connection.prepareStatement(sqlCount)) {
             try (ResultSet resultSet = statement.executeQuery()) {
                 resultSet.next();
                 result.setLength(resultSet.getInt(1));
@@ -2917,13 +2946,13 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         sqlCount = "SELECT count(1) " +
                 "FROM dashboards.population_denominators";
 
-        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             try (ResultSet resultSet = statement.executeQuery()) {
                 result.setResults(getPopulationList(resultSet));
             }
         }
 
-        try (PreparedStatement statement = conn.prepareStatement(sqlCount)) {
+        try (PreparedStatement statement = connection.prepareStatement(sqlCount)) {
             try (ResultSet resultSet = statement.executeQuery()) {
                 resultSet.next();
                 result.setLength(resultSet.getInt(1));
@@ -2957,4 +2986,11 @@ public class ExplorerJDBCDAL extends BaseJDBCDAL {
         return population;
     }
 
+    @Override
+    public void close() throws Exception {
+        LOG.info("closing the JDBCDal");
+        if (connection != null) {
+            this.connection.close();
+        }
+    }
 }
