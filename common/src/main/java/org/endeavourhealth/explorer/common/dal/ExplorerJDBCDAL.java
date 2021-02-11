@@ -76,6 +76,9 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 stmt.setInt(i, Integer.parseInt(ids[i-1]));
             }
             stmt.executeUpdate();
+            connection.commit();
+        } catch (Exception ex) {
+            connection.rollback();
         }
     }
 
@@ -94,6 +97,9 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 stmt.setString(5, snomed);
                 stmt.setString(6, value_set_id);
                 stmt.executeUpdate();
+                connection.commit();
+            } catch (Exception ex) {
+                connection.rollback();
             }
         } else // edit
         {
@@ -108,6 +114,9 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 stmt.setString(5, snomed);
                 stmt.setString(6, id);
                 stmt.executeUpdate();
+                connection.commit();
+            } catch (Exception ex) {
+                connection.rollback();
             }
         }
     }
@@ -120,6 +129,9 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, id);
             stmt.executeUpdate();
+            connection.commit();
+        } catch (Exception ex) {
+            connection.rollback();
         }
 
         String sqlCount = "insert into dashboards.value_set_codes (value_set_id, type, original_code, original_term, snomed_id) " +
@@ -130,6 +142,9 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         try (PreparedStatement stmt = connection.prepareStatement(sqlCount)) {
             stmt.setString(1, id);
             stmt.executeUpdate();
+            connection.commit();
+        } catch (Exception ex) {
+            connection.rollback();
         }
     }
 
@@ -150,6 +165,9 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 stmt.setInt(i, Integer.parseInt(ids[i-1]));
             }
             stmt.executeUpdate();
+            connection.commit();
+        } catch (Exception ex) {
+            connection.rollback();
         }
 
     }
@@ -166,6 +184,9 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 stmt.setString(2, name);
                 stmt.setString(3, jsonQuery);
                 stmt.executeUpdate();
+                connection.commit();
+            } catch (Exception ex) {
+                connection.rollback();
             }
         } else // edit
         {
@@ -178,6 +199,9 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 stmt.setString(3, jsonQuery);
                 stmt.setString(4, dashboardId);
                 stmt.executeUpdate();
+                connection.commit();
+            } catch (Exception ex) {
+                connection.rollback();
             }
         }
     }
@@ -190,6 +214,9 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, id);
             stmt.executeUpdate();
+            connection.commit();
+        } catch (Exception ex) {
+            connection.rollback();
         }
     }
 
@@ -210,6 +237,9 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 stmt.setInt(i, Integer.parseInt(ids[i-1]));
             }
             stmt.executeUpdate();
+            connection.commit();
+        } catch (Exception ex) {
+            connection.rollback();
         }
     }
 
@@ -227,6 +257,9 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 stmt.setString(4, denominatorQuery);
                 stmt.setString(5, jsonQuery);
                 stmt.executeUpdate();
+                connection.commit();
+            } catch (Exception ex) {
+                connection.rollback();
             }
         } else // edit
         {
@@ -241,6 +274,9 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 stmt.setString(5, jsonQuery);
                 stmt.setString(6, id);
                 stmt.executeUpdate();
+                connection.commit();
+            } catch (Exception ex) {
+                connection.rollback();
             }
         }
     }
@@ -253,6 +289,9 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, id);
             stmt.executeUpdate();
+            connection.commit();
+        } catch (Exception ex) {
+            connection.rollback();
         }
     }
 
@@ -274,6 +313,9 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 stmt.setInt(i, Integer.parseInt(ids[i-1]));
             }
             stmt.executeUpdate();
+            connection.commit();
+        } catch (Exception ex) {
+            connection.rollback();
         }
 
         sql = "DELETE FROM dashboards.value_set_codes WHERE value_set_id in ("+params+")";
@@ -283,6 +325,9 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 stmt.setInt(i, Integer.parseInt(ids[i-1]));
             }
             stmt.executeUpdate();
+            connection.commit();
+        } catch (Exception ex) {
+            connection.rollback();
         }
 
     }
@@ -298,6 +343,9 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 stmt.setString(1, type);
                 stmt.setString(2, name);
                 stmt.executeUpdate();
+                connection.commit();
+            } catch (Exception ex) {
+                connection.rollback();
             }
         } else // edit
         {
@@ -309,6 +357,9 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 stmt.setString(2, name);
                 stmt.setString(3, id);
                 stmt.executeUpdate();
+                connection.commit();
+            } catch (Exception ex) {
+                connection.rollback();
             }
         }
     }
@@ -1771,6 +1822,9 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 stmt.setString(1, type);
                 stmt.setString(2, name);
                 stmt.executeUpdate();
+                connection.commit();
+            } catch (Exception ex) {
+                connection.rollback();
             }
         } else // edit
         {
@@ -1782,6 +1836,9 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 stmt.setString(2, name);
                 stmt.setString(3, id);
                 stmt.executeUpdate();
+                connection.commit();
+            } catch (Exception ex) {
+                connection.rollback();
             }
         }
     }
@@ -1805,6 +1862,9 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 stmt.setInt(i, Integer.parseInt(ids[i-1]));
             }
             stmt.executeUpdate();
+            connection.commit();
+        } catch (Exception ex) {
+            connection.rollback();
         }
 
         sql = "DELETE FROM dashboards.organisations WHERE organisation_group_id in ("+params+")";
@@ -1814,6 +1874,9 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 stmt.setInt(i, Integer.parseInt(ids[i-1]));
             }
             stmt.executeUpdate();
+            connection.commit();
+        } catch (Exception ex) {
+            connection.rollback();
         }
 
     }
@@ -1826,6 +1889,9 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, id);
             stmt.executeUpdate();
+            connection.commit();
+        } catch (Exception ex) {
+            connection.rollback();
         }
 
         String sqlCount = "insert into dashboards.organisations (organisation_group_id, name, type, ods_code) " +
@@ -1836,6 +1902,9 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         try (PreparedStatement stmt = connection.prepareStatement(sqlCount)) {
             stmt.setString(1, id);
             stmt.executeUpdate();
+            connection.commit();
+        } catch (Exception ex) {
+            connection.rollback();
         }
     }
 
@@ -1853,6 +1922,9 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 stmt.setString(3, code);
                 stmt.setString(4, organisation_group_id);
                 stmt.executeUpdate();
+                connection.commit();
+            } catch (Exception ex) {
+                connection.rollback();
             }
         } else // edit
         {
@@ -1865,6 +1937,9 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 stmt.setString(3, code);
                 stmt.setString(4, id);
                 stmt.executeUpdate();
+                connection.commit();
+            } catch (Exception ex) {
+                connection.rollback();
             }
         }
     }
@@ -1888,6 +1963,9 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 stmt.setInt(i, Integer.parseInt(ids[i-1]));
             }
             stmt.executeUpdate();
+            connection.commit();
+        } catch (Exception ex) {
+            connection.rollback();
         }
 
     }
