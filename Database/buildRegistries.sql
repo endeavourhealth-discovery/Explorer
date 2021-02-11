@@ -90,8 +90,8 @@ BEGIN
   ELSE
           -- add new entries to registries
           INSERT INTO registries (registry, query, ccg, practice_name, ods_code, list_size, registry_size, updated, parent_registry, target_percentage) 
-          SELECT registry_name, query, q.ccg, q.registered_practice, q.ods_code, MAX(pls.list_size), q.registry_size, now(), parentregistry, targetPercentage  
-          FROM qry_reg q LEFT JOIN practice_list_sizes pls ON q.ods_code = pls.ods_code GROUP BY registry_name, query, q.ccg, q.registered_practice, q.ods_code, q.registry_size, now(), parentregistry, targetPercentage;
+          SELECT registry_name, query, q.ccg, q.registered_practice, q.ods_code, SUM(pls.list_size), q.registry_size, now(), parentregistry, targetPercentage
+          FROM qry_reg q LEFT JOIN population_denominators pls ON q.ods_code = pls.ods_code GROUP BY registry_name, query, q.ccg, q.registered_practice, q.ods_code, q.registry_size, now(), parentregistry, targetPercentage;
   END IF;
 
   -- add a new entry for registry trend

@@ -76,7 +76,7 @@ IF filter_ccg='' and filter_registry = '' THEN
 
 elseif filter_ccg != '' and filter_registry	 = '' THEN
 
-	SELECT count(distinct(ccg)) into counter FROM dashboards.practice_list_sizes where ccg in (filter_ccg);
+	SELECT count(distinct(ccg)) into counter FROM dashboards.population_denominators where ccg in (filter_ccg);
 
 	if counter = 0 then
 		leave sp;
@@ -206,7 +206,7 @@ SELECT
 
 elseif filter_ccg != '' and filter_registry	 != '' THEN
 
-	SELECT count(distinct(ccg)) into counter FROM dashboards.practice_list_sizes where ccg in (filter_ccg);
+	SELECT count(distinct(ccg)) into counter FROM dashboards.population_denominators where ccg in (filter_ccg);
 
 	if counter = 0 then
 		leave sp;
