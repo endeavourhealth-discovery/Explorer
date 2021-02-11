@@ -49,7 +49,10 @@ BEGIN
    -- medication
    SET @sql = CONCAT("UPDATE ", p_tab_name, 
    " SET original_code = CONCAT('SN_', snomed_id) 
-   WHERE data_type = 'Medication'");
+   WHERE snomed_id <> '0' AND snomed_id <> '' 
+   AND snomed_id IS NOT NULL AND LENGTH(snomed_id) > 5 AND TRIM(snomed_id) REGEXP '^[0-9]+$' 
+   AND original_code NOT LIKE 'SN\_%' AND original_code NOT LIKE 'BC\_%' 
+   AND data_type = 'Medication'");
    PREPARE stmt FROM @sql;
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;
