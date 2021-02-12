@@ -59,6 +59,7 @@ import {GraphicalComparisonComponent} from "./graphicalcomparison/graphicalcompa
 import {CovidLibraryComponent} from "./covidlibrary/covidlibrary.component";
 import {CovidViewerComponent} from "./covidviewer/covidviewer.component";
 import {PopulationsComponent} from "./populations/populations.component";
+import {RegistryListsComponent} from "./registrylists/registrylists.component";
 
 @NgModule({
   declarations: [
@@ -84,7 +85,8 @@ import {PopulationsComponent} from "./populations/populations.component";
     GraphicalComparisonComponent,
     CovidLibraryComponent,
     CovidViewerComponent,
-    PopulationsComponent
+    PopulationsComponent,
+    RegistryListsComponent
   ],
     imports: [
         BrowserModule,

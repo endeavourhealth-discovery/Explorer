@@ -241,4 +241,8 @@ export class RegistriesComponent implements OnInit {
     this.router.navigate(['/graphicalcomparison'])
   }
 
+  registryLists () {
+    this.router.navigate(['/registrylists'])
+  }
+
 }

@@ -458,4 +458,11 @@ export class ExplorerService {
     return this.http.get('api/events/population', {params});
   }
 
+  getRegistryLists(): Observable<any> {
+
+    let params = new HttpParams();
+
+    return this.http.get('api/events/registrylists', {params});
+  }
+
 }

@@ -13,6 +13,7 @@ import {GraphicalComparisonComponent} from "./explorer/graphicalcomparison/graph
 import {CovidLibraryComponent} from "./explorer/covidlibrary/covidlibrary.component";
 import {CovidViewerComponent} from "./explorer/covidviewer/covidviewer.component";
 import {PopulationsComponent} from "./explorer/populations/populations.component";
+import {RegistryListsComponent} from "./explorer/registrylists/registrylists.component";
 
 @Injectable()
 export class AppMenuService implements  AbstractMenuProvider {
@@ -30,7 +31,8 @@ export class AppMenuService implements  AbstractMenuProvider {
       {path: 'map', component: MapComponent, data: {role: 'explorer'}},
       {path: 'tutorials', component: TutorialsComponent, data: {role: 'explorer'}},
       {path: 'graphicalcomparison', component: GraphicalComparisonComponent, data: {role: 'explorer'}},
-      {path: 'populations', component: PopulationsComponent, data: {role: 'explorer'}}
+      {path: 'populations', component: PopulationsComponent, data: {role: 'explorer'}},
+      {path: 'registrylists', component: RegistryListsComponent, data: {role: 'explorer'}}
     ];
   }
 

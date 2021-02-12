@@ -2882,6 +2882,57 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         return population;
     }
 
+    public RegistryListsResult getRegistryLists() throws Exception {
+        RegistryListsResult result = new RegistryListsResult();
+
+        String sql = "";
+        String sqlCount = "";
+
+        sql = "SELECT ccg, practice_name, registry, list_size, registry_size, target_percentage " +
+                "FROM dashboards.registries " +
+                "order by ccg, practice_name, list_size desc, registry_size desc";
+
+        sqlCount = "SELECT count(1) " +
+                "FROM dashboards.registries";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                result.setResults(getRegistryList(resultSet));
+            }
+        }
+
+        try (PreparedStatement statement = connection.prepareStatement(sqlCount)) {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                resultSet.next();
+                result.setLength(resultSet.getInt(1));
+            }
+        }
+
+        return result;
+    }
+
+    private List<RegistryLists> getRegistryList(ResultSet resultSet) throws SQLException {
+        List<RegistryLists> result = new ArrayList<>();
+        while (resultSet.next()) {
+            result.add(getRegistryLists(resultSet));
+        }
+
+        return result;
+    }
+
+    public static RegistryLists getRegistryLists(ResultSet resultSet) throws SQLException {
+        RegistryLists registryLists = new RegistryLists();
+
+        registryLists
+                .setCcg(resultSet.getString("ccg"))
+                .setPracticeName(resultSet.getString("practice_name"))
+                .setRegistry(resultSet.getString("registry"))
+                .setListSize(resultSet.getString("list_size"))
+                .setRegistrySize(resultSet.getString("registry_size"))
+                .setTarget(resultSet.getString("target_percentage"));
+        return registryLists;
+    }
+
     @Override
     public void close() throws Exception {
         if (connection != null) {

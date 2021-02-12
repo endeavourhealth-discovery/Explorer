@@ -1170,4 +1170,27 @@ public class DashboardEndpoint {
                     .build();
         }
     }
+
+    @GET
+    @Path("/registrylists")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getRegistryLists(@Context SecurityContext sc, @HeaderParam("userProjectId") String userProjectId) throws Exception {
+        LOG.debug("getRegistryLists");
+
+        checkUserAccessToOrganisations(userProjectId);
+
+        try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
+
+            viewerDAL.setValidOrgs(validOrgs);
+            viewerDAL.setSubscriberConnection(configName);
+
+            RegistryListsResult result = viewerDAL.getRegistryLists();
+
+            return Response
+                    .ok()
+                    .entity(result)
+                    .build();
+        }
+    }
 }
