@@ -2892,8 +2892,7 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 "FROM dashboards.registries " +
                 "order by ccg, practice_name, list_size desc, registry_size desc";
 
-        sqlCount = "SELECT count(1) " +
-                "FROM dashboards.registries";
+        sqlCount = "SELECT count(1) FROM dashboards.registries";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             try (ResultSet resultSet = statement.executeQuery()) {
