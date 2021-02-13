@@ -65,7 +65,7 @@ export class RegistryListsComponent implements OnInit {
         useTextFile: false,
         useBom: false,
       };
-      new ngxCsv(exportData, 'population_counts', options);
+      new ngxCsv(exportData, 'registry_lists', options);
     }
   }
 
