@@ -59,6 +59,7 @@ DECLARE includedDiagnosisValueSetString VARCHAR(255);
 DECLARE timeperioddaterange VARCHAR(255);
 DECLARE regPeriodRange VARCHAR(500) DEFAULT NULL;
 DECLARE agerange VARCHAR(500) DEFAULT NULL;
+DECLARE dateRangeFlag VARCHAR(1) DEFAULT NULL;
 
   DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -108,8 +109,29 @@ SET p_greaterlessvalue = IF(p_greaterlessvalue = '', NULL, p_greaterlessvalue);
       CALL createValueSet(includedValueSetString, p_includeValuesettab);
       -- create concept from valueset
       CALL createConcept(p_includeConcepttab, p_includeValuesettab, p_schema);
+      -- check data type
+      SET @sql = CONCAT('SELECT DISTINCT data_type INTO @datatype FROM ', p_includeConcepttab,' ORDER BY data_type DESC LIMIT 1');
+      PREPARE stmt FROM @sql;
+      EXECUTE stmt;
+      DEALLOCATE PREPARE stmt; 
+
+      IF @datatype = 'Medication' THEN
+
+        IF p_includedDateFrom = '1970-01-01' THEN SET p_includedDateFrom = NULL; END IF;
+        IF p_includedDateTo = '1970-01-01' THEN SET p_includedDateTo = NULL; END IF;
+
+        IF p_includedDateFrom IS NOT NULL OR p_includedDateTo IS NOT NULL OR p_includedPeriodValue IS NOT NULL OR p_includedPeriodType IS NOT NULL THEN
+          SET dateRangeFlag = 'M';  -- medication
+        ELSE
+          SET dateRangeFlag = 'Y';
+        END IF;
+
+      ELSE
+        SET dateRangeFlag = 'Y';
+      END IF;
+
       -- get date range string
-      SET timeperioddaterange = getTimePeriodDateRange(p_includedDateFrom, p_includedDateTo, p_includedPeriodValue, p_includedPeriodType, p_includedPeriodOperator,'Y');    
+      SET timeperioddaterange = getTimePeriodDateRange(p_includedDateFrom, p_includedDateTo, p_includedPeriodValue, p_includedPeriodType, p_includedPeriodOperator, dateRangeFlag);    
       -- build query expression table
       CALL runBuildQuery(p_query_id, p_withWithout, p_includedAnyAll, timeperioddaterange, p_includeConcepttab, p_observationCohortTab, NULL, NULL, NULL, 
       NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
