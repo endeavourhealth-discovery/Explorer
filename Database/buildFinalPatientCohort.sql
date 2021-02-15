@@ -32,9 +32,6 @@ BEGIN
         RESIGNAL; -- rethrow the error
     END;   
 
-  -- Set Debug Mode
-  SET @enabled = FALSE;
-
   DROP TEMPORARY TABLE IF EXISTS qry_selectTables;
   SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_selectTables AS 
   SELECT id, query_id, selectTable FROM ', p_ruleTab,' WHERE query_id = ',p_query_id);
@@ -163,10 +160,7 @@ BEGIN
 
         -- clean up tmp tables
     SET l_tmp = SUBSTRING(l_tmp, 1, LENGTH(l_tmp)-1);
-    
-    IF @enabled = FALSE THEN
-      CALL dropTempTables(l_tmp);
-    END IF;
+    CALL dropTempTables(l_tmp);
 
 
 END//
