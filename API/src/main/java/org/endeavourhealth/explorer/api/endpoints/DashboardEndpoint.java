@@ -27,6 +27,7 @@ public class DashboardEndpoint {
 
     List<String> validOrgs = new ArrayList<>();
     String configName = null;
+    Boolean patientIdentifiable = false;
 
     private void checkUserAccessToOrganisations(String userProjectId) throws Exception {
 
@@ -38,6 +39,8 @@ public class DashboardEndpoint {
 
         if (project != null) {
             configName = project.getConfigName();
+            if (project.getDeidentificationLevel()==0)
+                patientIdentifiable = true;
         }
 
         validOrgs = orgList;
@@ -55,7 +58,7 @@ public class DashboardEndpoint {
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
 
             viewerDAL.setValidOrgs(validOrgs);
-            viewerDAL.setSubscriberConnection(configName);
+            viewerDAL.setSubscriberConnection(configName); viewerDAL.setPatientIdentifiable(patientIdentifiable);
 
             CovidLibraryResult result = viewerDAL.getCovidLibrary();
 
@@ -81,7 +84,7 @@ public class DashboardEndpoint {
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
 
             viewerDAL.setValidOrgs(validOrgs);
-            viewerDAL.setSubscriberConnection(configName);
+            viewerDAL.setSubscriberConnection(configName); viewerDAL.setPatientIdentifiable(patientIdentifiable);
 
             LookupListResult result = viewerDAL.getLookupLists(list, type);
 
@@ -105,7 +108,7 @@ public class DashboardEndpoint {
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
 
             viewerDAL.setValidOrgs(validOrgs);
-            viewerDAL.setSubscriberConnection(configName);
+            viewerDAL.setSubscriberConnection(configName); viewerDAL.setPatientIdentifiable(patientIdentifiable);
 
             LookupListResult result = viewerDAL.getLookupListByValueSet(valueSetId);
 
@@ -129,7 +132,7 @@ public class DashboardEndpoint {
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
 
             viewerDAL.setValidOrgs(validOrgs);
-            viewerDAL.setSubscriberConnection(configName);
+            viewerDAL.setSubscriberConnection(configName); viewerDAL.setPatientIdentifiable(patientIdentifiable);
 
             DashboardLibraryResult result = viewerDAL.getDashboardLibrary(selectedTypeString);
 
@@ -159,7 +162,7 @@ public class DashboardEndpoint {
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
 
             viewerDAL.setValidOrgs(validOrgs);
-            viewerDAL.setSubscriberConnection(configName);
+            viewerDAL.setSubscriberConnection(configName); viewerDAL.setPatientIdentifiable(patientIdentifiable);
 
             ChartResult result = null;
 
@@ -202,7 +205,7 @@ public class DashboardEndpoint {
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
 
             viewerDAL.setValidOrgs(validOrgs);
-            viewerDAL.setSubscriberConnection(configName);
+            viewerDAL.setSubscriberConnection(configName); viewerDAL.setPatientIdentifiable(patientIdentifiable);
 
             ChartResult result = null;
 
@@ -233,7 +236,7 @@ public class DashboardEndpoint {
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
 
             viewerDAL.setValidOrgs(validOrgs);
-            viewerDAL.setSubscriberConnection(configName);
+            viewerDAL.setSubscriberConnection(configName); viewerDAL.setPatientIdentifiable(patientIdentifiable);
 
             Chart result = null;
             if (ignoreDateRange==0)
@@ -263,7 +266,7 @@ public class DashboardEndpoint {
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
 
             viewerDAL.setValidOrgs(validOrgs);
-            viewerDAL.setSubscriberConnection(configName);
+            viewerDAL.setSubscriberConnection(configName); viewerDAL.setPatientIdentifiable(patientIdentifiable);
 
             ChartResult result = null;
 
@@ -292,7 +295,7 @@ public class DashboardEndpoint {
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
 
             viewerDAL.setValidOrgs(validOrgs);
-            viewerDAL.setSubscriberConnection(configName);
+            viewerDAL.setSubscriberConnection(configName); viewerDAL.setPatientIdentifiable(patientIdentifiable);
 
             PatientResult result = viewerDAL.getPatientResult(page, size, name, queryId);
 
@@ -316,7 +319,7 @@ public class DashboardEndpoint {
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
 
             viewerDAL.setValidOrgs(validOrgs);
-            viewerDAL.setSubscriberConnection(configName);
+            viewerDAL.setSubscriberConnection(configName); viewerDAL.setPatientIdentifiable(patientIdentifiable);
 
             ValueSetLibraryResult result = viewerDAL.getValueSetLibrary(selectedTypeString);
 
@@ -342,7 +345,7 @@ public class DashboardEndpoint {
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
 
             viewerDAL.setValidOrgs(validOrgs);
-            viewerDAL.setSubscriberConnection(configName);
+            viewerDAL.setSubscriberConnection(configName); viewerDAL.setPatientIdentifiable(patientIdentifiable);
 
             ValueSetCodeResult result = viewerDAL.getValueSetCodes(valueSetId, selectedTypeString);
 
@@ -366,7 +369,7 @@ public class DashboardEndpoint {
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
 
             viewerDAL.setValidOrgs(validOrgs);
-            viewerDAL.setSubscriberConnection(configName);
+            viewerDAL.setSubscriberConnection(configName); viewerDAL.setPatientIdentifiable(patientIdentifiable);
 
             QueryLibraryResult result = viewerDAL.getQueryLibrary(selectedTypeString);
 
@@ -392,7 +395,7 @@ public class DashboardEndpoint {
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
 
             viewerDAL.setValidOrgs(validOrgs);
-            viewerDAL.setSubscriberConnection(configName);
+            viewerDAL.setSubscriberConnection(configName); viewerDAL.setPatientIdentifiable(patientIdentifiable);
 
             viewerDAL.saveValueSet(type, name, id);
 
@@ -415,7 +418,7 @@ public class DashboardEndpoint {
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
 
             viewerDAL.setValidOrgs(validOrgs);
-            viewerDAL.setSubscriberConnection(configName);
+            viewerDAL.setSubscriberConnection(configName); viewerDAL.setPatientIdentifiable(patientIdentifiable);
 
             viewerDAL.deleteValueSet(id);
 
@@ -438,7 +441,7 @@ public class DashboardEndpoint {
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
 
             viewerDAL.setValidOrgs(validOrgs);
-            viewerDAL.setSubscriberConnection(configName);
+            viewerDAL.setSubscriberConnection(configName); viewerDAL.setPatientIdentifiable(patientIdentifiable);
 
             viewerDAL.saveQuery(params.getType(), params.getName(), params.getRegistryName(), params.getDenominatorQuery(), params.getId(), params.getJsonQuery());
 
@@ -461,7 +464,7 @@ public class DashboardEndpoint {
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
 
             viewerDAL.setValidOrgs(validOrgs);
-            viewerDAL.setSubscriberConnection(configName);
+            viewerDAL.setSubscriberConnection(configName); viewerDAL.setPatientIdentifiable(patientIdentifiable);
 
             viewerDAL.deleteQuery(id);
 
@@ -487,7 +490,7 @@ public class DashboardEndpoint {
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
 
             viewerDAL.setValidOrgs(validOrgs);
-            viewerDAL.setSubscriberConnection(configName);
+            viewerDAL.setSubscriberConnection(configName); viewerDAL.setPatientIdentifiable(patientIdentifiable);
 
             viewerDAL.saveDashboard(type, name, dashboardId, jsonQuery);
 
@@ -509,7 +512,7 @@ public class DashboardEndpoint {
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
 
             viewerDAL.setValidOrgs(validOrgs);
-            viewerDAL.setSubscriberConnection(configName);
+            viewerDAL.setSubscriberConnection(configName); viewerDAL.setPatientIdentifiable(patientIdentifiable);
 
             viewerDAL.deleteDashboard(dashboardId);
 
@@ -532,7 +535,7 @@ public class DashboardEndpoint {
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
 
             viewerDAL.setValidOrgs(validOrgs);
-            viewerDAL.setSubscriberConnection(configName);
+            viewerDAL.setSubscriberConnection(configName); viewerDAL.setPatientIdentifiable(patientIdentifiable);
 
             viewerDAL.duplicateValueSet(id);
 
@@ -561,7 +564,7 @@ public class DashboardEndpoint {
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
 
             viewerDAL.setValidOrgs(validOrgs);
-            viewerDAL.setSubscriberConnection(configName);
+            viewerDAL.setSubscriberConnection(configName); viewerDAL.setPatientIdentifiable(patientIdentifiable);
 
             viewerDAL.saveValueSetCode(type, selectedDataType, code, term, snomed, value_set_id, id);
 
@@ -584,7 +587,7 @@ public class DashboardEndpoint {
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
 
             viewerDAL.setValidOrgs(validOrgs);
-            viewerDAL.setSubscriberConnection(configName);
+            viewerDAL.setSubscriberConnection(configName); viewerDAL.setPatientIdentifiable(patientIdentifiable);
 
             viewerDAL.deleteValueSetCode(id);
 
@@ -608,182 +611,13 @@ public class DashboardEndpoint {
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
 
             viewerDAL.setValidOrgs(validOrgs);
-            viewerDAL.setSubscriberConnection(configName);
+            viewerDAL.setSubscriberConnection(configName); viewerDAL.setPatientIdentifiable(patientIdentifiable);
 
             RegistriesResult result = viewerDAL.getRegistries(org, registry);
 
             return Response
                     .ok()
                     .entity(result)
-                    .build();
-        }
-    }
-
-    @GET
-    @Path("/organisationgroups")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getOrganisationGroups(@Context SecurityContext sc, @HeaderParam("userProjectId") String userProjectId,
-                                       @QueryParam("selectedTypeString") String selectedTypeString) throws Exception {
-        LOG.debug("getOrganisationGroups");
-
-        checkUserAccessToOrganisations(userProjectId);
-
-        try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
-
-            viewerDAL.setValidOrgs(validOrgs);
-            viewerDAL.setSubscriberConnection(configName);
-
-            OrganisationGroupsResult result = viewerDAL.getOrganisationGroups(selectedTypeString);
-
-            return Response
-                    .ok()
-                    .entity(result)
-                    .build();
-        }
-    }
-
-    @GET
-    @Path("/organisations")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getOrganisations(@Context SecurityContext sc, @HeaderParam("userProjectId") String userProjectId,
-                                     @QueryParam("organisation_group_id") String organisation_group_id) throws Exception {
-        LOG.debug("getOrganisations");
-
-        checkUserAccessToOrganisations(userProjectId);
-
-        try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
-
-            viewerDAL.setValidOrgs(validOrgs);
-            viewerDAL.setSubscriberConnection(configName);
-
-            OrganisationsResult result = viewerDAL.getOrganisations(organisation_group_id);
-
-            return Response
-                    .ok()
-                    .entity(result)
-                    .build();
-        }
-    }
-
-    @GET
-    @Path("/organisationgroupeditor")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response saveOrganisationGroup(@Context SecurityContext sc, @HeaderParam("userProjectId") String userProjectId,
-                                 @QueryParam("type") String type,
-                                 @QueryParam("name") String name,
-                                 @QueryParam("id") String id) throws Exception {
-        LOG.debug("saveOrganisationGroup");
-
-        checkUserAccessToOrganisations(userProjectId);
-
-        try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
-
-            viewerDAL.setValidOrgs(validOrgs);
-            viewerDAL.setSubscriberConnection(configName);
-
-            viewerDAL.saveOrganisationGroup(type, name, id);
-
-            return Response
-                    .ok()
-                    .build();
-        }
-    }
-
-    @GET
-    @Path("/organisationgroupdelete")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteOrganisationGroup(@Context SecurityContext sc, @HeaderParam("userProjectId") String userProjectId,
-                                   @QueryParam("id") String id) throws Exception {
-        LOG.debug("deleteOrganisationGroup");
-
-        checkUserAccessToOrganisations(userProjectId);
-
-        try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
-
-            viewerDAL.setValidOrgs(validOrgs);
-            viewerDAL.setSubscriberConnection(configName);
-
-            viewerDAL.deleteOrganisationGroup(id);
-
-            return Response
-                    .ok()
-                    .build();
-        }
-    }
-
-    @GET
-    @Path("/organisationeditor")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response saveOrganisation(@Context SecurityContext sc, @HeaderParam("userProjectId") String userProjectId,
-                                     @QueryParam("name") String name,
-                                     @QueryParam("type") String type,
-                                     @QueryParam("code") String code,
-                                     @QueryParam("organisation_group_id") String organisation_group_id,
-                                     @QueryParam("id") String id) throws Exception {
-        LOG.debug("saveOrganisation");
-
-        checkUserAccessToOrganisations(userProjectId);
-
-        try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
-
-            viewerDAL.setValidOrgs(validOrgs);
-            viewerDAL.setSubscriberConnection(configName);
-
-            viewerDAL.saveOrganisation(name, type, code, organisation_group_id, id);
-
-            return Response
-                    .ok()
-                    .build();
-        }
-    }
-
-    @GET
-    @Path("/organisationdelete")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteOrganisation(@Context SecurityContext sc, @HeaderParam("userProjectId") String userProjectId,
-                                       @QueryParam("id") String id) throws Exception {
-        LOG.debug("deleteOrganisation");
-
-        checkUserAccessToOrganisations(userProjectId);
-
-        try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
-
-            viewerDAL.setValidOrgs(validOrgs);
-            viewerDAL.setSubscriberConnection(configName);
-
-            viewerDAL.deleteOrganisation(id);
-
-            return Response
-                    .ok()
-                    .build();
-        }
-    }
-
-    @GET
-    @Path("/organisationgroupduplicate")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response duplicateOrganisationGroup(@Context SecurityContext sc, @HeaderParam("userProjectId") String userProjectId,
-                                      @QueryParam("id") String id) throws Exception {
-        LOG.debug("duplicateOrganisationGroup");
-
-        checkUserAccessToOrganisations(userProjectId);
-
-        try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
-
-            viewerDAL.setValidOrgs(validOrgs);
-            viewerDAL.setSubscriberConnection(configName);
-
-            viewerDAL.duplicateOrganisationGroup(id);
-
-            return Response
-                    .ok()
                     .build();
         }
     }
@@ -801,7 +635,7 @@ public class DashboardEndpoint {
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
 
             viewerDAL.setValidOrgs(validOrgs);
-            viewerDAL.setSubscriberConnection(configName);
+            viewerDAL.setSubscriberConnection(configName); viewerDAL.setPatientIdentifiable(patientIdentifiable);
 
             viewerDAL.duplicateDashboard(id);
 
@@ -824,7 +658,7 @@ public class DashboardEndpoint {
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
 
             viewerDAL.setValidOrgs(validOrgs);
-            viewerDAL.setSubscriberConnection(configName);
+            viewerDAL.setSubscriberConnection(configName); viewerDAL.setPatientIdentifiable(patientIdentifiable);
 
             viewerDAL.duplicateQuery(id);
 
@@ -847,7 +681,7 @@ public class DashboardEndpoint {
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
 
             viewerDAL.setValidOrgs(validOrgs);
-            viewerDAL.setSubscriberConnection(configName);
+            viewerDAL.setSubscriberConnection(configName); viewerDAL.setPatientIdentifiable(patientIdentifiable);
 
             QueryResult result = viewerDAL.getQuery(selectedQuery);
 
@@ -871,7 +705,7 @@ public class DashboardEndpoint {
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
 
             viewerDAL.setValidOrgs(validOrgs);
-            viewerDAL.setSubscriberConnection(configName);
+            viewerDAL.setSubscriberConnection(configName); viewerDAL.setPatientIdentifiable(patientIdentifiable);
 
             SeriesResult result = viewerDAL.getSeriesFromQuery(query);
 
@@ -895,7 +729,7 @@ public class DashboardEndpoint {
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
 
             viewerDAL.setValidOrgs(validOrgs);
-            viewerDAL.setSubscriberConnection(configName);
+            viewerDAL.setSubscriberConnection(configName); viewerDAL.setPatientIdentifiable(patientIdentifiable);
 
             SeriesResult result = viewerDAL.getGroupingFromQuery(query);
 
@@ -919,7 +753,7 @@ public class DashboardEndpoint {
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
 
             viewerDAL.setValidOrgs(validOrgs);
-            viewerDAL.setSubscriberConnection(configName);
+            viewerDAL.setSubscriberConnection(configName); viewerDAL.setPatientIdentifiable(patientIdentifiable);
 
             SeriesResult result = viewerDAL.getSeriesFromDashboardId(dashboardId);
 
@@ -943,7 +777,7 @@ public class DashboardEndpoint {
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
 
             viewerDAL.setValidOrgs(validOrgs);
-            viewerDAL.setSubscriberConnection(configName);
+            viewerDAL.setSubscriberConnection(configName); viewerDAL.setPatientIdentifiable(patientIdentifiable);
 
             DashboardViewResult result = viewerDAL.getDashboardView(dashboardNumber);
 
@@ -967,7 +801,7 @@ public class DashboardEndpoint {
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
 
             viewerDAL.setValidOrgs(validOrgs);
-            viewerDAL.setSubscriberConnection(configName);
+            viewerDAL.setSubscriberConnection(configName); viewerDAL.setPatientIdentifiable(patientIdentifiable);
 
             DashboardViewResult result = viewerDAL.getCovidDashboardView(dashboardNumber);
 
@@ -994,7 +828,7 @@ public class DashboardEndpoint {
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
 
             viewerDAL.setValidOrgs(validOrgs);
-            viewerDAL.setSubscriberConnection(configName);
+            viewerDAL.setSubscriberConnection(configName); viewerDAL.setPatientIdentifiable(patientIdentifiable);
 
             ArrayList<String> result = viewerDAL.getMapDates(query);
 
@@ -1026,7 +860,7 @@ public class DashboardEndpoint {
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
 
             viewerDAL.setValidOrgs(validOrgs);
-            viewerDAL.setSubscriberConnection(configName);
+            viewerDAL.setSubscriberConnection(configName); viewerDAL.setPatientIdentifiable(patientIdentifiable);
 
             MapResult result = viewerDAL.getMaps(query, date, lowerLimits, upperLimits, colors, descriptions);
             result.setLowerLimits(new ArrayList(lowerLimits));
@@ -1063,7 +897,7 @@ public class DashboardEndpoint {
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
 
             viewerDAL.setValidOrgs(validOrgs);
-            viewerDAL.setSubscriberConnection(configName);
+            viewerDAL.setSubscriberConnection(configName); viewerDAL.setPatientIdentifiable(patientIdentifiable);
 
             TableData data = viewerDAL.getTableData(queryName, outputType, searchData, pageNumber, pageSize, orderColumn, descending);
 
@@ -1090,7 +924,7 @@ public class DashboardEndpoint {
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
 
             viewerDAL.setValidOrgs(validOrgs);
-            viewerDAL.setSubscriberConnection(configName);
+            viewerDAL.setSubscriberConnection(configName); viewerDAL.setPatientIdentifiable(patientIdentifiable);
 
             long count = viewerDAL.getTableTotalCount(queryName, outputType, searchData);
 
@@ -1114,7 +948,7 @@ public class DashboardEndpoint {
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
 
             viewerDAL.setValidOrgs(validOrgs);
-            viewerDAL.setSubscriberConnection(configName);
+            viewerDAL.setSubscriberConnection(configName); viewerDAL.setPatientIdentifiable(patientIdentifiable);
 
             ArrayList<String> result = viewerDAL.getMapQueries();
 
@@ -1137,7 +971,7 @@ public class DashboardEndpoint {
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
 
             viewerDAL.setValidOrgs(validOrgs);
-            viewerDAL.setSubscriberConnection(configName);
+            viewerDAL.setSubscriberConnection(configName); viewerDAL.setPatientIdentifiable(patientIdentifiable);
 
             RegistryQueryResult result = viewerDAL.getRegistryQueries();
 
@@ -1160,7 +994,7 @@ public class DashboardEndpoint {
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
 
             viewerDAL.setValidOrgs(validOrgs);
-            viewerDAL.setSubscriberConnection(configName);
+            viewerDAL.setSubscriberConnection(configName); viewerDAL.setPatientIdentifiable(patientIdentifiable);
 
             PopulationResult result = viewerDAL.getPopulation();
 
@@ -1183,7 +1017,7 @@ public class DashboardEndpoint {
         try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
 
             viewerDAL.setValidOrgs(validOrgs);
-            viewerDAL.setSubscriberConnection(configName);
+            viewerDAL.setSubscriberConnection(configName); viewerDAL.setPatientIdentifiable(patientIdentifiable);
 
             RegistryListsResult result = viewerDAL.getRegistryLists();
 

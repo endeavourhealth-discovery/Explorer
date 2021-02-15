@@ -31,9 +31,14 @@ public class ExplorerJDBCDAL implements AutoCloseable {
 
     List<String> validOrgs = new ArrayList<>();
     Connection connection = null;
+    Boolean patientIdentifiable = false;
 
     public void setValidOrgs(List<String> orgs) {
         validOrgs = orgs;
+    }
+
+    public void setPatientIdentifiable(Boolean pid) {
+        patientIdentifiable = pid;
     }
 
     public void closeSubscriberConnection() throws Exception {
@@ -373,6 +378,8 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         if (!type.isEmpty())
             typeSQL = " where data_type = ? ";
 
+        Boolean checkOrgs = false;
+
         switch (list) {
             case "1":
                 sql = "SELECT distinct(type) as type " +
@@ -399,8 +406,16 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                         " FROM dashboards.value_sets";
                 break;
             case "5":
+                checkOrgs = true;
+                StringBuilder builder = new StringBuilder();
+                for( int i = 0 ; i < validOrgs.size(); i++ ) {
+                    builder.append("?,");
+                }
+                String params = builder.deleteCharAt( builder.length() -1 ).toString();
+
                 sql = "SELECT distinct(ccg) as type " +
                         "FROM dashboards.registries " +
+                        "WHERE ods_code in ("+params+")"+
                         " order by ccg";
 
                 sqlCount = "SELECT count(distinct(ccg)) " +
@@ -414,21 +429,20 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 sqlCount = "SELECT count(distinct(type)) " +
                         " FROM dashboards.value_set_codes";
                 break;
-            case "9":
-                sql = "SELECT distinct(type) as type " +
-                        "FROM dashboards.organisation_groups" +
+            case "10":
+                checkOrgs = true;
+                builder = new StringBuilder();
+                for( int i = 0 ; i < validOrgs.size(); i++ ) {
+                    builder.append("?,");
+                }
+                params = builder.deleteCharAt( builder.length() -1 ).toString();
+
+                sql = "SELECT distinct(ccg) as type " +
+                        "FROM dashboards.population_denominators " +
+                        "WHERE ods_code in ("+params+")"+
                         " order by type";
 
-                sqlCount = "SELECT count(distinct(type))" +
-                        " FROM dashboards.organisation_groups";
-                break;
-            case "10":
-                sql = "SELECT distinct(name) as type " +
-                        "FROM dashboards.organisation_groups" +
-                        " order by name";
-
-                sqlCount = "SELECT count(distinct(name))" +
-                        " FROM dashboards.organisation_groups";
+                sqlCount = "SELECT 999";
                 break;
             case "11":
                 sql = "SELECT distinct(name) as type " +
@@ -479,16 +493,32 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                         " FROM dashboards.dataset_tables where table_name = 'encounter'";
                 break;
             case "17":
+                checkOrgs = true;
+                builder = new StringBuilder();
+                for( int i = 0 ; i < validOrgs.size(); i++ ) {
+                    builder.append("?,");
+                }
+                params = builder.deleteCharAt( builder.length() -1 ).toString();
+
                 sql = "SELECT distinct(registry) as type " +
                         "FROM dashboards.registries " +
+                        "WHERE ods_code in ("+params+")"+
                         " order by registry";
 
                 sqlCount = "SELECT count(distinct(registry)) " +
                         " FROM dashboards.registries";
                 break;
             case "18":
+                checkOrgs = true;
+                builder = new StringBuilder();
+                for( int i = 0 ; i < validOrgs.size(); i++ ) {
+                    builder.append("?,");
+                }
+                params = builder.deleteCharAt( builder.length() -1 ).toString();
+
                 sql = "SELECT distinct(practice_name) as type " +
                         "FROM dashboards.registries " +
+                        "WHERE ods_code in ("+params+")"+
                         " order by practice_name";
 
                 sqlCount = "SELECT count(distinct(practice_name)) " +
@@ -523,8 +553,14 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         }
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            int p = 1;
             if (!type.isEmpty())
-                statement.setString(1, type);
+                statement.setString(p++, type);
+            if (checkOrgs) {
+                for (int i = 1; i <= validOrgs.size(); i++) {
+                    statement.setString(p++, validOrgs.get(i-1));
+                }
+            }
             try (ResultSet resultSet = statement.executeQuery()) {
                 result.setResults(getLookupList(resultSet));
             }
@@ -1660,11 +1696,16 @@ public class ExplorerJDBCDAL implements AutoCloseable {
     public RegistriesResult getRegistries(String ccg, String registry) throws Exception {
         RegistriesResult result = new RegistriesResult();
 
-        String sql = "{ call dashboards.getRegistries(?,?) }";
+        String sql = "{ call dashboards.getRegistries(?,?,?) }";
+
+        String orgs = String.join(",",validOrgs);
+        orgs = orgs.replaceAll(",","','");
+        orgs = "'" + orgs + "'";
 
         try (CallableStatement cs = connection.prepareCall(sql);) {
             cs.setString(1, ccg);
             cs.setString(2, registry);
+            cs.setString(3, orgs);
             try (ResultSet resultSet = cs.executeQuery()) {
                 result.setResults(getRegistriesList(resultSet));
             }
@@ -1691,283 +1732,6 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 .setAllColumns(resultSet.getString("all_columns"))
                 .setRegistrySize(resultSet.getString("registry_size"));
         return registries;
-    }
-
-    public OrganisationGroupsResult getOrganisationGroups(String selectedTypeString) throws Exception {
-        OrganisationGroupsResult result = new OrganisationGroupsResult();
-
-        String ids[] = selectedTypeString.split(",");
-
-        StringBuilder builder = new StringBuilder();
-
-        for( int i = 0 ; i < ids.length; i++ ) {
-            builder.append("?,");
-        }
-
-        String sql = "";
-        String sqlCount = "";
-        String params = builder.deleteCharAt( builder.length() -1 ).toString();
-
-        sql = "SELECT id, type, name, updated " +
-                "FROM dashboards.organisation_groups WHERE type in ("+params+")"+
-                "order by type,name";
-
-        sqlCount = "SELECT count(1) " +
-                "FROM dashboards.organisation_groups WHERE type in ("+params+")";
-
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            for (int i = 1; i <= ids.length; i++) {
-                statement.setString(i, ids[i-1]);
-            }
-            try (ResultSet resultSet = statement.executeQuery()) {
-                result.setResults(getOrganisationGroupsList(resultSet));
-            }
-        }
-
-        try (PreparedStatement statement = connection.prepareStatement(sqlCount)) {
-            for (int i = 1; i <= ids.length; i++) {
-                statement.setString(i, ids[i-1]);
-            }
-            try (ResultSet resultSet = statement.executeQuery()) {
-                resultSet.next();
-                result.setLength(resultSet.getInt(1));
-            }
-        }
-
-        return result;
-    }
-
-    private List<OrganisationGroups> getOrganisationGroupsList(ResultSet resultSet) throws SQLException {
-        List<OrganisationGroups> result = new ArrayList<>();
-        while (resultSet.next()) {
-            result.add(getOrganisationGroups(resultSet));
-        }
-
-        return result;
-    }
-
-    public static OrganisationGroups getOrganisationGroups(ResultSet resultSet) throws SQLException {
-        OrganisationGroups organisationgroups = new OrganisationGroups();
-
-        organisationgroups
-                .setId(resultSet.getInt("id"))
-                .setType(resultSet.getString("type"))
-                .setName(resultSet.getString("name"))
-                .setUpdated(resultSet.getDate("updated"));
-        return organisationgroups;
-    }
-
-    public OrganisationsResult getOrganisations(String organisation_group_id) throws Exception {
-        OrganisationsResult result = new OrganisationsResult();
-
-        String sql = "";
-        String sqlCount = "";
-
-        sql = "SELECT type, name, ods_code, updated, id " +
-                "FROM dashboards.organisations " +
-                "WHERE organisation_group_id = ? " +
-                "order by type, name";
-
-        sqlCount = "SELECT count(1) " +
-                "FROM dashboards.organisations " +
-                "WHERE organisation_group_id = ?";
-
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, organisation_group_id);
-            try (ResultSet resultSet = statement.executeQuery()) {
-                result.setResults(getOrganisationsList(resultSet));
-            }
-        }
-
-        try (PreparedStatement statement = connection.prepareStatement(sqlCount)) {
-            statement.setString(1, organisation_group_id);
-            try (ResultSet resultSet = statement.executeQuery()) {
-                resultSet.next();
-                result.setLength(resultSet.getInt(1));
-            }
-        }
-
-        return result;
-    }
-
-    private List<Organisations> getOrganisationsList(ResultSet resultSet) throws SQLException {
-        List<Organisations> result = new ArrayList<>();
-        while (resultSet.next()) {
-            result.add(getOrganisations(resultSet));
-        }
-
-        return result;
-    }
-
-    public static Organisations getOrganisations(ResultSet resultSet) throws SQLException {
-        Organisations organisations = new Organisations();
-
-        organisations
-                .setType(resultSet.getString("type"))
-                .setName(resultSet.getString("name"))
-                .setCode(resultSet.getString("ods_code"))
-                .setUpdated(resultSet.getDate("updated"))
-                .setId(resultSet.getString("id"));
-        return organisations;
-    }
-
-    public void saveOrganisationGroup(String type, String name, String id) throws Exception {
-
-        String sql = "";
-
-        if (id.equals("")) {
-            sql = "INSERT INTO dashboards.organisation_groups (type, name) " +
-                    "VALUES (?, ?)";
-            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-                stmt.setString(1, type);
-                stmt.setString(2, name);
-                stmt.executeUpdate();
-                connection.commit();
-            } catch (Exception ex) {
-                connection.rollback();
-            }
-        } else // edit
-        {
-            sql = "UPDATE dashboards.organisation_groups SET type = ?, name = ? " +
-                    "WHERE id = ?";
-
-            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-                stmt.setString(1, type);
-                stmt.setString(2, name);
-                stmt.setString(3, id);
-                stmt.executeUpdate();
-                connection.commit();
-            } catch (Exception ex) {
-                connection.rollback();
-            }
-        }
-    }
-
-    public void deleteOrganisationGroup(String id) throws Exception {
-
-        String ids[] = id.split(",");
-
-        StringBuilder builder = new StringBuilder();
-
-        for( int i = 0 ; i < ids.length; i++ ) {
-            builder.append("?,");
-        }
-
-        String params = builder.deleteCharAt( builder.length() -1 ).toString();
-
-        String sql = "DELETE FROM dashboards.organisation_groups WHERE id in ("+params+")";
-
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            for (int i = 1; i <= ids.length; i++) {
-                stmt.setInt(i, Integer.parseInt(ids[i-1]));
-            }
-            stmt.executeUpdate();
-            connection.commit();
-        } catch (Exception ex) {
-            connection.rollback();
-        }
-
-        sql = "DELETE FROM dashboards.organisations WHERE organisation_group_id in ("+params+")";
-
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            for (int i = 1; i <= ids.length; i++) {
-                stmt.setInt(i, Integer.parseInt(ids[i-1]));
-            }
-            stmt.executeUpdate();
-            connection.commit();
-        } catch (Exception ex) {
-            connection.rollback();
-        }
-
-    }
-
-    public void duplicateOrganisationGroup(String id) throws Exception {
-
-        String sql = "insert into dashboards.organisation_groups (type, name) " +
-                "select type, concat('Copy of ',name) from dashboards.organisation_groups where id = ?";
-
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, id);
-            stmt.executeUpdate();
-            connection.commit();
-        } catch (Exception ex) {
-            connection.rollback();
-        }
-
-        String sqlCount = "insert into dashboards.organisations (organisation_group_id, name, type, ods_code) " +
-                "select (select max(id) as id from dashboards.organisation_groups), name, type, ods_code " +
-                "from dashboards.organisations " +
-                "where organisation_group_id = ?";
-
-        try (PreparedStatement stmt = connection.prepareStatement(sqlCount)) {
-            stmt.setString(1, id);
-            stmt.executeUpdate();
-            connection.commit();
-        } catch (Exception ex) {
-            connection.rollback();
-        }
-    }
-
-    public void saveOrganisation(String name, String type, String code, String organisation_group_id, String id) throws Exception {
-
-        String sql = "";
-
-        if (id.equals("")) {
-            sql = "INSERT INTO dashboards.organisations (name, type, ods_code, organisation_group_id) " +
-                    "VALUES (?, ?, ?, ?)";
-
-            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-                stmt.setString(1, name);
-                stmt.setString(2, type);
-                stmt.setString(3, code);
-                stmt.setString(4, organisation_group_id);
-                stmt.executeUpdate();
-                connection.commit();
-            } catch (Exception ex) {
-                connection.rollback();
-            }
-        } else // edit
-        {
-            sql = "UPDATE dashboards.organisations SET name = ?, type = ?, ods_code = ? " +
-                    "WHERE id = ?";
-
-            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-                stmt.setString(1, name);
-                stmt.setString(2, type);
-                stmt.setString(3, code);
-                stmt.setString(4, id);
-                stmt.executeUpdate();
-                connection.commit();
-            } catch (Exception ex) {
-                connection.rollback();
-            }
-        }
-    }
-
-    public void deleteOrganisation(String id) throws Exception {
-
-        String ids[] = id.split(",");
-
-        StringBuilder builder = new StringBuilder();
-
-        for( int i = 0 ; i < ids.length; i++ ) {
-            builder.append("?,");
-        }
-
-        String params = builder.deleteCharAt( builder.length() -1 ).toString();
-
-        String sql = "DELETE FROM dashboards.organisations WHERE id in ("+params+")";
-
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            for (int i = 1; i <= ids.length; i++) {
-                stmt.setInt(i, Integer.parseInt(ids[i-1]));
-            }
-            stmt.executeUpdate();
-            connection.commit();
-        } catch (Exception ex) {
-            connection.rollback();
-        }
-
     }
 
     public QueryResult getQuery(String selectedQuery) throws Exception {
@@ -2646,6 +2410,12 @@ public class ExplorerJDBCDAL implements AutoCloseable {
     public SeriesResult getGroupingFromQuery(String queryName) throws Exception {
         SeriesResult result = new SeriesResult();
 
+        StringBuilder builder = new StringBuilder();
+        for( int i = 0 ; i < validOrgs.size(); i++ ) {
+            builder.append("?,");
+        }
+        String params = builder.deleteCharAt( builder.length() -1 ).toString();
+
         String sql = "";
         String sqlCount = "";
 
@@ -2661,12 +2431,18 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         }
 
         sql = "SELECT distinct `grouping` " +
-                "FROM dashboards.`dashboard_results_" + queryId + "`"+
+                "FROM dashboards.`dashboard_results_" + queryId + "` r "+
+                "join dashboards.population_denominators p on p.ccg = r.`grouping` "+
+                "WHERE ods_code in ("+params+")"+
                 " order by `grouping`";
 
         sqlCount = "SELECT 1";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            int p = 1;
+            for (int i = 1; i <= validOrgs.size(); i++) {
+                statement.setString(p++, validOrgs.get(i-1));
+            }
             try (ResultSet resultSet = statement.executeQuery()) {
                 result.setResults(getGroupingList(resultSet));
             }
@@ -2685,6 +2461,12 @@ public class ExplorerJDBCDAL implements AutoCloseable {
     public SeriesResult getSeriesFromQuery(String queryName) throws Exception {
         SeriesResult result = new SeriesResult();
 
+        StringBuilder builder = new StringBuilder();
+        for( int i = 0 ; i < validOrgs.size(); i++ ) {
+            builder.append("?,");
+        }
+        String params = builder.deleteCharAt( builder.length() -1 ).toString();
+
         String sql = "";
         String sqlCount = "";
 
@@ -2699,13 +2481,20 @@ public class ExplorerJDBCDAL implements AutoCloseable {
             }
         }
 
-        sql = "SELECT distinct name " +
-                "FROM dashboards.`dashboard_results_" + queryId + "`"+
-                " order by name";
+        sql = "SELECT distinct `name` " +
+                "FROM dashboards.`dashboard_results_" + queryId + "` r "+
+                "join dashboards.population_denominators p on p.ccg = r.`grouping` "+
+                "WHERE ods_code in ("+params+")"+
+                " order by `name`";
 
         sqlCount = "SELECT 1";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            int p = 1;
+            for (int i = 1; i <= validOrgs.size(); i++) {
+                statement.setString(p++, validOrgs.get(i-1));
+            }
+
             try (ResultSet resultSet = statement.executeQuery()) {
                 result.setResults(getSeriesList(resultSet));
             }
@@ -2789,12 +2578,22 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         String sql = "";
         String sqlCount = "";
 
-        sql = "select distinct registry,query from dashboards.registries";
+        StringBuilder builder = new StringBuilder();
+        for( int i = 0 ; i < validOrgs.size(); i++ ) {
+            builder.append("?,");
+        }
+        String params = builder.deleteCharAt( builder.length() -1 ).toString();
+
+        sql = "select distinct registry,query from dashboards.registries "+
+                "WHERE ods_code in ("+params+")";
 
         sqlCount = "SELECT 999";
 
-
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            int p = 1;
+            for (int i = 1; i <= validOrgs.size(); i++) {
+                statement.setString(p++, validOrgs.get(i-1));
+            }
             try (ResultSet resultSet = statement.executeQuery()) {
                 result.setResults(getRegistryQueryList(resultSet));
             }
@@ -2834,8 +2633,15 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         String sql = "";
         String sqlCount = "";
 
+        StringBuilder builder = new StringBuilder();
+        for( int i = 0 ; i < validOrgs.size(); i++ ) {
+            builder.append("?,");
+        }
+        String params = builder.deleteCharAt( builder.length() -1 ).toString();
+
         sql = "SELECT stp,ccg,pcn,practice,ethnic,age,sex,sum(list_size) as list_size " +
         "FROM dashboards.population_denominators " +
+        "WHERE ods_code in ("+params+") "+
         "group by stp,ccg,pcn,practice,ethnic,age,sex " +
         "with rollup";
 
@@ -2843,6 +2649,10 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 "FROM dashboards.population_denominators";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            int p = 1;
+            for (int i = 1; i <= validOrgs.size(); i++) {
+                statement.setString(p++, validOrgs.get(i-1));
+            }
             try (ResultSet resultSet = statement.executeQuery()) {
                 result.setResults(getPopulationList(resultSet));
             }
@@ -2888,13 +2698,25 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         String sql = "";
         String sqlCount = "";
 
+        StringBuilder builder = new StringBuilder();
+        for( int i = 0 ; i < validOrgs.size(); i++ ) {
+            builder.append("?,");
+        }
+        String params = builder.deleteCharAt( builder.length() -1 ).toString();
+
         sql = "SELECT ccg, practice_name, registry, list_size, registry_size, target_percentage " +
                 "FROM dashboards.registries " +
+                "WHERE ods_code in ("+params+") "+
                 "order by ccg, practice_name, list_size desc, registry_size desc";
 
         sqlCount = "SELECT count(1) FROM dashboards.registries";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            int p = 1;
+
+            for (int i = 1; i <= validOrgs.size(); i++) {
+                statement.setString(p++, validOrgs.get(i-1));
+            }
             try (ResultSet resultSet = statement.executeQuery()) {
                 result.setResults(getRegistryList(resultSet));
             }

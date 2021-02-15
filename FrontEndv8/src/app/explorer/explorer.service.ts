@@ -222,63 +222,6 @@ export class ExplorerService {
     return this.http.get('api/events/registries', {params});
   }
 
-  getOrganisationGroups(selectedTypeString?: string): Observable<any> {
-
-    let params = new HttpParams();
-    params = params.append('selectedTypeString', selectedTypeString);
-
-    return this.http.get('api/events/organisationgroups', {params});
-  }
-
-  getOrganisations(organisation_group_id?: string): Observable<any> {
-
-    let params = new HttpParams();
-    params = params.append('organisation_group_id', organisation_group_id);
-
-    return this.http.get('api/events/organisations', {params});
-  }
-
-  saveOrganisationGroup(type?: string, name?: string, id?: string): Observable<any> {
-    let params = new HttpParams();
-    params = params.append('type', type);
-    params = params.append('name', name);
-    params = params.append('id', id);
-
-    return this.http.get('api/events/organisationgroupeditor', {params});
-  }
-
-  deleteOrganisationGroup(id?: string): Observable<any> {
-    let params = new HttpParams();
-    params = params.append('id', id);
-
-    return this.http.get('api/events/organisationgroupdelete', {params});
-  }
-
-  saveOrganisation(name?: string, type?: string, code?: string, organisation_group_id?: string, id?: string): Observable<any> {
-    let params = new HttpParams();
-    params = params.append('name', name);
-    params = params.append('type', type);
-    params = params.append('code', code);
-    params = params.append('organisation_group_id', organisation_group_id);
-    params = params.append('id', id);
-
-    return this.http.get('api/events/organisationeditor', {params});
-  }
-
-  deleteOrganisation(id?: string): Observable<any> {
-    let params = new HttpParams();
-    params = params.append('id', id);
-
-    return this.http.get('api/events/organisationdelete', {params});
-  }
-
-  duplicateOrganisationGroup(id?: string): Observable<any> {
-    let params = new HttpParams();
-    params = params.append('id', id);
-
-    return this.http.get('api/events/organisationgroupduplicate', {params});
-  }
-
   duplicateDashboard(id?: string): Observable<any> {
     let params = new HttpParams();
     params = params.append('id', id);

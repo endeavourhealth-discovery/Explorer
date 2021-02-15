@@ -4,7 +4,8 @@ DROP PROCEDURE IF EXISTS getRegistries;
 
 DELIMITER //
 CREATE PROCEDURE getRegistries(IN filter_ccg VARCHAR(255),
-  IN filter_registry VARCHAR(255))
+  IN filter_registry VARCHAR(255),
+  IN valid_orgs VARCHAR(1000))
 
 sp: BEGIN
 
@@ -41,7 +42,7 @@ IF filter_ccg='' and filter_registry = '' THEN
 	  dashboards.registries where registry in (select distinct registry from dashboards.registries where parent_registry = '');
 
 	SET @sql = CONCAT('create table dashboards.temp as SELECT IFNULL(ccg, "GRAND TOTAL") AS ccg, ', @sql, '
-                  FROM dashboards.registries where parent_registry = \'\' GROUP BY ccg with rollup');
+                  FROM dashboards.registries where ods_code in (',valid_orgs,') and parent_registry = \'\' GROUP BY ccg with rollup');
 
 	PREPARE stmt FROM @sql;
 	EXECUTE stmt;
@@ -99,7 +100,7 @@ elseif filter_ccg != '' and filter_registry	 = '' THEN
 	  dashboards.registries where registry in (select distinct registry from dashboards.registries where parent_registry = '');
 
 	SET @sql = CONCAT('create table dashboards.temp as SELECT IFNULL(practice_name, "GRAND TOTAL") AS practice_name, ', @sql, '
-                  FROM dashboards.registries where ccg = \'',filter_ccg,'\' and parent_registry = \'\' GROUP BY practice_name with rollup');
+                  FROM dashboards.registries where ods_code in (',valid_orgs,') and ccg = \'',filter_ccg,'\' and parent_registry = \'\' GROUP BY practice_name with rollup');
 
 	PREPARE stmt FROM @sql;
 	EXECUTE stmt;
@@ -157,7 +158,7 @@ elseif filter_ccg='' and filter_registry != '' THEN
 	  dashboards.registries where registry in (select distinct registry from dashboards.registries where parent_registry = filter_registry);
 
 	SET @sql = CONCAT('create table dashboards.temp as SELECT IFNULL(ccg, "GRAND TOTAL") AS ccg, ', @sql, '
-                  FROM dashboards.registries where parent_registry = \'',filter_registry,'\' GROUP BY ccg with rollup');
+                  FROM dashboards.registries where ods_code in (',valid_orgs,') and parent_registry = \'',filter_registry,'\' GROUP BY ccg with rollup');
 
 	PREPARE stmt FROM @sql;
 	EXECUTE stmt;
@@ -236,7 +237,7 @@ elseif filter_ccg != '' and filter_registry	 != '' THEN
 	  dashboards.registries where registry in (select distinct registry from dashboards.registries where parent_registry = filter_registry);
 
 	SET @sql = CONCAT('create table dashboards.temp as SELECT IFNULL(practice_name, "GRAND TOTAL") AS practice_name, ', @sql, '
-                  FROM dashboards.registries where ccg = \'',filter_ccg,'\' and parent_registry = \'',filter_registry,'\' GROUP BY practice_name with rollup');
+                  FROM dashboards.registries where ods_code in (',valid_orgs,') and ccg = \'',filter_ccg,'\' and parent_registry = \'',filter_registry,'\' GROUP BY practice_name with rollup');
 
 	PREPARE stmt FROM @sql;
 	EXECUTE stmt;

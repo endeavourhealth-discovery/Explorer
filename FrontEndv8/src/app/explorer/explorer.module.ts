@@ -42,10 +42,6 @@ import {GaugeModule} from "angular-gauge";
 import {MatStepperModule} from "@angular/material/stepper";
 import {AdvancedQueryEditorComponent} from "./advancedqueryeditor/advancedqueryeditor.component";
 import {MatDividerModule} from "@angular/material/divider";
-import {OrganisationGroupsComponent} from "./organisationgroups/organisationgroups.component";
-import {OrganisationsComponent} from "./organisations/organisations.component";
-import {OrganisationGroupsEditorComponent} from "./organisationgroupseditor/organisationgroupseditor.component";
-import {OrganisationsEditorComponent} from "./organisationseditor/organisationseditor.component";
 import {MatRadioModule} from "@angular/material/radio";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {DragDropModule} from '@angular/cdk/drag-drop';
@@ -75,10 +71,6 @@ import {RegistryListsComponent} from "./registrylists/registrylists.component";
     ValueSetCodeEditorComponent,
     RegistriesComponent,
     AdvancedQueryEditorComponent,
-    OrganisationGroupsComponent,
-    OrganisationsComponent,
-    OrganisationGroupsEditorComponent,
-    OrganisationsEditorComponent,
     DashboardViewerComponent,
     MapComponent,
     TrendComponent,
@@ -140,9 +132,6 @@ import {RegistryListsComponent} from "./registrylists/registrylists.component";
     DashboardEditorComponent,
     ValueSetCodeEditorComponent,
     AdvancedQueryEditorComponent,
-    OrganisationsComponent,
-    OrganisationGroupsEditorComponent,
-    OrganisationsEditorComponent,
     TrendComponent
   ],
   providers: [ Globals ]
