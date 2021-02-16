@@ -18,6 +18,7 @@ public class Population {
     private String age;
     private String sex;
     private String listSize;
+    private String odsCode;
 
     public String getStp() {
         return stp;
@@ -88,6 +89,15 @@ public class Population {
 
     public Population setListSize(String listSize) {
         this.listSize = listSize;
+        return this;
+    }
+
+    public String getOdsCode() {
+        return odsCode;
+    }
+
+    public Population setOdsCode(String odsCode) {
+        this.odsCode = odsCode;
         return this;
     }
 }

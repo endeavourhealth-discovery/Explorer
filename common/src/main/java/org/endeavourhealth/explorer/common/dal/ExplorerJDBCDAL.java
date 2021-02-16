@@ -2692,6 +2692,77 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         return population;
     }
 
+    public String getOrganisationTree() throws Exception {
+
+        StringBuilder builder = new StringBuilder();
+        for( int i = 0 ; i < validOrgs.size(); i++ ) {
+            builder.append("?,");
+        }
+        String params = builder.deleteCharAt( builder.length() -1 ).toString();
+
+        String sql = "SELECT stp,ccg,pcn,practice,ods_code " +
+                "FROM dashboards.population_denominators " +
+                "WHERE ods_code in ("+params+") "+
+                "group by stp,ccg,pcn,practice,ods_code "+
+                "order by stp,ccg,pcn,practice,ods_code";
+
+        String orgTree = "{";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            int p = 1;
+            for (int i = 1; i <= validOrgs.size(); i++) {
+                statement.setString(p++, validOrgs.get(i-1));
+            }
+            try (ResultSet resultSet = statement.executeQuery()) {
+                String prevSTP = "";
+                String prevCCG = "";
+                String prevPCN = "";
+                while (resultSet.next()) {
+                    String stp = resultSet.getString("stp");
+                    String ccg = resultSet.getString("ccg");
+                    String pcn = resultSet.getString("pcn");
+                    String practice = resultSet.getString("practice");
+                    if (!stp.equals(prevSTP)) {
+                        orgTree += "]}},";
+                        orgTree += "\""+ stp + "\":{";
+                    }
+                    prevSTP = stp;
+                    if (!ccg.equals(prevCCG)) {
+                        orgTree += "\"},";
+                        orgTree += "\""+ccg+"\":{";
+                    }
+                    prevCCG = ccg;
+                    if (!pcn.equals(prevPCN)) {
+                        orgTree += "\"],";
+                        orgTree += "\""+pcn+"\":[";
+                    }
+                    orgTree += "\""+practice+"\",";
+                    prevPCN = pcn;
+                }
+                orgTree = removeLastChar(orgTree);
+                orgTree += "\"}}}";
+            }
+        }
+
+        orgTree = orgTree.replaceAll("\\{\\]\\}\\},","\\{");
+        orgTree = orgTree.replaceAll("\\:\\{\"\\},","\\:\\{");
+        orgTree = orgTree.replaceAll("\",\"\\],","\"\\],");
+        orgTree = orgTree.replaceAll("\\{\"\\],","\\{");
+        orgTree = orgTree.replaceAll("\",\"\\},","\"\\]\\},");
+        orgTree = orgTree.replaceAll("\"\"\\}\\}\\}","\"\\]\\}\\}\\}");
+        orgTree = orgTree.replaceAll("\",\\]\\}\\}","\"\\]\\}\\}");
+
+        return orgTree;
+    }
+
+    private static String removeLastChar(String str) {
+        return removeLastChars(str, 1);
+    }
+
+    private static String removeLastChars(String str, int chars) {
+        return str.substring(0, str.length() - chars);
+    }
+
     public RegistryListsResult getRegistryLists() throws Exception {
         RegistryListsResult result = new RegistryListsResult();
 

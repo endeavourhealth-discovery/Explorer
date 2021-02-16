@@ -395,10 +395,15 @@ export class ExplorerService {
   }
 
   getPopulation(): Observable<any> {
-
-    let params = new HttpParams();
+    let params: HttpParams = new HttpParams();
 
     return this.http.get('api/events/population', {params});
+  }
+
+  getOrganisationTree(): Observable<any> {
+    let params = new HttpParams();
+
+    return this.http.get('api/events/organisationtree', {params});
   }
 
   getRegistryLists(): Observable<any> {
