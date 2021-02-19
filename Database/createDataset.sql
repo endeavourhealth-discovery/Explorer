@@ -27,7 +27,6 @@ BEGIN
 
 DECLARE clinicalTypeString VARCHAR(1000);
 DECLARE whereString VARCHAR(1000);
-DECLARE indexString VARCHAR(255) DEFAULT NULL;
 
 DECLARE front VARCHAR(500) DEFAULT NULL;
 DECLARE frontlen INT DEFAULT NULL;
@@ -45,16 +44,10 @@ DECLARE clinicalType VARCHAR(100);
 
     IF p_event_type IN ('MEDICATION', 'ENCOUNTERS') THEN
 
-               IF p_event_type = 'MEDICATION' THEN
-                 SET indexString = ' FORCE INDEX FOR JOIN (ix_medication_statement_index_2,ix_medication_statement_index_4) ';
-               ELSEIF p_event_type = 'ENCOUNTERS' THEN
-                 SET indexString = ' FORCE INDEX FOR JOIN (ix_encounter_index_2,ix_encounter_index_4) ';
-               END IF;
-
        IF p_datasetconcepttab IS NOT NULL THEN
          SET @sql = CONCAT('INSERT INTO ', p_datasettab,' 
          SELECT DISTINCT p.query_id, o.id 
-         FROM ', p_patientcohorttab,' p JOIN ', p_schema, '.', p_sourcetab,' o ', indexString,' ON o.patient_id = p.patient_id AND o.organization_id = p.organization_id 
+         FROM ', p_patientcohorttab,' p JOIN ', p_schema, '.', p_sourcetab,' o ON o.patient_id = p.patient_id AND o.organization_id = p.organization_id 
          JOIN ', p_datasetconcepttab,' c ON o.non_core_concept_id = c.non_core_concept_id 
          WHERE o.non_core_concept_id IS NOT NULL AND ', p_daterange,' AND ', p_activeString);
          PREPARE stmt FROM @sql;
@@ -63,7 +56,7 @@ DECLARE clinicalType VARCHAR(100);
        ELSE
          SET @sql = CONCAT('INSERT INTO ', p_datasettab,' 
          SELECT DISTINCT p.query_id, o.id 
-         FROM ', p_patientcohorttab,' p JOIN ', p_schema, '.', p_sourcetab,' o ', indexString,' ON o.patient_id = p.patient_id AND o.organization_id = p.organization_id 
+         FROM ', p_patientcohorttab,' p JOIN ', p_schema, '.', p_sourcetab,' o ON o.patient_id = p.patient_id AND o.organization_id = p.organization_id 
          WHERE o.non_core_concept_id IS NOT NULL AND ', p_daterange,' AND ', p_activeString);
          PREPARE stmt FROM @sql;
          EXECUTE stmt;
@@ -75,8 +68,6 @@ DECLARE clinicalType VARCHAR(100);
     SET clinicalTypeString = p_selectedClinicalTypes;
     
     IF p_event_type = 'CLINICALEVENTS' THEN
-
-         SET indexString = ' FORCE INDEX FOR JOIN (ix_observation_index_2,ix_observation_index_5) ';
 
       -- create a temporary dataset table 
       DROP TEMPORARY TABLE IF EXISTS qry_dataset;
@@ -157,7 +148,7 @@ DECLARE clinicalType VARCHAR(100);
                               -- insert observation results into a temporary table
                               SET @sql = CONCAT('INSERT INTO qry_dataset 
                               SELECT DISTINCT p.query_id, o.id 
-                              FROM ', p_patientcohorttab,' p JOIN ', p_schema, '.', p_sourcetab,' o ', indexString,' ON o.patient_id = p.patient_id 
+                              FROM ', p_patientcohorttab,' p JOIN ', p_schema, '.', p_sourcetab,' o ON o.patient_id = p.patient_id 
                               AND o.organization_id = p.organization_id 
                               JOIN qry_concept cpt ON o.non_core_concept_id = cpt.non_core_concept_id 
                               WHERE ', whereString,' 
@@ -207,7 +198,7 @@ DECLARE clinicalType VARCHAR(100);
 
                               SET @sql = CONCAT("INSERT INTO qry_dataset 
                               SELECT DISTINCT p.query_id, o.id 
-                              FROM ", p_patientcohorttab," p JOIN ", p_schema, '.', p_sourcetab," o ", indexString," ON o.patient_id = p.patient_id 
+                              FROM ", p_patientcohorttab," p JOIN ", p_schema, '.', p_sourcetab," o ON o.patient_id = p.patient_id 
                               AND o.organization_id = p.organization_id 
                               JOIN ", p_schema,".concept cpt ON o.non_core_concept_id = cpt.dbid 
                               WHERE o.is_problem = 1 
@@ -234,7 +225,7 @@ DECLARE clinicalType VARCHAR(100);
                                  
                               SET @sql = CONCAT("INSERT INTO qry_dataset 
                               SELECT DISTINCT p.query_id, o.id 
-                              FROM ", p_patientcohorttab," p JOIN ", p_schema, '.', p_sourcetab," o ", indexString," ON o.patient_id = p.patient_id 
+                              FROM ", p_patientcohorttab," p JOIN ", p_schema, '.', p_sourcetab," o ON o.patient_id = p.patient_id 
                               AND o.organization_id = p.organization_id 
                               JOIN ", p_schema,".concept cpt ON o.non_core_concept_id = cpt.dbid
                               WHERE ( cpt.name LIKE '%procedure%' 
@@ -260,7 +251,7 @@ DECLARE clinicalType VARCHAR(100);
                                  
                               SET @sql = CONCAT("INSERT INTO qry_dataset 
                               SELECT DISTINCT p.query_id, o.id 
-                              FROM ", p_patientcohorttab," p JOIN ", p_schema, '.', p_sourcetab, " o ", indexString," ON o.patient_id = p.patient_id 
+                              FROM ", p_patientcohorttab," p JOIN ", p_schema, '.', p_sourcetab, " o ON o.patient_id = p.patient_id 
                               AND o.organization_id = p.organization_id 
                               JOIN ", p_schema,".concept cpt ON o.non_core_concept_id = cpt.dbid
                               WHERE ( cpt.name LIKE '%family history%' OR cpt.name LIKE '%FH:%' 
@@ -286,7 +277,7 @@ DECLARE clinicalType VARCHAR(100);
             
                               SET @sql = CONCAT("INSERT INTO qry_dataset 
                               SELECT DISTINCT p.query_id, o.id 
-                              FROM ", p_patientcohorttab," p JOIN ", p_schema, '.', p_sourcetab, " o ", indexString," ON o.patient_id = p.patient_id 
+                              FROM ", p_patientcohorttab," p JOIN ", p_schema, '.', p_sourcetab, " o ON o.patient_id = p.patient_id 
                               AND o.organization_id = p.organization_id 
                               JOIN ", p_schema,".concept cpt ON o.non_core_concept_id = cpt.dbid
                               WHERE ( cpt.name LIKE '%immunisation%' OR cpt.name LIKE '%vaccination%' 
@@ -566,7 +557,7 @@ DECLARE clinicalType VARCHAR(100);
 
             SET @sql = CONCAT('INSERT INTO qry_dataset 
             SELECT DISTINCT p.query_id, o.id 
-            FROM ', p_patientcohorttab,' p JOIN ', p_schema, '.', p_sourcetab,' o ', indexString,' ON o.patient_id = p.patient_id 
+            FROM ', p_patientcohorttab,' p JOIN ', p_schema, '.', p_sourcetab,' o ON o.patient_id = p.patient_id 
             AND o.organization_id = p.organization_id 
             JOIN ', p_datasetconcepttab,' c ON o.non_core_concept_id = c.non_core_concept_id  
             WHERE o.non_core_concept_id IS NOT NULL AND ', p_daterange,' AND ', p_activeString); 
@@ -578,7 +569,7 @@ DECLARE clinicalType VARCHAR(100);
 
             SET @sql = CONCAT('INSERT INTO qry_dataset 
             SELECT DISTINCT p.query_id, o.id 
-            FROM ', p_patientcohorttab,' p JOIN ', p_schema, '.', p_sourcetab,' o ', indexString,' ON o.patient_id = p.patient_id 
+            FROM ', p_patientcohorttab,' p JOIN ', p_schema, '.', p_sourcetab,' o ON o.patient_id = p.patient_id 
             AND o.organization_id = p.organization_id 
             WHERE o.non_core_concept_id IS NOT NULL AND ', p_daterange,' AND ', p_activeString);
             PREPARE stmt FROM @sql;
