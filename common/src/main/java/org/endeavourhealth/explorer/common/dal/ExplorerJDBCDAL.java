@@ -1551,6 +1551,51 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         return chartItem;
     }
 
+    public ChartResult getDashboardTrend(String chartName, String dateFrom, String dateTo, String weekly) throws Exception {
+        List<String> charts = Arrays.asList(chartName.split("\\s*,\\s*"));
+
+        ChartResult result = new ChartResult();
+        String sql = "";
+
+        List<Chart> chart = new ArrayList<>();
+        Chart chartItem = null;
+
+        for (String chart_name : charts) {
+            chartItem = new Chart();
+            chartItem.setName(chart_name);
+
+            if (weekly.equals("1")) {
+                sql = "SELECT FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) AS series_name, " +
+                        "SUM(series_value) AS series_value " +
+                        "from dashboards.`dashboard_results_0` r "+
+                        "where name = ? " +
+                        "and series_name between ? and ? "+
+                        " GROUP BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) " +
+                        "ORDER BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7))";
+            } else {
+                sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_0` r "+
+                        "where name = ? " +
+                        "and series_name between ? and ? group by series_name order by series_name";
+            }
+
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                int p = 1;
+                statement.setString(p++, chart_name);
+                statement.setString(p++, dateFrom);
+                statement.setString(p++, dateTo);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    chartItem.setSeries(getSeriesFromResultSet(resultSet));
+                }
+            }
+
+            chart.add(chartItem);
+        }
+
+        result.setResults(chart);
+
+        return result;
+    }
+
     private List<Series> getSeriesFromResultSet(ResultSet resultSet) throws SQLException {
         List<Series> result = new ArrayList<>();
         while (resultSet.next()) {
@@ -1606,7 +1651,7 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                         "select distinct practice_ods_code from dashboards.population_denominators "+
                         "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
                         "AND r.ccg = ? and registry in ("+params+")"+
-                        " GROUP BY r.ccg, r.registry order by r.registry_size desc";
+                        " GROUP BY r.ccg, r.registry";
             else
                 sql = "SELECT r.registry as series_name,r.registry_size as series_value FROM dashboards.registries r "+
                         "where r.ods_code in ("+

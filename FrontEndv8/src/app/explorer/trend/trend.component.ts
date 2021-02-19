@@ -86,7 +86,6 @@ export class TrendComponent {
   refresh() {
     this.orgList = this.orgs.split(',');
     let weekly = "0";
-    let cumulative = "0";
     let organisation: string;
     let indicator: string;
 
@@ -113,7 +112,7 @@ export class TrendComponent {
     }
     names = names.substr(1);
 
-    this.explorerService.getDashboard('Registry trends', names, this.formatDate(this.dateFrom), this.formatDate(this.dateTo), cumulative, 'registry_trend', weekly)
+    this.explorerService.getDashboardTrend(names, this.formatDate(this.dateFrom), this.formatDate(this.dateTo), weekly)
       .subscribe(result => {
         this.chartResults = result.results;
 

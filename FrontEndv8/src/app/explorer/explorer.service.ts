@@ -84,6 +84,17 @@ export class ExplorerService {
     return this.http.get('api/events/dashboardsingle', {params});
   }
 
+  getDashboardTrend(charts: string, dateFrom: string, dateTo: string, weekly: string): Observable<any> {
+    let params = new HttpParams();
+
+    params = params.append('chartName', charts);
+    params = params.append('dateFrom', dateFrom);
+    params = params.append('dateTo', dateTo);
+    params = params.append('weekly', weekly);
+
+    return this.http.get('api/events/dashboardtrend', {params});
+  }
+
   getPatients(page?: number, size?: number, name?: string, queryId?: string): Observable<any> {
 
     let params = new HttpParams();

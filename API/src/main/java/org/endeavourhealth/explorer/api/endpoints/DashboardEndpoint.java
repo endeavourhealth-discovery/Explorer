@@ -252,6 +252,35 @@ public class DashboardEndpoint {
     }
 
     @GET
+    @Path("/dashboardtrend")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getDashboardTrend(@Context SecurityContext sc, @HeaderParam("userProjectId") String userProjectId,
+                                 @QueryParam("chartName") String chartName,
+                                 @QueryParam("dateFrom") String dateFrom,
+                                 @QueryParam("dateTo") String dateTo,
+                                 @QueryParam("weekly") String weekly
+    ) throws Exception {
+        LOG.debug("getDashboardTrend");
+        checkUserAccessToOrganisations(userProjectId);
+
+        try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
+
+            viewerDAL.setValidOrgs(validOrgs);
+            viewerDAL.setSubscriberConnection(configName); viewerDAL.setPatientIdentifiable(patientIdentifiable);
+
+            ChartResult result = null;
+
+            result = viewerDAL.getDashboardTrend(chartName, dateFrom, dateTo, weekly);
+
+            return Response
+                    .ok()
+                    .entity(result)
+                    .build();
+        }
+    }
+
+    @GET
     @Path("/dashboardRegistries")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)

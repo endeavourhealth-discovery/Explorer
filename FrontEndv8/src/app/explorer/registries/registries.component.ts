@@ -32,6 +32,8 @@ export class RegistriesComponent implements OnInit {
   queryList: queryList[];
   filter: string;
 
+  wait: boolean = true;
+
   displayedColumns: string[] = ['select', 'org', 'listSize', 'registrySize', 'allColumns'];
 
   constructor(
@@ -56,10 +58,13 @@ export class RegistriesComponent implements OnInit {
   }
 
   loadEvents(org: any, registry: any) {
+    this.wait = true;
+
     this.events = null;
     this.explorerService.getRegistries(org, registry)
       .subscribe(
-        (result) => this.displayEvents(result)
+        (result) => this.displayEvents(result),
+        (error) =>  this.wait = false
       );
   }
 
@@ -73,6 +78,8 @@ export class RegistriesComponent implements OnInit {
 
     this.dataSource = new MatTableDataSource(events.results);
 
+    this.wait = false;
+
     this.dataSource.filterPredicate = (data:{org: string}, filterValue: string) => {
       const filterArray = filterValue.split(' ');
       const matchFilter = [];
@@ -85,6 +92,7 @@ export class RegistriesComponent implements OnInit {
     }
 
     this.applyFilter();
+
   }
 
   getSize(index, registrySize) {
