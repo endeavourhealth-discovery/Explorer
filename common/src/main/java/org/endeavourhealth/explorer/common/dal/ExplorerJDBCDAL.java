@@ -411,15 +411,16 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 for( int i = 0 ; i < validOrgs.size(); i++ ) {
                     builder.append("?,");
                 }
-                String params = builder.deleteCharAt( builder.length() -1 ).toString();
+                String paramsValidOrgs = builder.deleteCharAt( builder.length() -1 ).toString();
 
-                sql = "SELECT distinct(ccg) as type " +
-                        "FROM dashboards.registries " +
-                        "WHERE ods_code in ("+params+")"+
-                        " order by ccg";
+                sql = "SELECT distinct(r.ccg) as type " +
+                        "FROM dashboards.registries r "+
+                        "where r.ods_code in ("+
+                        "select distinct practice_ods_code from dashboards.population_denominators "+
+                        "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
+                        " order by r.ccg";
 
-                sqlCount = "SELECT count(distinct(ccg)) " +
-                        " FROM dashboards.registries";
+                sqlCount = "SELECT 999";
                 break;
             case "8":
                 sql = "SELECT distinct(type) " +
@@ -435,11 +436,11 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 for( int i = 0 ; i < validOrgs.size(); i++ ) {
                     builder.append("?,");
                 }
-                params = builder.deleteCharAt( builder.length() -1 ).toString();
+                String params = builder.deleteCharAt( builder.length() -1 ).toString();
 
                 sql = "SELECT distinct(ccg) as type " +
                         "FROM dashboards.population_denominators " +
-                        "WHERE ods_code in ("+params+")"+
+                        "WHERE (stp_ods_code in ("+params+") or ccg_ods_code in ("+params+") or practice_ods_code in ("+params+")) "+
                         " order by type";
 
                 sqlCount = "SELECT 999";
@@ -498,15 +499,16 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 for( int i = 0 ; i < validOrgs.size(); i++ ) {
                     builder.append("?,");
                 }
-                params = builder.deleteCharAt( builder.length() -1 ).toString();
+                paramsValidOrgs = builder.deleteCharAt( builder.length() -1 ).toString();
 
-                sql = "SELECT distinct(registry) as type " +
-                        "FROM dashboards.registries " +
-                        "WHERE ods_code in ("+params+")"+
-                        " order by registry";
+                sql = "SELECT distinct(r.registry) as type " +
+                        "FROM dashboards.registries r "+
+                        "where r.ods_code in ("+
+                        "select distinct practice_ods_code from dashboards.population_denominators "+
+                        "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
+                        "order by r.registry";
 
-                sqlCount = "SELECT count(distinct(registry)) " +
-                        " FROM dashboards.registries";
+                sqlCount = "SELECT 999";
                 break;
             case "18":
                 checkOrgs = true;
@@ -514,15 +516,16 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 for( int i = 0 ; i < validOrgs.size(); i++ ) {
                     builder.append("?,");
                 }
-                params = builder.deleteCharAt( builder.length() -1 ).toString();
+                paramsValidOrgs = builder.deleteCharAt( builder.length() -1 ).toString();
 
-                sql = "SELECT distinct(practice_name) as type " +
-                        "FROM dashboards.registries " +
-                        "WHERE ods_code in ("+params+")"+
-                        " order by practice_name";
+                sql = "SELECT distinct(r.practice_name) as type " +
+                        "FROM dashboards.registries r "+
+                        "where r.ods_code in ("+
+                        "select distinct practice_ods_code from dashboards.population_denominators "+
+                        "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
+                        " order by r.practice_name";
 
-                sqlCount = "SELECT count(distinct(practice_name)) " +
-                        " FROM dashboards.registries";
+                sqlCount = "SELECT 999";
                 break;
             case "19":
                 sql = "SELECT distinct(type) as type " +
@@ -560,6 +563,13 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 for (int i = 1; i <= validOrgs.size(); i++) {
                     statement.setString(p++, validOrgs.get(i-1));
                 }
+                for (int i = 1; i <= validOrgs.size(); i++) {
+                    statement.setString(p++, validOrgs.get(i-1));
+                }
+                for (int i = 1; i <= validOrgs.size(); i++) {
+                    statement.setString(p++, validOrgs.get(i-1));
+                }
+
             }
             try (ResultSet resultSet = statement.executeQuery()) {
                 result.setResults(getLookupList(resultSet));
@@ -876,13 +886,13 @@ public class ExplorerJDBCDAL implements AutoCloseable {
     private List<DashboardLibrary> getDashboardList(ResultSet resultSet) throws SQLException {
         List<DashboardLibrary> result = new ArrayList<>();
         while (resultSet.next()) {
-            result.add(getDashboard(resultSet));
+            result.add(getDashboardLibraryResult(resultSet));
         }
 
         return result;
     }
 
-    public static DashboardLibrary getDashboard(ResultSet resultSet) throws SQLException {
+    public static DashboardLibrary getDashboardLibraryResult(ResultSet resultSet) throws SQLException {
         DashboardLibrary dashboardLibrary = new DashboardLibrary();
 
         dashboardLibrary
@@ -951,6 +961,12 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         String orgParams = "";
         String orgArray[] = new String[0];
 
+        StringBuilder builder = new StringBuilder();
+        for( int i = 0 ; i < validOrgs.size(); i++ ) {
+            builder.append("?,");
+        }
+        String validOrgParams = builder.deleteCharAt( builder.length() -1 ).toString();
+
         if (!stp.equals("")) {
             orgs = Arrays.asList(stp.split("\\s*,\\s*"));
             orgArray = stp.split(",");
@@ -968,7 +984,7 @@ public class ExplorerJDBCDAL implements AutoCloseable {
             orgArray = practice.split(",");
         }
 
-        StringBuilder builder = new StringBuilder();
+        builder = new StringBuilder();
         for( int i = 0 ; i < orgArray.length; i++ ) {
             builder.append("?,");
         }
@@ -1103,9 +1119,12 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                                     sql = "SELECT t.series_name," +
                                             "floor(@running_total:=@running_total + t.series_value) as series_value " +
                                             "FROM " +
-                                            "( SELECT name,series_name,sum(series_value/((select sum(list_size) as list_size from dashboards.population_denominators where " + orgSQL + " " + ethnicSQL + " " + ageSQL+ " " + sexSQL + ")/100000)) as series_value " +
+                                            "( SELECT name,series_name,sum(series_value/((select sum(list_size) as list_size from dashboards.population_denominators "+
+                                            "WHERE (stp_ods_code in ("+validOrgParams+") or ccg_ods_code in ("+validOrgParams+") or practice_ods_code in ("+validOrgParams+")) "+
+                                            "AND "+ orgSQL + " " + ethnicSQL + " " + ageSQL+ " " + sexSQL + ")/100000)) as series_value " +
                                             "FROM dashboards.`covid_results_" + dashboardId + "` r " +
-                                            "where series_name between ? and ? " + seriesSQL + " and " + orgSQL + " " + ethnicSQL + " " + ageSQL+ " " + sexSQL + " group by series_name) t " +
+                                            "WHERE (stp_ods_code in ("+validOrgParams+") or ccg_ods_code in ("+validOrgParams+") or practice_ods_code in ("+validOrgParams+")) "+
+                                            "AND series_name between ? and ? " + seriesSQL + " and " + orgSQL + " " + ethnicSQL + " " + ageSQL+ " " + sexSQL + " group by series_name) t " +
                                             "JOIN (SELECT @running_total:=0) r " +
                                             "ORDER BY t.series_name";
                                 } else {
@@ -1114,7 +1133,8 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                                             "FROM " +
                                             "( SELECT name,series_name,sum(series_value) as series_value " +
                                             "FROM dashboards.`covid_results_" + dashboardId + "` " +
-                                            "where series_name between ? and ? " + seriesSQL + " and " + orgSQL + " " + ethnicSQL + " " + ageSQL+ " " + sexSQL + " group by series_name) t " +
+                                            "WHERE (stp_ods_code in ("+validOrgParams+") or ccg_ods_code in ("+validOrgParams+") or practice_ods_code in ("+validOrgParams+")) "+
+                                            "AND series_name between ? and ? " + seriesSQL + " and " + orgSQL + " " + ethnicSQL + " " + ageSQL+ " " + sexSQL + " group by series_name) t " +
                                             "JOIN (SELECT @running_total:=0) r " +
                                             "ORDER BY t.series_name";
                                 }
@@ -1123,27 +1143,35 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                                 if (weekly.equals("1")) {
                                     if (rate.equals("1")) {
                                         sql = "SELECT FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) AS series_name, " +
-                                                "floor(SUM(series_value/((select sum(list_size) as list_size from dashboards.population_denominators where " + orgSQL + " " + ethnicSQL + " " + ageSQL+ " " + sexSQL + ")/100000))) AS series_value " +
+                                                "floor(SUM(series_value/((select sum(list_size) as list_size from dashboards.population_denominators "+
+                                                "WHERE (stp_ods_code in ("+validOrgParams+") or ccg_ods_code in ("+validOrgParams+") or practice_ods_code in ("+validOrgParams+")) "+
+                                                "AND " + orgSQL + " " + ethnicSQL + " " + ageSQL+ " " + sexSQL + ")/100000))) AS series_value " +
                                                 "FROM dashboards.`covid_results_" + dashboardId + "` r " +
-                                                "where series_name between ? and ? " + seriesSQL + " and " + orgSQL + " " + ethnicSQL + " " + ageSQL + " " +sexSQL + " " +
+                                                "WHERE (stp_ods_code in ("+validOrgParams+") or ccg_ods_code in ("+validOrgParams+") or practice_ods_code in ("+validOrgParams+")) "+
+                                                "AND series_name between ? and ? " + seriesSQL + " and " + orgSQL + " " + ethnicSQL + " " + ageSQL + " " +sexSQL + " " +
                                                 " GROUP BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) " +
                                                 "ORDER BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7))";
                                     } else {
                                         sql = "SELECT FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) AS series_name, " +
                                                 "SUM(series_value) AS series_value " +
-                                                "from dashboards.`covid_results_" + dashboardId + "` where " +
-                                                "series_name between ? and ? " + seriesSQL + " and " + orgSQL + " " + ethnicSQL + " " + ageSQL + " " +sexSQL + " " +
+                                                "from dashboards.`covid_results_" + dashboardId + "` " +
+                                                "WHERE (stp_ods_code in ("+validOrgParams+") or ccg_ods_code in ("+validOrgParams+") or practice_ods_code in ("+validOrgParams+")) "+
+                                                "AND series_name between ? and ? " + seriesSQL + " and " + orgSQL + " " + ethnicSQL + " " + ageSQL + " " +sexSQL + " " +
                                                 " GROUP BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) " +
                                                 "ORDER BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7))";
                                     }
                                 } else {
                                     if (rate.equals("1")) {
-                                        sql = "SELECT series_name,floor(sum(series_value/((select sum(list_size) as list_size from dashboards.population_denominators where " + orgSQL + " " + ethnicSQL + " " + ageSQL+ " " + sexSQL + ")/100000))) as series_value "+
+                                        sql = "SELECT series_name,floor(sum(series_value/((select sum(list_size) as list_size from dashboards.population_denominators "+
+                                                "WHERE (stp_ods_code in ("+validOrgParams+") or ccg_ods_code in ("+validOrgParams+") or practice_ods_code in ("+validOrgParams+")) "+
+                                                "AND " + orgSQL + " " + ethnicSQL + " " + ageSQL+ " " + sexSQL + ")/100000))) as series_value "+
                                                 "from dashboards.`covid_results_" + dashboardId + "` r " +
-                                                "where series_name between ? and ? " + seriesSQL + " and " + orgSQL + " " + ethnicSQL + " " + ageSQL+ " " + sexSQL + " group by series_name order by series_name";
+                                                "WHERE (stp_ods_code in ("+validOrgParams+") or ccg_ods_code in ("+validOrgParams+") or practice_ods_code in ("+validOrgParams+")) "+
+                                                "AND series_name between ? and ? " + seriesSQL + " and " + orgSQL + " " + ethnicSQL + " " + ageSQL+ " " + sexSQL + " group by series_name order by series_name";
                                     } else {
-                                        sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`covid_results_" + dashboardId + "` where " +
-                                                "series_name between ? and ? " + seriesSQL + " and " + orgSQL + " " + ethnicSQL + " " + ageSQL+ " " + sexSQL + " group by series_name order by series_name";
+                                        sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`covid_results_" + dashboardId + "` " +
+                                                "WHERE (stp_ods_code in ("+validOrgParams+") or ccg_ods_code in ("+validOrgParams+") or practice_ods_code in ("+validOrgParams+")) "+
+                                                "AND series_name between ? and ? " + seriesSQL + " and " + orgSQL + " " + ethnicSQL + " " + ageSQL+ " " + sexSQL + " group by series_name order by series_name";
                                     }
                                 }
 
@@ -1152,6 +1180,15 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                             try (PreparedStatement statement = connection.prepareStatement(sql)) {
                                 int p = 1;
                                 if (rate.equals("1")) {
+                                    for (int i = 1; i <= validOrgs.size(); i++) {
+                                        statement.setString(p++, validOrgs.get(i-1));
+                                    }
+                                    for (int i = 1; i <= validOrgs.size(); i++) {
+                                        statement.setString(p++, validOrgs.get(i-1));
+                                    }
+                                    for (int i = 1; i <= validOrgs.size(); i++) {
+                                        statement.setString(p++, validOrgs.get(i-1));
+                                    }
                                     if (combineOrgs.equals("false")) {
                                         statement.setString(p++, orgName);
                                     } else {
@@ -1186,6 +1223,15 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                                             }
                                         }
                                     }
+                                }
+                                for (int i = 1; i <= validOrgs.size(); i++) {
+                                    statement.setString(p++, validOrgs.get(i-1));
+                                }
+                                for (int i = 1; i <= validOrgs.size(); i++) {
+                                    statement.setString(p++, validOrgs.get(i-1));
+                                }
+                                for (int i = 1; i <= validOrgs.size(); i++) {
+                                    statement.setString(p++, validOrgs.get(i-1));
                                 }
                                 statement.setString(p++, dateFrom);
                                 statement.setString(p++, dateTo);
@@ -1252,9 +1298,15 @@ public class ExplorerJDBCDAL implements AutoCloseable {
     public ChartResult getDashboard(String query, String chartName, String dateFrom, String dateTo, String cumulative, String grouping, String weekly) throws Exception {
         List<String> charts = Arrays.asList(chartName.split("\\s*,\\s*"));
 
+        StringBuilder builder = new StringBuilder();
+        for( int i = 0 ; i < validOrgs.size(); i++ ) {
+            builder.append("?,");
+        }
+        String validOrgParams = builder.deleteCharAt( builder.length() -1 ).toString();
+
         String ids[] = grouping.split(",");
 
-        StringBuilder builder = new StringBuilder();
+        builder = new StringBuilder();
 
         for( int i = 0 ; i < ids.length; i++ ) {
             builder.append("?,");
@@ -1278,7 +1330,6 @@ public class ExplorerJDBCDAL implements AutoCloseable {
 
         List<Chart> chart = new ArrayList<>();
         Chart chartItem = null;
-        String ids2[] = new String[0];
 
         for (String chart_name : charts) {
 
@@ -1290,28 +1341,42 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                         "@running_total:=@running_total + t.series_value as series_value " +
                         "FROM " +
                         "( SELECT name,series_name,sum(series_value) as series_value "+
-                        "FROM dashboards.`dashboard_results_" + queryId + "` " +
-                        "where name = ? and series_name between ? and ? and `grouping` in ("+params+") group by series_name) t " +
+                        "FROM dashboards.`dashboard_results_" + queryId + "` r " +
+                        "where r.`grouping` in ("+
+                        "select distinct ccg from dashboards.population_denominators "+
+                        "WHERE (stp_ods_code in ("+validOrgParams+") or ccg_ods_code in ("+validOrgParams+"))) "+
+                        "AND name = ? and series_name between ? and ? and `grouping` in ("+params+") group by series_name) t " +
                         "JOIN (SELECT @running_total:=0) r " +
                         "ORDER BY t.series_name";
             } else {
                 if (weekly.equals("1")) {
                     sql = "SELECT FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) AS series_name, " +
                             "SUM(series_value) AS series_value " +
-                            "from dashboards.`dashboard_results_" + queryId + "` where name = ? " +
+                            "from dashboards.`dashboard_results_" + queryId + "` r "+
+                            "where r.`grouping` in ("+
+                            "select distinct ccg from dashboards.population_denominators "+
+                            "WHERE (stp_ods_code in ("+validOrgParams+") or ccg_ods_code in ("+validOrgParams+"))) "+
+                            "AND name = ? " +
                             "and series_name between ? and ? and `grouping` in ("+params+")"+
                             " GROUP BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) " +
                             "ORDER BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7))";
                 } else {
-                    sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` where name = ? " +
+                    sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` r "+
+                            "where r.`grouping` in ("+
+                            "select distinct ccg from dashboards.population_denominators "+
+                            "WHERE (stp_ods_code in ("+validOrgParams+") or ccg_ods_code in ("+validOrgParams+"))) "+
+                            "AND name = ? " +
                             "and series_name between ? and ? and `grouping` in ("+params+") group by series_name order by series_name";
                 }
 
             }
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
                 int p = 1;
-                for (int i = 1; i <= ids2.length; i++) {
-                    statement.setString(p++, ids2[i-1]);
+                for (int i = 1; i <= validOrgs.size(); i++) {
+                    statement.setString(p++, validOrgs.get(i-1));
+                }
+                for (int i = 1; i <= validOrgs.size(); i++) {
+                    statement.setString(p++, validOrgs.get(i-1));
                 }
                 statement.setString(p++, chart_name);
                 statement.setString(p++, dateFrom);
@@ -1335,9 +1400,15 @@ public class ExplorerJDBCDAL implements AutoCloseable {
 
     public Chart getDashboardSingle(String query, String chartName, String dateFrom, String dateTo, String grouping) throws Exception {
 
+        StringBuilder builder = new StringBuilder();
+        for( int i = 0 ; i < validOrgs.size(); i++ ) {
+            builder.append("?,");
+        }
+        String validOrgParams = builder.deleteCharAt( builder.length() -1 ).toString();
+
         String ids[] = grouping.split(",");
 
-        StringBuilder builder = new StringBuilder();
+        builder = new StringBuilder();
 
         for( int i = 0 ; i < ids.length; i++ ) {
             builder.append("?,");
@@ -1361,15 +1432,27 @@ public class ExplorerJDBCDAL implements AutoCloseable {
             }
         }
 
-        sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` where name = ? "+
+        sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` r "+
+                "where r.`grouping` in ("+
+                "select distinct ccg from dashboards.population_denominators "+
+                "WHERE (stp_ods_code in ("+validOrgParams+") or ccg_ods_code in ("+validOrgParams+"))) "+
+                "AND name = ? "+
                 "and series_name between ? and ? and `grouping` in ("+params+") group by series_name order by series_name";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, chartName);
-            statement.setString(2, dateFrom);
-            statement.setString(3, dateTo);
+            int p = 1;
+            for (int i = 1; i <= validOrgs.size(); i++) {
+                statement.setString(p++, validOrgs.get(i-1));
+            }
+            for (int i = 1; i <= validOrgs.size(); i++) {
+                statement.setString(p++, validOrgs.get(i-1));
+            }
+
+            statement.setString(p++, chartName);
+            statement.setString(p++, dateFrom);
+            statement.setString(p++, dateTo);
             for (int i = 1; i <= ids.length; i++) {
-                statement.setString(i+3, ids[i-1]);
+                statement.setString(p++, ids[i-1]);
             }
             try (ResultSet resultSet = statement.executeQuery()) {
                 chartItem.setSeries(getSeriesFromResultSet(resultSet));
@@ -1377,13 +1460,25 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         }
 
         if (chartItem.getSeries().size()==0) {
-            sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` where name = ? and `grouping` in ("+params+")"+
+            sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` r "+
+                    "where r.`grouping` in ("+
+                    "select distinct ccg from dashboards.population_denominators "+
+                    "WHERE (stp_ods_code in ("+validOrgParams+") or ccg_ods_code in ("+validOrgParams+"))) "+
+                    "AND name = ? and `grouping` in ("+params+")"+
                     " group by series_name order by series_name";
 
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
-                statement.setString(1, chartName);
+                int p = 1;
+                for (int i = 1; i <= validOrgs.size(); i++) {
+                    statement.setString(p++, validOrgs.get(i-1));
+                }
+                for (int i = 1; i <= validOrgs.size(); i++) {
+                    statement.setString(p++, validOrgs.get(i-1));
+                }
+
+                statement.setString(p++, chartName);
                 for (int i = 1; i <= ids.length; i++) {
-                    statement.setString(i+1, ids[i-1]);
+                    statement.setString(p++, ids[i-1]);
                 }
                 try (ResultSet resultSet = statement.executeQuery()) {
                     chartItem.setSeries(getSeriesFromResultSet(resultSet));
@@ -1396,9 +1491,15 @@ public class ExplorerJDBCDAL implements AutoCloseable {
 
     public Chart getDashboardSingle(String query, String chartName, String grouping) throws Exception {
 
+        StringBuilder builder = new StringBuilder();
+        for( int i = 0 ; i < validOrgs.size(); i++ ) {
+            builder.append("?,");
+        }
+        String validOrgParams = builder.deleteCharAt( builder.length() -1 ).toString();
+
         String ids[] = grouping.split(",");
 
-        StringBuilder builder = new StringBuilder();
+        builder = new StringBuilder();
 
         for( int i = 0 ; i < ids.length; i++ ) {
             builder.append("?,");
@@ -1422,13 +1523,25 @@ public class ExplorerJDBCDAL implements AutoCloseable {
             }
         }
 
-        sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` where name = ? and `grouping` in ("+params+")"+
+        sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` r "+
+                "where r.`grouping` in ("+
+                "select distinct ccg from dashboards.population_denominators "+
+                "WHERE (stp_ods_code in ("+validOrgParams+") or ccg_ods_code in ("+validOrgParams+"))) "+
+                "AND name = ? and `grouping` in ("+params+")"+
                 " group by series_name order by series_name";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, chartName);
+            int p = 1;
+            for (int i = 1; i <= validOrgs.size(); i++) {
+                statement.setString(p++, validOrgs.get(i-1));
+            }
+            for (int i = 1; i <= validOrgs.size(); i++) {
+                statement.setString(p++, validOrgs.get(i-1));
+            }
+
+            statement.setString(p++, chartName);
             for (int i = 1; i <= ids.length; i++) {
-                statement.setString(i+1, ids[i-1]);
+                statement.setString(p++, ids[i-1]);
             }
             try (ResultSet resultSet = statement.executeQuery()) {
                 chartItem.setSeries(getSeriesFromResultSet(resultSet));
@@ -1457,11 +1570,17 @@ public class ExplorerJDBCDAL implements AutoCloseable {
     public ChartResult getDashboardRegistries(String organisations, String registries) throws Exception {
         String ccg = "";
 
+        StringBuilder builder = new StringBuilder();
+        for( int i = 0 ; i < validOrgs.size(); i++ ) {
+            builder.append("?,");
+        }
+        String paramsValidOrgs = builder.deleteCharAt( builder.length() -1 ).toString();
+
         List<String> charts = Arrays.asList(organisations.split("\\s*,\\s*"));
 
         String ids[] = registries.split(",");
 
-        StringBuilder builder = new StringBuilder();
+        builder = new StringBuilder();
 
         for( int i = 0 ; i < ids.length; i++ ) {
             builder.append("?,");
@@ -1482,16 +1601,34 @@ public class ExplorerJDBCDAL implements AutoCloseable {
             String temp = "";
 
             if (organisations.contains("CCG"))
-                sql = "SELECT registry as series_name,sum(registry_size) as series_value FROM dashboards.registries where ccg = ? and registry in ("+params+")"+
-                    " GROUP BY ccg, registry order by registry_size desc";
+                sql = "SELECT r.registry as series_name,sum(r.registry_size) as series_value FROM dashboards.registries r "+
+                        "where r.ods_code in ("+
+                        "select distinct practice_ods_code from dashboards.population_denominators "+
+                        "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
+                        "AND r.ccg = ? and registry in ("+params+")"+
+                        " GROUP BY r.ccg, r.registry order by r.registry_size desc";
             else
-                sql = "SELECT registry as series_name,registry_size as series_value FROM dashboards.registries where practice_name = ? and registry in ("+params+")"+
-                        " order by registry_size desc";
+                sql = "SELECT r.registry as series_name,r.registry_size as series_value FROM dashboards.registries r "+
+                        "where r.ods_code in ("+
+                        "select distinct practice_ods_code from dashboards.population_denominators "+
+                        "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
+                        "AND r.practice_name = ? and registry in ("+params+")"+
+                        " order by r.registry_size desc";
 
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
-                statement.setString(1, chart_name);
+                int p = 1;
+                for (int i = 1; i <= validOrgs.size(); i++) {
+                    statement.setString(p++, validOrgs.get(i-1));
+                }
+                for (int i = 1; i <= validOrgs.size(); i++) {
+                    statement.setString(p++, validOrgs.get(i-1));
+                }
+                for (int i = 1; i <= validOrgs.size(); i++) {
+                    statement.setString(p++, validOrgs.get(i-1));
+                }
+                statement.setString(p++, chart_name);
                 for (int i = 1; i <= ids.length; i++) {
-                    statement.setString(i+1, ids[i-1]);
+                    statement.setString(p++, ids[i-1]);
                 }
                 try (ResultSet resultSet = statement.executeQuery()) {
                     chartItem.setSeries(getSeriesFromResultSet(resultSet));
@@ -1696,7 +1833,7 @@ public class ExplorerJDBCDAL implements AutoCloseable {
     public RegistriesResult getRegistries(String ccg, String registry) throws Exception {
         RegistriesResult result = new RegistriesResult();
 
-        String sql = "{ call dashboards.getRegistries(?,?,?) }";
+        String sql = "{ call dashboards.getRegistries(?,?,?,?) }";
 
         String orgs = String.join(",",validOrgs);
         orgs = orgs.replaceAll(",","','");
@@ -1706,6 +1843,7 @@ public class ExplorerJDBCDAL implements AutoCloseable {
             cs.setString(1, ccg);
             cs.setString(2, registry);
             cs.setString(3, orgs);
+            cs.setString(4, String.join(",",validOrgs));
             try (ResultSet resultSet = cs.executeQuery()) {
                 result.setResults(getRegistriesList(resultSet));
             }
@@ -2414,7 +2552,7 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         for( int i = 0 ; i < validOrgs.size(); i++ ) {
             builder.append("?,");
         }
-        String params = builder.deleteCharAt( builder.length() -1 ).toString();
+        String validOrgParams = builder.deleteCharAt( builder.length() -1 ).toString();
 
         String sql = "";
         String sqlCount = "";
@@ -2432,8 +2570,9 @@ public class ExplorerJDBCDAL implements AutoCloseable {
 
         sql = "SELECT distinct `grouping` " +
                 "FROM dashboards.`dashboard_results_" + queryId + "` r "+
-                "join dashboards.population_denominators p on p.ccg = r.`grouping` "+
-                "WHERE ods_code in ("+params+")"+
+                "where r.`grouping` in ("+
+                "select distinct ccg from dashboards.population_denominators "+
+                "WHERE (stp_ods_code in ("+validOrgParams+") or ccg_ods_code in ("+validOrgParams+"))) "+
                 " order by `grouping`";
 
         sqlCount = "SELECT 1";
@@ -2443,6 +2582,10 @@ public class ExplorerJDBCDAL implements AutoCloseable {
             for (int i = 1; i <= validOrgs.size(); i++) {
                 statement.setString(p++, validOrgs.get(i-1));
             }
+            for (int i = 1; i <= validOrgs.size(); i++) {
+                statement.setString(p++, validOrgs.get(i-1));
+            }
+
             try (ResultSet resultSet = statement.executeQuery()) {
                 result.setResults(getGroupingList(resultSet));
             }
@@ -2461,12 +2604,6 @@ public class ExplorerJDBCDAL implements AutoCloseable {
     public SeriesResult getSeriesFromQuery(String queryName) throws Exception {
         SeriesResult result = new SeriesResult();
 
-        StringBuilder builder = new StringBuilder();
-        for( int i = 0 ; i < validOrgs.size(); i++ ) {
-            builder.append("?,");
-        }
-        String params = builder.deleteCharAt( builder.length() -1 ).toString();
-
         String sql = "";
         String sqlCount = "";
 
@@ -2481,20 +2618,13 @@ public class ExplorerJDBCDAL implements AutoCloseable {
             }
         }
 
-        sql = "SELECT distinct `name` " +
-                "FROM dashboards.`dashboard_results_" + queryId + "` r "+
-                "join dashboards.population_denominators p on p.ccg = r.`grouping` "+
-                "WHERE ods_code in ("+params+")"+
-                " order by `name`";
+        sql = "SELECT distinct name " +
+                "FROM dashboards.`dashboard_results_" + queryId + "`"+
+                " order by name";
 
         sqlCount = "SELECT 1";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            int p = 1;
-            for (int i = 1; i <= validOrgs.size(); i++) {
-                statement.setString(p++, validOrgs.get(i-1));
-            }
-
             try (ResultSet resultSet = statement.executeQuery()) {
                 result.setResults(getSeriesList(resultSet));
             }
@@ -2582,15 +2712,23 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         for( int i = 0 ; i < validOrgs.size(); i++ ) {
             builder.append("?,");
         }
-        String params = builder.deleteCharAt( builder.length() -1 ).toString();
+        String paramsValidOrgs = builder.deleteCharAt( builder.length() -1 ).toString();
 
-        sql = "select distinct registry,query from dashboards.registries "+
-                "WHERE ods_code in ("+params+")";
+        sql = "select distinct r.registry,r.query from dashboards.registries r "+
+                "where r.ods_code in ("+
+                "select distinct practice_ods_code from dashboards.population_denominators "+
+                "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) ";
 
-        sqlCount = "SELECT 999";
+                sqlCount = "SELECT 999";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             int p = 1;
+            for (int i = 1; i <= validOrgs.size(); i++) {
+                statement.setString(p++, validOrgs.get(i-1));
+            }
+            for (int i = 1; i <= validOrgs.size(); i++) {
+                statement.setString(p++, validOrgs.get(i-1));
+            }
             for (int i = 1; i <= validOrgs.size(); i++) {
                 statement.setString(p++, validOrgs.get(i-1));
             }
@@ -2641,7 +2779,7 @@ public class ExplorerJDBCDAL implements AutoCloseable {
 
         sql = "SELECT stp,ccg,pcn,practice,ethnic,age,sex,sum(list_size) as list_size " +
         "FROM dashboards.population_denominators " +
-        "WHERE ods_code in ("+params+") "+
+        "WHERE (stp_ods_code in ("+params+") or ccg_ods_code in ("+params+") or practice_ods_code in ("+params+")) "+
         "group by stp,ccg,pcn,practice,ethnic,age,sex " +
         "with rollup";
 
@@ -2650,6 +2788,12 @@ public class ExplorerJDBCDAL implements AutoCloseable {
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             int p = 1;
+            for (int i = 1; i <= validOrgs.size(); i++) {
+                statement.setString(p++, validOrgs.get(i-1));
+            }
+            for (int i = 1; i <= validOrgs.size(); i++) {
+                statement.setString(p++, validOrgs.get(i-1));
+            }
             for (int i = 1; i <= validOrgs.size(); i++) {
                 statement.setString(p++, validOrgs.get(i-1));
             }
@@ -2700,16 +2844,22 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         }
         String params = builder.deleteCharAt( builder.length() -1 ).toString();
 
-        String sql = "SELECT stp,ccg,pcn,practice,ods_code " +
+        String sql = "SELECT stp,ccg,pcn,practice,stp_ods_code,ccg_ods_code,practice_ods_code " +
                 "FROM dashboards.population_denominators " +
-                "WHERE ods_code in ("+params+") "+
-                "group by stp,ccg,pcn,practice,ods_code "+
-                "order by stp,ccg,pcn,practice,ods_code";
+                "WHERE (stp_ods_code in ("+params+") or ccg_ods_code in ("+params+") or practice_ods_code in ("+params+")) "+
+                "group by stp,ccg,pcn,practice,stp_ods_code,ccg_ods_code,practice_ods_code "+
+                "order by stp,ccg,pcn,practice,stp_ods_code,ccg_ods_code,practice_ods_code";
 
         String orgTree = "{";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             int p = 1;
+            for (int i = 1; i <= validOrgs.size(); i++) {
+                statement.setString(p++, validOrgs.get(i-1));
+            }
+            for (int i = 1; i <= validOrgs.size(); i++) {
+                statement.setString(p++, validOrgs.get(i-1));
+            }
             for (int i = 1; i <= validOrgs.size(); i++) {
                 statement.setString(p++, validOrgs.get(i-1));
             }
@@ -2763,7 +2913,7 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         return str.substring(0, str.length() - chars);
     }
 
-    public RegistryListsResult getRegistryLists() throws Exception {
+        public RegistryListsResult getRegistryLists() throws Exception {
         RegistryListsResult result = new RegistryListsResult();
 
         String sql = "";
@@ -2773,18 +2923,26 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         for( int i = 0 ; i < validOrgs.size(); i++ ) {
             builder.append("?,");
         }
-        String params = builder.deleteCharAt( builder.length() -1 ).toString();
+        String paramsValidOrgs = builder.deleteCharAt( builder.length() -1 ).toString();
 
-        sql = "SELECT ccg, practice_name, registry, list_size, registry_size, target_percentage " +
-                "FROM dashboards.registries " +
-                "WHERE ods_code in ("+params+") "+
-                "order by ccg, practice_name, list_size desc, registry_size desc";
+        sql = "SELECT r.ccg, r.practice_name, r.registry, r.list_size, r.registry_size, r.target_percentage " +
+                "from dashboards.registries r "+
+                "where r.ods_code in ("+
+                "select distinct practice_ods_code from dashboards.population_denominators "+
+                "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
+                "order by r.ccg, r.practice_name, r.list_size desc, r.registry_size desc";
 
         sqlCount = "SELECT count(1) FROM dashboards.registries";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             int p = 1;
 
+            for (int i = 1; i <= validOrgs.size(); i++) {
+                statement.setString(p++, validOrgs.get(i-1));
+            }
+            for (int i = 1; i <= validOrgs.size(); i++) {
+                statement.setString(p++, validOrgs.get(i-1));
+            }
             for (int i = 1; i <= validOrgs.size(); i++) {
                 statement.setString(p++, validOrgs.get(i-1));
             }
