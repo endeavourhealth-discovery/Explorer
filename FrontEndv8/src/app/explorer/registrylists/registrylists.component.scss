@@ -21,6 +21,31 @@ mat-paginator {
   color: midnightblue;
 }
 
+.poor{
+  color: red;
+  font-weight: normal;
+  font-weight: bold;
+}
+
+.good{
+  color: green;
+  font-weight: normal;
+  font-weight: bold;
+}
+
+.neutral {
+  color: black;
+  font-weight: normal;
+}
+
+.ok{
+  color: orange;
+}
+
+.normal{
+  color: black;
+}
+
 #pre-bootstrap {
   background-color: #FFFFFF ;
   font-family: Roboto, "Helvetica Neue", sans-serif;

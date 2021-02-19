@@ -28,7 +28,7 @@ export class RegistryListsComponent implements OnInit {
   @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: false}) sort: MatSort;
 
-  displayedColumns: string[] = ['ccg', 'practiceName', 'registry', 'listSize', 'registrySize', 'target'];
+  displayedColumns: string[] = ['ccg', 'practiceName', 'registry', 'listSize', 'registries', 'target'];
 
   constructor(
     private route: ActivatedRoute,
@@ -87,6 +87,42 @@ export class RegistryListsComponent implements OnInit {
 
   formatNumber (list: number) {
     return Number(list).toLocaleString();
+  }
+
+  toPercent(registrysize: any, listsize: any) {
+    let val: any = (listsize/registrysize*100).toFixed(1);
+    if (registrysize==0)
+      val = 0;
+    return val;
+  }
+
+  gaugeLabel(value: number) {
+    return value+" %";
+  }
+
+  valueDialClass(percentage, target) {
+    if (percentage>=target)
+      return "good";
+    else if (percentage<target)
+      return "poor";
+  }
+
+  valueClass(percentage, target) {
+    if (percentage>=target)
+      return "goodValue";
+    else if (percentage<target)
+      return "poorValue";
+  }
+
+  getSize(listSize, registrySize) {
+    if (registrySize==0)
+      return "";
+
+    if (registrySize>0) {
+      return (registrySize*1).toLocaleString();
+    } else {
+      return registrySize;
+    }
   }
 
 }
