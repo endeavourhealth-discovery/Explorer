@@ -52,26 +52,6 @@ ELSEIF p_runDate = 'N' THEN
        SET p_includedPeriodOperator = '>=';
   END IF;
 
-ELSEIF p_runDate = 'M' THEN
-
-  -- set PPED date
-  IF CURDATE() <= CONCAT(YEAR(CURDATE()),'-03-31') THEN
-    SET effectiveDate = CONCAT(YEAR(CURDATE()),'-03-31');
-  ELSEIF CURDATE() > CONCAT(YEAR(CURDATE()),'-03-31') THEN
-    SET effectiveDate = CONCAT(YEAR(CURDATE())+1,'-03-31');
-  END IF;
-
-  SET effectiveDate = QUOTE(effectiveDate);
-
-  SET signString = '';
-  SET clinicalEffectiveDateString = 'o2.cancellation_date';
-
-  IF UPPER(p_includedPeriodOperator) = 'WITHIN' OR UPPER(p_includedPeriodOperator) IS NULL THEN
-       SET p_includedPeriodOperator = '>=';
-       ELSEIF UPPER(p_includedPeriodOperator) = 'BEFORE' THEN
-       SET p_includedPeriodOperator = '<=';
-  END IF;
-
 END IF;
 
 SET p_includedPeriodType = IF(p_includedPeriodType = 'Days','DAY', IF(p_includedPeriodType = 'Weeks','WEEK',IF(p_includedPeriodType = 'Months','MONTH',NULL)));
