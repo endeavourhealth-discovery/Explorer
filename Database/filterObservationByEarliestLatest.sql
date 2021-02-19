@@ -4,7 +4,6 @@ DROP PROCEDURE IF EXISTS filterObservationByEarliestLatest;
 
 DELIMITER //
 CREATE PROCEDURE filterObservationByEarliestLatest(
-  p_concepttab VARCHAR(64),
   p_observationcohorttab VARCHAR(64),
   p_earliestlatestobservationtab VARCHAR(64),
   p_includedEarliestLatest VARCHAR(20),
@@ -34,9 +33,9 @@ BEGIN
 
   IF p_includedEarliestLatest = 'Latest' THEN
 
-     DROP TEMPORARY TABLE IF EXISTS qry_tmp;
+     DROP TEMPORARY TABLE IF EXISTS qry_tmp_filter;
 
-     SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp AS 
+     SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp_filter AS 
      SELECT 
           ob.id,
           ob.patient_id,
@@ -45,6 +44,7 @@ BEGIN
           ob.non_core_concept_id,
           ob.organization_id,
           ob.value_set_code_type,
+          ob.cancellation_date, 
           ob.rnk 
      FROM ( 
       SELECT 
@@ -55,6 +55,7 @@ BEGIN
           o2.non_core_concept_id,
           o2.organization_id,
           o2.value_set_code_type,
+          o2.cancellation_date, 
           @currank := IF(@curpatient = BINARY o2.patient_id, @currank + 1, 1) AS rnk,
           @curpatient := o2.patient_id AS cur_patient
           FROM ', p_observationcohorttab,' o2 JOIN (SELECT @currank := 0, @curpatient := 0) r 
@@ -68,8 +69,8 @@ BEGIN
      DEALLOCATE PREPARE stmt;
 
      SET @sql = CONCAT('CREATE TEMPORARY TABLE ', p_earliestlatestobservationtab,' AS 
-     SELECT o2.id, o2.patient_id, o2.clinical_effective_date, o2.result_value, o2.non_core_concept_id, o2.organization_id, o2.value_set_code_type 
-     FROM qry_tmp o2 
+     SELECT o2.id, o2.patient_id, o2.clinical_effective_date, o2.result_value, o2.non_core_concept_id, o2.organization_id, o2.value_set_code_type, o2.cancellation_date 
+     FROM qry_tmp_filter o2 
      WHERE ', p_timeperioddaterange);
      PREPARE stmt FROM @sql;
      EXECUTE stmt;
@@ -77,9 +78,9 @@ BEGIN
 
   ELSEIF p_includedEarliestLatest = 'Earliest' THEN
 
-     DROP TEMPORARY TABLE IF EXISTS qry_tmp;
+     DROP TEMPORARY TABLE IF EXISTS qry_tmp_filter;
 
-     SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp AS 
+     SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp_filter AS 
      SELECT 
           ob.id,
           ob.patient_id,
@@ -88,6 +89,7 @@ BEGIN
           ob.non_core_concept_id,
           ob.organization_id,
           ob.value_set_code_type,
+          ob.cancellation_date, 
           ob.rnk  
      FROM (
       SELECT 
@@ -98,6 +100,7 @@ BEGIN
           o2.non_core_concept_id,
           o2.organization_id,
           o2.value_set_code_type,
+          o2.cancellation_date, 
           @currank := IF(@curpatient = BINARY o2.patient_id, @currank + 1, 1) AS rnk,
           @curpatient := o2.patient_id AS cur_patient
           FROM ', p_observationcohorttab,' o2 JOIN (SELECT @currank := 0, @curpatient := 0) r 
@@ -111,8 +114,8 @@ BEGIN
      DEALLOCATE PREPARE stmt;
 
      SET @sql = CONCAT('CREATE TEMPORARY TABLE ', p_earliestlatestobservationtab,' AS 
-     SELECT o2.id, o2.patient_id, o2.clinical_effective_date, o2.result_value, o2.non_core_concept_id, o2.organization_id, o2.value_set_code_type 
-     FROM qry_tmp o2 
+     SELECT o2.id, o2.patient_id, o2.clinical_effective_date, o2.result_value, o2.non_core_concept_id, o2.organization_id, o2.value_set_code_type, o2.cancellation_date  
+     FROM qry_tmp_filter o2 
      WHERE ', p_timeperioddaterange);
      PREPARE stmt FROM @sql;
      EXECUTE stmt;
