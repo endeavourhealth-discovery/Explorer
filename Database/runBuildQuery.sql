@@ -30,7 +30,8 @@ CREATE PROCEDURE runBuildQuery(
   IN p_queryCohort VARCHAR(64),
   IN p_queryNumber VARCHAR(20),
   IN p_concept_all_tmp VARCHAR(64), 
-  IN p_filter INT
+  IN p_filter INT,
+  IN p_dataType VARCHAR(255)
 )
 
 BEGIN
@@ -60,11 +61,14 @@ SET p_greaterless = IF(p_greaterless = 'Greater than',' > ',' < ');
 
 IF p_queryType = '1' THEN 
 
+
    DROP TEMPORARY TABLE IF EXISTS qry_tmp;
    -- create an obervation cohort for any or all the selected valuesets in the selected time period if applicable
    IF p_filter = 1 THEN 
             -- create an empty table
-            CREATE TEMPORARY TABLE qry_tmp (patient_id BIGINT, organization_id BIGINT);
+            CREATE TEMPORARY TABLE qry_tmp (id BIGINT, patient_id BIGINT, clinical_effective_date DATE, 
+            result_value DOUBLE, non_core_concept_id INT, organization_id BIGINT, value_set_code_type VARCHAR(255), 
+            cancellation_date DATE);
          
             DROP TEMPORARY TABLE IF EXISTS qry_cohort_tmp;
 
@@ -85,9 +89,10 @@ IF p_queryType = '1' THEN
             WHILE EXISTS (SELECT row_id from qry_cohort_tmp WHERE row_id > @row_id AND row_id <= @row_id + 50) DO
 
                SET @sql = CONCAT("INSERT INTO qry_tmp  
-               SELECT DISTINCT o2.patient_id, o2.organization_id 
-               FROM qry_cohort_tmp p JOIN ", p_observationCohortTab," o2 FORCE INDEX FOR JOIN (ix_observation_index_2, ix_observation_index_5) ON p.patient_id = o2.patient_id AND p.organization_id = o2.organization_id 
-               JOIN ", p_concept_all_tmp," cpt FORCE INDEX FOR JOIN (non_cpt_idx, data_type_idx, value_set_code_type_idx) ON cpt.non_core_concept_id = o2.non_core_concept_id 
+               SELECT o2.id, o2.patient_id, o2.clinical_effective_date, o2.result_value, o2.non_core_concept_id, o2.organization_id, cpt.value_set_code_type, NULL AS cancellation_date  
+               FROM qry_cohort_tmp p JOIN ", p_observationCohortTab," o2   
+               ON p.patient_id = o2.patient_id AND p.organization_id = o2.organization_id AND p.person_id = o2.person_id 
+               JOIN ", p_concept_all_tmp," cpt ON cpt.non_core_concept_id = o2.non_core_concept_id 
                WHERE cpt.data_type = 'Observation' AND cpt.value_set_code_type = ", p_includedAnyAll, " (SELECT DISTINCT c.value_set_code_type FROM ", p_concepttab," c ) 
                AND ", p_timeperioddaterange, " AND p.row_id > @row_id AND p.row_id <= @row_id + 50" );
 
@@ -100,7 +105,7 @@ IF p_queryType = '1' THEN
             END WHILE; 
    ELSE
                SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp AS 
-               SELECT DISTINCT o2.patient_id, o2.organization_id 
+               SELECT o2.id, o2.patient_id, o2.clinical_effective_date, o2.result_value, o2.non_core_concept_id, o2.organization_id, o2.value_set_code_type, o2.cancellation_date 
                FROM ', p_observationCohortTab,' o2 JOIN ', p_queryCohort,' p ON p.patient_id = o2.patient_id AND p.organization_id = o2.organization_id 
                WHERE o2.value_set_code_type = ', p_includedAnyAll, ' (SELECT DISTINCT c.value_set_code_type FROM ', p_concepttab,' c ) 
                AND ', p_timeperioddaterange);
@@ -108,6 +113,22 @@ IF p_queryType = '1' THEN
                PREPARE stmt FROM @sql;
                EXECUTE stmt;
                DEALLOCATE PREPARE stmt;
+   END IF;
+
+   IF p_dataType = 'M' THEN 
+        -- get the latest medical record
+        CALL filterObservationByEarliestLatest('qry_tmp', 'qry_observation_tmp', 'Latest', NULL, NULL, '1');
+
+        DROP TEMPORARY TABLE IF EXISTS qry_tmp;
+        -- get only active records
+        SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp AS 
+        SELECT DISTINCT o2.patient_id, o2.organization_id
+        FROM qry_observation_tmp o2 
+        WHERE o2.cancellation_date IS NULL AND ', p_timeperioddaterange);
+        PREPARE stmt FROM @sql;
+        EXECUTE stmt;
+        DEALLOCATE PREPARE stmt;
+        
    END IF;
 
    ALTER TABLE qry_tmp ADD INDEX pat_idx (patient_id);
@@ -138,7 +159,9 @@ ELSEIF p_queryType = '2' THEN
    -- create an observation cohort containing any or all of the selected valuesets
    IF p_filter = 1 THEN
             -- create an empty table
-            CREATE TEMPORARY TABLE qry_tmp_1 (id BIGINT, patient_id BIGINT, clinical_effective_date DATE, result_value DOUBLE, non_core_concept_id INT, organization_id BIGINT, value_set_code_type VARCHAR(255) );
+            CREATE TEMPORARY TABLE qry_tmp_1 (id BIGINT, patient_id BIGINT, clinical_effective_date DATE, 
+            result_value DOUBLE, non_core_concept_id INT, organization_id BIGINT, value_set_code_type VARCHAR(255), 
+            cancellation_date DATE);
          
             DROP TEMPORARY TABLE IF EXISTS qry_cohort_tmp;
 
@@ -159,9 +182,10 @@ ELSEIF p_queryType = '2' THEN
             WHILE EXISTS (SELECT row_id from qry_cohort_tmp WHERE row_id > @row_id AND row_id <= @row_id + 50) DO
 
                SET @sql = CONCAT("INSERT INTO qry_tmp_1 AS 
-               SELECT o1.id, o1.patient_id, o1.clinical_effective_date, o1.result_value, o1.non_core_concept_id, o1.organization_id, cpt.value_set_code_type 
-               FROM qry_cohort_tmp p JOIN ", p_observationCohortTab," o1 FORCE INDEX FOR JOIN (ix_observation_index_2, ix_observation_index_5) ON p.patient_id = o1.patient_id AND p.organization_id = o1.organization_id 
-               JOIN ", p_concept_all_tmp," cpt FORCE INDEX FOR JOIN (non_cpt_idx, data_type_idx, value_set_code_type_idx) ON cpt.non_core_concept_id = o1.non_core_concept_id 
+               SELECT o1.id, o1.patient_id, o1.clinical_effective_date, o1.result_value, o1.non_core_concept_id, o1.organization_id, cpt.value_set_code_type, NULL AS cancellation_date  
+               FROM qry_cohort_tmp p JOIN ", p_observationCohortTab," o1   
+               ON p.patient_id = o1.patient_id AND p.organization_id = o1.organization_id AND p.person_id = o1.person_id 
+               JOIN ", p_concept_all_tmp," cpt ON cpt.non_core_concept_id = o1.non_core_concept_id 
                WHERE cpt.data_type = 'Observation' AND cpt.value_set_code_type = ", p_includedAnyAll, " (SELECT DISTINCT c.value_set_code_type FROM ", p_concepttab, " c ) 
                AND p.row_id > @row_id AND p.row_id <= @row_id + 50");
 
@@ -174,8 +198,7 @@ ELSEIF p_queryType = '2' THEN
             END WHILE; 
    ELSE
                SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp_1 AS 
-               SELECT o1.id, o1.patient_id, o1.clinical_effective_date, o1.result_value, 
-                     o1.non_core_concept_id, o1.organization_id, o1.value_set_code_type 
+               SELECT o1.id, o1.patient_id, o1.clinical_effective_date, o1.result_value, o1.non_core_concept_id, o1.organization_id, o1.value_set_code_type, o1.cancellation_date  
                FROM ', p_observationCohortTab,' o1 JOIN ', p_queryCohort,' p ON p.patient_id = o1.patient_id AND p.organization_id = o1.organization_id 
                WHERE o1.value_set_code_type = ', p_includedAnyAll, ' (SELECT DISTINCT c.value_set_code_type FROM ', p_concepttab, ' c ) ');
 
@@ -190,7 +213,7 @@ ELSEIF p_queryType = '2' THEN
    -- from the patient observation cohort:
    -- 1 filter out the patient observations with result values greater or less than the included value and within the selected time period if applicable
    -- 2 filter out the latest or earliest of these into a new table
-   CALL filterObservationByEarliestLatest(p_concepttab, 'qry_tmp_1', 'qry_observation_tmp', p_includedEarliestLatest, p_includedOperator, p_includedEntryValue, p_timeperioddaterange);
+   CALL filterObservationByEarliestLatest( 'qry_tmp_1', 'qry_observation_tmp', p_includedEarliestLatest, p_includedOperator, p_includedEntryValue, p_timeperioddaterange);
 
    SET p_whereString = CONCAT(p_withWithout,' (SELECT 1 FROM ', 'qry_observation_tmp', ' o1 WHERE o.patient_id = o1.patient_id AND o.organization_id = o1.organization_id)');
 
@@ -219,7 +242,9 @@ ELSEIF p_queryType = '3' THEN
 
    IF p_filter = 1 THEN
             -- create an empty table
-            CREATE TEMPORARY TABLE qry_tmp_1 (id BIGINT, patient_id BIGINT, clinical_effective_date DATE, result_value DOUBLE, non_core_concept_id INT, organization_id BIGINT, value_set_code_type VARCHAR(255));
+            CREATE TEMPORARY TABLE qry_tmp_1 (id BIGINT, patient_id BIGINT, clinical_effective_date DATE, 
+            result_value DOUBLE, non_core_concept_id INT, organization_id BIGINT, value_set_code_type VARCHAR(255), 
+            cancellation_date DATE);
          
             DROP TEMPORARY TABLE IF EXISTS qry_cohort_tmp;
 
@@ -240,9 +265,10 @@ ELSEIF p_queryType = '3' THEN
             WHILE EXISTS (SELECT row_id from qry_cohort_tmp WHERE row_id > @row_id AND row_id <= @row_id + 50) DO
 
                SET @sql = CONCAT("INSERT INTO qry_tmp_1  
-               SELECT o1.id, o1.patient_id, o1.clinical_effective_date, o1.result_value, o1.non_core_concept_id, o1.organization_id, cpt.value_set_code_type 
-               FROM qry_cohort_tmp p JOIN ", p_observationCohortTab," o1 FORCE INDEX FOR JOIN (ix_observation_index_2, ix_observation_index_5) ON p.patient_id = o1.patient_id AND p.organization_id = o1.organization_id 
-               JOIN ", p_concept_all_tmp," cpt FORCE INDEX FOR JOIN (non_cpt_idx, data_type_idx, value_set_code_type_idx) ON cpt.non_core_concept_id = o1.non_core_concept_id 
+               SELECT o1.id, o1.patient_id, o1.clinical_effective_date, o1.result_value, o1.non_core_concept_id, o1.organization_id, cpt.value_set_code_type, NULL AS cancellation_date  
+               FROM qry_cohort_tmp p JOIN ", p_observationCohortTab," o1   
+               ON p.patient_id = o1.patient_id AND p.organization_id = o1.organization_id AND p.person_id = o1.person_id 
+               JOIN ", p_concept_all_tmp," cpt ON cpt.non_core_concept_id = o1.non_core_concept_id 
                WHERE cpt.data_type = 'Observation' AND cpt.value_set_code_type = ", p_includedAnyAll," (SELECT DISTINCT c.value_set_code_type FROM ", p_concepttab," c) 
                AND p.row_id > @row_id AND p.row_id <= @row_id + 50");
               
@@ -255,8 +281,7 @@ ELSEIF p_queryType = '3' THEN
             END WHILE; 
    ELSE
             SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp_1 AS 
-            SELECT o1.id, o1.patient_id, o1.clinical_effective_date, 
-                  o1.result_value, o1.non_core_concept_id, o1.organization_id, o1.value_set_code_type 
+            SELECT o1.id, o1.patient_id, o1.clinical_effective_date, o1.result_value, o1.non_core_concept_id, o1.organization_id, o1.value_set_code_type, o1.cancellation_date 
             FROM ', p_observationCohortTab,' o1 JOIN ', p_queryCohort,' p ON p.patient_id = o1.patient_id AND p.organization_id = o1.organization_id 
             WHERE o1.value_set_code_type = ', p_includedAnyAll,' (SELECT DISTINCT c.value_set_code_type FROM ', p_concepttab,' c) ');
 
@@ -269,11 +294,11 @@ ELSEIF p_queryType = '3' THEN
    ALTER TABLE qry_tmp_1 ADD INDEX non_core_concept_idx (non_core_concept_id);
 
    -- filter out the latest or earliest of these observation concepts within the selected time frame if applicable
-   CALL filterObservationByEarliestLatest(p_concepttab, 'qry_tmp_1', 'qry_observation_tmp', p_includedEarliestLatest, NULL, NULL, p_timeperioddaterange);
+   CALL filterObservationByEarliestLatest( 'qry_tmp_1', 'qry_observation_tmp', p_includedEarliestLatest, NULL, NULL, p_timeperioddaterange);
    -- filter out patients with the tested value sets
    DROP TEMPORARY TABLE IF EXISTS qry_tmp_1;
    SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp_1 AS 
-   SELECT o1.id, o1.patient_id, o1.clinical_effective_date, o1.result_value, o1.non_core_concept_id, o1.organization_id, o1.value_set_code_type 
+   SELECT o1.id, o1.patient_id, o1.clinical_effective_date, o1.result_value, o1.non_core_concept_id, o1.organization_id, o1.value_set_code_type, o1.cancellation_date  
    FROM qry_observation_tmp o1 
    WHERE o1.value_set_code_type = ', p_includedAnyAllTested,' (SELECT DISTINCT c.value_set_code_type FROM ', p_includedAnyAllTestedConcepttab,' c) ');
    PREPARE stmt FROM @sql;
@@ -290,15 +315,16 @@ ELSEIF p_queryType = '3' THEN
       IF p_filter = 1 THEN 
 
          SET @sql = CONCAT("CREATE TEMPORARY TABLE qry_tmp_2 AS 
-         SELECT o1.id, o1.patient_id, o1.clinical_effective_date, o1.result_value, o1.non_core_concept_id, o1.organization_id, cpt.value_set_code_type 
-         FROM qry_tmp_1 p JOIN ", p_observationCohortTab," o1 FORCE INDEX FOR JOIN (ix_observation_index_2, ix_observation_index_5) ON p.patient_id = o1.patient_id AND p.organization_id = o1.organization_id 
-         JOIN ", p_concept_all_tmp," cpt FORCE INDEX FOR JOIN (non_cpt_idx, data_type_idx, value_set_code_type_idx) ON cpt.non_core_concept_id = o1.non_core_concept_id 
+         SELECT o1.id, o1.patient_id, o1.clinical_effective_date, o1.result_value, o1.non_core_concept_id, o1.organization_id, cpt.value_set_code_type, NULL AS cancellation_date 
+         FROM qry_tmp_1 p JOIN ", p_observationCohortTab," o1   
+         ON p.patient_id = o1.patient_id AND p.organization_id = o1.organization_id AND p.person_id = o1.person_id 
+         JOIN ", p_concept_all_tmp," cpt ON cpt.non_core_concept_id = o1.non_core_concept_id 
          WHERE cpt.data_type = 'Observation' AND cpt.value_set_code_type = ", p_diagnosisAnyAll," (SELECT DISTINCT c.value_set_code_type FROM ", p_incDiagnosisConceptTab," c) ");
       
       ELSE
 
          SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp_2 AS 
-         SELECT o1.id, o1.patient_id, o1.clinical_effective_date, o1.result_value, o1.non_core_concept_id, o1.organization_id, o1.value_set_code_type 
+         SELECT o1.id, o1.patient_id, o1.clinical_effective_date, o1.result_value, o1.non_core_concept_id, o1.organization_id, o1.value_set_code_type, o1.cancellation_date 
          FROM ', p_observationCohortTab,' o1 JOIN qry_tmp_1 p ON p.patient_id = o1.patient_id AND p.organization_id = o1.organization_id 
          WHERE o1.value_set_code_type = ', p_diagnosisAnyAll,' (SELECT DISTINCT c.value_set_code_type FROM ', p_incDiagnosisConceptTab,' c) ');
 
@@ -309,12 +335,12 @@ ELSEIF p_queryType = '3' THEN
       DEALLOCATE PREPARE stmt;
 
       -- filter out the earliest diagnosis dates
-      CALL filterObservationByEarliestLatest(p_incDiagnosisConceptTab, 'qry_tmp_2', 'qry_diagnosis_tmp', 'Earliest', NULL, NULL, '1');
+      CALL filterObservationByEarliestLatest( 'qry_tmp_2', 'qry_diagnosis_tmp', 'Earliest', NULL, NULL, '1');
       
       -- filter out patients with latest concepts on or after their diagnosis date
       DROP TEMPORARY TABLE IF EXISTS qry_tmp_2;
       SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp_2 AS 
-      SELECT o.id, o.patient_id, o.clinical_effective_date, o.result_value, o.non_core_concept_id, o.organization_id, o.value_set_code_type 
+      SELECT o.id, o.patient_id, o.clinical_effective_date, o.result_value, o.non_core_concept_id, o.organization_id, o.value_set_code_type, o.cancellation_date  
       FROM qry_tmp_1 o JOIN ', p_queryCohort,' p ON p.patient_id = o.patient_id AND p.organization_id = o.organization_id 
       JOIN qry_diagnosis_tmp o1 ON o1.patient_id = p.patient_id AND o1.organization_id = p.organization_id 
       WHERE o.clinical_effective_date >= o1.clinical_effective_date' );
@@ -331,7 +357,7 @@ ELSEIF p_queryType = '3' THEN
       -- filter out patients with latest concepts after the patient's x birthday
       DROP TEMPORARY TABLE IF EXISTS qry_tmp_2;
       SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp_2 AS 
-      SELECT o1.id, o1.patient_id, o1.clinical_effective_date, o1.result_value, o1.non_core_concept_id, o1.organization_id, o1.value_set_code_type 
+      SELECT o1.id, o1.patient_id, o1.clinical_effective_date, o1.result_value, o1.non_core_concept_id, o1.organization_id, o1.value_set_code_type, o1.cancellation_date 
       FROM qry_tmp_1 o1 JOIN ', p_queryCohort,' p ON p.patient_id = o1.patient_id AND p.organization_id = o1.organization_id 
       WHERE o1.clinical_effective_date >= DATE_SUB(p.date_of_birth, INTERVAL -', p_diagnosisDob,' YEAR)');
       PREPARE stmt FROM @sql;
@@ -347,7 +373,7 @@ ELSEIF p_queryType = '3' THEN
       -- filter out patients by age
       DROP TEMPORARY TABLE IF EXISTS qry_tmp_2;
       SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp_2 AS 
-      SELECT o1.id, o1.patient_id, o1.clinical_effective_date, o1.result_value, o1.non_core_concept_id, o1.organization_id, o1.value_set_code_type 
+      SELECT o1.id, o1.patient_id, o1.clinical_effective_date, o1.result_value, o1.non_core_concept_id, o1.organization_id, o1.value_set_code_type, o1.cancellation_date  
       FROM qry_tmp_1 o1 JOIN ', p_queryCohort,' p ON p.patient_id = o1.patient_id AND p.organization_id = o1.organization_id 
       WHERE ', p_ageRange);
       PREPARE stmt FROM @sql;
@@ -386,7 +412,9 @@ ELSEIF p_queryType = '4' THEN
    -- create a temporary patient observation cohort containing any or all of the selected value sets
    IF p_filter = 1 THEN
             -- create an empty table
-            CREATE TEMPORARY TABLE qry_tmp_1 (id BIGINT, patient_id BIGINT, clinical_effective_date DATE, result_value DOUBLE, non_core_concept_id INT, organization_id BIGINT, value_set_code_type VARCHAR(255) );
+            CREATE TEMPORARY TABLE qry_tmp_1 (id BIGINT, patient_id BIGINT, clinical_effective_date DATE, 
+            result_value DOUBLE, non_core_concept_id INT, organization_id BIGINT, value_set_code_type VARCHAR(255), 
+            cancellation_date DATE);
          
             DROP TEMPORARY TABLE IF EXISTS qry_cohort_tmp;
 
@@ -407,9 +435,10 @@ ELSEIF p_queryType = '4' THEN
             WHILE EXISTS (SELECT row_id from qry_cohort_tmp WHERE row_id > @row_id AND row_id <= @row_id + 50) DO
 
                SET @sql = CONCAT("INSERT INTO qry_tmp_1 AS 
-               SELECT o1.id, o1.patient_id, o1.clinical_effective_date, o1.result_value, o1.non_core_concept_id, o1.organization_id, cpt.value_set_code_type 
-               FROM qry_cohort_tmp p JOIN ", p_observationCohortTab," o1 FORCE INDEX FOR JOIN (ix_observation_index_2, ix_observation_index_5) ON p.patient_id = o1.patient_id AND p.organization_id = o1.organization_id  
-               JOIN ", p_concept_all_tmp," cpt FORCE INDEX FOR JOIN (non_cpt_idx, data_type_idx, value_set_code_type_idx) ON cpt.non_core_concept_id = o1.non_core_concept_id 
+               SELECT o1.id, o1.patient_id, o1.clinical_effective_date, o1.result_value, o1.non_core_concept_id, o1.organization_id, cpt.value_set_code_type, NULL AS cancellation_date  
+               FROM qry_cohort_tmp p JOIN ", p_observationCohortTab," o1   
+               ON p.patient_id = o1.patient_id AND p.organization_id = o1.organization_id AND p.person_id = o1.person_id 
+               JOIN ", p_concept_all_tmp," cpt ON cpt.non_core_concept_id = o1.non_core_concept_id 
                WHERE cpt.data_type = 'Observation' AND cpt.value_set_code_type = ", p_includedAnyAll," (SELECT DISTINCT c.value_set_code_type FROM ", p_concepttab," c ) 
                AND p.row_id > @row_id AND p.row_id <= @row_id + 50");
 
@@ -422,7 +451,7 @@ ELSEIF p_queryType = '4' THEN
             END WHILE; 
    ELSE
                SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp_1 AS 
-               SELECT o1.id, o1.patient_id, o1.clinical_effective_date, o1.result_value, o1.non_core_concept_id, o1.organization_id, o1.value_set_code_type 
+               SELECT o1.id, o1.patient_id, o1.clinical_effective_date, o1.result_value, o1.non_core_concept_id, o1.organization_id, o1.value_set_code_type, o1.cancellation_date 
                FROM ', p_observationCohortTab,' o1 JOIN ', p_queryCohort,' p ON p.patient_id = o1.patient_id AND p.organization_id = o1.organization_id  
                WHERE o1.value_set_code_type = ', p_includedAnyAll,' (SELECT DISTINCT c.value_set_code_type FROM ', p_concepttab,' c ) ');
 
@@ -435,7 +464,7 @@ ELSEIF p_queryType = '4' THEN
    ALTER TABLE qry_tmp_1 ADD INDEX non_core_concept_idx (non_core_concept_id);
 
    -- filter out the Earliest of these observational concepts 
-   CALL filterObservationByEarliestLatest(p_concepttab, 'qry_tmp_1', 'qry_observation_tmp', 'Earliest', NULL, NULL, '1');
+   CALL filterObservationByEarliestLatest( 'qry_tmp_1', 'qry_observation_tmp', 'Earliest', NULL, NULL, '1');
 
    DROP TEMPORARY TABLE IF EXISTS qry_tmp_2;
    -- create a temporary patient observation cohort containing any or all of the followed by value sets
@@ -462,9 +491,10 @@ ELSEIF p_queryType = '4' THEN
             WHILE EXISTS (SELECT row_id from qry_cohort_tmp WHERE row_id > @row_id AND row_id <= @row_id + 50) DO
 
                SET @sql = CONCAT("INSERT INTO qry_tmp_2 
-               SELECT o2.id, o2.patient_id, o2.clinical_effective_date, o2.result_value, o2.non_core_concept_id, o2.organization_id, cpt.value_set_code_type 
-               FROM qry_cohort_tmp p JOIN ", p_observationCohortTab," o2 FORCE INDEX FOR JOIN (ix_observation_index_2, ix_observation_index_5) ON p.patient_id = o2.patient_id AND p.organization_id = o2.organization_id  
-               JOIN ", p_concept_all_tmp," cpt FORCE INDEX FOR JOIN (non_cpt_idx, data_type_idx, value_set_code_type_idx) ON cpt.non_core_concept_id = o2.non_core_concept_id 
+               SELECT o2.id, o2.patient_id, o2.clinical_effective_date, o2.result_value, o2.non_core_concept_id, o2.organization_id, cpt.value_set_code_type, NULLL AS cancellation_date 
+               FROM qry_cohort_tmp p JOIN ", p_observationCohortTab," o2   
+               ON p.patient_id = o2.patient_id AND p.organization_id = o2.organization_id AND p.person_id = o2.person_id 
+               JOIN ", p_concept_all_tmp," cpt ON cpt.non_core_concept_id = o2.non_core_concept_id 
                WHERE cpt.data_type = 'Observation' AND cpt.value_set_code_type = ", p_includedAnyAllFollowedBy, " (SELECT DISTINCT c.value_set_code_type FROM ", p_includedFollowedByConcepttab," c ) 
                AND p.row_id > @row_id AND p.row_id <= @row_id + 50");
 
@@ -477,7 +507,7 @@ ELSEIF p_queryType = '4' THEN
             END WHILE; 
    ELSE
             SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp_2 AS 
-            SELECT o2.id, o2.patient_id, o2.clinical_effective_date, o2.result_value, o2.non_core_concept_id, o2.organization_id, o2.value_set_code_type 
+            SELECT o2.id, o2.patient_id, o2.clinical_effective_date, o2.result_value, o2.non_core_concept_id, o2.organization_id, o2.value_set_code_type, o2.cancellation_date  
             FROM ', p_observationCohortTab,' o2 JOIN ', p_queryCohort,' p ON p.patient_id = o2.patient_id AND p.organization_id = o2.organization_id  
             WHERE o2.value_set_code_type = ', p_includedAnyAllFollowedBy, ' (SELECT DISTINCT c.value_set_code_type FROM ', p_includedFollowedByConcepttab,' c ) ');
 
@@ -490,7 +520,7 @@ ELSEIF p_queryType = '4' THEN
    ALTER TABLE qry_tmp_2 ADD INDEX non_core_concept_idx (non_core_concept_id);
 
       -- filter out the Earliest of these observational concepts 
-   CALL filterObservationByEarliestLatest(p_concepttab, 'qry_tmp_2', 'qry_observation_tmp_2', 'Earliest', NULL, NULL, '1');
+   CALL filterObservationByEarliestLatest( 'qry_tmp_2', 'qry_observation_tmp_2', 'Earliest', NULL, NULL, '1');
 
    DROP TEMPORARY TABLE IF EXISTS qry_tmp_3;
    -- create a temporary patient cohort where one value set is compared to another over a time period
@@ -528,7 +558,9 @@ ELSEIF p_queryType = '5' THEN
    -- create a temporary patient observation cohort containing any or all of the selected value sets within the selected time period if applicable
    IF p_filter = 1 THEN
             -- create an empty table
-            CREATE TEMPORARY TABLE qry_tmp (patient_id BIGINT, value_set_code_type VARCHAR(255), non_core_concept_id INT, clinical_effective_date DATE, organization_id BIGINT);
+            CREATE TEMPORARY TABLE qry_tmp (id BIGINT, patient_id BIGINT, clinical_effective_date DATE, 
+            result_value DOUBLE, non_core_concept_id INT, organization_id BIGINT, value_set_code_type VARCHAR(255), 
+            cancellation_date DATE);
          
             DROP TEMPORARY TABLE IF EXISTS qry_cohort_tmp;
 
@@ -549,9 +581,10 @@ ELSEIF p_queryType = '5' THEN
             WHILE EXISTS (SELECT row_id from qry_cohort_tmp WHERE row_id > @row_id AND row_id <= @row_id + 50) DO
 
                SET @sql = CONCAT("INSERT INTO qry_tmp 
-               SELECT DISTINCT o2.patient_id, o2.value_set_code_type, o2.non_core_concept_id, o2.clinical_effective_date, o2.organization_id  
-               FROM qry_cohort_tmp p JOIN ", p_observationCohortTab," o2 FORCE INDEX FOR JOIN (ix_observation_index_2, ix_observation_index_5) ON p.patient_id = o2.patient_id AND p.organization_id = o2.organization_id    
-               JOIN ", p_concept_all_tmp," cpt FORCE INDEX FOR JOIN (non_cpt_idx, data_type_idx, value_set_code_type_idx) ON cpt.non_core_concept_id = o2.non_core_concept_id 
+               SELECT o2.id, o2.patient_id, o2.clinical_effective_date, o2.result_value, o2.non_core_concept_id, o2.organization_id, cpt.value_set_code_type, NULL AS cancellation_date   
+               FROM qry_cohort_tmp p JOIN ", p_observationCohortTab," o2   
+               ON p.patient_id = o2.patient_id AND p.organization_id = o2.organization_id AND p.person_id = o2.person_id     
+               JOIN ", p_concept_all_tmp," cpt ON cpt.non_core_concept_id = o2.non_core_concept_id 
                WHERE cpt.data_type = 'Observation' AND cpt.value_set_code_type = ", p_includedAnyAll," (SELECT DISTINCT c.value_set_code_type FROM ", p_concepttab," c ) 
                AND ", p_timeperioddaterange," AND p.row_id > @row_id AND p.row_id <= @row_id + 50");
 
@@ -565,7 +598,7 @@ ELSEIF p_queryType = '5' THEN
    ELSE
 
       SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp AS 
-      SELECT DISTINCT o2.patient_id, o2.value_set_code_type, o2.non_core_concept_id, o2.clinical_effective_date, o2.organization_id  
+      SELECT o2.id, o2.patient_id, o2.clinical_effective_date, o2.result_value, o2.non_core_concept_id, o2.organization_id, o2.value_set_code_type, o2.cancellation_date   
       FROM ', p_observationCohortTab,' o2 JOIN ', p_queryCohort,' p ON p.patient_id = o2.patient_id AND p.organization_id = o2.organization_id    
       WHERE o2.value_set_code_type = ', p_includedAnyAll,' (SELECT DISTINCT c.value_set_code_type FROM ', p_concepttab,' c ) 
       AND ', p_timeperioddaterange);
