@@ -23,6 +23,8 @@ export class RegistryListsComponent implements OnInit {
 
   selection = new SelectionModel<any>(true, []);
 
+  wait: boolean = true;
+
   events: any;
   dataSource: MatTableDataSource<any>;
   @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
@@ -74,6 +76,8 @@ export class RegistryListsComponent implements OnInit {
     this.dataSource = new MatTableDataSource(events.results);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+
+    this.wait = false;
   }
 
   applyFilter(event: Event) {

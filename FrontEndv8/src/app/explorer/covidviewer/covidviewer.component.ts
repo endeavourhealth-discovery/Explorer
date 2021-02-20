@@ -126,14 +126,12 @@ export class CovidViewerComponent implements OnInit {
   dateFrom1: string = '2020-01-01';
   dateTo1: string = this.formatDate(new Date());
   dashboardId: string;
-  showLineCharts1: boolean = false;
   seriesValues1 = new FormControl();
   seriesList1: string = '';
   selectedethnic1: any = [];
   selectedage1: any = [];
   selectedsex1: any = [];
   chartName: string = "";
-  showPrompt: boolean = true;
   showWait: boolean = false;
   showCharts: boolean = false;
 
@@ -217,7 +215,7 @@ export class CovidViewerComponent implements OnInit {
       this.ethnicValues1 = new FormControl([]);
       this.selectedethnic1 = "";
     }
-    this.refreshDashboard();
+
   }
 
   toggleAgeSelection1(event) {
@@ -228,7 +226,7 @@ export class CovidViewerComponent implements OnInit {
       this.ageValues1 = new FormControl([]);
       this.selectedage1 = "";
     }
-    this.refreshDashboard();
+
   }
 
   toggleSexSelection1(event) {
@@ -239,7 +237,7 @@ export class CovidViewerComponent implements OnInit {
       this.sexValues1 = new FormControl([]);
       this.selectedsex1 = "";
     }
-    this.refreshDashboard();
+
   }
 
   toggleSeriesSelection1(event) {
@@ -250,13 +248,11 @@ export class CovidViewerComponent implements OnInit {
       this.seriesValues1 = new FormControl([]);
       this.selectedSeries1 = "";
     }
-    this.refreshDashboard();
+
   }
 
   refreshDashboard() {
     let series = this.selectedSeries1.toString();
-
-    this.showLineCharts1 = this.selectedWidgets[0].name=='Line chart';
 
     let stp = "";
     let ccg = "";
@@ -308,86 +304,82 @@ export class CovidViewerComponent implements OnInit {
     if (this.selectAllSex1)
       sex = 'All';
 
-    if (this.showLineCharts1) {
-      let cumulative = "0";
-      if (this.cumulative1) {
-        cumulative = "1";
-      }
-      let weekly = "0";
-      if (this.weekly1) {
-        weekly = "1";
-      }
-
-      let rate = "0";
-      if (this.rate1) {
-        rate = "1";
-      }
-
-      this.showPrompt = false;
-      this.showWait = true;
-      this.showCharts = false;
-
-      let cumulativeText = '';
-      if (cumulative=="1")
-        cumulativeText+='cumulative ';
-
-      if (weekly=="1") {
-        this.chartSelections1='Weekly '+cumulativeText+'trend'
-      }
-      else {
-        this.chartSelections1='Daily '+cumulativeText+'trend'
-      }
-
-      if (rate == '1') {
-        this.yAxisLabel1 = 'Rate per 100,000 patients';
-      } else
-        this.yAxisLabel1 = this.yAxisLabel;
-
-      this.xAxisLabel1 = this.chartSelections1;
-      this.chartSelections2 = ' of '+series;
-      this.chartSelections3 = ' in '+stp+ccg+pcn+practice;
-      this.chartSelections4 = '';
-
-      if (ethnic!='All')
-        this.chartSelections4 += ' filtered by '+ethnic+' ethnic groups';
-      if (age!='All')
-        this.chartSelections4 += ' filtered by '+age+' age groups';
-      if (sex!='All')
-        this.chartSelections4 += ' filtered by '+sex+' genders';
-
-      let re = /\,/gi;
-
-      this.chartSelections2 = this.chartSelections2.replace(re, ", ");
-      this.chartSelections3 = this.chartSelections3.replace(re, ", ");
-      this.chartSelections4 = this.chartSelections4.replace(re, ", ");
-
-      this.explorerService.getDashboardCovid(this.dashboardId, series, this.formatDate(this.dateFrom1), this.formatDate(this.dateTo1), stp, ccg, pcn, practice, ethnic, age, sex, cumulative, weekly, rate, this.combineSeries1, this.combineEthnic1, this.combineAge1, this.combineSex1, this.combineOrgs)
-        .subscribe(result => {
-
-          this.showPrompt = false;
-          this.showWait = false;
-          this.showCharts = true;
-
-          this.chartResults1 = result.results;
-
-          // apply log10 to values in series
-          this.chartResults1 = this.chartResults1.map(
-            e => {
-              return {
-                name: e.name,
-                series: e.series.map(
-                  v => {
-                    return {
-                      name: new Date(v.name),
-                      value: this.applyLogarithm1(v.value)
-                    }
-                  }
-                )
-              }
-            }
-          )
-        });
+    let cumulative = "0";
+    if (this.cumulative1) {
+      cumulative = "1";
     }
+    let weekly = "0";
+    if (this.weekly1) {
+      weekly = "1";
+    }
+
+    let rate = "0";
+    if (this.rate1) {
+      rate = "1";
+    }
+
+    this.showWait = true;
+    this.showCharts = false;
+
+    let cumulativeText = '';
+    if (cumulative=="1")
+      cumulativeText+='cumulative ';
+
+    if (weekly=="1") {
+      this.chartSelections1='Weekly '+cumulativeText+'trend'
+    }
+    else {
+      this.chartSelections1='Daily '+cumulativeText+'trend'
+    }
+
+    if (rate == '1') {
+      this.yAxisLabel1 = 'Rate per 100,000 patients';
+    } else
+      this.yAxisLabel1 = this.yAxisLabel;
+
+    this.xAxisLabel1 = this.chartSelections1;
+    this.chartSelections2 = ' of '+series;
+    this.chartSelections3 = ' in '+stp+ccg+pcn+practice;
+    this.chartSelections4 = '';
+
+    if (ethnic!='All')
+      this.chartSelections4 += ' filtered by '+ethnic+' ethnic groups';
+    if (age!='All')
+      this.chartSelections4 += ' filtered by '+age+' age groups';
+    if (sex!='All')
+      this.chartSelections4 += ' filtered by '+sex+' genders';
+
+    let re = /\,/gi;
+
+    this.chartSelections2 = this.chartSelections2.replace(re, ", ");
+    this.chartSelections3 = this.chartSelections3.replace(re, ", ");
+    this.chartSelections4 = this.chartSelections4.replace(re, ", ");
+
+    this.explorerService.getDashboardCovid(this.dashboardId, series, this.formatDate(this.dateFrom1), this.formatDate(this.dateTo1), stp, ccg, pcn, practice, ethnic, age, sex, cumulative, weekly, rate, this.combineSeries1, this.combineEthnic1, this.combineAge1, this.combineSex1, this.combineOrgs)
+      .subscribe(result => {
+
+        this.showWait = false;
+        this.showCharts = true;
+
+        this.chartResults1 = result.results;
+
+        // apply log10 to values in series
+        this.chartResults1 = this.chartResults1.map(
+          e => {
+            return {
+              name: e.name,
+              series: e.series.map(
+                v => {
+                  return {
+                    name: new Date(v.name),
+                    value: this.applyLogarithm1(v.value)
+                  }
+                }
+              )
+            }
+          }
+        )
+      });
 
   }
 
@@ -466,8 +458,6 @@ export class CovidViewerComponent implements OnInit {
       }
     )
 
-    this.refreshDashboard();
-
   }
 
   loadSeries() {
@@ -490,7 +480,6 @@ export class CovidViewerComponent implements OnInit {
     this.seriesList1 = this.selectedSeries1;
     this.seriesValues1 = new FormControl(this.seriesList1);
 
-    this.refreshDashboard();
   }
 
   formatTooltipYAxis1(val: number) {
@@ -576,10 +565,7 @@ export class CovidViewerComponent implements OnInit {
 
   download1() {
     var csvData = '';
-    if (this.showLineCharts1)
-      csvData = this.ConvertToCSVMulti(this.chartResults1);
-    else
-      csvData = this.ConvertToCSVSingle(this.chartResultsSingle1,this.selectedSeries1.toString());
+    csvData = this.ConvertToCSVMulti(this.chartResults1);
 
     let exportData = this.csvJSON(csvData);
 
@@ -637,21 +623,6 @@ export class CovidViewerComponent implements OnInit {
             csv += array[key].name+ ',' + point + ',' + array[key].series[key2].value + '\n';
           }
         }
-      }
-    }
-    return csv;
-  }
-
-  ConvertToCSVSingle(objArray, series) {
-    let array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
-    let csv = 'key,point,count\r\n';
-    for (let key in array) {
-      if (array.hasOwnProperty(key)) {
-        let point = array[key].name;
-        if (point.toString().indexOf("GMT") > -1) { // date type of series
-          point = this.formatDate(point);
-        }
-        csv += series+ ',' + point + ',' + array[key].value + '\n';
       }
     }
     return csv;
@@ -730,7 +701,6 @@ export class CovidViewerComponent implements OnInit {
     descendants.forEach(child => this.checklistSelection.isSelected(child));
     this.checkAllParentsSelection(node);
 
-    this.refreshDashboard();
   }
 
   /** Toggle a leaf orgitem selection. Check all the parents to see if they changed */
@@ -738,7 +708,6 @@ export class CovidViewerComponent implements OnInit {
     this.checklistSelection.toggle(node);
     this.checkAllParentsSelection(node);
 
-    this.refreshDashboard();
   }
 
   /* Checks all the parents when a leaf node is selected/unselected */

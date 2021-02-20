@@ -294,7 +294,7 @@ export class DashboardViewerComponent implements OnInit {
       this.ccgValues1 = new FormControl([]);
       this.selectedCCG1 = "";
     }
-    this.refresh1();
+
   }
 
   toggleSelection2(event) {
@@ -305,7 +305,7 @@ export class DashboardViewerComponent implements OnInit {
       this.ccgValues2 = new FormControl([]);
       this.selectedCCG2 = "";
     }
-    this.refresh2();
+
   }
 
   toggleSelection3(event) {
@@ -316,7 +316,7 @@ export class DashboardViewerComponent implements OnInit {
       this.ccgValues3 = new FormControl([]);
       this.selectedCCG3 = "";
     }
-    this.refresh3();
+
   }
 
   toggleSelection4(event) {
@@ -327,7 +327,7 @@ export class DashboardViewerComponent implements OnInit {
       this.ccgValues4 = new FormControl([]);
       this.selectedCCG4 = "";
     }
-    this.refresh4();
+
   }
 
   toggleSelectionSeries1(event) {
@@ -338,7 +338,7 @@ export class DashboardViewerComponent implements OnInit {
       this.seriesValues1 = new FormControl([]);
       this.selectedSeries1 = "";
     }
-    this.refresh1();
+
   }
 
   toggleSelectionSeries2(event) {
@@ -349,7 +349,7 @@ export class DashboardViewerComponent implements OnInit {
       this.seriesValues2 = new FormControl([]);
       this.selectedSeries2 = "";
     }
-    this.refresh2();
+
   }
 
   toggleSelectionSeries3(event) {
@@ -360,7 +360,7 @@ export class DashboardViewerComponent implements OnInit {
       this.seriesValues3 = new FormControl([]);
       this.selectedSeries3 = "";
     }
-    this.refresh3();
+
   }
 
   toggleSelectionSeries4(event) {
@@ -371,15 +371,11 @@ export class DashboardViewerComponent implements OnInit {
       this.seriesValues4 = new FormControl([]);
       this.selectedSeries4 = "";
     }
-    this.refresh4();
+
   }
 
-  refresh1() {
+  refreshDashboard1() {
     let values1 = this.selectedSeries1.toString();
-
-    this.showLineCharts1 = this.selectedWidgets[0].name=='Line chart';
-    this.showBarCharts1 = this.selectedWidgets[0].name=='Bar chart';
-    this.showTables1 = this.selectedWidgets[0].name=='Table';
 
     if (this.showLineCharts1) {
       let cumulative = "0";
@@ -431,12 +427,8 @@ export class DashboardViewerComponent implements OnInit {
     }
   }
 
-  refresh2() {
+  refreshDashboard2() {
     let values2 = this.selectedSeries2.toString();
-
-    this.showLineCharts2 = this.selectedWidgets[1].name=='Line chart';
-    this.showBarCharts2 = this.selectedWidgets[1].name=='Bar chart';
-    this.showTables2 = this.selectedWidgets[1].name=='Table';
 
     if (this.showLineCharts2) {
       let cumulative = "0";
@@ -488,12 +480,8 @@ export class DashboardViewerComponent implements OnInit {
     }
   }
 
-  refresh3() {
+  refreshDashboard3() {
     let values3 = this.selectedSeries3.toString();
-
-    this.showLineCharts3 = this.selectedWidgets[2].name=='Line chart';
-    this.showBarCharts3 = this.selectedWidgets[2].name=='Bar chart';
-    this.showTables3 = this.selectedWidgets[2].name=='Table';
 
     if (this.showLineCharts3) {
       let cumulative = "0";
@@ -545,12 +533,8 @@ export class DashboardViewerComponent implements OnInit {
     }
   }
 
-  refresh4() {
+  refreshDashboard4() {
     let values4 = this.selectedSeries4.toString();
-
-    this.showLineCharts4 = this.selectedWidgets[3].name=='Line chart';
-    this.showBarCharts4 = this.selectedWidgets[3].name=='Bar chart';
-    this.showTables4 = this.selectedWidgets[3].name=='Table';
 
     if (this.showLineCharts4) {
       let cumulative = "0";
@@ -607,6 +591,50 @@ export class DashboardViewerComponent implements OnInit {
       e => {
         let query: dashboardQuery = JSON.parse(e.jsonQuery);
 
+        this.selectedWidgets = query.visualType;
+
+        if (this.selectedWidgets.length==1) {
+          this.showLineCharts1 = this.selectedWidgets[0].name=='Line chart';
+          this.showBarCharts1 = this.selectedWidgets[0].name=='Bar chart';
+          this.showTables1 = this.selectedWidgets[0].name=='Table';
+        }
+
+        if (this.selectedWidgets.length==2) {
+          this.showLineCharts1 = this.selectedWidgets[0].name=='Line chart';
+          this.showBarCharts1 = this.selectedWidgets[0].name=='Bar chart';
+          this.showTables1 = this.selectedWidgets[0].name=='Table';
+          this.showLineCharts2 = this.selectedWidgets[1].name=='Line chart';
+          this.showBarCharts2 = this.selectedWidgets[1].name=='Bar chart';
+          this.showTables2 = this.selectedWidgets[1].name=='Table';
+        }
+
+        if (this.selectedWidgets.length==3) {
+          this.showLineCharts1 = this.selectedWidgets[0].name=='Line chart';
+          this.showBarCharts1 = this.selectedWidgets[0].name=='Bar chart';
+          this.showTables1 = this.selectedWidgets[0].name=='Table';
+          this.showLineCharts2 = this.selectedWidgets[1].name=='Line chart';
+          this.showBarCharts2 = this.selectedWidgets[1].name=='Bar chart';
+          this.showTables2 = this.selectedWidgets[1].name=='Table';
+          this.showLineCharts3 = this.selectedWidgets[2].name=='Line chart';
+          this.showBarCharts3 = this.selectedWidgets[2].name=='Bar chart';
+          this.showTables3 = this.selectedWidgets[2].name=='Table';
+        }
+
+        if (this.selectedWidgets.length==4) {
+          this.showLineCharts1 = this.selectedWidgets[0].name=='Line chart';
+          this.showBarCharts1 = this.selectedWidgets[0].name=='Bar chart';
+          this.showTables1 = this.selectedWidgets[0].name=='Table';
+          this.showLineCharts2 = this.selectedWidgets[1].name=='Line chart';
+          this.showBarCharts2 = this.selectedWidgets[1].name=='Bar chart';
+          this.showTables2 = this.selectedWidgets[1].name=='Table';
+          this.showLineCharts3 = this.selectedWidgets[2].name=='Line chart';
+          this.showBarCharts3 = this.selectedWidgets[2].name=='Bar chart';
+          this.showTables3 = this.selectedWidgets[2].name=='Table';
+          this.showLineCharts4 = this.selectedWidgets[3].name=='Line chart';
+          this.showBarCharts4 = this.selectedWidgets[3].name=='Bar chart';
+          this.showTables4 = this.selectedWidgets[3].name=='Table';
+        }
+
         this.selectedVisualisation1 = query.selectedVisualisation1;
 
         this.selectedQuery1 = query.selectedSeries1;
@@ -659,7 +687,6 @@ export class DashboardViewerComponent implements OnInit {
         this.xAxisLabel4 = query.xAxisLabel4;
         this.yAxisLabel4 = query.yAxisLabel4;
 
-        this.selectedWidgets = query.visualType;
 
       }
     )
@@ -713,7 +740,7 @@ export class DashboardViewerComponent implements OnInit {
       this.view1 = [1300, 700];
       this.widget1 = true;
 
-      this.refresh1();
+
     }
     if (this.selectedWidgets.length==2) {
       this.cols = "2";
@@ -721,9 +748,9 @@ export class DashboardViewerComponent implements OnInit {
       this.view1 = [770, 700];
       this.view2 = [770, 700];
       this.widget1 = true;
-      this.refresh1();
+
       this.widget2 = true;
-      this.refresh2();
+
     }
     if (this.selectedWidgets.length==3) {
       this.cols = "2";
@@ -732,11 +759,11 @@ export class DashboardViewerComponent implements OnInit {
       this.view2 = [770, 270];
       this.view3 = [770, 270];
       this.widget1 = true;
-      this.refresh1();
+
       this.widget2 = true;
-      this.refresh2();
+
       this.widget3 = true;
-      this.refresh3();
+
     }
     if (this.selectedWidgets.length==4) {
       this.cols = "2";
@@ -746,13 +773,13 @@ export class DashboardViewerComponent implements OnInit {
       this.view3 = [770, 270];
       this.view4 = [770, 270];
       this.widget1 = true;
-      this.refresh1();
+
       this.widget2 = true;
-      this.refresh2();
+
       this.widget3 = true;
-      this.refresh3();
+
       this.widget4 = true;
-      this.refresh4();
+
     }
 
   }
@@ -781,7 +808,7 @@ export class DashboardViewerComponent implements OnInit {
 
     this.ccgValues1 = new FormControl(this.ccgList1);
 
-    this.refresh1();
+
   }
 
   loadQuery1Series(result: any, queryName: any) {
@@ -829,7 +856,7 @@ export class DashboardViewerComponent implements OnInit {
 
     this.ccgValues2 = new FormControl(this.ccgList2);
 
-    this.refresh2();
+
   }
 
   loadQuery2Series(result: any, queryName: any) {
@@ -877,7 +904,7 @@ export class DashboardViewerComponent implements OnInit {
 
     this.ccgValues3 = new FormControl(this.ccgList3);
 
-    this.refresh3();
+
   }
 
   loadQuery3Series(result: any, queryName: any) {
@@ -925,7 +952,7 @@ export class DashboardViewerComponent implements OnInit {
 
     this.ccgValues4 = new FormControl(this.ccgList4);
 
-    this.refresh4();
+
   }
 
   loadQuery4Series(result: any, queryName: any) {
