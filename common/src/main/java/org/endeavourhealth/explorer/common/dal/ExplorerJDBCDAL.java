@@ -1190,10 +1190,10 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                                         statement.setString(p++, validOrgs.get(i-1));
                                     }
                                     if (combineOrgs.equals("false")) {
-                                        statement.setString(p++, orgName);
+                                        statement.setString(p++, orgName.split("\\|")[0].trim());
                                     } else {
                                         for (int i = 1; i <= orgArray.length; i++) {
-                                            statement.setString(p++, orgArray[i - 1]);
+                                            statement.setString(p++, orgArray[i - 1].split("\\|")[0].trim());
                                         }
                                     }
                                     if (!ethnic.equals("All")) {
@@ -1245,10 +1245,10 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                                     }
                                 }
                                 if (combineOrgs.equals("false")) {
-                                    statement.setString(p++, orgName);
+                                    statement.setString(p++, orgName.split("\\|")[0].trim());
                                 } else {
                                     for (int i = 1; i <= orgArray.length; i++) {
-                                        statement.setString(p++, orgArray[i - 1]);
+                                        statement.setString(p++, orgArray[i - 1].split("\\|")[0].trim());
                                     }
                                 }
                                 if (!ethnic.equals("All")) {
@@ -2889,11 +2889,11 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         }
         String params = builder.deleteCharAt( builder.length() -1 ).toString();
 
-        String sql = "SELECT stp,ccg,pcn,practice,stp_ods_code,ccg_ods_code,practice_ods_code " +
+        String sql = "SELECT stp,ccg,pcn,concat(practice,' | ', practice_ods_code) as practice " +
                 "FROM dashboards.population_denominators " +
                 "WHERE (stp_ods_code in ("+params+") or ccg_ods_code in ("+params+") or practice_ods_code in ("+params+")) "+
-                "group by stp,ccg,pcn,practice,stp_ods_code,ccg_ods_code,practice_ods_code "+
-                "order by stp,ccg,pcn,practice,stp_ods_code,ccg_ods_code,practice_ods_code";
+                "group by stp,ccg,pcn,practice,practice_ods_code "+
+                "order by stp,ccg,pcn,practice,practice_ods_code";
 
         String orgTree = "{";
 

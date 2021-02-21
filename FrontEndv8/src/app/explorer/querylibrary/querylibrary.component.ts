@@ -263,9 +263,7 @@ export class QueryLibraryComponent implements OnInit {
       let details = '';
 
       if (fieldName=='providerOrganisation') {
-        details = query.providerOrganisation
-      } else if (fieldName=='includedOrganisation') {
-        details = query.includedOrganisation
+        details = query.providerOrganisation.toString().replace(/,/g, ', ')
       } else if (fieldName=='registrationStatus') {
         details = query.registrationStatus
       }else if (fieldName=='valueDateFrom') {

@@ -1,13 +1,16 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject, Injectable, OnInit} from '@angular/core';
 import {MatDialogRef, MAT_DIALOG_DATA, MatDialog} from '@angular/material/dialog';
 import {ExplorerService} from '../explorer.service';
 import {LoggerService} from 'dds-angular8';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {STEPPER_GLOBAL_OPTIONS} from "@angular/cdk/stepper";
 import {takeUntil} from "rxjs/operators";
-import {ReplaySubject, Subject} from "rxjs";
+import {BehaviorSubject, ReplaySubject, Subject} from "rxjs";
 import {MessageBoxDialogComponent} from "../message-box-dialog/message-box-dialog.component";
 import {Router} from "@angular/router";
+import {MatTreeFlatDataSource, MatTreeFlattener} from "@angular/material/tree";
+import {FlatTreeControl} from "@angular/cdk/tree";
+import {SelectionModel} from "@angular/cdk/collections";
 
 export interface DialogData {
   id: string;
@@ -23,7 +26,6 @@ interface savedQuery {
   targetPercentage: string;
   registryName: string;
   providerOrganisation: string;
-  includedOrganisation: string;
   registrationStatus: string;
   ageFrom: string;
   ageTo: string;
@@ -535,11 +537,69 @@ interface valueSetEncounter {
   value: string;
 }
 
+export class OrgItemNode {
+  children: OrgItemNode[];
+  item: string;
+}
+
+export class OrgItemFlatNode {
+  item: string;
+  level: number;
+  expandable: boolean;
+}
+
+@Injectable()
+export class ChecklistDatabase {
+  dataChange = new BehaviorSubject<OrgItemNode[]>([]);
+
+  get data(): OrgItemNode[] { return this.dataChange.value; }
+
+  constructor(private explorerService: ExplorerService,
+              private log: LoggerService) {
+
+    this.initialize();
+  }
+
+  initialize() {
+    this.explorerService.getOrganisationTree()
+      .subscribe(
+        (result) => this.loadOrgTree(result),
+        (error) => this.log.error(error)
+      );
+
+  }
+
+  loadOrgTree(orgs: any) {
+    const data = this.buildFileTree(orgs, 0);
+
+    this.dataChange.next(data);
+  }
+
+  buildFileTree(obj: {[key: string]: any}, level: number): OrgItemNode[] {
+    return Object.keys(obj).reduce<OrgItemNode[]>((accumulator, key) => {
+      const value = obj[key];
+      const node = new OrgItemNode();
+      node.item = key;
+
+      if (value != null) {
+        if (typeof value === 'object') {
+          node.children = this.buildFileTree(value, level + 1);
+        } else {
+          node.item = value;
+        }
+      }
+
+      return accumulator.concat(node);
+    }, []);
+  }
+
+}
+
 @Component({
   selector: 'app-queryeditor',
   templateUrl: './advancedqueryeditor.component.html',
   styleUrls: ['./advancedqueryeditor.component.scss'],
-  providers: [{
+  providers: [ChecklistDatabase, {
     provide: STEPPER_GLOBAL_OPTIONS, useValue: {showError: true}
   }]
 })
@@ -558,8 +618,6 @@ export class AdvancedQueryEditorComponent implements OnInit {
   denominatorQuery: string = '';
   targetPercentage: string = '';
   registryName: string = '';
-  selectedOrganisation: string = '';
-  selectedIncludedOrganisation: string = '';
   selectedRegistration: string = '';
   registrationExclude: string = '';
   registrationDateFrom: string = '';
@@ -1026,8 +1084,6 @@ export class AdvancedQueryEditorComponent implements OnInit {
   fifthFormGroup: FormGroup;
   sixthFormGroup: FormGroup;
 
-  orgList = [];
-  orgIncList = [];
   valueSet = [];
   valueSetObservation = [];
   valueSetMedication = [];
@@ -1213,8 +1269,19 @@ export class AdvancedQueryEditorComponent implements OnInit {
     private explorerService: ExplorerService,
     private log: LoggerService,
     private _formBuilder: FormBuilder,
+    private _database: ChecklistDatabase,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private dialog: MatDialog) {
+
+    this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel,
+      this.isExpandable, this.getChildren);
+    this.treeControl = new FlatTreeControl<OrgItemFlatNode>(this.getLevel, this.isExpandable);
+    this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
+
+    _database.dataChange.subscribe(data => {
+      this.dataSource.data = data;
+    });
+
     this.disableForm = true;
     this.id = data.id;
     this.name = data.name;
@@ -1226,8 +1293,6 @@ export class AdvancedQueryEditorComponent implements OnInit {
       let query: savedQuery = JSON.parse(data.query);
 
       this.targetPercentage = query.targetPercentage;
-      this.selectedOrganisation = query.providerOrganisation;
-      this.selectedIncludedOrganisation = query.includedOrganisation;
       this.selectedRegistration = query.registrationStatus;
       this.ageFrom = query.ageFrom;
       this.ageTo = query.ageTo;
@@ -1828,9 +1893,9 @@ export class AdvancedQueryEditorComponent implements OnInit {
       control1: ['', Validators.required], control2: ['', Validators.required], control157: [''], control158: [''], control159: ['']
     });
     this.secondFormGroup = this._formBuilder.group({
-      control17: [''], control3: ['', Validators.required], control4: ['', Validators.required], control8: [''], control9: ['']
+      control4: ['', Validators.required], control8: [''], control9: ['']
     });
-    
+
     this.thirdFormGroup = this._formBuilder.group({
       control6: [''], control7: [''],
       control6a: [''], control7a: [''],
@@ -2061,25 +2126,10 @@ export class AdvancedQueryEditorComponent implements OnInit {
   private _onDestroy = new Subject<void>();
 
   ngOnInit() {
-    this.explorerService.getLookupLists('10','')
-      .subscribe(
-        (result) => this.loadOrgList(result),
-        (error) => this.log.error(error)
-      );
+    this.loadLists();
   }
 
-  loadOrgList(lists: any) {
-    lists.results.map(
-      e => {
-        this.orgList.push(e.type);
-      }
-    )
-    lists.results.map(
-      e => {
-        this.orgIncList.push(e.type);
-      }
-    )
-
+  loadLists() {
     this.explorerService.getLookupLists('12','')
       .subscribe(
         (result) => this.loadQueryList(result),
@@ -2328,10 +2378,20 @@ export class AdvancedQueryEditorComponent implements OnInit {
 
   saveQuery(close: boolean) {
 
+    let practice = "";
+
+    this.checklistSelection.selected.map(
+      e => {
+        if (e.level==3)
+          practice += ','+e.item.split('|')[1].trim();
+      }
+    )
+
+    practice = practice.replace(',', '');
+
     let query = {
       targetPercentage: this.targetPercentage,
-      providerOrganisation: this.selectedOrganisation,
-      includedOrganisation: this.selectedIncludedOrganisation,
+      providerOrganisation: practice,
       registrationStatus: this.selectedRegistration,
       registrationExclude: this.registrationExclude,
       registrationDateFrom: this.formatDate(this.registrationDateFrom),
@@ -2836,7 +2896,6 @@ export class AdvancedQueryEditorComponent implements OnInit {
 
     this.disableForm = this.type=='' || this.type==undefined ||
       this.name=='' || this.name==undefined ||
-      this.selectedOrganisation=='' || this.selectedOrganisation==undefined ||
       this.selectedRegistration=='' || this.selectedRegistration==undefined ||
       this.selectedDelivery=='' || this.selectedDelivery==undefined ||
       this.selectedSchedule=='' || this.selectedSchedule==undefined;
@@ -2991,6 +3050,116 @@ export class AdvancedQueryEditorComponent implements OnInit {
 
   addSameRule15() {
     this.rule15 = true;
+  }
+
+  flatNodeMap = new Map<OrgItemFlatNode, OrgItemNode>();
+
+  nestedNodeMap = new Map<OrgItemNode, OrgItemFlatNode>();
+
+  selectedParent: OrgItemFlatNode | null = null;
+
+  treeControl: FlatTreeControl<OrgItemFlatNode>;
+
+  treeFlattener: MatTreeFlattener<OrgItemNode, OrgItemFlatNode>;
+
+  dataSource: MatTreeFlatDataSource<OrgItemNode, OrgItemFlatNode>;
+
+  checklistSelection = new SelectionModel<OrgItemFlatNode>(true /* multiple */);
+
+  getLevel = (node: OrgItemFlatNode) => node.level;
+
+  isExpandable = (node: OrgItemFlatNode) => node.expandable;
+
+  getChildren = (node: OrgItemNode): OrgItemNode[] => node.children;
+
+  hasChild = (_: number, _nodeData: OrgItemFlatNode) => _nodeData.expandable;
+
+  hasNoContent = (_: number, _nodeData: OrgItemFlatNode) => _nodeData.item === '';
+
+  transformer = (node: OrgItemNode, level: number) => {
+    const existingNode = this.nestedNodeMap.get(node);
+    const flatNode = existingNode && existingNode.item === node.item
+      ? existingNode
+      : new OrgItemFlatNode();
+    flatNode.item = node.item;
+    flatNode.level = level;
+    if (node.children!=undefined)
+      flatNode.expandable = node.children.length>0;
+    this.flatNodeMap.set(flatNode, node);
+    this.nestedNodeMap.set(node, flatNode);
+    return flatNode;
+  }
+
+  descendantsAllSelected(node: OrgItemFlatNode): boolean {
+    const descendants = this.treeControl.getDescendants(node);
+    const descAllSelected = descendants.length > 0 && descendants.every(child => {
+      return this.checklistSelection.isSelected(child);
+    });
+    return descAllSelected;
+  }
+
+  descendantsPartiallySelected(node: OrgItemFlatNode): boolean {
+    const descendants = this.treeControl.getDescendants(node);
+    const result = descendants.some(child => this.checklistSelection.isSelected(child));
+    return result && !this.descendantsAllSelected(node);
+  }
+
+  OrgItemSelectionToggle(node: OrgItemFlatNode): void {
+    this.checklistSelection.toggle(node);
+    const descendants = this.treeControl.getDescendants(node);
+    this.checklistSelection.isSelected(node)
+      ? this.checklistSelection.select(...descendants)
+      : this.checklistSelection.deselect(...descendants);
+
+    descendants.forEach(child => this.checklistSelection.isSelected(child));
+    this.checkAllParentsSelection(node);
+
+  }
+
+  OrgLeafItemSelectionToggle(node: OrgItemFlatNode): void {
+    this.checklistSelection.toggle(node);
+    this.checkAllParentsSelection(node);
+
+  }
+
+  checkAllParentsSelection(node: OrgItemFlatNode): void {
+    let parent: OrgItemFlatNode | null = this.getParentNode(node);
+    while (parent) {
+      this.checkRootNodeSelection(parent);
+      parent = this.getParentNode(parent);
+    }
+  }
+
+  checkRootNodeSelection(node: OrgItemFlatNode): void {
+    const nodeSelected = this.checklistSelection.isSelected(node);
+    const descendants = this.treeControl.getDescendants(node);
+    const descAllSelected = descendants.length > 0 && descendants.every(child => {
+      return this.checklistSelection.isSelected(child);
+    });
+    if (nodeSelected && !descAllSelected) {
+      this.checklistSelection.deselect(node);
+    } else if (!nodeSelected && descAllSelected) {
+      //this.checklistSelection.select(node);
+    }
+  }
+
+  getParentNode(node: OrgItemFlatNode): OrgItemFlatNode | null {
+    const currentLevel = this.getLevel(node);
+
+    if (currentLevel < 1) {
+      return null;
+    }
+
+    const startIndex = this.treeControl.dataNodes.indexOf(node) - 1;
+
+    for (let i = startIndex; i >= 0; i--) {
+      const currentNode = this.treeControl.dataNodes[i];
+
+      if (this.getLevel(currentNode) < currentLevel) {
+        return currentNode;
+      }
+    }
+    return null;
   }
 
 }

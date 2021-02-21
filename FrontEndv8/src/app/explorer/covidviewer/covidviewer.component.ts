@@ -25,26 +25,17 @@ interface dashboardQuery {
   visualType: widget[];
 }
 
-/**
- * Node for orgitem
- */
 export class OrgItemNode {
   children: OrgItemNode[];
   item: string;
 }
 
-/** Flat orgitem node with expandable and level information */
 export class OrgItemFlatNode {
   item: string;
   level: number;
   expandable: boolean;
 }
 
-/**
- * Checklist database, it can build a tree structured Json object.
- * Each node in Json object represents a orgitem or a category.
- * If a node is a category, it has children items and new items can be added under the category.
- */
 @Injectable()
 export class ChecklistDatabase {
   dataChange = new BehaviorSubject<OrgItemNode[]>([]);
@@ -58,9 +49,6 @@ export class ChecklistDatabase {
   }
 
   initialize() {
-    // Build the tree nodes from Json object. The result is a list of `OrgItemNode` with nested
-    //     file node as children.
-
     this.explorerService.getOrganisationTree()
       .subscribe(
         (result) => this.loadOrgTree(result),
@@ -72,14 +60,9 @@ export class ChecklistDatabase {
   loadOrgTree(orgs: any) {
     const data = this.buildFileTree(orgs, 0);
 
-    // Notify the change.
     this.dataChange.next(data);
   }
 
-  /**
-   * Build the file structure tree. The `value` is the Json object, or a sub-tree of a Json object.
-   * The return value is the list of `OrgItemNode`.
-   */
   buildFileTree(obj: {[key: string]: any}, level: number): OrgItemNode[] {
     return Object.keys(obj).reduce<OrgItemNode[]>((accumulator, key) => {
       const value = obj[key];
@@ -628,13 +611,10 @@ export class CovidViewerComponent implements OnInit {
     return csv;
   }
 
-  /** Map from flat node to nested node. This helps us finding the nested node to be modified */
   flatNodeMap = new Map<OrgItemFlatNode, OrgItemNode>();
 
-  /** Map from nested node to flattened node. This helps us to keep the same object for selection */
   nestedNodeMap = new Map<OrgItemNode, OrgItemFlatNode>();
 
-  /** A selected parent node to be inserted */
   selectedParent: OrgItemFlatNode | null = null;
 
   treeControl: FlatTreeControl<OrgItemFlatNode>;
@@ -643,7 +623,6 @@ export class CovidViewerComponent implements OnInit {
 
   dataSource: MatTreeFlatDataSource<OrgItemNode, OrgItemFlatNode>;
 
-  /** The selection for checklist */
   checklistSelection = new SelectionModel<OrgItemFlatNode>(true /* multiple */);
 
   getLevel = (node: OrgItemFlatNode) => node.level;
@@ -656,9 +635,6 @@ export class CovidViewerComponent implements OnInit {
 
   hasNoContent = (_: number, _nodeData: OrgItemFlatNode) => _nodeData.item === '';
 
-  /**
-   * Transformer to convert nested node to flat node. Record the nodes in maps for later use.
-   */
   transformer = (node: OrgItemNode, level: number) => {
     const existingNode = this.nestedNodeMap.get(node);
     const flatNode = existingNode && existingNode.item === node.item
@@ -673,7 +649,6 @@ export class CovidViewerComponent implements OnInit {
     return flatNode;
   }
 
-  /** Whether all the descendants of the node are selected. */
   descendantsAllSelected(node: OrgItemFlatNode): boolean {
     const descendants = this.treeControl.getDescendants(node);
     const descAllSelected = descendants.length > 0 && descendants.every(child => {
@@ -682,14 +657,12 @@ export class CovidViewerComponent implements OnInit {
     return descAllSelected;
   }
 
-  /** Whether part of the descendants are selected */
   descendantsPartiallySelected(node: OrgItemFlatNode): boolean {
     const descendants = this.treeControl.getDescendants(node);
     const result = descendants.some(child => this.checklistSelection.isSelected(child));
     return result && !this.descendantsAllSelected(node);
   }
 
-  /** Toggle the orgitem selection. Select/deselect all the descendants node */
   OrgItemSelectionToggle(node: OrgItemFlatNode): void {
     this.checklistSelection.toggle(node);
     const descendants = this.treeControl.getDescendants(node);
@@ -697,20 +670,17 @@ export class CovidViewerComponent implements OnInit {
       ? this.checklistSelection.select(...descendants)
       : this.checklistSelection.deselect(...descendants);
 
-    // Force update for the parent
     descendants.forEach(child => this.checklistSelection.isSelected(child));
     this.checkAllParentsSelection(node);
 
   }
 
-  /** Toggle a leaf orgitem selection. Check all the parents to see if they changed */
   OrgLeafItemSelectionToggle(node: OrgItemFlatNode): void {
     this.checklistSelection.toggle(node);
     this.checkAllParentsSelection(node);
 
   }
 
-  /* Checks all the parents when a leaf node is selected/unselected */
   checkAllParentsSelection(node: OrgItemFlatNode): void {
     let parent: OrgItemFlatNode | null = this.getParentNode(node);
     while (parent) {
@@ -719,7 +689,6 @@ export class CovidViewerComponent implements OnInit {
     }
   }
 
-  /** Check root node checked state and change it accordingly */
   checkRootNodeSelection(node: OrgItemFlatNode): void {
     const nodeSelected = this.checklistSelection.isSelected(node);
     const descendants = this.treeControl.getDescendants(node);
@@ -733,7 +702,6 @@ export class CovidViewerComponent implements OnInit {
     }
   }
 
-  /* Get the parent node of a node */
   getParentNode(node: OrgItemFlatNode): OrgItemFlatNode | null {
     const currentLevel = this.getLevel(node);
 
