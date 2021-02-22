@@ -6,13 +6,11 @@ DELIMITER //
 CREATE PROCEDURE buildCohortDefinition(
      p_query_id INT,
      p_providerOrganisation VARCHAR(5000),
-     p_includedOrganisation VARCHAR(5000),
      p_registrationStatus VARCHAR(255),
      p_gender VARCHAR(20),
      p_postcode VARCHAR(20),
      p_organisationTab VARCHAR(64),
      p_practiceCohortTab VARCHAR(64),
-     p_storeTab VARCHAR(64),
      p_schema VARCHAR(255)
 )
 
@@ -31,15 +29,10 @@ BEGIN
         RESIGNAL; -- rethrow the error
     END;
 
-  -- get provider and include orgs
-  SET p_includedOrganisation = IF(p_includedOrganisation = '', NULL, p_includedOrganisation);  
-  IF p_includedOrganisation IS NOT NULL THEN
-      CALL getOrgString(CONCAT(p_providerOrganisation,',',p_includedOrganisation), p_organisationTab, p_storeTab, @Org);
-      SET orgrange = @Org;
-  ELSE
-      CALL getOrgString(p_providerOrganisation, p_organisationTab, p_storeTab, @Org);
-      SET orgrange = @Org;
-  END IF;
+  -- get provider orgs
+
+  CALL storeString(p_providerOrganisation, p_organisationTab);
+  SET orgrange = CONCAT('JOIN ', p_organisationTab, ' ot ON ot.code = org.ods_code ');
 
   -- registration status
   SET p_registrationStatus = IF(p_registrationStatus = '', NULL, p_registrationStatus);  

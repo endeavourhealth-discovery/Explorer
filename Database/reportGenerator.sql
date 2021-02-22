@@ -11,7 +11,7 @@ DECLARE sourceSchema VARCHAR(255) DEFAULT NULL;
 -- variables for patient cohort
 DECLARE targetPercentage VARCHAR(10) DEFAULT NULL;
 DECLARE providerOrganisation VARCHAR(5000) DEFAULT NULL;
-DECLARE includedOrganisation VARCHAR(5000) DEFAULT NULL; 
+-- DECLARE includedOrganisation VARCHAR(5000) DEFAULT NULL; 
 DECLARE registrationStatus VARCHAR(255) DEFAULT NULL; 
 
 DECLARE postcode VARCHAR(20) DEFAULT NULL; 
@@ -218,7 +218,7 @@ SET sourceSchema = 'subscriber_pi_rv';
 
 SET targetPercentage = JSON_UNQUOTE(JSON_EXTRACT(query,'$.targetPercentage')); 
 SET providerOrganisation = UPPER(REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.providerOrganisation'),'[',''),']',''),'"',''));
-SET includedOrganisation = UPPER(REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.includedOrganisation'),'[',''),']',''),'"',''));
+-- SET includedOrganisation = UPPER(REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.includedOrganisation'),'[',''),']',''),'"',''));
 SET registrationStatus = JSON_UNQUOTE(JSON_EXTRACT(query,'$.registrationStatus'));
 
 SET gender = LOWER(JSON_UNQUOTE(JSON_EXTRACT(query,'$.gender'))); 
@@ -420,7 +420,7 @@ SET rule_det_tmp = CONCAT('rule_det_tmp_',query_id);
 CALL debug_msg(@enabled, CONCAT(NOW(),' - start'));
 CALL debug_msg(@enabled, CONCAT(NOW(),' - buildCohortDefinition'));
 -- build practice cohort -- 
-CALL buildCohortDefinition(query_id, providerOrganisation, includedOrganisation, registrationStatus, gender, postcode, org_tmp, practiceCohort_tmp, store_tmp, sourceSchema);
+CALL buildCohortDefinition(query_id, providerOrganisation, registrationStatus, gender, postcode, org_tmp, practiceCohort_tmp, sourceSchema);
 -- build concept cohort for all valuesets to be used in the advance queries --
 CALL debug_msg(@enabled, CONCAT(NOW(),' - createValueSet'));
 CALL createValueSet('1', all_valueset_tmp);
