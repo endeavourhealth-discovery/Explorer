@@ -24,7 +24,7 @@ BEGIN
     BEGIN
       GET DIAGNOSTICS CONDITION 1
         @code = RETURNED_SQLSTATE, @msg = MESSAGE_TEXT;
-        CALL log_errors(p_query_id,'buildRegistries', @code, @msg, now());
+        CALL log_errors(p_query_id, 'buildRegistries', @code, @msg, now());
         RESIGNAL; -- rethrow the error
     END;   
 
@@ -61,9 +61,9 @@ BEGIN
   ALTER TABLE qry_reg ADD INDEX ods_idx(ods_code);
 
   -- delete previous entries if exist
-  SET @sql = CONCAT("DELETE reg FROM registries reg 
-                    WHERE reg.query = ", QUOTE(query)," AND reg.registry = ", QUOTE(registry_name)," AND ", parent_registry,
-                    " AND EXISTS (SELECT 1 FROM qry_reg q WHERE reg.ods_code = q.ods_code)");
+  SET @sql = CONCAT("DELETE reg FROM registries reg WHERE reg.query = ", QUOTE(query),
+  " AND reg.registry = ", QUOTE(registry_name)," AND ", parent_registry,
+  " AND EXISTS (SELECT 1 FROM qry_reg q WHERE reg.ods_code = q.ods_code)");
   PREPARE stmt FROM @sql;
   EXECUTE stmt;
   DEALLOCATE PREPARE stmt;
@@ -72,21 +72,17 @@ BEGIN
 
     DROP TEMPORARY TABLE IF EXISTS qry_list_size;
     SET @sql = CONCAT("CREATE TEMPORARY TABLE qry_list_size AS 
-    SELECT pd.query_id, COUNT(DISTINCT(pd.patient_id)) AS list_size 
+    SELECT pd.query_id, pd.ods_code, COUNT(DISTINCT(pd.patient_id)) AS list_size 
     FROM person_dataset pd WHERE EXISTS (SELECT 1 FROM query_library q WHERE q.id = pd.query_id) 
-    AND pd.query_id = ", parent_qry_id," GROUP BY pd.query_id" ); 
+    AND pd.query_id = ", parent_qry_id," GROUP BY pd.query_id, pd.ods_code" ); 
     PREPARE stmt FROM @sql;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 
-    SET @list_size = NULL;
-
-    SELECT list_size INTO @list_size FROM qry_list_size;
-
             -- add new entries to registries
           INSERT INTO registries (registry, query, ccg, practice_name, ods_code, list_size, registry_size, updated, parent_registry, target_percentage) 
-          SELECT registry_name, query, q.ccg, q.registered_practice, q.ods_code, @list_size, q.registry_size, now(), parentregistry, targetPercentage  
-          FROM qry_reg q;
+          SELECT registry_name, query, q.ccg, q.registered_practice, q.ods_code, l.list_size, q.registry_size, now(), parentregistry, targetPercentage  
+          FROM qry_reg q JOIN qry_list_size l ON q.ods_code = l.ods_code;
   ELSE
           -- add new entries to registries
           INSERT INTO registries (registry, query, ccg, practice_name, ods_code, list_size, registry_size, updated, parent_registry, target_percentage) 
