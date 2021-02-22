@@ -181,7 +181,7 @@ ELSEIF p_queryType = '2' THEN
 
             WHILE EXISTS (SELECT row_id from qry_cohort_tmp WHERE row_id > @row_id AND row_id <= @row_id + 50) DO
 
-               SET @sql = CONCAT("INSERT INTO qry_tmp_1 AS 
+               SET @sql = CONCAT("INSERT INTO qry_tmp_1  
                SELECT o1.id, o1.patient_id, o1.clinical_effective_date, o1.result_value, o1.non_core_concept_id, o1.organization_id, cpt.value_set_code_type, NULL AS cancellation_date  
                FROM qry_cohort_tmp p JOIN ", p_observationCohortTab," o1   
                ON p.patient_id = o1.patient_id AND p.organization_id = o1.organization_id AND p.person_id = o1.person_id 
@@ -280,7 +280,7 @@ ELSEIF p_queryType = '3' THEN
 
             END WHILE; 
    ELSE
-            SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp_1 AS 
+            SET @sql = CONCAT('CREATE TEMPORARY TABLE qry_tmp_1 AS  
             SELECT o1.id, o1.patient_id, o1.clinical_effective_date, o1.result_value, o1.non_core_concept_id, o1.organization_id, o1.value_set_code_type, o1.cancellation_date 
             FROM ', p_observationCohortTab,' o1 JOIN ', p_queryCohort,' p ON p.patient_id = o1.patient_id AND p.organization_id = o1.organization_id 
             WHERE o1.value_set_code_type = ', p_includedAnyAll,' (SELECT DISTINCT c.value_set_code_type FROM ', p_concepttab,' c) ');
@@ -434,7 +434,7 @@ ELSEIF p_queryType = '4' THEN
 
             WHILE EXISTS (SELECT row_id from qry_cohort_tmp WHERE row_id > @row_id AND row_id <= @row_id + 50) DO
 
-               SET @sql = CONCAT("INSERT INTO qry_tmp_1 AS 
+               SET @sql = CONCAT("INSERT INTO qry_tmp_1 
                SELECT o1.id, o1.patient_id, o1.clinical_effective_date, o1.result_value, o1.non_core_concept_id, o1.organization_id, cpt.value_set_code_type, NULL AS cancellation_date  
                FROM qry_cohort_tmp p JOIN ", p_observationCohortTab," o1   
                ON p.patient_id = o1.patient_id AND p.organization_id = o1.organization_id AND p.person_id = o1.person_id 
