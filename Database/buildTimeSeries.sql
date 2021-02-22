@@ -43,8 +43,10 @@ BEGIN
     END;
 
   -- check date format passed
-  SET p_fromDate = IF(p_fromDate = '', NULL, SUBSTRING(p_fromDate, 1, 10));
-  SET p_toDate = IF(p_toDate = '', NULL, SUBSTRING(p_toDate, 1, 10));
+  SET p_fromDate = UPPER(p_fromDate);
+  SET p_fromDate = IF(p_fromDate IN ('', 'NULL'), NULL, SUBSTRING(p_fromDate, 1, 10));
+  SET p_toDate = UPPER(p_toDate);
+  SET p_toDate = IF(p_toDate IN ('', 'NULL'), NULL, SUBSTRING(p_toDate, 1, 10));
 
   SET p_seriesTable = IF(p_seriesTable = '', NULL, p_seriesTable);
   SET p_seriesField = IF(p_seriesField = '', NULL, p_seriesField);
