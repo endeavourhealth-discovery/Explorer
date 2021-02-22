@@ -35,7 +35,7 @@ DECLARE clinicalType VARCHAR(100);
 
     IF p_event_type = 'DEMOGRAPHICS' THEN
        SET @sql = CONCAT('INSERT INTO ', p_datasettab,'  
-       SELECT DISTINCT p.query_id, o.id 
+       SELECT DISTINCT p.query_id, o.id, p.ods_code 
        FROM ', p_schema, '.', p_sourcetab,' o JOIN ', p_patientcohorttab,' p ON o.id = p.patient_id AND o.organization_id = p.organization_id');
        PREPARE stmt FROM @sql;
        EXECUTE stmt;
@@ -46,7 +46,7 @@ DECLARE clinicalType VARCHAR(100);
 
        IF p_datasetconcepttab IS NOT NULL THEN
          SET @sql = CONCAT('INSERT INTO ', p_datasettab,' 
-         SELECT DISTINCT p.query_id, o.id 
+         SELECT DISTINCT p.query_id, o.id, p.ods_code  
          FROM ', p_patientcohorttab,' p JOIN ', p_schema, '.', p_sourcetab,' o ON o.patient_id = p.patient_id AND o.organization_id = p.organization_id 
          JOIN ', p_datasetconcepttab,' c ON o.non_core_concept_id = c.non_core_concept_id 
          WHERE o.non_core_concept_id IS NOT NULL AND ', p_daterange,' AND ', p_activeString);
@@ -55,7 +55,7 @@ DECLARE clinicalType VARCHAR(100);
          DEALLOCATE PREPARE stmt;
        ELSE
          SET @sql = CONCAT('INSERT INTO ', p_datasettab,' 
-         SELECT DISTINCT p.query_id, o.id 
+         SELECT DISTINCT p.query_id, o.id, p.ods_code  
          FROM ', p_patientcohorttab,' p JOIN ', p_schema, '.', p_sourcetab,' o ON o.patient_id = p.patient_id AND o.organization_id = p.organization_id 
          WHERE o.non_core_concept_id IS NOT NULL AND ', p_daterange,' AND ', p_activeString);
          PREPARE stmt FROM @sql;
@@ -72,20 +72,9 @@ DECLARE clinicalType VARCHAR(100);
       -- create a temporary dataset table 
       DROP TEMPORARY TABLE IF EXISTS qry_dataset;
       CREATE TEMPORARY TABLE qry_dataset 
-      (query_id INT(11) NOT NULL, id BIGINT(20) NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+      (query_id INT(11) NOT NULL, id BIGINT(20) NOT NULL, ods_code VARCHAR(50)) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
          IF LENGTH(TRIM(clinicalTypeString)) <> 0 OR clinicalTypeString IS NOT NULL THEN
-
-            -- create a copy of concept map and add index to core
-            DROP TEMPORARY TABLE IF EXISTS qry_cpt_map;
-            SET @sql = CONCAT("CREATE TEMPORARY TABLE qry_cpt_map AS
-            SELECT legacy, core FROM ", p_schema,".concept_map 
-            WHERE deleted = 0");
-            PREPARE stmt FROM @sql;
-            EXECUTE stmt;
-            DEALLOCATE PREPARE stmt;
-
-            ALTER TABLE qry_cpt_map ADD INDEX core_idx(core);
 
             -- create a temporary table to hold code category values
             DROP TEMPORARY TABLE IF EXISTS qry_code_cat;
@@ -130,8 +119,8 @@ DECLARE clinicalType VARCHAR(100);
                               DROP TEMPORARY TABLE IF EXISTS qry_concept;
                               SET @sql = CONCAT("CREATE TEMPORARY TABLE qry_concept AS 
                               SELECT COALESCE(cm.legacy, cv.concept_dbid) non_core_concept_id 
-                              FROM qry_code_cat cv JOIN ", p_schema,".concept c ON c.dbid = cv.concept_dbid 
-                              LEFT JOIN qry_cpt_map cm ON cv.concept_dbid = cm.core 
+                              FROM qry_code_cat cv JOIN ", p_schema, ".concept c ON c.dbid = cv.concept_dbid 
+                              LEFT JOIN ", p_schema, ".concept_map cm ON cv.concept_dbid = cm.core 
                               WHERE cv.description = ", QUOTE(clinicalType));
                               PREPARE stmt FROM @sql;
                               EXECUTE stmt;
@@ -147,7 +136,7 @@ DECLARE clinicalType VARCHAR(100);
 
                               -- insert observation results into a temporary table
                               SET @sql = CONCAT('INSERT INTO qry_dataset 
-                              SELECT DISTINCT p.query_id, o.id 
+                              SELECT DISTINCT p.query_id, o.id, p.ods_code  
                               FROM ', p_patientcohorttab,' p JOIN ', p_schema, '.', p_sourcetab,' o ON o.patient_id = p.patient_id 
                               AND o.organization_id = p.organization_id 
                               JOIN qry_concept cpt ON o.non_core_concept_id = cpt.non_core_concept_id 
@@ -163,8 +152,8 @@ DECLARE clinicalType VARCHAR(100);
                               DROP TEMPORARY TABLE IF EXISTS qry_concept;
                               SET @sql = CONCAT("CREATE TEMPORARY TABLE qry_concept AS 
                               SELECT cv.code_category_id, COALESCE(cm.legacy, cv.concept_dbid) non_core_concept_id 
-                              FROM qry_code_cat cv JOIN ", p_schema,".concept c ON c.dbid = cv.concept_dbid 
-                              LEFT JOIN qry_cpt_map cm ON cv.concept_dbid = cm.core 
+                              FROM qry_code_cat cv JOIN ", p_schema, ".concept c ON c.dbid = cv.concept_dbid 
+                              LEFT JOIN ", p_schema, ".concept_map cm ON cv.concept_dbid = cm.core 
                               WHERE cv.code_category_id IN (17, 21, 37) "); -- Family history, Immunisations, Procedure code
                               PREPARE stmt FROM @sql;
                               EXECUTE stmt;
@@ -173,7 +162,7 @@ DECLARE clinicalType VARCHAR(100);
                               ALTER TABLE qry_concept ADD INDEX cpt_idx (non_core_concept_id);
 
                               SET @sql = CONCAT("INSERT INTO qry_dataset 
-                              SELECT DISTINCT p.query_id, o.id 
+                              SELECT DISTINCT p.query_id, o.id, p.ods_code  
                               FROM ", p_patientcohorttab," p JOIN ", p_schema, '.', p_sourcetab," o ", indexString," ON o.patient_id = p.patient_id AND o.organization_id = p.organization_id  
                               JOIN ", p_schema,".concept cpt ON o.non_core_concept_id = cpt.dbid 
                               WHERE o.result_value_units IS NULL 
@@ -197,7 +186,7 @@ DECLARE clinicalType VARCHAR(100);
                        ELSEIF clinicalType = 'Conditions/diseases' THEN
 
                               SET @sql = CONCAT("INSERT INTO qry_dataset 
-                              SELECT DISTINCT p.query_id, o.id 
+                              SELECT DISTINCT p.query_id, o.id, p.ods_code  
                               FROM ", p_patientcohorttab," p JOIN ", p_schema, '.', p_sourcetab," o ON o.patient_id = p.patient_id 
                               AND o.organization_id = p.organization_id 
                               JOIN ", p_schema,".concept cpt ON o.non_core_concept_id = cpt.dbid 
@@ -214,8 +203,8 @@ DECLARE clinicalType VARCHAR(100);
                               DROP TEMPORARY TABLE IF EXISTS qry_concept;
                               SET @sql = CONCAT("CREATE TEMPORARY TABLE qry_concept AS 
                               SELECT cv.code_category_id, COALESCE(cm.legacy, cv.concept_dbid) non_core_concept_id 
-                              FROM qry_code_cat cv JOIN ", p_schema,".concept c ON c.dbid = cv.concept_dbid 
-                              LEFT JOIN qry_cpt_map cm ON cv.concept_dbid = cm.core 
+                              FROM qry_code_cat cv JOIN ", p_schema, ".concept c ON c.dbid = cv.concept_dbid 
+                              LEFT JOIN ", p_schema, ".concept_map cm ON cv.concept_dbid = cm.core 
                               WHERE cv.code_category_id = 37 "); -- Procedure code
                               PREPARE stmt FROM @sql;
                               EXECUTE stmt;
@@ -224,7 +213,7 @@ DECLARE clinicalType VARCHAR(100);
                               ALTER TABLE qry_concept ADD INDEX cpt_idx (non_core_concept_id);
                                  
                               SET @sql = CONCAT("INSERT INTO qry_dataset 
-                              SELECT DISTINCT p.query_id, o.id 
+                              SELECT DISTINCT p.query_id, o.id, p.ods_code  
                               FROM ", p_patientcohorttab," p JOIN ", p_schema, '.', p_sourcetab," o ON o.patient_id = p.patient_id 
                               AND o.organization_id = p.organization_id 
                               JOIN ", p_schema,".concept cpt ON o.non_core_concept_id = cpt.dbid
@@ -240,8 +229,8 @@ DECLARE clinicalType VARCHAR(100);
                               DROP TEMPORARY TABLE IF EXISTS qry_concept;
                               SET @sql = CONCAT("CREATE TEMPORARY TABLE qry_concept AS 
                               SELECT cv.code_category_id, COALESCE(cm.legacy, cv.concept_dbid) non_core_concept_id 
-                              FROM qry_code_cat cv JOIN ", p_schema,".concept c ON c.dbid = cv.concept_dbid 
-                              LEFT JOIN qry_cpt_map cm ON cv.concept_dbid = cm.core 
+                              FROM qry_code_cat cv JOIN ", p_schema, ".concept c ON c.dbid = cv.concept_dbid 
+                              LEFT JOIN ", p_schema, ".concept_map cm ON cv.concept_dbid = cm.core 
                               WHERE cv.code_category_id = 17 "); -- Family history
                               PREPARE stmt FROM @sql;
                               EXECUTE stmt;
@@ -250,7 +239,7 @@ DECLARE clinicalType VARCHAR(100);
                               ALTER TABLE qry_concept ADD INDEX cpt_idx (non_core_concept_id);
                                  
                               SET @sql = CONCAT("INSERT INTO qry_dataset 
-                              SELECT DISTINCT p.query_id, o.id 
+                              SELECT DISTINCT p.query_id, o.id, p.ods_code  
                               FROM ", p_patientcohorttab," p JOIN ", p_schema, '.', p_sourcetab, " o ON o.patient_id = p.patient_id 
                               AND o.organization_id = p.organization_id 
                               JOIN ", p_schema,".concept cpt ON o.non_core_concept_id = cpt.dbid
@@ -266,8 +255,8 @@ DECLARE clinicalType VARCHAR(100);
                               DROP TEMPORARY TABLE IF EXISTS qry_concept;
                               SET @sql = CONCAT("CREATE TEMPORARY TABLE qry_concept AS 
                               SELECT cv.code_category_id, COALESCE(cm.legacy, cv.concept_dbid) non_core_concept_id 
-                              FROM qry_code_cat cv JOIN ", p_schema,".concept c ON c.dbid = cv.concept_dbid 
-                              LEFT JOIN qry_cpt_map cm ON cv.concept_dbid = cm.core 
+                              FROM qry_code_cat cv JOIN ", p_schema, ".concept c ON c.dbid = cv.concept_dbid 
+                              LEFT JOIN ", p_schema, ".concept_map cm ON cv.concept_dbid = cm.core 
                               WHERE cv.code_category_id = 21 "); -- Immunisations
                               PREPARE stmt FROM @sql;
                               EXECUTE stmt;
@@ -276,7 +265,7 @@ DECLARE clinicalType VARCHAR(100);
                               ALTER TABLE qry_concept ADD INDEX cpt_idx (non_core_concept_id);
             
                               SET @sql = CONCAT("INSERT INTO qry_dataset 
-                              SELECT DISTINCT p.query_id, o.id 
+                              SELECT DISTINCT p.query_id, o.id, p.ods_code  
                               FROM ", p_patientcohorttab," p JOIN ", p_schema, '.', p_sourcetab, " o ON o.patient_id = p.patient_id 
                               AND o.organization_id = p.organization_id 
                               JOIN ", p_schema,".concept cpt ON o.non_core_concept_id = cpt.dbid
@@ -556,7 +545,7 @@ DECLARE clinicalType VARCHAR(100);
          IF p_datasetconcepttab IS NOT NULL THEN 
 
             SET @sql = CONCAT('INSERT INTO qry_dataset 
-            SELECT DISTINCT p.query_id, o.id 
+            SELECT DISTINCT p.query_id, o.id, p.ods_code  
             FROM ', p_patientcohorttab,' p JOIN ', p_schema, '.', p_sourcetab,' o ON o.patient_id = p.patient_id 
             AND o.organization_id = p.organization_id 
             JOIN ', p_datasetconcepttab,' c ON o.non_core_concept_id = c.non_core_concept_id  
@@ -568,7 +557,7 @@ DECLARE clinicalType VARCHAR(100);
          ELSEIF p_datasetconcepttab IS NULL AND (LENGTH(TRIM(p_selectedClinicalTypes)) = 0 OR p_selectedClinicalTypes IS NULL) THEN 
 
             SET @sql = CONCAT('INSERT INTO qry_dataset 
-            SELECT DISTINCT p.query_id, o.id 
+            SELECT DISTINCT p.query_id, o.id, p.ods_code  
             FROM ', p_patientcohorttab,' p JOIN ', p_schema, '.', p_sourcetab,' o ON o.patient_id = p.patient_id 
             AND o.organization_id = p.organization_id 
             WHERE o.non_core_concept_id IS NOT NULL AND ', p_daterange,' AND ', p_activeString);
@@ -583,12 +572,14 @@ DECLARE clinicalType VARCHAR(100);
          CREATE TEMPORARY TABLE qry_dataset_fin (
             row_id INT, 
             query_id INT, 
-            id BIGINT, PRIMARY KEY(row_id) 
+            id BIGINT, 
+            ods_code VARCHAR(50), PRIMARY KEY(row_id) 
             ) AS 
          SELECT (@row_no := @row_no + 1) AS row_id, 
             a.query_id,
-            a.id 
-         FROM (SELECT DISTINCT query_id, id 
+            a.id,
+            a.ods_code  
+         FROM (SELECT DISTINCT query_id, id, ods_code  
                FROM qry_dataset ) a JOIN (SELECT @row_no := 0) t;
 
          SET @row_id = 0;
@@ -597,7 +588,7 @@ DECLARE clinicalType VARCHAR(100);
          WHILE EXISTS (SELECT row_id from qry_dataset_fin WHERE row_id > @row_id AND row_id <= @row_id + 1000) DO
 
                SET @ins = CONCAT("INSERT INTO  ", p_datasettab, " 
-               SELECT q.query_id, q.id FROM qry_dataset_fin q WHERE q.row_id > @row_id AND q.row_id <= @row_id + 1000");
+               SELECT q.query_id, q.id, q.ods_code FROM qry_dataset_fin q WHERE q.row_id > @row_id AND q.row_id <= @row_id + 1000");
                PREPARE stmt FROM @ins;
                EXECUTE stmt;
                DEALLOCATE PREPARE stmt;
