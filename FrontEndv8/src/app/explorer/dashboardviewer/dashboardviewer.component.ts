@@ -782,6 +782,15 @@ export class DashboardViewerComponent implements OnInit {
 
     }
 
+    if (this.showTables1)
+      this.refreshDashboard1();
+    if (this.showTables2)
+      this.refreshDashboard2();
+    if (this.showTables3)
+      this.refreshDashboard3();
+    if (this.showTables4)
+      this.refreshDashboard4();
+
   }
 
   loadQuery1(result: any, queryName: any) {

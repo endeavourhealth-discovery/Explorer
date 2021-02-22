@@ -48,7 +48,7 @@
             </div>
             <mat-form-field style="width:550px;"  appearance="standard" *ngIf="showTables1 && tableData1">
               <mat-label>Output Types</mat-label>
-              <mat-select  style="width:530px" [(value)]="tableOutput1">
+              <mat-select (selectionChange)="refreshDashboard1()" style="width:530px" [(value)]="tableOutput1">
                 <mat-option *ngFor="let result of tableData1.outputTypes" [value]="result">{{result}}</mat-option>
               </mat-select>
             </mat-form-field>
@@ -214,7 +214,7 @@
             </div>
             <mat-form-field style="width:550px;"  appearance="standard" *ngIf="showTables2 && tableData2">
               <mat-label>Output Types</mat-label>
-              <mat-select  style="width:530px" [(value)]="tableOutput2">
+              <mat-select (selectionChange)="refreshDashboard2()" style="width:530px" [(value)]="tableOutput2">
                 <mat-option *ngFor="let result of tableData2.outputTypes" [value]="result">{{result}}</mat-option>
               </mat-select>
             </mat-form-field>
@@ -380,7 +380,7 @@
             </div>
             <mat-form-field style="width:550px;"  appearance="standard" *ngIf="showTables3 && tableData3">
               <mat-label>Output Types</mat-label>
-              <mat-select  style="width:530px" [(value)]="tableOutput3">
+              <mat-select (selectionChange)="refreshDashboard3()" style="width:530px" [(value)]="tableOutput3">
                 <mat-option *ngFor="let result of tableData3.outputTypes" [value]="result">{{result}}</mat-option>
               </mat-select>
             </mat-form-field>
@@ -546,7 +546,7 @@
             </div>
             <mat-form-field style="width:550px;"  appearance="standard" *ngIf="showTables4 && tableData4">
               <mat-label>Output Types</mat-label>
-              <mat-select  style="width:530px" [(value)]="tableOutput4">
+              <mat-select (selectionChange)="refreshDashboard4()" style="width:530px" [(value)]="tableOutput4">
                 <mat-option *ngFor="let result of tableData4.outputTypes" [value]="result">{{result}}</mat-option>
               </mat-select>
             </mat-form-field>

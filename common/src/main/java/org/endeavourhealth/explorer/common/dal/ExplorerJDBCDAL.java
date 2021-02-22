@@ -32,6 +32,7 @@ public class ExplorerJDBCDAL implements AutoCloseable {
     List<String> validOrgs = new ArrayList<>();
     Connection connection = null;
     Boolean patientIdentifiable = false;
+    Short projectType = 7;
 
     public void setValidOrgs(List<String> orgs) {
         validOrgs = orgs;
@@ -39,6 +40,10 @@ public class ExplorerJDBCDAL implements AutoCloseable {
 
     public void setPatientIdentifiable(Boolean pid) {
         patientIdentifiable = pid;
+    }
+
+    public void setProjectType(Short type) {
+        projectType = type;
     }
 
     public void closeSubscriberConnection() throws Exception {
@@ -413,11 +418,17 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 }
                 String paramsValidOrgs = builder.deleteCharAt( builder.length() -1 ).toString();
 
+                String noResults = "";
+
+                if (projectType==7) // STP
+                    noResults = " and 0=1 ";
+
                 sql = "SELECT distinct(r.ccg) as type " +
                         "FROM dashboards.registries r "+
                         "where r.ods_code in ("+
                         "select distinct practice_ods_code from dashboards.population_denominators "+
                         "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
+                        noResults+
                         " order by r.ccg";
 
                 sqlCount = "SELECT 999";
@@ -429,21 +440,6 @@ public class ExplorerJDBCDAL implements AutoCloseable {
 
                 sqlCount = "SELECT count(distinct(type)) " +
                         " FROM dashboards.value_set_codes";
-                break;
-            case "10":
-                checkOrgs = true;
-                builder = new StringBuilder();
-                for( int i = 0 ; i < validOrgs.size(); i++ ) {
-                    builder.append("?,");
-                }
-                String params = builder.deleteCharAt( builder.length() -1 ).toString();
-
-                sql = "SELECT distinct(ccg) as type " +
-                        "FROM dashboards.population_denominators " +
-                        "WHERE (stp_ods_code in ("+params+") or ccg_ods_code in ("+params+") or practice_ods_code in ("+params+")) "+
-                        " order by type";
-
-                sqlCount = "SELECT 999";
                 break;
             case "11":
                 sql = "SELECT distinct(name) as type " +
@@ -501,12 +497,18 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 }
                 paramsValidOrgs = builder.deleteCharAt( builder.length() -1 ).toString();
 
+                noResults = "";
+
+                if (projectType==6||projectType==7) // CCG/STP
+                    noResults = " and 0=1 ";
+
                 sql = "SELECT distinct(r.registry) as type " +
                         "FROM dashboards.registries r "+
                         "where r.ods_code in ("+
                         "select distinct practice_ods_code from dashboards.population_denominators "+
                         "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
-                        "order by r.registry";
+                        noResults+
+                        " order by r.registry";
 
                 sqlCount = "SELECT 999";
                 break;
@@ -518,11 +520,17 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 }
                 paramsValidOrgs = builder.deleteCharAt( builder.length() -1 ).toString();
 
+                noResults = "";
+
+                if (projectType==6||projectType==7) // CCG/STP
+                    noResults = " and 0=1 ";
+
                 sql = "SELECT distinct(r.practice_name) as type " +
                         "FROM dashboards.registries r "+
                         "where r.ods_code in ("+
                         "select distinct practice_ods_code from dashboards.population_denominators "+
                         "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
+                        noResults+
                         " order by r.practice_name";
 
                 sqlCount = "SELECT 999";
@@ -957,6 +965,17 @@ public class ExplorerJDBCDAL implements AutoCloseable {
     public ChartResult getDashboardCovid(String dashboardId, String series, String dateFrom, String dateTo, String stp, String ccg, String pcn, String practice, String ethnic, String age, String sex,
                                          String cumulative, String weekly, String rate,String combineSeries, String combineEthnic, String combineAge, String combineSex, String combineOrgs) throws Exception {
 
+        if (projectType==7) { // STP
+            ccg = "Access denied to : "+ccg;
+            pcn = "Access denied to : "+pcn;
+            practice = "Access denied to : "+practice;
+        }
+
+        if (projectType==6) { // CCG
+            pcn = "Access denied to : "+pcn;
+            practice = "Access denied to : "+practice;
+        }
+
         List<String> orgs = null;
         String orgParams = "";
         String orgArray[] = new String[0];
@@ -1336,6 +1355,11 @@ public class ExplorerJDBCDAL implements AutoCloseable {
             chartItem = new Chart();
             chartItem.setName(chart_name);
 
+            String noResults = "";
+
+            if (projectType==7) // STP
+                noResults = " and 0=1 ";
+
             if (cumulative.equals("1")) {
                 sql = "SELECT t.series_name," +
                         "@running_total:=@running_total + t.series_value as series_value " +
@@ -1345,7 +1369,8 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                         "where r.`grouping` in ("+
                         "select distinct ccg from dashboards.population_denominators "+
                         "WHERE (stp_ods_code in ("+validOrgParams+") or ccg_ods_code in ("+validOrgParams+"))) "+
-                        "AND name = ? and series_name between ? and ? and `grouping` in ("+params+") group by series_name) t " +
+                        noResults+
+                        " AND name = ? and series_name between ? and ? and `grouping` in ("+params+") group by series_name) t " +
                         "JOIN (SELECT @running_total:=0) r " +
                         "ORDER BY t.series_name";
             } else {
@@ -1356,7 +1381,8 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                             "where r.`grouping` in ("+
                             "select distinct ccg from dashboards.population_denominators "+
                             "WHERE (stp_ods_code in ("+validOrgParams+") or ccg_ods_code in ("+validOrgParams+"))) "+
-                            "AND name = ? " +
+                            noResults+
+                            " AND name = ? " +
                             "and series_name between ? and ? and `grouping` in ("+params+")"+
                             " GROUP BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) " +
                             "ORDER BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7))";
@@ -1365,7 +1391,8 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                             "where r.`grouping` in ("+
                             "select distinct ccg from dashboards.population_denominators "+
                             "WHERE (stp_ods_code in ("+validOrgParams+") or ccg_ods_code in ("+validOrgParams+"))) "+
-                            "AND name = ? " +
+                            noResults+
+                            " AND name = ? " +
                             "and series_name between ? and ? and `grouping` in ("+params+") group by series_name order by series_name";
                 }
 
@@ -1432,11 +1459,17 @@ public class ExplorerJDBCDAL implements AutoCloseable {
             }
         }
 
+        String noResults = "";
+
+        if (projectType==7) // STP
+            noResults = " and 0=1 ";
+
         sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` r "+
                 "where r.`grouping` in ("+
                 "select distinct ccg from dashboards.population_denominators "+
                 "WHERE (stp_ods_code in ("+validOrgParams+") or ccg_ods_code in ("+validOrgParams+"))) "+
-                "AND name = ? "+
+                noResults+
+                " AND name = ? "+
                 "and series_name between ? and ? and `grouping` in ("+params+") group by series_name order by series_name";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -1460,11 +1493,17 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         }
 
         if (chartItem.getSeries().size()==0) {
+            noResults = "";
+
+            if (projectType==7) // STP
+                noResults = " and 0=1 ";
+
             sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` r "+
                     "where r.`grouping` in ("+
                     "select distinct ccg from dashboards.population_denominators "+
                     "WHERE (stp_ods_code in ("+validOrgParams+") or ccg_ods_code in ("+validOrgParams+"))) "+
-                    "AND name = ? and `grouping` in ("+params+")"+
+                    noResults+
+                    " AND name = ? and `grouping` in ("+params+")"+
                     " group by series_name order by series_name";
 
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -1523,11 +1562,17 @@ public class ExplorerJDBCDAL implements AutoCloseable {
             }
         }
 
+        String noResults = "";
+
+        if (projectType==7) // STP
+            noResults = " and 0=1 ";
+
         sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` r "+
                 "where r.`grouping` in ("+
                 "select distinct ccg from dashboards.population_denominators "+
                 "WHERE (stp_ods_code in ("+validOrgParams+") or ccg_ods_code in ("+validOrgParams+"))) "+
-                "AND name = ? and `grouping` in ("+params+")"+
+                noResults+
+                " AND name = ? and `grouping` in ("+params+")"+
                 " group by series_name order by series_name";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -1645,20 +1690,34 @@ public class ExplorerJDBCDAL implements AutoCloseable {
 
             String temp = "";
 
-            if (organisations.contains("CCG"))
-                sql = "SELECT r.registry as series_name,sum(r.registry_size) as series_value FROM dashboards.registries r "+
-                        "where r.ods_code in ("+
-                        "select distinct practice_ods_code from dashboards.population_denominators "+
-                        "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
-                        "AND r.ccg = ? and registry in ("+params+")"+
+            if (organisations.contains("CCG")) {
+                String noResults = "";
+
+                if (projectType==7) // STP
+                    noResults = " and 0=1 ";
+
+                sql = "SELECT r.registry as series_name,sum(r.registry_size) as series_value FROM dashboards.registries r " +
+                        "where r.ods_code in (" +
+                        "select distinct practice_ods_code from dashboards.population_denominators " +
+                        "WHERE (stp_ods_code in (" + paramsValidOrgs + ") or ccg_ods_code in (" + paramsValidOrgs + ") or practice_ods_code in (" + paramsValidOrgs + "))) " +
+                        noResults+
+                        " AND r.ccg = ? and registry in (" + params + ")" +
                         " GROUP BY r.ccg, r.registry";
-            else
-                sql = "SELECT r.registry as series_name,r.registry_size as series_value FROM dashboards.registries r "+
-                        "where r.ods_code in ("+
-                        "select distinct practice_ods_code from dashboards.population_denominators "+
-                        "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
-                        "AND r.practice_name = ? and registry in ("+params+")"+
+            }
+            else {
+                String noResults = "";
+
+                if (projectType==6||projectType==7) // CCG/STP
+                    noResults = " and 0=1 ";
+
+                sql = "SELECT r.registry as series_name,r.registry_size as series_value FROM dashboards.registries r " +
+                        "where r.ods_code in (" +
+                        "select distinct practice_ods_code from dashboards.population_denominators " +
+                        "WHERE (stp_ods_code in (" + paramsValidOrgs + ") or ccg_ods_code in (" + paramsValidOrgs + ") or practice_ods_code in (" + paramsValidOrgs + "))) " +
+                        noResults+
+                        " AND r.practice_name = ? and registry in (" + params + ")" +
                         " order by r.registry_size desc";
+            }
 
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
                 int p = 1;
@@ -1877,6 +1936,11 @@ public class ExplorerJDBCDAL implements AutoCloseable {
 
     public RegistriesResult getRegistries(String ccg, String registry) throws Exception {
         RegistriesResult result = new RegistriesResult();
+
+        if (projectType==6||projectType==7) { // CCG/STP
+            ccg = "Access denied";
+            registry = "Access denied";
+        }
 
         String sql = "{ call dashboards.getRegistries(?,?,?,?) }";
 
@@ -2613,11 +2677,17 @@ public class ExplorerJDBCDAL implements AutoCloseable {
             }
         }
 
+        String noResults = "";
+
+        if (projectType==7) // CCG/STP
+            noResults = " and 0=1 ";
+
         sql = "SELECT distinct `grouping` " +
                 "FROM dashboards.`dashboard_results_" + queryId + "` r "+
                 "where r.`grouping` in ("+
                 "select distinct ccg from dashboards.population_denominators "+
                 "WHERE (stp_ods_code in ("+validOrgParams+") or ccg_ods_code in ("+validOrgParams+"))) "+
+                noResults+
                 " order by `grouping`";
 
         sqlCount = "SELECT 1";
@@ -2759,10 +2829,16 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         }
         String paramsValidOrgs = builder.deleteCharAt( builder.length() -1 ).toString();
 
+        String noResults = "";
+
+        if (projectType==6||projectType==7) // CCG/STP
+            noResults = " and 0=1 ";
+
         sql = "select distinct r.registry,r.query from dashboards.registries r "+
                 "where r.ods_code in ("+
                 "select distinct practice_ods_code from dashboards.population_denominators "+
-                "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) ";
+                "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "
+                +noResults;
 
                 sqlCount = "SELECT 999";
 
@@ -2822,10 +2898,16 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         }
         String params = builder.deleteCharAt( builder.length() -1 ).toString();
 
+        String noResults = "";
+
+        if (projectType==6||projectType==7) // CCG/STP
+            noResults = " and 0=1 ";
+
         sql = "SELECT stp,ccg,pcn,practice,ethnic,age,sex,sum(list_size) as list_size " +
         "FROM dashboards.population_denominators " +
         "WHERE (stp_ods_code in ("+params+") or ccg_ods_code in ("+params+") or practice_ods_code in ("+params+")) "+
-        "group by stp,ccg,pcn,practice,ethnic,age,sex " +
+        noResults+
+        " group by stp,ccg,pcn,practice,ethnic,age,sex " +
         "with rollup";
 
         sqlCount = "SELECT count(1) " +
@@ -2917,6 +2999,18 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                     String ccg = resultSet.getString("ccg");
                     String pcn = resultSet.getString("pcn");
                     String practice = resultSet.getString("practice");
+
+                    if (projectType==7) { // STP level
+                        ccg = "Access denied to : "+ccg;
+                        pcn = "Access denied to : "+pcn;
+                        practice = "Access denied to : "+practice;
+                    }
+
+                    if (projectType==6) { // CCG level
+                        pcn = "Access denied to : "+pcn;
+                        practice = "Access denied to : "+practice;
+                    }
+
                     if (!stp.equals(prevSTP)) {
                         orgTree += "]}},";
                         orgTree += "\""+ stp + "\":{";
@@ -2958,7 +3052,7 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         return str.substring(0, str.length() - chars);
     }
 
-        public RegistryListsResult getRegistryLists() throws Exception {
+    public RegistryListsResult getRegistryLists() throws Exception {
         RegistryListsResult result = new RegistryListsResult();
 
         String sql = "";
@@ -2970,12 +3064,18 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         }
         String paramsValidOrgs = builder.deleteCharAt( builder.length() -1 ).toString();
 
+        String noResults = "";
+
+        if (projectType==6||projectType==7) // CCG/STP
+            noResults = " and 0=1 ";
+
         sql = "SELECT r.ccg, r.practice_name, r.registry, r.list_size, r.registry_size, r.target_percentage " +
                 "from dashboards.registries r "+
                 "where r.ods_code in ("+
                 "select distinct practice_ods_code from dashboards.population_denominators "+
                 "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
-                "order by r.ccg, r.practice_name, r.list_size desc, r.registry_size desc";
+                 noResults+
+                " order by r.ccg, r.practice_name, r.list_size desc, r.registry_size desc";
 
         sqlCount = "SELECT count(1) FROM dashboards.registries";
 
