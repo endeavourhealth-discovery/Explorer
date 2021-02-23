@@ -12,6 +12,7 @@ import {FormControl} from "@angular/forms";
 import {ValueSetCodeComponent} from "../valuesetcode/valuesetcode.component";
 import {MatSort} from "@angular/material/sort";
 import {ngxCsv} from "ngx-csv";
+import {PatientComponent} from "../patient/patient.component";
 
 @Component({
   selector: 'app-registrylists',
@@ -73,6 +74,7 @@ export class RegistryListsComponent implements OnInit {
 
   displayEvents(events: any) {
     this.events = events;
+    console.log(this.events);
     this.dataSource = new MatTableDataSource(events.results);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
@@ -127,6 +129,25 @@ export class RegistryListsComponent implements OnInit {
     } else {
       return registrySize;
     }
+  }
+
+  patientList(query:any, parent:any) {
+    console.log(parent);
+    const dialogRef = this.dialog.open(PatientComponent, {
+      disableClose: true,
+      height: '830px',
+      width: '1600px',
+
+      data: {queryId: query, parentQueryId: parent}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      let nhsNumber = "";
+      if (result) {
+        nhsNumber = result;
+        window.location.href = "https://devgateway.discoverydataservice.net/record-viewer/#/summary?nhsNumber="+nhsNumber;
+      }
+    });
   }
 
 }

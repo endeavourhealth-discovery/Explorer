@@ -13,6 +13,8 @@ public class RegistryLists {
     private String listSize;
     private String registrySize;
     private String target;
+    private String queryId;
+    private String parentQueryId;
 
     public String getCcg() {
         return ccg;
@@ -65,6 +67,24 @@ public class RegistryLists {
 
     public RegistryLists setTarget(String target) {
         this.target = target;
+        return this;
+    }
+
+    public String getQueryId() {
+        return queryId;
+    }
+
+    public RegistryLists setQueryId(String queryId) {
+        this.queryId = queryId;
+        return this;
+    }
+
+    public String getParentQueryId() {
+        return parentQueryId;
+    }
+
+    public RegistryLists setParentQueryId(String parentQueryId) {
+        this.parentQueryId = parentQueryId;
         return this;
     }
 

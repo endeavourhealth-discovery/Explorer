@@ -1748,12 +1748,23 @@ public class ExplorerJDBCDAL implements AutoCloseable {
     }
 
 
-    public PatientResult getPatientResult(Integer page, Integer size, String name, String queryId) throws Exception {
+    public PatientResult getPatientResult(Integer page, Integer size, String name, String queryId, String parentQueryId) throws Exception {
         PatientResult result = new PatientResult();
 
         String sql = "";
 
         String[] names = name.split(" ", 2);
+
+        StringBuilder builder = new StringBuilder();
+        for( int i = 0 ; i < validOrgs.size(); i++ ) {
+            builder.append("?,");
+        }
+        String paramsValidOrgs = builder.deleteCharAt( builder.length() -1 ).toString();
+
+        String noResults = "";
+
+        if (projectType==6||projectType==7||!patientIdentifiable) // CCG/STP/not PID
+            noResults = " and 0=1 ";
 
         if (name.equals("")) { // No name
             sql = "SELECT p.id,coalesce(p.date_of_birth,'') as date_of_birth,coalesce(c.name,'') as gender,FLOOR(DATEDIFF(now(), p.date_of_birth) / 365.25) as age, " +
@@ -1767,15 +1778,32 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                     "join practitioner pr on pr.id = e.usual_gp_practitioner_id " +
                     "join organization o on o.id = p.organization_id " +
                     "join concept con on con.dbid = e.registration_type_concept_id " +
-                    "where p.id in "+
+                    "where o.ods_code in "+
+                    "(select distinct practice_ods_code from dashboards.population_denominators "+
+                    "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
+                    noResults+
+                    " and p.id in "+
                     "(SELECT patient_id FROM dashboards.person_dataset " +
-                    "where query_id = ?) " +
+                    "where query_id = ? and patient_id not in "+
+                    "(SELECT patient_id FROM dashboards.person_dataset where query_id = ?)) "+
                     "LIMIT ?,?";
 
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
-                statement.setString(1, queryId);
-                statement.setInt(2, page * 10);
-                statement.setInt(3, size);
+                int p = 1;
+
+                for (int i = 1; i <= validOrgs.size(); i++) {
+                    statement.setString(p++, validOrgs.get(i-1));
+                }
+                for (int i = 1; i <= validOrgs.size(); i++) {
+                    statement.setString(p++, validOrgs.get(i-1));
+                }
+                for (int i = 1; i <= validOrgs.size(); i++) {
+                    statement.setString(p++, validOrgs.get(i-1));
+                }
+                statement.setString(p++, parentQueryId);
+                statement.setString(p++, queryId);
+                statement.setInt(p++, page * 10);
+                statement.setInt(p++, size);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     result.setResults(getPatientSummaryList(resultSet));
                 }
@@ -1789,12 +1817,29 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                     "join practitioner pr on pr.id = e.usual_gp_practitioner_id " +
                     "join organization o on o.id = p.organization_id " +
                     "join concept con on con.dbid = e.registration_type_concept_id " +
-                    "where p.id in "+
+                    "where o.ods_code in "+
+                    "(select distinct practice_ods_code from dashboards.population_denominators "+
+                    "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
+                    noResults+
+                    " and p.id in "+
                     "(SELECT patient_id FROM dashboards.person_dataset " +
-                    "where query_id = ?)";
+                    "where query_id = ? and patient_id not in "+
+                    "(SELECT patient_id FROM dashboards.person_dataset where query_id = ?)) ";
 
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
-                statement.setString(1, queryId);
+                int p = 1;
+
+                for (int i = 1; i <= validOrgs.size(); i++) {
+                    statement.setString(p++, validOrgs.get(i-1));
+                }
+                for (int i = 1; i <= validOrgs.size(); i++) {
+                    statement.setString(p++, validOrgs.get(i-1));
+                }
+                for (int i = 1; i <= validOrgs.size(); i++) {
+                    statement.setString(p++, validOrgs.get(i-1));
+                }
+                statement.setString(p++, parentQueryId);
+                statement.setString(p++, queryId);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     resultSet.next();
                     result.setLength(resultSet.getInt(1));
@@ -1813,16 +1858,33 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                     "join practitioner pr on pr.id = e.usual_gp_practitioner_id " +
                     "join organization o on o.id = p.organization_id " +
                     "join concept con on con.dbid = e.registration_type_concept_id " +
-                    "where p.id in "+
+                    "where o.ods_code in "+
+                    "(select distinct practice_ods_code from dashboards.population_denominators "+
+                    "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
+                    noResults+
+                    " and p.id in "+
                     "(SELECT patient_id FROM dashboards.person_dataset " +
-                    "where query_id = ?) " +
+                    "where query_id = ? and patient_id not in "+
+                    "(SELECT patient_id FROM dashboards.person_dataset where query_id = ?)) "+
                     "and p.last_name like ? LIMIT ?,?";
 
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
-                statement.setString(1, queryId);
-                statement.setString(2, names[0]+"%");
-                statement.setInt(3, page * 10);
-                statement.setInt(4, size);
+                int p = 1;
+
+                for (int i = 1; i <= validOrgs.size(); i++) {
+                    statement.setString(p++, validOrgs.get(i-1));
+                }
+                for (int i = 1; i <= validOrgs.size(); i++) {
+                    statement.setString(p++, validOrgs.get(i-1));
+                }
+                for (int i = 1; i <= validOrgs.size(); i++) {
+                    statement.setString(p++, validOrgs.get(i-1));
+                }
+                statement.setString(p++, parentQueryId);
+                statement.setString(p++, queryId);
+                statement.setString(p++, names[0]+"%");
+                statement.setInt(p++, page * 10);
+                statement.setInt(p++, size);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     result.setResults(getPatientSummaryList(resultSet));
                 }
@@ -1836,14 +1898,31 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                     "join practitioner pr on pr.id = e.usual_gp_practitioner_id " +
                     "join organization o on o.id = p.organization_id " +
                     "join concept con on con.dbid = e.registration_type_concept_id " +
-                    "where p.id in "+
+                    "where o.ods_code in "+
+                    "(select distinct practice_ods_code from dashboards.population_denominators "+
+                    "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
+                    noResults+
+                    " and p.id in "+
                     "(SELECT patient_id FROM dashboards.person_dataset " +
-                    "where query_id = ?) " +
+                    "where query_id = ? and patient_id not in "+
+                    "(SELECT patient_id FROM dashboards.person_dataset where query_id = ?)) "+
                     "and p.last_name like ?";
 
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
-                statement.setString(1, queryId);
-                statement.setString(2, names[0]+"%");
+                int p = 1;
+
+                for (int i = 1; i <= validOrgs.size(); i++) {
+                    statement.setString(p++, validOrgs.get(i-1));
+                }
+                for (int i = 1; i <= validOrgs.size(); i++) {
+                    statement.setString(p++, validOrgs.get(i-1));
+                }
+                for (int i = 1; i <= validOrgs.size(); i++) {
+                    statement.setString(p++, validOrgs.get(i-1));
+                }
+                statement.setString(p++, parentQueryId);
+                statement.setString(p++, queryId);
+                statement.setString(p++, names[0]+"%");
                 try (ResultSet resultSet = statement.executeQuery()) {
                     resultSet.next();
                     result.setLength(resultSet.getInt(1));
@@ -1862,17 +1941,34 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                     "join practitioner pr on pr.id = e.usual_gp_practitioner_id " +
                     "join organization o on o.id = p.organization_id " +
                     "join concept con on con.dbid = e.registration_type_concept_id " +
-                    "where p.id in "+
+                    "where o.ods_code in "+
+                    "(select distinct practice_ods_code from dashboards.population_denominators "+
+                    "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
+                    noResults+
+                    " and p.id in "+
                     "(SELECT patient_id FROM dashboards.person_dataset " +
-                    "where query_id = ?) " +
+                    "where query_id = ? and patient_id not in "+
+                    "(SELECT patient_id FROM dashboards.person_dataset where query_id = ?)) "+
                     "and (p.first_names like ? and p.last_name like ?) LIMIT ?,?";
 
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
-                statement.setString(1, queryId);
-                statement.setString(2, names[0]+"%");
-                statement.setString(3, names[1]+"%");
-                statement.setInt(4, page * 10);
-                statement.setInt(5, size);
+                int p = 1;
+
+                for (int i = 1; i <= validOrgs.size(); i++) {
+                    statement.setString(p++, validOrgs.get(i-1));
+                }
+                for (int i = 1; i <= validOrgs.size(); i++) {
+                    statement.setString(p++, validOrgs.get(i-1));
+                }
+                for (int i = 1; i <= validOrgs.size(); i++) {
+                    statement.setString(p++, validOrgs.get(i-1));
+                }
+                statement.setString(p++, parentQueryId);
+                statement.setString(p++, queryId);
+                statement.setString(p++, names[0]+"%");
+                statement.setString(p++, names[1]+"%");
+                statement.setInt(p++, page * 10);
+                statement.setInt(p++, size);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     result.setResults(getPatientSummaryList(resultSet));
                 }
@@ -1886,15 +1982,32 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                     "join practitioner pr on pr.id = e.usual_gp_practitioner_id " +
                     "join organization o on o.id = p.organization_id " +
                     "join concept con on con.dbid = e.registration_type_concept_id " +
-                    "where p.id in "+
+                    "where o.ods_code in "+
+                    "(select distinct practice_ods_code from dashboards.population_denominators "+
+                    "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
+                    noResults+
+                    " and p.id in "+
                     "(SELECT patient_id FROM dashboards.person_dataset " +
-                    "where query_id = ?) " +
+                    "where query_id = ? and patient_id not in "+
+                    "(SELECT patient_id FROM dashboards.person_dataset where query_id = ?)) "+
                     "and (p.first_names like ? and p.last_name like ?)";
 
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
-                statement.setString(1, queryId);
-                statement.setString(2, names[0]+"%");
-                statement.setString(3, names[1]+"%");
+                int p = 1;
+
+                for (int i = 1; i <= validOrgs.size(); i++) {
+                    statement.setString(p++, validOrgs.get(i-1));
+                }
+                for (int i = 1; i <= validOrgs.size(); i++) {
+                    statement.setString(p++, validOrgs.get(i-1));
+                }
+                for (int i = 1; i <= validOrgs.size(); i++) {
+                    statement.setString(p++, validOrgs.get(i-1));
+                }
+                statement.setString(p++, parentQueryId);
+                statement.setString(p++, queryId);
+                statement.setString(p++, names[0]+"%");
+                statement.setString(p++, names[1]+"%");
                 try (ResultSet resultSet = statement.executeQuery()) {
                     resultSet.next();
                     result.setLength(resultSet.getInt(1));
@@ -3303,8 +3416,9 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         if (projectType==6||projectType==7) // CCG/STP
             noResults = " and 0=1 ";
 
-        sql = "SELECT r.ccg, r.practice_name, r.registry, r.list_size, r.registry_size, r.target_percentage " +
-                "from dashboards.registries r "+
+        sql = "SELECT r.ccg, r.practice_name, r.registry, r.list_size, r.registry_size, r.target_percentage,ql.id as query_id,ql2.id as parent_query_id from dashboards.registries r "+
+                "left join dashboards.query_library ql on ql.name = r.query "+
+                "left join dashboards.query_library ql2 on ql2.name = ql.denominator_query "+
                 "where r.ods_code in ("+
                 "select distinct practice_ods_code from dashboards.population_denominators "+
                 "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
@@ -3358,7 +3472,9 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 .setRegistry(resultSet.getString("registry"))
                 .setListSize(resultSet.getString("list_size"))
                 .setRegistrySize(resultSet.getString("registry_size"))
-                .setTarget(resultSet.getString("target_percentage"));
+                .setTarget(resultSet.getString("target_percentage"))
+                .setQueryId(resultSet.getString("query_id"))
+                .setParentQueryId(resultSet.getString("parent_query_id"));
         return registryLists;
     }
 

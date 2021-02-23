@@ -5,7 +5,6 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import {ActivatedRoute} from "@angular/router";
 import {FormControl} from '@angular/forms';
 import {MatDialog} from "@angular/material/dialog";
-import {PatientComponent} from "../patient/patient.component";
 import {Globals} from '../globals'
 import {ngxCsv} from "ngx-csv";
 import {BehaviorSubject, Observable} from "rxjs";
@@ -507,29 +506,6 @@ export class CovidViewerComponent implements OnInit {
   }
 
   onSelectLine1(data): void {
-    // this.patientDialog(data.series, data.name, this.selectOrg);
-  }
-
-  onSelectBar1(data): void {
-    // this.patientDialog(this.selectedSeries1, data.name, this.selectOrg);
-  }
-
-  patientDialog(chartName: any, seriesName: any, ccgs: any) {
-    const dialogRef = this.dialog.open(PatientComponent, {
-      disableClose: true,
-      height: '830px',
-      width: '1600px',
-
-      data: {chartName: chartName, seriesName: seriesName, ccgs: ccgs}
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      let patientId = 0;
-      if (result) {
-        patientId = result;
-        window.location.href = "https://devgateway.discoverydataservice.net/record-viewer/#/summary?patient_id="+patientId;
-      }
-    });
   }
 
   formatDate(date) {

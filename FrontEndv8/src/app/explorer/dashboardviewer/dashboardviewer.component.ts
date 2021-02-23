@@ -5,7 +5,6 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import {ActivatedRoute} from "@angular/router";
 import {FormControl} from '@angular/forms';
 import {MatDialog} from "@angular/material/dialog";
-import {PatientComponent} from "../patient/patient.component";
 import {Globals} from '../globals'
 import {TableData} from "./model/TableData";
 import {ngxCsv} from "ngx-csv";
@@ -1073,53 +1072,33 @@ export class DashboardViewerComponent implements OnInit {
   }
 
   onSelectLine1(data): void {
-    // this.patientDialog(data.series, data.name, this.selectedCCG1.toString());
   }
 
   onSelectBar1(data): void {
-    // this.patientDialog(this.selectedSeries1, data.name, this.selectedCCG1.toString());
   }
 
   onSelectLine2(data): void {
-    // this.patientDialog(data.series, data.name, this.selectedCCG2.toString());
   }
 
   onSelectBar2(data): void {
-    // this.patientDialog(this.selectedSeries2, data.name, this.selectedCCG2.toString());
   }
 
   onSelectLine3(data): void {
-    // this.patientDialog(data.series, data.name, this.selectedCCG3.toString());
   }
 
   onSelectBar3(data): void {
-    // this.patientDialog(this.selectedSeries3, data.name, this.selectedCCG3.toString());
   }
 
   onSelectLine4(data): void {
-    // this.patientDialog(data.series, data.name, this.selectedCCG4.toString());
   }
 
   onSelectBar4(data): void {
-    // this.patientDialog(this.selectedSeries4, data.name, this.selectedCCG4.toString());
   }
 
-  patientDialog(chartName: any, seriesName: any, ccgs: any) {
-    const dialogRef = this.dialog.open(PatientComponent, {
-      disableClose: true,
-      height: '830px',
-      width: '1600px',
-
-      data: {chartName: chartName, seriesName: seriesName, ccgs: ccgs}
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      let patientId = 0;
-      if (result) {
-        patientId = result;
-        window.location.href = "https://devgateway.discoverydataservice.net/record-viewer/#/summary?patient_id="+patientId;
-      }
-    });
+  tablePatientSelect($event) {
+    let nhsNumber = $event["NHS number"];
+    if (nhsNumber!=undefined)
+      window.location.href = "https://devgateway.discoverydataservice.net/record-viewer/#/summary?nhsNumber="+nhsNumber;
   }
 
   formatDate(date) {
@@ -1476,9 +1455,5 @@ export class DashboardViewerComponent implements OnInit {
     this.search4();
   }
 
-  tablePatientSelect($event) {
-    let patientId = $event["Patient ID"];
-    if (patientId!=undefined)
-      window.location.href = "https://devgateway.discoverydataservice.net/record-viewer/#/summary?patient_id="+patientId;
-  }
+
 }

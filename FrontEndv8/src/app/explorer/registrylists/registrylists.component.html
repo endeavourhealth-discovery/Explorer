@@ -63,7 +63,7 @@
                         </mwl-gauge>
                       </td>
                       <td style="text-align: left">
-                        <div>
+                        <div (click)="patientList(element.queryId, element.parentQueryId)">
                           <span [ngClass]="{
                         'neutral': toPercent(element.listSize,element.registrySize)<65&&element.registrySize!='-1'&&element.registrySize!='',
                         'good': toPercent(element.listSize,element.registrySize)>=65}"

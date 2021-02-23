@@ -95,13 +95,14 @@ export class ExplorerService {
     return this.http.get('api/events/dashboardtrend', {params});
   }
 
-  getPatients(page?: number, size?: number, name?: string, queryId?: string): Observable<any> {
+  getPatients(page?: number, size?: number, name?: string, queryId?: string, parentQueryId?: string): Observable<any> {
 
     let params = new HttpParams();
     params = params.append('page', page.toString());
     params = params.append('size', size.toString());
     params = params.append('name', name);
     params = params.append('queryId', queryId);
+    params = params.append('parentQueryId', parentQueryId);
 
     return this.http.get('api/events/patients', {params});
   }

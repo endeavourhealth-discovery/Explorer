@@ -33,7 +33,7 @@
       <td mat-cell *matCellDef="let element" [ngClass]="{'deceased': element.dod != null}"> {{element.registration}}</td>
     </ng-container>
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr style="cursor: pointer" mat-row *matRowDef="let row; columns: displayedColumns;" [mat-dialog-close]="row.id"></tr>
+    <tr style="cursor: pointer" mat-row *matRowDef="let row; columns: displayedColumns;" [mat-dialog-close]="row.nhsNumber"></tr>
   </table>
 
   <mat-paginator [length]="events?.length"

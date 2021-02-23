@@ -4,7 +4,6 @@ import {ExplorerService} from '../explorer.service';
 import {LoggerService} from 'dds-angular8';
 import {ActivatedRoute} from "@angular/router";
 import {FormControl} from "@angular/forms";
-import {PatientComponent} from "../patient/patient.component";
 import {MatDialog} from "@angular/material/dialog";
 import {SelectionModel} from "@angular/cdk/collections";
 import {Router} from "@angular/router";
@@ -155,24 +154,6 @@ export class RegistriesComponent implements OnInit {
     if (listsize==0)
       val = 0;
     return val;
-  }
-
-  patientList() {
-    const dialogRef = this.dialog.open(PatientComponent, {
-      disableClose: true,
-      height: '830px',
-      width: '1600px',
-
-      data: {queryId: "74"} // hard coded till fixed
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      let patientId = 0;
-      if (result) {
-        patientId = result;
-        window.location.href = "https://devgateway.discoverydataservice.net/record-viewer/#/summary?patient_id="+patientId;
-      }
-    });
   }
 
   isAllSelected() {
