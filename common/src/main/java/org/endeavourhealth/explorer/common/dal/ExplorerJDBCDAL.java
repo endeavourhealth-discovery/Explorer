@@ -2073,6 +2073,37 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         return dashboardView;
     }
 
+    public ArrayList<String> getMapQueries() throws Exception {
+
+        ArrayList<String> list = new ArrayList<>();
+        list.add("Suspected and confirmed Covid-19 cases");
+        list.add("Confirmed Covid-19 cases");
+        list.add("Shielded Covid-19 patients");
+
+        HashMap<Integer,String> queryLibrary = new HashMap<>();
+        String sql = "select id, name from dashboards.query_library";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    queryLibrary.put(resultSet.getInt("id"), resultSet.getString("name"));
+                }
+            }
+        }
+
+        for (Integer id : queryLibrary.keySet()) {
+            sql = "select table_name from information_schema.columns where table_name = 'person_output_" + id + "' and column_name = 'LSOA code';";
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    while (resultSet.next()) {
+                        list.add(queryLibrary.get(id));
+                    }
+                }
+            }
+        }
+        Collections.sort(list);
+        return list;
+    }
+
     public ArrayList<String> getMapDates(String query) throws Exception {
 
         String sql = "";
@@ -2085,20 +2116,6 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         } else if ("Shielded Covid-19 patients".equalsIgnoreCase(query)) {
             sql = "select distinct date_format(covid_date, '%Y-%m-%d') as date " +
                     "from dashboards.lsoa_covid_shielded where covid_date <= now() order by covid_date";
-        } else {
-            sql = "select id from dashboards.query_library where name = ? ";
-            String queryId = null;
-            try (PreparedStatement statement = connection.prepareStatement(sql)) {
-                statement.setString(1, query);
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    while (resultSet.next()) {
-                        queryId = resultSet.getString("id");
-                    }
-                }
-            }
-            sql = "select distinct date_format(`Effective date`, '%Y-%m-%d') as date " +
-                    "from dashboards.observation_output_" + queryId + " " +
-                    "order by `Effective date`";
         }
 
         ArrayList<String> list = new ArrayList();
@@ -2151,22 +2168,225 @@ public class ExplorerJDBCDAL implements AutoCloseable {
             }
         }
 
-        String minDate = "";
+        ArrayList<MapLayer> layer1 = new ArrayList();
+        ArrayList<MapLayer> layer2 = new ArrayList();
+        ArrayList<MapLayer> layer3 = new ArrayList();
+        ArrayList<MapLayer> layer4 = new ArrayList();
+        ArrayList<MapLayer> layer5 = new ArrayList();
+
+        StringBuilder builder = new StringBuilder();
+        for( int i = 0 ; i < validOrgs.size(); i++ ) {
+            builder.append("?,");
+        }
+        String paramsValidOrgs = builder.deleteCharAt( builder.length() -1 ).toString();
+
+        String noResults = "";
+
+        if (projectType==6||projectType==7) // CCG/STP
+            noResults = " and 0=1 ";
+
         if (queryId == null) {
             if ("Suspected and confirmed Covid-19 cases".equalsIgnoreCase(query))
-                sql = "select min(date_format(covid_date, '%Y-%m-%d')) as min_date from dashboards.lsoa_covid";
+                sql = "SELECT COUNT(covid.lsoa_code) AS patients, " +
+                        "regs.reg_count AS reg_patients, " +
+                        "ROUND(((COUNT(covid.lsoa_code) * 100000) / regs.reg_count),1) AS ratio, " +
+                        "covid.lsoa_code AS lsoa_code, " +
+                        "map.geo_json " +
+                        "FROM dashboards.lsoa_covid covid, person per, organization org, " +
+                        "( SELECT reg.lsoa_code, sum(reg.count) reg_count " +
+                        "  FROM dashboards.lsoa_registrations reg " +
+                        "  WHERE reg.lsoa_code IS NOT NULL " +
+                        "  GROUP BY reg.lsoa_code " +
+                        ") regs, dashboards.maps map " +
+                        "WHERE per.id = covid.person_id and org.id = per.organization_id "+
+                        "AND covid.lsoa_code = regs.lsoa_code " +
+                        "AND covid.lsoa_code = map.area_code " +
+                        "AND covid.covid_date = ? " +
+                        "and org.ods_code in "+
+                        "(select distinct practice_ods_code from dashboards.population_denominators "+
+                        "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
+                        noResults+
+                        " GROUP BY covid.lsoa_code " +
+                        "ORDER BY covid.lsoa_code ";
             else if ("Confirmed Covid-19 cases".equalsIgnoreCase(query))
-                sql = "select min(date_format(covid_date, '%Y-%m-%d')) as min_date from dashboards.lsoa_covid where corona_status = 'Confirmed Covid 19'";
+                sql = "SELECT COUNT(covid.lsoa_code) AS patients, " +
+                        "regs.reg_count AS reg_patients, " +
+                        "ROUND(((COUNT(covid.lsoa_code) * 100000) / regs.reg_count),1) AS ratio, " +
+                        "covid.lsoa_code AS lsoa_code, " +
+                        "map.geo_json " +
+                        "FROM dashboards.lsoa_covid covid, person per, organization org, " +
+                        "( SELECT reg.lsoa_code, sum(reg.count) reg_count " +
+                        "  FROM dashboards.lsoa_registrations reg " +
+                        "  WHERE reg.lsoa_code IS NOT NULL " +
+                        "  GROUP BY reg.lsoa_code " +
+                        ") regs, dashboards.maps map " +
+                        "WHERE per.id = covid.person_id and org.id = per.organization_id "+
+                        "AND covid.lsoa_code = regs.lsoa_code " +
+                        "AND covid.lsoa_code = map.area_code " +
+                        "AND covid.covid_date = ? " +
+                        "AND corona_status = 'Confirmed Covid 19' "+
+                        "and org.ods_code in "+
+                        "(select distinct practice_ods_code from dashboards.population_denominators "+
+                        "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
+                        noResults+
+                        " GROUP BY covid.lsoa_code " +
+                        "ORDER BY covid.lsoa_code ";
             else if ("Shielded Covid-19 patients".equalsIgnoreCase(query))
-                sql = "select min(date_format(covid_date, '%Y-%m-%d')) as min_date from dashboards.lsoa_covid_shielded";
+                sql = "SELECT COUNT(covid.lsoa_code) AS patients, " +
+                        "regs.reg_count AS reg_patients, " +
+                        "ROUND(((COUNT(covid.lsoa_code) * 100000) / regs.reg_count),1) AS ratio, " +
+                        "covid.lsoa_code AS lsoa_code, " +
+                        "map.geo_json " +
+                        "FROM dashboards.lsoa_covid_shielded covid, person per, organization org, " +
+                        "( SELECT reg.lsoa_code, sum(reg.count) reg_count " +
+                        "  FROM dashboards.lsoa_registrations reg " +
+                        "  WHERE reg.lsoa_code IS NOT NULL " +
+                        "  GROUP BY reg.lsoa_code " +
+                        ") regs, dashboards.maps map " +
+                        "WHERE per.id = covid.person_id and org.id = per.organization_id "+
+                        "AND covid.lsoa_code = regs.lsoa_code " +
+                        "AND covid.lsoa_code = map.area_code " +
+                        "AND covid.covid_date = ? " +
+                        "and org.ods_code in "+
+                        "(select distinct practice_ods_code from dashboards.population_denominators "+
+                        "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
+                        noResults+
+                        " GROUP BY covid.lsoa_code " +
+                        "ORDER BY covid.lsoa_code ";
+
         } else {
-            sql = "select min(date_format(`Effective date`, '%Y-%m-%d')) as min_date from dashboards.observation_output_" + queryId;
+            sql = "SELECT COUNT(PERSON.`LSOA code`) as patients, " +
+                    "REGS.reg_count as reg_patients, " +
+                    "ROUND(((COUNT(PERSON.`LSOA code`) * 100000) / REGS.reg_count),1) AS ratio, " +
+                    "PERSON.`LSOA code` as lsoa_code, " +
+                    "MAP.geo_json " +
+                    "FROM  dashboards.person_output_" + queryId + " PERSON, " +
+                    "dashboards.maps MAP, patient pat, organization org, " +
+                    "(SELECT lsoa_code, " +
+                    "SUM(count) as reg_count " +
+                    "FROM dashboards.lsoa_registrations " +
+                    "WHERE lsoa_code IS NOT NULL " +
+                    "GROUP BY lsoa_code " +
+                    ") REGS " +
+                    "WHERE pat.id = PERSON.`Patient ID` and org.id = pat.organization_id "+
+                    "AND  REGS.lsoa_code = PERSON.`LSOA code` " +
+                    "AND MAP.area_code = PERSON.`LSOA code` " +
+                    "and org.ods_code in "+
+                    "(select distinct practice_ods_code from dashboards.population_denominators "+
+                    "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
+                    noResults+
+                    " GROUP BY PERSON.`LSOA code` " +
+                    "ORDER BY PERSON.`LSOA code` ";
         }
+
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            int p = 1;
+            if(queryId == null) {
+                statement.setString(p++, date);
+            }
+            for (int i = 1; i <= validOrgs.size(); i++) {
+                statement.setString(p++, validOrgs.get(i-1));
+            }
+            for (int i = 1; i <= validOrgs.size(); i++) {
+                statement.setString(p++, validOrgs.get(i-1));
+            }
+            for (int i = 1; i <= validOrgs.size(); i++) {
+                statement.setString(p++, validOrgs.get(i-1));
+            }
+
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
-                    minDate = resultSet.getString("min_date");
+                    MapLayer layer = new MapLayer();
+                    BigDecimal ratio = resultSet.getBigDecimal("ratio");
+                    float ratioFloat = ratio.floatValue();
+                    String description = "";
+                    int rate = 0;
+
+                    layer.setAreaCode(resultSet.getString("lsoa_code"));
+                    rate = Math.round((resultSet.getFloat("patients") / resultSet.getFloat("reg_patients")) * 100000);
+                    description = "LSOA "+layer.getAreaCode() + ": " +
+                            resultSet.getInt("patients") + " of " +
+                            resultSet.getInt("reg_patients") + " registered cases (" + rate + " per 100,000 per day)";
+                    layer.setDescription(description);
+                    layer.setGeoJson(resultSet.getString("geo_json"));
+
+                    for (int i=0; i<5; i++) {
+                        if (i < 4 && ratioFloat >= Float.valueOf(lowerLimits.get(i)) &&
+                                ratioFloat <= Float.valueOf(upperLimits.get(i))) {
+                            layer.setColor(colors.get(i));
+                            if (i == 0) {
+                                layer1.add(layer);
+                            } else if (i == 1) {
+                                layer2.add(layer);
+                            } else if (i == 2) {
+                                layer3.add(layer);
+                            } else if (i == 3) {
+                                layer4.add(layer);
+                            }
+                        } else {
+                            if (i == 4 && ratioFloat >= Float.valueOf(lowerLimits.get(i))) {
+                                layer.setColor(colors.get(i));
+                                layer5.add(layer);
+                            }
+                        }
+                    }
                 }
+            }
+        }
+
+        ids.add(descriptions.get(0));
+        layers.put(descriptions.get(0), layer1);
+        ids.add(descriptions.get(1));
+        layers.put(descriptions.get(1), layer2);
+        ids.add(descriptions.get(2));
+        layers.put(descriptions.get(2), layer3);
+        ids.add(descriptions.get(3));
+        layers.put(descriptions.get(3), layer4);
+        ids.add(descriptions.get(4));
+        layers.put(descriptions.get(4), layer5);
+
+        MapResult result = new MapResult();
+        result.setIds(ids);
+        result.setLayers(layers);
+
+        return result;
+    }
+
+    public MapResult getMapsOpen(String query, String date,
+                             List<String> lowerLimits, List<String> upperLimits,
+                             List<String> colors, List<String> descriptions) throws Exception {
+
+
+        String queryId = null;
+        if (!"Confirmed Covid-19 cases".equalsIgnoreCase(query)&&!"Suspected and confirmed Covid-19 cases".equalsIgnoreCase(query)&&!"Shielded Covid-19 patients".equalsIgnoreCase(query)) {
+            String sql = "select id from dashboards.query_library where name = ? ";
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.setString(1, query);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    while (resultSet.next()) {
+                        queryId = resultSet.getString("id");
+                    }
+                }
+            }
+        }
+
+        ArrayList<String> ids = new ArrayList<String>();
+        HashMap<String, List<MapLayer>> layers = new HashMap();
+
+        String sql = "select * from dashboards.maps WHERE parent_area_code = 'nel_ccg'";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                ArrayList<MapLayer> list = new ArrayList();
+                while (resultSet.next()) {
+                    MapLayer layer = new MapLayer();
+                    layer.setAreaCode(resultSet.getString("area_code"));
+                    layer.setDescription(resultSet.getString("description"));
+                    layer.setGeoJson(resultSet.getString("geo_json"));
+                    layer.setColor("BLUE");
+                    list.add(layer);
+                }
+                ids.add("All levels");
+                layers.put("All levels", list);
             }
         }
 
@@ -2175,6 +2395,17 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         ArrayList<MapLayer> layer3 = new ArrayList();
         ArrayList<MapLayer> layer4 = new ArrayList();
         ArrayList<MapLayer> layer5 = new ArrayList();
+
+        StringBuilder builder = new StringBuilder();
+        for( int i = 0 ; i < validOrgs.size(); i++ ) {
+            builder.append("?,");
+        }
+        String paramsValidOrgs = builder.deleteCharAt( builder.length() -1 ).toString();
+
+        String noResults = "";
+
+        if (projectType==6||projectType==7) // CCG/STP
+            noResults = " and 0=1 ";
 
         if (queryId == null) {
             if ("Suspected and confirmed Covid-19 cases".equalsIgnoreCase(query))
@@ -2251,9 +2482,11 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         }
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            int p = 1;
             if(queryId == null) {
-                statement.setString(1, date);
+                statement.setString(p++, date);
             }
+
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
                     MapLayer layer = new MapLayer();
@@ -2594,37 +2827,6 @@ public class ExplorerJDBCDAL implements AutoCloseable {
             }
         }
         return false;
-    }
-
-    public ArrayList<String> getMapQueries() throws Exception {
-
-        ArrayList<String> list = new ArrayList<>();
-        list.add("Suspected and confirmed Covid-19 cases");
-        list.add("Confirmed Covid-19 cases");
-        list.add("Shielded Covid-19 patients");
-
-        HashMap<Integer,String> queryLibrary = new HashMap<>();
-        String sql = "select id, name from dashboards.query_library";
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            try (ResultSet resultSet = statement.executeQuery()) {
-                while (resultSet.next()) {
-                    queryLibrary.put(resultSet.getInt("id"), resultSet.getString("name"));
-                }
-            }
-        }
-
-        for (Integer id : queryLibrary.keySet()) {
-            sql = "select table_name from information_schema.columns where table_name = 'person_output_" + id + "' and column_name = 'LSOA code';";
-            try (PreparedStatement statement = connection.prepareStatement(sql)) {
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    while (resultSet.next()) {
-                        list.add(queryLibrary.get(id));
-                    }
-                }
-            }
-        }
-        Collections.sort(list);
-        return list;
     }
 
     private static String toTitleCase(String str) {

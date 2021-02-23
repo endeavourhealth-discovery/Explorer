@@ -893,7 +893,7 @@ public class DashboardEndpoint {
             viewerDAL.setValidOrgs(validOrgs);
             viewerDAL.setSubscriberConnection(configName); viewerDAL.setPatientIdentifiable(patientIdentifiable); viewerDAL.setProjectType(projectType);
 
-            MapResult result = viewerDAL.getMaps(query, date, lowerLimits, upperLimits, colors, descriptions);
+            MapResult result = viewerDAL.getMapsOpen(query, date, lowerLimits, upperLimits, colors, descriptions);
             result.setLowerLimits(new ArrayList(lowerLimits));
             result.setUpperLimits(new ArrayList(upperLimits));
             result.setColors(new ArrayList(colors));
