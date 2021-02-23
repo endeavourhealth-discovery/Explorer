@@ -20,15 +20,7 @@ interface query {
   schedule: string;
   delivery: string;
   providerOrganisation: string;
-  includedOrganisation: string;
   registrationStatus: string;
-  cohortValue: string;
-  valueDateFrom: string;
-  valueDateTo: string;
-  ageFrom: string;
-  ageTo: string;
-  gender: string;
-  postcode: string;
   timeSeries: boolean;
   seriesTable: string;
   seriesField: string;
@@ -266,18 +258,6 @@ export class QueryLibraryComponent implements OnInit {
         details = query.providerOrganisation.toString().replace(/,/g, ', ')
       } else if (fieldName=='registrationStatus') {
         details = query.registrationStatus
-      }else if (fieldName=='valueDateFrom') {
-        details = query.valueDateFrom
-      }else if (fieldName=='valueDateTo') {
-        details = query.valueDateTo
-      }else if (fieldName=='ageFrom') {
-        details = query.ageFrom
-      }else if (fieldName=='ageTo') {
-        details = query.ageTo
-      }else if (fieldName=='gender') {
-        details = query.gender
-      }else if (fieldName=='postcode') {
-        details = query.postcode
       }else if (fieldName=='tables') {
         details = '';
         if (query.demographics)
