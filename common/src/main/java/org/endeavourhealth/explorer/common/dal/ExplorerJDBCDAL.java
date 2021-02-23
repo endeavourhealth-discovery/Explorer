@@ -2696,35 +2696,67 @@ public class ExplorerJDBCDAL implements AutoCloseable {
 
         String like = "";
         if (!StringUtils.isNullOrEmpty(searchData)) {
-            like = " where ";
+            like = " and (";
             for (String column : likeColumns) {
-                like += "`" + column + "`" + " like ? or ";
+                like += "t.`" + column + "`" + " like ? or ";
             }
             like = like.substring(0, like.length() - 3);
+            like += ")";
         }
 
         String fields = "";
         for (String field : fieldsList) {
-            fields += "`" + field + "`,";
+            fields += "t.`" + field + "`,";
         }
         fields = fields.substring(0, fields.length()-1);
 
+        StringBuilder builder = new StringBuilder();
+        for( int i = 0 ; i < validOrgs.size(); i++ ) {
+            builder.append("?,");
+        }
+        String paramsValidOrgs = builder.deleteCharAt( builder.length() -1 ).toString();
+
+        String noResults = "";
+
+        if (projectType==6||projectType==7||!patientIdentifiable) // CCG/STP/not PID
+            noResults = " and 0=1 ";
 
         if (StringUtils.isNullOrEmpty(searchData)) {
-            sql = "select " + fields + " from dashboards." + tableName +
+            sql = "select " + fields + " from dashboards." + tableName + " t, person per, organization org "+
+                    "WHERE per.id = t.`Person ID` and org.id = per.organization_id "+
+                    "and org.ods_code in "+
+                    "(select distinct practice_ods_code from dashboards.population_denominators "+
+                    "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
+                    noResults+
                     " order by `" + orderColumn + "` " + order +
                     " limit " + ((pageNumber - 1)*pageSize) + "," + pageSize;
         } else {
-            sql = "select " + fields + " from dashboards." + tableName +
+            sql = "select " + fields + " from dashboards." + tableName + " t, person per, organization org "+
+                    "WHERE per.id = t.`Person ID` and org.id = per.organization_id "+
+                    "and org.ods_code in "+
+                    "(select distinct practice_ods_code from dashboards.population_denominators "+
+                    "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
+                    noResults+
                     like +
                     " order by `" + orderColumn + "` " + order +
                     " limit " + ((pageNumber - 1)*pageSize) + "," + pageSize;
         }
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            int p = 1;
+
+            for (int i = 1; i <= validOrgs.size(); i++) {
+                statement.setString(p++, validOrgs.get(i-1));
+            }
+            for (int i = 1; i <= validOrgs.size(); i++) {
+                statement.setString(p++, validOrgs.get(i-1));
+            }
+            for (int i = 1; i <= validOrgs.size(); i++) {
+                statement.setString(p++, validOrgs.get(i-1));
+            }
             if (!StringUtils.isNullOrEmpty(searchData)) {
                 for (int i = 0; i < likeColumns.size(); i++) {
-                    statement.setString(i+1, "%" + searchData + "%");
+                    statement.setString(p++, "%" + searchData + "%");
                 }
             }
             try (ResultSet resultSet = statement.executeQuery()) {
