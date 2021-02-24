@@ -1,0 +1,14 @@
+version: 0.0
+os: linux
+files:
+  - source: /target/api
+    destination: //opt/tomcat/webapps/explorer
+hooks:
+  BeforeInstall:
+    - location: cleanup
+      timeout: 300
+      runas: root
+  AfterInstall:
+    - location: permissions
+      timeout: 300
+      runas: root

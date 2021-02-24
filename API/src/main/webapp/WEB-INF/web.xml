@@ -84,7 +84,7 @@
             <url-pattern>/api/*</url-pattern>
         </web-resource-collection>
         <auth-constraint>
-            <role-name>eds_user</role-name>
+            <role-name>um_secured</role-name>
         </auth-constraint>
     </security-constraint>
 
@@ -96,7 +96,7 @@
 
     <!-- all roles in the system MUST be specified here -->
     <security-role>
-        <role-name>eds_user</role-name>
+        <role-name>um_secured</role-name>
     </security-role>
 
     <session-config>
@@ -115,6 +115,18 @@
     </filter>
     <filter-mapping>
         <filter-name>CorsFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <filter>
+        <filter-name>AppAccessFilter</filter-name>
+        <filter-class>org.endeavourhealth.coreui.framework.AppAccessFilter</filter-class>
+        <init-param>
+            <param-name>app_name</param-name>
+            <param-value>explorer</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>AppAccessFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 </web-app>
