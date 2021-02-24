@@ -93,7 +93,7 @@ LOOP
 
          SET @sql = CONCAT("INSERT INTO  ", p_observationTab, " 
          SELECT o.id, q.patient_id, q.person_id, o.clinical_effective_date, o.result_value, o.non_core_concept_id, q.organization_id, c.value_set_code_type, NULL, c.data_type     
-         FROM qry_tmp q JOIN ", p_schema,".observation o FORCE INDEX FOR JOIN (ix_observation_index_2, ix_observation_index_5) ON q.patient_id = o.patient_id AND q.organization_id = o.organization_id 
+         FROM qry_tmp q JOIN ", p_schema,".observation o ON q.patient_id = o.patient_id AND q.organization_id = o.organization_id AND q.person_id = o.person_id 
          JOIN ", p_conceptTab," c ON c.non_core_concept_id = o.non_core_concept_id  
          WHERE c.data_type = 'Observation' 
          AND q.row_id > @row_id AND q.row_id <= @row_id + 50");
@@ -102,7 +102,7 @@ LOOP
 
          SET @sql = CONCAT("INSERT INTO  ", p_observationTab, " 
          SELECT m.id, q.patient_id, q.person_id, m.clinical_effective_date, m.quantity_value, m.non_core_concept_id, q.organization_id, c.value_set_code_type, m.cancellation_date, c.data_type      
-         FROM qry_tmp q JOIN ", p_schema,".medication_statement m FORCE INDEX FOR JOIN (ix_medication_statement_index_2, ix_medication_statement_index_4) ON q.patient_id = m.patient_id AND q.organization_id = m.organization_id 
+         FROM qry_tmp q JOIN ", p_schema,".medication_statement m ON q.patient_id = m.patient_id AND q.organization_id = m.organization_id AND q.person_id = m.person_id 
          JOIN ", p_conceptTab," c ON c.non_core_concept_id = m.non_core_concept_id  
          WHERE c.data_type = 'Medication' 
          AND q.row_id > @row_id AND q.row_id <= @row_id + 50");
@@ -111,7 +111,7 @@ LOOP
 
          SET @sql = CONCAT("INSERT INTO  ", p_observationTab, " 
          SELECT en.id, q.patient_id, q.person_id, en.clinical_effective_date, NULL, en.non_core_concept_id, q.organization_id, c.value_set_code_type, NULL, c.data_type     
-         FROM qry_tmp q JOIN ", p_schema,".encounter en FORCE INDEX FOR JOIN (ix_encounter_index_2, ix_encounter_index_4) ON q.patient_id = en.patient_id AND q.organization_id = en.organization_id 
+         FROM qry_tmp q JOIN ", p_schema,".encounter en ON q.patient_id = en.patient_id AND q.organization_id = en.organization_id AND q.person_id = en.person_id 
          JOIN ", p_conceptTab," c ON c.non_core_concept_id = en.non_core_concept_id  
          WHERE c.data_type = 'Encounter' 
          AND q.row_id > @row_id AND q.row_id <= @row_id + 50");
@@ -120,7 +120,7 @@ LOOP
 
          SET @sql = CONCAT("INSERT INTO  ", p_observationTab, " 
          SELECT p.id, q.patient_id, q.person_id, NULL, NULL, p.ethnic_code_concept_id, q.organization_id, c.value_set_code_type, NULL, c.data_type     
-         FROM qry_tmp q JOIN ", p_schema,".patient p FORCE INDEX FOR JOIN (patient_id, ethnic_concept) ON q.patient_id = p.id AND q.organization_id = p.organization_id 
+         FROM qry_tmp q JOIN ", p_schema,".patient p ON q.patient_id = p.id AND q.organization_id = p.organization_id AND q.person_id = p.person_id 
          JOIN ", p_conceptTab," c ON c.non_core_concept_id = p.ethnic_code_concept_id  
          WHERE c.data_type = 'Ethnicity' 
          AND q.row_id > @row_id AND q.row_id <= @row_id + 50");
@@ -129,7 +129,7 @@ LOOP
 
          SET @sql = CONCAT("INSERT INTO  ", p_observationTab, " 
          SELECT ref.id, q.patient_id, q.person_id, ref.clinical_effective_date, NULL, ref.non_core_concept_id, q.organization_id, c.value_set_code_type, NULL, c.data_type     
-         FROM qry_tmp q JOIN ", p_schema,".referral_request ref FORCE INDEX FOR JOIN (referral_request_patient_id, referral_request_non_core_concept_id) ON q.patient_id = ref.patient_id AND q.organization_id = ref.organization_id 
+         FROM qry_tmp q JOIN ", p_schema,".referral_request ref ON q.patient_id = ref.patient_id AND q.organization_id = ref.organization_id AND q.person_id = ref.person_id 
          JOIN ", p_conceptTab," c ON c.non_core_concept_id = ref.non_core_concept_id  
          WHERE c.data_type = 'Referral' 
          AND q.row_id > @row_id AND q.row_id <= @row_id + 50");
