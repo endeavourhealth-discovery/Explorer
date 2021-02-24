@@ -3423,7 +3423,7 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 "select distinct practice_ods_code from dashboards.population_denominators "+
                 "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
                  noResults+
-                " order by r.ccg, r.practice_name, r.list_size desc, r.registry_size desc";
+                " order by r.ccg, r.practice_name, r.registry, r.list_size desc, r.registry_size desc";
 
         sqlCount = "SELECT count(1) FROM dashboards.registries";
 

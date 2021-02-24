@@ -8,9 +8,9 @@
   </mat-card-header>
   <mat-card-content>
     <div class="filter">
-      <mat-form-field style="width:300px; margin-left: 10px" class="expanded-full-width" appearance="outline">
-        <mat-label>Filter</mat-label>
-        <input matInput (keyup)="applyFilter($event)" placeholder="Filter" #input>
+      <mat-form-field style="width:400px; margin-left: 10px" class="expanded-full-width" appearance="outline">
+        <mat-label>Filter registries (use spaces to separate practice name/registry name)</mat-label>
+        <input matInput [(ngModel)]="filter" (keyup)="applyFilter()" placeholder="Filter">
       </mat-form-field>
       <button style="margin-left: 15px" mat-flat-button color="primary" (click)="onDownloadClick()">Download</button>
     </div>
