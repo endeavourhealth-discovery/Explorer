@@ -40,6 +40,21 @@ IF p_runDate = 'Y' THEN
        SET p_includedPeriodOperator = '<=';
   END IF;
 
+ELSEIF p_runDate = 'T' THEN
+
+  -- set current date
+  SET effectiveDate = CURDATE();
+  SET effectiveDate = QUOTE(effectiveDate);
+
+  SET signString = '';
+  SET clinicalEffectiveDateString = 'o2.clinical_effective_date';
+
+  IF UPPER(p_includedPeriodOperator) = 'WITHIN' OR UPPER(p_includedPeriodOperator) IS NULL THEN
+       SET p_includedPeriodOperator = '>=';
+       ELSEIF UPPER(p_includedPeriodOperator) = 'BEFORE' THEN
+       SET p_includedPeriodOperator = '<=';
+  END IF;
+
 ELSEIF p_runDate = 'N' THEN
 
   SET effectiveDate = 'o.clinical_effective_date';

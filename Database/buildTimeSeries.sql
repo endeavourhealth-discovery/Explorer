@@ -76,7 +76,7 @@ IF p_timeSeries = 'TRUE' AND
       SET sourceTab = 'encounter';
    END IF;
    -- get time series date range string
-   SET seriesDateRange = getTimePeriodDateRange(p_fromDate, p_toDate, p_periodValue, p_periodType, p_periodOperator,'Y');    
+   SET seriesDateRange = getTimePeriodDateRange(p_fromDate, p_toDate, p_periodValue, p_periodType, p_periodOperator,'T');    
    -- get time series value set string
    CALL getValueSetString(seriesValueSet, p_storetab, @seriesValueSetString);
    SET seriesValueSetString = @seriesValueSetString;
