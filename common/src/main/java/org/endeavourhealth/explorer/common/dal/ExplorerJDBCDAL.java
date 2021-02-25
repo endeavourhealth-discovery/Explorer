@@ -56,7 +56,6 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         List<EnterpriseConnector.ConnectionWrapper> connectionWrappers = EnterpriseConnector.openSubscriberConnections(configName);
 
         for (EnterpriseConnector.ConnectionWrapper wrapper: connectionWrappers) {
-
             if (wrapper.hasDatabaseConnection()) {
 
                 connection = wrapper.getConnection();
