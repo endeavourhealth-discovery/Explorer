@@ -1082,4 +1082,27 @@ public class DashboardEndpoint {
                     .build();
         }
     }
+
+    @GET
+    @Path("/queryqueue")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getQueryQueue(@Context SecurityContext sc, @HeaderParam("userProjectId") String userProjectId) throws Exception {
+        LOG.debug("getQueryQueue");
+
+        checkUserAccessToOrganisations(userProjectId);
+
+        try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
+
+            viewerDAL.setValidOrgs(validOrgs);
+            viewerDAL.setSubscriberConnection(configName); viewerDAL.setPatientIdentifiable(patientIdentifiable); viewerDAL.setProjectType(projectType);
+
+            QueryQueueResult result = viewerDAL.getQueryQueue();
+
+            return Response
+                    .ok()
+                    .entity(result)
+                    .build();
+        }
+    }
 }

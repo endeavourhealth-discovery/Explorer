@@ -13,6 +13,7 @@ import {CovidLibraryComponent} from "./explorer/covidlibrary/covidlibrary.compon
 import {CovidViewerComponent} from "./explorer/covidviewer/covidviewer.component";
 import {PopulationsComponent} from "./explorer/populations/populations.component";
 import {RegistryListsComponent} from "./explorer/registrylists/registrylists.component";
+import {QueryQueueComponent} from "./explorer/queryqueue/queryqueue.component";
 
 @Injectable()
 export class AppMenuService implements  AbstractMenuProvider {
@@ -30,7 +31,8 @@ export class AppMenuService implements  AbstractMenuProvider {
       {path: 'tutorials', component: TutorialsComponent, data: {role: 'explorer'}},
       {path: 'graphicalcomparison', component: GraphicalComparisonComponent, data: {role: 'explorer'}},
       {path: 'populations', component: PopulationsComponent, data: {role: 'explorer'}},
-      {path: 'registrylists', component: RegistryListsComponent, data: {role: 'explorer'}}
+      {path: 'registrylists', component: RegistryListsComponent, data: {role: 'explorer'}},
+      {path: 'queryqueue', component: QueryQueueComponent, data: {role: 'explorer'}},
     ];
   }
 
@@ -49,6 +51,7 @@ export class AppMenuService implements  AbstractMenuProvider {
       {icon: 'fas fa-map-marked-alt', caption: 'Maps', state: 'map'},
       {icon: 'fas fa-notes-medical', caption: 'Patient registries', state: 'registries'},
       {icon: 'fas fa-file-search', caption: 'Query & data set library', state: 'querylibrary'},
+      {icon: 'fas fa-clipboard-list-check', caption: 'Query queue', state: 'queryqueue'},
       {icon: 'fas fa-list-ol', caption: 'Value set library', state: 'valuesetlibrary'},
       {icon: 'fas fa-users', caption: 'Population counts', state: 'populations'},
       {icon: 'fas fa-video-plus', caption: 'Tutorials', state: 'tutorials'}

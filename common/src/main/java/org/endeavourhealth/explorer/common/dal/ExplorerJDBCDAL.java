@@ -3484,4 +3484,58 @@ public class ExplorerJDBCDAL implements AutoCloseable {
             this.connection.close();
         }
     }
+
+
+    public QueryQueueResult getQueryQueue() throws Exception {
+        QueryQueueResult result = new QueryQueueResult();
+
+        String sql = "";
+        String sqlCount = "";
+
+        sql = "SELECT type,registry_name,next_run_date,status,timesubmit,timefinish,timeexecute " +
+        "FROM dashboards.queue q " +
+        "join dashboards.query_library ql on ql.id = q.query_id " +
+        "order by status,timesubmit desc,timefinish desc";
+
+        sqlCount = "SELECT count(1) " +
+                "FROM dashboards.queue q";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                result.setResults(getQueryQueueList(resultSet));
+            }
+        }
+
+        try (PreparedStatement statement = connection.prepareStatement(sqlCount)) {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                resultSet.next();
+                result.setLength(resultSet.getInt(1));
+            }
+        }
+
+        return result;
+    }
+
+    private List<QueryQueue> getQueryQueueList(ResultSet resultSet) throws SQLException {
+        List<QueryQueue> result = new ArrayList<>();
+        while (resultSet.next()) {
+            result.add(getQueryQueue(resultSet));
+        }
+
+        return result;
+    }
+
+    public static QueryQueue getQueryQueue(ResultSet resultSet) throws SQLException {
+        QueryQueue queryqueue = new QueryQueue();
+
+        queryqueue
+                .setType(resultSet.getString("type"))
+                .setRegistryName(resultSet.getString("registry_name"))
+                .setDate(resultSet.getDate("next_run_date"))
+                .setStatus(resultSet.getString("status"))
+                .setTimeSubmit(resultSet.getString("timesubmit"))
+                .setTimeFinish(resultSet.getString("timefinish"))
+                .setTimeExecute(resultSet.getString("timeexecute"));
+        return queryqueue;
+    }
 }

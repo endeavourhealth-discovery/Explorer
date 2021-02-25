@@ -56,6 +56,7 @@ import {CovidLibraryComponent} from "./covidlibrary/covidlibrary.component";
 import {CovidViewerComponent} from "./covidviewer/covidviewer.component";
 import {PopulationsComponent} from "./populations/populations.component";
 import {RegistryListsComponent} from "./registrylists/registrylists.component";
+import {QueryQueueComponent} from "./queryqueue/queryqueue.component";
 
 @NgModule({
   declarations: [
@@ -78,7 +79,8 @@ import {RegistryListsComponent} from "./registrylists/registrylists.component";
     CovidLibraryComponent,
     CovidViewerComponent,
     PopulationsComponent,
-    RegistryListsComponent
+    RegistryListsComponent,
+    QueryQueueComponent
   ],
     imports: [
         BrowserModule,

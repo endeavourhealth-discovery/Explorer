@@ -425,4 +425,10 @@ export class ExplorerService {
     return this.http.get('api/events/registrylists', {params});
   }
 
+  getQueryQueue(): Observable<any> {
+    let params: HttpParams = new HttpParams();
+
+    return this.http.get('api/events/queryqueue', {params});
+  }
+
 }
