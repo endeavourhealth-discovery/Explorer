@@ -9,7 +9,8 @@ CREATE PROCEDURE buildFinalPatientCohort (
     IN p_patientcohorttab VARCHAR(64),
     IN p_practiceChortTab VARCHAR(64), 
     IN p_ruleTab VARCHAR(64),   
-    IN p_schema VARCHAR(255)
+    IN p_schema VARCHAR(255),
+    IN enabled INTEGER
 )
 
 
@@ -160,8 +161,9 @@ BEGIN
 
         -- clean up tmp tables
     SET l_tmp = SUBSTRING(l_tmp, 1, LENGTH(l_tmp)-1);
-    CALL dropTempTables(l_tmp);
-
-
+    IF enabled = 0 THEN 
+      CALL dropTempTables(l_tmp);
+    END IF;
+    
 END//
 DELIMITER ;
