@@ -50,11 +50,6 @@ export class PatientComponent {
 
   loadEvents() {
 
-    this.userManagerService.onProjectChange.subscribe(
-      (newProject) => this.dialogRef.close(),
-      (error) => this.log.error(error)
-    );
-
     this.events = null;
 
     this.explorerService.getPatients(this.page, this.size, this.name, this.queryId, this.parentQueryId)
