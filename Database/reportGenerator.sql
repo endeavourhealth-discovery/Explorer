@@ -3,7 +3,7 @@ USE dashboards;
 DROP PROCEDURE IF EXISTS reportGenerator;
 
 DELIMITER //
-CREATE PROCEDURE reportGenerator(query_id INT, query JSON)
+CREATE PROCEDURE reportGenerator(query_id INT, query JSON, p_sourceSchema VARCHAR(255), p_enableDebug INTEGER)
 
 BEGIN
 
@@ -210,10 +210,10 @@ DECLARE rule_tmp VARCHAR(64) DEFAULT NULL;
 DECLARE rule_det_tmp VARCHAR(64) DEFAULT NULL; 
 
 -- Set Debug Mode
-SET @enabled = FALSE;
+SET @enabled = p_enableDebug;
 
 -- Set Variables for Cohort definition -- 
-SET sourceSchema = 'subscriber_pi_rv';
+SET sourceSchema = p_sourceSchema;
 
 SET targetPercentage = JSON_UNQUOTE(JSON_EXTRACT(query,'$.targetPercentage')); 
 SET providerOrganisation = UPPER(REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.providerOrganisation'),'[',''),']',''),'"',''));

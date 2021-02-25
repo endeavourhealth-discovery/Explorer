@@ -3,7 +3,7 @@ USE dashboards;
 DROP PROCEDURE IF EXISTS processReportQueue;
 
 DELIMITER //
-CREATE PROCEDURE processReportQueue()
+CREATE PROCEDURE processReportQueue(p_sourceSchema VARCHAR(255), p_enableDebug INTEGER)
 
 BEGIN
 
@@ -70,7 +70,7 @@ UPDATE queue SET timesubmit = now() WHERE query_id = queryid;
 -- disable binary logging
 SET @@session.sql_log_bin=0;
 
-CALL reportgenerator(queryid, query_text);
+CALL reportgenerator(queryid, query_text, p_sourceSchema, p_enableDebug);
 
 -- enable binary logging
 SET @@session.sql_log_bin=1;
