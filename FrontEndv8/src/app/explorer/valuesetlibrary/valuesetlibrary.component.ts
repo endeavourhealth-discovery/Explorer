@@ -58,7 +58,7 @@ export class ValueSetLibraryComponent implements OnInit {
 
   start(newProject: any) {
     if (newProject!=this.projectId && this.projectId!='')
-      this.router.navigate(['/covidlibrary']);
+      this.router.navigate(['/valuesetlibrary']);
 
     this.projectId = newProject;
 

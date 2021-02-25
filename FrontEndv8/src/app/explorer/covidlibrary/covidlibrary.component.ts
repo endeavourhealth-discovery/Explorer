@@ -74,6 +74,8 @@ export class CovidLibraryComponent implements OnInit {
 
     this.projectId = newProject;
 
+    console.log(this.projectId);
+
     this.events = null;
     this.explorerService.getCovidLibrary()
       .subscribe(
