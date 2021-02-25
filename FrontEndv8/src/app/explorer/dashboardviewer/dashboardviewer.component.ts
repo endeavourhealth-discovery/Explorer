@@ -276,7 +276,7 @@ export class DashboardViewerComponent implements OnInit {
 
   start(newProject: any) {
     if (newProject!=this.projectId && this.projectId!='')
-      this.router.navigate(['/dashboardlibrary']);
+      history.back();
 
     this.projectId = newProject;
 
