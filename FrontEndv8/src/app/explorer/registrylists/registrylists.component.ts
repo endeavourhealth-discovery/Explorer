@@ -54,7 +54,7 @@ export class RegistryListsComponent implements OnInit {
 
   start(newProject: any) {
     if (newProject!=this.projectId && this.projectId!='')
-      this.router.navigate(['/covidlibrary']);
+      history.back();
 
     this.projectId = newProject;
 

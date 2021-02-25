@@ -56,7 +56,8 @@ export class GraphicalComparisonComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private explorerService: ExplorerService, private userManagerService: UserManagerService,
+    private explorerService: ExplorerService,
+    private userManagerService: UserManagerService,
     private router: Router,
     private log: LoggerService) { }
 
@@ -73,7 +74,7 @@ export class GraphicalComparisonComponent implements OnInit {
 
   start(newProject: any) {
     if (newProject!=this.projectId && this.projectId!='')
-      this.router.navigate(['/covidlibrary']);
+      history.back();
 
     this.projectId = newProject;
 
