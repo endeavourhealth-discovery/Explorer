@@ -50,6 +50,8 @@ export class CovidLibraryComponent implements OnInit {
   typeValues = new FormControl(this.typeList);
   originalData = [];
 
+  projectId: string = '';
+
   constructor(
     private route: ActivatedRoute,
     private explorerService: ExplorerService, private userManagerService: UserManagerService,
@@ -57,15 +59,21 @@ export class CovidLibraryComponent implements OnInit {
     private router: Router) { }
 
   ngOnInit() {
+    this.start(this.projectId);
+
     this.userManagerService.onProjectChange.subscribe(
-      (newProject) => this.loadEvents(),
+      (newProject) => this.start(newProject.id),
       (error) => this.log.error(error)
     );
 
-    this.loadEvents();
   }
 
-  loadEvents() {
+  start(newProject: any) {
+    if (newProject!=this.projectId && this.projectId!='')
+      this.router.navigate(['/covidlibrary']);
+
+    this.projectId = newProject;
+
     this.events = null;
     this.explorerService.getCovidLibrary()
       .subscribe(

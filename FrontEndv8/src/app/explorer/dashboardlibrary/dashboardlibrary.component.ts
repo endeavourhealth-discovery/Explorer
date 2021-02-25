@@ -74,6 +74,8 @@ export class DashboardLibraryComponent implements OnInit {
   widget3: boolean = false;
   widget4: boolean = false;
 
+  projectId: string = '';
+
   constructor(
     private route: ActivatedRoute,
     private explorerService: ExplorerService, private userManagerService: UserManagerService,
@@ -83,16 +85,21 @@ export class DashboardLibraryComponent implements OnInit {
 
   ngOnInit() {
 
+    this.start(this.projectId);
+
     this.userManagerService.onProjectChange.subscribe(
-      (newProject) => this.start(),
+      (newProject) => this.start(newProject.id),
       (error) => this.log.error(error)
     );
 
-    this.start();
-
   }
 
-  start() {
+  start(newProject: any) {
+    if (newProject!=this.projectId && this.projectId!='')
+      this.router.navigate(['/dashboardlibrary']);
+
+    this.projectId = newProject;
+
     this.explorerService.getLookupLists('1','')
       .subscribe(
         (result) => this.loadList(result),

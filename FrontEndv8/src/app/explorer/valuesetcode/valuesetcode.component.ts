@@ -51,13 +51,7 @@ export class ValueSetCodeComponent {
   }
 
   init() {
-    this.userManagerService.onProjectChange.subscribe(
-      (newProject) => this.start(),
-      (error) => this.log.error(error)
-    );
-
     this.start();
-
   }
 
   start() {

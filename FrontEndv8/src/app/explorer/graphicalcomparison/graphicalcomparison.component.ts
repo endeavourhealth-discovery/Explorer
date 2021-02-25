@@ -52,6 +52,8 @@ export class GraphicalComparisonComponent implements OnInit {
       "#5574a6","#3b3eac","#b77322","#16d620","#b91383","#f4359e","#9c5935","#a9c413","#2a778d","#668d1c","#bea413","#0c5922","#743411"]
   };
 
+  projectId: string = '';
+
   constructor(
     private route: ActivatedRoute,
     private explorerService: ExplorerService, private userManagerService: UserManagerService,
@@ -61,16 +63,20 @@ export class GraphicalComparisonComponent implements OnInit {
   private _onDestroy = new Subject<void>();
 
   ngOnInit() {
+    this.start(this.projectId);
 
     this.userManagerService.onProjectChange.subscribe(
-      (newProject) => this.start(),
+      (newProject) => this.start(newProject.id),
       (error) => this.log.error(error)
     );
-
-    this.start();
   }
 
-  start() {
+  start(newProject: any) {
+    if (newProject!=this.projectId && this.projectId!='')
+      this.router.navigate(['/graphicalcomparison']);
+
+    this.projectId = newProject;
+
     this.explorerService.getLookupLists('17','')
       .subscribe(
         (result) => this.loadRegistryList(result),

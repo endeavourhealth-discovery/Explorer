@@ -64,7 +64,8 @@ export class TrendComponent {
 
   constructor(
     public dialogRef: MatDialogRef<TrendComponent>,
-    private explorerService: ExplorerService, private userManagerService: UserManagerService,
+    private explorerService: ExplorerService,
+    private userManagerService: UserManagerService,
     private log: LoggerService,
     @Inject(MAT_DIALOG_DATA) public data: DialogData) {
     this.orgs = data.orgs;
@@ -74,11 +75,6 @@ export class TrendComponent {
   private _onDestroy = new Subject<void>();
 
   ngOnInit() {
-    this.userManagerService.onProjectChange.subscribe(
-      (newProject) => this.start(),
-      (error) => this.log.error(error)
-    );
-
     this.start();
   }
 

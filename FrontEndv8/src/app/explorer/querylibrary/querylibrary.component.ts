@@ -3,7 +3,7 @@ import {MatTableDataSource} from '@angular/material';
 import {ExplorerService} from '../explorer.service';
 import {LoggerService, UserManagerService} from 'dds-angular8';
 import {MatPaginator} from '@angular/material/paginator';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {FormControl} from "@angular/forms";
 import {SelectionModel} from "@angular/cdk/collections";
 import {MessageBoxDialogComponent} from "../message-box-dialog/message-box-dialog.component";
@@ -63,23 +63,31 @@ export class QueryLibraryComponent implements OnInit {
   typeValues = new FormControl(this.typeList);
   originalData = [];
 
+  projectId: string = '';
+
   constructor(
     private route: ActivatedRoute,
-    private explorerService: ExplorerService, private userManagerService: UserManagerService,
+    private explorerService: ExplorerService,
+    private userManagerService: UserManagerService,
     private log: LoggerService,
+    private router: Router,
     private dialog: MatDialog) {}
 
   ngOnInit() {
+    this.start(this.projectId);
 
     this.userManagerService.onProjectChange.subscribe(
-      (newProject) => this.start(),
+      (newProject) => this.start(newProject.id),
       (error) => this.log.error(error)
     );
-
-    this.start();
   }
 
-  start() {
+  start(newProject: any) {
+    if (newProject!=this.projectId && this.projectId!='')
+      this.router.navigate(['/querylibrary']);
+
+    this.projectId = newProject;
+
     this.explorerService.getLookupLists('2','')
       .subscribe(
         (result) => this.loadList(result),

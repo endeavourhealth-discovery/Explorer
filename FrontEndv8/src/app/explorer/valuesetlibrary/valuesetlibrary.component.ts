@@ -3,7 +3,7 @@ import {MatTableDataSource} from '@angular/material';
 import {ExplorerService} from '../explorer.service';
 import {LoggerService, UserManagerService} from 'dds-angular8';
 import {MatPaginator, PageEvent} from '@angular/material/paginator';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {MatDialog} from "@angular/material/dialog";
 import {ValueSetEditorComponent} from "../valueseteditor/valueseteditor.component";
 import {SelectionModel} from '@angular/cdk/collections';
@@ -37,23 +37,31 @@ export class ValueSetLibraryComponent implements OnInit {
   typeValues = new FormControl(this.typeList);
   originalData = [];
 
+  projectId: string = '';
+
   constructor(
     private route: ActivatedRoute,
-    private explorerService: ExplorerService, private userManagerService: UserManagerService,
+    private explorerService: ExplorerService,
+    private userManagerService: UserManagerService,
+    private router: Router,
     private log: LoggerService,
     private dialog: MatDialog) { }
 
   ngOnInit() {
+    this.start(this.projectId);
+
     this.userManagerService.onProjectChange.subscribe(
-      (newProject) => this.start(),
+      (newProject) => this.start(newProject.id),
       (error) => this.log.error(error)
     );
-
-    this.start();
-
   }
 
-  start() {
+  start(newProject: any) {
+    if (newProject!=this.projectId && this.projectId!='')
+      this.router.navigate(['/covidlibrary']);
+
+    this.projectId = newProject;
+
     this.explorerService.getLookupLists('4','')
       .subscribe(
         (result) => this.loadList(result),

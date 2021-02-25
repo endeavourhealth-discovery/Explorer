@@ -8,6 +8,7 @@ import {MatSliderChange} from "@angular/material/slider";
 import {Level} from "./model/Level";
 import {CookieService} from "ngx-cookie-service";
 import {UserProfile} from "dds-angular8/user-manager/models/UserProfile";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-map',
@@ -45,24 +46,31 @@ export class MapComponent implements OnInit {
   isCovidQuery: boolean = true;
   isLevelTransparent: boolean = false;
 
+  projectId: string = '';
+
   constructor(private explorerService: ExplorerService, private userManagerService: UserManagerService,
               private log: LoggerService,
               private cookieService: CookieService,
+              private router: Router,
               private userService: UserManagerService) {
 
   }
 
   ngOnInit() {
+    this.start(this.projectId);
+
     this.userManagerService.onProjectChange.subscribe(
-      (newProject) => this.start(),
+      (newProject) => this.start(newProject.id),
       (error) => this.log.error(error)
     );
-
-    this.start();
-
   }
 
-  start() {
+  start(newProject: any) {
+    if (newProject!=this.projectId && this.projectId!='')
+      this.router.navigate(['/map']);
+
+    this.projectId = newProject;
+
     this.explorerService.getMapQueries()
       .subscribe(
         (result) => {
@@ -71,7 +79,6 @@ export class MapComponent implements OnInit {
           this.userService.getUserProfile(true).then(
             result => {
               this.user = result;
-              console.log(this.user);
               this.init();
             }
           );

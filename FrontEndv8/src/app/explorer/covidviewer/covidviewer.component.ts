@@ -2,7 +2,7 @@ import {AfterViewInit, Component, Injectable, OnInit, Output, ViewEncapsulation}
 import {ExplorerService} from '../explorer.service';
 import {LoggerService, UserManagerService} from 'dds-angular8';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {FormControl} from '@angular/forms';
 import {MatDialog} from "@angular/material/dialog";
 import {Globals} from '../globals'
@@ -41,20 +41,23 @@ export class ChecklistDatabase {
 
   get data(): OrgItemNode[] { return this.dataChange.value; }
 
-  constructor(private explorerService: ExplorerService, private userManagerService: UserManagerService,
-    private log: LoggerService) {
+  constructor(private explorerService: ExplorerService,
+              private userManagerService: UserManagerService,
+              private log: LoggerService) {
 
     this.initialize();
   }
 
   initialize() {
+    this.start();
+  }
 
+  start() {
     this.explorerService.getOrganisationTree()
       .subscribe(
         (result) => this.loadOrgTree(result),
         (error) => this.log.error(error)
       );
-
   }
 
   loadOrgTree(orgs: any) {
@@ -159,12 +162,15 @@ export class CovidViewerComponent implements OnInit {
   selectedWidgets : widget[] = [
   ];
 
+  projectId: string = '';
+
   constructor(
     private route: ActivatedRoute,
     private explorerService: ExplorerService, private userManagerService: UserManagerService,
     private log: LoggerService,
     private dialog: MatDialog,
     private _database: ChecklistDatabase,
+    private router: Router,
     globals: Globals) {
 
     this.globals = globals;
@@ -180,15 +186,20 @@ export class CovidViewerComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.start(this.projectId);
+
     this.userManagerService.onProjectChange.subscribe(
-      (newProject) => this.start(),
+      (newProject) => this.start(newProject.id),
       (error) => this.log.error(error)
     );
-
-   this.start();
   }
 
-  start() {
+  start(newProject: any) {
+    if (newProject!=this.projectId && this.projectId!='')
+      this.router.navigate(['/covidlibrary']);
+
+    this.projectId = newProject;
+
     this.ethnicValues1 = new FormControl(this.ethnicList1);
     this.selectedethnic1 = this.ethnicList1;
 

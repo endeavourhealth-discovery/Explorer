@@ -2,7 +2,7 @@ import {AfterViewInit, Component, OnInit, Output} from '@angular/core';
 import {ExplorerService} from '../explorer.service';
 import {LoggerService, UserManagerService} from 'dds-angular8';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {FormControl} from '@angular/forms';
 import {MatDialog} from "@angular/material/dialog";
 import {Globals} from '../globals'
@@ -253,27 +253,33 @@ export class DashboardViewerComponent implements OnInit {
   tableStyle3 = '';
   tableStyle4 = '';
 
+  projectId: string = '';
+
   constructor(
     private route: ActivatedRoute,
     private explorerService: ExplorerService, private userManagerService: UserManagerService,
     private log: LoggerService,
     private dialog: MatDialog,
+    private router: Router,
     globals: Globals) {
     this.globals = globals;
   }
 
   ngOnInit() {
+    this.start(this.projectId);
 
     this.userManagerService.onProjectChange.subscribe(
-      (newProject) => this.start(),
+      (newProject) => this.start(newProject.id),
       (error) => this.log.error(error)
     );
-
-    this.start();
-
   }
 
-  start() {
+  start(newProject: any) {
+    if (newProject!=this.projectId && this.projectId!='')
+      this.router.navigate(['/dashboardlibrary']);
+
+    this.projectId = newProject;
+
     this.ccgValues1 = new FormControl(this.ccgList1);
     this.selectedCCG1 = this.ccgList1;
     this.ccgValues2 = new FormControl(this.ccgList2);

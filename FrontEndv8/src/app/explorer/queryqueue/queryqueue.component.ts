@@ -3,7 +3,7 @@ import {MatTableDataSource} from '@angular/material';
 import {ExplorerService} from '../explorer.service';
 import {LoggerService, UserManagerService} from 'dds-angular8';
 import {MatPaginator, PageEvent} from '@angular/material/paginator';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {MatDialog} from "@angular/material/dialog";
 import {ValueSetEditorComponent} from "../valueseteditor/valueseteditor.component";
 import {SelectionModel} from '@angular/cdk/collections';
@@ -32,23 +32,31 @@ export class QueryQueueComponent implements OnInit {
 
   displayedColumns: string[] = ['type', 'registry', 'date', 'status', 'timeSubmit', 'timeFinish', 'timeExecute'];
 
+  projectId: string = '';
+
   constructor(
     private route: ActivatedRoute,
-    private explorerService: ExplorerService, private userManagerService: UserManagerService,
+    private explorerService: ExplorerService,
+    private userManagerService: UserManagerService,
+    private router: Router,
     private log: LoggerService,
     private dialog: MatDialog) { }
 
   ngOnInit() {
+    this.start(this.projectId);
+
     this.userManagerService.onProjectChange.subscribe(
-      (newProject) => this.loadEvents(),
+      (newProject) => this.start(newProject.id),
       (error) => this.log.error(error)
     );
-
-    this.loadEvents();
-
   }
 
-  loadEvents() {
+  start(newProject: any) {
+    if (newProject!=this.projectId && this.projectId!='')
+      this.router.navigate(['/queryqueue']);
+
+    this.projectId = newProject;
+
     this.events = null;
     this.explorerService.getQueryQueue()
       .subscribe(

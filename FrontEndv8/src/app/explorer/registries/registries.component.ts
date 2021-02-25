@@ -35,25 +35,31 @@ export class RegistriesComponent implements OnInit {
 
   displayedColumns: string[] = ['select', 'org', 'listSize', 'registrySize', 'allColumns'];
 
+  projectId: string = '';
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private explorerService: ExplorerService, private userManagerService: UserManagerService,
+    private explorerService: ExplorerService,
+    private userManagerService: UserManagerService,
     private dialog: MatDialog,
     private log: LoggerService) { }
 
   ngOnInit() {
+    this.start(this.projectId);
 
     this.userManagerService.onProjectChange.subscribe(
-      (newProject) => this.start(),
+      (newProject) => this.start(newProject.id),
       (error) => this.log.error(error)
     );
-
-    this.start();
-
   }
 
-  start() {
+  start(newProject: any) {
+    if (newProject!=this.projectId && this.projectId!='')
+      this.router.navigate(['/registries']);
+
+    this.projectId = newProject;
+
     this.loadEvents('', '');
 
     this.explorerService.getRegistryQueries()
