@@ -1,7 +1,7 @@
 import {Component, Inject} from '@angular/core';
 import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {ExplorerService} from '../explorer.service';
-import {LoggerService} from 'dds-angular8';
+import {LoggerService, UserManagerService} from 'dds-angular8';
 import {FormGroup} from "@angular/forms";
 
 export interface DialogData {
@@ -24,7 +24,7 @@ export class ValueSetEditorComponent {
 
   constructor(
     public dialogRef: MatDialogRef<ValueSetEditorComponent>,
-    private explorerService: ExplorerService,
+    private explorerService: ExplorerService, private userManagerService: UserManagerService,
     private log: LoggerService,
     @Inject(MAT_DIALOG_DATA) public data: DialogData) {
     this.disableForm = true;

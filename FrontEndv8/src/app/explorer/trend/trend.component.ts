@@ -1,6 +1,6 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
-import {LoggerService} from 'dds-angular8';
+import {LoggerService, UserManagerService} from 'dds-angular8';
 import {FormControl} from '@angular/forms';
 import {ExplorerService} from "../explorer.service";
 import {ReplaySubject, Subject} from "rxjs";
@@ -64,7 +64,7 @@ export class TrendComponent {
 
   constructor(
     public dialogRef: MatDialogRef<TrendComponent>,
-    private explorerService: ExplorerService,
+    private explorerService: ExplorerService, private userManagerService: UserManagerService,
     private log: LoggerService,
     @Inject(MAT_DIALOG_DATA) public data: DialogData) {
     this.orgs = data.orgs;
@@ -74,13 +74,22 @@ export class TrendComponent {
   private _onDestroy = new Subject<void>();
 
   ngOnInit() {
+    this.userManagerService.onProjectChange.subscribe(
+      (newProject) => this.start(),
+      (error) => this.log.error(error)
+    );
+
+    this.start();
+  }
+
+  start() {
     this.showLineCharts = true;
 
     this.explorerService.getLookupLists('17','')
-        .subscribe(
-            (result) => this.loadList(result),
-            (error) => this.log.error(error)
-        );
+      .subscribe(
+        (result) => this.loadList(result),
+        (error) => this.log.error(error)
+      );
   }
 
   refresh() {

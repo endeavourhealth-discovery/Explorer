@@ -1,7 +1,7 @@
 import {Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {MatDialogRef, MAT_DIALOG_DATA, MatDialog} from '@angular/material/dialog';
 import {ExplorerService} from '../explorer.service';
-import {LoggerService} from 'dds-angular8';
+import {LoggerService, UserManagerService} from 'dds-angular8';
 import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {MessageBoxDialogComponent} from "../message-box-dialog/message-box-dialog.component";
@@ -42,7 +42,7 @@ export class ValueSetCodeComponent {
 
   constructor(
     public dialogRef: MatDialogRef<ValueSetCodeComponent>,
-    private explorerService: ExplorerService,
+    private explorerService: ExplorerService, private userManagerService: UserManagerService,
     private log: LoggerService,
     private dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: DialogData) {
@@ -51,6 +51,16 @@ export class ValueSetCodeComponent {
   }
 
   init() {
+    this.userManagerService.onProjectChange.subscribe(
+      (newProject) => this.start(),
+      (error) => this.log.error(error)
+    );
+
+    this.start();
+
+  }
+
+  start() {
     this.explorerService.getLookupListValueSet(this.valueSetId)
       .subscribe(
         (result) => this.loadList(result),

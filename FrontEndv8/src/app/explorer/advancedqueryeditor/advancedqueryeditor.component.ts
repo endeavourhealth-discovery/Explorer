@@ -1,7 +1,7 @@
 import {Component, Inject, Injectable, OnInit} from '@angular/core';
 import {MatDialogRef, MAT_DIALOG_DATA, MatDialog} from '@angular/material/dialog';
 import {ExplorerService} from '../explorer.service';
-import {LoggerService} from 'dds-angular8';
+import {LoggerService, UserManagerService} from 'dds-angular8';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {STEPPER_GLOBAL_OPTIONS} from "@angular/cdk/stepper";
 import {takeUntil} from "rxjs/operators";
@@ -554,13 +554,14 @@ export class ChecklistDatabase {
 
   get data(): OrgItemNode[] { return this.dataChange.value; }
 
-  constructor(private explorerService: ExplorerService,
+  constructor(private explorerService: ExplorerService, private userManagerService: UserManagerService,
               private log: LoggerService) {
 
     this.initialize();
   }
 
   initialize() {
+
     this.explorerService.getOrganisationTree()
       .subscribe(
         (result) => this.loadOrgTree(result),
@@ -1266,7 +1267,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<AdvancedQueryEditorComponent>,
-    private explorerService: ExplorerService,
+    private explorerService: ExplorerService, private userManagerService: UserManagerService,
     private log: LoggerService,
     private _formBuilder: FormBuilder,
     private _database: ChecklistDatabase,

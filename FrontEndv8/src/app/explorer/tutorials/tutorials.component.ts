@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {MatTableDataSource} from '@angular/material';
 import {ExplorerService} from '../explorer.service';
-import {LoggerService} from 'dds-angular8';
+import {LoggerService, UserManagerService} from 'dds-angular8';
 import {PageEvent} from '@angular/material/paginator';
 import {ActivatedRoute} from "@angular/router";
 import {MatDialog} from "@angular/material/dialog";
@@ -16,7 +16,7 @@ export class TutorialsComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private explorerService: ExplorerService,
+    private explorerService: ExplorerService, private userManagerService: UserManagerService,
     private log: LoggerService
     ) { }
 

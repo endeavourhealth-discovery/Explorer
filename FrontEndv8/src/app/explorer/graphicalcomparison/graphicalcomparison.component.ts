@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {LoggerService} from 'dds-angular8';
+import {LoggerService, UserManagerService} from 'dds-angular8';
 import {FormControl} from '@angular/forms';
 import {ExplorerService} from "../explorer.service";
 import {ReplaySubject, Subject} from "rxjs";
@@ -54,18 +54,28 @@ export class GraphicalComparisonComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private explorerService: ExplorerService,
+    private explorerService: ExplorerService, private userManagerService: UserManagerService,
     private router: Router,
     private log: LoggerService) { }
 
   private _onDestroy = new Subject<void>();
 
   ngOnInit() {
+
+    this.userManagerService.onProjectChange.subscribe(
+      (newProject) => this.start(),
+      (error) => this.log.error(error)
+    );
+
+    this.start();
+  }
+
+  start() {
     this.explorerService.getLookupLists('17','')
-        .subscribe(
-            (result) => this.loadRegistryList(result),
-            (error) => this.log.error(error)
-        );
+      .subscribe(
+        (result) => this.loadRegistryList(result),
+        (error) => this.log.error(error)
+      );
   }
 
   refresh() {

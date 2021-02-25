@@ -45,7 +45,7 @@ export class MapComponent implements OnInit {
   isCovidQuery: boolean = true;
   isLevelTransparent: boolean = false;
 
-  constructor(private explorerService: ExplorerService,
+  constructor(private explorerService: ExplorerService, private userManagerService: UserManagerService,
               private log: LoggerService,
               private cookieService: CookieService,
               private userService: UserManagerService) {
@@ -53,6 +53,16 @@ export class MapComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.userManagerService.onProjectChange.subscribe(
+      (newProject) => this.start(),
+      (error) => this.log.error(error)
+    );
+
+    this.start();
+
+  }
+
+  start() {
     this.explorerService.getMapQueries()
       .subscribe(
         (result) => {

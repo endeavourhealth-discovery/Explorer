@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, Injectable, OnInit, Output, ViewEncapsulation} from '@angular/core';
 import {ExplorerService} from '../explorer.service';
-import {LoggerService} from 'dds-angular8';
+import {LoggerService, UserManagerService} from 'dds-angular8';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import {ActivatedRoute} from "@angular/router";
 import {FormControl} from '@angular/forms';
@@ -41,13 +41,14 @@ export class ChecklistDatabase {
 
   get data(): OrgItemNode[] { return this.dataChange.value; }
 
-  constructor(private explorerService: ExplorerService,
+  constructor(private explorerService: ExplorerService, private userManagerService: UserManagerService,
     private log: LoggerService) {
 
     this.initialize();
   }
 
   initialize() {
+
     this.explorerService.getOrganisationTree()
       .subscribe(
         (result) => this.loadOrgTree(result),
@@ -160,7 +161,7 @@ export class CovidViewerComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private explorerService: ExplorerService,
+    private explorerService: ExplorerService, private userManagerService: UserManagerService,
     private log: LoggerService,
     private dialog: MatDialog,
     private _database: ChecklistDatabase,
@@ -179,6 +180,15 @@ export class CovidViewerComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.userManagerService.onProjectChange.subscribe(
+      (newProject) => this.start(),
+      (error) => this.log.error(error)
+    );
+
+   this.start();
+  }
+
+  start() {
     this.ethnicValues1 = new FormControl(this.ethnicList1);
     this.selectedethnic1 = this.ethnicList1;
 

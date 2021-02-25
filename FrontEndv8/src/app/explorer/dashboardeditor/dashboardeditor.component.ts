@@ -1,7 +1,7 @@
 import {Component, Inject} from '@angular/core';
 import {MatDialogRef, MAT_DIALOG_DATA, MatDialog} from '@angular/material/dialog';
 import {ExplorerService} from '../explorer.service';
-import {LoggerService} from 'dds-angular8';
+import {LoggerService, UserManagerService} from 'dds-angular8';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {STEPPER_GLOBAL_OPTIONS} from "@angular/cdk/stepper";
 import {CdkDragDrop, transferArrayItem} from "@angular/cdk/drag-drop";
@@ -102,7 +102,7 @@ export class DashboardEditorComponent {
 
   constructor(
     public dialogRef: MatDialogRef<DashboardEditorComponent>,
-    private explorerService: ExplorerService,
+    private explorerService: ExplorerService, private userManagerService: UserManagerService,
     private log: LoggerService,
     private _formBuilder: FormBuilder,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
@@ -203,6 +203,10 @@ export class DashboardEditorComponent {
   private _onDestroy = new Subject<void>();
 
   ngOnInit() {
+    this.start();
+  }
+
+  start() {
     this.explorerService.getLookupLists('12','')
       .subscribe(
         (result) => this.loadSeriesList(result),

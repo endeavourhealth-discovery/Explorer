@@ -1,7 +1,7 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {ExplorerService} from '../explorer.service';
-import {LoggerService} from 'dds-angular8';
+import {LoggerService, UserManagerService} from 'dds-angular8';
 import {MatTableDataSource} from "@angular/material/table";
 import {PageEvent} from "@angular/material/paginator";
 
@@ -30,7 +30,7 @@ export class PatientComponent {
 
   constructor(
     public dialogRef: MatDialogRef<PatientComponent>,
-    private explorerService: ExplorerService,
+    private explorerService: ExplorerService, private userManagerService: UserManagerService,
     private log: LoggerService,
     @Inject(MAT_DIALOG_DATA) public data: DialogData) {
 
@@ -49,6 +49,12 @@ export class PatientComponent {
   }
 
   loadEvents() {
+
+    this.userManagerService.onProjectChange.subscribe(
+      (newProject) => this.dialogRef.close(),
+      (error) => this.log.error(error)
+    );
+
     this.events = null;
 
     this.explorerService.getPatients(this.page, this.size, this.name, this.queryId, this.parentQueryId)

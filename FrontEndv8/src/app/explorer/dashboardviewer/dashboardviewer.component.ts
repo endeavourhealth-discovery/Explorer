@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, OnInit, Output} from '@angular/core';
 import {ExplorerService} from '../explorer.service';
-import {LoggerService} from 'dds-angular8';
+import {LoggerService, UserManagerService} from 'dds-angular8';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import {ActivatedRoute} from "@angular/router";
 import {FormControl} from '@angular/forms';
@@ -255,7 +255,7 @@ export class DashboardViewerComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private explorerService: ExplorerService,
+    private explorerService: ExplorerService, private userManagerService: UserManagerService,
     private log: LoggerService,
     private dialog: MatDialog,
     globals: Globals) {
@@ -263,6 +263,17 @@ export class DashboardViewerComponent implements OnInit {
   }
 
   ngOnInit() {
+
+    this.userManagerService.onProjectChange.subscribe(
+      (newProject) => this.start(),
+      (error) => this.log.error(error)
+    );
+
+    this.start();
+
+  }
+
+  start() {
     this.ccgValues1 = new FormControl(this.ccgList1);
     this.selectedCCG1 = this.ccgList1;
     this.ccgValues2 = new FormControl(this.ccgList2);
@@ -282,7 +293,6 @@ export class DashboardViewerComponent implements OnInit {
             (error) => this.log.error(error)
           );
       });
-
   }
 
   toggleSelection1(event) {

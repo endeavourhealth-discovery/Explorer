@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from '@angular/material';
 import {ExplorerService} from '../explorer.service';
-import {LoggerService} from 'dds-angular8';
+import {LoggerService, UserManagerService} from 'dds-angular8';
 import {ActivatedRoute, Router} from "@angular/router";
 import {FormControl} from "@angular/forms";
 import {SelectionModel} from "@angular/cdk/collections";
@@ -52,11 +52,16 @@ export class CovidLibraryComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private explorerService: ExplorerService,
+    private explorerService: ExplorerService, private userManagerService: UserManagerService,
     private log: LoggerService,
     private router: Router) { }
 
   ngOnInit() {
+    this.userManagerService.onProjectChange.subscribe(
+      (newProject) => this.loadEvents(),
+      (error) => this.log.error(error)
+    );
+
     this.loadEvents();
   }
 
