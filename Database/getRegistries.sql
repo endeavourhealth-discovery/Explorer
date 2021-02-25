@@ -35,7 +35,7 @@ IF filter_ccg='' and filter_registry = '' THEN
 		  registry, '`',
           ',ifnull(avg(case when registry = ''',
 		  registry,
-		  ''' then target_percentage end),0) AS `',
+		  ''' then IFNULL(target_percentage,0) end),0) AS `',
 		  registry, '.0000`'
 		)
 	  ) INTO @sql
@@ -47,7 +47,7 @@ IF filter_ccg='' and filter_registry = '' THEN
 			WHERE (find_in_set(stp_ods_code, valid_orgs2) or find_in_set(ccg_ods_code, valid_orgs2) or find_in_set(practice_ods_code, valid_orgs2))
 		)
   	    AND registry in (select distinct registry from dashboards.registries r
-	    WHERE parent_registry = ''
+	    WHERE parent_registry IS NULL
 		AND r.ods_code in
 		(
 			select distinct practice_ods_code from dashboards.population_denominators
@@ -57,7 +57,7 @@ IF filter_ccg='' and filter_registry = '' THEN
 
 	SET @sql = CONCAT('create table dashboards.temp as SELECT IFNULL(r.ccg, "GRAND TOTAL") AS ccg, ', @sql,
 	'FROM dashboards.registries r '
-   'where r.parent_registry = \'\' and r.ods_code in '
+   'where r.parent_registry IS NULL and r.ods_code in '
    '(select distinct practice_ods_code from dashboards.population_denominators '
    'WHERE (stp_ods_code in (',valid_orgs,') or ccg_ods_code in (',valid_orgs,') or practice_ods_code in (',valid_orgs,'))) '
    'GROUP BY r.ccg with rollup');
@@ -72,7 +72,7 @@ IF filter_ccg='' and filter_registry = '' THEN
 	SELECT distinct r.ccg, r.practice_name, r.list_size
 	FROM dashboards.registries r
       join dashboards.population_denominators p on p.practice_ods_code = r.ods_code
-	  WHERE (find_in_set(stp_ods_code, valid_orgs2) or find_in_set(ccg_ods_code, valid_orgs2) or find_in_set(practice_ods_code, valid_orgs2)) and parent_registry = '';
+	  WHERE (find_in_set(stp_ods_code, valid_orgs2) or find_in_set(ccg_ods_code, valid_orgs2) or find_in_set(practice_ods_code, valid_orgs2)) and parent_registry IS NULL;
 
 	create temporary table list_sizes_ccg engine=memory
 	select IFNULL(ccg, "GRAND TOTAL") AS ccg,sum(list_size) as list_size from list_sizes
@@ -117,7 +117,7 @@ elseif filter_ccg != '' and filter_registry	 = '' THEN
                 '`',
                 ',ifnull(avg(case when registry = \'',
                 registry,
-                '\' then target_percentage end),0) AS `',
+                '\' then IFNULL(target_percentage,0) end),0) AS `',
                 registry,
                 '.0000`'))
 	INTO @sql
@@ -129,7 +129,7 @@ elseif filter_ccg != '' and filter_registry	 = '' THEN
 			WHERE (find_in_set(stp_ods_code, valid_orgs2) or find_in_set(ccg_ods_code, valid_orgs2) or find_in_set(practice_ods_code, valid_orgs2))
 		)
   	    AND registry in (select distinct registry from dashboards.registries r
-	    WHERE parent_registry = ''
+	    WHERE parent_registry IS NULL
 		AND r.ods_code in
 		(
 			select distinct practice_ods_code from dashboards.population_denominators
@@ -139,7 +139,7 @@ elseif filter_ccg != '' and filter_registry	 = '' THEN
 
 	SET @sql = CONCAT('create table dashboards.temp as SELECT IFNULL(r.practice_name, "GRAND TOTAL") AS practice_name, ', @sql,
                     'FROM dashboards.registries r '
-                   'where r.ccg = \'',filter_ccg,'\' and r.parent_registry = \'\' and r.ods_code in '
+                   'where r.ccg = \'',filter_ccg,'\' and r.parent_registry IS NULL and r.ods_code in '
                    '(select distinct practice_ods_code from dashboards.population_denominators '
                    'WHERE (stp_ods_code in (',valid_orgs,') or ccg_ods_code in (',valid_orgs,') or practice_ods_code in (',valid_orgs,'))) '
                    'GROUP BY r.practice_name with rollup');
@@ -154,7 +154,7 @@ elseif filter_ccg != '' and filter_registry	 = '' THEN
 	SELECT distinct r.ccg, r.practice_name, r.list_size
 	FROM dashboards.registries r
       join dashboards.population_denominators p on p.practice_ods_code = r.ods_code
-	  WHERE (find_in_set(stp_ods_code, valid_orgs2) or find_in_set(ccg_ods_code, valid_orgs2) or find_in_set(practice_ods_code, valid_orgs2)) and r.ccg = filter_ccg and parent_registry = '';
+	  WHERE (find_in_set(stp_ods_code, valid_orgs2) or find_in_set(ccg_ods_code, valid_orgs2) or find_in_set(practice_ods_code, valid_orgs2)) and r.ccg = filter_ccg and parent_registry IS NULL;
 
 	create temporary table list_sizes_practice engine=memory
 	select IFNULL(practice_name, "GRAND TOTAL") AS practice_name,sum(list_size) as list_size from list_sizes
@@ -200,7 +200,7 @@ elseif filter_ccg='' and filter_registry != '' THEN
                 '`',
                 ',ifnull(avg(case when registry = \'',
                 registry,
-                '\' then target_percentage end),0) AS `',
+                '\' then IFNULL(target_percentage,0) end),0) AS `',
                 registry,
                 '.0000`'))
 	INTO @sql
@@ -238,7 +238,7 @@ elseif filter_ccg='' and filter_registry != '' THEN
 	SELECT distinct r.ccg, r.practice_name, r.list_size
 	FROM dashboards.registries r
       join dashboards.population_denominators p on p.practice_ods_code = r.ods_code
-	  WHERE (find_in_set(stp_ods_code, valid_orgs2) or find_in_set(ccg_ods_code, valid_orgs2) or find_in_set(practice_ods_code, valid_orgs2)) and parent_registry = '';
+	  WHERE (find_in_set(stp_ods_code, valid_orgs2) or find_in_set(ccg_ods_code, valid_orgs2) or find_in_set(practice_ods_code, valid_orgs2)) and parent_registry IS NULL;
 
 	create temporary table registry_sizes engine=memory
 	SELECT distinct r.ccg, r.practice_name, r.list_size as registry_size
@@ -312,7 +312,7 @@ I	INTO counter FROM
                 '`',
                 ',ifnull(avg(case when registry = \'',
                 registry,
-                '\' then target_percentage end),0) AS `',
+                '\' then IFNULL(target_percentage,0) end),0) AS `',
                 registry,
                 '.0000`'))
 	INTO @sql
@@ -350,7 +350,7 @@ I	INTO counter FROM
 	SELECT distinct r.ccg, r.practice_name, r.list_size
 	FROM dashboards.registries r
       join dashboards.population_denominators p on p.practice_ods_code = r.ods_code
-	  WHERE (find_in_set(stp_ods_code, valid_orgs2) or find_in_set(ccg_ods_code, valid_orgs2) or find_in_set(practice_ods_code, valid_orgs2)) and r.ccg = filter_ccg and parent_registry = '';
+	  WHERE (find_in_set(stp_ods_code, valid_orgs2) or find_in_set(ccg_ods_code, valid_orgs2) or find_in_set(practice_ods_code, valid_orgs2)) and r.ccg = filter_ccg and parent_registry IS NULL;
 
 	create temporary table registry_sizes engine=memory
 	SELECT distinct r.ccg, r.practice_name, r.list_size as registry_size

@@ -2,11 +2,13 @@ package org.endeavourhealth.explorer.common.dal;
 
 import com.amazonaws.util.StringUtils;
 import com.facebook.presto.jdbc.internal.google.api.client.json.Json;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import org.endeavourhealth.common.config.ConfigManager;
 import org.endeavourhealth.explorer.common.models.*;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -66,7 +68,19 @@ public class ExplorerJDBCDAL implements AutoCloseable {
             LOG.info("Connection has not been found");
             throw new Exception("Connection has not been found");
         }
+    }
 
+    private String getRunMode() throws Exception {
+        String runMode = "";
+        try {
+            ConfigManager.Initialize("explorer");
+            JsonNode jsonMode = ConfigManager.getConfigurationAsJson("run_mode");
+            runMode = jsonMode.get("mode").asText();
+        } catch (Exception e) {
+            LOG.error(e.getMessage());
+            throw new Exception("No run_mode in config");
+        }
+        return runMode;
     }
 
     public void deleteValueSetCode(String id) throws Exception {

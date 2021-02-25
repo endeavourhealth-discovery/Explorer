@@ -1,5 +1,7 @@
 package org.endeavourhealth.explorer.api.endpoints;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import org.endeavourhealth.common.config.ConfigManager;
 import org.endeavourhealth.core.database.dal.usermanager.caching.ProjectCache;
 import org.endeavourhealth.core.database.dal.usermanager.caching.UserCache;
 import org.endeavourhealth.core.database.rdbms.datasharingmanager.models.ProjectEntity;
@@ -46,6 +48,19 @@ public class DashboardEndpoint {
         }
 
         validOrgs = orgList;
+    }
+
+    private String getRunMode() throws Exception {
+        String runMode = "";
+        try {
+            ConfigManager.Initialize("explorer");
+            JsonNode jsonMode = ConfigManager.getConfigurationAsJson("run_mode");
+            runMode = jsonMode.get("mode").asText();
+        } catch (Exception e) {
+            LOG.error(e.getMessage());
+            throw new Exception("No run_mode in config");
+        }
+        return runMode;
     }
 
     @GET
@@ -894,7 +909,13 @@ public class DashboardEndpoint {
             viewerDAL.setValidOrgs(validOrgs);
             viewerDAL.setSubscriberConnection(configName); viewerDAL.setPatientIdentifiable(patientIdentifiable); viewerDAL.setProjectType(projectType);
 
-            MapResult result = viewerDAL.getMapsOpen(query, date, lowerLimits, upperLimits, colors, descriptions);
+            MapResult result = null;
+
+            if (getRunMode().equals("demo"))
+                result = viewerDAL.getMapsOpen(query, date, lowerLimits, upperLimits, colors, descriptions);
+            else
+                result = viewerDAL.getMaps(query, date, lowerLimits, upperLimits, colors, descriptions);
+
             result.setLowerLimits(new ArrayList(lowerLimits));
             result.setUpperLimits(new ArrayList(upperLimits));
             result.setColors(new ArrayList(colors));
