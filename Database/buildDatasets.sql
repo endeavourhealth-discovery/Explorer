@@ -22,6 +22,7 @@ CREATE PROCEDURE buildDatasets (
   p_allergy_tmp VARCHAR(64),
   p_referral_req_tmp VARCHAR(64),
   p_activeProblems VARCHAR(10),
+  p_org_tmp VARCHAR(64), 
   p_schema VARCHAR(255)
 )
 
@@ -62,22 +63,22 @@ CREATE TABLE IF NOT EXISTS encounter_dataset (
   PRIMARY KEY (query_id, encounter_id, ods_code), INDEX enc_idx (encounter_id)  ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
   
     -- remove previous query id data
-    SET @sql = CONCAT('DELETE FROM person_dataset WHERE query_id = ', p_query_id);
+    SET @sql = CONCAT('DELETE FROM person_dataset WHERE query_id = ', p_query_id, ' AND ods_code IN (SELECT code FROM ', p_org_tmp,')');
     PREPARE stmt FROM @sql;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 
-    SET @sql = CONCAT('DELETE FROM observation_dataset WHERE query_id = ', p_query_id);
+    SET @sql = CONCAT('DELETE FROM observation_dataset WHERE query_id = ', p_query_id, ' AND ods_code IN (SELECT code FROM ', p_org_tmp,')');
     PREPARE stmt FROM @sql;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 
-    SET @sql = CONCAT('DELETE FROM medication_dataset WHERE query_id = ', p_query_id);
+    SET @sql = CONCAT('DELETE FROM medication_dataset WHERE query_id = ', p_query_id, ' AND ods_code IN (SELECT code FROM ', p_org_tmp,')');
     PREPARE stmt FROM @sql;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 
-    SET @sql = CONCAT('DELETE FROM encounter_dataset WHERE query_id = ', p_query_id);
+    SET @sql = CONCAT('DELETE FROM encounter_dataset WHERE query_id = ', p_query_id, ' AND ods_code IN (SELECT code FROM ', p_org_tmp,')');
     PREPARE stmt FROM @sql;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;

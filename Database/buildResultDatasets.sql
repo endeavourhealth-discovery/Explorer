@@ -37,6 +37,7 @@ CREATE PROCEDURE buildResultDatasets (
   IN p_clinicalEventConcept_tmp VARCHAR(64),
   IN p_schema VARCHAR(255),
   IN p_storetab VARCHAR(64),
+  IN p_org_tmp VARCHAR(64), 
   OUT p_eventTypes VARCHAR(255)
   )
 
@@ -154,7 +155,7 @@ END IF;
     -- build datasets from event types
     CALL buildDatasets(p_query_id, p_patientcohorttab, eventTypeString, encountersDateRangeString, p_encounterConcept_tmp, medicationDateRangeString, 
     p_medicationConcept_tmp, p_currentMedication, clinicalEventsDateRangeString, p_clinicalEventConcept_tmp, p_selectedClinicalTypes, 
-    p_procedure_req_tmp,p_diagnostic_tmp,p_warning_tmp,p_allergy_tmp,p_referral_req_tmp,p_activeProblems, p_schema);
+    p_procedure_req_tmp,p_diagnostic_tmp,p_warning_tmp,p_allergy_tmp,p_referral_req_tmp,p_activeProblems, p_org_tmp, p_schema);
 
     SET p_eventTypes = eventTypeString;
 

@@ -451,13 +451,13 @@ CALL debug_msg(@enabled, CONCAT(NOW(),' - buildQueryExpression'));
 CALL buildQueryExpression(query_id, rule_tmp, rule_det_tmp, practiceCohort_tmp);
 -- process the rules
 CALL debug_msg(@enabled, CONCAT(NOW(),' - processQueryExpression'));
-CALL processQueryExpression(query_id, query, rule_tmp, practiceCohort_tmp, registerCohort_tmp, observationCohort_tmp, store_tmp, all_concept_tmp, sourceSchema);
+CALL processQueryExpression(query_id, query, rule_tmp, practiceCohort_tmp, registerCohort_tmp, observationCohort_tmp, store_tmp, all_concept_tmp, sourceSchema, @enabled);
 -- build final patient cohort
 CALL debug_msg(@enabled, CONCAT(NOW(),' - buildFinalPatientCohort'));
-CALL buildFinalPatientCohort(query_id, patientCohort_tmp, practiceCohort_tmp, rule_tmp, sourceSchema);
+CALL buildFinalPatientCohort(query_id, patientCohort_tmp, practiceCohort_tmp, rule_tmp, sourceSchema, @enabled);
 CALL debug_msg(@enabled, CONCAT(NOW(),' - tempTables'));
 -- remove tmp tables
-SET tempTables = CONCAT(org_tmp,',',observationCohort_tmp,',',practiceCohort_tmp,',',registerCohort_tmp,',',Q1,',',Q1A,',',Q1B,',',Q1C,',',
+SET tempTables = CONCAT(observationCohort_tmp,',',practiceCohort_tmp,',',registerCohort_tmp,',',Q1,',',Q1A,',',Q1B,',',Q1C,',',
 Q1D,',',Q1E,',',Q1F,',',Q1G,',',Q1H,',',Q1I,',',Q1J,',',Q1K,',',Q1L,',',Q2,',',Q2A,',',Q2B,',',Q2C,',',
 Q3,',',Q3A,',',Q3B,',',Q3C,',',Q3D,',',Q3E,',',Q3F,',',Q3G,',',Q3H,',',
 Q4,',',Q4A,',',Q4B,',',Q5,',',Q5A,',',Q0,',',A1,',',A2,',',A3,',',A4,',',A5,',',rule_tmp,',',rule_det_tmp,',',all_valueset_tmp,',', all_concept_tmp);
@@ -473,11 +473,11 @@ CALL buildResultDatasets(query_id, patientCohort_tmp, demographics, encounters, 
 dateFromEncounters, dateToEncounters, dateFromMedication, dateToMedication, dateFromClinicalEvents, dateToClinicalEvents, selectedClinicalTypes, 
 selectedEncounterValueSet, selectedMedicationValueSet, selectedClinicalEventValueSet, procedure_req_tmp, diagnostic_tmp, warning_tmp , allergy_tmp, referral_req_tmp,
 encounterValueSet_tmp, encounterConcept_tmp, medicationValueSet_tmp, medicationConcept_tmp, clinicalEventValueSet_tmp, clinicalEventConcept_tmp, 
-sourceSchema, store_tmp, @eventTypes);
+sourceSchema, store_tmp, org_tmp, @eventTypes);
 SET eventTypes = @eventTypes;
 -- update registries
 CALL debug_msg(@enabled, CONCAT(NOW(),' - buildRegistries'));
-CALL buildRegistries(query_id, patientCohort_tmp, targetPercentage);
+CALL buildRegistries(query_id, patientCohort_tmp, targetPercentage, org_tmp);
 -- build dataset outputs
 CALL debug_msg(@enabled, CONCAT(NOW(),' - buildDatasetOutputTables'));
 CALL buildDatasetOutputTables(selectedDemographicFields, selectedEncounterFields, selectedMedicationFields, selectedClinicalEventFields, 
@@ -491,7 +491,7 @@ sourceSchema, query_id, patientCohort_tmp);
 CALL debug_msg(@enabled, CONCAT(NOW(),' - updateQueue'));
 CALL updateQueue(query_id, schedule);
 -- remove temp tables
-SET tempTables = CONCAT(store_tmp,',',encounterValueSet_tmp,',',encounterConcept_tmp,',',
+SET tempTables = CONCAT(org_tmp,',',store_tmp,',',encounterValueSet_tmp,',',encounterConcept_tmp,',',
 medicationValueSet_tmp,',',medicationConcept_tmp,',',clinicalEventValueSet_tmp,',',clinicalEventConcept_tmp,',',
 seriesValueset_tmp,',',seriesConcept_tmp,',',patientCohort_tmp,',',procedure_req_tmp,',',diagnostic_tmp,',',warning_tmp,',',allergy_tmp,',',referral_req_tmp);
 CALL debug_msg(@enabled, CONCAT(NOW(),' - dropTempTables'));
