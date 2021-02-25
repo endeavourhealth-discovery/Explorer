@@ -13,7 +13,8 @@ CREATE PROCEDURE processQueryExpression(
   IN p_observationCohort_tmp VARCHAR(64), 
   IN p_store_tmp VARCHAR(64),
   IN p_conceptAllTab VARCHAR(64), 
-  IN p_schema VARCHAR(255)
+  IN p_schema VARCHAR(255),
+  IN enabled INTEGER
 )
 
 BEGIN
@@ -229,7 +230,9 @@ BEGIN
 
     -- clean up tmp tables
     SET l_tmp = SUBSTRING(l_tmp, 1, LENGTH(l_tmp)-1);
-    CALL dropTempTables(l_tmp);
+    IF enabled = 0 THEN 
+      CALL dropTempTables(l_tmp);
+    END IF;
 
 END //
 DELIMITER ;

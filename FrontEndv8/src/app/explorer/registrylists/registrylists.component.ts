@@ -25,6 +25,7 @@ export class RegistryListsComponent implements OnInit {
   selection = new SelectionModel<any>(true, []);
 
   wait: boolean = true;
+  filter: string;
 
   events: any;
   dataSource: MatTableDataSource<any>;
@@ -80,15 +81,38 @@ export class RegistryListsComponent implements OnInit {
     this.dataSource.sort = this.sort;
 
     this.wait = false;
+
+    /*this.dataSource.filterPredicate = (data:{practiceName: string, registry: string}, filterValue: string) => {
+      const filterArray = filterValue.split(' ');
+      const matchFilter = [];
+      filterArray.forEach(filter => {
+        const customFilter = [];
+        customFilter.push(data.practiceName.trim().toLowerCase().indexOf(filter) !== -1 && data.registry.trim().toLowerCase().indexOf(filter) !== -1);
+        matchFilter.push(customFilter.some(Boolean));
+      })
+      return matchFilter.some(Boolean);
+    }*/
+
+    this.dataSource.filterPredicate = (data:{practiceName: string, registry: string}, filterValue: string) => {
+      const filterArray = filterValue.split(' ');
+      const matchFilter = [];
+      const customFilter = [];
+      if (filterArray.length<2)
+        customFilter.push(data.practiceName.trim().toLowerCase().indexOf(filterArray[0]) !== -1 || data.registry.trim().toLowerCase().indexOf(filterArray[0]) !== -1);
+      else if (filterArray.length>1)
+        customFilter.push((data.practiceName.trim().toLowerCase().indexOf(filterArray[0]) !== -1 && data.registry.trim().toLowerCase().indexOf(filterArray[1]) !== -1)||
+                          (data.practiceName.trim().toLowerCase().indexOf(filterArray[1]) !== -1 && data.registry.trim().toLowerCase().indexOf(filterArray[0]) !== -1));
+      matchFilter.push(customFilter.some(Boolean));
+      return matchFilter.some(Boolean);
+    }
+
+
+    this.applyFilter();
   }
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
+  applyFilter() {
+    const filterValue = this.filter;
     this.dataSource.filter = filterValue.trim().toLowerCase();
-
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
   }
 
   formatNumber (list: number) {

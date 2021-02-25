@@ -7,7 +7,8 @@ DELIMITER //
 CREATE PROCEDURE buildRegistries (
     IN p_query_id INT,
     IN p_patientcohorttab VARCHAR(64),
-    IN p_targetPercentage VARCHAR(10)
+    IN p_targetPercentage VARCHAR(10),
+    IN p_org_tmp VARCHAR(64) 
 )
 
 BEGIN
@@ -74,7 +75,7 @@ BEGIN
     SET @sql = CONCAT("CREATE TEMPORARY TABLE qry_list_size AS 
     SELECT pd.query_id, pd.ods_code, COUNT(DISTINCT(pd.patient_id)) AS list_size 
     FROM person_dataset pd WHERE EXISTS (SELECT 1 FROM query_library q WHERE q.id = pd.query_id) 
-    AND pd.query_id = ", parent_qry_id," GROUP BY pd.query_id, pd.ods_code" ); 
+    AND pd.query_id = ", parent_qry_id," AND pd.ods_code IN (SELECT code FROM ", p_org_tmp,") GROUP BY pd.query_id, pd.ods_code" ); 
     PREPARE stmt FROM @sql;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
