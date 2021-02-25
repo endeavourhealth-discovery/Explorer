@@ -56,7 +56,7 @@ export class RegistriesComponent implements OnInit {
 
   start(newProject: any) {
     if (newProject!=this.projectId && this.projectId!='')
-      history.back();
+      window.location.reload();
 
     this.projectId = newProject;
 
