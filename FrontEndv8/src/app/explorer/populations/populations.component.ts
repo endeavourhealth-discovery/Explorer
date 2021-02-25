@@ -54,7 +54,7 @@ export class PopulationsComponent implements OnInit {
 
   start(newProject: any) {
     if (newProject!=this.projectId && this.projectId!='')
-      this.router.navigate(['/populations']);
+      this.router.navigate(['/covidlibrary']);
 
     this.projectId = newProject;
 

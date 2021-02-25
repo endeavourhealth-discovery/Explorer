@@ -67,7 +67,7 @@ export class MapComponent implements OnInit {
 
   start(newProject: any) {
     if (newProject!=this.projectId && this.projectId!='')
-      this.router.navigate(['/map']);
+      this.router.navigate(['/covidlibrary']);
 
     this.projectId = newProject;
 
