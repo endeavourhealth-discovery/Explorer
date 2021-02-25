@@ -4,7 +4,7 @@ import {FormControl} from '@angular/forms';
 import {ExplorerService} from "../explorer.service";
 import {ReplaySubject, Subject} from "rxjs";
 import {takeUntil} from "rxjs/operators";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 
 interface orgList {
   value: string;
@@ -55,6 +55,7 @@ export class GraphicalComparisonComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private explorerService: ExplorerService,
+    private router: Router,
     private log: LoggerService) { }
 
   private _onDestroy = new Subject<void>();
@@ -162,4 +163,13 @@ export class GraphicalComparisonComponent implements OnInit {
   formatTooltipYAxis(val: number) {
     return Number(val).toLocaleString();
   }
+
+  registryLists () {
+    this.router.navigate(['/registrylists'])
+  }
+
+  columnView () {
+    this.router.navigate(['/registries'])
+  }
+
 }

@@ -3,7 +3,7 @@ import {MatTableDataSource} from '@angular/material';
 import {ExplorerService} from '../explorer.service';
 import {LoggerService} from 'dds-angular8';
 import {MatPaginator, PageEvent} from '@angular/material/paginator';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {MatDialog} from "@angular/material/dialog";
 import {ValueSetEditorComponent} from "../valueseteditor/valueseteditor.component";
 import {SelectionModel} from '@angular/cdk/collections';
@@ -37,6 +37,7 @@ export class RegistryListsComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private explorerService: ExplorerService,
+    private router: Router,
     private log: LoggerService,
     private dialog: MatDialog) { }
 
@@ -63,7 +64,7 @@ export class RegistryListsComponent implements OnInit {
         quoteStrings: '"',
         decimalseparator: '.',
         showLabels: true,
-        headers: ['ccg', 'practiceName', 'registry', 'listSize', 'registrySize', 'target'],
+        headers: ['CCG', 'Practice Name', 'Query name', 'Denominator count', 'Numerator count', 'Target %'],
         showTitle: false,
         title: 'Registry lists',
         useTextFile: false,
@@ -81,17 +82,6 @@ export class RegistryListsComponent implements OnInit {
     this.dataSource.sort = this.sort;
 
     this.wait = false;
-
-    /*this.dataSource.filterPredicate = (data:{practiceName: string, registry: string}, filterValue: string) => {
-      const filterArray = filterValue.split(' ');
-      const matchFilter = [];
-      filterArray.forEach(filter => {
-        const customFilter = [];
-        customFilter.push(data.practiceName.trim().toLowerCase().indexOf(filter) !== -1 && data.registry.trim().toLowerCase().indexOf(filter) !== -1);
-        matchFilter.push(customFilter.some(Boolean));
-      })
-      return matchFilter.some(Boolean);
-    }*/
 
     this.dataSource.filterPredicate = (data:{practiceName: string, registry: string}, filterValue: string) => {
       const filterArray = filterValue.split(' ');
@@ -172,6 +162,14 @@ export class RegistryListsComponent implements OnInit {
         window.location.href = "https://devgateway.discoverydataservice.net/record-viewer/#/summary?nhsNumber="+nhsNumber;
       }
     });
+  }
+
+  graphicalComparison () {
+    this.router.navigate(['/graphicalcomparison'])
+  }
+
+  columnView () {
+    this.router.navigate(['/registries'])
   }
 
 }

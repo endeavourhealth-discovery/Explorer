@@ -49,9 +49,9 @@ export class AppMenuService implements  AbstractMenuProvider {
       {icon: 'fas fa-virus', caption: 'Covid library', state: 'covidlibrary'},
       {icon: 'fas fa-analytics', caption: 'Dashboard library', state: 'dashboardlibrary'},
       {icon: 'fas fa-map-marked-alt', caption: 'Maps', state: 'map'},
-      {icon: 'fas fa-notes-medical', caption: 'Patient registries', state: 'registries'},
+      {icon: 'fas fa-poll-people', caption: 'Query results', state: 'registries'},
       {icon: 'fas fa-file-search', caption: 'Query & data set library', state: 'querylibrary'},
-      {icon: 'fas fa-clipboard-list-check', caption: 'Query queue', state: 'queryqueue'},
+      {icon: 'fas fa-clock', caption: 'Query queue', state: 'queryqueue'},
       {icon: 'fas fa-list-ol', caption: 'Value set library', state: 'valuesetlibrary'},
       {icon: 'fas fa-users', caption: 'Population counts', state: 'populations'},
       {icon: 'fas fa-video-plus', caption: 'Tutorials', state: 'tutorials'}

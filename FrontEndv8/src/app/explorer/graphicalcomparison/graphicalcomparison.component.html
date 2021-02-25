@@ -1,28 +1,28 @@
 <mat-card>
   <mat-card-header>
     <div mat-card-avatar>
-      <i class="fad fa-notes-medical"></i>
+      <i class="fad fa-poll-people"></i>
     </div>
-    <mat-card-title>Patient registries</mat-card-title>
-    <mat-card-subtitle>Patient registries of diseases, conditions, risk factors, exposures, diagnosis or procedures.</mat-card-subtitle>
+    <mat-card-title>Query results - graphical comparison</mat-card-title>
+    <mat-card-subtitle>Results of queries run against your organisations</mat-card-subtitle>
   </mat-card-header>
 
   <mat-card-content>
     <div style="font-size: 14px">
-      <mat-form-field *ngIf="selectedCCG==''" style="margin-left: 20px; width:32%" class="example-full-width" appearance="outline">
+      <mat-form-field *ngIf="selectedCCG==''" style="margin-left: 20px; width:30%" class="example-full-width" appearance="outline">
         <mat-label>Select practice</mat-label>
         <mat-select [formControl]="practices" multiple [(value)]="selectedPractices">
           <mat-option (click)="refresh()" *ngFor="let result of practiceList" [value]="result">{{result}}</mat-option>
         </mat-select>
       </mat-form-field>
-      <mat-form-field *ngIf="selectedPractices==''" style="margin-left: 10px; width:32%" class="example-full-width" appearance="outline">
+      <mat-form-field *ngIf="selectedPractices==''" style="margin-left: 30px; width:20%" class="example-full-width" appearance="outline">
         <mat-label>Filter CCG/TRUST</mat-label>
         <mat-select [formControl]="ccgValues" multiple [(value)]="selectedCCG">
           <mat-option (click)="refresh()" *ngFor="let result of ccgList" [value]="result">{{result}}</mat-option>
         </mat-select>
       </mat-form-field>
-      <mat-form-field style="margin-left: 10px; width:32%" class="example-full-width" appearance="outline">
-        <mat-label>Select registry</mat-label>
+      <mat-form-field style="margin-left: 10px; width:30%" class="example-full-width" appearance="outline">
+        <mat-label>Select query</mat-label>
         <mat-select [formControl]="registries" multiple [(value)]="selectedRegistries">
           <mat-select-search [formControl]="filterCtrl"></mat-select-search>
           <mat-option (click)="refresh()" *ngFor="let result of registryList" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">
@@ -30,6 +30,8 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
+      <button style="margin-left: 10px" mat-flat-button color="accent" (click)="columnView();">Column view</button>
+      <button style="margin-left: 10px" mat-flat-button color="accent" (click)="registryLists();">List view</button>
     </div>
     <br/>
     <table style="table-layout: fixed; min-width: 100%">

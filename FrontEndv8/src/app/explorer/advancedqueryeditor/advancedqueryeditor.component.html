@@ -40,13 +40,13 @@
         <tr>
           <td>
             <mat-form-field appearance="outline" style="width: 600px">
-              <mat-label>Registry name</mat-label>
-              <input maxlength="60" required matInput placeholder="Registry" [(ngModel)]="registryName" formControlName="control159" (ngModelChange)="formChanged()" (keydown.enter)="stepper.next()">
+              <mat-label>Abbreviated query name</mat-label>
+              <input maxlength="60" required matInput placeholder="Abbreviated name" [(ngModel)]="registryName" formControlName="control159" (ngModelChange)="formChanged()" (keydown.enter)="stepper.next()">
             </mat-form-field>
           </td>
           <td></td>
           <td>
-            <p>Please enter an abbreviated name for the registry that will appear as a column in the Registries module.</p>
+            <p>Please enter an abbreviated name for the query that will appear as a column in the query results module.</p>
           </td>
         </tr>
         <tr>
@@ -63,7 +63,7 @@
           </td>
           <td></td>
           <td>
-            <p>Select an (optional) query as the denominator for this query. This query’s patient cohort (numerator) will then be compared against the selected denominator query cohort in the registries results.</p>
+            <p>Select an (optional) query as the denominator for this query. This query’s patient cohort (numerator) will then be compared against the selected denominator query cohort in the query results.</p>
           </td>
         </tr>
         <tr>
