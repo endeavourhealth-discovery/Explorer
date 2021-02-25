@@ -143,7 +143,7 @@ BEGIN
          @curmedstmt := mo.medication_statement_id AS cur_med_stmt 
          FROM ", p_schema,".medication_order mo, (SELECT @currank := 0, @curmedstmt := 0) r 
          ORDER BY mo.medication_statement_id DESC, mo.clinical_effective_date DESC, mo.id DESC) med 
-         WHERE med.rnk = 1 AND EXISTS (SELECT 1 FROM ", p_patientcohorttab," pc WHERE  pc.patient_id = med.patient_id) ");
+         WHERE med.rnk = 1 AND EXISTS (SELECT 1 FROM ", p_patientcohorttab," pc WHERE  pc.patient_id = med.patient_id AND pc.organization_id = med.organization_id) ");
          PREPARE stmt FROM @med;
          EXECUTE stmt;
          DEALLOCATE PREPARE stmt;
@@ -198,7 +198,6 @@ BEGIN
          -- remove the last comma in the string
          SET l_sql = SUBSTRING(l_sql, 1, LENGTH(l_sql)-1);
 
-         
          SET l_sql = REPLACE(l_sql, 'procedure_request_status', 'NULL');
          SET l_sql = REPLACE(l_sql, 'referral_requester_organisation', 'NULL');
          SET l_sql = REPLACE(l_sql, 'referral_recipient_organisation', 'NULL');
@@ -211,9 +210,9 @@ BEGIN
 
          -- create an empty output table
          SET @output = CONCAT('CREATE TABLE ', output_table ,' AS 
-         SELECT DISTINCT r.', event_table,'_id AS id, ', BINARY l_sql ,' FROM ', p_schema,'.', event_table,
-         ' t JOIN ', result_dataset,' r ON t.id = r.', event_table,'_id 
-         JOIN ', p_patientcohorttab,' p ON p.patient_id = ', event_id,' AND p.organization_id = t.organization_id '
+         SELECT DISTINCT r.', event_table,'_id AS id, ', BINARY l_sql ,' FROM ', p_schema,'.', event_table,' t JOIN '
+         , p_patientcohorttab,' p ON p.patient_id = ', event_id,' AND p.organization_id = t.organization_id JOIN '
+         , result_dataset,' r ON t.id = r.', event_table,'_id AND p.ods_code = r.ods_code '
          , join_clause_1,' '
          , join_clause_2,' '
          , join_clause_3,' '
@@ -291,8 +290,9 @@ BEGIN
 
          -- create a temporary table to hold the ids
          DROP TEMPORARY TABLE IF EXISTS qry_output_tmp;
-         SET @tmp = CONCAT('CREATE TEMPORARY TABLE qry_output_tmp ( row_id INT, id BIGINT, PRIMARY KEY(row_id) ) AS 
-         SELECT (@row_no := @row_no + 1) AS row_id, ', event_table,'_id AS id FROM ', result_dataset,' r JOIN (SELECT @row_no := 0) t 
+         SET @tmp = CONCAT('CREATE TEMPORARY TABLE qry_output_tmp ( row_id INT, ods_code VARCHAR(50), id BIGINT, PRIMARY KEY(row_id) ) AS 
+         SELECT (@row_no := @row_no + 1) AS row_id, ods_code, ', event_table,'_id AS id 
+         FROM ', result_dataset,' r JOIN (SELECT @row_no := 0) t 
          WHERE r.query_id = ', p_query_id);
          PREPARE stmt FROM @tmp;
          EXECUTE stmt;
@@ -304,9 +304,8 @@ BEGIN
          WHILE EXISTS (SELECT row_id from qry_output_tmp WHERE row_id > @row_id AND row_id <= @row_id + 10000) DO
 
                SET @ins = CONCAT("INSERT INTO  ", output_table, " 
-               SELECT q.id AS Id, ", BINARY l_sql , " FROM ", p_schema,".", event_table," t 
-               JOIN qry_output_tmp q ON t.id = q.id 
-               JOIN ", p_patientcohorttab," p ON p.patient_id = ", event_id," AND p.organization_id = t.organization_id "
+               SELECT q.id AS Id, ", BINARY l_sql , " FROM ", p_schema,".", event_table," t JOIN "
+               , p_patientcohorttab," p ON p.patient_id = ", event_id," AND p.organization_id = t.organization_id JOIN qry_output_tmp q ON t.id = q.id AND q.ods_code = p.ods_code "
                , join_clause_1," "
                , join_clause_2," "
                , join_clause_3," "
