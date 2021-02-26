@@ -98,4 +98,5 @@ export class QueryQueueComponent implements OnInit {
       return 'No';
     }
   }
+  
 }
