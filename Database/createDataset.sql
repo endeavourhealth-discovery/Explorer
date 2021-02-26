@@ -36,7 +36,7 @@ DECLARE clinicalType VARCHAR(100);
     IF p_event_type = 'DEMOGRAPHICS' THEN
        SET @sql = CONCAT('INSERT INTO ', p_datasettab,'  
        SELECT DISTINCT p.query_id, o.id, p.ods_code 
-       FROM ', p_schema, '.', p_sourcetab,' o JOIN ', p_patientcohorttab,' p ON o.id = p.patient_id AND o.organization_id = p.organization_id');
+       FROM ', p_schema, '.', p_sourcetab,' o JOIN ', p_patientcohorttab,' p ON o.id = p.patient_id AND o.organization_id = p.organization_id AND o.person_id = p.person_id ');
        PREPARE stmt FROM @sql;
        EXECUTE stmt;
        DEALLOCATE PREPARE stmt;
@@ -47,7 +47,7 @@ DECLARE clinicalType VARCHAR(100);
        IF p_datasetconcepttab IS NOT NULL THEN
          SET @sql = CONCAT('INSERT INTO ', p_datasettab,' 
          SELECT DISTINCT p.query_id, o.id, p.ods_code  
-         FROM ', p_patientcohorttab,' p JOIN ', p_schema, '.', p_sourcetab,' o ON o.patient_id = p.patient_id AND o.organization_id = p.organization_id 
+         FROM ', p_patientcohorttab,' p JOIN ', p_schema, '.', p_sourcetab,' o ON o.patient_id = p.patient_id AND o.organization_id = p.organization_id AND o.person_id = p.person_id  
          JOIN ', p_datasetconcepttab,' c ON o.non_core_concept_id = c.non_core_concept_id 
          WHERE o.non_core_concept_id IS NOT NULL AND ', p_daterange,' AND ', p_activeString);
          PREPARE stmt FROM @sql;
@@ -56,7 +56,7 @@ DECLARE clinicalType VARCHAR(100);
        ELSE
          SET @sql = CONCAT('INSERT INTO ', p_datasettab,' 
          SELECT DISTINCT p.query_id, o.id, p.ods_code  
-         FROM ', p_patientcohorttab,' p JOIN ', p_schema, '.', p_sourcetab,' o ON o.patient_id = p.patient_id AND o.organization_id = p.organization_id 
+         FROM ', p_patientcohorttab,' p JOIN ', p_schema, '.', p_sourcetab,' o ON o.patient_id = p.patient_id AND o.organization_id = p.organization_id AND p.person_id = p.person_id 
          WHERE o.non_core_concept_id IS NOT NULL AND ', p_daterange,' AND ', p_activeString);
          PREPARE stmt FROM @sql;
          EXECUTE stmt;
@@ -138,7 +138,7 @@ DECLARE clinicalType VARCHAR(100);
                               SET @sql = CONCAT('INSERT INTO qry_dataset 
                               SELECT DISTINCT p.query_id, o.id, p.ods_code  
                               FROM ', p_patientcohorttab,' p JOIN ', p_schema, '.', p_sourcetab,' o ON o.patient_id = p.patient_id 
-                              AND o.organization_id = p.organization_id 
+                              AND o.organization_id = p.organization_id AND o.person_id = p.person_id 
                               JOIN qry_concept cpt ON o.non_core_concept_id = cpt.non_core_concept_id 
                               WHERE ', whereString,' 
                               AND o.non_core_concept_id IS NOT NULL 
@@ -163,7 +163,7 @@ DECLARE clinicalType VARCHAR(100);
 
                               SET @sql = CONCAT("INSERT INTO qry_dataset 
                               SELECT DISTINCT p.query_id, o.id, p.ods_code  
-                              FROM ", p_patientcohorttab," p JOIN ", p_schema, '.', p_sourcetab," o ", indexString," ON o.patient_id = p.patient_id AND o.organization_id = p.organization_id  
+                              FROM ", p_patientcohorttab," p JOIN ", p_schema, '.', p_sourcetab," o ", indexString," ON o.patient_id = p.patient_id AND o.organization_id = p.organization_id AND o.person_id = p.person_id  
                               JOIN ", p_schema,".concept cpt ON o.non_core_concept_id = cpt.dbid 
                               WHERE o.result_value_units IS NULL 
                               AND o.result_value IS NULL 
@@ -188,7 +188,7 @@ DECLARE clinicalType VARCHAR(100);
                               SET @sql = CONCAT("INSERT INTO qry_dataset 
                               SELECT DISTINCT p.query_id, o.id, p.ods_code  
                               FROM ", p_patientcohorttab," p JOIN ", p_schema, '.', p_sourcetab," o ON o.patient_id = p.patient_id 
-                              AND o.organization_id = p.organization_id 
+                              AND o.organization_id = p.organization_id AND o.person_id = p.person_id 
                               JOIN ", p_schema,".concept cpt ON o.non_core_concept_id = cpt.dbid 
                               WHERE o.is_problem = 1 
                               AND o.is_review = 0 
@@ -215,7 +215,7 @@ DECLARE clinicalType VARCHAR(100);
                               SET @sql = CONCAT("INSERT INTO qry_dataset 
                               SELECT DISTINCT p.query_id, o.id, p.ods_code  
                               FROM ", p_patientcohorttab," p JOIN ", p_schema, '.', p_sourcetab," o ON o.patient_id = p.patient_id 
-                              AND o.organization_id = p.organization_id 
+                              AND o.organization_id = p.organization_id AND o.person_id = p.person_id 
                               JOIN ", p_schema,".concept cpt ON o.non_core_concept_id = cpt.dbid
                               WHERE ( cpt.name LIKE '%procedure%' 
                               OR EXISTS (SELECT 1 FROM qry_concept q WHERE q.non_core_concept_id = o.non_core_concept_id) ) 
@@ -241,7 +241,7 @@ DECLARE clinicalType VARCHAR(100);
                               SET @sql = CONCAT("INSERT INTO qry_dataset 
                               SELECT DISTINCT p.query_id, o.id, p.ods_code  
                               FROM ", p_patientcohorttab," p JOIN ", p_schema, '.', p_sourcetab, " o ON o.patient_id = p.patient_id 
-                              AND o.organization_id = p.organization_id 
+                              AND o.organization_id = p.organization_id AND o.person_id = p.person_id 
                               JOIN ", p_schema,".concept cpt ON o.non_core_concept_id = cpt.dbid
                               WHERE ( cpt.name LIKE '%family history%' OR cpt.name LIKE '%FH:%' 
                               OR EXISTS (SELECT 1 FROM qry_concept q WHERE q.non_core_concept_id = o.non_core_concept_id) ) 
@@ -267,7 +267,7 @@ DECLARE clinicalType VARCHAR(100);
                               SET @sql = CONCAT("INSERT INTO qry_dataset 
                               SELECT DISTINCT p.query_id, o.id, p.ods_code  
                               FROM ", p_patientcohorttab," p JOIN ", p_schema, '.', p_sourcetab, " o ON o.patient_id = p.patient_id 
-                              AND o.organization_id = p.organization_id 
+                              AND o.organization_id = p.organization_id AND o.person_id = p.person_id 
                               JOIN ", p_schema,".concept cpt ON o.non_core_concept_id = cpt.dbid
                               WHERE ( cpt.name LIKE '%immunisation%' OR cpt.name LIKE '%vaccination%' 
                               OR EXISTS (SELECT 1 FROM qry_concept q WHERE q.non_core_concept_id = o.non_core_concept_id) ) 
@@ -317,7 +317,7 @@ DECLARE clinicalType VARCHAR(100);
                               NULL AS `Referral mode`,
                               NULL AS `Referral outgoing status`
                               FROM ", p_schema,".procedure_request o JOIN ", p_patientcohorttab, " p ON o.patient_id = p.patient_id 
-                              AND o.organization_id = p.organization_id 
+                              AND o.organization_id = p.organization_id AND o.person_id = p.person_id 
                               JOIN ", p_schema,".concept c ON c.dbid = o.non_core_concept_id 
                               LEFT JOIN ", p_schema,".concept c2 ON c2.dbid = o.status_concept_id 
                               JOIN ", p_schema,".organization org ON org.id = o.organization_id 
@@ -368,7 +368,7 @@ DECLARE clinicalType VARCHAR(100);
                               NULL AS `Referral mode`,
                               NULL AS `Referral outgoing status`
                               FROM ", p_schema,".diagnostic_order o JOIN ", p_patientcohorttab, " p ON o.patient_id = p.patient_id 
-                              AND o.organization_id = p.organization_id 
+                              AND o.organization_id = p.organization_id AND o.person_id = p.person_id 
                               JOIN ", p_schema,".concept c ON c.dbid = o.non_core_concept_id 
                               LEFT JOIN ", p_schema,".concept c2 ON c2.dbid = o.result_concept_id 
                               LEFT JOIN ", p_schema,".concept c3 ON c3.dbid = o.episodicity_concept_id 
@@ -422,7 +422,7 @@ DECLARE clinicalType VARCHAR(100);
                               NULL AS `Referral mode`,
                               NULL AS `Referral outgoing status`
                               FROM ", p_schema,".flag o JOIN ", p_patientcohorttab, " p ON o.patient_id = p.patient_id 
-                              AND o.organization_id = p.organization_id 
+                              AND o.organization_id = p.organization_id AND o.person_id = p.person_id 
                               JOIN ", p_schema,".organization org ON org.id = o.organization_id 
                               WHERE ", p_daterange);  
                               PREPARE stmt FROM @sql;
@@ -470,7 +470,7 @@ DECLARE clinicalType VARCHAR(100);
                               NULL AS `Referral mode`,
                               NULL AS `Referral outgoing status`
                               FROM ", p_schema,".allergy_intolerance o JOIN ", p_patientcohorttab, " p ON o.patient_id = p.patient_id 
-                              AND o.organization_id = p.organization_id 
+                              AND o.organization_id = p.organization_id AND o.person_id = p.person_id 
                               JOIN ", p_schema,".concept c ON c.dbid = o.non_core_concept_id 
                               JOIN ", p_schema,".organization org ON org.id = o.organization_id 
                               LEFT JOIN ", p_schema,".practitioner pr ON pr.id = o.practitioner_id 
@@ -520,7 +520,7 @@ DECLARE clinicalType VARCHAR(100);
                               o.mode AS `Referral mode`,
                               o.outgoing_referral AS `Referral outgoing status`
                               FROM ", p_schema,".referral_request o JOIN ", p_patientcohorttab, " p ON o.patient_id = p.patient_id 
-                              AND o.organization_id = p.organization_id 
+                              AND o.organization_id = p.organization_id AND o.person_id = p.person_id 
                               JOIN ", p_schema,".concept c ON c.dbid = o.non_core_concept_id 
                               JOIN ", p_schema,".organization org ON org.id = o.organization_id 
                               LEFT JOIN ", p_schema,".concept c2 ON c2.dbid = o.referral_request_type_concept_id 
@@ -547,7 +547,7 @@ DECLARE clinicalType VARCHAR(100);
             SET @sql = CONCAT('INSERT INTO qry_dataset 
             SELECT DISTINCT p.query_id, o.id, p.ods_code  
             FROM ', p_patientcohorttab,' p JOIN ', p_schema, '.', p_sourcetab,' o ON o.patient_id = p.patient_id 
-            AND o.organization_id = p.organization_id 
+            AND o.organization_id = p.organization_id AND o.person_id = p.person_id 
             JOIN ', p_datasetconcepttab,' c ON o.non_core_concept_id = c.non_core_concept_id  
             WHERE o.non_core_concept_id IS NOT NULL AND ', p_daterange,' AND ', p_activeString); 
             PREPARE stmt FROM @sql;
@@ -559,7 +559,7 @@ DECLARE clinicalType VARCHAR(100);
             SET @sql = CONCAT('INSERT INTO qry_dataset 
             SELECT DISTINCT p.query_id, o.id, p.ods_code  
             FROM ', p_patientcohorttab,' p JOIN ', p_schema, '.', p_sourcetab,' o ON o.patient_id = p.patient_id 
-            AND o.organization_id = p.organization_id 
+            AND o.organization_id = p.organization_id AND o.person_id = p.person_id 
             WHERE o.non_core_concept_id IS NOT NULL AND ', p_daterange,' AND ', p_activeString);
             PREPARE stmt FROM @sql;
             EXECUTE stmt;
