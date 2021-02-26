@@ -33,6 +33,7 @@ export class PopulationsComponent implements OnInit {
 
   displayedColumns: string[] = ['stp', 'ccg', 'pcn', 'practice', 'ethnic', 'age', 'sex', 'listSize'];
 
+  projectId: string = '';
   init: any = 0;
 
   constructor(
@@ -43,16 +44,27 @@ export class PopulationsComponent implements OnInit {
     private router: Router,
     private dialog: MatDialog) {
     this.userManagerService.onProjectChange.subscribe(
-      (newProject) => this.ngOnInit(),
+      (newProject) => this.start(newProject.id),
       (error) => this.log.error(error)
     );
   }
 
   ngOnInit() {
+    this.start(this.projectId);
+  }
+
+  start(newProject: any) {
     this.init++;
 
     if (this.init==1)
       return;
+
+    if (newProject!=this.projectId) {
+      this.router.navigate(['/covidlibrary']);
+      return;
+    }
+
+    this.projectId = newProject;
 
     this.events = null;
     this.explorerService.getPopulation()

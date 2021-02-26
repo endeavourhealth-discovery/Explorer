@@ -253,6 +253,7 @@ export class DashboardViewerComponent implements OnInit {
   tableStyle3 = '';
   tableStyle4 = '';
 
+  projectId: string = '';
   init: any = 0;
 
   constructor(
@@ -264,16 +265,27 @@ export class DashboardViewerComponent implements OnInit {
     globals: Globals) {
     this.globals = globals;
     this.userManagerService.onProjectChange.subscribe(
-      (newProject) => this.ngOnInit(),
+      (newProject) => this.start(newProject.id),
       (error) => this.log.error(error)
     );
   }
 
   ngOnInit() {
+    this.start(this.projectId);
+  }
+
+  start(newProject: any) {
     this.init++;
 
     if (this.init==1)
       return;
+
+    if (newProject!=this.projectId) {
+      this.router.navigate(['/dashboardlibrary']);
+      return;
+    }
+
+    this.projectId = newProject;
 
     this.ccgValues1 = new FormControl(this.ccgList1);
     this.selectedCCG1 = this.ccgList1;

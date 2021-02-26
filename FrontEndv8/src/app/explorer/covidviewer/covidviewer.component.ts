@@ -45,13 +45,10 @@ export class ChecklistDatabase {
               private userManagerService: UserManagerService,
               private log: LoggerService) {
 
-    this.userManagerService.onProjectChange.subscribe(
-      (newProject) => this.start(),
-      (error) => this.log.error(error)
-    );
+    this.initialize();
   }
 
-  start() {
+  initialize() {
     this.explorerService.getOrganisationTree()
       .subscribe(
         (result) => this.loadOrgTree(result),
@@ -161,6 +158,9 @@ export class CovidViewerComponent implements OnInit {
   selectedWidgets : widget[] = [
   ];
 
+  projectId: string = '';
+  init: any = 0;
+
   constructor(
     private route: ActivatedRoute,
     private explorerService: ExplorerService, private userManagerService: UserManagerService,
@@ -180,9 +180,30 @@ export class CovidViewerComponent implements OnInit {
     _database.dataChange.subscribe(data => {
       this.dataSource.data = data;
     });
+
+    this.userManagerService.onProjectChange.subscribe(
+      (newProject) => this.start(newProject.id),
+      (error) => this.log.error(error)
+    );
   }
 
   ngOnInit() {
+    this.start(this.projectId);
+  }
+
+  start(newProject: any) {
+    this.init++;
+
+    if (this.init==1)
+      return;
+
+    if (newProject!=this.projectId) {
+      this.router.navigate(['/covidlibrary']);
+      return;
+    }
+
+    this.projectId = newProject;
+
     this.ethnicValues1 = new FormControl(this.ethnicList1);
     this.selectedethnic1 = this.ethnicList1;
 

@@ -74,6 +74,7 @@ export class DashboardLibraryComponent implements OnInit {
   widget3: boolean = false;
   widget4: boolean = false;
 
+  projectId: string = '';
   init: any = 0;
 
   constructor(
@@ -83,16 +84,27 @@ export class DashboardLibraryComponent implements OnInit {
     private router: Router,
     private dialog: MatDialog) {
     this.userManagerService.onProjectChange.subscribe(
-      (newProject) => this.ngOnInit(),
+      (newProject) => this.start(newProject.id),
       (error) => this.log.error(error)
     );
   }
 
   ngOnInit() {
+    this.start(this.projectId);
+  }
+
+  start(newProject: any) {
     this.init++;
 
     if (this.init==1)
       return;
+
+    if (newProject!=this.projectId) {
+      this.router.navigate(['/covidlibrary']);
+      return;
+    }
+
+    this.projectId = newProject;
 
     this.explorerService.getLookupLists('1','')
       .subscribe(

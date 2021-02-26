@@ -35,6 +35,7 @@ export class RegistriesComponent implements OnInit {
 
   displayedColumns: string[] = ['select', 'org', 'listSize', 'registrySize', 'allColumns'];
 
+  projectId: string = '';
   init: any = 0;
 
   constructor(
@@ -45,16 +46,27 @@ export class RegistriesComponent implements OnInit {
     private dialog: MatDialog,
     private log: LoggerService) {
     this.userManagerService.onProjectChange.subscribe(
-      (newProject) => this.ngOnInit(),
+      (newProject) => this.start(newProject.id),
       (error) => this.log.error(error)
     );
   }
 
   ngOnInit() {
+    this.start(this.projectId);
+  }
+
+  start(newProject: any) {
     this.init++;
 
     if (this.init==1)
       return;
+
+    if (newProject!=this.projectId) {
+      this.router.navigate(['/covidlibrary']);
+      return;
+    }
+
+    this.projectId = newProject;
 
     this.loadEvents('', '');
 
