@@ -41,6 +41,8 @@ export class ChecklistDatabase {
 
   get data(): OrgItemNode[] { return this.dataChange.value; }
 
+  init: any = 0;
+
   constructor(private explorerService: ExplorerService,
               private userManagerService: UserManagerService,
               private log: LoggerService) {
@@ -52,6 +54,11 @@ export class ChecklistDatabase {
   }
 
   start() {
+    this.init++;
+
+    if (this.init==1)
+      return;
+
     this.explorerService.getOrganisationTree()
       .subscribe(
         (result) => this.loadOrgTree(result),
@@ -161,8 +168,6 @@ export class CovidViewerComponent implements OnInit {
   selectedWidgets : widget[] = [
   ];
 
-  init: any = 0;
-
   constructor(
     private route: ActivatedRoute,
     private explorerService: ExplorerService, private userManagerService: UserManagerService,
@@ -182,16 +187,9 @@ export class CovidViewerComponent implements OnInit {
     _database.dataChange.subscribe(data => {
       this.dataSource.data = data;
     });
-
-
   }
 
   ngOnInit() {
-    this.init++;
-
-    if (this.init==1)
-      return;
-
     this.ethnicValues1 = new FormControl(this.ethnicList1);
     this.selectedethnic1 = this.ethnicList1;
 
