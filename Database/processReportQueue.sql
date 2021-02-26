@@ -21,6 +21,7 @@ SET q.query = l.query,
     q.timefinish = NULL,
     q.timeexecute = NULL
 WHERE q.query_last_updated <> l.updated
+AND q.query <> l.query 
 AND l.id >= 0
 AND q.status <> 'A';  -- i.e. not already processing
 
