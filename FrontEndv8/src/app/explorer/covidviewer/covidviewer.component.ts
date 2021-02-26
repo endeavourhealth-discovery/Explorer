@@ -45,11 +45,10 @@ export class ChecklistDatabase {
               private userManagerService: UserManagerService,
               private log: LoggerService) {
 
-    this.initialize();
-  }
-
-  initialize() {
-    this.start();
+    this.userManagerService.onProjectChange.subscribe(
+      (newProject) => this.start(),
+      (error) => this.log.error(error)
+    );
   }
 
   start() {
@@ -184,10 +183,7 @@ export class CovidViewerComponent implements OnInit {
       this.dataSource.data = data;
     });
 
-    this.userManagerService.onProjectChange.subscribe(
-      (newProject) => this.ngOnInit(),
-      (error) => this.log.error(error)
-    );
+
   }
 
   ngOnInit() {
