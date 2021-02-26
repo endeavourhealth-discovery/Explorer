@@ -41,8 +41,6 @@ export class ChecklistDatabase {
 
   get data(): OrgItemNode[] { return this.dataChange.value; }
 
-  init: any = 0;
-
   constructor(private explorerService: ExplorerService,
               private userManagerService: UserManagerService,
               private log: LoggerService) {
@@ -54,11 +52,6 @@ export class ChecklistDatabase {
   }
 
   start() {
-    this.init++;
-
-    if (this.init==1)
-      return;
-
     this.explorerService.getOrganisationTree()
       .subscribe(
         (result) => this.loadOrgTree(result),
