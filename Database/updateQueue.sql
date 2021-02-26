@@ -29,7 +29,7 @@ BEGIN
   ELSEIF p_schedule = 'Quarterly' THEN
       SET nextrundate = 'DATE_ADD(CURDATE(), INTERVAL 1 QUARTER)';
   ELSEIF p_schedule = 'One-off' THEN
-      SET nextrundate = 'NULL'; 
+      SET nextrundate = 'DATE_ADD(CURDATE(), INTERVAL -1 DAY)';
   END IF;
 
   -- UPDATE queue table and reset status for next run
