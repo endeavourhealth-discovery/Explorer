@@ -2848,8 +2848,8 @@ public class ExplorerJDBCDAL implements AutoCloseable {
             noResults = " and 0=1 ";
 
         if (StringUtils.isNullOrEmpty(searchData)) {
-            sql = "select " + fields + " from dashboards." + tableName + " t, person per, organization org "+
-                    "WHERE per.id = t.`Person ID` and org.id = per.organization_id "+
+            sql = "select " + fields + " from dashboards." + tableName + " t, patient pat, organization org "+
+                    "WHERE pat.id = t.`Patient ID` and org.id = pat.organization_id "+
                     "and org.ods_code in "+
                     "(select distinct practice_ods_code from dashboards.population_denominators "+
                     "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
@@ -2857,8 +2857,8 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                     " order by `" + orderColumn + "` " + order +
                     " limit " + ((pageNumber - 1)*pageSize) + "," + pageSize;
         } else {
-            sql = "select " + fields + " from dashboards." + tableName + " t, person per, organization org "+
-                    "WHERE per.id = t.`Person ID` and org.id = per.organization_id "+
+            sql = "select " + fields + " from dashboards." + tableName + " t, patient pat, organization org "+
+                    "WHERE pat.id = t.`Patient ID` and org.id = pat.organization_id  "+
                     "and org.ods_code in "+
                     "(select distinct practice_ods_code from dashboards.population_denominators "+
                     "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
