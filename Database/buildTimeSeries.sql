@@ -48,6 +48,8 @@ BEGIN
   SET p_toDate = UPPER(p_toDate);
   SET p_toDate = IF(p_toDate IN ('', 'NULL'), NULL, SUBSTRING(p_toDate, 1, 10));
 
+  SET p_periodValue = IF(p_periodValue = '', NULL, p_periodValue);
+
   SET p_seriesTable = IF(p_seriesTable = '', NULL, p_seriesTable);
   SET p_seriesField = IF(p_seriesField = '', NULL, p_seriesField);
 
@@ -132,7 +134,7 @@ IF p_timeSeries = 'TRUE' AND
          o2.clinical_effective_date AS series_name, 
          COUNT(DISTINCT(o2.patient_id)) AS series_value 
    FROM ', p_patientcohorttab,' c JOIN ', p_schema,'.', sourceTab,' o2 
-   ON c.patient_id = o2.patient_id AND c.organization_id = o2.organization_id ', 
+   ON c.patient_id = o2.patient_id AND c.organization_id = o2.organization_id AND c.person_id = o2.person_id ', 
    join_clause_1,' 
    JOIN ', p_schema,'.organization org ON org.id = o2.organization_id 
    LEFT JOIN ', p_schema,'.organization org2 ON org2.id = org.parent_organization_id 
