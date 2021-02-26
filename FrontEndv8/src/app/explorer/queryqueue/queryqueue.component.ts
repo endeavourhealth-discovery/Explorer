@@ -90,7 +90,7 @@ export class QueryQueueComponent implements OnInit {
   }
 
   formatStatus(status: any) {
-    if (status == 'Y') {
+    if (status == 'A') {
       return 'Yes';
     }
     else if (status == 'N')
@@ -98,5 +98,5 @@ export class QueryQueueComponent implements OnInit {
       return 'No';
     }
   }
-  
+
 }
