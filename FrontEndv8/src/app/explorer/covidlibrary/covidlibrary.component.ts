@@ -50,31 +50,24 @@ export class CovidLibraryComponent implements OnInit {
   typeValues = new FormControl(this.typeList);
   originalData = [];
 
-  projectId: string = '';
+  init: any = 0;
 
   constructor(
     private route: ActivatedRoute,
     private explorerService: ExplorerService, private userManagerService: UserManagerService,
     private log: LoggerService,
-    private router: Router) { }
-
-  ngOnInit() {
-    this.start(this.projectId);
-
+    private router: Router) {
     this.userManagerService.onProjectChange.subscribe(
-      (newProject) => this.start(newProject.id),
+      (newProject) => this.ngOnInit(),
       (error) => this.log.error(error)
     );
-
   }
 
-  start(newProject: any) {
-    if (newProject!=this.projectId && this.projectId!='')
-      window.location.reload();
+  ngOnInit() {
+    this.init++;
 
-    this.projectId = newProject;
-
-    console.log(this.projectId);
+    if (this.init==1)
+      return;
 
     this.events = null;
     this.explorerService.getCovidLibrary()
@@ -84,6 +77,7 @@ export class CovidLibraryComponent implements OnInit {
       );
 
     this.selection.clear();
+
   }
 
   displayEvents(events: any) {

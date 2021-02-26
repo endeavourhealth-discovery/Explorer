@@ -74,31 +74,25 @@ export class DashboardLibraryComponent implements OnInit {
   widget3: boolean = false;
   widget4: boolean = false;
 
-  projectId: string = '';
+  init: any = 0;
 
   constructor(
     private route: ActivatedRoute,
     private explorerService: ExplorerService, private userManagerService: UserManagerService,
     private log: LoggerService,
     private router: Router,
-    private dialog: MatDialog) { }
-
-  ngOnInit() {
-
-    this.start(this.projectId);
-
+    private dialog: MatDialog) {
     this.userManagerService.onProjectChange.subscribe(
-      (newProject) => this.start(newProject.id),
+      (newProject) => this.ngOnInit(),
       (error) => this.log.error(error)
     );
-
   }
 
-  start(newProject: any) {
-    if (newProject!=this.projectId && this.projectId!='')
-      window.location.reload();
+  ngOnInit() {
+    this.init++;
 
-    this.projectId = newProject;
+    if (this.init==1)
+      return;
 
     this.explorerService.getLookupLists('1','')
       .subscribe(

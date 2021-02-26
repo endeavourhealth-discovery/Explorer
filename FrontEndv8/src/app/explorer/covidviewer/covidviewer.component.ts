@@ -162,7 +162,7 @@ export class CovidViewerComponent implements OnInit {
   selectedWidgets : widget[] = [
   ];
 
-  projectId: string = '';
+  init: any = 0;
 
   constructor(
     private route: ActivatedRoute,
@@ -183,22 +183,18 @@ export class CovidViewerComponent implements OnInit {
     _database.dataChange.subscribe(data => {
       this.dataSource.data = data;
     });
-  }
-
-  ngOnInit() {
-    this.start(this.projectId);
 
     this.userManagerService.onProjectChange.subscribe(
-      (newProject) => this.start(newProject.id),
+      (newProject) => this.ngOnInit(),
       (error) => this.log.error(error)
     );
   }
 
-  start(newProject: any) {
-    if (newProject!=this.projectId && this.projectId!='')
-      window.location.reload();
+  ngOnInit() {
+    this.init++;
 
-    this.projectId = newProject;
+    if (this.init==1)
+      return;
 
     this.ethnicValues1 = new FormControl(this.ethnicList1);
     this.selectedethnic1 = this.ethnicList1;

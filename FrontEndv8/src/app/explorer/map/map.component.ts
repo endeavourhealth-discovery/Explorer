@@ -46,30 +46,24 @@ export class MapComponent implements OnInit {
   isCovidQuery: boolean = true;
   isLevelTransparent: boolean = false;
 
-  projectId: string = '';
+  inits: any = 0;
 
   constructor(private explorerService: ExplorerService, private userManagerService: UserManagerService,
               private log: LoggerService,
               private cookieService: CookieService,
               private router: Router,
               private userService: UserManagerService) {
-
-  }
-
-  ngOnInit() {
-    this.start(this.projectId);
-
     this.userManagerService.onProjectChange.subscribe(
-      (newProject) => this.start(newProject.id),
+      (newProject) => this.ngOnInit(),
       (error) => this.log.error(error)
     );
   }
 
-  start(newProject: any) {
-    if (newProject!=this.projectId && this.projectId!='')
-      window.location.reload();
+  ngOnInit() {
+    this.inits++;
 
-    this.projectId = newProject;
+    if (this.inits==1)
+      return;
 
     this.explorerService.getMapQueries()
       .subscribe(

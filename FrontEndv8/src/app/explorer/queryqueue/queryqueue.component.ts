@@ -32,7 +32,7 @@ export class QueryQueueComponent implements OnInit {
 
   displayedColumns: string[] = ['type', 'registry', 'date', 'status', 'timeSubmit', 'timeFinish', 'timeExecute'];
 
-  projectId: string = '';
+  init: any = 0;
 
   constructor(
     private route: ActivatedRoute,
@@ -40,22 +40,18 @@ export class QueryQueueComponent implements OnInit {
     private userManagerService: UserManagerService,
     private router: Router,
     private log: LoggerService,
-    private dialog: MatDialog) { }
-
-  ngOnInit() {
-    this.start(this.projectId);
-
+    private dialog: MatDialog) {
     this.userManagerService.onProjectChange.subscribe(
-      (newProject) => this.start(newProject.id),
+      (newProject) => this.ngOnInit(),
       (error) => this.log.error(error)
     );
   }
 
-  start(newProject: any) {
-    if (newProject!=this.projectId && this.projectId!='')
-      window.location.reload();
+  ngOnInit() {
+    this.init++;
 
-    this.projectId = newProject;
+    if (this.init==1)
+      return;
 
     this.events = null;
     this.explorerService.getQueryQueue()
