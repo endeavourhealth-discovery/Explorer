@@ -179,7 +179,7 @@ export class RegistryListsComponent implements OnInit {
       let nhsNumber = "";
       if (result) {
         nhsNumber = result;
-        window.location.href = "https://devgateway.discoverydataservice.net/record-viewer/#/summary?nhsNumber="+nhsNumber;
+        window.location.href = "https://gateway.discoverydataservice.net/record-viewer/#/summary?nhsNumber="+nhsNumber;
       }
     });
   }
