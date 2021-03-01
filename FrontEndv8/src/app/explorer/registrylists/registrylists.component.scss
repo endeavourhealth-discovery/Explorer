@@ -23,19 +23,35 @@ mat-paginator {
 
 .poor{
   color: red;
-  font-weight: normal;
   font-weight: bold;
 }
 
 .good{
   color: green;
-  font-weight: normal;
   font-weight: bold;
 }
 
 .neutral {
   color: black;
   font-weight: normal;
+}
+
+.poorLink{
+  color: red;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.goodLink{
+  color: green;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.neutralLink {
+  color: black;
+  font-weight: normal;
+  text-decoration: underline;
 }
 
 .ok{

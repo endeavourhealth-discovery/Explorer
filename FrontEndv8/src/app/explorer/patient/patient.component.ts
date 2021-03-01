@@ -9,6 +9,7 @@ import {PageEvent} from "@angular/material/paginator";
 export interface DialogData {
   queryId: string;
   parentQueryId: string;
+  met: string;
 }
 
 @Component({
@@ -25,6 +26,7 @@ export class PatientComponent {
   name: string = "";
   queryId: string = "";
   parentQueryId: string = "";
+  met: string = "";
 
   displayedColumns: string[] = ['name/address', 'dob/nhsNumber', 'age/gender', 'usual_gp/organisation', 'registration'];
 
@@ -44,6 +46,7 @@ export class PatientComponent {
     this.dataSource = new MatTableDataSource(this.events);
     this.queryId = data.queryId;
     this.parentQueryId = data.parentQueryId;
+    this.met = data.met;
 
     this.loadEvents();
   }
@@ -52,7 +55,7 @@ export class PatientComponent {
 
     this.events = null;
 
-    this.explorerService.getPatients(this.page, this.size, this.name, this.queryId, this.parentQueryId)
+    this.explorerService.getPatients(this.page, this.size, this.name, this.queryId, this.parentQueryId, this.met)
       .subscribe(
         (result) => this.displayEvents(result),
         (error) => this.log.error(error)

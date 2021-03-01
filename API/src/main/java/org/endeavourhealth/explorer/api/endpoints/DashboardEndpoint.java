@@ -334,7 +334,8 @@ public class DashboardEndpoint {
                                 @QueryParam("size") Integer size,
                                 @QueryParam("name") String name,
                                 @QueryParam("queryId") String queryId,
-                                @QueryParam("parentQueryId") String parentQueryId) throws Exception {
+                                @QueryParam("parentQueryId") String parentQueryId,
+                                @QueryParam("met") String met) throws Exception {
         LOG.debug("getPatients");
 
         checkUserAccessToOrganisations(userProjectId);
@@ -344,7 +345,7 @@ public class DashboardEndpoint {
             viewerDAL.setValidOrgs(validOrgs);
             viewerDAL.setSubscriberConnection(configName); viewerDAL.setPatientIdentifiable(patientIdentifiable); viewerDAL.setProjectType(projectType);
 
-            PatientResult result = viewerDAL.getPatientResult(page, size, name, queryId, parentQueryId);
+            PatientResult result = viewerDAL.getPatientResult(page, size, name, queryId, parentQueryId, met);
 
             return Response
                     .ok()

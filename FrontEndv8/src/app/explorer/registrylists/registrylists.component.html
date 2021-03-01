@@ -65,21 +65,21 @@
                         </mwl-gauge>
                       </td>
                       <td style="text-align: left">
-                        <div (click)="patientList(element.queryId, element.parentQueryId)">
+                        <div>
                           <span [ngClass]="{
                         'neutral': toPercent(element.listSize,element.registrySize)<65&&element.registrySize!='-1'&&element.registrySize!='',
                         'good': toPercent(element.listSize,element.registrySize)>=65}"
                                 *ngIf="element.listSize>0&&toPercent(element.listSize,element.registrySize)>0">Criteria met: </span>
-                          <span [ngClass]="{
-                        'neutral': toPercent(element.listSize,element.registrySize)<65&&element.registrySize!='-1'&&element.registrySize!='',
-                        'goodBold': toPercent(element.listSize,element.registrySize)>=65}">{{getSize(element.listSize, element.registrySize)}}</span>
+                          <span matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="view patients with criteria met" (click)="patientList(element.queryId, element.parentQueryId, 1)" [ngClass]="{
+                        'neutralLink': toPercent(element.listSize,element.registrySize)<65&&element.registrySize!='-1'&&element.registrySize!='',
+                        'goodLink': toPercent(element.listSize,element.registrySize)>=65}">{{getSize(element.listSize, element.registrySize)}}</span>
                           <div [ngClass]="{
                         'poor': toPercent(element.listSize,element.registrySize)<65&&element.registrySize!='-1'&&element.registrySize!='',
                         'neutral': toPercent(element.listSize,element.registrySize)>=65}"
                                *ngIf="element.listSize>0&&toPercent(element.listSize,element.registrySize)>0">Not met:
-                            <span [ngClass]="{
-                        'poorBold': toPercent(element.listSize,element.registrySize)<65&&element.registrySize!='-1'&&element.registrySize!='',
-                        'neutral': toPercent(element.listSize,element.registrySize)>=65}">{{(element.listSize-element.registrySize).toLocaleString()}}</span>
+                            <span matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="view patients with criteria not met" (click)="patientList(element.queryId, element.parentQueryId, 0)" [ngClass]="{
+                        'poorLink': toPercent(element.listSize,element.registrySize)<65&&element.registrySize!='-1'&&element.registrySize!='',
+                        'neutralLink': toPercent(element.listSize,element.registrySize)>=65}">{{(element.listSize-element.registrySize).toLocaleString()}}</span>
                           </div>
                         </div>
                       </td>

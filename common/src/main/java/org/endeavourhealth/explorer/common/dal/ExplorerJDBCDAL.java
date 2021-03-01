@@ -1761,7 +1761,7 @@ public class ExplorerJDBCDAL implements AutoCloseable {
     }
 
 
-    public PatientResult getPatientResult(Integer page, Integer size, String name, String queryId, String parentQueryId) throws Exception {
+    public PatientResult getPatientResult(Integer page, Integer size, String name, String queryId, String parentQueryId, String met) throws Exception {
         PatientResult result = new PatientResult();
 
         String sql = "";
@@ -1778,6 +1778,10 @@ public class ExplorerJDBCDAL implements AutoCloseable {
 
         if (projectType==6||projectType==7||!patientIdentifiable) // CCG/STP/not PID
             noResults = " and 0=1 ";
+
+        String metInclude = " IN ";
+        if (met.equals("0"))
+            metInclude = " NOT IN ";
 
         if (name.equals("")) { // No name
             sql = "SELECT p.id,coalesce(p.date_of_birth,'') as date_of_birth,coalesce(c.name,'') as gender,FLOOR(DATEDIFF(now(), p.date_of_birth) / 365.25) as age, " +
@@ -1797,7 +1801,7 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                     noResults+
                     " and p.id in "+
                     "(SELECT patient_id FROM dashboards.person_dataset " +
-                    "where query_id = ? and patient_id not in "+
+                    "where query_id = ? and patient_id "+metInclude+
                     "(SELECT patient_id FROM dashboards.person_dataset where query_id = ?)) "+
                     "LIMIT ?,?";
 
@@ -1836,7 +1840,7 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                     noResults+
                     " and p.id in "+
                     "(SELECT patient_id FROM dashboards.person_dataset " +
-                    "where query_id = ? and patient_id not in "+
+                    "where query_id = ? and patient_id "+metInclude+
                     "(SELECT patient_id FROM dashboards.person_dataset where query_id = ?)) ";
 
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -1877,7 +1881,7 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                     noResults+
                     " and p.id in "+
                     "(SELECT patient_id FROM dashboards.person_dataset " +
-                    "where query_id = ? and patient_id not in "+
+                    "where query_id = ? and patient_id "+metInclude+
                     "(SELECT patient_id FROM dashboards.person_dataset where query_id = ?)) "+
                     "and p.last_name like ? LIMIT ?,?";
 
@@ -1917,7 +1921,7 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                     noResults+
                     " and p.id in "+
                     "(SELECT patient_id FROM dashboards.person_dataset " +
-                    "where query_id = ? and patient_id not in "+
+                    "where query_id = ? and patient_id "+metInclude+
                     "(SELECT patient_id FROM dashboards.person_dataset where query_id = ?)) "+
                     "and p.last_name like ?";
 
@@ -1960,7 +1964,7 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                     noResults+
                     " and p.id in "+
                     "(SELECT patient_id FROM dashboards.person_dataset " +
-                    "where query_id = ? and patient_id not in "+
+                    "where query_id = ? and patient_id "+metInclude+
                     "(SELECT patient_id FROM dashboards.person_dataset where query_id = ?)) "+
                     "and (p.first_names like ? and p.last_name like ?) LIMIT ?,?";
 
@@ -2001,7 +2005,7 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                     noResults+
                     " and p.id in "+
                     "(SELECT patient_id FROM dashboards.person_dataset " +
-                    "where query_id = ? and patient_id not in "+
+                    "where query_id = ? and patient_id "+metInclude+
                     "(SELECT patient_id FROM dashboards.person_dataset where query_id = ?)) "+
                     "and (p.first_names like ? and p.last_name like ?)";
 

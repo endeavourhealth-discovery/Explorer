@@ -73,7 +73,7 @@
 
                       </td>
                       <td style="text-align: left">
-                        <div>
+                        <div (click)="gotoRegistryLists(index, element)">
                           <span [ngClass]="{
                         'neutral': toPercent(index,element.registrySize)<element.allColumns.split('~')[i+1].split('.')[0]*1,
                         'good': toPercent(index,element.registrySize)>=element.allColumns.split('~')[i+1].split('.')[0]*1}"

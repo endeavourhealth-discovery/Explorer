@@ -96,12 +96,17 @@ export class RegistryListsComponent implements OnInit {
 
   displayEvents(events: any) {
     this.events = events;
-    console.log(this.events);
     this.dataSource = new MatTableDataSource(events.results);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
 
     this.wait = false;
+
+    this.route.queryParams
+      .subscribe(params => {
+        let org = params['org'];
+        this.filter = org.split(' ')[0];
+      });
 
     this.dataSource.filterPredicate = (data:{practiceName: string, registry: string}, filterValue: string) => {
       const filterArray = filterValue.split(' ');
@@ -165,14 +170,13 @@ export class RegistryListsComponent implements OnInit {
     }
   }
 
-  patientList(query:any, parent:any) {
-    console.log(parent);
+  patientList(query:any, parent:any, met: any) {
     const dialogRef = this.dialog.open(PatientComponent, {
       disableClose: true,
       height: '830px',
       width: '1600px',
 
-      data: {queryId: query, parentQueryId: parent}
+      data: {queryId: query, parentQueryId: parent, met: met}
     });
 
     dialogRef.afterClosed().subscribe(result => {
