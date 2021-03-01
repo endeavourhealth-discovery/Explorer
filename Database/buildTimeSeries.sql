@@ -129,7 +129,7 @@ IF p_timeSeries = 'TRUE' AND
          a.series_name,
          a.series_value
    FROM (SELECT  
-         org2.name AS `grouping`,', 
+         org.name AS `grouping`,', 
          seriesColumn,' AS name, 
          o2.clinical_effective_date AS series_name, 
          COUNT(DISTINCT(o2.patient_id)) AS series_value 
@@ -137,9 +137,8 @@ IF p_timeSeries = 'TRUE' AND
    ON c.patient_id = o2.patient_id AND c.organization_id = o2.organization_id AND c.person_id = o2.person_id ', 
    join_clause_1,' 
    JOIN ', p_schema,'.organization org ON org.id = o2.organization_id 
-   LEFT JOIN ', p_schema,'.organization org2 ON org2.id = org.parent_organization_id 
    WHERE ', seriesDateRange,'  
-   GROUP BY org2.name,', seriesColumn,', o2.clinical_effective_date) a JOIN (SELECT @row_no := 0) t 
+   GROUP BY org.name,', seriesColumn,', o2.clinical_effective_date) a JOIN (SELECT @row_no := 0) t 
    ORDER BY a.series_name, a.grouping'); 
    PREPARE stmt FROM @sql;
    EXECUTE stmt;
