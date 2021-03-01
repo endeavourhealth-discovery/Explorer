@@ -31,10 +31,10 @@
               </mat-select>
             </mat-form-field>
             <mat-form-field style="width:200px;; margin-left: 10px"  appearance="standard" *ngIf="showLineCharts1||showBarCharts1">
-              <mat-label>Filter CCG/TRUST</mat-label>
-              <mat-select style="width:200px;;" [formControl]="ccgValues1" multiple [(value)]="selectedCCG1">
+              <mat-label>Filter organisation</mat-label>
+              <mat-select style="width:200px;;" [formControl]="OrgValues1" multiple [(value)]="selectedOrg1">
                 <mat-checkbox class="mat-option" [(ngModel)]="selectAll1" (change)="toggleSelection1($event)">Select All</mat-checkbox>
-                <mat-option  *ngFor="let result of ccgList1" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">{{result}}</mat-option>
+                <mat-option  *ngFor="let result of OrgList1" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">{{result}}</mat-option>
               </mat-select>
             </mat-form-field>
             <div style="margin-top: -13px" *ngIf="showLineCharts1||showBarCharts1">
@@ -197,10 +197,10 @@
               </mat-select>
             </mat-form-field>
             <mat-form-field style="width:200px;; margin-left: 10px"  appearance="standard" *ngIf="showLineCharts2||showBarCharts2">
-              <mat-label>Filter CCG/TRUST</mat-label>
-              <mat-select style="width:200px;;" [formControl]="ccgValues2" multiple [(value)]="selectedCCG2">
+              <mat-label>Filter organisation</mat-label>
+              <mat-select style="width:200px;;" [formControl]="OrgValues2" multiple [(value)]="selectedOrg2">
                 <mat-checkbox class="mat-option" [(ngModel)]="selectAll2" (change)="toggleSelection2($event)">Select All</mat-checkbox>
-                <mat-option *ngFor="let result of ccgList2" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">{{result}}</mat-option>
+                <mat-option *ngFor="let result of OrgList2" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">{{result}}</mat-option>
               </mat-select>
             </mat-form-field>
             <div style="margin-top: -13px" *ngIf="showLineCharts2||showBarCharts2">
@@ -363,10 +363,10 @@
               </mat-select>
             </mat-form-field>
             <mat-form-field style="width:200px;; margin-left: 10px"  appearance="standard" *ngIf="showLineCharts3||showBarCharts3">
-              <mat-label>Filter CCG/TRUST</mat-label>
-              <mat-select style="width:200px;;" [formControl]="ccgValues3" multiple [(value)]="selectedCCG3">
+              <mat-label>Filter organisation</mat-label>
+              <mat-select style="width:200px;;" [formControl]="OrgValues3" multiple [(value)]="selectedOrg3">
                 <mat-checkbox class="mat-option" [(ngModel)]="selectAll3" (change)="toggleSelection3($event)">Select All</mat-checkbox>
-                <mat-option  *ngFor="let result of ccgList3" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">{{result}}</mat-option>
+                <mat-option  *ngFor="let result of OrgList3" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">{{result}}</mat-option>
               </mat-select>
             </mat-form-field>
             <div style="margin-top: -13px" *ngIf="showLineCharts3||showBarCharts3">
@@ -529,10 +529,10 @@
               </mat-select>
             </mat-form-field>
             <mat-form-field style="width:200px;; margin-left: 10px"  appearance="standard" *ngIf="showLineCharts4||showBarCharts4">
-              <mat-label>Filter CCG/TRUST</mat-label>
-              <mat-select style="width:200px;;" [formControl]="ccgValues4" multiple [(value)]="selectedCCG4">
+              <mat-label>Filter organisation</mat-label>
+              <mat-select style="width:200px;;" [formControl]="OrgValues4" multiple [(value)]="selectedOrg4">
                 <mat-checkbox class="mat-option" [(ngModel)]="selectAll4" (change)="toggleSelection4($event)">Select All</mat-checkbox>
-                <mat-option  *ngFor="let result of ccgList4" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">{{result}}</mat-option>
+                <mat-option  *ngFor="let result of OrgList4" [value]="result" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="{{result}}">{{result}}</mat-option>
               </mat-select>
             </mat-form-field>
             <div style="margin-top: -13px" *ngIf="showLineCharts4||showBarCharts4">

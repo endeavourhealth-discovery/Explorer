@@ -96,10 +96,10 @@ export class DashboardViewerComponent implements OnInit {
   seriesList2: string = '';
   seriesList3: string = '';
   seriesList4: string = '';
-  selectedCCG1: any = [];
-  selectedCCG2: any = [];
-  selectedCCG3: any = [];
-  selectedCCG4: any = [];
+  selectedOrg1: any = [];
+  selectedOrg2: any = [];
+  selectedOrg3: any = [];
+  selectedOrg4: any = [];
   months: string[] = [];
   chartName: string = "";
   widget1: boolean = false;
@@ -137,8 +137,8 @@ export class DashboardViewerComponent implements OnInit {
   weekly1: boolean = false;
 
   refLines1 = [{value: 1, name: 'Minimum'}, {value: 2, name: 'Average'}, {value: 3, name: 'Maximum'}];
-  ccgList1 = [];
-  ccgValues1 = new FormControl(this.ccgList1);
+  OrgList1 = [];
+  OrgValues1 = new FormControl(this.OrgList1);
   showGridLines2: boolean = true;
   showAreaChart2: boolean = false;
   gradient2: boolean = false;
@@ -148,8 +148,8 @@ export class DashboardViewerComponent implements OnInit {
   weekly2: boolean = false;
 
   refLines2 = [{value: 1, name: 'Minimum'}, {value: 2, name: 'Average'}, {value: 3, name: 'Maximum'}];
-  ccgList2 = [];
-  ccgValues2 = new FormControl(this.ccgList2);
+  OrgList2 = [];
+  OrgValues2 = new FormControl(this.OrgList2);
   showGridLines3: boolean = true;
   showAreaChart3: boolean = false;
   gradient3: boolean = false;
@@ -159,8 +159,8 @@ export class DashboardViewerComponent implements OnInit {
   weekly3: boolean = false;
 
   refLines3 = [{value: 1, name: 'Minimum'}, {value: 2, name: 'Average'}, {value: 3, name: 'Maximum'}];
-  ccgList3 = [];
-  ccgValues3 = new FormControl(this.ccgList3);
+  OrgList3 = [];
+  OrgValues3 = new FormControl(this.OrgList3);
   showGridLines4: boolean = true;
   showAreaChart4: boolean = false;
   gradient4: boolean = false;
@@ -170,8 +170,8 @@ export class DashboardViewerComponent implements OnInit {
   weekly4: boolean = false;
 
   refLines4 = [{value: 1, name: 'Minimum'}, {value: 2, name: 'Average'}, {value: 3, name: 'Maximum'}];
-  ccgList4 = [];
-  ccgValues4 = new FormControl(this.ccgList4);
+  OrgList4 = [];
+  OrgValues4 = new FormControl(this.OrgList4);
   colorScheme = {
     domain: ["#3366cc","#dc3912","#ff9900","#109618","#990099","#0099c6","#dd4477","#66aa00","#b82e2e","#316395","#3366cc",
       "#994499","#22aa99","#aaaa11","#6633cc","#e67300","#8b0707","#651067","#329262",
@@ -287,14 +287,14 @@ export class DashboardViewerComponent implements OnInit {
 
     this.projectId = newProject;
 
-    this.ccgValues1 = new FormControl(this.ccgList1);
-    this.selectedCCG1 = this.ccgList1;
-    this.ccgValues2 = new FormControl(this.ccgList2);
-    this.selectedCCG2 = this.ccgList2;
-    this.ccgValues3 = new FormControl(this.ccgList3);
-    this.selectedCCG3 = this.ccgList3;
-    this.ccgValues4 = new FormControl(this.ccgList4);
-    this.selectedCCG4 = this.ccgList4;
+    this.OrgValues1 = new FormControl(this.OrgList1);
+    this.selectedOrg1 = this.OrgList1;
+    this.OrgValues2 = new FormControl(this.OrgList2);
+    this.selectedOrg2 = this.OrgList2;
+    this.OrgValues3 = new FormControl(this.OrgList3);
+    this.selectedOrg3 = this.OrgList3;
+    this.OrgValues4 = new FormControl(this.OrgList4);
+    this.selectedOrg4 = this.OrgList4;
 
     this.route.queryParams
       .subscribe(params => {
@@ -310,44 +310,44 @@ export class DashboardViewerComponent implements OnInit {
 
   toggleSelection1(event) {
     if (event.checked) {
-      this.ccgValues1 = new FormControl(this.ccgList1);
-      this.selectedCCG1 = this.ccgList1;
+      this.OrgValues1 = new FormControl(this.OrgList1);
+      this.selectedOrg1 = this.OrgList1;
     } else {
-      this.ccgValues1 = new FormControl([]);
-      this.selectedCCG1 = "";
+      this.OrgValues1 = new FormControl([]);
+      this.selectedOrg1 = "";
     }
 
   }
 
   toggleSelection2(event) {
     if (event.checked) {
-      this.ccgValues2 = new FormControl(this.ccgList2);
-      this.selectedCCG2 = this.ccgList2;
+      this.OrgValues2 = new FormControl(this.OrgList2);
+      this.selectedOrg2 = this.OrgList2;
     } else {
-      this.ccgValues2 = new FormControl([]);
-      this.selectedCCG2 = "";
+      this.OrgValues2 = new FormControl([]);
+      this.selectedOrg2 = "";
     }
 
   }
 
   toggleSelection3(event) {
     if (event.checked) {
-      this.ccgValues3 = new FormControl(this.ccgList3);
-      this.selectedCCG3 = this.ccgList3;
+      this.OrgValues3 = new FormControl(this.OrgList3);
+      this.selectedOrg3 = this.OrgList3;
     } else {
-      this.ccgValues3 = new FormControl([]);
-      this.selectedCCG3 = "";
+      this.OrgValues3 = new FormControl([]);
+      this.selectedOrg3 = "";
     }
 
   }
 
   toggleSelection4(event) {
     if (event.checked) {
-      this.ccgValues4 = new FormControl(this.ccgList4);
-      this.selectedCCG4 = this.ccgList4;
+      this.OrgValues4 = new FormControl(this.OrgList4);
+      this.selectedOrg4 = this.OrgList4;
     } else {
-      this.ccgValues4 = new FormControl([]);
-      this.selectedCCG4 = "";
+      this.OrgValues4 = new FormControl([]);
+      this.selectedOrg4 = "";
     }
 
   }
@@ -411,7 +411,7 @@ export class DashboardViewerComponent implements OnInit {
 
       this.yAxisLabel1 = this.yAxisLab1;
 
-      this.explorerService.getDashboard(this.selectedQuery1, values1, this.formatDate(this.dateFrom1), this.formatDate(this.dateTo1), cumulative, this.selectedCCG1.toString(), weekly)
+      this.explorerService.getDashboard(this.selectedQuery1, values1, this.formatDate(this.dateFrom1), this.formatDate(this.dateTo1), cumulative, this.selectedOrg1.toString(), weekly)
         .subscribe(result => {
           this.chartResults1 = result.results;
 
@@ -435,7 +435,7 @@ export class DashboardViewerComponent implements OnInit {
     }
 
     if (this.showBarCharts1) {
-      this.explorerService.getDashboardSingle(this.selectedQuery1, values1, this.formatDate(this.dateFrom1), this.formatDate(this.dateTo1), 0, this.selectedCCG1.toString())
+      this.explorerService.getDashboardSingle(this.selectedQuery1, values1, this.formatDate(this.dateFrom1), this.formatDate(this.dateTo1), 0, this.selectedOrg1.toString())
         .subscribe(result => {
           this.chartResultsSingle1 = result.series;
         });
@@ -464,7 +464,7 @@ export class DashboardViewerComponent implements OnInit {
 
       this.yAxisLabel2 = this.yAxisLab2;
 
-      this.explorerService.getDashboard(this.selectedQuery2, values2, this.formatDate(this.dateFrom2), this.formatDate(this.dateTo2), cumulative, this.selectedCCG2.toString(), weekly)
+      this.explorerService.getDashboard(this.selectedQuery2, values2, this.formatDate(this.dateFrom2), this.formatDate(this.dateTo2), cumulative, this.selectedOrg2.toString(), weekly)
         .subscribe(result => {
           this.chartResults2 = result.results;
 
@@ -488,7 +488,7 @@ export class DashboardViewerComponent implements OnInit {
     }
 
     if (this.showBarCharts2) {
-      this.explorerService.getDashboardSingle(this.selectedQuery2, values2, this.formatDate(this.dateFrom2), this.formatDate(this.dateTo2), 0, this.selectedCCG2.toString())
+      this.explorerService.getDashboardSingle(this.selectedQuery2, values2, this.formatDate(this.dateFrom2), this.formatDate(this.dateTo2), 0, this.selectedOrg2.toString())
         .subscribe(result => {
           this.chartResultsSingle2 = result.series;
         });
@@ -517,7 +517,7 @@ export class DashboardViewerComponent implements OnInit {
 
       this.yAxisLabel3 = this.yAxisLab3;
 
-      this.explorerService.getDashboard(this.selectedQuery3, values3, this.formatDate(this.dateFrom3), this.formatDate(this.dateTo3), cumulative, this.selectedCCG3.toString(), weekly)
+      this.explorerService.getDashboard(this.selectedQuery3, values3, this.formatDate(this.dateFrom3), this.formatDate(this.dateTo3), cumulative, this.selectedOrg3.toString(), weekly)
         .subscribe(result => {
           this.chartResults3 = result.results;
 
@@ -541,7 +541,7 @@ export class DashboardViewerComponent implements OnInit {
     }
 
     if (this.showBarCharts3) {
-      this.explorerService.getDashboardSingle(this.selectedQuery3, values3, this.formatDate(this.dateFrom3), this.formatDate(this.dateTo3), 0, this.selectedCCG3.toString())
+      this.explorerService.getDashboardSingle(this.selectedQuery3, values3, this.formatDate(this.dateFrom3), this.formatDate(this.dateTo3), 0, this.selectedOrg3.toString())
         .subscribe(result => {
           this.chartResultsSingle3 = result.series;
         });
@@ -570,7 +570,7 @@ export class DashboardViewerComponent implements OnInit {
 
       this.yAxisLabel4 = this.yAxisLab4;
 
-      this.explorerService.getDashboard(this.selectedQuery4, values4, this.formatDate(this.dateFrom4), this.formatDate(this.dateTo4), cumulative, this.selectedCCG4.toString(), weekly)
+      this.explorerService.getDashboard(this.selectedQuery4, values4, this.formatDate(this.dateFrom4), this.formatDate(this.dateTo4), cumulative, this.selectedOrg4.toString(), weekly)
         .subscribe(result => {
           this.chartResults4 = result.results;
 
@@ -594,7 +594,7 @@ export class DashboardViewerComponent implements OnInit {
     }
 
     if (this.showBarCharts4) {
-      this.explorerService.getDashboardSingle(this.selectedQuery4, values4, this.formatDate(this.dateFrom4), this.formatDate(this.dateTo4), 0, this.selectedCCG4.toString())
+      this.explorerService.getDashboardSingle(this.selectedQuery4, values4, this.formatDate(this.dateFrom4), this.formatDate(this.dateTo4), 0, this.selectedOrg4.toString())
         .subscribe(result => {
           this.chartResultsSingle4 = result.series;
         });
@@ -833,11 +833,11 @@ export class DashboardViewerComponent implements OnInit {
   loadQuery1Grouping(result: any) {
     result.results.map(
       e => {
-        this.ccgList1.push(e.grouping);
+        this.OrgList1.push(e.grouping);
       }
     )
 
-    this.ccgValues1 = new FormControl(this.ccgList1);
+    this.OrgValues1 = new FormControl(this.OrgList1);
 
 
   }
@@ -881,11 +881,11 @@ export class DashboardViewerComponent implements OnInit {
   loadQuery2Grouping(result: any) {
     result.results.map(
       e => {
-        this.ccgList2.push(e.grouping);
+        this.OrgList2.push(e.grouping);
       }
     )
 
-    this.ccgValues2 = new FormControl(this.ccgList2);
+    this.OrgValues2 = new FormControl(this.OrgList2);
 
 
   }
@@ -929,11 +929,11 @@ export class DashboardViewerComponent implements OnInit {
   loadQuery3Grouping(result: any) {
     result.results.map(
       e => {
-        this.ccgList3.push(e.grouping);
+        this.OrgList3.push(e.grouping);
       }
     )
 
-    this.ccgValues3 = new FormControl(this.ccgList3);
+    this.OrgValues3 = new FormControl(this.OrgList3);
 
 
   }
@@ -977,11 +977,11 @@ export class DashboardViewerComponent implements OnInit {
   loadQuery4Grouping(result: any) {
     result.results.map(
       e => {
-        this.ccgList4.push(e.grouping);
+        this.OrgList4.push(e.grouping);
       }
     )
 
-    this.ccgValues4 = new FormControl(this.ccgList4);
+    this.OrgValues4 = new FormControl(this.OrgList4);
 
 
   }
@@ -1141,9 +1141,9 @@ export class DashboardViewerComponent implements OnInit {
   download1() {
     var csvData = '';
     if (this.showLineCharts1)
-      csvData = this.ConvertToCSVMulti(this.chartResults1,this.selectedCCG1.toString());
+      csvData = this.ConvertToCSVMulti(this.chartResults1,this.selectedOrg1.toString());
     else
-      csvData = this.ConvertToCSVSingle(this.chartResultsSingle1,this.selectedCCG1.toString(),this.selectedSeries1.toString());
+      csvData = this.ConvertToCSVSingle(this.chartResultsSingle1,this.selectedOrg1.toString(),this.selectedSeries1.toString());
 
     let exportData = this.csvJSON(csvData);
 
@@ -1190,9 +1190,9 @@ export class DashboardViewerComponent implements OnInit {
   download2() {
     var csvData = '';
     if (this.showLineCharts2)
-      csvData = this.ConvertToCSVMulti(this.chartResults2,this.selectedCCG2.toString());
+      csvData = this.ConvertToCSVMulti(this.chartResults2,this.selectedOrg2.toString());
     else
-      csvData = this.ConvertToCSVSingle(this.chartResultsSingle2,this.selectedCCG2.toString(),this.selectedSeries2.toString());
+      csvData = this.ConvertToCSVSingle(this.chartResultsSingle2,this.selectedOrg2.toString(),this.selectedSeries2.toString());
 
     let exportData = this.csvJSON(csvData);
 
@@ -1215,9 +1215,9 @@ export class DashboardViewerComponent implements OnInit {
   download3() {
     var csvData = '';
     if (this.showLineCharts3)
-      csvData = this.ConvertToCSVMulti(this.chartResults3,this.selectedCCG3.toString());
+      csvData = this.ConvertToCSVMulti(this.chartResults3,this.selectedOrg3.toString());
     else
-      csvData = this.ConvertToCSVSingle(this.chartResultsSingle3,this.selectedCCG3.toString(),this.selectedSeries3.toString());
+      csvData = this.ConvertToCSVSingle(this.chartResultsSingle3,this.selectedOrg3.toString(),this.selectedSeries3.toString());
 
     let exportData = this.csvJSON(csvData);
 
@@ -1240,9 +1240,9 @@ export class DashboardViewerComponent implements OnInit {
   download4() {
     var csvData = '';
     if (this.showLineCharts4)
-      csvData = this.ConvertToCSVMulti(this.chartResults4,this.selectedCCG4.toString());
+      csvData = this.ConvertToCSVMulti(this.chartResults4,this.selectedOrg4.toString());
     else
-      csvData = this.ConvertToCSVSingle(this.chartResultsSingle4,this.selectedCCG4.toString(),this.selectedSeries4.toString());
+      csvData = this.ConvertToCSVSingle(this.chartResultsSingle4,this.selectedOrg4.toString(),this.selectedSeries4.toString());
 
     let exportData = this.csvJSON(csvData);
 

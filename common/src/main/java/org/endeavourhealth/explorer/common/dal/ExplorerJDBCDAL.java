@@ -3025,7 +3025,7 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         for( int i = 0 ; i < validOrgs.size(); i++ ) {
             builder.append("?,");
         }
-        String validOrgParams = builder.deleteCharAt( builder.length() -1 ).toString();
+        String paramsValidOrgs = builder.deleteCharAt( builder.length() -1 ).toString();
 
         String sql = "";
         String sqlCount = "";
@@ -3043,14 +3043,14 @@ public class ExplorerJDBCDAL implements AutoCloseable {
 
         String noResults = "";
 
-        if (projectType==7) // CCG/STP
+        if (projectType==6||projectType==7) // CCG/STP
             noResults = " and 0=1 ";
 
         sql = "SELECT distinct `grouping` " +
                 "FROM dashboards.`dashboard_results_" + queryId + "` r "+
                 "where r.`grouping` in ("+
-                "select distinct ccg from dashboards.population_denominators "+
-                "WHERE (stp_ods_code in ("+validOrgParams+") or ccg_ods_code in ("+validOrgParams+"))) "+
+                "select distinct practice from dashboards.population_denominators "+
+                "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
                 noResults+
                 " order by `grouping`";
 
@@ -3058,6 +3058,9 @@ public class ExplorerJDBCDAL implements AutoCloseable {
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             int p = 1;
+            for (int i = 1; i <= validOrgs.size(); i++) {
+                statement.setString(p++, validOrgs.get(i-1));
+            }
             for (int i = 1; i <= validOrgs.size(); i++) {
                 statement.setString(p++, validOrgs.get(i-1));
             }
