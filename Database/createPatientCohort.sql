@@ -10,6 +10,8 @@ CREATE PROCEDURE createPatientCohort(
      p_genderRange VARCHAR(255),
      p_postcodeRange VARCHAR(255),
      p_practiceCohortTab VARCHAR(64),
+     p_ethnicGroups VARCHAR(255), 
+     p_lsoaString VARCHAR(255), 
      p_schema VARCHAR(255)
 )
 
@@ -54,6 +56,8 @@ BEGIN
           p.date_of_death, 
           IF(p.date_of_death IS NULL, FLOOR(DATEDIFF(NOW(), p.date_of_birth) / 365.25), FLOOR(DATEDIFF(p.date_of_death, p.date_of_birth) / 365.25)) AS age, 
           c2.code AS gender, 
+          el.ethnic_group, 
+          pa.lsoa_2011_code AS lsoa_code, 
           pa.postcode 
    FROM ',p_schema,'.episode_of_care e 
    JOIN ',p_schema,'.organization org on org.id = e.organization_id 
@@ -61,6 +65,8 @@ BEGIN
    JOIN ',p_schema,'.patient p ON p.id = e.patient_id 
    JOIN ',p_schema,'.concept c2 ON c2.dbid = p.gender_concept_id ', p_org, ' 
    LEFT JOIN ',p_schema,'.patient_address pa ON p.current_address_id = pa.id AND p.id = pa.patient_id 
+   LEFT JOIN ',p_schema,'.concept c3 ON c3.dbid = p.ethnic_code_concept_id
+   LEFT JOIN ',p_schema,'.ethnicity_lookup el ON el.ethnic_name = c3.name 
    WHERE ',regstatus_1, 
    ' AND e.id >= (SELECT MAX(e2.id) 
                   FROM ',p_schema,'.episode_of_care e2 
@@ -69,6 +75,8 @@ BEGIN
                   WHERE ',regstatus_2,' 
                   AND e2.person_id = e.person_id AND e2.organization_id = e.organization_id) 
      AND ',p_genderRange,' 
+     AND ',p_ethnicGroups,' 
+     AND ',p_lsoaString,' 
      AND ',p_postcodeRange,' 
      AND ',p_death);
 

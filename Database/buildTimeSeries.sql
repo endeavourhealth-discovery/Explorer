@@ -21,7 +21,8 @@ CREATE PROCEDURE buildTimeSeries (
   p_seriesConceptTab VARCHAR(64),
   p_schema VARCHAR(255),
   p_query_id INT,
-  p_patientcohorttab VARCHAR(64)
+  p_patientcohorttab VARCHAR(64),
+  p_baselineDate VARCHAR(30)
 )
 
 BEGIN
@@ -78,7 +79,7 @@ IF p_timeSeries = 'TRUE' AND
       SET sourceTab = 'encounter';
    END IF;
    -- get time series date range string
-   SET seriesDateRange = getTimePeriodDateRange(p_fromDate, p_toDate, p_periodValue, p_periodType, p_periodOperator,'T');    
+   SET seriesDateRange = getTimePeriodDateRange(p_fromDate, p_toDate, p_periodValue, p_periodType, p_periodOperator, p_baselineDate);    
    -- get time series value set string
    CALL getValueSetString(seriesValueSet, p_storetab, @seriesValueSetString);
    SET seriesValueSetString = @seriesValueSetString;

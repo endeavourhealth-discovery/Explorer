@@ -14,6 +14,7 @@ CREATE PROCEDURE processQueryExpression(
   IN p_store_tmp VARCHAR(64),
   IN p_conceptAllTab VARCHAR(64), 
   IN p_schema VARCHAR(255),
+  IN p_baselineDate VARCHAR(30),
   IN enabled INTEGER
 )
 
@@ -96,11 +97,11 @@ BEGIN
                   IF l_id = 1 AND l_selectReject = 'REGISTER' THEN
 
                         SET l_observationtab = CONCAT(p_schema,'.observation');
-                        CALL queryBuilder(l_query_id, jsonQuery, TempValue, l_cohort, l_observationtab, p_store_tmp, p_conceptAllTab, p_schema, 1);
+                        CALL queryBuilder(l_query_id, jsonQuery, TempValue, l_cohort, l_observationtab, p_store_tmp, p_conceptAllTab, p_schema, p_baselineDate, 1);
 
                   ELSE 
                         SET l_observationtab = p_observationCohort_tmp;
-                        CALL queryBuilder(l_query_id, jsonQuery, TempValue, l_cohort, l_observationtab, p_store_tmp, NULL, p_schema, 2);
+                        CALL queryBuilder(l_query_id, jsonQuery, TempValue, l_cohort, l_observationtab, p_store_tmp, NULL, p_schema, p_baselineDate, 2);
 
                   END IF;                  
 

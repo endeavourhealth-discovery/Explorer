@@ -14,6 +14,7 @@ CREATE PROCEDURE queryBuilder(
   IN p_store_tmp VARCHAR(64),
   IN p_concept_all_tmp VARCHAR(64),
   IN p_schema VARCHAR(255),
+  IN p_baselineDate VARCHAR(30),
   IN p_filter INT
 )
 
@@ -94,7 +95,7 @@ DECLARE tempTables VARCHAR(5000);
         incConcept_tmp, p_observationCohort_tmp, '1', NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-        p_schema, p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_filter);
+        p_schema, p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_baselineDate, p_filter);
 
     -- remove tmp tables
     SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp);
@@ -119,7 +120,7 @@ DECLARE tempTables VARCHAR(5000);
         incConcept_tmp, p_observationCohort_tmp, '1', NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-        p_schema, p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_filter);
+        p_schema, p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_baselineDate, p_filter);
 
         -- remove tmp tables
         SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp);
@@ -144,7 +145,7 @@ DECLARE tempTables VARCHAR(5000);
         incConcept_tmp, p_observationCohort_tmp, '1', NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-        p_schema, p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_filter);
+        p_schema, p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_baselineDate, p_filter);
 
         -- remove tmp tables
         SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp);
@@ -169,7 +170,7 @@ DECLARE tempTables VARCHAR(5000);
         incConcept_tmp, p_observationCohort_tmp, '1', NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-        p_schema, p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_filter);
+        p_schema, p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_baselineDate, p_filter);
 
         -- remove tmp tables
         SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp);
@@ -194,7 +195,7 @@ DECLARE tempTables VARCHAR(5000);
         incConcept_tmp, p_observationCohort_tmp, '1', NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-        p_schema, p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_filter);
+        p_schema, p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_baselineDate, p_filter);
 
         -- remove tmp tables
         SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp);
@@ -219,7 +220,7 @@ DECLARE tempTables VARCHAR(5000);
         incConcept_tmp, p_observationCohort_tmp, '1', NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-        p_schema, p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_filter);
+        p_schema, p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_baselineDate, p_filter);
 
         -- remove tmp tables
         SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp);
@@ -244,7 +245,7 @@ DECLARE tempTables VARCHAR(5000);
         incConcept_tmp, p_observationCohort_tmp, '1', NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-        p_schema, p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_filter);
+        p_schema, p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_baselineDate, p_filter);
 
         -- remove tmp tables
         SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp);
@@ -269,7 +270,7 @@ DECLARE tempTables VARCHAR(5000);
         incConcept_tmp, p_observationCohort_tmp, '1', NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-        p_schema, p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_filter);
+        p_schema, p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_baselineDate, p_filter);
 
         -- remove tmp tables
         SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp);
@@ -294,7 +295,7 @@ DECLARE tempTables VARCHAR(5000);
         incConcept_tmp, p_observationCohort_tmp, '1', NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-        p_schema, p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_filter);
+        p_schema, p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_baselineDate, p_filter);
 
         -- remove tmp tables
         SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp);
@@ -319,7 +320,7 @@ DECLARE tempTables VARCHAR(5000);
         incConcept_tmp, p_observationCohort_tmp, '1', NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-        p_schema, p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_filter);
+        p_schema, p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_baselineDate, p_filter);
 
         -- remove tmp tables
         SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp);
@@ -344,7 +345,7 @@ DECLARE tempTables VARCHAR(5000);
         incConcept_tmp, p_observationCohort_tmp, '1', NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-        p_schema, p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_filter);
+        p_schema, p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_baselineDate, p_filter);
 
         -- remove tmp tables
         SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp);
@@ -369,7 +370,7 @@ DECLARE tempTables VARCHAR(5000);
         incConcept_tmp, p_observationCohort_tmp, '1', NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-        p_schema, p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_filter);
+        p_schema, p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_baselineDate, p_filter);
 
         -- remove tmp tables
         SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp);
@@ -394,7 +395,7 @@ DECLARE tempTables VARCHAR(5000);
         incConcept_tmp, p_observationCohort_tmp, '1', NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-        p_schema, p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_filter);
+        p_schema, p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_baselineDate, p_filter);
 
         -- remove tmp tables
         SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp);
@@ -422,7 +423,7 @@ DECLARE tempTables VARCHAR(5000);
         incConcept_tmp, p_observationCohort_tmp, '2', includedEarliestLatest, includedOperator, includedEntryValue, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
-        p_schema, p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_filter);
+        p_schema, p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_baselineDate, p_filter);
 
         -- remove tmp tables
         SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp);
@@ -450,7 +451,7 @@ DECLARE tempTables VARCHAR(5000);
         incConcept_tmp, p_observationCohort_tmp, '2', includedEarliestLatest, includedOperator, includedEntryValue, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
-        p_schema, p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_filter);
+        p_schema, p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_baselineDate, p_filter);
 
         -- remove tmp tables
         SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp);
@@ -478,7 +479,7 @@ DECLARE tempTables VARCHAR(5000);
         incConcept_tmp, p_observationCohort_tmp, '2', includedEarliestLatest, includedOperator, includedEntryValue, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
-        p_schema, p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_filter);
+        p_schema, p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_baselineDate, p_filter);
 
         -- remove tmp tables
         SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp);
@@ -506,7 +507,7 @@ DECLARE tempTables VARCHAR(5000);
         incConcept_tmp, p_observationCohort_tmp, '2', includedEarliestLatest, includedOperator, includedEntryValue, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
-        p_schema, p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_filter);
+        p_schema, p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_baselineDate, p_filter);
 
         -- remove tmp tables
         SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp);
@@ -545,7 +546,7 @@ DECLARE tempTables VARCHAR(5000);
         incConcept_tmp, p_observationCohort_tmp, '3', includedEarliestLatest, NULL, NULL, includedAnyAllTested, includedTestedValueSet, incTestedValueset_tmp, 
         incTestedConcept_tmp, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, includedDiagnosisAgeFrom, includedDiagnosisAgeTo, includedDob, includedDiagnosisAnyAll, includedDiagnosisValueSet,
-        incDiagnosisValueSet_tmp, incDiagnosisConcept_tmp, p_schema, p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_filter);
+        incDiagnosisValueSet_tmp, incDiagnosisConcept_tmp, p_schema, p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_baselineDate, p_filter);
 
         -- remove tmp tables
         SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp,',',incTestedValueset_tmp,',',incTestedConcept_tmp,',',incDiagnosisValueSet_tmp,',',incDiagnosisConcept_tmp);
@@ -584,7 +585,7 @@ DECLARE tempTables VARCHAR(5000);
         incConcept_tmp, p_observationCohort_tmp, '3', includedEarliestLatest, NULL, NULL, includedAnyAllTested, includedTestedValueSet, incTestedValueset_tmp, 
         incTestedConcept_tmp, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, includedDiagnosisAgeFrom, includedDiagnosisAgeTo, includedDob, includedDiagnosisAnyAll, includedDiagnosisValueSet,
-        incDiagnosisValueSet_tmp, incDiagnosisConcept_tmp, p_schema, p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_filter);
+        incDiagnosisValueSet_tmp, incDiagnosisConcept_tmp, p_schema, p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_baselineDate, p_filter);
 
         -- remove tmp tables
         SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp,',',incTestedValueset_tmp,',',incTestedConcept_tmp,',',incDiagnosisValueSet_tmp,',',incDiagnosisConcept_tmp);
@@ -623,7 +624,7 @@ DECLARE tempTables VARCHAR(5000);
         incConcept_tmp, p_observationCohort_tmp, '3', includedEarliestLatest, NULL, NULL, includedAnyAllTested, includedTestedValueSet, incTestedValueset_tmp, 
         incTestedConcept_tmp, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, includedDiagnosisAgeFrom, includedDiagnosisAgeTo, includedDob, includedDiagnosisAnyAll, includedDiagnosisValueSet,
-        incDiagnosisValueSet_tmp, incDiagnosisConcept_tmp, p_schema, p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_filter);
+        incDiagnosisValueSet_tmp, incDiagnosisConcept_tmp, p_schema, p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_baselineDate, p_filter);
 
         -- remove tmp tables
         SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp,',',incTestedValueset_tmp,',',incTestedConcept_tmp,',',incDiagnosisValueSet_tmp,',',incDiagnosisConcept_tmp);
@@ -662,7 +663,7 @@ DECLARE tempTables VARCHAR(5000);
         incConcept_tmp, p_observationCohort_tmp, '3', includedEarliestLatest, NULL, NULL, includedAnyAllTested, includedTestedValueSet, incTestedValueset_tmp, 
         incTestedConcept_tmp, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, includedDiagnosisAgeFrom, includedDiagnosisAgeTo, includedDob, includedDiagnosisAnyAll, includedDiagnosisValueSet,
-        incDiagnosisValueSet_tmp, incDiagnosisConcept_tmp, p_schema, p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_filter);
+        incDiagnosisValueSet_tmp, incDiagnosisConcept_tmp, p_schema, p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_baselineDate, p_filter);
 
         -- remove tmp tables
         SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp,',',incTestedValueset_tmp,',',incTestedConcept_tmp,',',incDiagnosisValueSet_tmp,',',incDiagnosisConcept_tmp);
@@ -701,7 +702,7 @@ DECLARE tempTables VARCHAR(5000);
         incConcept_tmp, p_observationCohort_tmp, '3', includedEarliestLatest, NULL, NULL, includedAnyAllTested, includedTestedValueSet, incTestedValueset_tmp, 
         incTestedConcept_tmp, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, includedDiagnosisAgeFrom, includedDiagnosisAgeTo, includedDob, includedDiagnosisAnyAll, includedDiagnosisValueSet,
-        incDiagnosisValueSet_tmp, incDiagnosisConcept_tmp, p_schema, p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_filter);
+        incDiagnosisValueSet_tmp, incDiagnosisConcept_tmp, p_schema, p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_baselineDate, p_filter);
 
         -- remove tmp tables
         SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp,',',incTestedValueset_tmp,',',incTestedConcept_tmp,',',incDiagnosisValueSet_tmp,',',incDiagnosisConcept_tmp);
@@ -740,7 +741,7 @@ DECLARE tempTables VARCHAR(5000);
         incConcept_tmp, p_observationCohort_tmp, '3', includedEarliestLatest, NULL, NULL, includedAnyAllTested, includedTestedValueSet, incTestedValueset_tmp, 
         incTestedConcept_tmp, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, includedDiagnosisAgeFrom, includedDiagnosisAgeTo, includedDob, includedDiagnosisAnyAll, includedDiagnosisValueSet,
-        incDiagnosisValueSet_tmp, incDiagnosisConcept_tmp, p_schema, p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_filter);
+        incDiagnosisValueSet_tmp, incDiagnosisConcept_tmp, p_schema, p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_baselineDate, p_filter);
 
         -- remove tmp tables
         SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp,',',incTestedValueset_tmp,',',incTestedConcept_tmp,',',incDiagnosisValueSet_tmp,',',incDiagnosisConcept_tmp);
@@ -779,7 +780,7 @@ DECLARE tempTables VARCHAR(5000);
         incConcept_tmp, p_observationCohort_tmp, '3', includedEarliestLatest, NULL, NULL, includedAnyAllTested, includedTestedValueSet, incTestedValueset_tmp, 
         incTestedConcept_tmp, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, includedDiagnosisAgeFrom, includedDiagnosisAgeTo, includedDob, includedDiagnosisAnyAll, includedDiagnosisValueSet,
-        incDiagnosisValueSet_tmp, incDiagnosisConcept_tmp, p_schema, p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_filter);
+        incDiagnosisValueSet_tmp, incDiagnosisConcept_tmp, p_schema, p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_baselineDate, p_filter);
 
         -- remove tmp tables
         SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp,',',incTestedValueset_tmp,',',incTestedConcept_tmp,',',incDiagnosisValueSet_tmp,',',incDiagnosisConcept_tmp);
@@ -818,7 +819,7 @@ DECLARE tempTables VARCHAR(5000);
         incConcept_tmp, p_observationCohort_tmp, '3', includedEarliestLatest, NULL, NULL, includedAnyAllTested, includedTestedValueSet, incTestedValueset_tmp, 
         incTestedConcept_tmp, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, includedDiagnosisAgeFrom, includedDiagnosisAgeTo, includedDob, includedDiagnosisAnyAll, includedDiagnosisValueSet,
-        incDiagnosisValueSet_tmp, incDiagnosisConcept_tmp, p_schema, p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_filter);
+        incDiagnosisValueSet_tmp, incDiagnosisConcept_tmp, p_schema, p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_baselineDate, p_filter);
 
         -- remove tmp tables
         SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp,',',incTestedValueset_tmp,',',incTestedConcept_tmp,',',incDiagnosisValueSet_tmp,',',incDiagnosisConcept_tmp);
@@ -857,7 +858,7 @@ DECLARE tempTables VARCHAR(5000);
         incConcept_tmp, p_observationCohort_tmp, '3', includedEarliestLatest, NULL, NULL, includedAnyAllTested, includedTestedValueSet, incTestedValueset_tmp, 
         incTestedConcept_tmp, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, includedDiagnosisAgeFrom, includedDiagnosisAgeTo, includedDob, includedDiagnosisAnyAll, includedDiagnosisValueSet,
-        incDiagnosisValueSet_tmp, incDiagnosisConcept_tmp, p_schema, p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_filter);
+        incDiagnosisValueSet_tmp, incDiagnosisConcept_tmp, p_schema, p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_baselineDate, p_filter);
 
         -- remove tmp tables
         SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp,',',incTestedValueset_tmp,',',incTestedConcept_tmp,',',incDiagnosisValueSet_tmp,',',incDiagnosisConcept_tmp);
@@ -887,7 +888,7 @@ DECLARE tempTables VARCHAR(5000);
         incConcept_tmp, p_observationCohort_tmp, '4', NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, includedAreNot, includedAnyAllFollowedBy, includedFollowedByValueSet, incFollowedByValueSet_tmp, incFollowedByConcept_tmp, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-        NULL, NULL, p_schema , p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_filter);
+        NULL, NULL, p_schema , p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_baselineDate, p_filter);
 
         -- remove tmp tables
         SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp,',',incFollowedByValueSet_tmp,',',incFollowedByConcept_tmp);
@@ -917,7 +918,7 @@ DECLARE tempTables VARCHAR(5000);
         incConcept_tmp, p_observationCohort_tmp, '4', NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, includedAreNot, includedAnyAllFollowedBy, includedFollowedByValueSet, incFollowedByValueSet_tmp, incFollowedByConcept_tmp, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-        NULL, NULL, p_schema , p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_filter);
+        NULL, NULL, p_schema , p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_baselineDate, p_filter);
 
         -- remove tmp tables
         SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp,',',incFollowedByValueSet_tmp,',',incFollowedByConcept_tmp);
@@ -947,7 +948,7 @@ DECLARE tempTables VARCHAR(5000);
         incConcept_tmp, p_observationCohort_tmp, '4', NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, includedAreNot, includedAnyAllFollowedBy, includedFollowedByValueSet, incFollowedByValueSet_tmp, incFollowedByConcept_tmp, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-        NULL, NULL, p_schema , p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_filter);
+        NULL, NULL, p_schema , p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_baselineDate, p_filter);
 
         -- remove tmp tables
         SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp,',',incFollowedByValueSet_tmp,',',incFollowedByConcept_tmp);
@@ -974,7 +975,7 @@ DECLARE tempTables VARCHAR(5000);
         incConcept_tmp, p_observationCohort_tmp, '5', NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, includedOperator, includedEntryValue, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-        NULL, NULL, p_schema , p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_filter);
+        NULL, NULL, p_schema , p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_baselineDate, p_filter);
 
         -- remove tmp tables
         SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp);
@@ -1001,7 +1002,7 @@ DECLARE tempTables VARCHAR(5000);
         incConcept_tmp, p_observationCohort_tmp, '5', NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, includedOperator, includedEntryValue, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
-        NULL, NULL, p_schema , p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_filter);
+        NULL, NULL, p_schema , p_store_tmp, p_queryCohort, p_queryNumber, p_concept_all_tmp, p_baselineDate, p_filter);
 
         -- remove tmp tables
         SET tempTables = CONCAT(incValueSet_tmp,',',incConcept_tmp);
@@ -1019,7 +1020,7 @@ DECLARE tempTables VARCHAR(5000);
         NULL, NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, registrationExclude, registrationDateFrom, 
         registrationDateTo, registrationPeriodValue, registrationPeriodType, NULL, NULL, NULL, NULL, NULL, 
-        NULL, NULL, p_schema, NULL, p_queryCohort, p_queryNumber, NULL, NULL);
+        NULL, NULL, p_schema, NULL, p_queryCohort, p_queryNumber, NULL, p_baselineDate, NULL);
 
     ELSEIF p_queryNumber = 'A1' THEN 
 
@@ -1031,7 +1032,7 @@ DECLARE tempTables VARCHAR(5000);
         NULL, NULL, 'A', NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, ageFrom, ageTo, NULL, NULL, NULL,
-        NULL, NULL, p_schema, NULL, p_queryCohort, p_queryNumber, NULL, NULL);
+        NULL, NULL, p_schema, NULL, p_queryCohort, p_queryNumber, NULL, p_baselineDate, NULL);
 
     ELSEIF p_queryNumber = 'A2' THEN 
 
@@ -1043,7 +1044,7 @@ DECLARE tempTables VARCHAR(5000);
         NULL, NULL, 'A', NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, ageFrom, ageTo, NULL, NULL, NULL,
-        NULL, NULL, p_schema, NULL, p_queryCohort, p_queryNumber, NULL, NULL);
+        NULL, NULL, p_schema, NULL, p_queryCohort, p_queryNumber, NULL, p_baselineDate, NULL);
 
     ELSEIF p_queryNumber = 'A3' THEN 
 
@@ -1055,7 +1056,7 @@ DECLARE tempTables VARCHAR(5000);
         NULL, NULL, 'A', NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, ageFrom, ageTo, NULL, NULL, NULL,
-        NULL, NULL, p_schema, NULL, p_queryCohort, p_queryNumber, NULL, NULL);
+        NULL, NULL, p_schema, NULL, p_queryCohort, p_queryNumber, NULL, p_baselineDate, NULL);
 
     ELSEIF p_queryNumber = 'A4' THEN 
 
@@ -1067,7 +1068,7 @@ DECLARE tempTables VARCHAR(5000);
         NULL, NULL, 'A', NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, ageFrom, ageTo, NULL, NULL, NULL,
-        NULL, NULL, p_schema, NULL, p_queryCohort, p_queryNumber, NULL, NULL);
+        NULL, NULL, p_schema, NULL, p_queryCohort, p_queryNumber, NULL, p_baselineDate, NULL);
 
     ELSEIF p_queryNumber = 'A5' THEN 
 
@@ -1079,7 +1080,7 @@ DECLARE tempTables VARCHAR(5000);
         NULL, NULL, 'A', NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
         NULL, NULL, NULL, ageFrom, ageTo, NULL, NULL, NULL,
-        NULL, NULL, p_schema, NULL, p_queryCohort, p_queryNumber, NULL, NULL);
+        NULL, NULL, p_schema, NULL, p_queryCohort, p_queryNumber, NULL, p_baselineDate, NULL);
 
     END IF;
 

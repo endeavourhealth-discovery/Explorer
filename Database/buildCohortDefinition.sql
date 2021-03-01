@@ -9,8 +9,11 @@ CREATE PROCEDURE buildCohortDefinition(
      p_registrationStatus VARCHAR(255),
      p_gender VARCHAR(20),
      p_postcode VARCHAR(20),
+     p_selectedEthnicFields VARCHAR(2000), 
+     p_lsoa VARCHAR(50),
      p_organisationTab VARCHAR(64),
      p_practiceCohortTab VARCHAR(64),
+     p_ethnicFieldsTab VARCHAR(64), 
      p_schema VARCHAR(255)
 )
 
@@ -20,6 +23,8 @@ BEGIN
   DECLARE regstatus VARCHAR(255) DEFAULT NULL;
   DECLARE genderrange VARCHAR(255) DEFAULT NULL;
   DECLARE postcoderange VARCHAR(255) DEFAULT NULL;
+  DECLARE ethnicgroups VARCHAR(255) DEFAULT NULL; 
+  DECLARE lsoaString VARCHAR(255) DEFAULT NULL;  
 
   DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -29,8 +34,26 @@ BEGIN
         RESIGNAL; -- rethrow the error
     END;
 
-  -- get provider orgs
+  -- ethnic groups
+  SET p_selectedEthnicFields = IF(p_selectedEthnicFields = '', NULL, p_selectedEthnicFields);  
+  IF p_selectedEthnicFields IS NOT NULL THEN
+      CALL storeString(p_selectedEthnicFields, p_ethnicFieldsTab);
+      SET ethnicgroups = CONCAT('el.ethnic_group IN (SELECT code FROM ', p_ethnicFieldsTab,')');
+  ELSE
+      SET ethnicgroups = '1';
+  END IF;
 
+  -- lsoa code
+  SET p_lsoa = IF(p_lsoa = '', NULL, p_lsoa);  
+  IF p_lsoa IS NOT NULL THEN
+     SET p_lsoa = TRIM(REPLACE(UPPER(p_lsoa),' ',''));
+     SET p_lsoa = CONCAT(p_lsoa,'%');
+     SET lsoaString = CONCAT("pa.lsoa_2011_code LIKE ", QUOTE(p_lsoa));
+  ELSE
+     SET lsoaString = '1';
+  END IF;
+
+  -- get provider orgs
   CALL storeString(p_providerOrganisation, p_organisationTab);
   SET orgrange = CONCAT('JOIN ', p_organisationTab, ' ot ON ot.code = org.ods_code ');
 
@@ -53,7 +76,7 @@ BEGIN
   END IF;
   
   -- create the practice patient cohort
-  CALL createPatientCohort(p_query_id, orgrange, regstatus, genderrange, postcoderange, p_practiceCohortTab, p_schema);
+  CALL createPatientCohort(p_query_id, orgrange, regstatus, genderrange, postcoderange, p_practiceCohortTab, ethnicgroups, lsoaString, p_schema);
 
 END//
 DELIMITER ;

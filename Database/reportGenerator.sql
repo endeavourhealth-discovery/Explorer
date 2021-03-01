@@ -16,6 +16,9 @@ DECLARE registrationStatus VARCHAR(255) DEFAULT NULL;
 DECLARE postcode VARCHAR(20) DEFAULT NULL; 
 DECLARE gender VARCHAR(20) DEFAULT NULL;  
 
+DECLARE selectedEthnicFields VARCHAR(2000) DEFAULT NULL; 
+DECLARE lsoa VARCHAR(50) DEFAULT NULL; 
+
 -- variables for rules builder
 DECLARE matching1 VARCHAR(30) DEFAULT NULL;
 DECLARE queryExpression1 VARCHAR(255) DEFAULT NULL;
@@ -145,6 +148,7 @@ DECLARE all_concept_tmp VARCHAR(64) DEFAULT NULL;
 DECLARE practiceCohort_tmp VARCHAR(64) DEFAULT NULL;
 DECLARE registerCohort_tmp VARCHAR(64) DEFAULT NULL;
 DECLARE observationCohort_tmp VARCHAR(64) DEFAULT NULL;
+DECLARE ethnicFields_tmp VARCHAR(64) DEFAULT NULL; 
 
 DECLARE Q1 VARCHAR(64) DEFAULT NULL;
 DECLARE Q1A VARCHAR(64) DEFAULT NULL;
@@ -209,6 +213,9 @@ DECLARE tempTables VARCHAR(5000);
 DECLARE rule_tmp VARCHAR(64) DEFAULT NULL; 
 DECLARE rule_det_tmp VARCHAR(64) DEFAULT NULL; 
 
+-- baseline run date
+DECLARE baselineDate VARCHAR(30) DEFAULT NULL; 
+
 -- Set Debug Mode
 SET @enabled = p_enableDebug;
 
@@ -219,10 +226,17 @@ SET targetPercentage = JSON_UNQUOTE(JSON_EXTRACT(query,'$.targetPercentage'));
 SET providerOrganisation = UPPER(REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.providerOrganisation'),'[',''),']',''),'"',''));
 SET registrationStatus = JSON_UNQUOTE(JSON_EXTRACT(query,'$.registrationStatus'));
 
+SET selectedEthnicFields =  REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.selectedEthnicFields'),'[',''),']',''),'"','');  
+SET lsoa =  JSON_UNQUOTE(JSON_EXTRACT(query,'$.lsoa'));   
+
 SET gender = LOWER(JSON_UNQUOTE(JSON_EXTRACT(query,'$.gender'))); 
 SET postcode = JSON_UNQUOTE(JSON_EXTRACT(query,'$.postcode'));
 SET org_tmp = CONCAT('org_tmp_',query_id);
 SET store_tmp = CONCAT('store_tmp_',query_id);
+SET ethnicFields_tmp = CONCAT('ethnicFields_tmp_',query_id);
+
+-- get basline rundate
+SET baselineDate = JSON_UNQUOTE(JSON_EXTRACT(query,'$.baselineDate'));  
 
 -- Set Variables for Query expression --
 SET matching1 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.matching1')),'');
@@ -418,7 +432,7 @@ SET rule_det_tmp = CONCAT('rule_det_tmp_',query_id);
 CALL debug_msg(@enabled, CONCAT(NOW(),' - start'));
 CALL debug_msg(@enabled, CONCAT(NOW(),' - buildCohortDefinition'));
 -- build practice cohort -- 
-CALL buildCohortDefinition(query_id, providerOrganisation, registrationStatus, gender, postcode, org_tmp, practiceCohort_tmp, sourceSchema);
+CALL buildCohortDefinition(query_id, providerOrganisation, registrationStatus, gender, postcode, selectedEthnicFields, lsoa, org_tmp, practiceCohort_tmp, ethnicFields_tmp, sourceSchema);
 -- build concept cohort for all valuesets to be used in the advance queries --
 CALL debug_msg(@enabled, CONCAT(NOW(),' - createValueSet'));
 CALL createValueSet('1', all_valueset_tmp);
@@ -451,13 +465,13 @@ CALL debug_msg(@enabled, CONCAT(NOW(),' - buildQueryExpression'));
 CALL buildQueryExpression(query_id, rule_tmp, rule_det_tmp, practiceCohort_tmp);
 -- process the rules
 CALL debug_msg(@enabled, CONCAT(NOW(),' - processQueryExpression'));
-CALL processQueryExpression(query_id, query, rule_tmp, practiceCohort_tmp, registerCohort_tmp, observationCohort_tmp, store_tmp, all_concept_tmp, sourceSchema, @enabled);
+CALL processQueryExpression(query_id, query, rule_tmp, practiceCohort_tmp, registerCohort_tmp, observationCohort_tmp, store_tmp, all_concept_tmp, sourceSchema, baselineDate, @enabled);
 -- build final patient cohort
 CALL debug_msg(@enabled, CONCAT(NOW(),' - buildFinalPatientCohort'));
 CALL buildFinalPatientCohort(query_id, patientCohort_tmp, practiceCohort_tmp, rule_tmp, sourceSchema, @enabled);
 CALL debug_msg(@enabled, CONCAT(NOW(),' - tempTables'));
 -- remove tmp tables
-SET tempTables = CONCAT(observationCohort_tmp,',',practiceCohort_tmp,',',registerCohort_tmp,',',Q1,',',Q1A,',',Q1B,',',Q1C,',',
+SET tempTables = CONCAT(observationCohort_tmp,',',practiceCohort_tmp,',',registerCohort_tmp,',',ethnicFields_tmp,',',Q1,',',Q1A,',',Q1B,',',Q1C,',',
 Q1D,',',Q1E,',',Q1F,',',Q1G,',',Q1H,',',Q1I,',',Q1J,',',Q1K,',',Q1L,',',Q2,',',Q2A,',',Q2B,',',Q2C,',',
 Q3,',',Q3A,',',Q3B,',',Q3C,',',Q3D,',',Q3E,',',Q3F,',',Q3G,',',Q3H,',',
 Q4,',',Q4A,',',Q4B,',',Q5,',',Q5A,',',Q0,',',A1,',',A2,',',A3,',',A4,',',A5,',',rule_tmp,',',rule_det_tmp,',',all_valueset_tmp,',', all_concept_tmp);
@@ -486,7 +500,7 @@ eventTypes, store_tmp, sourceSchema, query_id, patientCohort_tmp, procedure_req_
 CALL debug_msg(@enabled, CONCAT(NOW(),' - buildTimeSeries'));
 CALL buildTimeSeries(timeSeries, seriesTable, seriesField, seriesEncounterValueSet, seriesMedicationValueSet, seriesClinicalEventValueSet, 
 seriesDateFrom, seriesDateTo, seriesPeriodOperator, seriesPeriodValue, seriesPeriodType, store_tmp, seriesValueset_tmp, seriesConcept_tmp, 
-sourceSchema, query_id, patientCohort_tmp); 
+sourceSchema, query_id, patientCohort_tmp, baselineDate); 
 -- update queue for next run date
 CALL debug_msg(@enabled, CONCAT(NOW(),' - updateQueue'));
 CALL updateQueue(query_id, schedule);
