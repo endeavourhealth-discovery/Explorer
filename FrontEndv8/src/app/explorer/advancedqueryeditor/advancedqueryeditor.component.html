@@ -141,7 +141,16 @@
               </mat-select>
             </mat-form-field>
             <br/>
-            <mat-form-field appearance="outline" style="width: 100px">
+            <mat-form-field appearance="outline" style="width: 200px">
+              <mat-label>Baseline run date</mat-label>
+              <input matInput [matDatepicker]="baseline" placeholder="Baseline run date" [(ngModel)]="baselineDate" formControlName="baseline">
+              <mat-datepicker-toggle matSuffix [for]="baseline">
+                <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+              </mat-datepicker-toggle>
+              <mat-datepicker #baseline></mat-datepicker>
+            </mat-form-field>
+            <br/>
+            <mat-form-field appearance="outline" style="width: 200px">
               <mat-label>Gender</mat-label>
               <mat-select [(ngModel)]="selectedGender" formControlName="control8">
                 <mat-option *ngFor="let gender of genders" [value]="gender.genValue">
@@ -150,9 +159,23 @@
               </mat-select>
             </mat-form-field>
             <br/>
-            <mat-form-field appearance="outline" style="width: 180px">
+            <mat-form-field appearance="outline" style="width: 200px">
+              <mat-label>Ethnic group</mat-label>
+              <mat-select multiple [(ngModel)]="selectedEthnicFields" formControlName="selectedEthnicFields" (ngModelChange)="formChanged()">
+                <mat-option *ngFor="let field of ethnicFieldList" [value]="field">
+                  {{field}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <br/>
+            <mat-form-field appearance="outline" style="width: 200px">
               <mat-label>Home address postcode</mat-label>
               <input matInput placeholder="Postcode" [(ngModel)]="postcode" formControlName="control9" (keydown.enter)="stepper.next()">
+            </mat-form-field>
+            <br/>
+            <mat-form-field appearance="outline" style="width: 200px">
+              <mat-label>Home address LSOA code</mat-label>
+              <input matInput placeholder="LSOA code" [(ngModel)]="lsoa" formControlName="lsoa" (keydown.enter)="stepper.next()">
             </mat-form-field>
           </td>
         </tr>
@@ -4351,9 +4374,24 @@
             </div>
           </td>
         </tr>
+        <tr>
+          <td>
+            <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+              <mat-form-field appearance="outline" style="margin-left: 25px">
+                <mat-label>Submit query to queue for running?</mat-label>
+                <mat-select [(ngModel)]="submitQuery" formControlName="submitQuery" (ngModelChange)="formChanged()" required>
+                  <mat-option *ngFor="let yesno of yesnos" [value]="yesno.yesnoValue">
+                    {{yesno.yesnoValue}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <p style="margin-left: 20px; margin-top: 25px">Is the query ready for submission to the queue, to be run now?</p>
+            </div>
+          </td>
+        </tr>
       </table>
 
-      <div style="margin-top: 530px" mat-dialog-actions align="end">
+      <div style="margin-top: 500px" mat-dialog-actions align="end">
         <button style="margin-right: 15px" mat-button color="accent" (click)="onCancelClick()">Cancel</button>
         <button style="margin-right: 15px" mat-button color="accent" matStepperPrevious>Back</button>
         <button style="margin-right: 15px" mat-flat-button color="accent" [disabled]="disableForm" (click)="saveQuery(false)">Save</button>

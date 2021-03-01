@@ -38,7 +38,10 @@ interface savedQuery {
   ageFrom4: string;
   ageTo4: string;
   gender: string;
+  baselineDate: string;
+  selectedEthnicFields: string;
   postcode: string;
+  lsoa: string;
   registrationExclude: string;
   registrationDateFrom: string;
   registrationDateTo: string;
@@ -46,6 +49,7 @@ interface savedQuery {
   registrationPeriodType: string;
   schedule: string;
   delivery: string;
+  submitQuery: string;
   withWithout1: string;
   includedValueSet1: string;
   includedDateFrom1: string;
@@ -475,6 +479,10 @@ interface delivery {
   deliveryValue: string;
 }
 
+interface yesno {
+  yesnoValue: string;
+}
+
 interface clinicalType {
   clinicalType: string;
 }
@@ -636,7 +644,10 @@ export class AdvancedQueryEditorComponent implements OnInit {
   ageFrom4: string = '';
   ageTo4: string = '';
   selectedGender: string = '';
+  baselineDate: string = '';
+  selectedEthnicFields: string = '';
   postcode: string = '';
+  lsoa: string = '';
 
   withWithout1: string = '';
   includedValueSet1: string = '';
@@ -1032,6 +1043,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
   clinicalEventFieldList = [];
   encounterFieldList = [];
   medicationFieldList = [];
+  ethnicFieldList = [];
   selectedDemographicFields: string = '';
   selectedEncounterFields: string = '';
   selectedMedicationFields: string = '';
@@ -1075,6 +1087,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
 
   selectedDelivery: string = '';
   selectedSchedule: string = '';
+  submitQuery: string = '';
 
   disableForm: boolean;
   id: string;
@@ -1205,6 +1218,11 @@ export class AdvancedQueryEditorComponent implements OnInit {
     {deliveryValue: 'Dashboard'},
     {deliveryValue: 'CSV files'}
   ];
+  yesnos: yesno[] = [
+    {yesnoValue: ''},
+    {yesnoValue: 'Yes'},
+    {yesnoValue: 'No'}
+  ];
   schedules: schedule[] = [
     {scheduleValue: ''},
     {scheduleValue: 'Daily'},
@@ -1306,7 +1324,10 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.ageFrom4 = query.ageFrom4;
       this.ageTo4 = query.ageTo4;
       this.selectedGender = query.gender;
+      this.baselineDate = query.baselineDate;
+      this.selectedEthnicFields = query.selectedEthnicFields;
       this.postcode = query.postcode;
+      this.lsoa = query.lsoa;
       this.registrationExclude = query.registrationExclude;
       this.registrationDateFrom = query.registrationDateFrom;
       this.registrationDateTo = query.registrationDateTo;
@@ -1314,6 +1335,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.registrationPeriodType = query.registrationPeriodType;
       this.selectedSchedule = query.schedule;
       this.selectedDelivery = query.delivery;
+      this.submitQuery = query.submitQuery;
       this.withWithout1 = query.withWithout1;
       this.includedValueSet1 = query.includedValueSet1;
       this.includedDateFrom1 = query.includedDateFrom1;
@@ -1894,7 +1916,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
       control1: ['', Validators.required], control2: ['', Validators.required], control157: [''], control158: [''], control159: ['']
     });
     this.secondFormGroup = this._formBuilder.group({
-      control4: ['', Validators.required], control8: [''], control9: ['']
+      control4: ['', Validators.required], control8: [''], control9: [''], lsoa: [''], selectedEthnicFields: [''], baseline: ['']
     });
 
     this.thirdFormGroup = this._formBuilder.group({
@@ -2120,7 +2142,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
       control77: [''], control78: [''], control79: [''], control80: ['']
     });
     this.sixthFormGroup = this._formBuilder.group({
-      control15: [''], control18: ['', Validators.required], control19: ['', Validators.required]
+      control15: [''], control18: ['', Validators.required], control19: ['', Validators.required], submitQuery: ['', Validators.required]
     });
   }
 
@@ -2315,6 +2337,20 @@ export class AdvancedQueryEditorComponent implements OnInit {
       }
     )
 
+    this.explorerService.getLookupLists('19','')
+      .subscribe(
+        (result) => this.loadEthnicSet(result),
+        (error) => this.log.error(error)
+      );
+
+  }
+
+  loadEthnicSet(lists: any) {
+    lists.results.map(
+      e => {
+        this.ethnicFieldList.push(e.type);
+      }
+    )
   }
 
   filterValueset1() {
@@ -2410,7 +2446,10 @@ export class AdvancedQueryEditorComponent implements OnInit {
       ageFrom4: this.ageFrom4,
       ageTo4: this.ageTo4,
       gender: this.selectedGender,
+      baselineDate: this.formatDate(this.baselineDate),
+      selectedEthnicFields: this.selectedEthnicFields,
       postcode: this.postcode,
+      lsoa: this.lsoa,
       withWithout1: this.withWithout1,
       includedAnyAll1: this.includedAnyAll1,
       includedValueSet1: this.includedValueSet1,
@@ -2812,7 +2851,8 @@ export class AdvancedQueryEditorComponent implements OnInit {
       seriesPeriodValue: this.seriesPeriodValue,
       seriesPeriodType: this.seriesPeriodType,
       schedule: this.selectedSchedule,
-      delivery: this.selectedDelivery
+      delivery: this.selectedDelivery,
+      submitQuery: this.submitQuery
     };
     this.jsonQuery = JSON.stringify(query);
 
@@ -2899,6 +2939,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.name=='' || this.name==undefined ||
       this.selectedRegistration=='' || this.selectedRegistration==undefined ||
       this.selectedDelivery=='' || this.selectedDelivery==undefined ||
+      this.submitQuery=='' || this.submitQuery==undefined ||
       this.selectedSchedule=='' || this.selectedSchedule==undefined;
   }
 
