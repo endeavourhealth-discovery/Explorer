@@ -109,7 +109,7 @@ AND id NOT IN (SELECT query_id FROM queue);
                       FROM query_library q1 LEFT JOIN query_library q2 ON q1.denominator_query = q2.name
                       WHERE q1.id = l_id;
                     
-                      IF l_qry_id IS NOT NULL AND l_denominator_qry IS NULL AND l_parent_qry_id IS NULL THEN   -- is top level
+                      IF l_qry_id IS NOT NULL AND (LENGTH(TRIM(l_denominator_qry)) = 0 OR l_denominator_qry IS NULL)  AND l_parent_qry_id IS NULL THEN   -- is top level
                           -- add to queue
                           INSERT INTO queue (query_id, query, query_last_updated, next_run_date)
                           VALUES (l_id, l_query, l_updated, CURDATE());
@@ -122,6 +122,10 @@ AND id NOT IN (SELECT query_id FROM queue);
 
                               INSERT INTO queue (query_id, query, query_last_updated, next_run_date)
                               VALUES (l_id, l_query, l_updated, CURDATE());
+
+                            ELSE
+                                -- reset handler for not found
+                                SET done = 0;
 
                             END IF;
 
