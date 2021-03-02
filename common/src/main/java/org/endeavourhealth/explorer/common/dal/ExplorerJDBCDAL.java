@@ -538,7 +538,7 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 if (projectType==6||projectType==7) // CCG/STP
                     noResults = " and 0=1 ";
 
-                sql = "SELECT distinct(r.practice_name) as type " +
+                sql = "SELECT distinct(concat(r.practice_name,' | ', r.ods_code)) as type " +
                         "FROM dashboards.registries r "+
                         "where r.ods_code in ("+
                         "select distinct practice_ods_code from dashboards.population_denominators "+
@@ -1887,7 +1887,7 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                         "select distinct practice_ods_code from dashboards.population_denominators " +
                         "WHERE (stp_ods_code in (" + paramsValidOrgs + ") or ccg_ods_code in (" + paramsValidOrgs + ") or practice_ods_code in (" + paramsValidOrgs + "))) " +
                         noResults+
-                        " AND r.practice_name = ? and registry in (" + params + ")" +
+                        " AND r.ods_code = ? and registry in (" + params + ")" +
                         " order by r.registry_size desc";
             }
 
@@ -1902,7 +1902,10 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 for (int i = 1; i <= validOrgs.size(); i++) {
                     statement.setString(p++, validOrgs.get(i-1));
                 }
-                statement.setString(p++, chart_name);
+                if (!organisations.contains("CCG"))
+                    statement.setString(p++, chart_name.split("\\|")[1].trim());
+                else
+                    statement.setString(p++, chart_name);
                 for (int i = 1; i <= ids.length; i++) {
                     statement.setString(p++, ids[i-1]);
                 }
