@@ -99,4 +99,8 @@ export class QueryQueueComponent implements OnInit {
     }
   }
 
+  refresh() {
+    this.ngOnInit();
+  }
+
 }

@@ -12,6 +12,7 @@
         <mat-label>Filter</mat-label>
         <input matInput (keyup)="applyFilter($event)" placeholder="Filter" #input [(ngModel)]="filterText">
       </mat-form-field>
+      <button style="margin-left: 15px" mat-flat-button color="primary" (click)="refresh()">Refresh</button>
     </div>
 
     <div fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
