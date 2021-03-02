@@ -512,7 +512,7 @@ public class ExplorerJDBCDAL implements AutoCloseable {
 
                 noResults = "";
 
-                if (projectType==6||projectType==7) // CCG/STP
+                if (projectType==7) // STP - access denied
                     noResults = " and 0=1 ";
 
                 sql = "SELECT distinct(r.registry) as type " +
@@ -1222,13 +1222,13 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                                         statement.setString(p++, validOrgs.get(i-1));
                                     }
                                     if (combineOrgs.equals("false")) {
-                                        if (!practice.equals(""))
+                                        if (orgName.contains("|"))
                                             statement.setString(p++, orgName.split("\\|")[1].trim());
                                         else
                                             statement.setString(p++, orgName.split("\\|")[0].trim());
                                     } else {
                                         for (int i = 1; i <= orgArray.length; i++) {
-                                            if (!practice.equals(""))
+                                            if (orgArray[i - 1].contains("|"))
                                                 statement.setString(p++, orgArray[i - 1].split("\\|")[1].trim());
                                             else
                                                 statement.setString(p++, orgArray[i - 1].split("\\|")[0].trim());
@@ -1283,13 +1283,13 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                                     }
                                 }
                                 if (combineOrgs.equals("false")) {
-                                    if (!practice.equals(""))
+                                    if (orgName.contains("|"))
                                         statement.setString(p++, orgName.split("\\|")[1].trim());
                                     else
                                         statement.setString(p++, orgName.split("\\|")[0].trim());
                                 } else {
                                     for (int i = 1; i <= orgArray.length; i++) {
-                                        if (!practice.equals(""))
+                                        if (orgArray[i - 1].contains("|"))
                                             statement.setString(p++, orgArray[i - 1].split("\\|")[1].trim());
                                         else
                                             statement.setString(p++, orgArray[i - 1].split("\\|")[0].trim());
