@@ -9,7 +9,7 @@ CREATE FUNCTION getTimePeriodDateRange(
   p_includedPeriodValue VARCHAR(20), 
   p_includedPeriodType VARCHAR(20),
   p_includedPeriodOperator VARCHAR(50),
-  p_runDate VARCHAR(1)
+  p_baselineDate VARCHAR(30)
   )
 RETURNS VARCHAR(255)
 NOT DETERMINISTIC READS SQL DATA
@@ -20,29 +20,21 @@ DECLARE effectiveDate VARCHAR(30);
 DECLARE signString VARCHAR(3);
 DECLARE clinicalEffectiveDateString VARCHAR(255);
 
-IF p_runDate = 'Y' THEN
+IF p_baselineDate = 'N' THEN  -- for query pattern 4
 
-  -- set PPED date
-  IF CURDATE() <= CONCAT(YEAR(CURDATE()),'-03-31') THEN
-    SET effectiveDate = CONCAT(YEAR(CURDATE()),'-03-31');
-  ELSEIF CURDATE() > CONCAT(YEAR(CURDATE()),'-03-31') THEN
-    SET effectiveDate = CONCAT(YEAR(CURDATE())+1,'-03-31');
-  END IF;
-
-  SET effectiveDate = QUOTE(effectiveDate);
-
-  SET signString = '';
+  SET effectiveDate = 'o.clinical_effective_date';
+  SET signString = '-';
   SET clinicalEffectiveDateString = 'o2.clinical_effective_date';
 
   IF UPPER(p_includedPeriodOperator) = 'WITHIN' OR UPPER(p_includedPeriodOperator) IS NULL THEN
-       SET p_includedPeriodOperator = '>=';
-       ELSEIF UPPER(p_includedPeriodOperator) = 'BEFORE' THEN
        SET p_includedPeriodOperator = '<=';
+       ELSEIF UPPER(p_includedPeriodOperator) = 'BEFORE' THEN
+       SET p_includedPeriodOperator = '>=';
   END IF;
 
-ELSEIF p_runDate = 'T' THEN
+ELSEIF LENGTH(TRIM(p_baselineDate)) = 0  OR p_baselineDate IS NULL THEN
 
-  -- set current date
+  -- set current date as the default date if no date specified
   SET effectiveDate = CURDATE();
   SET effectiveDate = QUOTE(effectiveDate);
 
@@ -55,16 +47,19 @@ ELSEIF p_runDate = 'T' THEN
        SET p_includedPeriodOperator = '<=';
   END IF;
 
-ELSEIF p_runDate = 'N' THEN
+ELSE
 
-  SET effectiveDate = 'o.clinical_effective_date';
-  SET signString = '-';
+  -- set baseline run date
+  SET effectiveDate = p_baselineDate;
+  SET effectiveDate = QUOTE(effectiveDate);
+
+  SET signString = '';
   SET clinicalEffectiveDateString = 'o2.clinical_effective_date';
 
   IF UPPER(p_includedPeriodOperator) = 'WITHIN' OR UPPER(p_includedPeriodOperator) IS NULL THEN
-       SET p_includedPeriodOperator = '<=';
-       ELSEIF UPPER(p_includedPeriodOperator) = 'BEFORE' THEN
        SET p_includedPeriodOperator = '>=';
+       ELSEIF UPPER(p_includedPeriodOperator) = 'BEFORE' THEN
+       SET p_includedPeriodOperator = '<=';
   END IF;
 
 END IF;
