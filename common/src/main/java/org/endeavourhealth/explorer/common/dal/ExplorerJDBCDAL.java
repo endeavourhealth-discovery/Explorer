@@ -1102,7 +1102,7 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         else if (!pcn.equals(""))
             orgSQL = " pcn in ("+orgParams+")";
         else if (!practice.equals(""))
-            orgSQL = " practice in ("+orgParams+")";
+            orgSQL = " practice_ods_code in ("+orgParams+")";
 
         String ethnicSQL = "and ethnic in ("+ethnicParams+")";
         String ageSQL = "and age in ("+ageParams+")";
@@ -1222,10 +1222,16 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                                         statement.setString(p++, validOrgs.get(i-1));
                                     }
                                     if (combineOrgs.equals("false")) {
-                                        statement.setString(p++, orgName.split("\\|")[0].trim());
+                                        if (!practice.equals(""))
+                                            statement.setString(p++, orgName.split("\\|")[1].trim());
+                                        else
+                                            statement.setString(p++, orgName.split("\\|")[0].trim());
                                     } else {
                                         for (int i = 1; i <= orgArray.length; i++) {
-                                            statement.setString(p++, orgArray[i - 1].split("\\|")[0].trim());
+                                            if (!practice.equals(""))
+                                                statement.setString(p++, orgArray[i - 1].split("\\|")[1].trim());
+                                            else
+                                                statement.setString(p++, orgArray[i - 1].split("\\|")[0].trim());
                                         }
                                     }
                                     if (!ethnic.equals("All")) {
@@ -1277,10 +1283,16 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                                     }
                                 }
                                 if (combineOrgs.equals("false")) {
-                                    statement.setString(p++, orgName.split("\\|")[0].trim());
+                                    if (!practice.equals(""))
+                                        statement.setString(p++, orgName.split("\\|")[1].trim());
+                                    else
+                                        statement.setString(p++, orgName.split("\\|")[0].trim());
                                 } else {
                                     for (int i = 1; i <= orgArray.length; i++) {
-                                        statement.setString(p++, orgArray[i - 1].split("\\|")[0].trim());
+                                        if (!practice.equals(""))
+                                            statement.setString(p++, orgArray[i - 1].split("\\|")[1].trim());
+                                        else
+                                            statement.setString(p++, orgArray[i - 1].split("\\|")[0].trim());
                                     }
                                 }
                                 if (!ethnic.equals("All")) {
