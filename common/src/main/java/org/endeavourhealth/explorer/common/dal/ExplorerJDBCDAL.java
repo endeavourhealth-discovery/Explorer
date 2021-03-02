@@ -3192,7 +3192,7 @@ public class ExplorerJDBCDAL implements AutoCloseable {
 
         if (projectType==7) { // STP - no access allowed
             noResults = " and 0=1 ";
-            sql = "SELECT distinct d.practice " +
+            sql = "SELECT distinct d.practice as `grouping` " +
                     "FROM dashboards.`dashboard_results_" + queryId + "` r " +
                     "join dashboards.population_denominators d on d.practice_ods_code = r.`grouping` "+
                     "where r.`grouping` in (" +
@@ -3211,7 +3211,7 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                     " order by `grouping`";
 
         } else if (projectType==5) { // Practice
-            sql = "SELECT distinct d.practice " +
+            sql = "SELECT distinct d.practice as `grouping` " +
                     "FROM dashboards.`dashboard_results_" + queryId + "` r "+
                     "join dashboards.population_denominators d on d.practice_ods_code = r.`grouping` "+
                     "where r.`grouping` in ("+
