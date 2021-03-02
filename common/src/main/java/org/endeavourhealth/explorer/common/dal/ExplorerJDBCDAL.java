@@ -1370,46 +1370,17 @@ public class ExplorerJDBCDAL implements AutoCloseable {
 
             String noResults = "";
 
-            if (projectType==7) { // STP
+            if (projectType==7) { // STP - no access
                 noResults = " and 0=1 ";
 
-                if (cumulative.equals("1")) {
-                    sql = "SELECT t.series_name," +
-                            "@running_total:=@running_total + t.series_value as series_value " +
-                            "FROM " +
-                            "( SELECT name,series_name,sum(series_value) as series_value "+
-                            "FROM dashboards.`dashboard_results_" + queryId + "` r " +
-                            "where r.`grouping` in ("+
-                            "select distinct practice from dashboards.population_denominators "+
-                            "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
-                            noResults+
-                            " AND name = ? and series_name between ? and ? and `grouping` in ("+params+") group by series_name) t " +
-                            "JOIN (SELECT @running_total:=0) r " +
-                            "ORDER BY t.series_name";
-                } else {
-                    if (weekly.equals("1")) {
-                        sql = "SELECT FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) AS series_name, " +
-                                "SUM(series_value) AS series_value " +
-                                "from dashboards.`dashboard_results_" + queryId + "` r "+
-                                "where r.`grouping` in ("+
-                                "select distinct practice from dashboards.population_denominators "+
-                                "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
-                                noResults+
-                                " AND name = ? " +
-                                "and series_name between ? and ? and `grouping` in ("+params+")"+
-                                " GROUP BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) " +
-                                "ORDER BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7))";
-                    } else {
-                        sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` r "+
-                                "where r.`grouping` in ("+
-                                "select distinct practice from dashboards.population_denominators "+
-                                "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
-                                noResults+
-                                " AND name = ? " +
-                                "and series_name between ? and ? and `grouping` in ("+params+") group by series_name order by series_name";
-                    }
-
-                }
+                sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` r "+
+                        "where r.`grouping` in ("+
+                        "select distinct practice_ods_code from dashboards.population_denominators "+
+                        "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+")) "+
+                        "and practice in ("+params+")) "+
+                        noResults+
+                        " AND name = ? " +
+                        "and series_name between ? and ? group by series_name order by series_name";
             } else if (projectType==6) { // CCG
                 if (cumulative.equals("1")) {
                     sql = "SELECT t.series_name," +
@@ -1418,13 +1389,11 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                             "( SELECT name,series_name,sum(series_value) as series_value "+
                             "FROM dashboards.`dashboard_results_" + queryId + "` r " +
                             "where r.`grouping` in ("+
-                            "select distinct practice from dashboards.population_denominators "+
-                            "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
+                            "select distinct practice_ods_code from dashboards.population_denominators "+
+                            "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+")) "+
+                            "and ccg in ("+params+")) "+
                             noResults+
                             " AND name = ? and series_name between ? and ? "+
-                            "and r.`grouping` in ("+
-                            "select distinct practice from dashboards.population_denominators "+
-                            "where ccg in ("+params+")) "+
                             "group by series_name) t " +
                             "JOIN (SELECT @running_total:=0) r " +
                             "ORDER BY t.series_name";
@@ -1434,27 +1403,23 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                                 "SUM(series_value) AS series_value " +
                                 "from dashboards.`dashboard_results_" + queryId + "` r "+
                                 "where r.`grouping` in ("+
-                                "select distinct practice from dashboards.population_denominators "+
-                                "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
+                                "select distinct practice_ods_code from dashboards.population_denominators "+
+                                "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+")) "+
+                                "and ccg in ("+params+")) "+
                                 noResults+
                                 " AND name = ? " +
                                 "and series_name between ? and ? "+
-                                "and r.`grouping` in ("+
-                                "select distinct practice from dashboards.population_denominators "+
-                                "where ccg in ("+params+")) "+
                                 " GROUP BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) " +
                                 "ORDER BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7))";
                     } else {
                         sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` r "+
                                 "where r.`grouping` in ("+
-                                "select distinct practice from dashboards.population_denominators "+
-                                "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
+                                "select distinct practice_ods_code from dashboards.population_denominators "+
+                                "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+")) "+
+                                "and ccg in ("+params+")) "+
                                 noResults+
                                 " AND name = ? " +
                                 "and series_name between ? and ? "+
-                                "and r.`grouping` in ("+
-                                "select distinct practice from dashboards.population_denominators "+
-                                "where ccg in ("+params+")) "+
                                 "group by series_name order by series_name";
                     }
 
@@ -1469,10 +1434,11 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                             "( SELECT name,series_name,sum(series_value) as series_value "+
                             "FROM dashboards.`dashboard_results_" + queryId + "` r " +
                             "where r.`grouping` in ("+
-                            "select distinct practice from dashboards.population_denominators "+
-                            "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
+                            "select distinct practice_ods_code from dashboards.population_denominators "+
+                            "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+")) "+
+                            "and practice in ("+params+")) "+
                             noResults+
-                            " AND name = ? and series_name between ? and ? and `grouping` in ("+params+") group by series_name) t " +
+                            " AND name = ? and series_name between ? and ? group by series_name) t " +
                             "JOIN (SELECT @running_total:=0) r " +
                             "ORDER BY t.series_name";
                 } else {
@@ -1481,21 +1447,24 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                                 "SUM(series_value) AS series_value " +
                                 "from dashboards.`dashboard_results_" + queryId + "` r "+
                                 "where r.`grouping` in ("+
-                                "select distinct practice from dashboards.population_denominators "+
-                                "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
+                                "select distinct practice_ods_code from dashboards.population_denominators "+
+                                "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+")) "+
+                                "and practice in ("+params+")) "+
                                 noResults+
                                 " AND name = ? " +
-                                "and series_name between ? and ? and `grouping` in ("+params+")"+
+                                "and series_name between ? and ? "+
                                 " GROUP BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) " +
                                 "ORDER BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7))";
                     } else {
                         sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` r "+
                                 "where r.`grouping` in ("+
-                                "select distinct practice from dashboards.population_denominators "+
-                                "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
+                                "select distinct practice_ods_code from dashboards.population_denominators "+
+                                "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+")) "+
+                                "and practice in ("+params+")) "+
                                 noResults+
                                 " AND name = ? " +
-                                "and series_name between ? and ? and `grouping` in ("+params+") group by series_name order by series_name";
+                                "and series_name between ? and ? group by series_name order by series_name";
+
                     }
 
                 }
@@ -1513,12 +1482,12 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 for (int i = 1; i <= validOrgs.size(); i++) {
                     statement.setString(p++, validOrgs.get(i-1));
                 }
-                statement.setString(p++, chart_name);
-                statement.setString(p++, dateFrom);
-                statement.setString(p++, dateTo);
                 for (int i = 1; i <= ids.length; i++) {
                     statement.setString(p++, ids[i-1]);
                 }
+                statement.setString(p++, chart_name);
+                statement.setString(p++, dateFrom);
+                statement.setString(p++, dateTo);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     chartItem.setSeries(getSeriesFromResultSet(resultSet));
                 }
@@ -1569,42 +1538,41 @@ public class ExplorerJDBCDAL implements AutoCloseable {
 
         String noResults = "";
 
-        if (projectType==7) { // STP
+        if (projectType==7) { // STP - no access
             noResults = " and 0=1 ";
             sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` r "+
                     "where r.`grouping` in ("+
-                    "select distinct practice from dashboards.population_denominators "+
-                    "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
+                    "select distinct practice_ods_code from dashboards.population_denominators "+
+                    "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+")) "+
+                    "and practice in ("+params+")) "+
                     noResults+
                     " AND name = ? "+
-                    "and series_name between ? and ? and `grouping` in ("+params+") group by series_name order by series_name";
+                    "and series_name between ? and ? group by series_name order by series_name";
 
         }
         else if (projectType==6) { // CCG
             sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` r "+
                     "where r.`grouping` in ("+
-                    "select distinct practice from dashboards.population_denominators "+
-                    "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
+                    "select distinct practice_ods_code from dashboards.population_denominators "+
+                    "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+")) "+
+                    "and ccg in ("+params+")) "+
                     noResults+
                     " AND name = ? "+
                     "and series_name between ? and ? "+
-                    "and r.`grouping` in ("+
-                    "select distinct practice from dashboards.population_denominators "+
-                    "where ccg in ("+params+")) "+
                     " group by series_name order by series_name";
 
         }
         if (projectType==5) { // Practice
             sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` r "+
                     "where r.`grouping` in ("+
-                    "select distinct practice from dashboards.population_denominators "+
-                    "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
+                    "select distinct practice_ods_code from dashboards.population_denominators "+
+                    "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+")) "+
+                    "and practice in ("+params+")) "+
                     noResults+
                     " AND name = ? "+
-                    "and series_name between ? and ? and `grouping` in ("+params+") group by series_name order by series_name";
+                    "and series_name between ? and ? group by series_name order by series_name";
 
         }
-
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             int p = 1;
@@ -1617,13 +1585,13 @@ public class ExplorerJDBCDAL implements AutoCloseable {
             for (int i = 1; i <= validOrgs.size(); i++) {
                 statement.setString(p++, validOrgs.get(i-1));
             }
-
-            statement.setString(p++, chartName);
-            statement.setString(p++, dateFrom);
-            statement.setString(p++, dateTo);
             for (int i = 1; i <= ids.length; i++) {
                 statement.setString(p++, ids[i-1]);
             }
+            statement.setString(p++, chartName);
+            statement.setString(p++, dateFrom);
+            statement.setString(p++, dateTo);
+
             try (ResultSet resultSet = statement.executeQuery()) {
                 chartItem.setSeries(getSeriesFromResultSet(resultSet));
             }
@@ -1632,38 +1600,38 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         if (chartItem.getSeries().size()==0) {
             noResults = "";
 
-            if (projectType==7) { // STP
+            if (projectType==7) { // STP - no access
                 noResults = " and 0=1 ";
                 sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` r "+
                         "where r.`grouping` in ("+
-                        "select distinct practice from dashboards.population_denominators "+
-                        "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
+                        "select distinct practice_ods_code from dashboards.population_denominators "+
+                        "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+")) "+
+                        "and practice in ("+params+")) "+
                         noResults+
                         " AND name = ? "+
-                        "and `grouping` in ("+params+") group by series_name order by series_name";
+                        "group by series_name order by series_name";
 
             }
             else if (projectType==6) { // CCG
                 sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` r "+
                         "where r.`grouping` in ("+
-                        "select distinct practice from dashboards.population_denominators "+
-                        "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
+                        "select distinct practice_ods_code from dashboards.population_denominators "+
+                        "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+")) "+
+                        "and ccg in ("+params+")) "+
                         noResults+
                         " AND name = ? "+
-                        "and r.`grouping` in ("+
-                        "select distinct practice from dashboards.population_denominators "+
-                        "where ccg in ("+params+")) "+
                         " group by series_name order by series_name";
 
             }
             if (projectType==5) { // Practice
                 sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` r "+
                         "where r.`grouping` in ("+
-                        "select distinct practice from dashboards.population_denominators "+
-                        "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
+                        "select distinct practice_ods_code from dashboards.population_denominators "+
+                        "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+")) "+
+                        "and practice in ("+params+")) "+
                         noResults+
                         " AND name = ? "+
-                        "and `grouping` in ("+params+") group by series_name order by series_name";
+                        "group by series_name order by series_name";
 
             }
 
@@ -1678,11 +1646,11 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 for (int i = 1; i <= validOrgs.size(); i++) {
                     statement.setString(p++, validOrgs.get(i-1));
                 }
-
-                statement.setString(p++, chartName);
                 for (int i = 1; i <= ids.length; i++) {
                     statement.setString(p++, ids[i-1]);
                 }
+                statement.setString(p++, chartName);
+
                 try (ResultSet resultSet = statement.executeQuery()) {
                     chartItem.setSeries(getSeriesFromResultSet(resultSet));
                 }
@@ -1728,38 +1696,38 @@ public class ExplorerJDBCDAL implements AutoCloseable {
 
         String noResults = "";
 
-        if (projectType==7) { // STP
+        if (projectType==7) { // STP - no access
             noResults = " and 0=1 ";
             sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` r "+
                     "where r.`grouping` in ("+
-                    "select distinct practice from dashboards.population_denominators "+
-                    "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
+                    "select distinct practice_ods_code from dashboards.population_denominators "+
+                    "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+")) "+
+                    "and practice in ("+params+")) "+
                     noResults+
                     " AND name = ? "+
-                    "and `grouping` in ("+params+") group by series_name order by series_name";
+                    "group by series_name order by series_name";
 
         }
         else if (projectType==6) { // CCG
             sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` r "+
                     "where r.`grouping` in ("+
-                    "select distinct practice from dashboards.population_denominators "+
-                    "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
+                    "select distinct practice_ods_code from dashboards.population_denominators "+
+                    "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+")) "+
+                    "and ccg in ("+params+")) "+
                     noResults+
                     " AND name = ? "+
-                    "and r.`grouping` in ("+
-                    "select distinct practice from dashboards.population_denominators "+
-                    "where ccg in ("+params+")) "+
                     " group by series_name order by series_name";
 
         }
         if (projectType==5) { // Practice
             sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` r "+
                     "where r.`grouping` in ("+
-                    "select distinct practice from dashboards.population_denominators "+
-                    "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
+                    "select distinct practice_ods_code from dashboards.population_denominators "+
+                    "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+")) "+
+                    "and practice in ("+params+")) "+
                     noResults+
                     " AND name = ? "+
-                    "and `grouping` in ("+params+") group by series_name order by series_name";
+                    "group by series_name order by series_name";
 
         }
 
@@ -1774,11 +1742,12 @@ public class ExplorerJDBCDAL implements AutoCloseable {
             for (int i = 1; i <= validOrgs.size(); i++) {
                 statement.setString(p++, validOrgs.get(i-1));
             }
-
-            statement.setString(p++, chartName);
             for (int i = 1; i <= ids.length; i++) {
                 statement.setString(p++, ids[i-1]);
             }
+
+            statement.setString(p++, chartName);
+
             try (ResultSet resultSet = statement.executeQuery()) {
                 chartItem.setSeries(getSeriesFromResultSet(resultSet));
             }
@@ -3221,30 +3190,32 @@ public class ExplorerJDBCDAL implements AutoCloseable {
 
         String noResults = "";
 
-        if (projectType==7) { // STP
+        if (projectType==7) { // STP - no access allowed
             noResults = " and 0=1 ";
-            sql = "SELECT distinct `grouping` " +
+            sql = "SELECT distinct d.practice " +
                     "FROM dashboards.`dashboard_results_" + queryId + "` r " +
+                    "join dashboards.population_denominators d on d.practice_ods_code = r.`grouping` "+
                     "where r.`grouping` in (" +
-                    "select distinct practice from dashboards.population_denominators " +
+                    "select distinct practice_ods_code from dashboards.population_denominators " +
                     "WHERE (stp_ods_code in (" + paramsValidOrgs + ") or ccg_ods_code in (" + paramsValidOrgs + ") or practice_ods_code in (" + paramsValidOrgs + "))) " +
                     noResults +
                     " order by `grouping`";
         } else if (projectType==6) { // CCG
             sql = "SELECT distinct d.ccg as `grouping` " +
                     "FROM dashboards.`dashboard_results_" + queryId + "` r "+
-                    "join dashboards.population_denominators d on d.practice = r.`grouping` "+
+                    "join dashboards.population_denominators d on d.practice_ods_code = r.`grouping` "+
                     "where r.`grouping` in ("+
-                    "select distinct practice from dashboards.population_denominators "+
+                    "select distinct practice_ods_code from dashboards.population_denominators "+
                     "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
                     noResults+
                     " order by `grouping`";
 
         } else if (projectType==5) { // Practice
-            sql = "SELECT distinct `grouping` " +
+            sql = "SELECT distinct d.practice " +
                     "FROM dashboards.`dashboard_results_" + queryId + "` r "+
+                    "join dashboards.population_denominators d on d.practice_ods_code = r.`grouping` "+
                     "where r.`grouping` in ("+
-                    "select distinct practice from dashboards.population_denominators "+
+                    "select distinct practice_ods_code from dashboards.population_denominators "+
                     "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
                     noResults+
                     " order by `grouping`";
