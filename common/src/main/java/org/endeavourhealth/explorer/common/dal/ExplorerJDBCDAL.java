@@ -2229,7 +2229,12 @@ public class ExplorerJDBCDAL implements AutoCloseable {
     public RegistriesResult getRegistries(String ccg, String registry) throws Exception {
         RegistriesResult result = new RegistriesResult();
 
-        if (projectType==6||projectType==7) { // CCG/STP
+        if (projectType==7) { // STP - access denied
+            ccg = "Access denied";
+            registry = "Access denied";
+        }
+
+        if (projectType==6 && !ccg.equals("")) { // CCG - access denied to practice view
             ccg = "Access denied";
             registry = "Access denied";
         }
@@ -3615,7 +3620,7 @@ public class ExplorerJDBCDAL implements AutoCloseable {
 
         String noResults = "";
 
-        if (projectType==6||projectType==7) // CCG/STP
+        if (projectType==6||projectType==7) // CCG/STP - access denied
             noResults = " and 0=1 ";
 
         sql = "SELECT r.ccg, r.practice_name, r.registry, r.list_size, r.registry_size, r.target_percentage,ql.id as query_id,ql2.id as parent_query_id from dashboards.registries r "+
