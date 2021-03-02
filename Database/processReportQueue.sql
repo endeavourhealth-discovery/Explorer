@@ -101,9 +101,6 @@ AND id NOT IN (SELECT query_id FROM queue);
 
             IF l_submitQuery = 'YES' THEN  
 
-                -- check if query is QOF type
-                IF l_type LIKE 'QOF%' THEN
-
                     -- check if type is top level
                       SELECT q1.id, q1.denominator_query, q2.id INTO l_qry_id, l_denominator_qry, l_parent_qry_id 
                       FROM query_library q1 LEFT JOIN query_library q2 ON q1.denominator_query = q2.name
@@ -124,18 +121,13 @@ AND id NOT IN (SELECT query_id FROM queue);
                               VALUES (l_id, l_query, l_updated, CURDATE());
 
                             ELSE
+                                -- do nothing
                                 -- reset handler for not found
                                 SET done = 0;
 
                             END IF;
 
                       END IF;
-
-                ELSE
-                      INSERT INTO queue (query_id, query, query_last_updated, next_run_date)
-                      VALUES (l_id, l_query, l_updated, CURDATE());
-
-                END IF;
 
             END IF;
 
@@ -184,12 +176,12 @@ UPDATE queue SET status = 'A' WHERE query_id = queryid;
 UPDATE queue SET timesubmit = now() WHERE query_id = queryid;
 
 -- disable binary logging
-SET @@session.sql_log_bin=0;
+-- SET @@session.sql_log_bin=0;
 
 CALL reportgenerator(queryid, query_text, p_sourceSchema, p_enableDebug);
 
 -- enable binary logging
-SET @@session.sql_log_bin=1;
+-- SET @@session.sql_log_bin=1;
 
 UPDATE queue SET timefinish = now() WHERE query_id = queryid;
 UPDATE queue SET timeexecute = STR_TO_DATE(TIMEDIFF(timefinish, timesubmit),'%H:%i:%s') WHERE query_id = queryid;
