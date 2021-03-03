@@ -175,6 +175,9 @@ UPDATE queue SET status = 'A' WHERE query_id = queryid;
 
 UPDATE queue SET timesubmit = now() WHERE query_id = queryid;
 
+-- remove errors if exists before processing query 
+DELETE FROM error_log WHERE query_id = queryid;
+
 -- disable binary logging
 -- SET @@session.sql_log_bin=0;
 
