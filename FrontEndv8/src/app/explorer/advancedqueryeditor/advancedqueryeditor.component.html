@@ -198,7 +198,7 @@
       <ng-template matStepLabel>Query criteria</ng-template>
       <div class="criteria-container">
         <div class="flex" fxLayout.xs="column"  fxLayoutAlign="start">
-          <p style="margin-left: 10px"><b style="font-size: 16px">A1. </b>
+          <p style="margin-left: 10px"><b style="font-size: 16px">A1 </b>
           <mat-form-field appearance="standard" style="width: 80px">
             <mat-label>Age from</mat-label>
             <input matInput placeholder="Age" [(ngModel)]="ageFrom" formControlName="control6" (keydown.enter)="stepper.next()">
@@ -208,7 +208,7 @@
             <mat-label>Age to</mat-label>
             <input matInput placeholder="Age" [(ngModel)]="ageTo" formControlName="control7" (keydown.enter)="stepper.next()">
           </mat-form-field>
-          <p style="margin-left: 10px"><b style="font-size: 16px">A2. </b>
+          <p style="margin-left: 10px"><b style="font-size: 16px">A2 </b>
             <mat-form-field appearance="standard" style="width: 80px">
               <mat-label>Age from</mat-label>
               <input matInput placeholder="Age" [(ngModel)]="ageFrom1" formControlName="control6a" (keydown.enter)="stepper.next()">
@@ -218,7 +218,7 @@
               <mat-label>Age to</mat-label>
               <input matInput placeholder="Age" [(ngModel)]="ageTo1" formControlName="control7a" (keydown.enter)="stepper.next()">
             </mat-form-field>
-          <p style="margin-left: 10px"><b style="font-size: 16px">A3. </b>
+          <p style="margin-left: 10px"><b style="font-size: 16px">A3 </b>
             <mat-form-field appearance="standard" style="width: 80px">
               <mat-label>Age from</mat-label>
               <input matInput placeholder="Age" [(ngModel)]="ageFrom2" formControlName="control6b"b (keydown.enter)="stepper.next()">
@@ -228,7 +228,7 @@
               <mat-label>Age to</mat-label>
               <input matInput placeholder="Age" [(ngModel)]="ageTo2" formControlName="control7b" (keydown.enter)="stepper.next()">
             </mat-form-field>
-          <p style="margin-left: 10px"><b style="font-size: 16px">A4. </b>
+          <p style="margin-left: 10px"><b style="font-size: 16px">A4 </b>
             <mat-form-field appearance="standard" style="width: 80px">
               <mat-label>Age from</mat-label>
               <input matInput placeholder="Age" [(ngModel)]="ageFrom3" formControlName="control6c" (keydown.enter)="stepper.next()">
@@ -238,7 +238,7 @@
               <mat-label>Age to</mat-label>
               <input matInput placeholder="Age" [(ngModel)]="ageTo3" formControlName="control7c" (keydown.enter)="stepper.next()">
             </mat-form-field>
-          <p style="margin-left: 10px"><b style="font-size: 16px">A5. </b>
+          <p style="margin-left: 10px"><b style="font-size: 16px">A5 </b>
             <mat-form-field appearance="standard" style="width: 80px">
               <mat-label>Age from</mat-label>
               <input matInput placeholder="Age" [(ngModel)]="ageFrom4" formControlName="control6d" (keydown.enter)="stepper.next()">
@@ -250,7 +250,7 @@
             </mat-form-field>
         </div>
         <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-          <p style="margin-left: 10px"><b style="font-size: 16px">Q0. </b>
+          <p style="margin-left: 10px"><b style="font-size: 16px">Q0 </b>
             <mat-form-field appearance="standard" style="width: 130px">
             <mat-label>Include/Exclude</mat-label>
             <mat-select [(ngModel)]="registrationExclude" formControlName="control5" (ngModelChange)="formChanged()">
@@ -298,7 +298,7 @@
         <br/>
 
         <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-          <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q1. </b>Identify patients
+          <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q1 </b>Identify patients
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
               <mat-label>With/Without</mat-label>
               <mat-select [(ngModel)]="withWithout1" formControlName="control22" (ngModelChange)="formChanged()">
@@ -378,7 +378,7 @@
         <br/>
 
         <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start" *ngIf="select1a">
-          <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q1a. </b>Identify patients
+          <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q1A </b>Identify patients
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
               <mat-label>With/Without</mat-label>
               <mat-select [(ngModel)]="withWithout1a" formControlName="control22a" (ngModelChange)="formChanged()">
@@ -458,7 +458,7 @@
         <br *ngIf="select1a"/>
 
         <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start" *ngIf="select1b">
-          <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q1b. </b>Identify patients
+          <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q1B </b>Identify patients
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
               <mat-label>With/Without</mat-label>
               <mat-select [(ngModel)]="withWithout1b" formControlName="control22b" (ngModelChange)="formChanged()">
@@ -538,7 +538,7 @@
         <br *ngIf="select1b"/>
 
         <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start" *ngIf="select1c">
-          <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q1c. </b>Identify patients
+          <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q1C </b>Identify patients
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
               <mat-label>With/Without</mat-label>
               <mat-select [(ngModel)]="withWithout1c" formControlName="control22c" (ngModelChange)="formChanged()">
@@ -618,7 +618,7 @@
         <br *ngIf="select1c"/>
 
         <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start" *ngIf="select1d">
-          <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q1d. </b>Identify patients
+          <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q1D </b>Identify patients
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
               <mat-label>With/Without</mat-label>
               <mat-select [(ngModel)]="withWithout1d" formControlName="control22d" (ngModelChange)="formChanged()">
@@ -698,7 +698,7 @@
         <br *ngIf="select1d"/>
 
         <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start" *ngIf="select1e">
-          <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q1e. </b>Identify patients
+          <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q1E </b>Identify patients
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
               <mat-label>With/Without</mat-label>
               <mat-select [(ngModel)]="withWithout1e" formControlName="control22e" (ngModelChange)="formChanged()">
@@ -778,7 +778,7 @@
         <br *ngIf="select1e"/>
 
         <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start" *ngIf="select1f">
-          <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q1f. </b>Identify patients
+          <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q1F </b>Identify patients
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
               <mat-label>With/Without</mat-label>
               <mat-select [(ngModel)]="withWithout1f" formControlName="control22f" (ngModelChange)="formChanged()">
@@ -858,7 +858,7 @@
         <br *ngIf="select1f"/>
 
         <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start" *ngIf="select1g">
-          <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q1g. </b>Identify patients
+          <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q1G </b>Identify patients
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
               <mat-label>With/Without</mat-label>
               <mat-select [(ngModel)]="withWithout1g" formControlName="control22g" (ngModelChange)="formChanged()">
@@ -938,7 +938,7 @@
         <br *ngIf="select1g"/>
 
         <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start" *ngIf="select1h">
-          <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q1h. </b>Identify patients
+          <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q1H </b>Identify patients
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
               <mat-label>With/Without</mat-label>
               <mat-select [(ngModel)]="withWithout1h" formControlName="control22h" (ngModelChange)="formChanged()">
@@ -1018,7 +1018,7 @@
         <br *ngIf="select1h"/>
 
         <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start" *ngIf="select1i">
-          <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q1i. </b>Identify patients
+          <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q1I </b>Identify patients
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
               <mat-label>With/Without</mat-label>
               <mat-select [(ngModel)]="withWithout1i" formControlName="control22i" (ngModelChange)="formChanged()">
@@ -1098,7 +1098,7 @@
         <br *ngIf="select1i"/>
 
         <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start" *ngIf="select1j">
-          <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q1j. </b>Identify patients
+          <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q1J </b>Identify patients
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
               <mat-label>With/Without</mat-label>
               <mat-select [(ngModel)]="withWithout1j" formControlName="control22j" (ngModelChange)="formChanged()">
@@ -1178,7 +1178,7 @@
         <br *ngIf="select1j"/>
 
         <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start" *ngIf="select1k">
-          <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q1k. </b>Identify patients
+          <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q1K </b>Identify patients
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
               <mat-label>With/Without</mat-label>
               <mat-select [(ngModel)]="withWithout1k" formControlName="control22k" (ngModelChange)="formChanged()">
@@ -1258,7 +1258,7 @@
         <br *ngIf="select1k"/>
 
         <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start" *ngIf="select1l">
-          <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q1l. </b>Identify patients
+          <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q1L </b>Identify patients
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
               <mat-label>With/Without</mat-label>
               <mat-select [(ngModel)]="withWithout1l" formControlName="control22l" (ngModelChange)="formChanged()">
@@ -1335,7 +1335,7 @@
         <br *ngIf="select1l"/>
 
         <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-          <p style="margin-left: 10px; margin-top: 29px"><b style="font-size: 16px">Q2. </b>Identify patients
+          <p style="margin-left: 10px; margin-top: 29px"><b style="font-size: 16px">Q2 </b>Identify patients
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
               <mat-label>With/Without</mat-label>
               <mat-select [(ngModel)]="withWithout2" formControlName="withWithout2" (ngModelChange)="formChanged()">
@@ -1444,7 +1444,7 @@
         <br/>
 
         <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start" *ngIf="select2a">
-          <p style="margin-left: 10px; margin-top: 29px"><b style="font-size: 16px">Q2a. </b>Identify patients
+          <p style="margin-left: 10px; margin-top: 29px"><b style="font-size: 16px">Q2A </b>Identify patients
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
               <mat-label>With/Without</mat-label>
               <mat-select [(ngModel)]="withWithout2a" formControlName="withWithout2a" (ngModelChange)="formChanged()">
@@ -1553,7 +1553,7 @@
         <br *ngIf="select2a"/>
 
         <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start" *ngIf="select2b">
-          <p style="margin-left: 10px; margin-top: 29px"><b style="font-size: 16px">Q2b. </b>Identify patients
+          <p style="margin-left: 10px; margin-top: 29px"><b style="font-size: 16px">Q2B </b>Identify patients
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
               <mat-label>With/Without</mat-label>
               <mat-select [(ngModel)]="withWithout2b" formControlName="withWithout2b" (ngModelChange)="formChanged()">
@@ -1662,7 +1662,7 @@
         <br *ngIf="select2b"/>
 
         <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start" *ngIf="select2c">
-          <p style="margin-left: 10px; margin-top: 29px"><b style="font-size: 16px">Q2c. </b>Identify patients
+          <p style="margin-left: 10px; margin-top: 29px"><b style="font-size: 16px">Q2C </b>Identify patients
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
               <mat-label>With/Without</mat-label>
               <mat-select [(ngModel)]="withWithout2c" formControlName="withWithout2c" (ngModelChange)="formChanged()">
@@ -1767,7 +1767,7 @@
         <br *ngIf="select2c"/>
 
         <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-          <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q3. </b>Identify patients
+          <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q3 </b>Identify patients
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
               <mat-label>With/Without</mat-label>
               <mat-select [(ngModel)]="withWithout3" formControlName="withWithout3" (ngModelChange)="formChanged()">
@@ -1918,7 +1918,7 @@
         <br/>
 
         <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start" *ngIf="select3a">
-          <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q3a. </b>Identify patients
+          <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q3A </b>Identify patients
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
               <mat-label>With/Without</mat-label>
               <mat-select [(ngModel)]="withWithout3a" formControlName="withWithout3a" (ngModelChange)="formChanged()">
@@ -2070,7 +2070,7 @@
         <br *ngIf="select3a"/>
 
         <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start" *ngIf="select3b">
-          <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q3b. </b>Identify patients
+          <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q3B </b>Identify patients
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
               <mat-label>With/Without</mat-label>
               <mat-select [(ngModel)]="withWithout3b" formControlName="withWithout3b" (ngModelChange)="formChanged()">
@@ -2222,7 +2222,7 @@
         <br *ngIf="select3b"/>
 
         <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start" *ngIf="select3c">
-          <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q3c. </b>Identify patients
+          <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q3C </b>Identify patients
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
               <mat-label>With/Without</mat-label>
               <mat-select [(ngModel)]="withWithout3c" formControlName="withWithout3c" (ngModelChange)="formChanged()">
@@ -2374,7 +2374,7 @@
         <br *ngIf="select3c"/>
 
         <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start" *ngIf="select3d">
-          <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q3d. </b>Identify patients
+          <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q3D </b>Identify patients
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
               <mat-label>With/Without</mat-label>
               <mat-select [(ngModel)]="withWithout3d" formControlName="withWithout3d" (ngModelChange)="formChanged()">
@@ -2526,7 +2526,7 @@
         <br *ngIf="select3d"/>
 
         <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start" *ngIf="select3e">
-          <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q3e. </b>Identify patients
+          <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q3E </b>Identify patients
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
               <mat-label>With/Without</mat-label>
               <mat-select [(ngModel)]="withWithout3e" formControlName="withWithout3e" (ngModelChange)="formChanged()">
@@ -2678,7 +2678,7 @@
         <br *ngIf="select3e"/>
 
         <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start" *ngIf="select3f">
-          <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q3f. </b>Identify patients
+          <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q3F </b>Identify patients
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
               <mat-label>With/Without</mat-label>
               <mat-select [(ngModel)]="withWithout3f" formControlName="withWithout3f" (ngModelChange)="formChanged()">
@@ -2827,7 +2827,7 @@
         <br *ngIf="select3f"/>
 
         <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-          <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q4. </b>Identify patients
+          <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q4 </b>Identify patients
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
               <mat-label>With/Without</mat-label>
               <mat-select [(ngModel)]="withWithout4" formControlName="withWithout4" (ngModelChange)="formChanged()">
@@ -2918,7 +2918,7 @@
         <br/>
 
         <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start" *ngIf="select4a">
-          <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q4a. </b>Identify patients
+          <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q4A </b>Identify patients
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
               <mat-label>With/Without</mat-label>
               <mat-select [(ngModel)]="withWithout4a" formControlName="withWithout4a" (ngModelChange)="formChanged()">
@@ -3009,7 +3009,7 @@
         <br *ngIf="select4a"/>
 
         <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start" *ngIf="select4b">
-          <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q4b. </b>Identify patients
+          <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q4B </b>Identify patients
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
               <mat-label>With/Without</mat-label>
               <mat-select [(ngModel)]="withWithout4b" formControlName="withWithout4b" (ngModelChange)="formChanged()">
@@ -3097,7 +3097,7 @@
         <br *ngIf="select4b"/>
 
         <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-          <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q5. </b>Identify patients
+          <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q5 </b>Identify patients
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
               <mat-label>With/Without</mat-label>
               <mat-select [(ngModel)]="withWithout5" formControlName="control40" (ngModelChange)="formChanged()">
@@ -3197,7 +3197,7 @@
       <br/>
 
       <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start" *ngIf="select5a">
-        <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q5a. </b>Identify patients
+        <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">Q5A </b>Identify patients
           <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
             <mat-label>With/Without</mat-label>
             <mat-select [(ngModel)]="withWithout5a" formControlName="control40a" (ngModelChange)="formChanged()">
@@ -3312,7 +3312,7 @@
       <div class="criteria-container">
         <br/>
         <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-          <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">R1. </b>Population register is patients
+          <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">R1 </b>Population register is patients
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
               <mat-label>Matching/Not Matching</mat-label>
               <mat-select [(ngModel)]="matching1" formControlName="control170" (ngModelChange)="formChanged()">
@@ -3323,10 +3323,10 @@
             </mat-form-field>
             <mat-form-field appearance="standard" style="width: 700px; margin-left: 10px">
               <mat-label>Query expression - example (Q1 AND (Q2 OR Q3) AND Q4) OR (Q6 OR (Q7 AND Q8))</mat-label>
-              <textarea cdkTextareaAutosize
+              <textarea cdkTextareaAutosize required
                         #autosize="cdkTextareaAutosize"
                         cdkAutosizeMinRows="1"
-                        cdkAutosizeMaxRows="5" matInput placeholder="Query expression" [(ngModel)]="queryExpression1" formControlName="control171" (ngModelChange)="formChanged()">
+                        cdkAutosizeMaxRows="5" matInput placeholder="Query expression" [(ngModel)]="queryExpression1" formControlName="control171" (ngModelChange)="formChanged()" oninput="this.value = this.value.toUpperCase()"  >
               </textarea>
             </mat-form-field></p>
 
@@ -3341,7 +3341,7 @@
 
         <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start" *ngIf="rule1">
           <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">R2. </b>
+            <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">R2 </b>
             <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
                 <mat-label>Select/Reject</mat-label>
                 <mat-select [(ngModel)]="selectReject2" formControlName="control172" (ngModelChange)="formChanged()">
@@ -3364,14 +3364,14 @@
                 <textarea cdkTextareaAutosize
                           #autosize="cdkTextareaAutosize"
                           cdkAutosizeMinRows="1"
-                          cdkAutosizeMaxRows="5" required matInput placeholder="Query expression" [(ngModel)]="queryExpression2" formControlName="control174" (ngModelChange)="formChanged()">
+                          cdkAutosizeMaxRows="5" required matInput placeholder="Query expression" [(ngModel)]="queryExpression2" formControlName="control174" (ngModelChange)="formChanged()" oninput="this.value = this.value.toUpperCase()" >
               </textarea>
               </mat-form-field>
             <p style="margin-left: 10px; margin-top: 0px">
             from those remaining after rule
             <mat-form-field appearance="standard" style="margin-left: 10px; margin-top: 28px;width: 120px">
               <mat-label>Rule - example R1</mat-label>
-              <input matInput placeholder="Rule" [(ngModel)]="ruleNumber2" formControlName="control175" (ngModelChange)="formChanged()">
+              <input matInput placeholder="Rule" required [(ngModel)]="ruleNumber2" formControlName="control175" (ngModelChange)="formChanged()" oninput="this.value = this.value.toUpperCase()"  >
             </mat-form-field></p>
 
             <div mat-dialog-actions style="margin-left: 20px" *ngIf="addRule2">
@@ -3387,7 +3387,7 @@
 
         <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start" *ngIf="rule2">
           <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">R3. </b>
+            <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">R3 </b>
               <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
                 <mat-label>Select/Reject</mat-label>
                 <mat-select [(ngModel)]="selectReject3" formControlName="control172a" (ngModelChange)="formChanged()">
@@ -3410,14 +3410,14 @@
                 <textarea cdkTextareaAutosize
                           #autosize="cdkTextareaAutosize"
                           cdkAutosizeMinRows="1"
-                          cdkAutosizeMaxRows="5" required matInput placeholder="Query expression" [(ngModel)]="queryExpression3" formControlName="control174a" (ngModelChange)="formChanged()">
+                          cdkAutosizeMaxRows="5" required matInput placeholder="Query expression" [(ngModel)]="queryExpression3" formControlName="control174a" (ngModelChange)="formChanged()" oninput="this.value = this.value.toUpperCase()" >
               </textarea>
               </mat-form-field>
             <p style="margin-left: 10px; margin-top: 0px">
               from those remaining after rule
               <mat-form-field appearance="standard" style="margin-left: 10px; margin-top: 28px;width: 120px">
                 <mat-label>Rule - example R1</mat-label>
-                <input matInput placeholder="Rule" [(ngModel)]="ruleNumber3" formControlName="control175a" (ngModelChange)="formChanged()">
+                <input matInput placeholder="Rule" required [(ngModel)]="ruleNumber3" formControlName="control175a" (ngModelChange)="formChanged()" oninput="this.value = this.value.toUpperCase()" >
               </mat-form-field></p>
 
             <div mat-dialog-actions style="margin-left: 20px" *ngIf="addRule3">
@@ -3433,7 +3433,7 @@
 
         <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start" *ngIf="rule3">
           <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">R4. </b>
+            <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">R4 </b>
               <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
                 <mat-label>Select/Reject</mat-label>
                 <mat-select [(ngModel)]="selectReject4" formControlName="control172b" (ngModelChange)="formChanged()">
@@ -3456,14 +3456,14 @@
                 <textarea cdkTextareaAutosize
                           #autosize="cdkTextareaAutosize"
                           cdkAutosizeMinRows="1"
-                          cdkAutosizeMaxRows="5" required matInput placeholder="Query expression" [(ngModel)]="queryExpression4" formControlName="control174b" (ngModelChange)="formChanged()">
+                          cdkAutosizeMaxRows="5" required matInput placeholder="Query expression" [(ngModel)]="queryExpression4" formControlName="control174b" (ngModelChange)="formChanged()" oninput="this.value = this.value.toUpperCase()" >
               </textarea>
               </mat-form-field>
             <p style="margin-left: 10px; margin-top: 0px">
               from those remaining after rule
               <mat-form-field appearance="standard" style="margin-left: 10px; margin-top: 28px;width: 120px">
                 <mat-label>Rule - example R1</mat-label>
-                <input matInput placeholder="Rule" [(ngModel)]="ruleNumber4" formControlName="control175b" (ngModelChange)="formChanged()">
+                <input matInput placeholder="Rule" required [(ngModel)]="ruleNumber4" formControlName="control175b" (ngModelChange)="formChanged()" oninput="this.value = this.value.toUpperCase()" >
               </mat-form-field></p>
 
             <div mat-dialog-actions style="margin-left: 20px" *ngIf="addRule4">
@@ -3479,7 +3479,7 @@
 
         <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start" *ngIf="rule4">
           <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">R5. </b>
+            <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">R5 </b>
               <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
                 <mat-label>Select/Reject</mat-label>
                 <mat-select [(ngModel)]="selectReject5" formControlName="control172c" (ngModelChange)="formChanged()">
@@ -3502,14 +3502,14 @@
                 <textarea cdkTextareaAutosize
                           #autosize="cdkTextareaAutosize"
                           cdkAutosizeMinRows="1"
-                          cdkAutosizeMaxRows="5" required matInput placeholder="Query expression" [(ngModel)]="queryExpression5" formControlName="control174c" (ngModelChange)="formChanged()">
+                          cdkAutosizeMaxRows="5" required matInput placeholder="Query expression" [(ngModel)]="queryExpression5" formControlName="control174c" (ngModelChange)="formChanged()" oninput="this.value = this.value.toUpperCase()" >
               </textarea>
               </mat-form-field>
             <p style="margin-left: 10px; margin-top: 0px">
               from those remaining after rule
               <mat-form-field appearance="standard" style="margin-left: 10px; margin-top: 28px;width: 120px">
                 <mat-label>Rule - example R1</mat-label>
-                <input matInput placeholder="Rule" [(ngModel)]="ruleNumber5" formControlName="control175c" (ngModelChange)="formChanged()">
+                <input matInput placeholder="Rule" required [(ngModel)]="ruleNumber5" formControlName="control175c" (ngModelChange)="formChanged()" oninput="this.value = this.value.toUpperCase()" >
               </mat-form-field></p>
 
             <div mat-dialog-actions style="margin-left: 20px" *ngIf="addRule5">
@@ -3525,7 +3525,7 @@
 
         <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start" *ngIf="rule5">
           <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">R6. </b>
+            <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">R6 </b>
               <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
                 <mat-label>Select/Reject</mat-label>
                 <mat-select [(ngModel)]="selectReject6" formControlName="control172d" (ngModelChange)="formChanged()">
@@ -3548,14 +3548,14 @@
                 <textarea cdkTextareaAutosize
                           #autosize="cdkTextareaAutosize"
                           cdkAutosizeMinRows="1"
-                          cdkAutosizeMaxRows="5" required matInput placeholder="Query expression" [(ngModel)]="queryExpression6" formControlName="control174d" (ngModelChange)="formChanged()">
+                          cdkAutosizeMaxRows="5" required matInput placeholder="Query expression" [(ngModel)]="queryExpression6" formControlName="control174d" (ngModelChange)="formChanged()" oninput="this.value = this.value.toUpperCase()" >
               </textarea>
               </mat-form-field>
             <p style="margin-left: 10px; margin-top: 0px">
               from those remaining after rule
               <mat-form-field appearance="standard" style="margin-left: 10px; margin-top: 28px;width: 120px">
                 <mat-label>Rule - example R1</mat-label>
-                <input matInput placeholder="Rule" [(ngModel)]="ruleNumber6" formControlName="control175d" (ngModelChange)="formChanged()">
+                <input matInput placeholder="Rule" required [(ngModel)]="ruleNumber6" formControlName="control175d" (ngModelChange)="formChanged()" oninput="this.value = this.value.toUpperCase()" >
               </mat-form-field></p>
 
             <div mat-dialog-actions style="margin-left: 20px" *ngIf="addRule6">
@@ -3571,7 +3571,7 @@
 
         <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start" *ngIf="rule6">
           <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">R7. </b>
+            <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">R7 </b>
               <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
                 <mat-label>Select/Reject</mat-label>
                 <mat-select [(ngModel)]="selectReject7" formControlName="control172e" (ngModelChange)="formChanged()">
@@ -3594,14 +3594,14 @@
                 <textarea cdkTextareaAutosize
                           #autosize="cdkTextareaAutosize"
                           cdkAutosizeMinRows="1"
-                          cdkAutosizeMaxRows="5" required matInput placeholder="Query expression" [(ngModel)]="queryExpression7" formControlName="control174e" (ngModelChange)="formChanged()">
+                          cdkAutosizeMaxRows="5" required matInput placeholder="Query expression" [(ngModel)]="queryExpression7" formControlName="control174e" (ngModelChange)="formChanged()" oninput="this.value = this.value.toUpperCase()" >
               </textarea>
               </mat-form-field>
             <p style="margin-left: 10px; margin-top: 0px">
               from those remaining after rule
               <mat-form-field appearance="standard" style="margin-left: 10px; margin-top: 28px;width: 120px">
                 <mat-label>Rule - example R1</mat-label>
-                <input matInput placeholder="Rule" [(ngModel)]="ruleNumber7" formControlName="control175e" (ngModelChange)="formChanged()">
+                <input matInput placeholder="Rule" required [(ngModel)]="ruleNumber7" formControlName="control175e" (ngModelChange)="formChanged()" oninput="this.value = this.value.toUpperCase()" >
               </mat-form-field></p>
 
             <div mat-dialog-actions style="margin-left: 20px" *ngIf="addRule7">
@@ -3617,7 +3617,7 @@
 
         <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start" *ngIf="rule7">
           <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">R8. </b>
+            <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">R8 </b>
               <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
                 <mat-label>Select/Reject</mat-label>
                 <mat-select [(ngModel)]="selectReject8" formControlName="control172f" (ngModelChange)="formChanged()">
@@ -3640,14 +3640,14 @@
                 <textarea cdkTextareaAutosize
                           #autosize="cdkTextareaAutosize"
                           cdkAutosizeMinRows="1"
-                          cdkAutosizeMaxRows="5" required matInput placeholder="Query expression" [(ngModel)]="queryExpression8" formControlName="control174f" (ngModelChange)="formChanged()">
+                          cdkAutosizeMaxRows="5" required matInput placeholder="Query expression" [(ngModel)]="queryExpression8" formControlName="control174f" (ngModelChange)="formChanged()" oninput="this.value = this.value.toUpperCase()" >
               </textarea>
               </mat-form-field>
             <p style="margin-left: 10px; margin-top: 0px">
               from those remaining after rule
               <mat-form-field appearance="standard" style="margin-left: 10px; margin-top: 28px;width: 120px">
                 <mat-label>Rule - example R1</mat-label>
-                <input matInput placeholder="Rule" [(ngModel)]="ruleNumber8" formControlName="control175f" (ngModelChange)="formChanged()">
+                <input matInput placeholder="Rule" required [(ngModel)]="ruleNumber8" formControlName="control175f" (ngModelChange)="formChanged()" oninput="this.value = this.value.toUpperCase()" >
               </mat-form-field></p>
 
             <div mat-dialog-actions style="margin-left: 20px" *ngIf="addRule8">
@@ -3663,7 +3663,7 @@
 
         <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start" *ngIf="rule8">
           <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">R9. </b>
+            <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">R9 </b>
               <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
                 <mat-label>Select/Reject</mat-label>
                 <mat-select [(ngModel)]="selectReject9" formControlName="control172g" (ngModelChange)="formChanged()">
@@ -3686,14 +3686,14 @@
                 <textarea cdkTextareaAutosize
                           #autosize="cdkTextareaAutosize"
                           cdkAutosizeMinRows="1"
-                          cdkAutosizeMaxRows="5" required matInput placeholder="Query expression" [(ngModel)]="queryExpression9" formControlName="control174g" (ngModelChange)="formChanged()">
+                          cdkAutosizeMaxRows="5" required matInput placeholder="Query expression" [(ngModel)]="queryExpression9" formControlName="control174g" (ngModelChange)="formChanged()" oninput="this.value = this.value.toUpperCase()" >
               </textarea>
               </mat-form-field>
             <p style="margin-left: 10px; margin-top: 0px">
               from those remaining after rule
               <mat-form-field appearance="standard" style="margin-left: 10px; margin-top: 28px;width: 120px">
                 <mat-label>Rule - example R1</mat-label>
-                <input matInput placeholder="Rule" [(ngModel)]="ruleNumber9" formControlName="control175g" (ngModelChange)="formChanged()">
+                <input matInput placeholder="Rule" required [(ngModel)]="ruleNumber9" formControlName="control175g" (ngModelChange)="formChanged()" oninput="this.value = this.value.toUpperCase()" >
               </mat-form-field></p>
 
             <div mat-dialog-actions style="margin-left: 20px" *ngIf="addRule9">
@@ -3709,7 +3709,7 @@
 
         <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start" *ngIf="rule9">
           <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">R10. </b>
+            <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">R10 </b>
               <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
                 <mat-label>Select/Reject</mat-label>
                 <mat-select [(ngModel)]="selectReject10" formControlName="control172h" (ngModelChange)="formChanged()">
@@ -3732,14 +3732,14 @@
                 <textarea cdkTextareaAutosize
                           #autosize="cdkTextareaAutosize"
                           cdkAutosizeMinRows="1"
-                          cdkAutosizeMaxRows="5" required matInput placeholder="Query expression" [(ngModel)]="queryExpression10" formControlName="control174h" (ngModelChange)="formChanged()">
+                          cdkAutosizeMaxRows="5" required matInput placeholder="Query expression" [(ngModel)]="queryExpression10" formControlName="control174h" (ngModelChange)="formChanged()" oninput="this.value = this.value.toUpperCase()" >
               </textarea>
               </mat-form-field>
             <p style="margin-left: 10px; margin-top: 0px">
               from those remaining after rule
               <mat-form-field appearance="standard" style="margin-left: 10px; margin-top: 28px;width: 120px">
                 <mat-label>Rule - example R1</mat-label>
-                <input matInput placeholder="Rule" [(ngModel)]="ruleNumber10" formControlName="control175h" (ngModelChange)="formChanged()">
+                <input matInput placeholder="Rule" required [(ngModel)]="ruleNumber10" formControlName="control175h" (ngModelChange)="formChanged()" oninput="this.value = this.value.toUpperCase()" >
               </mat-form-field></p>
 
             <div mat-dialog-actions style="margin-left: 20px" *ngIf="addRule10">
@@ -3755,7 +3755,7 @@
 
         <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start" *ngIf="rule10">
           <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">R11. </b>
+            <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">R11 </b>
               <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
                 <mat-label>Select/Reject</mat-label>
                 <mat-select [(ngModel)]="selectReject11" formControlName="control172i" (ngModelChange)="formChanged()">
@@ -3778,14 +3778,14 @@
                 <textarea cdkTextareaAutosize
                           #autosize="cdkTextareaAutosize"
                           cdkAutosizeMinRows="1"
-                          cdkAutosizeMaxRows="5" required matInput placeholder="Query expression" [(ngModel)]="queryExpression11" formControlName="control174i" (ngModelChange)="formChanged()">
+                          cdkAutosizeMaxRows="5" required matInput placeholder="Query expression" [(ngModel)]="queryExpression11" formControlName="control174i" (ngModelChange)="formChanged()" oninput="this.value = this.value.toUpperCase()" >
               </textarea>
               </mat-form-field>
             <p style="margin-left: 10px; margin-top: 0px">
               from those remaining after rule
               <mat-form-field appearance="standard" style="margin-left: 10px; margin-top: 28px;width: 120px">
                 <mat-label>Rule - example R1</mat-label>
-                <input matInput placeholder="Rule" [(ngModel)]="ruleNumber11" formControlName="control175i" (ngModelChange)="formChanged()">
+                <input matInput placeholder="Rule" required [(ngModel)]="ruleNumber11" formControlName="control175i" (ngModelChange)="formChanged()" oninput="this.value = this.value.toUpperCase()" >
               </mat-form-field></p>
 
             <div mat-dialog-actions style="margin-left: 20px" *ngIf="addRule11">
@@ -3801,7 +3801,7 @@
 
         <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start" *ngIf="rule11">
           <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">R12. </b>
+            <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">R12 </b>
               <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
                 <mat-label>Select/Reject</mat-label>
                 <mat-select [(ngModel)]="selectReject12" formControlName="control172j" (ngModelChange)="formChanged()">
@@ -3824,14 +3824,14 @@
                 <textarea cdkTextareaAutosize
                           #autosize="cdkTextareaAutosize"
                           cdkAutosizeMinRows="1"
-                          cdkAutosizeMaxRows="5" required matInput placeholder="Query expression" [(ngModel)]="queryExpression12" formControlName="control174j" (ngModelChange)="formChanged()">
+                          cdkAutosizeMaxRows="5" required matInput placeholder="Query expression" [(ngModel)]="queryExpression12" formControlName="control174j" (ngModelChange)="formChanged()" oninput="this.value = this.value.toUpperCase()" >
               </textarea>
               </mat-form-field>
             <p style="margin-left: 10px; margin-top: 0px">
               from those remaining after rule
               <mat-form-field appearance="standard" style="margin-left: 10px; margin-top: 28px;width: 120px">
                 <mat-label>Rule - example R1</mat-label>
-                <input matInput placeholder="Rule" [(ngModel)]="ruleNumber12" formControlName="control175j" (ngModelChange)="formChanged()">
+                <input matInput placeholder="Rule" required [(ngModel)]="ruleNumber12" formControlName="control175j" (ngModelChange)="formChanged()" oninput="this.value = this.value.toUpperCase()" >
               </mat-form-field></p>
 
             <div mat-dialog-actions style="margin-left: 20px" *ngIf="addRule12">
@@ -3847,7 +3847,7 @@
 
         <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start" *ngIf="rule12">
           <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">R13. </b>
+            <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">R13 </b>
               <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
                 <mat-label>Select/Reject</mat-label>
                 <mat-select [(ngModel)]="selectReject13" formControlName="control172k" (ngModelChange)="formChanged()">
@@ -3870,14 +3870,14 @@
                 <textarea cdkTextareaAutosize
                           #autosize="cdkTextareaAutosize"
                           cdkAutosizeMinRows="1"
-                          cdkAutosizeMaxRows="5" required matInput placeholder="Query expression" [(ngModel)]="queryExpression13" formControlName="control174k" (ngModelChange)="formChanged()">
+                          cdkAutosizeMaxRows="5" required matInput placeholder="Query expression" [(ngModel)]="queryExpression13" formControlName="control174k" (ngModelChange)="formChanged()" oninput="this.value = this.value.toUpperCase()" >
               </textarea>
               </mat-form-field>
             <p style="margin-left: 10px; margin-top: 0px">
               from those remaining after rule
               <mat-form-field appearance="standard" style="margin-left: 10px; margin-top: 28px;width: 120px">
                 <mat-label>Rule - example R1</mat-label>
-                <input matInput placeholder="Rule" [(ngModel)]="ruleNumber13" formControlName="control175k" (ngModelChange)="formChanged()">
+                <input matInput placeholder="Rule" required [(ngModel)]="ruleNumber13" formControlName="control175k" (ngModelChange)="formChanged()" oninput="this.value = this.value.toUpperCase()" >
               </mat-form-field></p>
 
             <div mat-dialog-actions style="margin-left: 20px" *ngIf="addRule13">
@@ -3893,7 +3893,7 @@
 
         <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start" *ngIf="rule13">
           <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">R14. </b>
+            <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">R14 </b>
               <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
                 <mat-label>Select/Reject</mat-label>
                 <mat-select [(ngModel)]="selectReject14" formControlName="control172l" (ngModelChange)="formChanged()">
@@ -3916,14 +3916,14 @@
                 <textarea cdkTextareaAutosize
                           #autosize="cdkTextareaAutosize"
                           cdkAutosizeMinRows="1"
-                          cdkAutosizeMaxRows="5" required matInput placeholder="Query expression" [(ngModel)]="queryExpression14" formControlName="control174l" (ngModelChange)="formChanged()">
+                          cdkAutosizeMaxRows="5" required matInput placeholder="Query expression" [(ngModel)]="queryExpression14" formControlName="control174l" (ngModelChange)="formChanged()" oninput="this.value = this.value.toUpperCase()" >
               </textarea>
               </mat-form-field>
             <p style="margin-left: 10px; margin-top: 0px">
               from those remaining after rule
               <mat-form-field appearance="standard" style="margin-left: 10px; margin-top: 28px;width: 120px">
                 <mat-label>Rule - example R1</mat-label>
-                <input matInput placeholder="Rule" [(ngModel)]="ruleNumber14" formControlName="control175l" (ngModelChange)="formChanged()">
+                <input matInput placeholder="Rule" required [(ngModel)]="ruleNumber14" formControlName="control175l" (ngModelChange)="formChanged()" oninput="this.value = this.value.toUpperCase()" >
               </mat-form-field></p>
 
             <div mat-dialog-actions style="margin-left: 20px" *ngIf="addRule14">
@@ -3939,7 +3939,7 @@
 
         <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start" *ngIf="rule14">
           <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">R15. </b>
+            <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">R15 </b>
               <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
                 <mat-label>Select/Reject</mat-label>
                 <mat-select [(ngModel)]="selectReject15" formControlName="control172m" (ngModelChange)="formChanged()">
@@ -3962,14 +3962,14 @@
                 <textarea cdkTextareaAutosize
                           #autosize="cdkTextareaAutosize"
                           cdkAutosizeMinRows="1"
-                          cdkAutosizeMaxRows="5" required matInput placeholder="Query expression" [(ngModel)]="queryExpression15" formControlName="control174m" (ngModelChange)="formChanged()">
+                          cdkAutosizeMaxRows="5" required matInput placeholder="Query expression" [(ngModel)]="queryExpression15" formControlName="control174m" (ngModelChange)="formChanged()" oninput="this.value = this.value.toUpperCase()" >
               </textarea>
               </mat-form-field>
             <p style="margin-left: 10px; margin-top: 0px">
               from those remaining after rule
               <mat-form-field appearance="standard" style="margin-left: 10px; margin-top: 28px;width: 120px">
                 <mat-label>Rule - example R1</mat-label>
-                <input matInput placeholder="Rule" [(ngModel)]="ruleNumber15" formControlName="control175m" (ngModelChange)="formChanged()">
+                <input matInput placeholder="Rule" required [(ngModel)]="ruleNumber15" formControlName="control175m" (ngModelChange)="formChanged()" oninput="this.value = this.value.toUpperCase()" >
               </mat-form-field></p>
 
             <div mat-dialog-actions style="margin-left: 20px" *ngIf="addRule15">
@@ -3985,7 +3985,7 @@
 
         <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start" *ngIf="rule15">
           <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
-            <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">R16. </b>
+            <p style="margin-left: 10px; margin-top: 28px"><b style="font-size: 16px">R16 </b>
               <mat-form-field appearance="standard" style="margin-left: 10px; width: 125px">
                 <mat-label>Select/Reject</mat-label>
                 <mat-select [(ngModel)]="selectReject16" formControlName="control172n" (ngModelChange)="formChanged()">
@@ -4008,14 +4008,14 @@
                 <textarea cdkTextareaAutosize
                           #autosize="cdkTextareaAutosize"
                           cdkAutosizeMinRows="1"
-                          cdkAutosizeMaxRows="5" required matInput placeholder="Query expression" [(ngModel)]="queryExpression16" formControlName="control174n" (ngModelChange)="formChanged()">
+                          cdkAutosizeMaxRows="5" required matInput placeholder="Query expression" [(ngModel)]="queryExpression16" formControlName="control174n" (ngModelChange)="formChanged()" oninput="this.value = this.value.toUpperCase()" >
               </textarea>
               </mat-form-field>
             <p style="margin-left: 10px; margin-top: 0px">
               from those remaining after rule
               <mat-form-field appearance="standard" style="margin-left: 10px; margin-top: 28px;width: 120px">
                 <mat-label>Rule - example R1</mat-label>
-                <input matInput placeholder="Rule" [(ngModel)]="ruleNumber16" formControlName="control175n" (ngModelChange)="formChanged()">
+                <input matInput placeholder="Rule" required [(ngModel)]="ruleNumber16" formControlName="control175n" (ngModelChange)="formChanged()" oninput="this.value = this.value.toUpperCase()" >
               </mat-form-field></p>
 
           </div>
@@ -4047,7 +4047,7 @@
     </form>
   </mat-step>
 
-  <mat-step [stepControl]="fifthFormGroup" errorMessage="Step not completed.">
+  <mat-step [stepControl]="fifthFormGroup" errorMessage="Step not completeD">
     <form [formGroup]="fifthFormGroup">
       <ng-template matStepLabel>Data set criteria</ng-template>
       <p>Once a patient cohort has been identified, these are the choices for defining the data set (output tables).
