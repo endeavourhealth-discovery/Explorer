@@ -31,25 +31,25 @@ export class TutorialsComponent implements OnInit {
         link = "https://youtu.be/uWZH7cb4in0";
         break;
       case 2:
-        link = "https://youtu.be/ASltpTGSpik";
+        link = "https://youtu.be/uWZH7cb4in0";
         break;
       case 3:
-        link = "https://youtu.be/tOEARtSdTV0";
+        link = "https://youtu.be/uWZH7cb4in0";
         break;
       case 4:
-        link = "https://www.youtube.com/watch?v=Q_4YF9CmVxM";
+        link = "https://youtu.be/uWZH7cb4in0";
         break;
       case 5:
-        link = "";
+        link = "https://youtu.be/uWZH7cb4in0";
         break;
       case 6:
-        link = "";
+        link = "https://youtu.be/uWZH7cb4in0";
         break;
       case 7:
-        link = "";
+        link = "https://youtu.be/uWZH7cb4in0";
         break;
       case 8:
-        link = "";
+        link = "https://youtu.be/uWZH7cb4in0";
         break;
       default:
 
