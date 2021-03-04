@@ -29,8 +29,8 @@ BEGIN
 
     SET counter = 1;
 
-    SET p_selectRejects = REPLACE(p_selectRejects,',,',',NULL');
-    SET p_selectRejects = REPLACE(p_selectRejects,',NULL','');
+    SET p_selectRejects = REPLACE(p_selectRejects,',,',',NULL,');
+    SET p_selectRejects = REPLACE(p_selectRejects,',NULL,','');
 
     processloop1:
     LOOP  
@@ -57,8 +57,7 @@ BEGIN
     END LOOP;
 
     SET counter = 1;
-    SET p_matchings = REPLACE(p_matchings,',,',',NULL');
-    SET p_matchings = REPLACE(p_matchings,',NULL','');
+    SET p_matchings = REPLACE(p_matchings,',,',',NULL,');
 
     processloop2:
     LOOP  
@@ -73,6 +72,8 @@ BEGIN
       SET TempValue = TRIM(front);
       SET TempValue = UPPER(TempValue);
 
+      IF TempValue = 'NULL' THEN SET TempValue = ''; END IF;
+
       SET counter = counter + 1;
 
               SET @sql = CONCAT('UPDATE ', p_ruleTab,' SET matching = ', QUOTE(TempValue),' WHERE id = ', counter,' AND selectReject IS NOT NULL');
@@ -85,8 +86,7 @@ BEGIN
     END LOOP;
 
     SET counter = 1;
-    SET p_queryExpressions = REPLACE(p_queryExpressions,',,',',NULL');
-    SET p_queryExpressions = REPLACE(p_queryExpressions,',NULL','');
+    SET p_queryExpressions = REPLACE(p_queryExpressions,',,',',NULL,');
 
     processloop3:
     LOOP  
@@ -107,6 +107,8 @@ BEGIN
       SET TempValue = REPLACE(TempValue,')',' ) ');
       SET TempValue = TRIM(TempValue);
 
+      IF TempValue = 'NULL' THEN SET TempValue = ''; END IF;
+
       SET counter = counter + 1;
 
               SET @sql = CONCAT('UPDATE ', p_ruleTab,' SET queryExpression = ', QUOTE(TempValue),' WHERE id = ', counter,' AND matching IS NOT NULL');
@@ -119,8 +121,7 @@ BEGIN
     END LOOP;
 
     SET counter = 1;
-    SET p_ruleNumbers = REPLACE(p_ruleNumbers,',,',',NULL');
-    SET p_ruleNumbers = REPLACE(p_ruleNumbers,',NULL','');
+    SET p_ruleNumbers = REPLACE(p_ruleNumbers,',,',',NULL,');
 
     processloop4:
     LOOP  
@@ -134,6 +135,8 @@ BEGIN
       SET frontlen = LENGTH(front);
       SET TempValue = TRIM(front);
       SET TempValue = UPPER(TempValue);
+
+      IF TempValue = 'NULL' THEN SET TempValue = ''; END IF;
 
       SET counter = counter + 1;
 
