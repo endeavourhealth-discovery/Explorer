@@ -158,7 +158,7 @@ BEGIN
               CALL log_errors(l_query_id, 'processQueryExpression', '45000', MESSAGE_TEXT, now());
               RESIGNAL; -- rethrow the error
             ELSEIF SUBSTRING(l_ruleNumber,2) >= l_id THEN
-              SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Rule number cannot be the same or greater than the rule';
+              SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Rule number cannot be the same as or greater than the rule';
               CALL log_errors(l_query_id, 'processQueryExpression', '45000', MESSAGE_TEXT, now());
               RESIGNAL; -- rethrow the error
             END IF;
