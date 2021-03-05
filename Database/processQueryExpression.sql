@@ -151,6 +151,17 @@ BEGIN
           SET l_rejecttab = NULL;
 
           SET @queryTable = NULL;
+            
+            -- check rule number 
+            IF LENGTH(TRIM(l_ruleNumber)) = 0 OR l_ruleNumber IS NULL THEN
+              SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Rule number not found';
+              CALL log_errors(l_query_id, 'processQueryExpression', '45000', MESSAGE_TEXT, now());
+              RESIGNAL; -- rethrow the error
+            ELSEIF SUBSTRING(l_ruleNumber,2) >= l_id THEN
+              SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Rule number cannot be the same as or greater than the rule';
+              CALL log_errors(l_query_id, 'processQueryExpression', '45000', MESSAGE_TEXT, now());
+              RESIGNAL; -- rethrow the error
+            END IF;
 
           SET @sql = CONCAT('SELECT queryTable INTO @queryTable FROM ', p_ruleTab,' WHERE id = SUBSTRING(', QUOTE(l_ruleNumber),',2)');
           PREPARE stmt FROM @sql;
