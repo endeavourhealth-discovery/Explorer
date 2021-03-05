@@ -45,6 +45,8 @@ public class DashboardEndpoint {
             if (project.getDeidentificationLevel()==0)
                 patientIdentifiable = true;
             projectType = project.getProjectTypeId();
+            if (projectType!=5 && projectType!=6 && projectType!=7)
+                projectType = 7;
         }
 
         validOrgs = orgList;
