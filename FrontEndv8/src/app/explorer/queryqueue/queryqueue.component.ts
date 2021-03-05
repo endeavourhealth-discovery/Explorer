@@ -16,7 +16,7 @@ import {MatSort} from "@angular/material/sort";
 
 export class QueryQueueComponent implements OnInit {
 
-  selection = new SelectionModel<any>(false, []);
+  selection = new SelectionModel<any>(true, []);
 
   filterText: string;
 
@@ -94,7 +94,18 @@ export class QueryQueueComponent implements OnInit {
     }
   }
 
+  formatQueryError(error: any) {
+    if (error == 'Y') {
+      return 'Yes';
+    }
+    else if (error == 'N')
+    {
+      return 'No';
+    }
+  }
+
   refresh() {
+    this.log.success("Query reset.");
     this.ngOnInit();
   }
 
@@ -119,14 +130,23 @@ export class QueryQueueComponent implements OnInit {
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
   }
 
-  resetQuery (query: any) {
-    this.explorerService.resetQueue(query)
+  resetQuery () {
+    let id = "";
+    this.selection.selected.map(
+      e => {
+        id+=","+e.id;
+      }
+    )
+    id = id.substr(1);
+    console.log(id);
+
+    this.explorerService.resetQueue(id)
       .subscribe(saved => {
-        this.log.success('Query reset.')
+        this.refresh();
         },
         error => this.log.error('This query could not be reset.')
       );
-    this.ngOnInit();
   }
+
 
 }
