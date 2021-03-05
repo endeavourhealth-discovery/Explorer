@@ -2,16 +2,11 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from '@angular/material';
 import {ExplorerService} from '../explorer.service';
 import {LoggerService, UserManagerService} from 'dds-angular8';
-import {MatPaginator, PageEvent} from '@angular/material/paginator';
+import {MatPaginator} from '@angular/material/paginator';
 import {ActivatedRoute, Router} from "@angular/router";
 import {MatDialog} from "@angular/material/dialog";
-import {ValueSetEditorComponent} from "../valueseteditor/valueseteditor.component";
 import {SelectionModel} from '@angular/cdk/collections';
-import {MessageBoxDialogComponent} from "../message-box-dialog/message-box-dialog.component";
-import {FormControl} from "@angular/forms";
-import {ValueSetCodeComponent} from "../valuesetcode/valuesetcode.component";
 import {MatSort} from "@angular/material/sort";
-import {ngxCsv} from "ngx-csv";
 
 @Component({
   selector: 'app-queryqueue',
@@ -21,7 +16,7 @@ import {ngxCsv} from "ngx-csv";
 
 export class QueryQueueComponent implements OnInit {
 
-  selection = new SelectionModel<any>(true, []);
+  selection = new SelectionModel<any>(false, []);
 
   filterText: string;
 
@@ -30,7 +25,7 @@ export class QueryQueueComponent implements OnInit {
   @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: false}) sort: MatSort;
 
-  displayedColumns: string[] = ['type', 'registry', 'date', 'status', 'timeSubmit', 'timeFinish', 'timeExecute'];
+  displayedColumns: string[] = ['type', 'registry', 'date', 'status', 'timeSubmit', 'timeFinish', 'timeExecute', 'error', 'select'];
 
   projectId: string = '';
   init: any = 0;
@@ -100,6 +95,37 @@ export class QueryQueueComponent implements OnInit {
   }
 
   refresh() {
+    this.ngOnInit();
+  }
+
+  isAllSelected() {
+    if (this.dataSource==undefined)
+      return false;
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    return numSelected === numRows;
+  }
+
+  masterToggle() {
+    this.isAllSelected() ?
+      this.selection.clear() :
+      this.dataSource.data.forEach(row => this.selection.select(row));
+  }
+
+  checkboxLabel(row?: any): string {
+    if (!row) {
+      return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
+    }
+    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
+  }
+
+  resetQuery (query: any) {
+    this.explorerService.resetQueue(query)
+      .subscribe(saved => {
+        this.log.success('Query reset.')
+        },
+        error => this.log.error('This query could not be reset.')
+      );
     this.ngOnInit();
   }
 

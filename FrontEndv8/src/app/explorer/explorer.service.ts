@@ -432,4 +432,12 @@ export class ExplorerService {
     return this.http.get('api/events/queryqueue', {params});
   }
 
+  resetQueue(id: string): Observable<any> {
+    let params: HttpParams = new HttpParams();
+
+    params = params.append('id', id);
+
+    return this.http.get('api/events/resetQueue', {params});
+  }
+
 }

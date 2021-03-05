@@ -17,6 +17,8 @@ public class QueryQueue {
     private String timeSubmit;
     private String timeFinish;
     private String timeExecute;
+    private String id;
+    private String error;
 
     public String getType() {
         return type;
@@ -86,6 +88,24 @@ public class QueryQueue {
 
     public QueryQueue setTimeExecute(String timeExecute) {
         this.timeExecute = timeExecute;
+        return this;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public QueryQueue setId(String id) {
+        this.id = id;
+        return this;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public QueryQueue setError(String error) {
+        this.error = error;
         return this;
     }
 }

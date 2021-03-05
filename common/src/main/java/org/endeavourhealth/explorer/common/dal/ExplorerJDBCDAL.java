@@ -3695,14 +3695,18 @@ public class ExplorerJDBCDAL implements AutoCloseable {
 
     public QueryQueueResult getQueryQueue() throws Exception {
         QueryQueueResult result = new QueryQueueResult();
-
         String sql = "";
         String sqlCount = "";
 
-        sql = "SELECT type,registry_name,next_run_date,status,timesubmit,timefinish,timeexecute " +
-        "FROM dashboards.queue q " +
-        "join dashboards.query_library ql on ql.id = q.query_id " +
-        "order by status,timesubmit desc,timefinish desc";
+        sql = "SELECT q.id,type,registry_name,next_run_date,status,timesubmit,timefinish,timeexecute, IF(e.query_id IS NULL ,'N','Y') AS error "+
+                "FROM dashboards.queue q "+
+                "join dashboards.query_library ql on ql.id = q.query_id "+
+                "LEFT JOIN (SELECT DISTINCT e1.query_id, DATE_FORMAT(e1.error_date,'%Y-%m-%d') "+
+                "FROM dashboards.error_log e1 JOIN dashboards.queue q1 ON e1.query_id = q1.query_id "+
+                "WHERE q1.next_run_date = CURDATE() "+
+                "AND q1.next_run_date = DATE_FORMAT(e1.error_date,'%Y-%m-%d') "+
+                "AND q1.status = 'A')  e ON e.query_id = q.query_id "+
+                "order by status,timesubmit desc,timefinish desc";
 
         sqlCount = "SELECT count(1) " +
                 "FROM dashboards.queue q";
@@ -3742,7 +3746,27 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 .setStatus(resultSet.getString("status"))
                 .setTimeSubmit(resultSet.getString("timesubmit"))
                 .setTimeFinish(resultSet.getString("timefinish"))
-                .setTimeExecute(resultSet.getString("timeexecute"));
+                .setTimeExecute(resultSet.getString("timeexecute"))
+                .setId(resultSet.getString("id"))
+                .setError(resultSet.getString("error"));
         return queryqueue;
+    }
+
+    public void resetQueue(String id) throws Exception {
+        String ids[] = id.split(",");
+        StringBuilder builder = new StringBuilder();
+        for( int i = 0 ; i < ids.length; i++ ) {
+            builder.append("?,");
+        }
+        String sql = "UPDATE dashboards.queue SET status = 'N' WHERE id in ("+builder.deleteCharAt( builder.length() -1 ).toString()+")";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            for (int i = 1; i <= ids.length; i++) {
+                stmt.setInt(i, Integer.parseInt(ids[i-1]));
+            }
+            stmt.executeUpdate();
+            connection.commit();
+        } catch (Exception ex) {
+            connection.rollback();
+        }
     }
 }

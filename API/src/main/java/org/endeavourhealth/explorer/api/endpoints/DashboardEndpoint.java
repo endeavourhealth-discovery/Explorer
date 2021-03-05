@@ -1129,4 +1129,28 @@ public class DashboardEndpoint {
                     .build();
         }
     }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/resetQueue")
+    public Response resetQueue(@Context SecurityContext sc, @HeaderParam("userProjectId") String userProjectId,
+                                       @QueryParam("id") String id) throws Exception {
+
+        LOG.debug("resetQueue");
+
+        checkUserAccessToOrganisations(userProjectId);
+
+        try (ExplorerJDBCDAL viewerDAL = new ExplorerJDBCDAL()) {
+
+            viewerDAL.setValidOrgs(validOrgs);
+            viewerDAL.setSubscriberConnection(configName); viewerDAL.setPatientIdentifiable(patientIdentifiable); viewerDAL.setProjectType(projectType);
+
+            viewerDAL.resetQueue(id);
+
+            return Response
+                    .ok()
+                    .build();
+        }
+    }
 }
