@@ -13,7 +13,7 @@
         <input matInput (keyup)="applyFilter($event)" placeholder="Filter" #input [(ngModel)]="filterText">
       </mat-form-field>
       <button style="margin-left: 15px" mat-flat-button color="primary" (click)="refresh()">Refresh</button>
-      <button style="margin-left: 15px" mat-flat-button color="accent" (click)="resetQuery(selection.selected[0].id)" [disabled]="selection.selected == ''">Reset query</button>
+      <button style="margin-left: 15px" mat-flat-button color="accent" (click)="resetQuery()" [disabled]="selection.selected.length==0">Re-run failed queries</button>
     </div>
 
     <div fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
@@ -51,7 +51,7 @@
           <td mat-cell *matCellDef="let element"> {{formatQueryError(element.error)}} </td>
         </ng-container>
         <ng-container matColumnDef="select">
-          <th mat-header-cell *matHeaderCellDef></th>
+          <th mat-header-cell *matHeaderCellDef>Re-run?</th>
           <td mat-cell *matCellDef="let row">
             <mat-checkbox (click)="$event.stopPropagation()"
                           (change)="$event ? selection.toggle(row) : null"

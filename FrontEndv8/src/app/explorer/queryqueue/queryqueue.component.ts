@@ -138,7 +138,6 @@ export class QueryQueueComponent implements OnInit {
       }
     )
     id = id.substr(1);
-    console.log(id);
 
     this.explorerService.resetQueue(id)
       .subscribe(saved => {
