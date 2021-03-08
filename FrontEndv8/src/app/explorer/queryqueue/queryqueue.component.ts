@@ -105,7 +105,12 @@ export class QueryQueueComponent implements OnInit {
   }
 
   refresh() {
-    this.log.success("Query reset.");
+    this.log.success("Queue refreshed");
+    this.ngOnInit();
+  }
+
+  reset() {
+    this.log.success("Query reset for running again");
     this.ngOnInit();
   }
 
@@ -141,7 +146,7 @@ export class QueryQueueComponent implements OnInit {
 
     this.explorerService.resetQueue(id)
       .subscribe(saved => {
-        this.refresh();
+          this.reset();
         },
         error => this.log.error('This query could not be reset.')
       );
