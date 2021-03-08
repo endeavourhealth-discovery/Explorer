@@ -1389,17 +1389,48 @@ public class ExplorerJDBCDAL implements AutoCloseable {
 
             String noResults = "";
 
-            if (projectType==7) { // STP - no access
-                noResults = " and 0=1 ";
-
-                sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` r "+
-                        "where r.`grouping` in ("+
-                        "select distinct practice_ods_code from dashboards.population_denominators "+
-                        "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+")) "+
-                        "and practice in ("+params+")) "+
-                        noResults+
-                        " AND name = ? " +
-                        "and series_name between ? and ? group by series_name order by series_name";
+            if (projectType==7) { // STP
+                if (cumulative.equals("1")) {
+                    sql = "SELECT t.series_name," +
+                            "@running_total:=@running_total + t.series_value as series_value " +
+                            "FROM " +
+                            "( SELECT name,series_name,sum(series_value) as series_value "+
+                            "FROM dashboards.`dashboard_results_" + queryId + "` r " +
+                            "where r.`grouping` in ("+
+                            "select distinct practice_ods_code from dashboards.population_denominators "+
+                            "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+")) "+
+                            "and stp in ("+params+")) "+
+                            noResults+
+                            " AND name = ? and series_name between ? and ? "+
+                            "group by series_name) t " +
+                            "JOIN (SELECT @running_total:=0) r " +
+                            "ORDER BY t.series_name";
+                } else {
+                    if (weekly.equals("1")) {
+                        sql = "SELECT FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) AS series_name, " +
+                                "SUM(series_value) AS series_value " +
+                                "from dashboards.`dashboard_results_" + queryId + "` r " +
+                                "where r.`grouping` in (" +
+                                "select distinct practice_ods_code from dashboards.population_denominators " +
+                                "WHERE (stp_ods_code in (" + paramsValidOrgs + ") or ccg_ods_code in (" + paramsValidOrgs + ") or practice_ods_code in (" + paramsValidOrgs + ")) " +
+                                "and stp in (" + params + ")) " +
+                                noResults +
+                                " AND name = ? " +
+                                "and series_name between ? and ? " +
+                                " GROUP BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) " +
+                                "ORDER BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7))";
+                    } else {
+                        sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` r " +
+                                "where r.`grouping` in (" +
+                                "select distinct practice_ods_code from dashboards.population_denominators " +
+                                "WHERE (stp_ods_code in (" + paramsValidOrgs + ") or ccg_ods_code in (" + paramsValidOrgs + ") or practice_ods_code in (" + paramsValidOrgs + ")) " +
+                                "and stp in (" + params + ")) " +
+                                noResults +
+                                " AND name = ? " +
+                                "and series_name between ? and ? " +
+                                "group by series_name order by series_name";
+                    }
+                }
             } else if (projectType==6) { // CCG
                 if (cumulative.equals("1")) {
                     sql = "SELECT t.series_name," +
@@ -3216,7 +3247,7 @@ public class ExplorerJDBCDAL implements AutoCloseable {
 
         if (projectType==7) { // STP - no access allowed
             noResults = " and 0=1 ";
-            sql = "SELECT distinct d.practice as `grouping` " +
+            sql = "SELECT distinct d.stp as `grouping` " +
                     "FROM dashboards.`dashboard_results_" + queryId + "` r " +
                     "join dashboards.population_denominators d on d.practice_ods_code = r.`grouping` "+
                     "where r.`grouping` in (" +
