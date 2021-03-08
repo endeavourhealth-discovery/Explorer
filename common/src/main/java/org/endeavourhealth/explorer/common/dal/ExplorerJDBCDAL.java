@@ -1913,6 +1913,7 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                         " GROUP BY r.ccg, r.registry";
             }
             else {
+                
                 String noResults = "";
 
                 if (projectType==6||projectType==7) // CCG/STP
