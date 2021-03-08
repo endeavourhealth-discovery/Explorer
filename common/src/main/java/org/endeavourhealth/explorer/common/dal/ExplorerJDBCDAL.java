@@ -573,9 +573,9 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                         " FROM dashboards.value_set_codes where value_set_id = 96";
                 break;
             case "22":
-                sql = "SELECT distinct(r.registry) as type " +
-                        "FROM dashboards.registries r "+
-                        " order by r.registry";
+                sql = "SELECT distinct(r.registry_name) as type " +
+                        "FROM dashboards.query_library r "+
+                        " order by r.registry_name";
 
                 sqlCount = "SELECT 999";
                 break;
