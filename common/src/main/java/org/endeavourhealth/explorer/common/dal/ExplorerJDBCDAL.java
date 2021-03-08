@@ -2486,9 +2486,6 @@ public class ExplorerJDBCDAL implements AutoCloseable {
 
         String noResults = "";
 
-        if (projectType==6||projectType==7) // CCG/STP
-            noResults = " and 0=1 ";
-
         if (queryId == null) {
             if ("Suspected and confirmed Covid-19 cases".equalsIgnoreCase(query))
                 sql = "SELECT COUNT(covid.lsoa_code) AS patients, " +
