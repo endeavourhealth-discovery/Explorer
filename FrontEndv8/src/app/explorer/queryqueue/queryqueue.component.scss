@@ -33,3 +33,17 @@ mat-paginator {
     opacity: 0;
   }
 }
+
+.running {
+  background: green;
+  td {
+    color: white;
+  }
+}
+
+.error {
+  background: red;
+  td {
+    color: white;
+  }
+}
