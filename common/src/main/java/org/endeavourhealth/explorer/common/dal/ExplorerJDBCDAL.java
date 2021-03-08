@@ -1588,16 +1588,16 @@ public class ExplorerJDBCDAL implements AutoCloseable {
 
         String noResults = "";
 
-        if (projectType==7) { // STP - no access
-            noResults = " and 0=1 ";
+        if (projectType==7) { // STP
             sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` r "+
                     "where r.`grouping` in ("+
                     "select distinct practice_ods_code from dashboards.population_denominators "+
                     "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+")) "+
-                    "and practice in ("+params+")) "+
+                    "and stp in ("+params+")) "+
                     noResults+
                     " AND name = ? "+
-                    "and series_name between ? and ? group by series_name order by series_name";
+                    "and series_name between ? and ? "+
+                    " group by series_name order by series_name";
 
         }
         else if (projectType==6) { // CCG
@@ -1650,16 +1650,15 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         if (chartItem.getSeries().size()==0) {
             noResults = "";
 
-            if (projectType==7) { // STP - no access
-                noResults = " and 0=1 ";
+            if (projectType==7) { // STP
                 sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` r "+
                         "where r.`grouping` in ("+
                         "select distinct practice_ods_code from dashboards.population_denominators "+
                         "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+")) "+
-                        "and practice in ("+params+")) "+
+                        "and stp in ("+params+")) "+
                         noResults+
                         " AND name = ? "+
-                        "group by series_name order by series_name";
+                        " group by series_name order by series_name";
 
             }
             else if (projectType==6) { // CCG
@@ -1746,16 +1745,15 @@ public class ExplorerJDBCDAL implements AutoCloseable {
 
         String noResults = "";
 
-        if (projectType==7) { // STP - no access
-            noResults = " and 0=1 ";
+        if (projectType==7) { // STP
             sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` r "+
                     "where r.`grouping` in ("+
                     "select distinct practice_ods_code from dashboards.population_denominators "+
                     "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+")) "+
-                    "and practice in ("+params+")) "+
+                    "and stp in ("+params+")) "+
                     noResults+
                     " AND name = ? "+
-                    "group by series_name order by series_name";
+                    " group by series_name order by series_name";
 
         }
         else if (projectType==6) { // CCG
@@ -3246,7 +3244,6 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         String noResults = "";
 
         if (projectType==7) { // STP - no access allowed
-            noResults = " and 0=1 ";
             sql = "SELECT distinct d.stp as `grouping` " +
                     "FROM dashboards.`dashboard_results_" + queryId + "` r " +
                     "join dashboards.population_denominators d on d.practice_ods_code = r.`grouping` "+
