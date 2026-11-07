@@ -17,32 +17,37 @@ DECLARE l_query TEXT;
 DECLARE l_type VARCHAR(255);
 DECLARE l_id INT;
 DECLARE l_submitQuery VARCHAR(255);
-DECLARE l_updated DATE;
+DECLARE l_updated DATETIME;
+DECLARE l_user_name VARCHAR(100);
 
 DECLARE l_qry_id INT DEFAULT NULL;
 DECLARE l_parent_qry_id INT DEFAULT NULL;
 DECLARE l_denominator_qry VARCHAR(500) DEFAULT NULL;
 DECLARE l_parent_exists_flag VARCHAR(1) DEFAULT NULL;
 
+DECLARE l_process_id INT DEFAULT NULL;
+
+SET SESSION TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
+
 DROP TEMPORARY TABLE IF EXISTS qry_process_upd;
 CREATE TEMPORARY TABLE qry_process_upd AS 
-SELECT ql.id, ql.type, ql.query, ql.updated 
+SELECT ql.id, ql.type, ql.query, ql.updated, ql.user_name  
 FROM query_library ql JOIN queue q ON ql.id = q.query_id
 WHERE ql.updated <> q.query_last_updated 
 AND ql.query <> q.query 
 AND ql.id >=0
-AND q.status <> 'A'; -- not already processing
+AND q.status <> 'A';
 
 DROP TEMPORARY TABLE IF EXISTS qry_process_ins;
 CREATE TEMPORARY TABLE qry_process_ins AS 
-SELECT id, `type`, query, updated
-FROM query_library 
+SELECT ql.id, ql.type, ql.query, ql.updated, ql.user_name 
+FROM query_library ql
 WHERE id >= 0
 AND id NOT IN (SELECT query_id FROM queue);  
 
   BEGIN
 
-      DECLARE c_chk_queryforupdate CURSOR FOR SELECT id, `type`, query, updated FROM qry_process_upd;
+      DECLARE c_chk_queryforupdate CURSOR FOR SELECT upd.id, upd.type, upd.query, upd.updated, upd.user_name FROM qry_process_upd upd;
       DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
       
           SET done = 0;
@@ -52,7 +57,7 @@ AND id NOT IN (SELECT query_id FROM queue);
             processloop1: 
             WHILE (done = 0) DO
 
-                FETCH c_chk_queryforupdate INTO l_id, l_type, l_query, l_updated;
+                FETCH c_chk_queryforupdate INTO l_id, l_type, l_query, l_updated, l_user_name;
 
                 IF done = 1 THEN 
                   LEAVE processloop1;
@@ -63,7 +68,15 @@ AND id NOT IN (SELECT query_id FROM queue);
 
                 IF l_submitQuery = 'YES' THEN  
 
-                  UPDATE queue q SET q.query = l_query, q.query_last_updated = l_updated, q.next_run_date = CURDATE(), q.status = 'N', q.timesubmit = NULL, q.timefinish = NULL, q.timeexecute = NULL 
+                  UPDATE queue q 
+                  SET q.query = l_query, 
+                      q.query_last_updated = l_updated, 
+                      q.next_run_date = CURDATE(), 
+                      q.status = 'N', 
+                      q.timesubmit = NULL, 
+                      q.timefinish = NULL, 
+                      q.timeexecute = NULL,
+                      q.user_name = l_user_name 
                   WHERE q.query_id = l_id;
 
                 END IF;
@@ -78,7 +91,7 @@ AND id NOT IN (SELECT query_id FROM queue);
 
   BEGIN
 
-      DECLARE c_chk_queryforinsert CURSOR FOR SELECT id, `type`, query, updated FROM qry_process_ins;
+      DECLARE c_chk_queryforinsert CURSOR FOR SELECT ins.id, ins.type, ins.query, ins.updated, ins.user_name FROM qry_process_ins ins;
       DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
       
       SET done = 0;
@@ -88,7 +101,7 @@ AND id NOT IN (SELECT query_id FROM queue);
         processloop2: 
         WHILE (done = 0) DO
 
-            FETCH c_chk_queryforinsert INTO l_id, l_type, l_query, l_updated;
+            FETCH c_chk_queryforinsert INTO l_id, l_type, l_query, l_updated, l_user_name;
 
             IF done = 1 THEN 
               LEAVE processloop2;
@@ -108,8 +121,8 @@ AND id NOT IN (SELECT query_id FROM queue);
                     
                       IF l_qry_id IS NOT NULL AND (LENGTH(TRIM(l_denominator_qry)) = 0 OR l_denominator_qry IS NULL)  AND l_parent_qry_id IS NULL THEN   -- is top level
                           -- add to queue
-                          INSERT INTO queue (query_id, query, query_last_updated, next_run_date)
-                          VALUES (l_id, l_query, l_updated, CURDATE());
+                          INSERT INTO queue (query_id, query, query_last_updated, next_run_date, user_name)
+                          VALUES (l_id, l_query, l_updated, CURDATE(), l_user_name);
                       
                       ELSEIF l_qry_id IS NOT NULL AND l_denominator_qry IS NOT NULL AND l_parent_qry_id IS NOT NULL THEN  -- could be numerator or denominator
                           -- check if parent exists in queue
@@ -117,8 +130,8 @@ AND id NOT IN (SELECT query_id FROM queue);
 
                             IF l_parent_exists_flag = 'Y' THEN  -- parent found
 
-                              INSERT INTO queue (query_id, query, query_last_updated, next_run_date)
-                              VALUES (l_id, l_query, l_updated, CURDATE());
+                              INSERT INTO queue (query_id, query, query_last_updated, next_run_date, user_name)
+                              VALUES (l_id, l_query, l_updated, CURDATE(), l_user_name);
 
                             ELSE
                                 -- do nothing
@@ -173,7 +186,7 @@ SELECT query INTO query_text FROM queue WHERE query_id = queryid;
 
 UPDATE queue SET status = 'A' WHERE query_id = queryid;
 
-UPDATE queue SET timesubmit = now() WHERE query_id = queryid;
+UPDATE queue SET timesubmit = IF(CONVERT_TZ(NOW(),  'UTC', 'Europe/London') IS NULL, NOW(), CONVERT_TZ(NOW(),  'UTC', 'Europe/London')) WHERE query_id = queryid;
 
 -- remove errors if exists before processing query 
 DELETE FROM error_log WHERE query_id = queryid;
@@ -181,12 +194,18 @@ DELETE FROM error_log WHERE query_id = queryid;
 -- disable binary logging
 -- SET @@session.sql_log_bin=0;
 
+SELECT connection_id() INTO l_process_id;
+
+UPDATE queue SET process_id = l_process_id WHERE query_id = queryid; 
+
 CALL reportgenerator(queryid, query_text, p_sourceSchema, p_enableDebug);
+
+UPDATE queue SET process_id = NULL, kill_process = NULL WHERE query_id = queryid; 
 
 -- enable binary logging
 -- SET @@session.sql_log_bin=1;
 
-UPDATE queue SET timefinish = now() WHERE query_id = queryid;
+UPDATE queue SET timefinish = IF(CONVERT_TZ(NOW(),  'UTC', 'Europe/London') IS NULL, NOW(), CONVERT_TZ(NOW(),  'UTC', 'Europe/London')) WHERE query_id = queryid;
 UPDATE queue SET timeexecute = STR_TO_DATE(TIMEDIFF(timefinish, timesubmit),'%H:%i:%s') WHERE query_id = queryid;
 
 END IF;

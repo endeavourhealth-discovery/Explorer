@@ -18,6 +18,7 @@ IN p_includeConcepttab VARCHAR(64),
 IN p_observationCohortTab VARCHAR(64),
 IN p_queryType VARCHAR(2),
 IN p_includedEarliestLatest VARCHAR(20), 
+IN p_followedByEarliestLatest VARCHAR(20), 
 IN p_includedOperator VARCHAR(50), 
 IN p_includedEntryValue VARCHAR(20), 
 IN p_includedAnyAllTested VARCHAR(10),
@@ -61,6 +62,7 @@ DECLARE timeperioddaterange VARCHAR(255);
 DECLARE regPeriodRange VARCHAR(500) DEFAULT NULL;
 DECLARE agerange VARCHAR(500) DEFAULT NULL;
 DECLARE dataTypeFlag VARCHAR(1) DEFAULT NULL;
+DECLARE _messageText VARCHAR(128) DEFAULT NULL;
 
   DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -129,9 +131,16 @@ SET p_greaterlessvalue = IF(p_greaterlessvalue = '', NULL, p_greaterlessvalue);
       SET timeperioddaterange = getTimePeriodDateRange(p_includedDateFrom, p_includedDateTo, p_includedPeriodValue, p_includedPeriodType, p_includedPeriodOperator, p_baselineDate); 
 
       -- build query expression table
-      CALL runBuildQuery(p_query_id, p_withWithout, p_includedAnyAll, timeperioddaterange, p_includeConcepttab, p_observationCohortTab, NULL, NULL, NULL, 
+      CALL runBuildQuery(p_query_id, p_withWithout, p_includedAnyAll, timeperioddaterange, p_includeConcepttab, p_observationCohortTab, NULL, NULL, NULL, NULL, 
       NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
-      NULL, NULL, NULL, '1', p_queryCohort, p_queryNumber, p_concept_all_tmp, p_filter, dataTypeFlag);
+      NULL, NULL, NULL, '1', p_queryCohort, p_queryNumber, p_concept_all_tmp, p_filter, dataTypeFlag, p_schema);
+
+    ELSE
+
+         SELECT CONCAT('Required values are missing in query pattern ',p_queryType) INTO _messageText;
+         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = _messageText;
+         CALL log_errors(p_query_id, 'buildQuery', '45000', MESSAGE_TEXT, now());
+         RESIGNAL; -- rethrow the error
 
     END IF;
 
@@ -153,9 +162,16 @@ SET p_greaterlessvalue = IF(p_greaterlessvalue = '', NULL, p_greaterlessvalue);
       -- get date range string
       SET timeperioddaterange = getTimePeriodDateRange(p_includedDateFrom, p_includedDateTo, p_includedPeriodValue, p_includedPeriodType, p_includedPeriodOperator, p_baselineDate);
       -- build query expression table
-      CALL runBuildQuery(p_query_id, p_withWithout, p_includedAnyAll, timeperioddaterange, p_includeConcepttab, p_observationCohortTab, p_includedEarliestLatest, p_includedOperator, p_includedEntryValue, 
+      CALL runBuildQuery(p_query_id, p_withWithout, p_includedAnyAll, timeperioddaterange, p_includeConcepttab, p_observationCohortTab, p_includedEarliestLatest, NULL, p_includedOperator, p_includedEntryValue, 
       NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-      NULL, NULL, NULL, '2', p_queryCohort, p_queryNumber, p_concept_all_tmp, p_filter, NULL);
+      NULL, NULL, NULL, '2', p_queryCohort, p_queryNumber, p_concept_all_tmp, p_filter, NULL, p_schema);
+
+    ELSE
+
+         SELECT CONCAT('Required values are missing in query pattern ',p_queryType) INTO _messageText;
+         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = _messageText;
+         CALL log_errors(p_query_id, 'buildQuery', '45000', MESSAGE_TEXT, now());
+         RESIGNAL; -- rethrow the error
 
     END IF;
 
@@ -200,7 +216,7 @@ SET p_greaterlessvalue = IF(p_greaterlessvalue = '', NULL, p_greaterlessvalue);
       SET p_ageTo = IF(p_ageTo = '', NULL, p_ageTo);
 
       IF (p_ageFrom IS NOT NULL) OR (p_ageTo IS NOT NULL) THEN
-         SET agerange = getAgeDateRangeString(p_ageFrom, p_ageTo, NULL, NULL, NULL, NULL, 1);
+         SET agerange = getAgeDateRangeString(p_ageFrom, p_ageTo, NULL, NULL, NULL, NULL, NULL, 1);
       ELSE
          SET agerange = NULL;
       END IF;
@@ -211,9 +227,16 @@ SET p_greaterlessvalue = IF(p_greaterlessvalue = '', NULL, p_greaterlessvalue);
       -- get date range string
       SET timeperioddaterange = getTimePeriodDateRange(p_includedDateFrom, p_includedDateTo, p_includedPeriodValue, p_includedPeriodType, p_includedPeriodOperator, p_baselineDate);
       -- build query expression table
-      CALL runBuildQuery(p_query_id, p_withWithout, p_includedAnyAll, timeperioddaterange, p_includeConcepttab, p_observationCohortTab, p_includedEarliestLatest, NULL, NULL, 
+      CALL runBuildQuery(p_query_id, p_withWithout, p_includedAnyAll, timeperioddaterange, p_includeConcepttab, p_observationCohortTab, p_includedEarliestLatest, NULL, NULL, NULL, 
       p_includedAnyAllTested, p_includeTestedConcepttab, NULL, NULL, NULL, NULL, NULL, NULL, NULL, agerange, 
-      p_includedDiagnosisAnyAll, p_includedDob, p_incDiagnosisConceptTab, '3', p_queryCohort, p_queryNumber, p_concept_all_tmp, p_filter, NULL);
+      p_includedDiagnosisAnyAll, p_includedDob, p_incDiagnosisConceptTab, '3', p_queryCohort, p_queryNumber, p_concept_all_tmp, p_filter, NULL, p_schema);
+
+    ELSE
+
+         SELECT CONCAT('Required values are missing in query pattern ',p_queryType) INTO _messageText;
+         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = _messageText;
+         CALL log_errors(p_query_id, 'buildQuery', '45000', MESSAGE_TEXT, now());
+         RESIGNAL; -- rethrow the error
 
     END IF;
 
@@ -221,9 +244,11 @@ SET p_greaterlessvalue = IF(p_greaterlessvalue = '', NULL, p_greaterlessvalue);
 
     IF p_withWithout IS NOT NULL AND
        p_includedAnyAll IS NOT NULL AND
+       p_includedEarliestLatest IS NOT NULL AND 
        p_includedValueSet IS NOT NULL AND 
        p_includedAreNot IS NOT NULL AND 
        p_includedAnyAllFollowedBy IS NOT NULL AND 
+       p_followedByEarliestLatest IS NOT NULL AND 
        p_includedFollowedByValueSet IS NOT NULL THEN
 
       -- valueset
@@ -243,9 +268,16 @@ SET p_greaterlessvalue = IF(p_greaterlessvalue = '', NULL, p_greaterlessvalue);
       -- get date range string
       SET timeperioddaterange = getTimePeriodDateRange(p_includedDateFrom, p_includedDateTo, p_includedPeriodValue, p_includedPeriodType, p_includedPeriodOperator,'N');
       -- build query expression table
-      CALL runBuildQuery(p_query_id, p_withWithout, p_includedAnyAll, timeperioddaterange, p_includeConcepttab, p_observationCohortTab, NULL, NULL, NULL, 
+      CALL runBuildQuery(p_query_id, p_withWithout, p_includedAnyAll, timeperioddaterange, p_includeConcepttab, p_observationCohortTab, p_includedEarliestLatest, p_followedByEarliestLatest, NULL, NULL, 
       NULL, NULL, p_includedAreNot, p_includedAnyAllFollowedBy, p_includedFollowedByConcepttab, NULL, NULL, NULL, NULL, NULL, 
-      NULL, NULL, NULL, '4', p_queryCohort, p_queryNumber, p_concept_all_tmp, p_filter, NULL);
+      NULL, NULL, NULL, '4', p_queryCohort, p_queryNumber, p_concept_all_tmp, p_filter, NULL, p_schema);
+
+    ELSE
+
+         SELECT CONCAT('Required values are missing in query pattern ',p_queryType) INTO _messageText;
+         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = _messageText;
+         CALL log_errors(p_query_id, 'buildQuery', '45000', MESSAGE_TEXT, now());
+         RESIGNAL; -- rethrow the error
 
     END IF;
     
@@ -266,9 +298,16 @@ SET p_greaterlessvalue = IF(p_greaterlessvalue = '', NULL, p_greaterlessvalue);
       -- get date range string
       SET timeperioddaterange = getTimePeriodDateRange(p_includedDateFrom, p_includedDateTo, p_includedPeriodValue, p_includedPeriodType, p_includedPeriodOperator, p_baselineDate);
       -- build query expression table
-      CALL runBuildQuery(p_query_id, p_withWithout, p_includedAnyAll, timeperioddaterange, p_includeConcepttab, p_observationCohortTab, NULL, NULL, NULL, 
+      CALL runBuildQuery(p_query_id, p_withWithout, p_includedAnyAll, timeperioddaterange, p_includeConcepttab, p_observationCohortTab, NULL, NULL, NULL, NULL, 
       NULL, NULL, NULL, NULL, NULL, p_greaterless, p_greaterlessvalue, NULL, NULL, NULL, 
-      NULL, NULL, NULL, '5', p_queryCohort, p_queryNumber, p_concept_all_tmp, p_filter, NULL);
+      NULL, NULL, NULL, '5', p_queryCohort, p_queryNumber, p_concept_all_tmp, p_filter, NULL, p_schema);
+
+    ELSE
+
+         SELECT CONCAT('Required values are missing in query pattern ',p_queryType) INTO _messageText;
+         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = _messageText;
+         CALL log_errors(p_query_id, 'buildQuery', '45000', MESSAGE_TEXT, now());
+         RESIGNAL; -- rethrow the error
 
     END IF;   
 
@@ -285,15 +324,15 @@ SET p_greaterlessvalue = IF(p_greaterlessvalue = '', NULL, p_greaterlessvalue);
   IF (p_registrationExclude IS NOT NULL AND (
      (p_registrationDateFrom IS NOT NULL OR p_registrationDateTo IS NOT NULL) OR 
      (p_registrationPeriodValue IS NOT NULL AND p_registrationPeriodType IS NOT NULL))) THEN 
-     SET regPeriodRange = getAgeDateRangeString(NULL, NULL, p_registrationDateFrom, p_registrationDateTo, p_registrationPeriodValue, p_registrationPeriodType, 2);
+     SET regPeriodRange = getAgeDateRangeString(NULL, NULL, p_registrationDateFrom, p_registrationDateTo, p_registrationPeriodValue, p_registrationPeriodType, p_baselineDate, 2);
   ELSE
      SET regPeriodRange = '1';
   END IF;
 
   -- build query expression table
-  CALL runBuildQuery(p_query_id, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
+  CALL runBuildQuery(p_query_id, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
   NULL, NULL, NULL, NULL, NULL, NULL, NULL, regPeriodRange, p_registrationExclude, NULL, 
-  NULL, NULL, NULL, '0', p_queryCohort, p_queryNumber, NULL, NULL, NULL);
+  NULL, NULL, NULL, '0', p_queryCohort, p_queryNumber, NULL, NULL, NULL, NULL);
 
  ELSEIF p_queryType = 'A' THEN 
 
@@ -302,15 +341,15 @@ SET p_greaterlessvalue = IF(p_greaterlessvalue = '', NULL, p_greaterlessvalue);
   SET p_ageTo = IF(p_ageTo = '', NULL, p_ageTo);
 
   IF (p_ageFrom IS NOT NULL) OR (p_ageTo IS NOT NULL) THEN
-     SET agerange = getAgeDateRangeString(p_ageFrom, p_ageTo, NULL, NULL, NULL, NULL, 1);
+     SET agerange = getAgeDateRangeString(p_ageFrom, p_ageTo, NULL, NULL, NULL, NULL, NULL, 1);
   ELSE
     SET agerange = '1';
   END IF;
 
   -- build query expression table
-  CALL runBuildQuery(p_query_id, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
+  CALL runBuildQuery(p_query_id, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
   NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, agerange, 
-  NULL, NULL, NULL, 'A', p_queryCohort, p_queryNumber, NULL, NULL, NULL);
+  NULL, NULL, NULL, 'A', p_queryCohort, p_queryNumber, NULL, NULL, NULL, NULL);
 
  END IF;
 

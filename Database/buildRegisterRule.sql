@@ -22,11 +22,23 @@ BEGIN
 
     SET p_matching = UPPER(p_matching);
     SET p_queryExpression = UPPER(p_queryExpression);
-    SET p_queryExpression = REPLACE(REPLACE(REPLACE(p_queryExpression,' ','{}'),'}{',''),'{}',' '); -- remove extra white spaces
+
     SET p_queryExpression = REPLACE(p_queryExpression,'( ','(');
+    SET p_queryExpression = REPLACE(p_queryExpression,' (','(');
     SET p_queryExpression = REPLACE(p_queryExpression,') ',')');
+    SET p_queryExpression = REPLACE(p_queryExpression,' )',')');
     SET p_queryExpression = REPLACE(p_queryExpression,'(',' ( ');
     SET p_queryExpression = REPLACE(p_queryExpression,')',' ) ');
+
+    SET p_queryExpression = REPLACE(p_queryExpression,'AND ','AND');
+    SET p_queryExpression = REPLACE(p_queryExpression,' AND','AND');
+    SET p_queryExpression = REPLACE(p_queryExpression,'AND',' AND ');
+
+    SET p_queryExpression = REPLACE(p_queryExpression,'OR ','OR');
+    SET p_queryExpression = REPLACE(p_queryExpression,' OR','OR');
+    SET p_queryExpression = REPLACE(p_queryExpression,'OR',' OR ');
+
+    SET p_queryExpression = REPLACE(REPLACE(REPLACE(p_queryExpression,' ','{}'),'}{',''),'{}',' '); -- remove extra white spaces
     SET p_queryExpression = TRIM(p_queryExpression);
 
     SET @sql = CONCAT('DROP TABLE IF EXISTS ', p_ruleTab);
@@ -36,13 +48,13 @@ BEGIN
 
     SET @sql = CONCAT('CREATE TABLE ', p_ruleTab,' ( 
     id INT(11) NOT NULL, query_id INT(11) NOT NULL, selectReject VARCHAR(30), 
-    matching VARCHAR(30), queryExpression VARCHAR(255), ruleNumber VARCHAR(20), query VARCHAR(1000), queryNumber VARCHAR(255), queryTable VARCHAR(64), selectTable VARCHAR(64), 
+    matching VARCHAR(30), queryExpression VARCHAR(255), ruleNumber VARCHAR(20), query VARCHAR(10000), queryNumber VARCHAR(255), queryTable VARCHAR(64), selectTable VARCHAR(64),
     PRIMARY KEY (id)) ENGINE=InnoDB DEFAULT CHARSET=latin1');
     PREPARE stmt FROM @sql;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt; 
 
-    IF LENGTH(TRIM(p_queryExpression)) != 0 OR p_queryExpression IS NOT NULL THEN
+    IF LENGTH(TRIM(p_queryExpression)) <> 0 OR p_queryExpression <> '' THEN
         -- insert a record into the temporary rule table
         SET @sql = CONCAT("INSERT INTO ", p_ruleTab," (id, query_id, selectReject, matching, queryExpression) 
         VALUES ( 1 ",",", p_query_id,", 'REGISTER', ", QUOTE(p_matching),", ", QUOTE(p_queryExpression),") ");
@@ -51,7 +63,7 @@ BEGIN
         DEALLOCATE PREPARE stmt;
     ELSE
         SET @sql = CONCAT("INSERT INTO ", p_ruleTab," (id, query_id, selectReject, matching, queryExpression) 
-        VALUES ( 1 ",",", p_query_id,", 'REGISTER', 'MATCHING', 'R') ");
+        VALUES ( 1 ",",", p_query_id,", 'REGISTER', 'MATCHING', 'R')");
         PREPARE stmt FROM @sql;
         EXECUTE stmt;
         DEALLOCATE PREPARE stmt;

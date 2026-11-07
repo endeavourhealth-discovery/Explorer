@@ -4,8 +4,8 @@
 
   <div style="font-size: 14px">
       <mat-form-field appearance="outline" style="width: 500px">
-        <mat-label>Code type/category</mat-label>
-        <input required matInput placeholder="Type" [(ngModel)]="type" (ngModelChange)="formChanged()">
+        <mat-label>Value set name</mat-label>
+        <input required matInput placeholder="Value set name" [(ngModel)]="type" (ngModelChange)="formChanged()">
       </mat-form-field>
       <mat-form-field appearance="outline" style="width: 500px">
         <mat-label>Data type</mat-label>
@@ -23,17 +23,14 @@
         <mat-label>Original term</mat-label>
         <input required matInput placeholder="Term" [(ngModel)]="term" (ngModelChange)="formChanged()">
       </mat-form-field>
-      <mat-form-field appearance="outline" style="width: 500px">
-        <mat-label>Snomed ID</mat-label>
-        <input required matInput placeholder="Snomed ID" [(ngModel)]="snomed" (ngModelChange)="formChanged()" (keyup)="valueSetCodeEntered($event)">
-      </mat-form-field>
       <br/>
-      <span style="margin-left: 5px; color: gray">*Required</span>
+      <span style="margin-left: 5px; color: gray">* Required</span>
   </div>
 
   <div mat-dialog-actions align="end">
-    <button style="margin-right: 15px" mat-button color="accent" (click)="showSnomed(snomed)">SNOMED-CT browser</button>
+    <button style="margin-right: 15px" mat-button color="accent" (click)="showSnomed(term)">SNOMED-CT browser</button>
     <button style="margin-right: 15px" mat-button color="accent" (click)="onCancelClick()">Cancel</button>
     <button style="margin-right: 15px" mat-flat-button color="accent" [disabled]="disableForm" (click)="saveValueSetCode()">Save</button>
   </div>
+
 

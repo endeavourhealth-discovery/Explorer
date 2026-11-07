@@ -100,11 +100,22 @@ BEGIN
       SET frontlen = LENGTH(front);
       SET TempValue = TRIM(front);
       SET TempValue = UPPER(TempValue);
-      SET TempValue = REPLACE(REPLACE(REPLACE(TempValue,' ','{}'),'}{',''),'{}',' '); -- remove extra white spaces
       SET TempValue = REPLACE(TempValue,'( ','(');
+      SET TempValue = REPLACE(TempValue,' (','(');
       SET TempValue = REPLACE(TempValue,') ',')');
+      SET TempValue = REPLACE(TempValue,' )',')');
       SET TempValue = REPLACE(TempValue,'(',' ( ');
       SET TempValue = REPLACE(TempValue,')',' ) ');
+
+      SET TempValue = REPLACE(TempValue,'AND ','AND');
+      SET TempValue = REPLACE(TempValue,' AND','AND');
+      SET TempValue = REPLACE(TempValue,'AND',' AND ');
+
+      SET TempValue = REPLACE(TempValue,'OR ','OR');
+      SET TempValue = REPLACE(TempValue,' OR','OR');
+      SET TempValue = REPLACE(TempValue,'OR',' OR ');
+
+      SET TempValue = REPLACE(REPLACE(REPLACE(TempValue,' ','{}'),'}{',''),'{}',' '); -- remove extra white spaces
       SET TempValue = TRIM(TempValue);
 
       IF TempValue = 'NULL' THEN SET TempValue = ''; END IF;

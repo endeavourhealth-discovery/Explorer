@@ -169,7 +169,7 @@ export class RegistriesComponent implements OnInit {
 
   gotoRegistryLists(index: any, element: any) {
     if (index.match(/^\d/)) {
-      this.router.navigate(['/registrylists'], { queryParams: { org: element.org } });
+      this.router.navigate(['/registrylists'], { queryParams: { param: element.org.split('(')[0] } });
     }
   }
 

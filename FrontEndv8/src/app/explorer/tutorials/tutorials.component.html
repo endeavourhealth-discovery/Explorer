@@ -11,36 +11,56 @@
       <mat-card style="width:400px">
         <mat-card-header>
           <div mat-card-avatar><i class="fad fa-video"></i></div>
+          <mat-card-title>Logon and navigation</mat-card-title>
+          <mat-card-subtitle>How to logon to the application and navigate around the menus and modules</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content style="padding:20px;" >
+          <img style="cursor:pointer;width:390px" mat-card-image src="assets/vid0.png" (click)="showVideo(1)">
+        </mat-card-content>
+      </mat-card>
+      <mat-card style="margin-left:50px;width:400px">
+        <mat-card-header>
+          <div mat-card-avatar><i class="fad fa-video"></i></div>
+          <mat-card-title>Key Features</mat-card-title>
+          <mat-card-subtitle>Key features for building value sets, queries, data sets, viewing results and identifying patients at risk or in need of further intervention</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content style="padding:20px;" >
+          <img style="cursor:pointer;width:390px" mat-card-image src="assets/vid10.png" (click)="showVideo(2)">
+        </mat-card-content>
+      </mat-card>
+      <mat-card style="margin-left:50px;width:400px">
+        <mat-card-header>
+          <div mat-card-avatar><i class="fad fa-video"></i></div>
           <mat-card-title>Covid library</mat-card-title>
           <mat-card-subtitle>How to use the COVID-19 dashboards</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content style="padding:20px;" >
-          <img style="cursor:pointer;width:390px" mat-card-image src="assets/vid1.png" (click)="showVideo(1)">
+          <img style="cursor:pointer;width:390px" mat-card-image src="assets/vid1.png" (click)="showVideo(3)">
         </mat-card-content>
       </mat-card>
-      <mat-card style="margin-left:50px; width:400px">
+    </div>
+    <br/>
+    <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+      <mat-card style="width:400px">
         <mat-card-header>
           <div mat-card-avatar><i class="fad fa-video"></i></div>
           <mat-card-title>Dashboard library</mat-card-title>
-          <mat-card-subtitle>How to use create your own dashboards</mat-card-subtitle>
+          <mat-card-subtitle>How to create and view your own dashboards</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content style="padding:20px;" >
-          <img style="cursor:pointer;width:390px" mat-card-image src="assets/vid2.png" (click)="showVideo(2)">
+          <img style="cursor:pointer;width:390px" mat-card-image src="assets/vid2.png" (click)="showVideo(4)">
         </mat-card-content>
       </mat-card>
-      <mat-card style="margin-left:50px; width:400px">
+      <mat-card style="margin-left:50px;width:400px">
         <mat-card-header>
           <div mat-card-avatar><i class="fad fa-video"></i></div>
           <mat-card-title>Maps</mat-card-title>
           <mat-card-subtitle>How to use the geospatial maps</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content style="padding:20px;" >
-          <img style="cursor:pointer;width:390px" mat-card-image src="assets/vid3.png" (click)="showVideo(3)">
+          <img style="cursor:pointer;width:390px" mat-card-image src="assets/vid3.png" (click)="showVideo(5)">
         </mat-card-content>
       </mat-card>
-    </div>
-    <br/>
-    <div style="margin-left: -50px" class="flex" fxLayout="row wrap" fxLayout.xs="column">
       <mat-card style="margin-left:50px; width:400px">
         <mat-card-header>
           <div mat-card-avatar><i class="fad fa-video"></i></div>
@@ -48,34 +68,33 @@
           <mat-card-subtitle>How to view results of queries and drill-down to records</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content style="padding:20px;" >
-          <img style="cursor:pointer;width:390px" mat-card-image src="assets/vid4.png" (click)="showVideo(4)">
+          <img style="cursor:pointer;width:390px" mat-card-image src="assets/vid4.png" (click)="showVideo(6)">
         </mat-card-content>
       </mat-card>
-
-      <mat-card style="margin-left:50px; width:400px">
+    </div>
+    <br/>
+    <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+      <mat-card style="width:400px">
         <mat-card-header>
           <div mat-card-avatar><i class="fad fa-video"></i></div>
           <mat-card-title>Query & data set library</mat-card-title>
           <mat-card-subtitle>How to create queries, data sets and visualisations</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content style="padding:20px;" >
-          <img style="cursor:pointer;width:390px" mat-card-image src="assets/vid5.png" (click)="showVideo(5)">
+          <img style="cursor:pointer;width:390px" mat-card-image src="assets/vid5.png" (click)="showVideo(7)">
         </mat-card-content>
       </mat-card>
 
-      <mat-card style="margin-left:50px; width:400px">
+      <mat-card style="margin-left:50px;width:400px">
         <mat-card-header>
           <div mat-card-avatar><i class="fad fa-video"></i></div>
           <mat-card-title>Query queue</mat-card-title>
           <mat-card-subtitle>Explanation of the query queue module</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content style="padding:20px;" >
-          <img style="cursor:pointer;width:390px" mat-card-image src="assets/vid6.png" (click)="showVideo(6)">
+          <img style="cursor:pointer;width:390px" mat-card-image src="assets/vid6.png" (click)="showVideo(8)">
         </mat-card-content>
       </mat-card>
-    </div>
-    <br/>
-    <div style="margin-left: -50px" class="flex" fxLayout="row wrap" fxLayout.xs="column">
       <mat-card style="margin-left:50px; width:400px">
         <mat-card-header>
           <div mat-card-avatar><i class="fad fa-video"></i></div>
@@ -83,17 +102,20 @@
           <mat-card-subtitle>How to create and modify value sets used by queries</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content style="padding:20px;" >
-          <img style="cursor:pointer;width:390px" mat-card-image src="assets/vid7.png" (click)="showVideo(7)">
+          <img style="cursor:pointer;width:390px" mat-card-image src="assets/vid7.png" (click)="showVideo(9)">
         </mat-card-content>
       </mat-card>
-      <mat-card style="margin-left:50px; width:400px">
+    </div>
+    <br/>
+    <div class="flex" fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="start">
+      <mat-card style="width:400px">
         <mat-card-header>
           <div mat-card-avatar><i class="fad fa-video"></i></div>
           <mat-card-title>Population counts</mat-card-title>
           <mat-card-subtitle>Explanation of the population counts module</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content style="padding:20px;" >
-          <img style="cursor:pointer;width:390px" mat-card-image src="assets/vid8.png" (click)="showVideo(8)">
+          <img style="cursor:pointer;width:390px" mat-card-image src="assets/vid8.png" (click)="showVideo(10)">
         </mat-card-content>
       </mat-card>
     </div>

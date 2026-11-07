@@ -27,6 +27,7 @@ BEGIN
   DECLARE seqCounter INT DEFAULT 0;
   DECLARE l_expression VARCHAR(10) DEFAULT NULL;
   DECLARE l_rule_id INT DEFAULT 0;
+  DECLARE _messageText VARCHAR(128);
 
   DECLARE c_get_rules CURSOR FOR SELECT id, query_id, queryExpression FROM qry_tmp ORDER BY id ASC;
     
@@ -94,11 +95,24 @@ BEGIN
                      SET TempValue = TRIM(front);
                      SET TempValue = UPPER(TempValue);
 
-                     IF TempValue IN ('AND','OR','(',')') OR TempValue Like 'Q%' OR TempValue REGEXP '^A[12345]' THEN 
+                     IF TempValue IN ('AND','OR','(',')') 
+                     OR TempValue REGEXP '^Q[abcd012345]$' 
+                     OR TempValue REGEXP '^Q[1][abcdefghijkl]$' 
+                     OR TempValue REGEXP '^Q[2][abc]$' 
+                     OR TempValue REGEXP '^Q[3][abcdef]$' 
+                     OR TempValue REGEXP '^Q[4][ab]$' 
+                     OR TempValue REGEXP '^Q[5][a]$' 
+                     OR TempValue REGEXP '^A[12345]$'
+                     OR TempValue = 'Q'  
+                     OR TempValue = 'R' THEN 
                         SET l_expression = QUOTE(TempValue);
                         SET insFlag = 'Y';
                      ELSE
-                        SET insFlag = 'N';
+                        -- SET insFlag = 'N';
+                        SELECT CONCAT('Query expression ',TempValue,' not recognised') INTO _messageText;
+                        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = _messageText;
+                        CALL log_errors(l_query_id, 'splitQueryExpression', '45000', MESSAGE_TEXT, now());
+                        RESIGNAL; -- rethrow the error
                      END IF;
 
                      IF insFlag = 'Y' THEN

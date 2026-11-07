@@ -20,7 +20,10 @@ status              VARCHAR(10) DEFAULT 'N', -- A active i.e. processing, N not 
 timesubmit          DATETIME DEFAULT NULL,
 timefinish          DATETIME DEFAULT NULL,
 timeexecute         VARCHAR(100) DEFAULT NULL, 
-primary key (id)
+process_id          INT,
+kill_process        VARCHAR(1) DEFAULT NULL,
+user_name           VARCHAR(100) DEFAULT NULL,
+PRIMARY KEY (id)
 )ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
 
 ALTER TABLE queue ADD INDEX qry_idx(query_id);

@@ -95,7 +95,7 @@ export class ExplorerService {
     return this.http.get('api/events/dashboardtrend', {params});
   }
 
-  getPatients(page: number, size: number, name: string, queryId: string, parentQueryId: string, met: string): Observable<any> {
+  getPatients(page: number, size: number, name: string, queryId: string, parentQueryId: string, met: string, odsCode: string): Observable<any> {
 
     let params = new HttpParams();
     params = params.append('page', page.toString());
@@ -104,6 +104,7 @@ export class ExplorerService {
     params = params.append('queryId', queryId);
     params = params.append('parentQueryId', parentQueryId);
     params = params.append('met', met);
+    params = params.append('odsCode', odsCode);
 
     return this.http.get('api/events/patients', {params});
   }
@@ -136,6 +137,16 @@ export class ExplorerService {
     params = params.append('selectedTypeString', selectedTypeString);
 
     return this.http.get('api/events/valuesetcode', {params});
+  }
+
+  getConcepts(page: number, size: number, term: string): Observable<any> {
+
+    let params = new HttpParams();
+    params = params.append('page', page.toString());
+    params = params.append('size', size.toString());
+    params = params.append('term', term);
+
+    return this.http.get('api/events/concepts', {params});
   }
 
   getQueryLibrary(selectedTypeString?: string): Observable<any> {
@@ -175,9 +186,10 @@ export class ExplorerService {
     return this.http.post<string>('api/events/queryeditor', body);
   }
 
-  deleteQuery(id?: string): Observable<any> {
+  deleteQuery(id?: string, deleteQueryAndResults?: boolean): Observable<any> {
     let params = new HttpParams();
     params = params.append('id', id);
+    params = params.append('deleteQueryAndResults', deleteQueryAndResults.toString());
 
     return this.http.get('api/events/querydelete', {params});
   }
@@ -206,13 +218,12 @@ export class ExplorerService {
     return this.http.get('api/events/valuesetduplicate', {params});
   }
 
-  saveValueSetCode(type?: string, selectedDataType?: string, code?: string, term?: string, snomed?: string, value_set_id?: string, id?: string): Observable<any> {
+  saveValueSetCode(type?: string, selectedDataType?: string, code?: string, term?: string, value_set_id?: string, id?: string): Observable<any> {
     let params = new HttpParams();
     params = params.append('type', type);
     params = params.append('selectedDataType', selectedDataType);
     params = params.append('code', code);
     params = params.append('term', term);
-    params = params.append('snomed', snomed);
     params = params.append('value_set_id', value_set_id);
     params = params.append('id', id);
 
@@ -398,11 +409,12 @@ export class ExplorerService {
     return this.http.get('api/events/registryQueries', {params});
   }
 
-  getDashboardRegistries (selectedOrganisations: string, selectedRegistries: string): Observable<any> {
+  getDashboardRegistries (selectedOrganisations: string, selectedRegistries: string, percentage: boolean): Observable<any> {
     let params = new HttpParams();
 
     params = params.append('organisations', selectedOrganisations);
     params = params.append('registries', selectedRegistries);
+    params = params.append('percentage', percentage.toString());
 
     return this.http.get('api/events/dashboardRegistries', {params});
   }
@@ -432,12 +444,28 @@ export class ExplorerService {
     return this.http.get('api/events/queryqueue', {params});
   }
 
-  resetQueue(id: string): Observable<any> {
+  rerunQuery(id: string): Observable<any> {
     let params: HttpParams = new HttpParams();
 
     params = params.append('id', id);
 
-    return this.http.get('api/events/resetQueue', {params});
+    return this.http.get('api/events/rerunQuery', {params});
+  }
+
+  stopQuery(id: string): Observable<any> {
+    let params: HttpParams = new HttpParams();
+
+    params = params.append('id', id);
+
+    return this.http.get('api/events/stopQuery', {params});
+  }
+
+  getAuditLog(selectedUserString?: string): Observable<any> {
+    let params: HttpParams = new HttpParams();
+
+    params = params.append('selectedUserString', selectedUserString);
+
+    return this.http.get('api/events/auditlog', {params});
   }
 
 }

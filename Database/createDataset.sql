@@ -20,6 +20,8 @@ CREATE PROCEDURE createDataset (
   p_warning_tmp VARCHAR(64),
   p_allergy_tmp VARCHAR(64),
   p_referral_req_tmp VARCHAR(64),
+  p_eventOccurrence VARCHAR(30), 
+  p_eventOccurrenceNumber VARCHAR(10),
   p_schema VARCHAR(255)
 )
 
@@ -56,7 +58,7 @@ DECLARE clinicalType VARCHAR(100);
        ELSE
          SET @sql = CONCAT('INSERT INTO ', p_datasettab,' 
          SELECT DISTINCT p.query_id, o.id, p.ods_code  
-         FROM ', p_patientcohorttab,' p JOIN ', p_schema, '.', p_sourcetab,' o ON o.patient_id = p.patient_id AND o.organization_id = p.organization_id AND p.person_id = p.person_id 
+         FROM ', p_patientcohorttab,' p JOIN ', p_schema, '.', p_sourcetab,' o ON o.patient_id = p.patient_id AND o.organization_id = p.organization_id AND o.person_id = p.person_id 
          WHERE o.non_core_concept_id IS NOT NULL AND ', p_daterange,' AND ', p_activeString);
          PREPARE stmt FROM @sql;
          EXECUTE stmt;
@@ -72,7 +74,8 @@ DECLARE clinicalType VARCHAR(100);
       -- create a temporary dataset table 
       DROP TEMPORARY TABLE IF EXISTS qry_dataset;
       CREATE TEMPORARY TABLE qry_dataset 
-      (query_id INT(11) NOT NULL, id BIGINT(20) NOT NULL, ods_code VARCHAR(50)) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+      (query_id INT(11) NOT NULL, id BIGINT(20) NOT NULL, ods_code VARCHAR(50), 
+      clinical_effective_date DATE, value_set_code_type VARCHAR(255), rank_order INT, patient_id BIGINT) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
          IF LENGTH(TRIM(clinicalTypeString)) <> 0 OR clinicalTypeString IS NOT NULL THEN
 
@@ -136,7 +139,7 @@ DECLARE clinicalType VARCHAR(100);
 
                               -- insert observation results into a temporary table
                               SET @sql = CONCAT('INSERT INTO qry_dataset 
-                              SELECT DISTINCT p.query_id, o.id, p.ods_code  
+                              SELECT DISTINCT p.query_id, o.id, p.ods_code, null, null, null, o.patient_id    
                               FROM ', p_patientcohorttab,' p JOIN ', p_schema, '.', p_sourcetab,' o ON o.patient_id = p.patient_id 
                               AND o.organization_id = p.organization_id AND o.person_id = p.person_id 
                               JOIN qry_concept cpt ON o.non_core_concept_id = cpt.non_core_concept_id 
@@ -162,8 +165,8 @@ DECLARE clinicalType VARCHAR(100);
                               ALTER TABLE qry_concept ADD INDEX cpt_idx (non_core_concept_id);
 
                               SET @sql = CONCAT("INSERT INTO qry_dataset 
-                              SELECT DISTINCT p.query_id, o.id, p.ods_code  
-                              FROM ", p_patientcohorttab," p JOIN ", p_schema, '.', p_sourcetab," o ", indexString," ON o.patient_id = p.patient_id AND o.organization_id = p.organization_id AND o.person_id = p.person_id  
+                              SELECT DISTINCT p.query_id, o.id, p.ods_code, null, null, null, o.patient_id      
+                              FROM ", p_patientcohorttab," p JOIN ", p_schema, '.', p_sourcetab," o ON o.patient_id = p.patient_id AND o.organization_id = p.organization_id AND o.person_id = p.person_id  
                               JOIN ", p_schema,".concept cpt ON o.non_core_concept_id = cpt.dbid 
                               WHERE o.result_value_units IS NULL 
                               AND o.result_value IS NULL 
@@ -186,7 +189,7 @@ DECLARE clinicalType VARCHAR(100);
                        ELSEIF clinicalType = 'Conditions/diseases' THEN
 
                               SET @sql = CONCAT("INSERT INTO qry_dataset 
-                              SELECT DISTINCT p.query_id, o.id, p.ods_code  
+                              SELECT DISTINCT p.query_id, o.id, p.ods_code, null, null, null, o.patient_id      
                               FROM ", p_patientcohorttab," p JOIN ", p_schema, '.', p_sourcetab," o ON o.patient_id = p.patient_id 
                               AND o.organization_id = p.organization_id AND o.person_id = p.person_id 
                               JOIN ", p_schema,".concept cpt ON o.non_core_concept_id = cpt.dbid 
@@ -213,7 +216,7 @@ DECLARE clinicalType VARCHAR(100);
                               ALTER TABLE qry_concept ADD INDEX cpt_idx (non_core_concept_id);
                                  
                               SET @sql = CONCAT("INSERT INTO qry_dataset 
-                              SELECT DISTINCT p.query_id, o.id, p.ods_code  
+                              SELECT DISTINCT p.query_id, o.id, p.ods_code, null, null, null, o.patient_id      
                               FROM ", p_patientcohorttab," p JOIN ", p_schema, '.', p_sourcetab," o ON o.patient_id = p.patient_id 
                               AND o.organization_id = p.organization_id AND o.person_id = p.person_id 
                               JOIN ", p_schema,".concept cpt ON o.non_core_concept_id = cpt.dbid
@@ -239,7 +242,7 @@ DECLARE clinicalType VARCHAR(100);
                               ALTER TABLE qry_concept ADD INDEX cpt_idx (non_core_concept_id);
                                  
                               SET @sql = CONCAT("INSERT INTO qry_dataset 
-                              SELECT DISTINCT p.query_id, o.id, p.ods_code  
+                              SELECT DISTINCT p.query_id, o.id, p.ods_code, null, null, null, o.patient_id      
                               FROM ", p_patientcohorttab," p JOIN ", p_schema, '.', p_sourcetab, " o ON o.patient_id = p.patient_id 
                               AND o.organization_id = p.organization_id AND o.person_id = p.person_id 
                               JOIN ", p_schema,".concept cpt ON o.non_core_concept_id = cpt.dbid
@@ -265,7 +268,7 @@ DECLARE clinicalType VARCHAR(100);
                               ALTER TABLE qry_concept ADD INDEX cpt_idx (non_core_concept_id);
             
                               SET @sql = CONCAT("INSERT INTO qry_dataset 
-                              SELECT DISTINCT p.query_id, o.id, p.ods_code  
+                              SELECT DISTINCT p.query_id, o.id, p.ods_code, null, null, null, o.patient_id      
                               FROM ", p_patientcohorttab," p JOIN ", p_schema, '.', p_sourcetab, " o ON o.patient_id = p.patient_id 
                               AND o.organization_id = p.organization_id AND o.person_id = p.person_id 
                               JOIN ", p_schema,".concept cpt ON o.non_core_concept_id = cpt.dbid
@@ -544,20 +547,42 @@ DECLARE clinicalType VARCHAR(100);
 
          IF p_datasetconcepttab IS NOT NULL THEN 
 
-            SET @sql = CONCAT('INSERT INTO qry_dataset 
-            SELECT DISTINCT p.query_id, o.id, p.ods_code  
-            FROM ', p_patientcohorttab,' p JOIN ', p_schema, '.', p_sourcetab,' o ON o.patient_id = p.patient_id 
-            AND o.organization_id = p.organization_id AND o.person_id = p.person_id 
-            JOIN ', p_datasetconcepttab,' c ON o.non_core_concept_id = c.non_core_concept_id  
-            WHERE o.non_core_concept_id IS NOT NULL AND ', p_daterange,' AND ', p_activeString); 
-            PREPARE stmt FROM @sql;
-            EXECUTE stmt;
-            DEALLOCATE PREPARE stmt;
+            IF p_event_type = 'CLINICALEVENTS' THEN
+
+                     CALL filterEventsByRank(p_patientcohorttab, p_datasetconcepttab, p_daterange, p_activeString, p_sourcetab, p_schema, p_eventOccurrence , p_eventOccurrenceNumber);
+
+                     DROP TEMPORARY TABLE IF EXISTS qry_dataset_tmp;
+                     CREATE TEMPORARY TABLE qry_dataset_tmp AS SELECT * FROM qry_dataset;
+                     ALTER TABLE qry_dataset_tmp ADD INDEX pat_idx(patient_id);
+                     ALTER TABLE qry_dataset_tmp ADD INDEX id_idx(id);
+
+                     INSERT INTO qry_dataset  
+                     SELECT e.query_id, e.id, e.ods_code, e.clinical_effective_date, e.value_set_code_type, e.rnk, e.patient_id  
+                     FROM qry_eventsbyrank_tmp e
+                     WHERE NOT EXISTS (SELECT 1 FROM qry_dataset_tmp q WHERE q.patient_id = e.patient_id AND q.id = e.id);
+
+                     UPDATE qry_dataset q JOIN qry_eventsbyrank_tmp e ON q.patient_id = e.patient_id AND q.id = e.id 
+                     SET q.clinical_effective_date = e.clinical_effective_date, q.value_set_code_type = e.value_set_code_type, q.rank_order = e.rnk; 
+                  
+            ELSE 
+
+                     SET @sql = CONCAT('INSERT INTO qry_dataset 
+                     SELECT DISTINCT p.query_id, o.id, p.ods_code, null, null, null, o.patient_id    
+                     FROM ', p_patientcohorttab,' p JOIN ', p_schema, '.', p_sourcetab,' o ON o.patient_id = p.patient_id 
+                     AND o.organization_id = p.organization_id AND o.person_id = p.person_id 
+                     JOIN ', p_datasetconcepttab,' c ON o.non_core_concept_id = c.non_core_concept_id  
+                     WHERE o.non_core_concept_id IS NOT NULL AND ', p_daterange,' AND ', p_activeString); 
+                     PREPARE stmt FROM @sql;
+                     EXECUTE stmt;
+                     DEALLOCATE PREPARE stmt;
+
+            END IF;
+
 
          ELSEIF p_datasetconcepttab IS NULL AND (LENGTH(TRIM(p_selectedClinicalTypes)) = 0 OR p_selectedClinicalTypes IS NULL) THEN 
 
             SET @sql = CONCAT('INSERT INTO qry_dataset 
-            SELECT DISTINCT p.query_id, o.id, p.ods_code  
+            SELECT DISTINCT p.query_id, o.id, p.ods_code, null, null, null, o.patient_id     
             FROM ', p_patientcohorttab,' p JOIN ', p_schema, '.', p_sourcetab,' o ON o.patient_id = p.patient_id 
             AND o.organization_id = p.organization_id AND o.person_id = p.person_id 
             WHERE o.non_core_concept_id IS NOT NULL AND ', p_daterange,' AND ', p_activeString);
@@ -570,16 +595,25 @@ DECLARE clinicalType VARCHAR(100);
          -- create a temporary table to hold the ids
          DROP TEMPORARY TABLE IF EXISTS qry_dataset_fin;
          CREATE TEMPORARY TABLE qry_dataset_fin (
-            row_id INT, 
-            query_id INT, 
-            id BIGINT, 
-            ods_code VARCHAR(50), PRIMARY KEY(row_id) 
+              row_id INT, 
+              query_id INT, 
+              id BIGINT, 
+              patient_id BIGINT,
+              ods_code VARCHAR(50), 
+              clinical_effective_date DATE, 
+              value_set_code_type VARCHAR(255), 
+              rank_order INT,
+              PRIMARY KEY(row_id) 
             ) AS 
          SELECT (@row_no := @row_no + 1) AS row_id, 
-            a.query_id,
-            a.id,
-            a.ods_code  
-         FROM (SELECT DISTINCT query_id, id, ods_code  
+              a.query_id,
+              a.id,
+              a.patient_id, 
+              a.ods_code,
+              a.clinical_effective_date, 
+              a.value_set_code_type, 
+              a.rank_order  
+         FROM (SELECT DISTINCT query_id, id, ods_code, clinical_effective_date, value_set_code_type, rank_order, patient_id    
                FROM qry_dataset ) a JOIN (SELECT @row_no := 0) t;
 
          SET @row_id = 0;
@@ -589,6 +623,7 @@ DECLARE clinicalType VARCHAR(100);
 
                SET @ins = CONCAT("INSERT INTO  ", p_datasettab, " 
                SELECT q.query_id, q.id, q.ods_code FROM qry_dataset_fin q WHERE q.row_id > @row_id AND q.row_id <= @row_id + 1000");
+     
                PREPARE stmt FROM @ins;
                EXECUTE stmt;
                DEALLOCATE PREPARE stmt;

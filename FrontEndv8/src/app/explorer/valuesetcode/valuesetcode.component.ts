@@ -10,6 +10,7 @@ import {ValueSetCodeEditorComponent} from "../valuesetcodeeditor/valuesetcodeedi
 import {MatSort} from "@angular/material/sort";
 import {FormControl} from "@angular/forms";
 import {ngxCsv} from "ngx-csv";
+import {ConceptBrowserComponent} from "../conceptbrowser/conceptbrowser.component";
 
 export interface DialogData {
   value_set_id: string;
@@ -31,7 +32,7 @@ export class ValueSetCodeComponent {
   @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: false}) sort: MatSort;
 
-  displayedColumns: string[] = ['type', 'dataType', 'code', 'term', 'snomed', 'updated','select'];
+  displayedColumns: string[] = ['type', 'dataType', 'code', 'term', 'updated','select'];
 
   selectedType: string = '';
   selectedTypeString: string = '';
@@ -118,14 +119,14 @@ export class ValueSetCodeComponent {
   onDownloadClick() {
     let values:any = this.dataSource.filteredData;
     //remove id from the data to be saved to csv
-    let exportData = values.map(({type, code, term, snomed, updated}) => ({type, code, term, snomed, updated}));
+    let exportData = values.map(({type, code, term, updated}) => ({type, code, term, updated}));
     if (exportData) {
       let options = {
         fieldSeparator: ',',
         quoteStrings: '"',
         decimalseparator: '.',
         showLabels: true,
-        headers: ['Type', 'Original Code', 'Original Term', 'Snomed ID', 'Last Updated'],
+        headers: ['Type', 'Original Code', 'Original Term', 'Last Updated'],
         showTitle: false,
         title: 'Value Set Codes',
         useTextFile: false,
@@ -165,7 +166,7 @@ export class ValueSetCodeComponent {
       disableClose: true,
       height: '550px',
       width: '600px',
-      data: {type: "", code: "", term: "", snomed: "", id: "", value_set_id: this.valueSetId}
+      data: {type: "", code: "", term: "", id: "", value_set_id: this.valueSetId}
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result)
@@ -203,7 +204,7 @@ export class ValueSetCodeComponent {
       disableClose: true,
       height: '550px',
       width: '600px',
-      data: {type:this.selection.selected[0].type, selectedDataType:this.selection.selected[0].dataType, code: this.selection.selected[0].code, term: this.selection.selected[0].term, snomed: this.selection.selected[0].snomed, id: this.selection.selected[0].id, value_set_id: ""}
+      data: {type:this.selection.selected[0].type, selectedDataType:this.selection.selected[0].dataType, code: this.selection.selected[0].code, term: this.selection.selected[0].term, id: this.selection.selected[0].id, value_set_id: ""}
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result)
@@ -220,10 +221,50 @@ export class ValueSetCodeComponent {
     }
   }
 
-  showSnomed(code) {
-    let url = 'https://termbrowser.nhs.uk/?perspective=full&conceptId1='+code+'&edition=uk-edition&release=v20201001&server=https://termbrowser.nhs.uk/sct-browser-api/snomed&langRefset=999001261000000100,999000691000001104';
+  searchConcepts() {
+    const dialogRef = this.dialog.open(ConceptBrowserComponent, {
+      disableClose: true,
+      height: '870px',
+      width: '1300px',
+      data: {
+      }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result)
+        this.saveValueSetCodes(result);
+    });
+  }
 
-    window.open(url);
+  saveValueSetCodes(result) {
+    let c = result.length;
+    let i = 0;
+    let valueSet = '';
+    let dataType = '';
+
+    result.map(
+      e => {
+        if (i==0) {
+          valueSet = e.originalCode;
+          dataType = e.term;
+          i++;
+        }
+        else {
+          this.explorerService.saveValueSetCode(valueSet, dataType, e.originalCode, e.term, this.valueSetId, "")
+            .subscribe(saved => {
+                i++;
+                if (i==c) {
+                  this.init();
+                }
+
+              },
+              error => this.log.error('This value set code could not be saved.')
+            );
+        }
+
+      }
+    )
+
 
   }
+
 }

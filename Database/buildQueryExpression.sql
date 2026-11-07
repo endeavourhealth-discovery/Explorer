@@ -164,10 +164,7 @@ BEGIN
                               END IF;
 
                               -- build qry number list
-                              IF l_queryExpression_det LIKE 'Q%' THEN
-                                    SET l_qryNo =  CONCAT(l_qryNo, SUBSTRING(l_queryExpression_det, 2) );        
-                                    SET l_qryNo =  CONCAT(l_qryNo, CASE WHEN LENGTH(l_qryNo)>0 THEN ',' ELSE '' END);
-                              ELSEIF l_queryExpression_det LIKE 'A%' THEN 
+                              IF l_queryExpression_det LIKE 'Q%' OR l_queryExpression_det LIKE 'A%' THEN
                                     SET l_qryNo =  CONCAT(l_qryNo, SUBSTRING(l_queryExpression_det, 1) );        
                                     SET l_qryNo =  CONCAT(l_qryNo, CASE WHEN LENGTH(l_qryNo)>0 THEN ',' ELSE '' END);
                               END IF;

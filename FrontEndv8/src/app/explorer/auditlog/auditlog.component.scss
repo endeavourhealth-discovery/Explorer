@@ -1,0 +1,80 @@
+table {
+  width: 100%;
+}
+
+tr.expanded-detail-row {
+  height: 0;
+}
+
+tr.expanded-element-row:not(.expanded-expanded-row):hover {
+  background: lightgray;
+}
+
+tr.expanded-element-row:not(.expanded-expanded-row):active {
+  background: #efefef;
+}
+
+.expanded-element-row td {
+  border-bottom-width: 0;
+}
+
+.expanded-element-detail {
+  overflow: hidden;
+  display: flex;
+}
+
+.expanded-element-description {
+  padding: 5px;
+  width: 1400px;
+}
+
+.expanded-element-description-attribution {
+  opacity: 0.5;
+}
+
+.expanded-table {
+  border-collapse: separate;
+  border-spacing: 5px 5px;
+}
+
+::ng-deep .mat-sort-header-arrow {
+  color: white;
+}
+
+mat-paginator {
+  width: 100%;
+}
+
+.highlight
+{
+  font-weight: bold;
+  background: white;
+  color: midnightblue;
+}
+
+.blink_me {
+  animation: blinker 1s linear infinite;
+  text-align: center;
+  padding-top: 100px;
+  padding-left: 500px;
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
+}
+
+.running {
+  background: green;
+  td {
+    color: white;
+  }
+}
+
+.error {
+  background: red;
+  td {
+    color: white;
+  }
+}

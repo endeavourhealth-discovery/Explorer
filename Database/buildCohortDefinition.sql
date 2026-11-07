@@ -11,9 +11,11 @@ CREATE PROCEDURE buildCohortDefinition(
      p_postcode VARCHAR(20),
      p_selectedEthnicFields VARCHAR(2000), 
      p_lsoa VARCHAR(50),
+     p_msoa VARCHAR(50),
      p_organisationTab VARCHAR(64),
      p_practiceCohortTab VARCHAR(64),
      p_ethnicFieldsTab VARCHAR(64), 
+     p_baselineDate VARCHAR(30),
      p_schema VARCHAR(255)
 )
 
@@ -25,6 +27,7 @@ BEGIN
   DECLARE postcoderange VARCHAR(255) DEFAULT NULL;
   DECLARE ethnicgroups VARCHAR(255) DEFAULT NULL; 
   DECLARE lsoaString VARCHAR(255) DEFAULT NULL;  
+  DECLARE msoaString VARCHAR(255) DEFAULT NULL;  
 
   DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -53,6 +56,16 @@ BEGIN
      SET lsoaString = '1';
   END IF;
 
+  -- msoa code
+  SET p_msoa = IF(p_msoa = '', NULL, p_msoa);  
+  IF p_msoa IS NOT NULL THEN
+     SET p_msoa = TRIM(REPLACE(UPPER(p_msoa),' ',''));
+     SET p_msoa = CONCAT(p_msoa,'%');
+     SET msoaString = CONCAT("pa.msoa_2011_code LIKE ", QUOTE(p_msoa));
+  ELSE
+     SET msoaString = '1';
+  END IF;
+
   -- get provider orgs
   CALL storeString(p_providerOrganisation, p_organisationTab);
   SET orgrange = CONCAT('JOIN ', p_organisationTab, ' ot ON ot.code = org.ods_code ');
@@ -76,7 +89,7 @@ BEGIN
   END IF;
   
   -- create the practice patient cohort
-  CALL createPatientCohort(p_query_id, orgrange, regstatus, genderrange, postcoderange, p_practiceCohortTab, ethnicgroups, lsoaString, p_schema);
+  CALL createPatientCohort(p_query_id, orgrange, regstatus, genderrange, postcoderange, p_practiceCohortTab, ethnicgroups, lsoaString, msoaString, p_baselineDate, p_schema);
 
 END//
 DELIMITER ;

@@ -23,6 +23,8 @@ CREATE PROCEDURE buildDatasets (
   p_referral_req_tmp VARCHAR(64),
   p_activeProblems VARCHAR(10),
   p_org_tmp VARCHAR(64), 
+  p_eventOccurrence VARCHAR(30), 
+  p_eventOccurrenceNumber VARCHAR(10),
   p_schema VARCHAR(255)
 )
 
@@ -51,7 +53,7 @@ CREATE TABLE IF NOT EXISTS person_dataset (
   PRIMARY KEY (query_id, patient_id, ods_code), INDEX pat_idx (patient_id) ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE IF NOT EXISTS observation_dataset (
-  query_id INT(11) NOT NULL, observation_id BIGINT(20) NOT NULL, ods_code VARCHAR(50) NOT NULL, 
+  query_id INT(11) NOT NULL, observation_id BIGINT(20) NOT NULL, ods_code VARCHAR(50) NOT NULL,  
   PRIMARY KEY (query_id, observation_id, ods_code), INDEX obs_idx (observation_id)  ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE IF NOT EXISTS medication_dataset (
@@ -141,7 +143,7 @@ CREATE TABLE IF NOT EXISTS encounter_dataset (
 
     -- create dataset
     CALL createDataset(p_query_id, p_patientcohorttab, sourcetab, TempValue, datasetconcepttab, p_selectedClinicalTypes, daterange, activeString, datasettab,
-    p_procedure_req_tmp, p_diagnostic_tmp, p_warning_tmp, p_allergy_tmp, p_referral_req_tmp, p_schema);
+    p_procedure_req_tmp, p_diagnostic_tmp, p_warning_tmp, p_allergy_tmp, p_referral_req_tmp, p_eventOccurrence, p_eventOccurrenceNumber, p_schema);
     -- fetch next event type
     SET p_eventTypeString = INSERT(p_eventTypeString, 1, frontlen + 1, '');
     

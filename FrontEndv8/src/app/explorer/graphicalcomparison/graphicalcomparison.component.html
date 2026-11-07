@@ -30,6 +30,7 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
+      <mat-checkbox class="checkbox" [(ngModel)]="percentage" (change)="refresh();">Show percentage of population</mat-checkbox>
       <button style="margin-left: 10px" mat-flat-button color="accent" (click)="columnView();">Column view</button>
       <button style="margin-left: 10px" mat-flat-button color="accent" (click)="registryLists();">List view</button>
     </div>

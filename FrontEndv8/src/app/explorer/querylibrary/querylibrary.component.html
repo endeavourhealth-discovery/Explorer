@@ -33,7 +33,7 @@
                           [aria-label]="checkboxLabel()">
             </mat-checkbox>
             <button mat-icon-button color="grey" (click)="add()" style="margin-left: 10px"><mat-icon>add</mat-icon></button>
-            <button *ngIf="selection.selected.length == 1" mat-icon-button color="grey" (click)="edit()" style="margin-left: 3px"><mat-icon>edit</mat-icon></button>
+            <button *ngIf="selection.selected.length == 1" mat-icon-button color="grey" (click)="edit(0, '', '', '', '', '')" style="margin-left: 3px"><mat-icon>edit</mat-icon></button>
             <button *ngIf="selection.selected.length == 1" mat-icon-button color="grey" (click)="duplicate()" style="margin-left: 6px"><mat-icon style="font-size: 20px">content_copy</mat-icon></button>
             <button *ngIf="selection.selected.length > 0" mat-icon-button color="warn" (click)="delete()" style="margin-left: 6px"><mat-icon>delete</mat-icon></button>
           </th>
@@ -45,13 +45,17 @@
             </mat-checkbox>
           </td>
         </ng-container>
+        <ng-container matColumnDef="results">
+          <th style="height: 60px" mat-header-cell *matHeaderCellDef>Results</th>
+          <td style="color:blue; cursor: pointer; width:80px" mat-cell *matCellDef="let element" matTooltipClass="tooltip" matTooltipPosition="left" matTooltip="view query results" (click)="gotoRegistryLists(element.registryName)">View results</td>
+        </ng-container>
         <ng-container matColumnDef="type">
           <th style="display: flex; justify-content: flex-end; height: 60px" mat-header-cell *matHeaderCellDef mat-sort-header>Folder</th>
-          <td style="cursor: pointer; text-align: right; padding-right: 10px; width:180px" mat-cell *matCellDef="let element"> {{element.type}} </td>
+          <td style="cursor: pointer; text-align: right; padding-right: 10px; width:180px; font-weight: bold" mat-cell *matCellDef="let element"> {{element.type}} </td>
         </ng-container>
         <ng-container matColumnDef="name">
           <th mat-header-cell *matHeaderCellDef style="width: 400px" mat-sort-header>Query name</th>
-          <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+          <td mat-cell *matCellDef="let element" style="cursor: pointer" (click)="edit(element.id, element.name, element.registryName, element.denominatorQuery, element.type, element.jsonQuery)" > {{element.name}} </td>
         </ng-container>
         <ng-container matColumnDef="denominatorQuery">
           <th mat-header-cell *matHeaderCellDef style="width: 350px" mat-sort-header>Denominator query name</th>
@@ -73,13 +77,13 @@
                     <td><h3>Cohort definition</h3></td>
                   </tr>
                   <tr>
-                    <td><b>Query name: </b>{{element.registryName}}</td>
+                    <td><b>Abbreviated query name: </b>{{element.registryName}}</td>
+                  </tr>
+                  <tr>
+                    <td><b>Denominator query: </b>{{element.denominatorQuery}}</td>
                   </tr>
                   <tr>
                     <td><b>Target vs denominator: </b>{{formatDetail(element.jsonQuery, 'targetPercentage')}}%</td>
-                  </tr>
-                  <tr>
-                    <td><b>Organisations: </b>{{formatDetail(element.jsonQuery, 'providerOrganisation')}}</td>
                   </tr>
                   <tr>
                     <td><b>Registration: </b>{{formatDetail(element.jsonQuery, 'registrationStatus')}}</td>
@@ -119,6 +123,9 @@
                   </tr>
                   <tr>
                    <td><b>Delivery: </b>{{formatDetail(element.jsonQuery, 'delivery')}}</td>
+                  </tr>
+                  <tr>
+                    <td><b>Submitted to queue: </b>{{formatDetail(element.jsonQuery, 'submitQuery')}}</td>
                   </tr>
                   <tr>
                     <td></td>

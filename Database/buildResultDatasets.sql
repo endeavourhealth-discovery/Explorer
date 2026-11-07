@@ -38,6 +38,8 @@ CREATE PROCEDURE buildResultDatasets (
   IN p_schema VARCHAR(255),
   IN p_storetab VARCHAR(64),
   IN p_org_tmp VARCHAR(64), 
+  IN p_eventOccurrence VARCHAR(30),
+  IN p_eventOccurrenceNumber VARCHAR(10),
   OUT p_eventTypes VARCHAR(255)
   )
 
@@ -76,7 +78,7 @@ IF p_encounters = 'TRUE' THEN
     SET eventTypeString = CONCAT(eventTypeString,'ENCOUNTERS,');
     -- get date range string for encounters
     IF p_dateFromEncounters IS NOT NULL OR p_dateToEncounters IS NOT NULL THEN
-        SET encountersDateRangeString = getAgeDateRangeString(NULL, NULL, p_dateFromEncounters, p_dateToEncounters, NULL, NULL, 3); 
+        SET encountersDateRangeString = getAgeDateRangeString(NULL, NULL, p_dateFromEncounters, p_dateToEncounters, NULL, NULL, NULL, 3); 
     ELSE
         SET encountersDateRangeString = '1';
     END IF;
@@ -101,7 +103,7 @@ IF p_medication = 'TRUE' THEN
     SET eventTypeString = CONCAT(eventTypeString,'MEDICATION,');
     -- get date range string for medication
     IF p_dateFromMedication IS NOT NULL OR p_dateToMedication IS NOT NULL THEN
-        SET medicationDateRangeString = getAgeDateRangeString(NULL, NULL, p_dateFromMedication, p_dateToMedication, NULL, NULL, 3); 
+        SET medicationDateRangeString = getAgeDateRangeString(NULL, NULL, p_dateFromMedication, p_dateToMedication, NULL, NULL, NULL, 3); 
     ELSE
         SET medicationDateRangeString = '1';
     END IF;
@@ -125,7 +127,7 @@ IF p_clinicalEvents = 'TRUE' THEN
     SET eventTypeString = CONCAT(eventTypeString,'CLINICALEVENTS,');
     -- get date range string for clinical events
     IF p_dateFromClinicalEvents IS NOT NULL OR p_dateToClinicalEvents IS NOT NULL THEN
-        SET clinicalEventsDateRangeString = getAgeDateRangeString(NULL, NULL, p_dateFromClinicalEvents, p_dateToClinicalEvents, NULL, NULL, 3); 
+        SET clinicalEventsDateRangeString = getAgeDateRangeString(NULL, NULL, p_dateFromClinicalEvents, p_dateToClinicalEvents, NULL, NULL, NULL, 3); 
     ELSE
         SET clinicalEventsDateRangeString = '1';
     END IF;
@@ -155,7 +157,8 @@ END IF;
     -- build datasets from event types
     CALL buildDatasets(p_query_id, p_patientcohorttab, eventTypeString, encountersDateRangeString, p_encounterConcept_tmp, medicationDateRangeString, 
     p_medicationConcept_tmp, p_currentMedication, clinicalEventsDateRangeString, p_clinicalEventConcept_tmp, p_selectedClinicalTypes, 
-    p_procedure_req_tmp,p_diagnostic_tmp,p_warning_tmp,p_allergy_tmp,p_referral_req_tmp,p_activeProblems, p_org_tmp, p_schema);
+    p_procedure_req_tmp,p_diagnostic_tmp,p_warning_tmp,p_allergy_tmp,p_referral_req_tmp,p_activeProblems, p_org_tmp, p_eventOccurrence, 
+    p_eventOccurrenceNumber, p_schema);
 
     SET p_eventTypes = eventTypeString;
 

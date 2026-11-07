@@ -19,6 +19,9 @@ public class QueryQueue {
     private String timeExecute;
     private String id;
     private String error;
+    private String processId;
+    private String killProcess;
+    private String userName;
 
     public String getType() {
         return type;
@@ -106,6 +109,33 @@ public class QueryQueue {
 
     public QueryQueue setError(String error) {
         this.error = error;
+        return this;
+    }
+
+    public String getProcessId() {
+        return processId;
+    }
+
+    public QueryQueue setProcessId(String processId) {
+        this.processId = processId;
+        return this;
+    }
+
+    public String getKillProcess() {
+        return killProcess;
+    }
+
+    public QueryQueue setKillProcess(String killProcess) {
+        this.killProcess = killProcess;
+        return this;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public QueryQueue setUserName(String userName) {
+        this.userName = userName;
         return this;
     }
 }

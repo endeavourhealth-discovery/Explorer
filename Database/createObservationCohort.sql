@@ -8,7 +8,8 @@ CREATE PROCEDURE createObservationCohort(
    p_observationTab VARCHAR(64), 
    p_cohortTab VARCHAR(64), 
    p_conceptTab VARCHAR(64), 
-   p_schema VARCHAR(255)
+   p_schema VARCHAR(255), 
+   p_dataType VARCHAR(255)
    )
 BEGIN
 
@@ -25,7 +26,11 @@ BEGIN
         RESIGNAL; -- rethrow the error
    END;
 
-   SET data_types = 'Observation, Medication, Encounter, Ethnicity, Referral';
+   IF p_dataType IS NULL OR LENGTH(TRIM(p_dataType)) = 0 THEN
+     SET data_types = 'Observation, Medication, Encounter, Ethnicity, Referral';
+   ELSE
+     SET data_types = p_dataType;
+   END IF;
 
    SET @sql = CONCAT('DROP TABLE IF EXISTS ', p_observationTab);
    PREPARE stmt FROM @sql;

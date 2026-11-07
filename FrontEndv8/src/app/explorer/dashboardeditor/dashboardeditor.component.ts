@@ -197,7 +197,14 @@ export class DashboardEditorComponent {
   }
 
   formChanged() {
-    this.disableForm = this.type=='' || this.type==undefined || this.name=='' || this.name==undefined || this.selectedVisualisation1=='' || this.selectedVisualisation1==undefined;
+    this.disableForm =
+      this.type=='' || this.type==undefined
+      || this.name=='' || this.name==undefined
+      || this.selectedSeries1=='' || this.selectedSeries1==undefined
+      || this.selectedWidgets.length==0
+      || this.selectedVisualisation1=='' || this.selectedVisualisation1==undefined;
+
+
   }
 
   private _onDestroy = new Subject<void>();
@@ -279,6 +286,8 @@ export class DashboardEditorComponent {
       {icon: "fad fa-flag", name: 'Indicator'},
       {icon: "fad fa-globe-africa", name: 'Map'}
     ];
+
+    this.formChanged();
   }
 
 

@@ -25,7 +25,7 @@ export class QueryQueueComponent implements OnInit {
   @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: false}) sort: MatSort;
 
-  displayedColumns: string[] = ['type', 'registry', 'date', 'status', 'timeSubmit', 'timeFinish', 'timeExecute', 'error', 'select'];
+  displayedColumns: string[] = ['type', 'registry', 'date', 'status', 'timeSubmit', 'timeFinish', 'timeExecute', 'error', 'userName', 'select'];
 
   projectId: string = '';
   init: any = 0;
@@ -109,8 +109,13 @@ export class QueryQueueComponent implements OnInit {
     this.ngOnInit();
   }
 
-  reset() {
-    this.log.success("Query reset for running again");
+  resetRerunQuery() {
+    this.log.success("Queries submitted for running again");
+    this.ngOnInit();
+  }
+
+  resetStopQuery() {
+    this.log.success("Query stopped");
     this.ngOnInit();
   }
 
@@ -135,7 +140,7 @@ export class QueryQueueComponent implements OnInit {
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
   }
 
-  resetQuery () {
+  rerunQuery () {
     let id = "";
     this.selection.selected.map(
       e => {
@@ -144,13 +149,33 @@ export class QueryQueueComponent implements OnInit {
     )
     id = id.substr(1);
 
-    this.explorerService.resetQueue(id)
+    this.explorerService.rerunQuery(id)
       .subscribe(saved => {
-          this.reset();
+          this.resetRerunQuery();
         },
-        error => this.log.error('This query could not be reset.')
+        error => this.log.error('This query could not be re-run.')
       );
   }
 
+  stopQuery () {
+    let id = "";
+    this.selection.selected.map(
+      e => {
+        id+=","+e.id;
+      }
+    )
+    id = id.substr(1);
+
+    this.explorerService.stopQuery(id)
+      .subscribe(saved => {
+          this.resetStopQuery();
+        },
+        error => this.log.error('This query could not be stopped.')
+      );
+  }
+
+  gotoRegistryLists(name: any) {
+    this.router.navigate(['/registrylists'], { queryParams: { param: name } });
+  }
 
 }

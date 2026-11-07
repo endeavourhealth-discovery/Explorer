@@ -19,6 +19,7 @@ interface query {
   clinicalEvents: boolean;
   schedule: string;
   delivery: string;
+  submitQuery: string;
   providerOrganisation: string;
   registrationStatus: string;
   timeSeries: boolean;
@@ -53,7 +54,7 @@ export class QueryLibraryComponent implements OnInit {
   @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: false}) sort: MatSort;
 
-  displayedColumns: string[] = ['type', 'name', 'denominatorQuery', 'select', 'expandArrow'];
+  displayedColumns: string[] = ['results','type', 'name', 'denominatorQuery', 'select', 'expandArrow'];
   expandedElement: QueryLibraryComponent | null;
 
   selectedType: string = '';
@@ -218,10 +219,10 @@ export class QueryLibraryComponent implements OnInit {
     )
     id = id.substr(1);
 
-    MessageBoxDialogComponent.open(this.dialog, 'Delete query', 'Are you sure you want to delete this query?', 'Delete', 'Cancel')
+    MessageBoxDialogComponent.open(this.dialog, 'Delete query and results', 'Are you sure you want to delete this query and all of its results? (Note that a query cannot be deleted if it is used by other queries as a denominator)', 'Delete query and results', 'Cancel')
       .subscribe(result => {
         if (result) {
-          this.explorerService.deleteQuery(id.toString())
+          this.explorerService.deleteQuery(id.toString(), true)
             .subscribe(saved => {
                 this.ngOnInit();
               },
@@ -246,11 +247,33 @@ export class QueryLibraryComponent implements OnInit {
       });
   }
 
-  edit() {
+  edit(id, queryName, registry, denominator, folder, queryJSON) {
+    let queryId = '';
+    let name = '';
+    let registryName = '';
+    let denominatorQuery = '';
     let type = '';
+    let jsonQuery = '';
+
+    if (id!=0) {
+      queryId = id;
+      name = queryName;
+      registryName = registry;
+      denominatorQuery = denominator;
+      type = folder;
+      jsonQuery = queryJSON;
+    }
+    else {
+      queryId = this.selection.selected[0].id;
+      name = this.selection.selected[0].name;
+      registryName = this.selection.selected[0].registryName;
+      denominatorQuery = this.selection.selected[0].denominatorQuery;
+      type = this.selection.selected[0].type;
+      jsonQuery = this.selection.selected[0].jsonQuery;
+    }
 
     this.originalData.forEach( (item, index) => {
-      if (this.originalData[index].id == this.selection.selected[0].id) {
+      if (this.originalData[index].id == queryId) {
         type = this.originalData[index].type;
       }
     });
@@ -260,12 +283,12 @@ export class QueryLibraryComponent implements OnInit {
       height: '950px',
       width: '1275px',
       data: {
-        id: this.selection.selected[0].id,
-        name: this.selection.selected[0].name,
-        registryName: this.selection.selected[0].registryName,
-        denominatorQuery: this.selection.selected[0].denominatorQuery,
+        id: queryId,
+        name: name,
+        registryName: registryName,
+        denominatorQuery: denominatorQuery,
         type: type,
-        query: this.selection.selected[0].jsonQuery
+        query: jsonQuery
       }
     });
     dialogRef.afterClosed().subscribe(result => {
@@ -317,6 +340,8 @@ export class QueryLibraryComponent implements OnInit {
         details = query.schedule
       }else if (fieldName=='delivery') {
         details = query.delivery
+      }else if (fieldName=='submitQuery') {
+        details = query.submitQuery
       }else if (fieldName=='targetPercentage') {
         details = query.targetPercentage
       }
@@ -333,4 +358,10 @@ export class QueryLibraryComponent implements OnInit {
       this.dataSource.paginator.firstPage();
     }
   }
+
+  gotoRegistryLists(name: any) {
+    this.router.navigate(['/registrylists'], { queryParams: { param: name } });
+  }
+
+
 }

@@ -23,13 +23,14 @@ DECLARE clinicalEffectiveDateString VARCHAR(255);
 IF p_baselineDate = 'N' THEN  -- for query pattern 4
 
   SET effectiveDate = 'o.clinical_effective_date';
-  SET signString = '-';
   SET clinicalEffectiveDateString = 'o2.clinical_effective_date';
 
-  IF UPPER(p_includedPeriodOperator) = 'WITHIN' OR UPPER(p_includedPeriodOperator) IS NULL THEN
-       SET p_includedPeriodOperator = '<=';
-       ELSEIF UPPER(p_includedPeriodOperator) = 'BEFORE' THEN
+  IF UPPER(p_includedPeriodOperator) = 'BEFORE' OR UPPER(p_includedPeriodOperator) IS NULL THEN
+       SET signString = '';
        SET p_includedPeriodOperator = '>=';
+  ELSEIF UPPER(p_includedPeriodOperator) = 'WITHIN' THEN
+       SET signString = '-';
+       SET p_includedPeriodOperator = '<=';
   END IF;
 
 ELSEIF LENGTH(TRIM(p_baselineDate)) = 0  OR p_baselineDate IS NULL THEN

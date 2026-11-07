@@ -9,12 +9,15 @@ public class RegistryLists {
     private static final Logger LOG = LoggerFactory.getLogger(RegistryLists.class);
     private String ccg;
     private String practiceName;
+    private String odsCode;
     private String registry;
     private String listSize;
     private String registrySize;
     private String target;
     private String queryId;
     private String parentQueryId;
+    private String updated;
+    private String parentQuery;
 
     public String getCcg() {
         return ccg;
@@ -31,6 +34,15 @@ public class RegistryLists {
 
     public RegistryLists setPracticeName(String practiceName) {
         this.practiceName = practiceName;
+        return this;
+    }
+
+    public String getOdsCode() {
+        return odsCode;
+    }
+
+    public RegistryLists setOdsCode(String odsCode) {
+        this.odsCode = odsCode;
         return this;
     }
 
@@ -85,6 +97,24 @@ public class RegistryLists {
 
     public RegistryLists setParentQueryId(String parentQueryId) {
         this.parentQueryId = parentQueryId;
+        return this;
+    }
+
+    public String getUpdated() {
+        return updated;
+    }
+
+    public RegistryLists setUpdated(String updated) {
+        this.updated = updated;
+        return this;
+    }
+
+    public String getParentQuery() {
+        return parentQuery;
+    }
+
+    public RegistryLists setParentQuery(String parentQuery) {
+        this.parentQuery = parentQuery;
         return this;
     }
 

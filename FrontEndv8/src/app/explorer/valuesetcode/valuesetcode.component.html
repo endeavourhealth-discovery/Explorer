@@ -4,16 +4,18 @@
 
 <div class="filter">
   <mat-form-field style="width:300px; margin-left: 10px" class="example-full-width" appearance="outline">
-    <mat-label>Filter type</mat-label>
+    <mat-label>Filter value sets</mat-label>
     <mat-select style="width:280px" [formControl]="typeValues" multiple [(value)]="selectedType">
       <mat-checkbox class="mat-option" [(ngModel)]="selectAll" (change)="toggleSelection($event)">Select All</mat-checkbox>
       <mat-option (click)="refresh(true)" *ngFor="let result of typeList" [value]="result">{{result}}</mat-option>
     </mat-select>
   </mat-form-field>
   <mat-form-field style="width:300px; margin-left: 10px" class="expanded-full-width" appearance="outline">
-    <mat-label>Filter</mat-label>
+    <mat-label>Search</mat-label>
     <input matInput (keyup)="applyFilter($event)" placeholder="Filter" #input>
   </mat-form-field>
+  <button style="margin-left: 15px; margin-right: 15px" mat-flat-button color="accent" (click)="searchConcepts()">Find concepts</button>
+  <button style="margin-right: 15px" mat-flat-button color="accent" (click)="onDownloadClick()">Download</button>
 </div>
 
 <div mat-dialog-content class="flex" fxLayout="row wrap" fxLayoutAlign="start">
@@ -38,28 +40,24 @@
       </td>
     </ng-container>
     <ng-container matColumnDef="type">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Type</th>
-      <td mat-cell style="width: 300px" *matCellDef="let element" (click)="showSnomed(element.snomed)" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="Show concept in SNOMED-CT browser"> {{element.type}} </td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Value set name</th>
+      <td mat-cell style="width: 300px" *matCellDef="let element" > {{element.type}} </td>
     </ng-container>
     <ng-container matColumnDef="dataType">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Data type</th>
-      <td mat-cell style="width: 200px" *matCellDef="let element" (click)="showSnomed(element.snomed)" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="Show concept in SNOMED-CT browser"> {{element.dataType}} </td>
+      <td mat-cell style="width: 200px" *matCellDef="let element" > {{element.dataType}} </td>
     </ng-container>
     <ng-container matColumnDef="code">
       <th mat-header-cell *matHeaderCellDef style="width: 150px" mat-sort-header>Original code</th>
-      <td mat-cell *matCellDef="let element" (click)="showSnomed(element.snomed)" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="Show concept in SNOMED-CT browser"> {{element.code}} </td>
+      <td mat-cell *matCellDef="let element" > {{element.code}} </td>
     </ng-container>
     <ng-container matColumnDef="term">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Original term</th>
-      <td mat-cell style="width: 450px; padding-right: 10px" *matCellDef="let element" (click)="showSnomed(element.snomed)" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="Show concept in SNOMED-CT browser"> {{element.term}} </td>
-    </ng-container>
-    <ng-container matColumnDef="snomed">
-      <th mat-header-cell *matHeaderCellDef style="width: 150px" mat-sort-header>Snomed ID</th>
-      <td mat-cell *matCellDef="let element" (click)="showSnomed(element.snomed)" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="Show concept in SNOMED-CT browser"> {{element.snomed}} </td>
+      <td mat-cell style="width: 450px; padding-right: 10px" *matCellDef="let element" > {{element.term}} </td>
     </ng-container>
     <ng-container matColumnDef="updated">
       <th mat-header-cell *matHeaderCellDef style="width: 100px" mat-sort-header>Last updated</th>
-      <td mat-cell *matCellDef="let element" (click)="showSnomed(element.snomed)" matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="Show concept in SNOMED-CT browser"> {{element.updated}} </td>
+      <td mat-cell *matCellDef="let element" > {{element.updated}} </td>
     </ng-container>
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr style="cursor: pointer" mat-row *matRowDef="let row; columns: displayedColumns;" class="expanded-element-row"></tr>
@@ -69,7 +67,6 @@
 
 <br/>
 <div mat-dialog-actions align="end">
-  <button mat-flat-button color="primary" (click)="onDownloadClick()">Download</button>
   <button style="margin-right: 15px" mat-flat-button color="accent" (click)="onCancelClick()">Close</button>
 </div>
 

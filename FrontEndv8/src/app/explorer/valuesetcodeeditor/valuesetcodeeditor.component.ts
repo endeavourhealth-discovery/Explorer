@@ -3,13 +3,13 @@ import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {ExplorerService} from '../explorer.service';
 import {LoggerService, UserManagerService} from 'dds-angular8';
 import {FormGroup} from "@angular/forms";
+import {MatTableDataSource} from "@angular/material/table";
 
 export interface DialogData {
   type: string;
   selectedDataType: string;
   code: string;
   term: string;
-  snomed: string;
   id: string;
   value_set_id: string;
 }
@@ -29,10 +29,11 @@ export class ValueSetCodeEditorComponent {
   selectedDataType: string;
   code: string;
   term: string;
-  snomed: string;
   disableForm: boolean;
   id: string;
   value_set_id: string;
+
+  events: any;
 
   dataTypes: dataType[] = [
     {value: 'Observation'},
@@ -51,13 +52,14 @@ export class ValueSetCodeEditorComponent {
     this.selectedDataType = data.selectedDataType;
     this.code = data.code;
     this.term = data.term;
-    this.snomed = data.snomed;
     this.id = data.id;
     this.value_set_id = data.value_set_id;
+
+    this.formChanged();
   }
 
   saveValueSetCode() {
-    this.explorerService.saveValueSetCode(this.type, this.selectedDataType, this.code, this.term, this.snomed, this.value_set_id, this.id)
+    this.explorerService.saveValueSetCode(this.type, this.selectedDataType, this.code, this.term, this.value_set_id, this.id)
       .subscribe(saved => {
           this.dialogRef.close(true);
         },
@@ -66,7 +68,6 @@ export class ValueSetCodeEditorComponent {
   }
 
   valueSetCodeEntered(event) {
-
     if (event.key === "Enter") {
       this.saveValueSetCode();
     }
@@ -77,14 +78,13 @@ export class ValueSetCodeEditorComponent {
   }
 
   showSnomed(code) {
-    let url = 'https://termbrowser.nhs.uk/?perspective=full&conceptId1='+code+'&edition=uk-edition&release=v20201001&server=https://termbrowser.nhs.uk/sct-browser-api/snomed&langRefset=999001261000000100,999000691000001104';
-
+    let url = 'https://termbrowser.nhs.uk/?perspective=full&conceptId1=404684003&edition=uk-edition&release=v20210120&server=https://termbrowser.nhs.uk/sct-browser-api/snomed&langRefset=999001261000000100,999000691000001104';
     window.open(url);
-
   }
 
   formChanged() {
-    this.disableForm = this.type=='' || this.type==undefined || this.selectedDataType=='' || this.selectedDataType==undefined || this.code=='' || this.code==undefined || this.term=='' || this.term==undefined || this.snomed=='' || this.snomed==undefined;
+    this.disableForm = this.type=='' || this.type==undefined || this.selectedDataType=='' || this.selectedDataType==undefined || this.code=='' || this.code==undefined || this.term=='' || this.term==undefined;
   }
+
 
 }

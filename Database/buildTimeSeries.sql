@@ -60,7 +60,7 @@ BEGIN
       SET seriesValueSet = p_seriesClinicalEventValueSet;
    ELSEIF p_seriesTable = 'Medication' THEN
       SET seriesValueSet = p_seriesMedicationValueSet;
-   ELSEIF p_seriesTable = 'Encounters' THEN
+   ELSEIF p_seriesTable = 'Encounter' THEN
       SET seriesValueSet = p_seriesEncounterValueSet;
    ELSE 
       SET seriesValueSet = NULL;
@@ -75,7 +75,7 @@ IF p_timeSeries = 'TRUE' AND
       SET sourceTab = 'observation';
    ELSEIF p_seriesTable = 'Medication' THEN
       SET sourceTab = 'medication_statement';
-   ELSEIF p_seriesTable = 'Encounters' THEN
+   ELSEIF p_seriesTable = 'Encounter' THEN
       SET sourceTab = 'encounter';
    END IF;
    -- get time series date range string

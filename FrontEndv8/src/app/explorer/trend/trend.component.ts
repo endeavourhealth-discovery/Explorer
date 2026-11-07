@@ -46,8 +46,8 @@ export class TrendComponent {
   yAxis: boolean = true;
   showYAxisLabel: boolean = true;
   showXAxisLabel: boolean = false;
-  xAxisLabel: string = 'Date';
-  yAxisLabel: string = 'Percentage';
+  xAxisLabel: string = 'Result date';
+  yAxisLabel: string = 'Patient count';
   timeline: boolean = false;
   showGridLines: boolean = true;
   showAreaChart: boolean = false;
@@ -112,7 +112,7 @@ export class TrendComponent {
     {
       for(var j = 0; j < ind.length; j++)
       {
-        names += ',' + orgs[i] + ' - '+ind[j];
+        names += ',' + orgs[i] + '~'+ind[j];
       }
     }
     names = names.substr(1);

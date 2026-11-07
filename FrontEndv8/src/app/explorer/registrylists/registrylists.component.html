@@ -70,14 +70,14 @@
                         'neutral': toPercent(element.listSize,element.registrySize)<65&&element.registrySize!='-1'&&element.registrySize!='',
                         'good': toPercent(element.listSize,element.registrySize)>=65}"
                                 *ngIf="element.listSize>0&&toPercent(element.listSize,element.registrySize)>0">Criteria met: </span>
-                          <span matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="view patients with criteria met" (click)="patientList(element.queryId, element.parentQueryId, 1)" [ngClass]="{
+                          <span matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="view patients with criteria met" (click)="patientList(element.queryId, element.parentQueryId, 1, element.registry, element.odsCode)" [ngClass]="{
                         'neutralLink': toPercent(element.listSize,element.registrySize)<65&&element.registrySize!='-1'&&element.registrySize!='',
                         'goodLink': toPercent(element.listSize,element.registrySize)>=65}">{{getSize(element.listSize, element.registrySize)}}</span>
                           <div [ngClass]="{
                         'poor': toPercent(element.listSize,element.registrySize)<65&&element.registrySize!='-1'&&element.registrySize!='',
                         'neutral': toPercent(element.listSize,element.registrySize)>=65}"
-                               *ngIf="element.listSize>0&&toPercent(element.listSize,element.registrySize)>0">Not met:
-                            <span matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="view patients with criteria not met" (click)="patientList(element.queryId, element.parentQueryId, 0)" [ngClass]="{
+                               *ngIf="element.listSize>0&&toPercent(element.listSize,element.registrySize)>0&&element.parentQueryId!=undefined">Not met:
+                            <span matTooltipClass="tooltip" matTooltipPosition="right" matTooltip="view patients with criteria not met" (click)="patientList(element.queryId, element.parentQueryId, 0, element.registry, element.odsCode)" [ngClass]="{
                         'poorLink': toPercent(element.listSize,element.registrySize)<65&&element.registrySize!='-1'&&element.registrySize!='',
                         'neutralLink': toPercent(element.listSize,element.registrySize)>=65}">{{(element.listSize-element.registrySize).toLocaleString()}}</span>
                           </div>
@@ -92,6 +92,31 @@
         <ng-container matColumnDef="target">
           <th style="width: 8%" mat-header-cell *matHeaderCellDef mat-sort-header>Target %</th>
           <td mat-cell *matCellDef="let element"> {{element.target}}% </td>
+        </ng-container>
+        <ng-container matColumnDef="updated">
+          <th style="width: 8%" mat-header-cell *matHeaderCellDef mat-sort-header>Run</th>
+          <td mat-cell *matCellDef="let element"> {{element.updated}} </td>
+        </ng-container>
+        <ng-container matColumnDef="parentQuery">
+          <th style="width: 8%" mat-header-cell *matHeaderCellDef mat-sort-header>Denominator</th>
+          <td mat-cell *matCellDef="let element"> {{element.parentQuery}} </td>
+        </ng-container>
+        <ng-container matColumnDef="select">
+          <th style="width: 8%" mat-header-cell *matHeaderCellDef>
+            <mat-checkbox (change)="$event ? masterToggle() : null"
+                          [checked]="selection.hasValue() && isAllSelected()"
+                          [indeterminate]="selection.hasValue() && !isAllSelected()"
+                          [aria-label]="checkboxLabel()">
+            </mat-checkbox>
+            <button *ngIf="selection.selected.length > 0" mat-icon-button color="warn" (click)="delete()" style="margin-left: 6px"><mat-icon>delete</mat-icon></button>
+          </th>
+          <td mat-cell *matCellDef="let row">
+            <mat-checkbox (click)="$event.stopPropagation()"
+                          (change)="$event ? selection.toggle(row) : null"
+                          [checked]="selection.isSelected(row)"
+                          [aria-label]="checkboxLabel(row)">
+            </mat-checkbox>
+          </td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

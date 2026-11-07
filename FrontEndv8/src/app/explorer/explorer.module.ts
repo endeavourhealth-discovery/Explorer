@@ -57,6 +57,8 @@ import {CovidViewerComponent} from "./covidviewer/covidviewer.component";
 import {PopulationsComponent} from "./populations/populations.component";
 import {RegistryListsComponent} from "./registrylists/registrylists.component";
 import {QueryQueueComponent} from "./queryqueue/queryqueue.component";
+import {ConceptBrowserComponent} from "./conceptbrowser/conceptbrowser.component";
+import {AuditLogComponent} from "./auditlog/auditlog.component";
 
 @NgModule({
   declarations: [
@@ -80,7 +82,9 @@ import {QueryQueueComponent} from "./queryqueue/queryqueue.component";
     CovidViewerComponent,
     PopulationsComponent,
     RegistryListsComponent,
-    QueryQueueComponent
+    QueryQueueComponent,
+    ConceptBrowserComponent,
+    AuditLogComponent
   ],
     imports: [
         BrowserModule,
@@ -134,7 +138,8 @@ import {QueryQueueComponent} from "./queryqueue/queryqueue.component";
     DashboardEditorComponent,
     ValueSetCodeEditorComponent,
     AdvancedQueryEditorComponent,
-    TrendComponent
+    TrendComponent,
+    ConceptBrowserComponent
   ],
   providers: [ Globals ]
 })

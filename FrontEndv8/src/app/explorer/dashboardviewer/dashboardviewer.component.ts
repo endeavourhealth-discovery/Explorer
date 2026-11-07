@@ -1120,8 +1120,8 @@ export class DashboardViewerComponent implements OnInit {
 
   tablePatientSelect($event) {
     let nhsNumber = $event["NHS number"];
-    if (nhsNumber!=undefined)
-      window.location.href = "https://gateway.discoverydataservice.net/record-viewer/#/summary?nhsNumber="+nhsNumber;
+    //if (nhsNumber!=undefined)
+      //window.location.href = "https://gateway.discoverydataservice.net/record-viewer/#/summary?nhsNumber="+nhsNumber;
   }
 
   formatDate(date) {
@@ -1294,6 +1294,33 @@ export class DashboardViewerComponent implements OnInit {
       }
     }
     return csv;
+  }
+
+  downloadTable1() {
+    this.explorerService.tableSearch(this.tableQuery1, this.tableOutput1, this.searchData1, 1,
+      50000, this.orderColumn1, this.descending1)
+      .subscribe(result => {
+          let values:any = result.rows;
+          let exportData = values;
+          if (exportData) {
+            let options = {
+              fieldSeparator: ',',
+              quoteStrings: '"',
+              decimalseparator: '.',
+              showLabels: true,
+              showTitle: false,
+              title: 'Output table',
+              useTextFile: false,
+              useBom: false,
+            };
+            new ngxCsv(exportData, 'output_table', options);
+          }
+        },
+        error => {
+          this.log.error('Table data could not be loaded. Please try again.');
+        }
+      );
+
   }
 
   onSearch1($event) {

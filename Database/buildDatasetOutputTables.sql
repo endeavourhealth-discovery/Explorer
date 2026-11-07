@@ -100,70 +100,82 @@ BEGIN
       SET TempValue = TRIM(front);
 
       IF TempValue = 'DEMOGRAPHICS'THEN
-         SET event_table = 'patient';
-         SET result_dataset = 'person_dataset';
-         SET output_table = CONCAT('person_output_',p_query_id);
-         SET event_id = 't.id';
-         SET join_clause_1 = 'JOIN (SELECT 1 ) prac '; -- dummy join
-         SET join_clause_2 = 'JOIN (SELECT 2 ) cpt '; -- dummy join
-         SET join_clause_3 = 'JOIN (SELECT 3 ) cpt2 '; -- dummy join
-         SET join_clause_4 = 'JOIN (SELECT 4 ) cpt3 '; -- dummy join
-         SET join_clause_5 = 'JOIN (SELECT 5 ) cpt4 '; -- dummy join
-         SET join_clause_6 = 'JOIN (SELECT 6 ) mo '; -- dummy join
-         CALL storeString(p_selectedDemographicFields, p_storetab);
+            SET event_table = 'patient';
+            SET result_dataset = 'person_dataset';
+            SET output_table = CONCAT('person_output_',p_query_id);
+            SET event_id = 't.id';
+            SET join_clause_1 = 'JOIN (SELECT 1 ) prac '; -- dummy join
+            SET join_clause_2 = 'JOIN (SELECT 2 ) cpt '; -- dummy join
+            SET join_clause_3 = 'JOIN (SELECT 3 ) cpt2 '; -- dummy join
+            SET join_clause_4 = 'JOIN (SELECT 4 ) cpt3 '; -- dummy join
+            SET join_clause_5 = 'JOIN (SELECT 5 ) cpt4 '; -- dummy join
+            SET join_clause_6 = 'JOIN (SELECT 6 ) mo '; -- dummy join
+            CALL storeString(p_selectedDemographicFields, p_storetab);
       ELSEIF TempValue = 'CLINICALEVENTS' THEN
-         SET event_table = 'observation';
-         SET result_dataset = 'observation_dataset';
-         SET output_table = CONCAT('observation_output_',p_query_id);
-         SET event_id = 't.patient_id';
-         SET join_clause_1 = CONCAT("LEFT JOIN ",p_schema,'.practitioner prac ON t.practitioner_id = prac.id ');
-         SET join_clause_2 = CONCAT("LEFT JOIN ",p_schema,'.concept cpt ON t.non_core_concept_id = cpt.dbid ');
-         SET join_clause_3 = CONCAT("LEFT JOIN ",p_schema,'.concept cpt2 ON t.result_concept_id = cpt2.dbid ');
-         SET join_clause_4 = CONCAT("LEFT JOIN ",p_schema,'.concept cpt3 ON t.episodicity_concept_id = cpt3.dbid ');
-         SET join_clause_5 = 'JOIN (SELECT 5 ) cpt4 '; -- dummy join
-         SET join_clause_6 = 'JOIN (SELECT 6 ) mo '; -- dummy join
-         CALL storeString(p_selectedClinicalEventFields, p_storetab);
+            SET event_table = 'observation';
+            SET result_dataset = 'observation_dataset';
+            SET output_table = CONCAT('observation_output_',p_query_id);
+            SET event_id = 't.patient_id';
+            SET join_clause_1 = CONCAT("LEFT JOIN ",p_schema,'.practitioner prac ON t.practitioner_id = prac.id ');
+            SET join_clause_2 = CONCAT("LEFT JOIN ",p_schema,'.concept cpt ON t.non_core_concept_id = cpt.dbid ');
+            SET join_clause_3 = CONCAT("LEFT JOIN ",p_schema,'.concept cpt2 ON t.result_concept_id = cpt2.dbid ');
+            SET join_clause_4 = CONCAT("LEFT JOIN ",p_schema,'.concept cpt3 ON t.episodicity_concept_id = cpt3.dbid ');
+            SET join_clause_5 = 'JOIN (SELECT 5 ) cpt4 '; -- dummy join
+            SET join_clause_6 = 'JOIN (SELECT 6 ) mo '; -- dummy join
+            CALL storeString(p_selectedClinicalEventFields, p_storetab);
       ELSEIF TempValue = 'MEDICATION' THEN
-         SET event_table = 'medication_statement';
-         SET result_dataset = 'medication_dataset';
-         SET output_table = CONCAT('medication_output_',p_query_id);
-         SET event_id = 't.patient_id';
-         SET join_clause_1 = CONCAT("LEFT JOIN ",p_schema,'.practitioner prac ON t.practitioner_id = prac.id ');
-         SET join_clause_2 = CONCAT("LEFT JOIN ",p_schema,'.concept cpt ON t.non_core_concept_id = cpt.dbid ');
-         SET join_clause_3 = 'JOIN (SELECT 3 ) cpt2 '; -- dummy join
-         SET join_clause_4 = 'JOIN (SELECT 4 ) cpt3 '; -- dummy join
-         SET join_clause_5 = CONCAT("LEFT JOIN ",p_schema,'.concept cpt4 ON t.authorisation_type_concept_id = cpt4.dbid ');
+            SET event_table = 'medication_statement';
+            SET result_dataset = 'medication_dataset';
+            SET output_table = CONCAT('medication_output_',p_query_id);
+            SET event_id = 't.patient_id';
+            SET join_clause_1 = CONCAT("LEFT JOIN ",p_schema,'.practitioner prac ON t.practitioner_id = prac.id ');
+            SET join_clause_2 = CONCAT("LEFT JOIN ",p_schema,'.concept cpt ON t.non_core_concept_id = cpt.dbid ');
+            SET join_clause_3 = 'JOIN (SELECT 3 ) cpt2 '; -- dummy join
+            SET join_clause_4 = 'JOIN (SELECT 4 ) cpt3 '; -- dummy join
+            SET join_clause_5 = CONCAT("LEFT JOIN ",p_schema,'.concept cpt4 ON t.authorisation_type_concept_id = cpt4.dbid ');
 
-         DROP TEMPORARY TABLE IF EXISTS qry_med_issue_date;
+            IF LOCATE('Last issue date', p_selectedMedicationFields) > 0 THEN
 
-         SET @med = CONCAT("CREATE TEMPORARY TABLE qry_med_issue_date AS 
-         SELECT med.clinical_effective_date, med.patient_id, med.medication_statement_id, med.organization_id, med.rnk 
-         FROM (SELECT mo.id, mo.medication_statement_id, mo.patient_id, mo.clinical_effective_date, mo.organization_id, 
-         @currank := IF(@curmedstmt = BINARY mo.medication_statement_id, @currank + 1, 1) AS rnk, 
-         @curmedstmt := mo.medication_statement_id AS cur_med_stmt 
-         FROM ", p_schema,".medication_order mo, (SELECT @currank := 0, @curmedstmt := 0) r 
-         ORDER BY mo.medication_statement_id DESC, mo.clinical_effective_date DESC, mo.id DESC) med 
-         WHERE med.rnk = 1 AND EXISTS (SELECT 1 FROM ", p_patientcohorttab," pc WHERE  pc.patient_id = med.patient_id AND pc.organization_id = med.organization_id) ");
-         PREPARE stmt FROM @med;
-         EXECUTE stmt;
-         DEALLOCATE PREPARE stmt;
+                        DROP TEMPORARY TABLE IF EXISTS qry_med_issue_date;
 
-         ALTER TABLE qry_med_issue_date ADD INDEX pat_med_idx(patient_id, medication_statement_id, organization_id);
+                        SET @med = CONCAT("CREATE TEMPORARY TABLE qry_med_issue_date AS 
+                        SELECT med.clinical_effective_date, med.patient_id, med.medication_statement_id, med.organization_id, med.rnk FROM 
+                        (SELECT med_ord.id, med_ord.clinical_effective_date, med_ord.patient_id, med_ord.medication_statement_id, med_ord.organization_id,
+                        @currank := IF(@curmedstmt = BINARY med_ord.medication_statement_id, @currank + 1, 1) AS rnk, 
+                        @curmedstmt := med_ord.medication_statement_id AS cur_med_stmt  
+                        FROM (SELECT mo.id, mo.medication_statement_id, mo.patient_id, mo.person_id,mo.clinical_effective_date, mo.organization_id 
+                        FROM ", p_schema,".medication_order mo JOIN ", p_patientcohorttab," pc ON pc.patient_id = mo.patient_id 
+                        AND pc.organization_id = mo.organization_id AND pc.person_id = mo.person_id) med_ord  
+                        JOIN (SELECT @currank := 0, @curmedstmt := 0) r  
+                        ORDER BY med_ord.medication_statement_id DESC, med_ord.clinical_effective_date DESC, med_ord.id DESC) med 
+                        WHERE med.rnk = 1 ");
+                        
+                        PREPARE stmt FROM @med;
+                        EXECUTE stmt;
+                        DEALLOCATE PREPARE stmt;
 
-         SET join_clause_6 = CONCAT("LEFT JOIN qry_med_issue_date mo ON mo.patient_id = t.patient_id AND mo.medication_statement_id = t.id AND mo.organization_id = t.organization_id ");
-         CALL storeString(p_selectedMedicationFields, p_storetab);
+                        ALTER TABLE qry_med_issue_date ADD INDEX pat_med_idx(patient_id, medication_statement_id, organization_id);
+
+                        SET join_clause_6 = CONCAT("LEFT JOIN qry_med_issue_date mo ON mo.patient_id = t.patient_id AND mo.medication_statement_id = t.id AND mo.organization_id = t.organization_id ");
+
+            ELSE
+                        SET join_clause_6 = 'JOIN (SELECT 6 ) mo '; -- dummy join
+            END IF;
+
+            CALL storeString(p_selectedMedicationFields, p_storetab);
+
       ELSEIF TempValue = 'ENCOUNTERS' THEN
-         SET event_table = 'encounter';
-         SET result_dataset = 'encounter_dataset';
-         SET output_table = CONCAT('encounter_output_',p_query_id);
-         SET event_id = 't.patient_id';
-         SET join_clause_1 = CONCAT("LEFT JOIN ",p_schema,'.practitioner prac ON t.practitioner_id = prac.id ');
-         SET join_clause_2 = CONCAT("LEFT JOIN ",p_schema,'.concept cpt ON t.non_core_concept_id = cpt.dbid ');
-         SET join_clause_3 = 'JOIN (SELECT 3 ) cpt2 '; -- dummy join
-         SET join_clause_4 = 'JOIN (SELECT 4 ) cpt3 '; -- dummy join
-         SET join_clause_5 = 'JOIN (SELECT 5 ) cpt4 '; -- dummy join
-         SET join_clause_6 = 'JOIN (SELECT 6 ) mo '; -- dummy join
-         CALL storeString(p_selectedEncounterFields, p_storetab);
+            SET event_table = 'encounter';
+            SET result_dataset = 'encounter_dataset';
+            SET output_table = CONCAT('encounter_output_',p_query_id);
+            SET event_id = 't.patient_id';
+            SET join_clause_1 = CONCAT("LEFT JOIN ",p_schema,'.practitioner prac ON t.practitioner_id = prac.id ');
+            SET join_clause_2 = CONCAT("LEFT JOIN ",p_schema,'.concept cpt ON t.non_core_concept_id = cpt.dbid ');
+            SET join_clause_3 = 'JOIN (SELECT 3 ) cpt2 '; -- dummy join
+            SET join_clause_4 = 'JOIN (SELECT 4 ) cpt3 '; -- dummy join
+            SET join_clause_5 = 'JOIN (SELECT 5 ) cpt4 '; -- dummy join
+            SET join_clause_6 = 'JOIN (SELECT 6 ) mo '; -- dummy join
+            CALL storeString(p_selectedEncounterFields, p_storetab);
       END IF;
 
       -- match the columns to the output fields
@@ -211,7 +223,7 @@ BEGIN
          -- create an empty output table
          SET @output = CONCAT('CREATE TABLE ', output_table ,' AS 
          SELECT DISTINCT r.', event_table,'_id AS id, ', BINARY l_sql ,' FROM ', p_schema,'.', event_table,' t JOIN '
-         , p_patientcohorttab,' p ON p.patient_id = ', event_id,' AND p.organization_id = t.organization_id JOIN '
+         , p_patientcohorttab,' p ON p.patient_id = ', event_id,' AND p.organization_id = t.organization_id AND p.person_id = t.person_id JOIN '
          , result_dataset,' r ON t.id = r.', event_table,'_id AND p.ods_code = r.ods_code '
          , join_clause_1,' '
          , join_clause_2,' '
@@ -305,7 +317,7 @@ BEGIN
 
                SET @ins = CONCAT("INSERT INTO  ", output_table, " 
                SELECT q.id AS Id, ", BINARY l_sql , " FROM ", p_schema,".", event_table," t JOIN "
-               , p_patientcohorttab," p ON p.patient_id = ", event_id," AND p.organization_id = t.organization_id JOIN qry_output_tmp q ON t.id = q.id AND q.ods_code = p.ods_code "
+               , p_patientcohorttab," p ON p.patient_id = ", event_id," AND p.organization_id = t.organization_id AND p.person_id = t.person_id JOIN qry_output_tmp q ON t.id = q.id AND q.ods_code = p.ods_code "
                , join_clause_1," "
                , join_clause_2," "
                , join_clause_3," "

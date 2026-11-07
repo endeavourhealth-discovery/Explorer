@@ -39,6 +39,7 @@ BEGIN
      SELECT 
           ob.id,
           ob.patient_id,
+          ob.person_id,
           ob.clinical_effective_date,
           ob.result_value,
           ob.non_core_concept_id,
@@ -50,6 +51,7 @@ BEGIN
       SELECT 
           o2.id,
           o2.patient_id,
+          o2.person_id,
           o2.clinical_effective_date,
           o2.result_value,
           o2.non_core_concept_id,
@@ -68,8 +70,10 @@ BEGIN
      EXECUTE stmt;
      DEALLOCATE PREPARE stmt;
 
+     ALTER TABLE qry_tmp_filter ADD INDEX eff_dte_idx(clinical_effective_date);
+
      SET @sql = CONCAT('CREATE TEMPORARY TABLE ', p_earliestlatestobservationtab,' AS 
-     SELECT o2.id, o2.patient_id, o2.clinical_effective_date, o2.result_value, o2.non_core_concept_id, o2.organization_id, o2.value_set_code_type, o2.cancellation_date 
+     SELECT o2.id, o2.patient_id, o2.person_id, o2.clinical_effective_date, o2.result_value, o2.non_core_concept_id, o2.organization_id, o2.value_set_code_type, o2.cancellation_date 
      FROM qry_tmp_filter o2 
      WHERE ', p_timeperioddaterange);
      PREPARE stmt FROM @sql;
@@ -84,6 +88,7 @@ BEGIN
      SELECT 
           ob.id,
           ob.patient_id,
+          ob.person_id,
           ob.clinical_effective_date,
           ob.result_value,
           ob.non_core_concept_id,
@@ -95,6 +100,7 @@ BEGIN
       SELECT 
           o2.id,
           o2.patient_id,
+          o2.person_id,
           o2.clinical_effective_date,
           o2.result_value,
           o2.non_core_concept_id,
@@ -113,8 +119,10 @@ BEGIN
      EXECUTE stmt;
      DEALLOCATE PREPARE stmt;
 
+     ALTER TABLE qry_tmp_filter ADD INDEX eff_dte_idx(clinical_effective_date);
+
      SET @sql = CONCAT('CREATE TEMPORARY TABLE ', p_earliestlatestobservationtab,' AS 
-     SELECT o2.id, o2.patient_id, o2.clinical_effective_date, o2.result_value, o2.non_core_concept_id, o2.organization_id, o2.value_set_code_type, o2.cancellation_date  
+     SELECT o2.id, o2.patient_id, o2.person_id, o2.clinical_effective_date, o2.result_value, o2.non_core_concept_id, o2.organization_id, o2.value_set_code_type, o2.cancellation_date  
      FROM qry_tmp_filter o2 
      WHERE ', p_timeperioddaterange);
      PREPARE stmt FROM @sql;

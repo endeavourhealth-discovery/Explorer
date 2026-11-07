@@ -138,6 +138,7 @@ BEGIN
            ,p_schema,'.getCurrentAddress(p.current_address_id, p.id) AS current_address, ' 
            ,p_schema,'.getCurrentAddressPostcode(p.current_address_id, p.id) AS postcode, ' 
            ,p_schema,'.getLSOACode(p.id) AS lsoa_code, '
+           ,p_schema,'.getMSOACode(p.id) AS msoa_code, '
            ,p_schema,'.getConceptName(p.ethnic_code_concept_id) AS ethnicity, 
            p.title, 
            p.first_names, 

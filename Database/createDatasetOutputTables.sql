@@ -39,6 +39,7 @@ VALUES
 ('patient', 'p.current_address', 'Current address'),
 ('patient', 'p.ethnicity', 'Ethnicity'),
 ('patient','p.lsoa_code', 'LSOA code'),
+('patient','p.msoa_code', 'MSOA code'),
 ('observation','t.patient_id', 'Patient ID'),
 ('observation','t.person_id', 'Person ID'),
 ('observation','p.ccg', 'CCG'),

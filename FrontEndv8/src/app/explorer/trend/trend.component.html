@@ -70,11 +70,11 @@
                 (select)="onSelect($event)"
               >
                 <ng-template #tooltipTemplate let-model="model">
-                  <span class="tooltip-label">{{formatXAxis(model.name)}} •  {{model.series}} • {{formatTooltipYAxis(model.value)}}%</span>
+                  <span class="tooltip-label">{{formatXAxis(model.name)}} •  {{model.series}} • {{formatTooltipYAxis(model.value)}} patients</span>
                 </ng-template>
                 <ng-template #seriesTooltipTemplate let-model="model">
             <span class="tooltip-label" *ngFor="let series of model">
-            <span class="tooltip-label">{{formatXAxis(series.name)}} •  {{series.series}} • {{formatTooltipYAxis(series.value)}}%</span>
+            <span class="tooltip-label">{{formatXAxis(series.name)}} •  {{series.series}} • {{formatTooltipYAxis(series.value)}} patients</span>
             </span>
                 </ng-template>
               </ngx-charts-line-chart>
@@ -102,11 +102,11 @@
                 (select)="onSelect($event)"
               >
                 <ng-template #tooltipTemplate let-model="model">
-                  <span class="tooltip-label">{{formatXAxis(model.name)}} •  {{model.series}} • {{formatTooltipYAxis(model.value)}}%</span>
+                  <span class="tooltip-label">{{formatXAxis(model.name)}} •  {{model.series}} • {{formatTooltipYAxis(model.value)}} patients</span>
                 </ng-template>
                 <ng-template #seriesTooltipTemplate let-model="model">
             <span class="tooltip-label" *ngFor="let series of model">
-            <span class="tooltip-label">{{formatXAxis(series.name)}} •  {{series.series}} • {{formatTooltipYAxis(series.value)}}%</span>
+            <span class="tooltip-label">{{formatXAxis(series.name)}} •  {{series.series}} • {{formatTooltipYAxis(series.value)}} patients</span>
             </span>
                 </ng-template>
               </ngx-charts-area-chart>

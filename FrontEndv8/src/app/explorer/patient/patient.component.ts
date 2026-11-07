@@ -10,6 +10,8 @@ export interface DialogData {
   queryId: string;
   parentQueryId: string;
   met: string;
+  queryName: string;
+  odsCode: string;
 }
 
 @Component({
@@ -27,6 +29,9 @@ export class PatientComponent {
   queryId: string = "";
   parentQueryId: string = "";
   met: string = "";
+  queryName: string = "";
+  metText: string = "";
+  odsCode: string = "";
 
   displayedColumns: string[] = ['name/address', 'dob/nhsNumber', 'age/gender', 'usual_gp/organisation', 'registration'];
 
@@ -47,6 +52,13 @@ export class PatientComponent {
     this.queryId = data.queryId;
     this.parentQueryId = data.parentQueryId;
     this.met = data.met;
+    this.queryName = data.queryName;
+    this.odsCode = data.odsCode;
+
+    if (this.met=="0")
+      this.metText = "not met";
+    else
+      this.metText = "met";
 
     this.loadEvents();
   }
@@ -55,7 +67,7 @@ export class PatientComponent {
 
     this.events = null;
 
-    this.explorerService.getPatients(this.page, this.size, this.name, this.queryId, this.parentQueryId, this.met)
+    this.explorerService.getPatients(this.page, this.size, this.name, this.queryId, this.parentQueryId, this.met, this.odsCode)
       .subscribe(
         (result) => this.displayEvents(result),
         (error) => this.log.error(error)

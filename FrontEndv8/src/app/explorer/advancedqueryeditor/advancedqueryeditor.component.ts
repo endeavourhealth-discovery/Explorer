@@ -1,4 +1,4 @@
-import {Component, Inject, Injectable, OnInit} from '@angular/core';
+import {Component, ElementRef, Inject, Injectable, OnInit, ViewChild} from '@angular/core';
 import {MatDialogRef, MAT_DIALOG_DATA, MatDialog} from '@angular/material/dialog';
 import {ExplorerService} from '../explorer.service';
 import {LoggerService} from 'dds-angular8';
@@ -21,7 +21,20 @@ export interface DialogData {
   query: string;
 }
 
+interface registryList {
+  type: string;
+}
+
+interface queryNameList {
+  type: string;
+}
+
 interface savedQuery {
+  queryList1: string;
+  queryList1a: string;
+  queryList1b: string;
+  queryList1c: string;
+  queryList1d: string;
   denominatorQuery: string;
   targetPercentage: string;
   registryName: string;
@@ -42,6 +55,7 @@ interface savedQuery {
   selectedEthnicFields: string;
   postcode: string;
   lsoa: string;
+  msoa: string;
   registrationExclude: string;
   registrationDateFrom: string;
   registrationDateTo: string;
@@ -313,6 +327,8 @@ interface savedQuery {
 
   withWithout4: string;
   includedValueSet4: string;
+  includedEarliestLatest4: string;
+  followedByEarliestLatest4: string;
   includedFollowedByValueSet4: string;
   includedPeriodOperator4: string;
   includedPeriodValue4: string;
@@ -322,6 +338,8 @@ interface savedQuery {
   includedAreNot4: string;
   withWithout4a: string;
   includedValueSet4a: string;
+  includedEarliestLatest4a: string;
+  followedByEarliestLatest4a: string;
   includedFollowedByValueSet4a: string;
   includedPeriodOperator4a: string;
   includedPeriodValue4a: string;
@@ -331,6 +349,8 @@ interface savedQuery {
   includedAreNot4a: string;
   withWithout4b: string;
   includedValueSet4b: string;
+  includedEarliestLatest4b: string;
+  followedByEarliestLatest4b: string;
   includedFollowedByValueSet4b: string;
   includedPeriodOperator4b: string;
   includedPeriodValue4b: string;
@@ -378,6 +398,8 @@ interface savedQuery {
   selectedEncounterValueSet: string;
   selectedMedicationValueSet: string;
   selectedClinicalEventValueSet: string;
+  selectedEventOccurrence: string;
+  eventOccurrenceNumber: string;
   seriesEncounterValueSet: string;
   seriesMedicationValueSet: string;
   seriesClinicalEventValueSet: string;
@@ -485,6 +507,10 @@ interface yesno {
 
 interface clinicalType {
   clinicalType: string;
+}
+
+interface eventOccurrence {
+  eventOccurrence: string;
 }
 
 interface exclude {
@@ -622,12 +648,22 @@ export class AdvancedQueryEditorComponent implements OnInit {
 
   queryList = [];
 
+  @ViewChild('registryNameInput', {static: false, read: ElementRef}) registryNameInput: ElementRef;
+  @ViewChild('queryNameInput', {static: false, read: ElementRef}) queryNameInput: ElementRef;
+
+  queryList1: string = '';
+  queryList1a: string = '';
+  queryList1b: string = '';
+  queryList1c: string = '';
+  queryList1d: string = '';
+
+  providers: string = '';
   type: string = '';
   name: string = '';
   denominatorQuery: string = '';
   targetPercentage: string = '';
   registryName: string = '';
-  selectedRegistration: string = '';
+  selectedRegistration: string = 'Currently registered patients';
   registrationExclude: string = '';
   registrationDateFrom: string = '';
   registrationDateTo: string = '';
@@ -648,6 +684,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
   selectedEthnicFields: string = '';
   postcode: string = '';
   lsoa: string = '';
+  msoa: string = '';
 
   withWithout1: string = '';
   includedValueSet1: string = '';
@@ -911,6 +948,8 @@ export class AdvancedQueryEditorComponent implements OnInit {
   includedDiagnosisAgeTo3f: string = '';
   withWithout4: string = '';
   includedValueSet4: string = '';
+  includedEarliestLatest4: string = '';
+  followedByEarliestLatest4: string = '';
   includedFollowedByValueSet4: string = '';
   includedPeriodOperator4: string = '';
   includedPeriodValue4: string = '';
@@ -920,6 +959,8 @@ export class AdvancedQueryEditorComponent implements OnInit {
   includedAreNot4: string = '';
   withWithout4a: string = '';
   includedValueSet4a: string = '';
+  includedEarliestLatest4a: string = '';
+  followedByEarliestLatest4a: string = '';
   includedFollowedByValueSet4a: string = '';
   includedPeriodOperator4a: string = '';
   includedPeriodValue4a: string = '';
@@ -929,6 +970,8 @@ export class AdvancedQueryEditorComponent implements OnInit {
   includedAreNot4a: string = '';
   withWithout4b: string = '';
   includedValueSet4b: string = '';
+  includedEarliestLatest4b: string = '';
+  followedByEarliestLatest4b: string = '';
   includedFollowedByValueSet4b: string = '';
   includedPeriodOperator4b: string = '';
   includedPeriodValue4b: string = '';
@@ -957,7 +1000,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
   includedPeriodType5a: string = '';
   includedAnyAll5a: string = '';
 
-  matching1: string = '';
+  matching1: string = 'matching';
   queryExpression1: string = '';
   selectReject2: string = '';
   matching2: string = '';
@@ -1076,6 +1119,14 @@ export class AdvancedQueryEditorComponent implements OnInit {
   selectedMedicationValueSet: string = '';
   selectedClinicalEventValueSet: string = '';
 
+  selectedEventOccurrence: string = '';
+  eventOccurrenceList: eventOccurrence[] = [
+    {eventOccurrence: 'All'},
+    {eventOccurrence: 'Latest'},
+    {eventOccurrence: 'Earliest'}
+  ];
+  eventOccurrenceNumber: string = '';
+
   seriesEncounterValueSet: string = '';
   seriesMedicationValueSet: string = '';
   seriesClinicalEventValueSet: string = '';
@@ -1085,11 +1136,13 @@ export class AdvancedQueryEditorComponent implements OnInit {
   seriesPeriodValue: string = '';
   seriesPeriodType: string = '';
 
-  selectedDelivery: string = '';
-  selectedSchedule: string = '';
-  submitQuery: string = '';
+  selectedDelivery: string = 'Dashboard';
+  selectedSchedule: string = 'One-off';
+  submitQuery: string = 'No';
 
   disableForm: boolean;
+  validRegistryName: boolean= true;
+  validQueryName: boolean= true;
   id: string;
   firstFormGroup: FormGroup;
   secondFormGroup: FormGroup;
@@ -1103,6 +1156,9 @@ export class AdvancedQueryEditorComponent implements OnInit {
   valueSetMedication = [];
   valueSetEncounter = [];
 
+  registryList: registryList[];
+  queryNameList: queryNameList[];
+
   filteredQueryList: ReplaySubject<querySet[]> = new ReplaySubject<querySet[]>(1);
   filteredValueset: ReplaySubject<valueSet[]> = new ReplaySubject<valueSet[]>(1);
   filteredValuesetObservation: ReplaySubject<valueSetObservation[]> = new ReplaySubject<valueSetObservation[]>(1);
@@ -1110,6 +1166,15 @@ export class AdvancedQueryEditorComponent implements OnInit {
   filteredValuesetEncounter: ReplaySubject<valueSetEncounter[]> = new ReplaySubject<valueSetEncounter[]>(1);
 
   jsonQuery: string;
+
+  selectQa: boolean = false;
+  addQueryList1a: boolean = true;
+  selectQb: boolean = false;
+  addQueryList1b: boolean = true;
+  selectQc: boolean = false;
+  addQueryList1c: boolean = true;
+  selectQd: boolean = false;
+  addQueryList1d: boolean = true;
 
   select1a: boolean = false;
   addQuery1: boolean = true;
@@ -1215,8 +1280,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
   ];
   deliveries: delivery[] = [
     {deliveryValue: ''},
-    {deliveryValue: 'Dashboard'},
-    {deliveryValue: 'CSV files'}
+    {deliveryValue: 'Dashboard'}
   ];
   yesnos: yesno[] = [
     {yesnoValue: ''},
@@ -1244,7 +1308,8 @@ export class AdvancedQueryEditorComponent implements OnInit {
   matching: matching[] = [
     {matching: ''},
     {matching: 'matching'},
-    {matching: 'not matching'}
+    {matching: 'not matching'},
+    {matching: 'matching denominator'}
   ];
   selectreject: selectreject[] = [
     {selectreject: ''},
@@ -1311,6 +1376,13 @@ export class AdvancedQueryEditorComponent implements OnInit {
     if (data.query!='') { // edit mode
       let query: savedQuery = JSON.parse(data.query);
 
+      this.providers = query.providerOrganisation;
+
+      this.queryList1 = query.queryList1;
+      this.queryList1a = query.queryList1a;
+      this.queryList1b = query.queryList1b;
+      this.queryList1c = query.queryList1c;
+      this.queryList1d = query.queryList1d;
       this.targetPercentage = query.targetPercentage;
       this.selectedRegistration = query.registrationStatus;
       this.ageFrom = query.ageFrom;
@@ -1328,6 +1400,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.selectedEthnicFields = query.selectedEthnicFields;
       this.postcode = query.postcode;
       this.lsoa = query.lsoa;
+      this.msoa = query.msoa;
       this.registrationExclude = query.registrationExclude;
       this.registrationDateFrom = query.registrationDateFrom;
       this.registrationDateTo = query.registrationDateTo;
@@ -1598,6 +1671,8 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.includedDiagnosisAgeTo3f = query.includedDiagnosisAgeTo3f;
       this.withWithout4 = query.withWithout4;
       this.includedValueSet4 = query.includedValueSet4;
+      this.includedEarliestLatest4 = query.includedEarliestLatest4;
+      this.followedByEarliestLatest4 = query.followedByEarliestLatest4;
       this.includedFollowedByValueSet4 = query.includedFollowedByValueSet4;
       this.includedPeriodOperator4 = query.includedPeriodOperator4;
       this.includedPeriodValue4 = query.includedPeriodValue4;
@@ -1607,6 +1682,8 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.includedAreNot4 = query.includedAreNot4;
       this.withWithout4a = query.withWithout4a;
       this.includedValueSet4a = query.includedValueSet4a;
+      this.includedEarliestLatest4a = query.includedEarliestLatest4a;
+      this.followedByEarliestLatest4a = query.followedByEarliestLatest4a;
       this.includedFollowedByValueSet4a = query.includedFollowedByValueSet4a;
       this.includedPeriodOperator4a = query.includedPeriodOperator4a;
       this.includedPeriodValue4a = query.includedPeriodValue4a;
@@ -1616,6 +1693,8 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.includedAreNot4a = query.includedAreNot4a;
       this.withWithout4b = query.withWithout4b;
       this.includedValueSet4b = query.includedValueSet4b;
+      this.includedEarliestLatest4b = query.includedEarliestLatest4b;
+      this.followedByEarliestLatest4b = query.followedByEarliestLatest4b;
       this.includedFollowedByValueSet4b = query.includedFollowedByValueSet4b;
       this.includedPeriodOperator4b = query.includedPeriodOperator4b;
       this.includedPeriodValue4b = query.includedPeriodValue4b;
@@ -1727,6 +1806,8 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.selectedEncounterValueSet = query.selectedEncounterValueSet;
       this.selectedMedicationValueSet = query.selectedMedicationValueSet;
       this.selectedClinicalEventValueSet = query.selectedClinicalEventValueSet;
+      this.selectedEventOccurrence = query.selectedEventOccurrence;
+      this.eventOccurrenceNumber = query.eventOccurrenceNumber;
       this.timeSeries = query.timeSeries;
       this.seriesTable = query.seriesTable;
       this.seriesField = query.seriesField;
@@ -1738,6 +1819,26 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.seriesPeriodOperator = query.seriesPeriodOperator;
       this.seriesPeriodValue = query.seriesPeriodValue;
       this.seriesPeriodType = query.seriesPeriodType;
+
+      if (this.queryList1a != "" && this.queryList1a!=undefined) {
+        this.selectQa = true;
+        this.addQueryList1a = false;
+      }
+
+      if (this.queryList1b != "" && this.queryList1b!=undefined) {
+        this.selectQb = true;
+        this.addQueryList1b = false;
+      }
+
+      if (this.queryList1c != "" && this.queryList1c!=undefined) {
+        this.selectQc = true;
+        this.addQueryList1c = false;
+      }
+
+      if (this.queryList1d != "" && this.queryList1d!=undefined) {
+        this.selectQd = true;
+        this.addQueryList1d = false;
+      }
 
       if (this.withWithout1a != "" && this.withWithout1a!=undefined) {
         this.select1a = true;
@@ -1916,10 +2017,11 @@ export class AdvancedQueryEditorComponent implements OnInit {
       control1: ['', Validators.required], control2: ['', Validators.required], control157: [''], control158: [''], control159: ['']
     });
     this.secondFormGroup = this._formBuilder.group({
-      control4: ['', Validators.required], control8: [''], control9: [''], lsoa: [''], selectedEthnicFields: [''], baseline: ['']
+      control4: ['', Validators.required], control8: [''], control9: [''], lsoa: [''], msoa: [''], selectedEthnicFields: [''], baseline: ['']
     });
 
     this.thirdFormGroup = this._formBuilder.group({
+      queryList1: [''],queryList1a: [''],queryList1b: [''],queryList1c: [''],queryList1d: [''],
       control6: [''], control7: [''],
       control6a: [''], control7a: [''],
       control6b: [''], control7b: [''],
@@ -1993,6 +2095,9 @@ export class AdvancedQueryEditorComponent implements OnInit {
       includedPeriodValue4a: [''], includedPeriodType4a: [''], includedAnyAll4a: [''], includedAreNot4a: [''], includedAnyAllFollowedBy4a: [''],
       withWithout4b: [''], includedValueSet4b: [''], includedFollowedByValueSet4b: [''],includedPeriodOperator4b: [''],
       includedPeriodValue4b: [''], includedPeriodType4b: [''], includedAnyAll4b: [''], includedAreNot4b: [''], includedAnyAllFollowedBy4b: [''],
+
+      includedEarliestLatest4: [''], includedEarliestLatest4a: [''], includedEarliestLatest4b: [''],
+      followedByEarliestLatest4: [''], followedByEarliestLatest4a: [''], followedByEarliestLatest4b: [''],
 
       control40: [''], control41: [''],
       control42: [''], control43: [''], control44: [''], control45: [''],
@@ -2136,10 +2241,10 @@ export class AdvancedQueryEditorComponent implements OnInit {
       control172n: [''], control173n: [''],control174n: [''],control175n: ['']
     });
     this.fifthFormGroup = this._formBuilder.group({
-      control165a: [''],  control165e: [''], control166a: [''], control166c: [''], control166d: [''], control166e: [''], control166g: [''], control167a: [''],
-      control167b: [''], control167c: [''], control167d: [''], control167e: [''], control167g: [''], control168a: [''], control168b: [''], control168c: [''], control168d: [''],
-      control168e: [''], control168f: [''], control168g: [''], control70: [''], control71: [''], control72: [''], control73: [''], control74: [''], control75: [''], control76: [''],
-      control77: [''], control78: [''], control79: [''], control80: ['']
+      control165a: [''],  demographicControl: [''], control166a: [''], control166c: [''], control166d: [''], encounterControl: [''], control166g: [''], control167a: [''],
+      control167b: [''], control167c: [''], control167d: [''], medicationControl: [''], control167g: [''], control168a: [''], control168b: [''], control168c: [''], control168d: [''],
+      clinicalEventControl: [''], control168f: [''], control168g: [''], control70: [''], control71: [''], control72: [''], control73: [''], control74: [''], control75: [''], control76: [''],
+      control77: [''], control78: [''], control79: [''], control80: [''], control81: [''], control82: ['']
     });
     this.sixthFormGroup = this._formBuilder.group({
       control15: [''], control18: ['', Validators.required], control19: ['', Validators.required], submitQuery: ['', Validators.required]
@@ -2182,6 +2287,18 @@ export class AdvancedQueryEditorComponent implements OnInit {
         (result) => this.loadValueSet4(result),
         (error) => this.log.error(error)
       );
+
+    this.explorerService.getLookupLists('22','')
+      .subscribe(
+        (result) => this.loadRegistryList(result),
+        (error) => this.log.error(error)
+      );
+
+    this.explorerService.getLookupLists('23','')
+      .subscribe(
+        (result) => this.loadQueryNameList(result),
+        (error) => this.log.error(error)
+      );
   }
 
   loadQueryList(lists: any) {
@@ -2213,6 +2330,14 @@ export class AdvancedQueryEditorComponent implements OnInit {
     this.filteredQueryList.next(
       this.queryList.filter(value => value.toLowerCase().indexOf(search) > -1)
     );
+  }
+
+  loadRegistryList (lists: any) {
+    this.registryList = lists.results;
+  }
+
+  loadQueryNameList (lists: any) {
+    this.queryNameList = lists.results;
   }
 
   loadValueSet1(lists: any) {
@@ -2413,6 +2538,46 @@ export class AdvancedQueryEditorComponent implements OnInit {
     );
   }
 
+  checkRegistry (registryName: any) {
+    let registry = this.registryList.find( record => record.type.toString().toLowerCase() === registryName.toString().toLowerCase());
+
+    if (registry != undefined) {
+      MessageBoxDialogComponent.open(this.dialog, 'Abbreviated query name', 'This query name has already been used', 'Ok')
+        .subscribe(result => {
+          if (result) {
+            this.registryName = '';
+            this.registryNameInput.nativeElement.focus();
+          }
+        });
+      this.validRegistryName = false;
+    }
+    else {
+      this.validRegistryName = true;
+    }
+
+    this.formChanged();
+  }
+
+  checkQueryName (queryName: any) {
+    let name = this.queryNameList.find( record => record.type.toString().toLowerCase() === queryName.toString().toLowerCase());
+
+    if (name != undefined) {
+      MessageBoxDialogComponent.open(this.dialog, 'Query name', 'This query name has already been used', 'Ok')
+        .subscribe(result => {
+          if (result) {
+            this.name = '';
+            this.queryNameInput.nativeElement.focus();
+          }
+        });
+      this.validQueryName = false;
+    }
+    else {
+      this.validQueryName = true;
+    }
+
+    this.formChanged();
+  }
+
   saveQuery(close: boolean) {
 
     let practice = "";
@@ -2425,6 +2590,53 @@ export class AdvancedQueryEditorComponent implements OnInit {
     )
 
     practice = practice.replace(',', '');
+
+    if (this.dateFromEncounters==null)
+      this.dateFromEncounters = '';
+
+    if (this.dateToEncounters==null)
+      this.dateToEncounters = '';
+
+    if (this.dateFromMedication==null)
+      this.dateFromMedication = '';
+
+    if (this.dateToMedication==null)
+      this.dateToMedication = '';
+
+    if (this.dateFromClinicalEvents==null)
+      this.dateFromClinicalEvents = '';
+
+    if (this.dateToClinicalEvents==null)
+      this.dateToClinicalEvents = '';
+
+    if (this.demographics && this.selectedDemographicFields.indexOf('Patient ID')<0) {
+      let arr = this.selectedDemographicFields.toString().split(",");
+      arr.push('Patient ID');
+      if (arr[0]=='')
+        arr.shift();
+      this.fifthFormGroup.controls.demographicControl.patchValue(arr);
+    }
+    if (this.encounters && this.selectedEncounterFields.indexOf('Patient ID')<0) {
+      let arr = this.selectedEncounterFields.toString().split(",");
+      arr.push('Patient ID');
+      if (arr[0]=='')
+        arr.shift();
+      this.fifthFormGroup.controls.encounterControl.patchValue(arr);
+    }
+    if (this.medication && this.selectedMedicationFields.indexOf('Patient ID')<0) {
+      let arr = this.selectedMedicationFields.toString().split(",");
+      arr.push('Patient ID');
+      if (arr[0]=='')
+        arr.shift();
+      this.fifthFormGroup.controls.medicationControl.patchValue(arr);
+    }
+    if (this.clinicalEvents && this.selectedClinicalEventFields.indexOf('Patient ID')<0) {
+      let arr = this.selectedClinicalEventFields.toString().split(",");
+      arr.push('Patient ID');
+      if (arr[0]=='')
+        arr.shift();
+      this.fifthFormGroup.controls.clinicalEventControl.patchValue(arr);
+    }
 
     let query = {
       targetPercentage: this.targetPercentage,
@@ -2450,6 +2662,12 @@ export class AdvancedQueryEditorComponent implements OnInit {
       selectedEthnicFields: this.selectedEthnicFields,
       postcode: this.postcode,
       lsoa: this.lsoa,
+      msoa: this.msoa,
+      queryList1: this.queryList1,
+      queryList1a: this.queryList1a,
+      queryList1b: this.queryList1b,
+      queryList1c: this.queryList1c,
+      queryList1d: this.queryList1d,
       withWithout1: this.withWithout1,
       includedAnyAll1: this.includedAnyAll1,
       includedValueSet1: this.includedValueSet1,
@@ -2713,6 +2931,8 @@ export class AdvancedQueryEditorComponent implements OnInit {
       withWithout4: this.withWithout4,
       includedAnyAll4: this.includedAnyAll4,
       includedValueSet4: this.includedValueSet4,
+      includedEarliestLatest4: this.includedEarliestLatest4,
+      followedByEarliestLatest4: this.followedByEarliestLatest4,
       includedAreNot4: this.includedAreNot4,
       includedAnyAllFollowedBy4: this. includedAnyAllFollowedBy4,
       includedFollowedByValueSet4: this.includedFollowedByValueSet4,
@@ -2722,6 +2942,8 @@ export class AdvancedQueryEditorComponent implements OnInit {
       withWithout4a: this.withWithout4a,
       includedAnyAll4a: this.includedAnyAll4a,
       includedValueSet4a: this.includedValueSet4a,
+      includedEarliestLatest4a: this.includedEarliestLatest4a,
+      followedByEarliestLatest4a: this.followedByEarliestLatest4a,
       includedAreNot4a: this.includedAreNot4a,
       includedAnyAllFollowedBy4a: this. includedAnyAllFollowedBy4a,
       includedFollowedByValueSet4a: this.includedFollowedByValueSet4a,
@@ -2731,6 +2953,8 @@ export class AdvancedQueryEditorComponent implements OnInit {
       withWithout4b: this.withWithout4b,
       includedAnyAll4b: this.includedAnyAll4b,
       includedValueSet4b: this.includedValueSet4b,
+      includedEarliestLatest4b: this.includedEarliestLatest4b,
+      followedByEarliestLatest4b: this.followedByEarliestLatest4b,
       includedAreNot4b: this.includedAreNot4b,
       includedAnyAllFollowedBy4b: this. includedAnyAllFollowedBy4b,
       includedFollowedByValueSet4b: this.includedFollowedByValueSet4b,
@@ -2839,6 +3063,8 @@ export class AdvancedQueryEditorComponent implements OnInit {
       selectedEncounterValueSet: this.selectedEncounterValueSet,
       selectedMedicationValueSet: this.selectedMedicationValueSet,
       selectedClinicalEventValueSet: this.selectedClinicalEventValueSet,
+      selectedEventOccurrence: this.selectedEventOccurrence,
+      eventOccurrenceNumber: this.eventOccurrenceNumber,
       timeSeries: this.timeSeries,
       seriesTable: this.seriesTable,
       seriesField: this.seriesField,
@@ -2861,7 +3087,7 @@ export class AdvancedQueryEditorComponent implements OnInit {
     if (this.denominatorQuery==undefined)
       this.denominatorQuery = '';
 
-    if (this.withWithout1 == '' && this.withWithout2 == '' && this.withWithout3 == '' && this.withWithout4 == '' && this.withWithout5 == '') {
+    if (this.queryList1 == '' && this.withWithout1 == '' && this.withWithout2 == '' && this.withWithout3 == '' && this.withWithout4 == '' && this.withWithout5 == '') {
       MessageBoxDialogComponent.open(this.dialog, 'Save query', 'Are you sure you want to save this query without any query criteria. It may result in a very large data set?', 'Yes', 'No')
         .subscribe(result => {
           if (result) {
@@ -2912,7 +3138,60 @@ export class AdvancedQueryEditorComponent implements OnInit {
   }
 
 
+  loadTreeSelections() {
+    for (let i = 0; i < this.treeControl.dataNodes.length; i++) {
+      let odsCode = this.treeControl.dataNodes[i].item;
+      if (odsCode.indexOf('|')>-1)
+        odsCode = odsCode.split('|')[1].trim();
+
+      if (this.providers.indexOf(odsCode)>-1) {
+        this.OrgItemSelectionToggle(this.treeControl.dataNodes[i]);
+      }
+    }
+  }
+
   formChanged() {
+
+    if (!this.clinicalEvents) {
+      this.dateFromClinicalEvents = '';
+      this.dateToClinicalEvents = '';
+      this.activeProblems = false;
+      this.selectedClinicalEventFields = '';
+      this.selectedClinicalTypes = '';
+      this.selectedClinicalEventValueSet = '';
+    }
+
+    if (!this.demographics) {
+      this.selectedDemographicFields = '';
+    }
+
+    if (!this.encounters) {
+      this.dateFromEncounters = '';
+      this.dateToEncounters = '';
+      this.selectedEncounterFields = '';
+      this.selectedEncounterValueSet = '';
+    }
+
+    if (!this.medication) {
+      this.dateFromMedication = '';
+      this.dateToMedication = '';
+      this.currentMedication = false;
+      this.selectedMedicationFields = '';
+      this.selectedMedicationValueSet = '';
+    }
+
+    if (!this.timeSeries) {
+      this.seriesTable = '';
+      this.seriesEncounterValueSet = '';
+      this.seriesMedicationValueSet = '';
+      this.seriesClinicalEventValueSet = '';
+      this.seriesDateFrom = '';
+      this.seriesDateTo = '';
+      this.seriesPeriodOperator = '';
+      this.seriesPeriodValue = '';
+      this.seriesPeriodType = '';
+    }
+
     this.seriesTableEncounter = false;
     this.seriesTableMedication = false;
     this.seriesTableObservation = false;
@@ -2921,26 +3200,53 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.seriesMedicationValueSet = '';
       this.seriesClinicalEventValueSet = '';
       this.seriesTableEncounter = true;
+      this.timeSeries = true;
     }
 
     else  if (this.seriesTable=='Medication') {
       this.seriesEncounterValueSet = '';
       this.seriesClinicalEventValueSet = '';
       this.seriesTableMedication = true;
+      this.timeSeries = true;
     }
 
     else if (this.seriesTable=='Clinical events') {
       this.seriesEncounterValueSet = '';
       this.seriesMedicationValueSet = '';
       this.seriesTableObservation = true;
+      this.timeSeries = true;
     }
 
-    this.disableForm = this.type=='' || this.type==undefined ||
+    this.disableForm = this.checklistSelection.selected.length==0 ||
+      this.type=='' || this.type==undefined ||
       this.name=='' || this.name==undefined ||
+      this.registryName=='' || this.registryName==undefined ||
       this.selectedRegistration=='' || this.selectedRegistration==undefined ||
+      this.matching1=='' || this.matching1==undefined ||
       this.selectedDelivery=='' || this.selectedDelivery==undefined ||
       this.submitQuery=='' || this.submitQuery==undefined ||
-      this.selectedSchedule=='' || this.selectedSchedule==undefined;
+      this.selectedSchedule=='' || this.selectedSchedule==undefined || this.validRegistryName == false || this.validQueryName == false
+      || (this.timeSeries && this.seriesTable=='')
+      || (this.timeSeries && this.seriesTable=='Encounter' && this.seriesEncounterValueSet=='')
+      || (this.timeSeries && this.seriesTable=='Medication' && this.seriesMedicationValueSet=='')
+      || (this.timeSeries && this.seriesTable=='Clinical events' && this.seriesClinicalEventValueSet=='');
+
+  }
+
+  addSameQueryList1a() {
+    this.selectQa = true;
+  }
+
+  addSameQueryList1b() {
+    this.selectQb = true;
+  }
+
+  addSameQueryList1c() {
+    this.selectQc = true;
+  }
+
+  addSameQueryList1d() {
+    this.selectQd = true;
   }
 
   addSameQuery1() {
@@ -3170,6 +3476,8 @@ export class AdvancedQueryEditorComponent implements OnInit {
       this.checkRootNodeSelection(parent);
       parent = this.getParentNode(parent);
     }
+
+    this.formChanged();
   }
 
   checkRootNodeSelection(node: OrgItemFlatNode): void {
@@ -3204,4 +3512,771 @@ export class AdvancedQueryEditorComponent implements OnInit {
     return null;
   }
 
+  deleteQuery(query: any) {
+    if (query == 'Q') {
+      this.queryList1 = '';
+    } else if (query == 'Qa') {
+      this.queryList1a = '';
+    } else if (query == 'Qb') {
+      this.queryList1b = '';
+    } else if (query == 'Qc') {
+      this.queryList1c = '';
+    } else if (query == 'Qd') {
+      this.queryList1d = '';
+    } else if (query == 'Q0') {
+      this.registrationExclude = '';
+      this.registrationPeriodValue = '';
+      this.registrationPeriodType = '';
+      this.registrationDateFrom = '';
+      this.registrationDateTo = '';
+    } else if (query == 'Q1') {
+      this.withWithout1 = '';
+      this.includedAnyAll1 = '';
+      this.includedValueSet1 = '';
+      this.includedDateFrom1 = '';
+      this.includedDateTo1 = '';
+      this.includedPeriodOperator1 = '';
+      this.includedPeriodValue1 = '';
+      this.includedPeriodType1 = '';
+    } else if (query == 'Q1a') {
+      this.withWithout1a = '';
+      this.includedAnyAll1a = '';
+      this.includedValueSet1a = '';
+      this.includedDateFrom1a = '';
+      this.includedDateTo1a = '';
+      this.includedPeriodOperator1a = '';
+      this.includedPeriodValue1a = '';
+      this.includedPeriodType1a = '';
+    } else if (query == 'Q1b') {
+      this.withWithout1b = '';
+      this.includedAnyAll1b = '';
+      this.includedValueSet1b = '';
+      this.includedDateFrom1b = '';
+      this.includedDateTo1b = '';
+      this.includedPeriodOperator1b = '';
+      this.includedPeriodValue1b = '';
+      this.includedPeriodType1b = '';
+    } else if (query == 'Q1c') {
+      this.withWithout1c = '';
+      this.includedAnyAll1c = '';
+      this.includedValueSet1c = '';
+      this.includedDateFrom1c = '';
+      this.includedDateTo1c = '';
+      this.includedPeriodOperator1c = '';
+      this.includedPeriodValue1c = '';
+      this.includedPeriodType1c = '';
+    } else if (query == 'Q1d') {
+      this.withWithout1d = '';
+      this.includedAnyAll1d = '';
+      this.includedValueSet1d = '';
+      this.includedDateFrom1d = '';
+      this.includedDateTo1d = '';
+      this.includedPeriodOperator1d = '';
+      this.includedPeriodValue1d = '';
+      this.includedPeriodType1d = '';
+    } else if (query == 'Q1e') {
+      this.withWithout1e = '';
+      this.includedAnyAll1e = '';
+      this.includedValueSet1e = '';
+      this.includedDateFrom1e = '';
+      this.includedDateTo1e = '';
+      this.includedPeriodOperator1e = '';
+      this.includedPeriodValue1e = '';
+      this.includedPeriodType1e = '';
+    } else if (query == 'Q1f') {
+      this.withWithout1f = '';
+      this.includedAnyAll1f = '';
+      this.includedValueSet1f = '';
+      this.includedDateFrom1f = '';
+      this.includedDateTo1f = '';
+      this.includedPeriodOperator1f = '';
+      this.includedPeriodValue1f = '';
+      this.includedPeriodType1f = '';
+    } else if (query == 'Q1g') {
+      this.withWithout1g = '';
+      this.includedAnyAll1g = '';
+      this.includedValueSet1g = '';
+      this.includedDateFrom1g = '';
+      this.includedDateTo1g = '';
+      this.includedPeriodOperator1g = '';
+      this.includedPeriodValue1g = '';
+      this.includedPeriodType1g = '';
+    } else if (query == 'Q1h') {
+      this.withWithout1h = '';
+      this.includedAnyAll1h = '';
+      this.includedValueSet1h = '';
+      this.includedDateFrom1h = '';
+      this.includedDateTo1h = '';
+      this.includedPeriodOperator1h = '';
+      this.includedPeriodValue1h = '';
+      this.includedPeriodType1h = '';
+    } else if (query == 'Q1i') {
+      this.withWithout1i = '';
+      this.includedAnyAll1i = '';
+      this.includedValueSet1i = '';
+      this.includedDateFrom1i = '';
+      this.includedDateTo1i = '';
+      this.includedPeriodOperator1i = '';
+      this.includedPeriodValue1i = '';
+      this.includedPeriodType1i = '';
+    } else if (query == 'Q1j') {
+      this.withWithout1j = '';
+      this.includedAnyAll1j = '';
+      this.includedValueSet1j = '';
+      this.includedDateFrom1j = '';
+      this.includedDateTo1j = '';
+      this.includedPeriodOperator1j = '';
+      this.includedPeriodValue1j = '';
+      this.includedPeriodType1j = '';
+    } else if (query == 'Q1k') {
+      this.withWithout1k = '';
+      this.includedAnyAll1k = '';
+      this.includedValueSet1k = '';
+      this.includedDateFrom1k = '';
+      this.includedDateTo1k = '';
+      this.includedPeriodOperator1k = '';
+      this.includedPeriodValue1k = '';
+      this.includedPeriodType1k = '';
+    } else if (query == 'Q1l') {
+      this.withWithout1l = '';
+      this.includedAnyAll1l = '';
+      this.includedValueSet1l = '';
+      this.includedDateFrom1l = '';
+      this.includedDateTo1l = '';
+      this.includedPeriodOperator1l = '';
+      this.includedPeriodValue1l = '';
+      this.includedPeriodType1l = '';
+    } else if (query == 'Q2') {
+      this.withWithout2 = '';
+      this.includedAnyAll2 = '';
+      this.includedValueSet2 = '';
+      this.includedEarliestLatest2 = '';
+      this.includedOperator2 = '';
+      this.includedEntryValue2 = '';
+      this.includedDateFrom2 = '';
+      this.includedDateTo2 = '';
+      this.includedPeriodOperator2 = '';
+      this.includedPeriodValue2 = '';
+      this.includedPeriodType2 = '';
+    } else if (query == 'Q2a') {
+      this.withWithout2a = '';
+      this.includedAnyAll2a = '';
+      this.includedValueSet2a = '';
+      this.includedEarliestLatest2a = '';
+      this.includedOperator2a = '';
+      this.includedEntryValue2a = '';
+      this.includedDateFrom2a = '';
+      this.includedDateTo2a = '';
+      this.includedPeriodOperator2a = '';
+      this.includedPeriodValue2a = '';
+      this.includedPeriodType2a = '';
+    } else if (query == 'Q2b') {
+      this.withWithout2b = '';
+      this.includedAnyAll2b = '';
+      this.includedValueSet2b = '';
+      this.includedEarliestLatest2b = '';
+      this.includedOperator2b = '';
+      this.includedEntryValue2b = '';
+      this.includedDateFrom2b = '';
+      this.includedDateTo2b = '';
+      this.includedPeriodOperator2b = '';
+      this.includedPeriodValue2b= '';
+      this.includedPeriodType2b = '';
+    } else if (query == 'Q2c') {
+      this.withWithout2c = '';
+      this.includedAnyAll2c = '';
+      this.includedValueSet2c = '';
+      this.includedEarliestLatest2c = '';
+      this.includedOperator2c = '';
+      this.includedEntryValue2c = '';
+      this.includedDateFrom2c = '';
+      this.includedDateTo2c = '';
+      this.includedPeriodOperator2c = '';
+      this.includedPeriodValue2c = '';
+      this.includedPeriodType2c = '';
+    } else if (query == 'Q3') {
+      this.withWithout3 = '';
+      this.includedAnyAll3 = '';
+      this.includedValueSet3 = '';
+      this.includedEarliestLatest3 = '';
+      this.includedAnyAllTested3 = '';
+      this.includedTestedValueSet3 = '';
+      this.includedDateFrom3 = '';
+      this.includedDateTo3 = '';
+      this.includedPeriodOperator3 = '';
+      this.includedPeriodValue3 = '';
+      this.includedPeriodType3 = '';
+      this.includedDob3 = '';
+      this.includedDiagnosisAnyAll3 = '';
+      this.includedDiagnosisValueSet3 = '';
+      this.includedDiagnosisAgeFrom3 = '';
+      this.includedDiagnosisAgeTo3 = '';
+    } else if (query == 'Q3a') {
+      this.withWithout3a = '';
+      this.includedAnyAll3a = '';
+      this.includedValueSet3a = '';
+      this.includedEarliestLatest3a = '';
+      this.includedAnyAllTested3a = '';
+      this.includedTestedValueSet3a = '';
+      this.includedDateFrom3a = '';
+      this.includedDateTo3a = '';
+      this.includedPeriodOperator3a = '';
+      this.includedPeriodValue3a = '';
+      this.includedPeriodType3a = '';
+      this.includedDob3a = '';
+      this.includedDiagnosisAnyAll3a = '';
+      this.includedDiagnosisValueSet3a = '';
+      this.includedDiagnosisAgeFrom3a = '';
+      this.includedDiagnosisAgeTo3a = '';
+    } else if (query == 'Q3b') {
+      this.withWithout3b = '';
+      this.includedAnyAll3b = '';
+      this.includedValueSet3b = '';
+      this.includedEarliestLatest3b = '';
+      this.includedAnyAllTested3b = '';
+      this.includedTestedValueSet3b = '';
+      this.includedDateFrom3b = '';
+      this.includedDateTo3b = '';
+      this.includedPeriodOperator3b = '';
+      this.includedPeriodValue3b = '';
+      this.includedPeriodType3b = '';
+      this.includedDob3b = '';
+      this.includedDiagnosisAnyAll3b = '';
+      this.includedDiagnosisValueSet3b = '';
+      this.includedDiagnosisAgeFrom3b = '';
+      this.includedDiagnosisAgeTo3b = '';
+    } else if (query == 'Q3c') {
+      this.withWithout3c = '';
+      this.includedAnyAll3c = '';
+      this.includedValueSet3c = '';
+      this.includedEarliestLatest3c = '';
+      this.includedAnyAllTested3c = '';
+      this.includedTestedValueSet3c = '';
+      this.includedDateFrom3c = '';
+      this.includedDateTo3c = '';
+      this.includedPeriodOperator3c = '';
+      this.includedPeriodValue3c = '';
+      this.includedPeriodType3c = '';
+      this.includedDob3c = '';
+      this.includedDiagnosisAnyAll3c = '';
+      this.includedDiagnosisValueSet3c = '';
+      this.includedDiagnosisAgeFrom3c = '';
+      this.includedDiagnosisAgeTo3c = '';
+    } else if (query == 'Q3d') {
+      this.withWithout3d = '';
+      this.includedAnyAll3d = '';
+      this.includedValueSet3d = '';
+      this.includedEarliestLatest3d = '';
+      this.includedAnyAllTested3d = '';
+      this.includedTestedValueSet3d = '';
+      this.includedDateFrom3d = '';
+      this.includedDateTo3d = '';
+      this.includedPeriodOperator3d = '';
+      this.includedPeriodValue3d = '';
+      this.includedPeriodType3d = '';
+      this.includedDob3d = '';
+      this.includedDiagnosisAnyAll3d = '';
+      this.includedDiagnosisValueSet3d = '';
+      this.includedDiagnosisAgeFrom3d = '';
+      this.includedDiagnosisAgeTo3d = '';
+    } else if (query == 'Q3e') {
+      this.withWithout3e = '';
+      this.includedAnyAll3e = '';
+      this.includedValueSet3e = '';
+      this.includedEarliestLatest3e = '';
+      this.includedAnyAllTested3e = '';
+      this.includedTestedValueSet3e = '';
+      this.includedDateFrom3e = '';
+      this.includedDateTo3e = '';
+      this.includedPeriodOperator3e = '';
+      this.includedPeriodValue3e = '';
+      this.includedPeriodType3e = '';
+      this.includedDob3e = '';
+      this.includedDiagnosisAnyAll3e = '';
+      this.includedDiagnosisValueSet3e = '';
+      this.includedDiagnosisAgeFrom3e = '';
+      this.includedDiagnosisAgeTo3e = '';
+    } else if (query == 'Q3f') {
+      this.withWithout3f = '';
+      this.includedAnyAll3f = '';
+      this.includedValueSet3f = '';
+      this.includedEarliestLatest3f = '';
+      this.includedAnyAllTested3f = '';
+      this.includedTestedValueSet3f = '';
+      this.includedDateFrom3f = '';
+      this.includedDateTo3f = '';
+      this.includedPeriodOperator3f = '';
+      this.includedPeriodValue3f = '';
+      this.includedPeriodType3f = '';
+      this.includedDob3f = '';
+      this.includedDiagnosisAnyAll3f = '';
+      this.includedDiagnosisValueSet3f = '';
+      this.includedDiagnosisAgeFrom3f = '';
+      this.includedDiagnosisAgeTo3f = '';
+    } else if (query == 'Q4') {
+      this.withWithout4 = '';
+      this.includedAnyAll4 = '';
+      this.includedValueSet4 = '';
+      this.includedEarliestLatest4 = '';
+      this.includedAreNot4 = '';
+      this.followedByEarliestLatest4 = '';
+      this.includedAnyAllFollowedBy4 = '';
+      this.includedFollowedByValueSet4 = '';
+      this.includedPeriodOperator4 = '';
+      this.includedPeriodValue4 = '';
+      this.includedPeriodType4 = '';
+    } else if (query == 'Q4a') {
+      this.withWithout4a = '';
+      this.includedAnyAll4a = '';
+      this.includedValueSet4a = '';
+      this.includedEarliestLatest4a = '';
+      this.includedAreNot4a = '';
+      this.followedByEarliestLatest4a = '';
+      this.includedAnyAllFollowedBy4a = '';
+      this.includedFollowedByValueSet4a = '';
+      this.includedPeriodOperator4a = '';
+      this.includedPeriodValue4a = '';
+      this.includedPeriodType4a = '';
+    } else if (query == 'Q4b') {
+      this.withWithout4b = '';
+      this.includedAnyAll4b = '';
+      this.includedValueSet4b = '';
+      this.includedEarliestLatest4b = '';
+      this.includedAreNot4b = '';
+      this.followedByEarliestLatest4b = '';
+      this.includedAnyAllFollowedBy4b = '';
+      this.includedFollowedByValueSet4b = '';
+      this.includedPeriodOperator4b = '';
+      this.includedPeriodValue4b = '';
+      this.includedPeriodType4b = '';
+    } else if (query == 'Q5') {
+      this.withWithout5 = '';
+      this.includedAnyAll5 = '';
+      this.includedValueSet5 = '';
+      this.includedOperator5 = '';
+      this.includedEntryValue5 = '';
+      this.includedDateFrom5 = '';
+      this.includedDateTo5 = '';
+      this.includedPeriodOperator5 = '';
+      this.includedPeriodValue5 = '';
+      this.includedPeriodType5 = '';
+    } else if (query == 'Q5a') {
+      this.withWithout5a = '';
+      this.includedAnyAll5a = '';
+      this.includedValueSet5a = '';
+      this.includedOperator5a = '';
+      this.includedEntryValue5a = '';
+      this.includedDateFrom5a = '';
+      this.includedDateTo5a = '';
+      this.includedPeriodOperator5a = '';
+      this.includedPeriodValue5a = '';
+      this.includedPeriodType5a = '';
+    } else if (query == 'all') {
+      this.queryList1 = '';
+      this.queryList1a = '';
+      this.queryList1b = '';
+      this.queryList1c = '';
+      this.queryList1d = '';
+      this.registrationExclude = '';
+      this.registrationPeriodValue = '';
+      this.registrationPeriodType = '';
+      this.registrationDateFrom = '';
+      this.registrationDateTo = '';
+      this.withWithout1 = '';
+      this.includedAnyAll1 = '';
+      this.includedValueSet1 = '';
+      this.includedDateFrom1 = '';
+      this.includedDateTo1 = '';
+      this.includedPeriodOperator1 = '';
+      this.includedPeriodValue1 = '';
+      this.includedPeriodType1 = '';
+      this.withWithout1a = '';
+      this.includedAnyAll1a = '';
+      this.includedValueSet1a = '';
+      this.includedDateFrom1a = '';
+      this.includedDateTo1a = '';
+      this.includedPeriodOperator1a = '';
+      this.includedPeriodValue1a = '';
+      this.includedPeriodType1a = '';
+      this.withWithout1b = '';
+      this.includedAnyAll1b = '';
+      this.includedValueSet1b = '';
+      this.includedDateFrom1b = '';
+      this.includedDateTo1b = '';
+      this.includedPeriodOperator1b = '';
+      this.includedPeriodValue1b = '';
+      this.includedPeriodType1b = '';
+      this.withWithout1c = '';
+      this.includedAnyAll1c = '';
+      this.includedValueSet1c = '';
+      this.includedDateFrom1c = '';
+      this.includedDateTo1c = '';
+      this.includedPeriodOperator1c = '';
+      this.includedPeriodValue1c = '';
+      this.includedPeriodType1c = '';
+      this.withWithout1d = '';
+      this.includedAnyAll1d = '';
+      this.includedValueSet1d = '';
+      this.includedDateFrom1d = '';
+      this.includedDateTo1d = '';
+      this.includedPeriodOperator1d = '';
+      this.includedPeriodValue1d = '';
+      this.includedPeriodType1d = '';
+      this.withWithout1e = '';
+      this.includedAnyAll1e = '';
+      this.includedValueSet1e = '';
+      this.includedDateFrom1e = '';
+      this.includedDateTo1e = '';
+      this.includedPeriodOperator1e = '';
+      this.includedPeriodValue1e = '';
+      this.includedPeriodType1e = '';
+      this.withWithout1f = '';
+      this.includedAnyAll1f = '';
+      this.includedValueSet1f = '';
+      this.includedDateFrom1f = '';
+      this.includedDateTo1f = '';
+      this.includedPeriodOperator1f = '';
+      this.includedPeriodValue1f = '';
+      this.includedPeriodType1f = '';
+      this.withWithout1g = '';
+      this.includedAnyAll1g = '';
+      this.includedValueSet1g = '';
+      this.includedDateFrom1g = '';
+      this.includedDateTo1g = '';
+      this.includedPeriodOperator1g = '';
+      this.includedPeriodValue1g = '';
+      this.includedPeriodType1g = '';
+      this.withWithout1h = '';
+      this.includedAnyAll1h = '';
+      this.includedValueSet1h = '';
+      this.includedDateFrom1h = '';
+      this.includedDateTo1h = '';
+      this.includedPeriodOperator1h = '';
+      this.includedPeriodValue1h = '';
+      this.includedPeriodType1h = '';
+      this.withWithout1i = '';
+      this.includedAnyAll1i = '';
+      this.includedValueSet1i = '';
+      this.includedDateFrom1i = '';
+      this.includedDateTo1i = '';
+      this.includedPeriodOperator1i = '';
+      this.includedPeriodValue1i = '';
+      this.includedPeriodType1i = '';
+      this.withWithout1j = '';
+      this.includedAnyAll1j = '';
+      this.includedValueSet1j = '';
+      this.includedDateFrom1j = '';
+      this.includedDateTo1j = '';
+      this.includedPeriodOperator1j = '';
+      this.includedPeriodValue1j = '';
+      this.includedPeriodType1j = '';
+      this.withWithout1k = '';
+      this.includedAnyAll1k = '';
+      this.includedValueSet1k = '';
+      this.includedDateFrom1k = '';
+      this.includedDateTo1k = '';
+      this.includedPeriodOperator1k = '';
+      this.includedPeriodValue1k = '';
+      this.includedPeriodType1k = '';
+      this.withWithout1l = '';
+      this.includedAnyAll1l = '';
+      this.includedValueSet1l = '';
+      this.includedDateFrom1l = '';
+      this.includedDateTo1l = '';
+      this.includedPeriodOperator1l = '';
+      this.includedPeriodValue1l = '';
+      this.includedPeriodType1l = '';
+      this.withWithout2 = '';
+      this.includedAnyAll2 = '';
+      this.includedValueSet2 = '';
+      this.includedEarliestLatest2 = '';
+      this.includedOperator2 = '';
+      this.includedEntryValue2 = '';
+      this.includedDateFrom2 = '';
+      this.includedDateTo2 = '';
+      this.includedPeriodOperator2 = '';
+      this.includedPeriodValue2 = '';
+      this.includedPeriodType2 = '';
+      this.withWithout2a = '';
+      this.includedAnyAll2a = '';
+      this.includedValueSet2a = '';
+      this.includedEarliestLatest2a = '';
+      this.includedOperator2a = '';
+      this.includedEntryValue2a = '';
+      this.includedDateFrom2a = '';
+      this.includedDateTo2a = '';
+      this.includedPeriodOperator2a = '';
+      this.includedPeriodValue2a = '';
+      this.includedPeriodType2a = '';
+      this.withWithout2b = '';
+      this.includedAnyAll2b = '';
+      this.includedValueSet2b = '';
+      this.includedEarliestLatest2b = '';
+      this.includedOperator2b = '';
+      this.includedEntryValue2b = '';
+      this.includedDateFrom2b = '';
+      this.includedDateTo2b = '';
+      this.includedPeriodOperator2b = '';
+      this.includedPeriodValue2b= '';
+      this.includedPeriodType2b = '';
+      this.withWithout2c = '';
+      this.includedAnyAll2c = '';
+      this.includedValueSet2c = '';
+      this.includedEarliestLatest2c = '';
+      this.includedOperator2c = '';
+      this.includedEntryValue2c = '';
+      this.includedDateFrom2c = '';
+      this.includedDateTo2c = '';
+      this.includedPeriodOperator2c = '';
+      this.includedPeriodValue2c = '';
+      this.includedPeriodType2c = '';
+      this.withWithout3 = '';
+      this.includedAnyAll3 = '';
+      this.includedValueSet3 = '';
+      this.includedEarliestLatest3 = '';
+      this.includedAnyAllTested3 = '';
+      this.includedTestedValueSet3 = '';
+      this.includedDateFrom3 = '';
+      this.includedDateTo3 = '';
+      this.includedPeriodOperator3 = '';
+      this.includedPeriodValue3 = '';
+      this.includedPeriodType3 = '';
+      this.includedDob3 = '';
+      this.includedDiagnosisAnyAll3 = '';
+      this.includedDiagnosisValueSet3 = '';
+      this.includedDiagnosisAgeFrom3 = '';
+      this.includedDiagnosisAgeTo3 = '';
+      this.withWithout3a = '';
+      this.includedAnyAll3a = '';
+      this.includedValueSet3a = '';
+      this.includedEarliestLatest3a = '';
+      this.includedAnyAllTested3a = '';
+      this.includedTestedValueSet3a = '';
+      this.includedDateFrom3a = '';
+      this.includedDateTo3a = '';
+      this.includedPeriodOperator3a = '';
+      this.includedPeriodValue3a = '';
+      this.includedPeriodType3a = '';
+      this.includedDob3a = '';
+      this.includedDiagnosisAnyAll3a = '';
+      this.includedDiagnosisValueSet3a = '';
+      this.includedDiagnosisAgeFrom3a = '';
+      this.includedDiagnosisAgeTo3a = '';
+      this.withWithout3b = '';
+      this.includedAnyAll3b = '';
+      this.includedValueSet3b = '';
+      this.includedEarliestLatest3b = '';
+      this.includedAnyAllTested3b = '';
+      this.includedTestedValueSet3b = '';
+      this.includedDateFrom3b = '';
+      this.includedDateTo3b = '';
+      this.includedPeriodOperator3b = '';
+      this.includedPeriodValue3b = '';
+      this.includedPeriodType3b = '';
+      this.includedDob3b = '';
+      this.includedDiagnosisAnyAll3b = '';
+      this.includedDiagnosisValueSet3b = '';
+      this.includedDiagnosisAgeFrom3b = '';
+      this.includedDiagnosisAgeTo3b = '';
+      this.withWithout3c = '';
+      this.includedAnyAll3c = '';
+      this.includedValueSet3c = '';
+      this.includedEarliestLatest3c = '';
+      this.includedAnyAllTested3c = '';
+      this.includedTestedValueSet3c = '';
+      this.includedDateFrom3c = '';
+      this.includedDateTo3c = '';
+      this.includedPeriodOperator3c = '';
+      this.includedPeriodValue3c = '';
+      this.includedPeriodType3c = '';
+      this.includedDob3c = '';
+      this.includedDiagnosisAnyAll3c = '';
+      this.includedDiagnosisValueSet3c = '';
+      this.includedDiagnosisAgeFrom3c = '';
+      this.includedDiagnosisAgeTo3c = '';
+      this.withWithout3d = '';
+      this.includedAnyAll3d = '';
+      this.includedValueSet3d = '';
+      this.includedEarliestLatest3d = '';
+      this.includedAnyAllTested3d = '';
+      this.includedTestedValueSet3d = '';
+      this.includedDateFrom3d = '';
+      this.includedDateTo3d = '';
+      this.includedPeriodOperator3d = '';
+      this.includedPeriodValue3d = '';
+      this.includedPeriodType3d = '';
+      this.includedDob3d = '';
+      this.includedDiagnosisAnyAll3d = '';
+      this.includedDiagnosisValueSet3d = '';
+      this.includedDiagnosisAgeFrom3d = '';
+      this.includedDiagnosisAgeTo3d = '';
+      this.withWithout3e = '';
+      this.includedAnyAll3e = '';
+      this.includedValueSet3e = '';
+      this.includedEarliestLatest3e = '';
+      this.includedAnyAllTested3e = '';
+      this.includedTestedValueSet3e = '';
+      this.includedDateFrom3e = '';
+      this.includedDateTo3e = '';
+      this.includedPeriodOperator3e = '';
+      this.includedPeriodValue3e = '';
+      this.includedPeriodType3e = '';
+      this.includedDob3e = '';
+      this.includedDiagnosisAnyAll3e = '';
+      this.includedDiagnosisValueSet3e = '';
+      this.includedDiagnosisAgeFrom3e = '';
+      this.includedDiagnosisAgeTo3e = '';
+      this.withWithout3f = '';
+      this.includedAnyAll3f = '';
+      this.includedValueSet3f = '';
+      this.includedEarliestLatest3f = '';
+      this.includedAnyAllTested3f = '';
+      this.includedTestedValueSet3f = '';
+      this.includedDateFrom3f = '';
+      this.includedDateTo3f = '';
+      this.includedPeriodOperator3f = '';
+      this.includedPeriodValue3f = '';
+      this.includedPeriodType3f = '';
+      this.includedDob3f = '';
+      this.includedDiagnosisAnyAll3f = '';
+      this.includedDiagnosisValueSet3f = '';
+      this.includedDiagnosisAgeFrom3f = '';
+      this.includedDiagnosisAgeTo3f = '';
+      this.withWithout4 = '';
+      this.includedAnyAll4 = '';
+      this.includedValueSet4 = '';
+      this.includedEarliestLatest4 = '';
+      this.includedAreNot4 = '';
+      this.followedByEarliestLatest4 = '';
+      this.includedAnyAllFollowedBy4 = '';
+      this.includedFollowedByValueSet4 = '';
+      this.includedPeriodOperator4 = '';
+      this.includedPeriodValue4 = '';
+      this.includedPeriodType4 = '';
+      this.withWithout4a = '';
+      this.includedAnyAll4a = '';
+      this.includedValueSet4a = '';
+      this.includedEarliestLatest4a = '';
+      this.includedAreNot4a = '';
+      this.followedByEarliestLatest4a = '';
+      this.includedAnyAllFollowedBy4a = '';
+      this.includedFollowedByValueSet4a = '';
+      this.includedPeriodOperator4a = '';
+      this.includedPeriodValue4a = '';
+      this.includedPeriodType4a = '';
+      this.withWithout4b = '';
+      this.includedAnyAll4b = '';
+      this.includedValueSet4b = '';
+      this.includedEarliestLatest4b = '';
+      this.includedAreNot4b = '';
+      this.followedByEarliestLatest4b = '';
+      this.includedAnyAllFollowedBy4b = '';
+      this.includedFollowedByValueSet4b = '';
+      this.includedPeriodOperator4b = '';
+      this.includedPeriodValue4b = '';
+      this.includedPeriodType4b = '';
+      this.withWithout5 = '';
+      this.includedAnyAll5 = '';
+      this.includedValueSet5 = '';
+      this.includedOperator5 = '';
+      this.includedEntryValue5 = '';
+      this.includedDateFrom5 = '';
+      this.includedDateTo5 = '';
+      this.includedPeriodOperator5 = '';
+      this.includedPeriodValue5 = '';
+      this.includedPeriodType5 = '';
+      this.withWithout5a = '';
+      this.includedAnyAll5a = '';
+      this.includedValueSet5a = '';
+      this.includedOperator5a = '';
+      this.includedEntryValue5a = '';
+      this.includedDateFrom5a = '';
+      this.includedDateTo5a = '';
+      this.includedPeriodOperator5a = '';
+      this.includedPeriodValue5a = '';
+      this.includedPeriodType5a = '';
+    }
+  }
+
+  deleteRule(rule: any) {
+    if (rule == 'R1') {
+      this.matching1 = '';
+      this.queryExpression1 = '';
+    } else if (rule == 'R2') {
+      this.selectReject2 = '';
+      this.matching2 = '';
+      this.queryExpression2 = '';
+      this.ruleNumber2 = '';
+    } else if (rule == 'R3') {
+      this.selectReject3 = '';
+      this.matching3 = '';
+      this.queryExpression3 = '';
+      this.ruleNumber3 = '';
+    } else if (rule == 'R4') {
+      this.selectReject4 = '';
+      this.matching4 = '';
+      this.queryExpression4 = '';
+      this.ruleNumber4 = '';
+    }else if (rule == 'R5') {
+      this.selectReject5 = '';
+      this.matching5 = '';
+      this.queryExpression5 = '';
+      this.ruleNumber5 = '';
+    } else if (rule == 'R6') {
+      this.selectReject6 = '';
+      this.matching6 = '';
+      this.queryExpression6 = '';
+      this.ruleNumber6 = '';
+    } else if (rule == 'R7') {
+      this.selectReject7 = '';
+      this.matching7 = '';
+      this.queryExpression7 = '';
+      this.ruleNumber7 = '';
+    } else if (rule == 'R8') {
+      this.selectReject8 = '';
+      this.matching8 = '';
+      this.queryExpression8 = '';
+      this.ruleNumber8 = '';
+    }else if (rule == 'R9') {
+      this.selectReject9 = '';
+      this.matching9 = '';
+      this.queryExpression9 = '';
+      this.ruleNumber9 = '';
+    } else if (rule == 'R10') {
+      this.selectReject10 = '';
+      this.matching10 = '';
+      this.queryExpression10 = '';
+      this.ruleNumber10 = '';
+    } else if (rule == 'R11') {
+      this.selectReject11 = '';
+      this.matching11 = '';
+      this.queryExpression11 = '';
+      this.ruleNumber11 = '';
+    } else if (rule == 'R12') {
+      this.selectReject12 = '';
+      this.matching12 = '';
+      this.queryExpression12 = '';
+      this.ruleNumber12 = '';
+    }else if (rule == 'R13') {
+      this.selectReject13 = '';
+      this.matching13 = '';
+      this.queryExpression13 = '';
+      this.ruleNumber13 = '';
+    } else if (rule == 'R14') {
+      this.selectReject14 = '';
+      this.matching14 = '';
+      this.queryExpression14 = '';
+      this.ruleNumber14 = '';
+    } else if (rule == 'R15') {
+      this.selectReject15 = '';
+      this.matching15 = '';
+      this.queryExpression15 = '';
+      this.ruleNumber15 = '';
+    } else if (rule == 'R16') {
+      this.selectReject16 = '';
+      this.matching16 = '';
+      this.queryExpression16 = '';
+      this.ruleNumber16 = '';
+    }
+  }
 }

@@ -18,6 +18,7 @@ DECLARE gender VARCHAR(20) DEFAULT NULL;
 
 DECLARE selectedEthnicFields VARCHAR(2000) DEFAULT NULL; 
 DECLARE lsoa VARCHAR(50) DEFAULT NULL; 
+DECLARE msoa VARCHAR(50) DEFAULT NULL; 
 
 -- variables for rules builder
 DECLARE matching1 VARCHAR(30) DEFAULT NULL;
@@ -192,6 +193,12 @@ DECLARE A3 VARCHAR(64) DEFAULT NULL;
 DECLARE A4 VARCHAR(64) DEFAULT NULL;
 DECLARE A5 VARCHAR(64) DEFAULT NULL;
 
+DECLARE Q VARCHAR(64) DEFAULT NULL;
+DECLARE QA VARCHAR(64) DEFAULT NULL;
+DECLARE QB VARCHAR(64) DEFAULT NULL;
+DECLARE QC VARCHAR(64) DEFAULT NULL;
+DECLARE QD VARCHAR(64) DEFAULT NULL;
+
 DECLARE encounterValueSet_tmp VARCHAR(64) DEFAULT NULL;
 DECLARE medicationValueSet_tmp VARCHAR(64) DEFAULT NULL;
 DECLARE clinicalEventValueSet_tmp VARCHAR(64) DEFAULT NULL;
@@ -216,6 +223,10 @@ DECLARE rule_det_tmp VARCHAR(64) DEFAULT NULL;
 -- baseline run date
 DECLARE baselineDate VARCHAR(30) DEFAULT NULL; 
 
+-- event occurrence
+DECLARE eventOccurrence VARCHAR(30) DEFAULT NULL;
+DECLARE eventOccurrenceNumber  VARCHAR(10) DEFAULT NULL;
+
 -- Set Debug Mode
 SET @enabled = p_enableDebug;
 
@@ -228,6 +239,7 @@ SET registrationStatus = JSON_UNQUOTE(JSON_EXTRACT(query,'$.registrationStatus')
 
 SET selectedEthnicFields =  REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.selectedEthnicFields'),'[',''),']',''),'"','');  
 SET lsoa =  JSON_UNQUOTE(JSON_EXTRACT(query,'$.lsoa'));   
+SET msoa =  JSON_UNQUOTE(JSON_EXTRACT(query,'$.msoa'));   
 
 SET gender = LOWER(JSON_UNQUOTE(JSON_EXTRACT(query,'$.gender'))); 
 SET postcode = JSON_UNQUOTE(JSON_EXTRACT(query,'$.postcode'));
@@ -237,6 +249,10 @@ SET ethnicFields_tmp = CONCAT('ethnicFields_tmp_',query_id);
 
 -- get basline rundate
 SET baselineDate = JSON_UNQUOTE(JSON_EXTRACT(query,'$.baselineDate'));  
+
+-- get event occurence
+SET eventOccurrence = UPPER(REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.selectedEventOccurrence'),'[',''),']',''),'"','')); 
+SET eventOccurrenceNumber = UPPER(REPLACE(REPLACE(REPLACE(JSON_EXTRACT(query,'$.eventOccurrenceNumber'),'[',''),']',''),'"','')); 
 
 -- Set Variables for Query expression --
 SET matching1 = IFNULL(JSON_UNQUOTE(JSON_EXTRACT(query,'$.matching1')),'');
@@ -399,6 +415,13 @@ SET A3 = CONCAT('A3_',query_id);
 SET A4 = CONCAT('A4_',query_id);
 SET A5 = CONCAT('A5_',query_id);
 
+-- set variables for query lists
+SET Q = CONCAT('Q_',query_id);
+SET QA = CONCAT('QA_',query_id);
+SET QB = CONCAT('QB_',query_id);
+SET QC = CONCAT('QC_',query_id);
+SET QD = CONCAT('QD_',query_id);
+
 SET all_valueset_tmp = CONCAT('all_valueset_tmp_',query_id);
 SET all_concept_tmp = CONCAT('all_concept_tmp_',query_id);
 SET practiceCohort_tmp  = CONCAT('practicecohort_tmp_',query_id);
@@ -432,7 +455,7 @@ SET rule_det_tmp = CONCAT('rule_det_tmp_',query_id);
 CALL debug_msg(@enabled, CONCAT(NOW(),' - start'));
 CALL debug_msg(@enabled, CONCAT(NOW(),' - buildCohortDefinition'));
 -- build practice cohort -- 
-CALL buildCohortDefinition(query_id, providerOrganisation, registrationStatus, gender, postcode, selectedEthnicFields, lsoa, org_tmp, practiceCohort_tmp, ethnicFields_tmp, sourceSchema);
+CALL buildCohortDefinition(query_id, providerOrganisation, registrationStatus, gender, postcode, selectedEthnicFields, lsoa, msoa, org_tmp, practiceCohort_tmp, ethnicFields_tmp, baselineDate, sourceSchema);
 -- build concept cohort for all valuesets to be used in the advance queries --
 CALL debug_msg(@enabled, CONCAT(NOW(),' - createValueSet'));
 CALL createValueSet('1', all_valueset_tmp);
@@ -474,7 +497,10 @@ CALL debug_msg(@enabled, CONCAT(NOW(),' - tempTables'));
 SET tempTables = CONCAT(observationCohort_tmp,',',practiceCohort_tmp,',',registerCohort_tmp,',',ethnicFields_tmp,',',Q1,',',Q1A,',',Q1B,',',Q1C,',',
 Q1D,',',Q1E,',',Q1F,',',Q1G,',',Q1H,',',Q1I,',',Q1J,',',Q1K,',',Q1L,',',Q2,',',Q2A,',',Q2B,',',Q2C,',',
 Q3,',',Q3A,',',Q3B,',',Q3C,',',Q3D,',',Q3E,',',Q3F,',',Q3G,',',Q3H,',',
-Q4,',',Q4A,',',Q4B,',',Q5,',',Q5A,',',Q0,',',A1,',',A2,',',A3,',',A4,',',A5,',',rule_tmp,',',rule_det_tmp,',',all_valueset_tmp,',', all_concept_tmp);
+Q4,',',Q4A,',',Q4B,',',Q5,',',Q5A,',',Q0,',',
+Q,',',QA,',',QB,',',QC,',',QD,',',
+A1,',',A2,',',A3,',',A4,',',A5,',',
+rule_tmp,',',rule_det_tmp,',',all_valueset_tmp,',', all_concept_tmp);
 CALL debug_msg(@enabled, CONCAT(NOW(),' - dropTempTables'));
 
 IF @enabled = FALSE THEN
@@ -487,11 +513,11 @@ CALL buildResultDatasets(query_id, patientCohort_tmp, demographics, encounters, 
 dateFromEncounters, dateToEncounters, dateFromMedication, dateToMedication, dateFromClinicalEvents, dateToClinicalEvents, selectedClinicalTypes, 
 selectedEncounterValueSet, selectedMedicationValueSet, selectedClinicalEventValueSet, procedure_req_tmp, diagnostic_tmp, warning_tmp , allergy_tmp, referral_req_tmp,
 encounterValueSet_tmp, encounterConcept_tmp, medicationValueSet_tmp, medicationConcept_tmp, clinicalEventValueSet_tmp, clinicalEventConcept_tmp, 
-sourceSchema, store_tmp, org_tmp, @eventTypes);
+sourceSchema, store_tmp, org_tmp, eventOccurrence, eventOccurrenceNumber, @eventTypes);
 SET eventTypes = @eventTypes;
 -- update registries
 CALL debug_msg(@enabled, CONCAT(NOW(),' - buildRegistries'));
-CALL buildRegistries(query_id, patientCohort_tmp, targetPercentage, org_tmp);
+CALL buildRegistries(query_id, patientCohort_tmp, targetPercentage, sourceSchema, org_tmp);
 -- build dataset outputs
 CALL debug_msg(@enabled, CONCAT(NOW(),' - buildDatasetOutputTables'));
 CALL buildDatasetOutputTables(selectedDemographicFields, selectedEncounterFields, selectedMedicationFields, selectedClinicalEventFields, 
@@ -507,7 +533,7 @@ CALL updateQueue(query_id, schedule);
 -- remove temp tables
 SET tempTables = CONCAT(org_tmp,',',store_tmp,',',encounterValueSet_tmp,',',encounterConcept_tmp,',',
 medicationValueSet_tmp,',',medicationConcept_tmp,',',clinicalEventValueSet_tmp,',',clinicalEventConcept_tmp,',',
-seriesValueset_tmp,',',seriesConcept_tmp,',',patientCohort_tmp,',',procedure_req_tmp,',',diagnostic_tmp,',',warning_tmp,',',allergy_tmp,',',referral_req_tmp);
+seriesValueset_tmp,',',seriesConcept_tmp,',',procedure_req_tmp,',',diagnostic_tmp,',',warning_tmp,',',allergy_tmp,',',referral_req_tmp);
 CALL debug_msg(@enabled, CONCAT(NOW(),' - dropTempTables'));
 
 IF @enabled = FALSE THEN

@@ -52,6 +52,7 @@
                 <mat-option *ngFor="let result of tableData1.outputTypes" [value]="result">{{result}}</mat-option>
               </mat-select>
             </mat-form-field>
+            <button class="download" mat-flat-button color="primary" (click)="downloadTable1()">Download as CSV</button>
             <div *ngIf="showTables1 && tableData1" class="{{tableStyle1}}">
               <app-generic-table-ssp
                 [items]="tableData1.rows"

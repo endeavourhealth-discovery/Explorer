@@ -5,8 +5,8 @@ DROP PROCEDURE IF EXISTS getRegistries;
 DELIMITER //
 CREATE PROCEDURE getRegistries(IN filter_ccg VARCHAR(255),
   IN filter_registry VARCHAR(255),
-  IN valid_orgs VARCHAR(1000),
-  IN valid_orgs2 VARCHAR(1000))
+  IN valid_orgs VARCHAR(10000),
+  IN valid_orgs2 VARCHAR(10000))
 
 sp: BEGIN
 
@@ -22,7 +22,7 @@ drop temporary table if exists registry_sizes_practice;
 drop temporary table if exists list_sizes_practice;
 
 
-SET session group_concat_max_len=15000;
+SET session group_concat_max_len=150000;
 
 IF filter_ccg='' and filter_registry = '' THEN
 
@@ -43,14 +43,14 @@ IF filter_ccg='' and filter_registry = '' THEN
 	  dashboards.registries r
 		where r.ods_code in
 		(
-			select distinct practice_ods_code from dashboards.population_denominators
+			select distinct practice_ods_code from dashboards.organisation_breakdown
 			WHERE (find_in_set(stp_ods_code, valid_orgs2) or find_in_set(ccg_ods_code, valid_orgs2) or find_in_set(practice_ods_code, valid_orgs2))
 		)
   	    AND registry in (select distinct registry from dashboards.registries r
 	    WHERE parent_registry IS NULL
 		AND r.ods_code in
 		(
-			select distinct practice_ods_code from dashboards.population_denominators
+			select distinct practice_ods_code from dashboards.organisation_breakdown
 			WHERE (find_in_set(stp_ods_code, valid_orgs2) or find_in_set(ccg_ods_code, valid_orgs2) or find_in_set(practice_ods_code, valid_orgs2))
 		)
       );
@@ -58,7 +58,7 @@ IF filter_ccg='' and filter_registry = '' THEN
 	SET @sql = CONCAT('create table dashboards.temp as SELECT IFNULL(r.ccg, "GRAND TOTAL") AS ccg, ', @sql,
 	'FROM dashboards.registries r '
    'where r.parent_registry IS NULL and r.ods_code in '
-   '(select distinct practice_ods_code from dashboards.population_denominators '
+   '(select distinct practice_ods_code from dashboards.organisation_breakdown '
    'WHERE (stp_ods_code in (',valid_orgs,') or ccg_ods_code in (',valid_orgs,') or practice_ods_code in (',valid_orgs,'))) '
    'GROUP BY r.ccg with rollup');
 
@@ -71,8 +71,14 @@ IF filter_ccg='' and filter_registry = '' THEN
 	create temporary table list_sizes engine=memory
 	SELECT distinct r.ccg, r.practice_name, r.list_size
 	FROM dashboards.registries r
-      join dashboards.population_denominators p on p.practice_ods_code = r.ods_code
-	  WHERE (find_in_set(stp_ods_code, valid_orgs2) or find_in_set(ccg_ods_code, valid_orgs2) or find_in_set(practice_ods_code, valid_orgs2)) and parent_registry IS NULL;
+      join dashboards.organisation_breakdown p on p.practice_ods_code = r.ods_code
+	  WHERE (find_in_set(stp_ods_code, valid_orgs2) or find_in_set(ccg_ods_code, valid_orgs2) or find_in_set(practice_ods_code, valid_orgs2)) and r.parent_registry IS NULL
+	and r.updated =
+    (select max(r2.updated)
+	FROM dashboards.registries r2
+      join dashboards.organisation_breakdown p on p.practice_ods_code = r2.ods_code
+	  WHERE (find_in_set(stp_ods_code, valid_orgs2) or find_in_set(ccg_ods_code, valid_orgs2) or find_in_set(practice_ods_code, valid_orgs2)) and r2.parent_registry IS NULL
+    and r2.ods_code = r.ods_code);
 
 	create temporary table list_sizes_ccg engine=memory
 	select IFNULL(ccg, "GRAND TOTAL") AS ccg,sum(list_size) as list_size from list_sizes
@@ -103,7 +109,7 @@ WHERE
 
 elseif filter_ccg != '' and filter_registry	 = '' THEN
 
-	SELECT count(distinct(ccg)) into counter FROM dashboards.population_denominators where ccg in (filter_ccg);
+	SELECT count(distinct(ccg)) into counter FROM dashboards.organisation_breakdown where ccg in (filter_ccg);
 
 	if counter = 0 then
 		leave sp;
@@ -125,14 +131,14 @@ elseif filter_ccg != '' and filter_registry	 = '' THEN
 	  dashboards.registries r
 		where r.ods_code in
 		(
-			select distinct practice_ods_code from dashboards.population_denominators
+			select distinct practice_ods_code from dashboards.organisation_breakdown
 			WHERE (find_in_set(stp_ods_code, valid_orgs2) or find_in_set(ccg_ods_code, valid_orgs2) or find_in_set(practice_ods_code, valid_orgs2))
 		)
   	    AND registry in (select distinct registry from dashboards.registries r
 	    WHERE parent_registry IS NULL
 		AND r.ods_code in
 		(
-			select distinct practice_ods_code from dashboards.population_denominators
+			select distinct practice_ods_code from dashboards.organisation_breakdown
 			WHERE (find_in_set(stp_ods_code, valid_orgs2) or find_in_set(ccg_ods_code, valid_orgs2) or find_in_set(practice_ods_code, valid_orgs2))
 		)
       );
@@ -140,7 +146,7 @@ elseif filter_ccg != '' and filter_registry	 = '' THEN
 	SET @sql = CONCAT('create table dashboards.temp as SELECT IFNULL(r.practice_name, "GRAND TOTAL") AS practice_name, ', @sql,
                     'FROM dashboards.registries r '
                    'where r.ccg = \'',filter_ccg,'\' and r.parent_registry IS NULL and r.ods_code in '
-                   '(select distinct practice_ods_code from dashboards.population_denominators '
+                   '(select distinct practice_ods_code from dashboards.organisation_breakdown '
                    'WHERE (stp_ods_code in (',valid_orgs,') or ccg_ods_code in (',valid_orgs,') or practice_ods_code in (',valid_orgs,'))) '
                    'GROUP BY r.practice_name with rollup');
 
@@ -153,8 +159,14 @@ elseif filter_ccg != '' and filter_registry	 = '' THEN
 	create temporary table list_sizes engine=memory
 	SELECT distinct r.ccg, r.practice_name, r.list_size
 	FROM dashboards.registries r
-      join dashboards.population_denominators p on p.practice_ods_code = r.ods_code
-	  WHERE (find_in_set(stp_ods_code, valid_orgs2) or find_in_set(ccg_ods_code, valid_orgs2) or find_in_set(practice_ods_code, valid_orgs2)) and r.ccg = filter_ccg and parent_registry IS NULL;
+      join dashboards.organisation_breakdown p on p.practice_ods_code = r.ods_code
+	  WHERE (find_in_set(stp_ods_code, valid_orgs2) or find_in_set(ccg_ods_code, valid_orgs2) or find_in_set(practice_ods_code, valid_orgs2)) and r.ccg = filter_ccg and r.parent_registry IS NULL
+	and r.updated =
+    (select max(r2.updated)
+	FROM dashboards.registries r2
+      join dashboards.organisation_breakdown p on p.practice_ods_code = r2.ods_code
+	  WHERE (find_in_set(stp_ods_code, valid_orgs2) or find_in_set(ccg_ods_code, valid_orgs2) or find_in_set(practice_ods_code, valid_orgs2)) and r2.ccg = filter_ccg and r2.parent_registry IS NULL
+    and r2.ods_code = r.ods_code);
 
 	create temporary table list_sizes_practice engine=memory
 	select IFNULL(practice_name, "GRAND TOTAL") AS practice_name,sum(list_size) as list_size from list_sizes
@@ -185,7 +197,7 @@ WHERE
 elseif filter_ccg='' and filter_registry != '' THEN
 
 	SELECT count(distinct(registry)) into counter FROM dashboards.registries r
-      join dashboards.population_denominators p on p.practice_ods_code = r.ods_code
+      join dashboards.organisation_breakdown p on p.practice_ods_code = r.ods_code
 	  WHERE (find_in_set(stp_ods_code, valid_orgs2) or find_in_set(ccg_ods_code, valid_orgs2) or find_in_set(practice_ods_code, valid_orgs2)) and registry in (filter_registry);
 
 	if counter = 0 then
@@ -208,14 +220,14 @@ elseif filter_ccg='' and filter_registry != '' THEN
 	  dashboards.registries r
 		where r.ods_code in
 		(
-			select distinct practice_ods_code from dashboards.population_denominators
+			select distinct practice_ods_code from dashboards.organisation_breakdown
 			WHERE (find_in_set(stp_ods_code, valid_orgs2) or find_in_set(ccg_ods_code, valid_orgs2) or find_in_set(practice_ods_code, valid_orgs2))
 		)
   	    AND registry in (select distinct registry from dashboards.registries r
 	    WHERE parent_registry = filter_registry
 		AND r.ods_code in
 		(
-			select distinct practice_ods_code from dashboards.population_denominators
+			select distinct practice_ods_code from dashboards.organisation_breakdown
 			WHERE (find_in_set(stp_ods_code, valid_orgs2) or find_in_set(ccg_ods_code, valid_orgs2) or find_in_set(practice_ods_code, valid_orgs2))
 		)
       );
@@ -223,7 +235,7 @@ elseif filter_ccg='' and filter_registry != '' THEN
 	SET @sql = CONCAT('create table dashboards.temp as SELECT IFNULL(r.ccg, "GRAND TOTAL") AS ccg, ', @sql,
 	'FROM dashboards.registries r '
    'where r.parent_registry = \'',filter_registry,'\' and r.ods_code in '
-   '(select distinct practice_ods_code from dashboards.population_denominators '
+   '(select distinct practice_ods_code from dashboards.organisation_breakdown '
    'WHERE (stp_ods_code in (',valid_orgs,') or ccg_ods_code in (',valid_orgs,') or practice_ods_code in (',valid_orgs,'))) '
    'GROUP BY r.ccg with rollup');
 
@@ -237,14 +249,26 @@ elseif filter_ccg='' and filter_registry != '' THEN
 	create temporary table list_sizes engine=memory
 	SELECT distinct r.ccg, r.practice_name, r.list_size
 	FROM dashboards.registries r
-      join dashboards.population_denominators p on p.practice_ods_code = r.ods_code
-	  WHERE (find_in_set(stp_ods_code, valid_orgs2) or find_in_set(ccg_ods_code, valid_orgs2) or find_in_set(practice_ods_code, valid_orgs2)) and parent_registry IS NULL;
+      join dashboards.organisation_breakdown p on p.practice_ods_code = r.ods_code
+	  WHERE (find_in_set(stp_ods_code, valid_orgs2) or find_in_set(ccg_ods_code, valid_orgs2) or find_in_set(practice_ods_code, valid_orgs2)) and r.parent_registry IS NULL
+	and r.updated =
+    (select max(r2.updated)
+	FROM dashboards.registries r2
+      join dashboards.organisation_breakdown p on p.practice_ods_code = r2.ods_code
+	  WHERE (find_in_set(stp_ods_code, valid_orgs2) or find_in_set(ccg_ods_code, valid_orgs2) or find_in_set(practice_ods_code, valid_orgs2)) and r2.parent_registry IS NULL
+    and r2.ods_code = r.ods_code);
 
 	create temporary table registry_sizes engine=memory
 	SELECT distinct r.ccg, r.practice_name, r.list_size as registry_size
 	FROM dashboards.registries r
-      join dashboards.population_denominators p on p.practice_ods_code = r.ods_code
-	  WHERE (find_in_set(stp_ods_code, valid_orgs2) or find_in_set(ccg_ods_code, valid_orgs2) or find_in_set(practice_ods_code, valid_orgs2)) and parent_registry = filter_registry;
+      join dashboards.organisation_breakdown p on p.practice_ods_code = r.ods_code
+	  WHERE (find_in_set(stp_ods_code, valid_orgs2) or find_in_set(ccg_ods_code, valid_orgs2) or find_in_set(practice_ods_code, valid_orgs2)) and r.parent_registry = filter_registry
+      and r.updated =
+      (SELECT max(r2.updated)
+	FROM dashboards.registries r2
+      join dashboards.organisation_breakdown p on p.practice_ods_code = r2.ods_code
+	  WHERE (find_in_set(stp_ods_code, valid_orgs2) or find_in_set(ccg_ods_code, valid_orgs2) or find_in_set(practice_ods_code, valid_orgs2)) and r2.parent_registry = filter_registry
+		and r2.ods_code = r.ods_code);
 
 	create temporary table list_sizes_ccg engine=memory
 	select IFNULL(ccg, "GRAND TOTAL") AS ccg,sum(list_size) as list_size from list_sizes
@@ -287,7 +311,7 @@ WHERE
 
 elseif filter_ccg != '' and filter_registry	 != '' THEN
 
-	SELECT count(distinct(ccg)) into counter FROM dashboards.population_denominators where ccg in (filter_ccg);
+	SELECT count(distinct(ccg)) into counter FROM dashboards.organisation_breakdown where ccg in (filter_ccg);
 
 	if counter = 0 then
 		leave sp;
@@ -320,14 +344,14 @@ I	INTO counter FROM
 	  dashboards.registries r
 		where r.ods_code in
 		(
-			select distinct practice_ods_code from dashboards.population_denominators
+			select distinct practice_ods_code from dashboards.organisation_breakdown
 			WHERE (find_in_set(stp_ods_code, valid_orgs2) or find_in_set(ccg_ods_code, valid_orgs2) or find_in_set(practice_ods_code, valid_orgs2))
 		)
   	    AND registry in (select distinct registry from dashboards.registries r
 	    WHERE parent_registry = filter_registry
 		AND r.ods_code in
 		(
-			select distinct practice_ods_code from dashboards.population_denominators
+			select distinct practice_ods_code from dashboards.organisation_breakdown
 			WHERE (find_in_set(stp_ods_code, valid_orgs2) or find_in_set(ccg_ods_code, valid_orgs2) or find_in_set(practice_ods_code, valid_orgs2))
 		)
       );
@@ -335,7 +359,7 @@ I	INTO counter FROM
 	SET @sql = CONCAT('create table dashboards.temp as SELECT IFNULL(r.practice_name, "GRAND TOTAL") AS practice_name, ', @sql,
 	'FROM dashboards.registries r '
    'where r.ccg = \'',filter_ccg,'\' and r.parent_registry = \'',filter_registry,'\' and r.ods_code in '
-   '(select distinct practice_ods_code from dashboards.population_denominators '
+   '(select distinct practice_ods_code from dashboards.organisation_breakdown '
    'WHERE (stp_ods_code in (',valid_orgs,') or ccg_ods_code in (',valid_orgs,') or practice_ods_code in (',valid_orgs,'))) '
    'GROUP BY r.practice_name with rollup');
 
@@ -349,14 +373,26 @@ I	INTO counter FROM
 	create temporary table list_sizes engine=memory
 	SELECT distinct r.ccg, r.practice_name, r.list_size
 	FROM dashboards.registries r
-      join dashboards.population_denominators p on p.practice_ods_code = r.ods_code
-	  WHERE (find_in_set(stp_ods_code, valid_orgs2) or find_in_set(ccg_ods_code, valid_orgs2) or find_in_set(practice_ods_code, valid_orgs2)) and r.ccg = filter_ccg and parent_registry IS NULL;
+      join dashboards.organisation_breakdown p on p.practice_ods_code = r.ods_code
+	  WHERE (find_in_set(stp_ods_code, valid_orgs2) or find_in_set(ccg_ods_code, valid_orgs2) or find_in_set(practice_ods_code, valid_orgs2)) and r.ccg = filter_ccg and r.parent_registry IS NULL
+	and r.updated =
+    (select max(r2.updated)
+	FROM dashboards.registries r2
+      join dashboards.organisation_breakdown p on p.practice_ods_code = r2.ods_code
+	  WHERE (find_in_set(stp_ods_code, valid_orgs2) or find_in_set(ccg_ods_code, valid_orgs2) or find_in_set(practice_ods_code, valid_orgs2)) and r2.ccg = filter_ccg and r2.parent_registry IS NULL
+    and r2.ods_code = r.ods_code);
 
 	create temporary table registry_sizes engine=memory
 	SELECT distinct r.ccg, r.practice_name, r.list_size as registry_size
 	FROM dashboards.registries r
-      join dashboards.population_denominators p on p.practice_ods_code = r.ods_code
-	  WHERE (find_in_set(stp_ods_code, valid_orgs2) or find_in_set(ccg_ods_code, valid_orgs2) or find_in_set(practice_ods_code, valid_orgs2)) and r.ccg = filter_ccg and parent_registry = filter_registry;
+      join dashboards.organisation_breakdown p on p.practice_ods_code = r.ods_code
+	  WHERE (find_in_set(stp_ods_code, valid_orgs2) or find_in_set(ccg_ods_code, valid_orgs2) or find_in_set(practice_ods_code, valid_orgs2)) and r.ccg = filter_ccg and r.parent_registry = filter_registry
+      and r.updated =
+      (SELECT max(r2.updated)
+	FROM dashboards.registries r2
+      join dashboards.organisation_breakdown p on p.practice_ods_code = r2.ods_code
+	  WHERE (find_in_set(stp_ods_code, valid_orgs2) or find_in_set(ccg_ods_code, valid_orgs2) or find_in_set(practice_ods_code, valid_orgs2)) and r2.ccg = filter_ccg and r2.parent_registry = filter_registry
+		and r2.ods_code = r.ods_code);
 
 	create temporary table list_sizes_practice engine=memory
 	select IFNULL(practice_name, "GRAND TOTAL") AS practice_name,sum(list_size) as list_size from list_sizes
@@ -368,15 +404,15 @@ I	INTO counter FROM
 
 	UPDATE dashboards.temp t
         JOIN
-    list_sizes_practice r ON r.practice_name = t.practice_name
-SET
-    t.list_size = r.list_size;
+		list_sizes_practice r ON r.practice_name = t.practice_name
+		SET
+		t.list_size = r.list_size;
 
-	UPDATE dashboards.temp t
+		UPDATE dashboards.temp t
         JOIN
-    registry_sizes_practice r ON r.practice_name = t.practice_name
-SET
-    t.registry_size = r.registry_size;
+		registry_sizes_practice r ON r.practice_name = t.practice_name
+		SET
+		t.registry_size = r.registry_size;
 
 	SELECT
     CONCAT('select \'Go to denominator registry\' as org,\'\' as list_size,\'',

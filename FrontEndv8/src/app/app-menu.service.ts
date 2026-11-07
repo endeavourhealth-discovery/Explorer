@@ -14,25 +14,27 @@ import {CovidViewerComponent} from "./explorer/covidviewer/covidviewer.component
 import {PopulationsComponent} from "./explorer/populations/populations.component";
 import {RegistryListsComponent} from "./explorer/registrylists/registrylists.component";
 import {QueryQueueComponent} from "./explorer/queryqueue/queryqueue.component";
+import {AuditLogComponent} from "./explorer/auditlog/auditlog.component";
 
 @Injectable()
 export class AppMenuService implements  AbstractMenuProvider {
   static getRoutes(): Routes {
     return [
       {path: '', redirectTo: '/covidlibrary', pathMatch: 'full'},
-      {path: 'dashboardviewer', component: DashboardViewerComponent, data: {role: 'explorer'}},
-      {path: 'covidviewer', component: CovidViewerComponent, data: {role: 'explorer'}},
-      {path: 'registries', component: RegistriesComponent, data: {role: 'explorer'}},
-      {path: 'dashboardlibrary', component: DashboardLibraryComponent, data: {role: 'explorer'}},
-      {path: 'covidlibrary', component: CovidLibraryComponent, data: {role: 'explorer'}},
-      {path: 'querylibrary', component: QueryLibraryComponent, data: {role: 'explorer'}},
-      {path: 'valuesetlibrary', component: ValueSetLibraryComponent, data: {role: 'explorer'}},
-      {path: 'map', component: MapComponent, data: {role: 'explorer'}},
-      {path: 'tutorials', component: TutorialsComponent, data: {role: 'explorer'}},
-      {path: 'graphicalcomparison', component: GraphicalComparisonComponent, data: {role: 'explorer'}},
-      {path: 'populations', component: PopulationsComponent, data: {role: 'explorer'}},
-      {path: 'registrylists', component: RegistryListsComponent, data: {role: 'explorer'}},
-      {path: 'queryqueue', component: QueryQueueComponent, data: {role: 'explorer'}},
+      {path: 'dashboardviewer', component: DashboardViewerComponent, data: {role: 'explorer:dashboards'}},
+      {path: 'covidviewer', component: CovidViewerComponent, data: {role: 'explorer:covid'}},
+      {path: 'registries', component: RegistriesComponent, data: {role: 'explorer:dashboards'}},
+      {path: 'dashboardlibrary', component: DashboardLibraryComponent, data: {role: 'explorer:dashboards'}},
+      {path: 'covidlibrary', component: CovidLibraryComponent, data: {role: 'explorer:covid'}},
+      {path: 'querylibrary', component: QueryLibraryComponent, data: {role: 'explorer:dashboards'}},
+      {path: 'valuesetlibrary', component: ValueSetLibraryComponent, data: {role: 'explorer:dashboards'}},
+      {path: 'map', component: MapComponent, data: {role: 'explorer:dashboards'}},
+      {path: 'tutorials', component: TutorialsComponent, data: {role: 'explorer:dashboards'}},
+      {path: 'graphicalcomparison', component: GraphicalComparisonComponent, data: {role: 'explorer:dashboards'}},
+      {path: 'populations', component: PopulationsComponent, data: {role: 'explorer:dashboards'}},
+      {path: 'registrylists', component: RegistryListsComponent, data: {role: 'explorer:dashboards'}},
+      {path: 'queryqueue', component: QueryQueueComponent, data: {role: 'explorer:dashboards'}},
+      {path: 'auditlog', component: AuditLogComponent, data: {role: 'explorer:dashboards'}},
     ];
   }
 
@@ -54,6 +56,7 @@ export class AppMenuService implements  AbstractMenuProvider {
       {icon: 'fas fa-clock', caption: 'Query queue', state: 'queryqueue'},
       {icon: 'fas fa-list-ol', caption: 'Value set library', state: 'valuesetlibrary'},
       {icon: 'fas fa-users', caption: 'Population counts', state: 'populations'},
+      {icon: 'fas fa-history', caption: 'Audit log', state: 'auditlog'},
       {icon: 'fas fa-video-plus', caption: 'Tutorials', state: 'tutorials'}
     ];
   }

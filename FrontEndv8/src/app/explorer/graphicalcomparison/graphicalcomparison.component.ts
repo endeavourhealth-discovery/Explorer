@@ -20,6 +20,7 @@ export class GraphicalComparisonComponent implements OnInit {
   filterCtrl: FormControl = new FormControl();
   filteredValueset: ReplaySubject<orgList[]> = new ReplaySubject<orgList[]>(1);
 
+  percentage: boolean = false;
   view: any[] = [1600, 330];
   chartResults: any[];
   practices = new FormControl();
@@ -102,7 +103,7 @@ export class GraphicalComparisonComponent implements OnInit {
       organisations = this.selectedPractices.toString();
     }
 
-    this.explorerService.getDashboardRegistries(organisations, this.selectedRegistries.toString())
+    this.explorerService.getDashboardRegistries(organisations, this.selectedRegistries.toString(), this.percentage)
       .subscribe(result => {
         this.chartResults = result.results;
       });

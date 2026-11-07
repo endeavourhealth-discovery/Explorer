@@ -32,7 +32,7 @@ BEGIN
   DECLARE l_cohort VARCHAR(64) DEFAULT NULL;
   DECLARE l_selecttab VARCHAR(64) DEFAULT NULL;
   DECLARE l_rejecttab VARCHAR(64) DEFAULT NULL;
-  DECLARE l_observationtab VARCHAR(64) DEFAULT NULL;
+  DECLARE l_filter INT DEFAULT NULL;
 
   DECLARE counter INT DEFAULT 0;
   DECLARE l_tmp VARCHAR(1000) DEFAULT NULL;
@@ -95,15 +95,12 @@ BEGIN
                   SET TempValue = TRIM(front); 
 
                   IF l_id = 1 AND l_selectReject = 'REGISTER' THEN
+                      SET l_filter = 1;
+                  ELSE
+                      SET l_filter = 2;
+                  END IF;
 
-                        SET l_observationtab = CONCAT(p_schema,'.observation');
-                        CALL queryBuilder(l_query_id, jsonQuery, TempValue, l_cohort, l_observationtab, p_store_tmp, p_conceptAllTab, p_schema, p_baselineDate, 1);
-
-                  ELSE 
-                        SET l_observationtab = p_observationCohort_tmp;
-                        CALL queryBuilder(l_query_id, jsonQuery, TempValue, l_cohort, l_observationtab, p_store_tmp, NULL, p_schema, p_baselineDate, 2);
-
-                  END IF;                  
+                  CALL queryBuilder(l_query_id, jsonQuery, TempValue, l_cohort, p_observationCohort_tmp, p_store_tmp, NULL, p_schema, p_baselineDate, l_filter);                
 
                   -- fetch the next query number
                   SET l_queryNumber = INSERT(l_queryNumber, 1, frontlen + 1, '');
@@ -142,7 +139,7 @@ BEGIN
 
           IF @cnt > 1 THEN 
             -- build observation cohort 
-            CALL createObservationCohort(l_query_id, p_observationCohort_tmp, l_selecttab, p_conceptAllTab, p_schema);
+            CALL createObservationCohort(l_query_id, p_observationCohort_tmp, l_selecttab, p_conceptAllTab, p_schema, NULL);
           END IF;
 
         ELSEIF l_id > 1 AND l_selectReject IN ('SELECT', 'REJECT') THEN

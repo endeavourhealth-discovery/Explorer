@@ -10,6 +10,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.endeavourhealth.common.config.ConfigManager;
 import org.endeavourhealth.explorer.common.models.*;
+import org.joda.time.DateTime;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +27,7 @@ import java.text.DecimalFormat;
 import java.util.*;
 import org.endeavourhealth.core.database.rdbms.enterprise.EnterpriseConnector;
 import java.sql.Connection;
+import java.util.Date;
 
 public class ExplorerJDBCDAL implements AutoCloseable {
 
@@ -35,6 +37,8 @@ public class ExplorerJDBCDAL implements AutoCloseable {
     Connection connection = null;
     Boolean patientIdentifiable = false;
     Short projectType = 7;
+    String userName = "";
+    String roleName = "";
 
     public void setValidOrgs(List<String> orgs) {
         validOrgs = orgs;
@@ -46,6 +50,14 @@ public class ExplorerJDBCDAL implements AutoCloseable {
 
     public void setProjectType(Short type) {
         projectType = type;
+    }
+
+    public void setRoleName(String role) {
+        roleName = role;
+    }
+
+    public void setUserName(String user) {
+        userName = user;
     }
 
     public void closeSubscriberConnection() throws Exception {
@@ -103,22 +115,23 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         } catch (Exception ex) {
             connection.rollback();
         }
+
+        saveAuditLog("Delete value set code","0","0","Deleted id "+id);
     }
 
-    public void saveValueSetCode(String type, String selectedDataType, String code, String term, String snomed, String value_set_id, String id) throws Exception {
+    public void saveValueSetCode(String type, String selectedDataType, String code, String term, String value_set_id, String id) throws Exception {
 
         String sql = "";
 
         if (id.equals("")) {
-            sql = "INSERT INTO dashboards.value_set_codes (type, data_type, original_code, original_term, snomed_id, value_set_id) " +
-                    "VALUES (?, ?, ?, ?, ?, ?)";
+            sql = "INSERT INTO dashboards.value_set_codes (type, data_type, original_code, original_term, value_set_id) " +
+                    "VALUES (?, ?, ?, ?, ?)";
             try (PreparedStatement stmt = connection.prepareStatement(sql)) {
                 stmt.setString(1, type);
                 stmt.setString(2, selectedDataType);
                 stmt.setString(3, code);
                 stmt.setString(4, term);
-                stmt.setString(5, snomed);
-                stmt.setString(6, value_set_id);
+                stmt.setString(5, value_set_id);
                 stmt.executeUpdate();
                 connection.commit();
             } catch (Exception ex) {
@@ -126,7 +139,7 @@ public class ExplorerJDBCDAL implements AutoCloseable {
             }
         } else // edit
         {
-            sql = "UPDATE dashboards.value_set_codes SET type = ?, data_type = ?, original_code = ?, original_term = ?, snomed_id = ? " +
+            sql = "UPDATE dashboards.value_set_codes SET type = ?, data_type = ?, original_code = ?, original_term = ? " +
                     "WHERE id = ?";
 
             try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -134,20 +147,20 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 stmt.setString(2, selectedDataType);
                 stmt.setString(3, code);
                 stmt.setString(4, term);
-                stmt.setString(5, snomed);
-                stmt.setString(6, id);
+                stmt.setString(5, id);
                 stmt.executeUpdate();
                 connection.commit();
             } catch (Exception ex) {
                 connection.rollback();
             }
         }
+
     }
 
     public void duplicateValueSet(String id) throws Exception {
 
         String sql = "insert into dashboards.value_sets (type, name) " +
-                "select type, concat('Copy of ',name) from dashboards.value_sets where id = ?";
+                "select type, concat(name,' (copy)') from dashboards.value_sets where id = ?";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, id);
@@ -157,8 +170,8 @@ public class ExplorerJDBCDAL implements AutoCloseable {
             connection.rollback();
         }
 
-        String sqlCount = "insert into dashboards.value_set_codes (value_set_id, type, original_code, original_term, snomed_id) " +
-                "select (select max(id) as id from dashboards.value_sets), type, original_code, original_term, snomed_id " +
+        String sqlCount = "insert into dashboards.value_set_codes (value_set_id, type, data_type, original_code, original_term) " +
+                "select (select max(id) as id from dashboards.value_sets), type, data_type, original_code, original_term " +
                 "from dashboards.value_set_codes " +
                 "where value_set_id = ?";
 
@@ -169,6 +182,9 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         } catch (Exception ex) {
             connection.rollback();
         }
+
+        saveAuditLog("Duplicated value set","0","0","Duplicated value set "+id);
+
     }
 
     public void deleteDashboard(String dashboardId) throws Exception {
@@ -192,6 +208,25 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         } catch (Exception ex) {
             connection.rollback();
         }
+
+        saveAuditLog("Delete dashboard","0","0","Deleted dashboard "+dashboardId);
+
+
+    }
+
+    public void deleteDashboardFromName(String dashboardName) throws Exception {
+
+        String sql = "DELETE FROM dashboards.dashboard_library WHERE name = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, dashboardName);
+            stmt.executeUpdate();
+            connection.commit();
+        } catch (Exception ex) {
+            connection.rollback();
+        }
+
+        saveAuditLog("Delete dashboard","0","0","Deleted dashboard "+dashboardName);
 
     }
 
@@ -227,12 +262,14 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 connection.rollback();
             }
         }
+
+        saveAuditLog("Save dashboard","0","0","Save dashboard "+name);
     }
 
     public void duplicateDashboard(String id) throws Exception {
 
         String sql = "insert into dashboards.dashboard_library (type, name, query) " +
-                "select type, concat('Copy of ',name), query from dashboards.dashboard_library where dashboard_id = ?";
+                "select type, concat(name,' (copy)'), query from dashboards.dashboard_library where dashboard_id = ?";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, id);
@@ -241,29 +278,204 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         } catch (Exception ex) {
             connection.rollback();
         }
+
+        saveAuditLog("Duplicate dashboard","0","0","Duplicate dashboard "+id);
     }
 
-    public void deleteQuery(String id) throws Exception {
+    public void deleteQuery(String id, Boolean deleteQueryAndResults) throws Exception {
 
         String ids[] = id.split(",");
 
-        StringBuilder builder = new StringBuilder();
-
         for( int i = 0 ; i < ids.length; i++ ) {
-            builder.append("?,");
-        }
+            if (!isNumeric(ids[i])) // skip if query ID not numeric - protection against SQL injection
+                continue;
 
-        String sql = "DELETE FROM dashboards.query_library WHERE id in ("+builder.deleteCharAt( builder.length() -1 ).toString()+")";
+            if (Integer.parseInt(ids[i]) < 283) // do not allow deletion of QOF queries
+                continue;
 
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            for (int i = 1; i <= ids.length; i++) {
-                stmt.setInt(i, Integer.parseInt(ids[i-1]));
+            String sql = "select name, registry_name from dashboards.query_library where id = ?";
+            String queryName = "";
+            String registryName = "";
+            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+                stmt.setInt(1, Integer.parseInt(ids[i]));
+                try (ResultSet resultSet = stmt.executeQuery()) {
+                    while (resultSet.next()) {
+                        queryName = resultSet.getString("name");
+                        registryName = resultSet.getString("registry_name");
+                    }
+                }
             }
-            stmt.executeUpdate();
-            connection.commit();
-        } catch (Exception ex) {
-            connection.rollback();
+
+            saveAuditLog("Delete query",ids[i],"0","");
+
+            sql = "select name from dashboards.query_library where denominator_query = ?";
+
+            String name = "";
+
+            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+                stmt.setString(1, queryName);
+                try (ResultSet resultSet = stmt.executeQuery()) {
+                    while (resultSet.next()) {
+                        name = resultSet.getString("name");
+                    }
+                }
+            }
+
+            if (!name.equals("")) // cannot delete query as it has numerator queries that depend on it
+                continue;
+
+            if (deleteQueryAndResults) {
+                sql = "DELETE FROM dashboards.query_library WHERE id = ?";
+
+                try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+                    stmt.setInt(1, Integer.parseInt(ids[i]));
+                    stmt.executeUpdate();
+                    connection.commit();
+                } catch (Exception ex) {
+                    connection.rollback();
+                }
+
+                sql = "DELETE FROM dashboards.dashboard_library WHERE query like ?";
+
+                try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+                    stmt.setString(1, "%\""+queryName+"\",\"xAxisLabel%");
+                    stmt.executeUpdate();
+                    connection.commit();
+                } catch (Exception ex) {
+                    connection.rollback();
+                }
+
+                sql = "DELETE FROM dashboards.queue WHERE query_id = ?";
+
+                try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+                    stmt.setInt(1, Integer.parseInt(ids[i]));
+                    stmt.executeUpdate();
+                    connection.commit();
+                } catch (Exception ex) {
+                    connection.rollback();
+                }
+
+            }
+
+            sql = "DELETE FROM dashboards.dashboard_results_0 WHERE name = ?";
+
+            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+                stmt.setString(1, registryName);
+                stmt.executeUpdate();
+                connection.commit();
+            } catch (Exception ex) {
+                connection.rollback();
+            }
+
+            sql = "DELETE FROM dashboards.encounter_dataset WHERE query_id = ?";
+
+            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+                stmt.setInt(1, Integer.parseInt(ids[i]));
+                stmt.executeUpdate();
+                connection.commit();
+            } catch (Exception ex) {
+                connection.rollback();
+            }
+
+            sql = "DELETE FROM dashboards.medication_dataset WHERE query_id = ?";
+
+            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+                stmt.setInt(1, Integer.parseInt(ids[i]));
+                stmt.executeUpdate();
+                connection.commit();
+            } catch (Exception ex) {
+                connection.rollback();
+            }
+
+            sql = "DELETE FROM dashboards.observation_dataset WHERE query_id = ?";
+
+            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+                stmt.setInt(1, Integer.parseInt(ids[i]));
+                stmt.executeUpdate();
+                connection.commit();
+            } catch (Exception ex) {
+                connection.rollback();
+            }
+
+            sql = "DELETE FROM dashboards.person_dataset WHERE query_id = ?";
+
+            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+                stmt.setInt(1, Integer.parseInt(ids[i]));
+                stmt.executeUpdate();
+                connection.commit();
+            } catch (Exception ex) {
+                connection.rollback();
+            }
+
+            sql = "DELETE FROM dashboards.registries WHERE query = ?";
+
+            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+                stmt.setString(1, queryName);
+                stmt.executeUpdate();
+                connection.commit();
+            } catch (Exception ex) {
+                connection.rollback();
+            }
+
+            sql = "DROP TABLE IF EXISTS dashboards.dashboard_results_"+ids[i];
+
+            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+                stmt.executeUpdate();
+                connection.commit();
+            } catch (Exception ex) {
+                connection.rollback();
+            }
+
+            sql = "DROP TABLE IF EXISTS dashboards.encounter_output_"+ids[i];
+
+            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+                stmt.executeUpdate();
+                connection.commit();
+            } catch (Exception ex) {
+                connection.rollback();
+            }
+
+            sql = "DROP TABLE IF EXISTS dashboards.medication_output_"+ids[i];
+
+            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+                stmt.executeUpdate();
+                connection.commit();
+            } catch (Exception ex) {
+                connection.rollback();
+            }
+
+            sql = "DROP TABLE IF EXISTS dashboards.observation_output_"+ids[i];
+
+            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+                stmt.executeUpdate();
+                connection.commit();
+            } catch (Exception ex) {
+                connection.rollback();
+            }
+
+            sql = "DROP TABLE IF EXISTS dashboards.person_output_"+ids[i];
+
+            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+                stmt.executeUpdate();
+                connection.commit();
+            } catch (Exception ex) {
+                connection.rollback();
+            }
         }
+
+
+    }
+
+    public static boolean isNumeric(String strNum) {
+        if (strNum == null) {
+            return false;
+        }
+        try {
+            double d = Double.parseDouble(strNum);
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+        return true;
     }
 
     public void saveQuery(String type, String name, String registryName, String denominatorQuery, String id, String jsonQuery) throws Exception {
@@ -271,22 +483,35 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         String sql = "";
 
         if (id.equals("")) {
-            sql = "INSERT INTO dashboards.query_library (type, name, registry_name, denominator_query, query) " +
-                    "VALUES (?, ?, ?, ?, ?)";
+            sql = "INSERT INTO dashboards.query_library (type, name, registry_name, denominator_query, query, user_name) " +
+                    "VALUES (?, ?, ?, ?, ?, ?)";
             try (PreparedStatement stmt = connection.prepareStatement(sql)) {
                 stmt.setString(1, type);
                 stmt.setString(2, name);
                 stmt.setString(3, registryName);
                 stmt.setString(4, denominatorQuery);
                 stmt.setString(5, jsonQuery);
+                stmt.setString(6, userName);
                 stmt.executeUpdate();
                 connection.commit();
+
+                sql = "select max(id) as id from dashboards.query_library";
+                try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                    try (ResultSet resultSet = statement.executeQuery()) {
+                        while (resultSet.next()) {
+                            id = resultSet.getString("id");
+                        }
+                    }
+                }
+
+                saveAuditLog("Query created",id,"0","");
+
             } catch (Exception ex) {
                 connection.rollback();
             }
         } else // edit
         {
-            sql = "UPDATE dashboards.query_library SET type = ?, name = ?, registry_name = ?, denominator_query = ?, query = ? " +
+            sql = "UPDATE dashboards.query_library SET type = ?, name = ?, registry_name = ?, denominator_query = ?, query = ?, user_name = ? " +
                     "WHERE id = ?";
 
             try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -295,19 +520,44 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 stmt.setString(3, registryName);
                 stmt.setString(4, denominatorQuery);
                 stmt.setString(5, jsonQuery);
-                stmt.setString(6, id);
+                stmt.setString(6, userName);
+                stmt.setString(7, id);
                 stmt.executeUpdate();
                 connection.commit();
+
+                saveAuditLog("Query edited",id,"0","");
+
             } catch (Exception ex) {
                 connection.rollback();
             }
         }
+
+        deleteDashboardFromName(registryName+" trend");
+        deleteDashboardFromName(registryName+" tables");
+
+        if (jsonQuery.contains("\"timeSeries\":true")) { //auto-create trend dashboard if user has asked for one in the dataset output
+            String jsonDashboard =
+                    "{\"selectedVisualisation1\":\""+registryName+" trend\",\"selectedSeries1\":\""+name+"\",\"xAxisLabel1\":\"\",\"yAxisLabel1\":\"\",\"selectedVisualisation2\":\"\",\"selectedSeries2\":\"\",\"xAxisLabel2\":\"\",\"yAxisLabel2\":\"\",\"selectedVisualisation3\":\"\",\"selectedSeries3\":\"\",\"xAxisLabel3\":\"\",\"yAxisLabel3\":\"\",\"selectedVisualisation4\":\"\",\"selectedSeries4\":\"\",\"xAxisLabel4\":\"\",\"yAxisLabel4\":\"\",\"visualType\":[{\"icon\":\"fad fa-chart-line\",\"name\":\"Line chart\"}]}\n";
+
+            saveDashboard(type,registryName+" trend","",jsonDashboard);
+        }
+
+        if (jsonQuery.contains("\"demographics\":true")||
+                jsonQuery.contains("\"encounters\":true")||
+                jsonQuery.contains("\"medication\":true")||
+                jsonQuery.contains("\"clinicalEvents\":true")) { //auto-create table dashboard if user has asked for one in the dataset output
+            String jsonDashboard =
+                    "{\"selectedVisualisation1\":\""+registryName+" tables\",\"selectedSeries1\":\""+name+"\",\"xAxisLabel1\":\"\",\"yAxisLabel1\":\"\",\"selectedVisualisation2\":\"\",\"selectedSeries2\":\"\",\"xAxisLabel2\":\"\",\"yAxisLabel2\":\"\",\"selectedVisualisation3\":\"\",\"selectedSeries3\":\"\",\"xAxisLabel3\":\"\",\"yAxisLabel3\":\"\",\"selectedVisualisation4\":\"\",\"selectedSeries4\":\"\",\"xAxisLabel4\":\"\",\"yAxisLabel4\":\"\",\"visualType\":[{\"icon\":\"fal fa-table\",\"name\":\"Table\"}]}\n";
+
+            saveDashboard(type,registryName+" tables","",jsonDashboard);
+        }
+
     }
 
     public void duplicateQuery(String id) throws Exception {
 
         String sql = "insert into dashboards.query_library (type, name, registry_name, denominator_query, query) " +
-                "select type, concat('Copy of ',name), concat('Copy of ',registry_name), denominator_query, query from dashboards.query_library where id = ?";
+                "select type, concat(name,' (copy)'), concat(registry_name,' (copy)'), denominator_query, replace(query,'\"submitQuery\":\"Yes\"','\"submitQuery\":\"No\"') as query from dashboards.query_library where id = ?";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, id);
@@ -316,6 +566,8 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         } catch (Exception ex) {
             connection.rollback();
         }
+
+        saveAuditLog("Duplicate query",id,"0","");
     }
 
     public void deleteValueSet(String id) throws Exception {
@@ -353,6 +605,8 @@ public class ExplorerJDBCDAL implements AutoCloseable {
             connection.rollback();
         }
 
+        saveAuditLog("Delete value set","0","0","Delete value set "+id);
+
     }
 
     public void saveValueSet(String type, String name, String id) throws Exception {
@@ -385,6 +639,8 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 connection.rollback();
             }
         }
+
+        saveAuditLog("Save value set","0","0","Save value set "+name);
     }
 
     public LookupListResult getLookupLists(String list, String type) throws Exception {
@@ -439,7 +695,7 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 sql = "SELECT distinct(r.ccg) as type " +
                         "FROM dashboards.registries r "+
                         "where r.ods_code in ("+
-                        "select distinct practice_ods_code from dashboards.population_denominators "+
+                        "select distinct practice_ods_code from dashboards.organisation_breakdown "+
                         "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
                         noResults+
                         " order by r.ccg";
@@ -518,7 +774,7 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 sql = "SELECT distinct(r.registry) as type " +
                         "FROM dashboards.registries r "+
                         "where r.ods_code in ("+
-                        "select distinct practice_ods_code from dashboards.population_denominators "+
+                        "select distinct practice_ods_code from dashboards.organisation_breakdown "+
                         "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
                         noResults+
                         " order by r.registry";
@@ -541,10 +797,10 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 sql = "SELECT distinct(concat(r.practice_name,' | ', r.ods_code)) as type " +
                         "FROM dashboards.registries r "+
                         "where r.ods_code in ("+
-                        "select distinct practice_ods_code from dashboards.population_denominators "+
+                        "select distinct practice_ods_code from dashboards.organisation_breakdown "+
                         "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
                         noResults+
-                        " order by r.practice_name";
+                        " order by concat(r.practice_name,' | ', r.ods_code)";
 
                 sqlCount = "SELECT 999";
                 break;
@@ -575,7 +831,22 @@ public class ExplorerJDBCDAL implements AutoCloseable {
             case "22":
                 sql = "SELECT distinct(r.registry_name) as type " +
                         "FROM dashboards.query_library r "+
+                        "where r.registry_name is not null "+
                         " order by r.registry_name";
+
+                sqlCount = "SELECT 999";
+                break;
+            case "23":
+                sql = "SELECT distinct(r.name) as type " +
+                        "FROM dashboards.query_library r "+
+                        " order by r.name";
+
+                sqlCount = "SELECT 999";
+                break;
+            case "24":
+                sql = "SELECT distinct(user_name) as type " +
+                        "FROM dashboards.audit_log "+
+                        " order by user_name";
 
                 sqlCount = "SELECT 999";
                 break;
@@ -745,7 +1016,7 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         String params = builder.deleteCharAt( builder.length() -1 ).toString();
 
 
-        sql = "SELECT type, data_type, original_code, original_term, snomed_id, updated, id " +
+        sql = "SELECT type, data_type, original_code, original_term, updated, id " +
                 "FROM dashboards.value_set_codes " +
                 "WHERE value_set_id = ? and type in ("+params+")"+
                 " order by type, original_term";
@@ -795,10 +1066,59 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 .setDataType(resultSet.getString("data_type"))
                 .setCode(resultSet.getString("original_code"))
                 .setTerm(resultSet.getString("original_term"))
-                .setSnomed(resultSet.getString("snomed_id"))
                 .setUpdated(resultSet.getDate("updated"))
                 .setId(resultSet.getString("id"));
         return valueset;
+    }
+
+    public ConceptResult getConcepts(Integer page, Integer size, String term) throws Exception {
+        ConceptResult result = new ConceptResult();
+
+        String sql = "";
+        String sqlCount = "";
+
+        sql = "SELECT id as original_code, name as term, use_count FROM concept where name like ? order by use_count desc LIMIT ?,?";
+
+        sqlCount = "SELECT count(1) FROM concept where name like ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, "%"+term+"%");
+            statement.setInt(2, page * 10);
+            statement.setInt(3, size);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                result.setResults(getConceptList(resultSet));
+            }
+        }
+
+        try (PreparedStatement statement = connection.prepareStatement(sqlCount)) {
+            statement.setString(1, "%"+term+"%");
+            try (ResultSet resultSet = statement.executeQuery()) {
+                resultSet.next();
+                result.setLength(resultSet.getInt(1));
+            }
+        }
+
+        return result;
+    }
+
+    private List<Concept> getConceptList(ResultSet resultSet) throws SQLException {
+        List<Concept> result = new ArrayList<>();
+        while (resultSet.next()) {
+            result.add(getConcept(resultSet));
+        }
+
+        return result;
+    }
+
+    public static Concept getConcept(ResultSet resultSet) throws SQLException {
+        Concept concept = new Concept();
+
+        concept
+                .setOriginalCode(resultSet.getString("original_code"))
+                .setTerm(resultSet.getString("term"))
+                .setUseCount(resultSet.getString("use_count"));
+
+        return concept;
     }
 
     public ValueSetLibraryResult getValueSetLibrary(String selectedTypeString) throws Exception {
@@ -984,6 +1304,8 @@ public class ExplorerJDBCDAL implements AutoCloseable {
 
     public ChartResult getDashboardCovid(String dashboardId, String series, String dateFrom, String dateTo, String stp, String ccg, String pcn, String practice, String ethnic, String age, String sex,
                                          String cumulative, String weekly, String rate,String combineSeries, String combineEthnic, String combineAge, String combineSex, String combineOrgs) throws Exception {
+
+        saveAuditLog("View COVID-19 dashboard","0","0",stp+" "+ccg+" "+pcn+" "+practice);
 
         if (projectType==7) { // STP
             ccg = "Access denied to : "+ccg;
@@ -1347,6 +1669,9 @@ public class ExplorerJDBCDAL implements AutoCloseable {
     }
 
     public ChartResult getDashboard(String query, String chartName, String dateFrom, String dateTo, String cumulative, String grouping, String weekly) throws Exception {
+
+        saveAuditLog("View dashboard","0","0","View dashboard "+query+ " "+chartName);
+
         List<String> charts = Arrays.asList(chartName.split("\\s*,\\s*"));
 
         StringBuilder builder = new StringBuilder();
@@ -1397,7 +1722,7 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                             "( SELECT name,series_name,sum(series_value) as series_value "+
                             "FROM dashboards.`dashboard_results_" + queryId + "` r " +
                             "where r.`grouping` in ("+
-                            "select distinct practice_ods_code from dashboards.population_denominators "+
+                            "select distinct practice_ods_code from dashboards.organisation_breakdown "+
                             "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+")) "+
                             "and stp in ("+params+")) "+
                             noResults+
@@ -1411,7 +1736,7 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                                 "SUM(series_value) AS series_value " +
                                 "from dashboards.`dashboard_results_" + queryId + "` r " +
                                 "where r.`grouping` in (" +
-                                "select distinct practice_ods_code from dashboards.population_denominators " +
+                                "select distinct practice_ods_code from dashboards.organisation_breakdown " +
                                 "WHERE (stp_ods_code in (" + paramsValidOrgs + ") or ccg_ods_code in (" + paramsValidOrgs + ") or practice_ods_code in (" + paramsValidOrgs + ")) " +
                                 "and stp in (" + params + ")) " +
                                 noResults +
@@ -1422,7 +1747,7 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                     } else {
                         sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` r " +
                                 "where r.`grouping` in (" +
-                                "select distinct practice_ods_code from dashboards.population_denominators " +
+                                "select distinct practice_ods_code from dashboards.organisation_breakdown " +
                                 "WHERE (stp_ods_code in (" + paramsValidOrgs + ") or ccg_ods_code in (" + paramsValidOrgs + ") or practice_ods_code in (" + paramsValidOrgs + ")) " +
                                 "and stp in (" + params + ")) " +
                                 noResults +
@@ -1439,7 +1764,7 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                             "( SELECT name,series_name,sum(series_value) as series_value "+
                             "FROM dashboards.`dashboard_results_" + queryId + "` r " +
                             "where r.`grouping` in ("+
-                            "select distinct practice_ods_code from dashboards.population_denominators "+
+                            "select distinct practice_ods_code from dashboards.organisation_breakdown "+
                             "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+")) "+
                             "and ccg in ("+params+")) "+
                             noResults+
@@ -1453,7 +1778,7 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                                 "SUM(series_value) AS series_value " +
                                 "from dashboards.`dashboard_results_" + queryId + "` r "+
                                 "where r.`grouping` in ("+
-                                "select distinct practice_ods_code from dashboards.population_denominators "+
+                                "select distinct practice_ods_code from dashboards.organisation_breakdown "+
                                 "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+")) "+
                                 "and ccg in ("+params+")) "+
                                 noResults+
@@ -1464,7 +1789,7 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                     } else {
                         sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` r "+
                                 "where r.`grouping` in ("+
-                                "select distinct practice_ods_code from dashboards.population_denominators "+
+                                "select distinct practice_ods_code from dashboards.organisation_breakdown "+
                                 "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+")) "+
                                 "and ccg in ("+params+")) "+
                                 noResults+
@@ -1484,7 +1809,7 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                             "( SELECT name,series_name,sum(series_value) as series_value "+
                             "FROM dashboards.`dashboard_results_" + queryId + "` r " +
                             "where r.`grouping` in ("+
-                            "select distinct practice_ods_code from dashboards.population_denominators "+
+                            "select distinct practice_ods_code from dashboards.organisation_breakdown "+
                             "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+")) "+
                             "and practice in ("+params+")) "+
                             noResults+
@@ -1497,7 +1822,7 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                                 "SUM(series_value) AS series_value " +
                                 "from dashboards.`dashboard_results_" + queryId + "` r "+
                                 "where r.`grouping` in ("+
-                                "select distinct practice_ods_code from dashboards.population_denominators "+
+                                "select distinct practice_ods_code from dashboards.organisation_breakdown "+
                                 "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+")) "+
                                 "and practice in ("+params+")) "+
                                 noResults+
@@ -1508,7 +1833,7 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                     } else {
                         sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` r "+
                                 "where r.`grouping` in ("+
-                                "select distinct practice_ods_code from dashboards.population_denominators "+
+                                "select distinct practice_ods_code from dashboards.organisation_breakdown "+
                                 "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+")) "+
                                 "and practice in ("+params+")) "+
                                 noResults+
@@ -1554,7 +1879,19 @@ public class ExplorerJDBCDAL implements AutoCloseable {
 
     public Chart getDashboardSingle(String query, String chartName, String dateFrom, String dateTo, String grouping) throws Exception {
 
+        saveAuditLog("View dashboard","0","0","View dashboard "+query+ " "+chartName);
+
+        String chartnames[] = chartName.split(",");
+
         StringBuilder builder = new StringBuilder();
+
+        for( int i = 0 ; i < chartnames.length; i++ ) {
+            builder.append("?,");
+        }
+
+        String chartParams = builder.deleteCharAt( builder.length() -1 ).toString();
+
+        builder = new StringBuilder();
         for( int i = 0 ; i < validOrgs.size(); i++ ) {
             builder.append("?,");
         }
@@ -1562,6 +1899,7 @@ public class ExplorerJDBCDAL implements AutoCloseable {
 
         String ids[] = grouping.split(",");
 
+        builder = new StringBuilder();
         builder = new StringBuilder();
 
         for( int i = 0 ; i < ids.length; i++ ) {
@@ -1591,11 +1929,11 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         if (projectType==7) { // STP
             sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` r "+
                     "where r.`grouping` in ("+
-                    "select distinct practice_ods_code from dashboards.population_denominators "+
+                    "select distinct practice_ods_code from dashboards.organisation_breakdown "+
                     "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+")) "+
                     "and stp in ("+params+")) "+
                     noResults+
-                    " AND name = ? "+
+                    " AND name in ("+chartParams+") "+
                     "and series_name between ? and ? "+
                     " group by series_name order by series_name";
 
@@ -1603,11 +1941,11 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         else if (projectType==6) { // CCG
             sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` r "+
                     "where r.`grouping` in ("+
-                    "select distinct practice_ods_code from dashboards.population_denominators "+
+                    "select distinct practice_ods_code from dashboards.organisation_breakdown "+
                     "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+")) "+
                     "and ccg in ("+params+")) "+
                     noResults+
-                    " AND name = ? "+
+                    " AND name in ("+chartParams+") "+
                     "and series_name between ? and ? "+
                     " group by series_name order by series_name";
 
@@ -1615,11 +1953,11 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         if (projectType==5) { // Practice
             sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` r "+
                     "where r.`grouping` in ("+
-                    "select distinct practice_ods_code from dashboards.population_denominators "+
+                    "select distinct practice_ods_code from dashboards.organisation_breakdown "+
                     "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+")) "+
                     "and practice in ("+params+")) "+
                     noResults+
-                    " AND name = ? "+
+                    " AND name in ("+chartParams+") "+
                     "and series_name between ? and ? group by series_name order by series_name";
 
         }
@@ -1638,7 +1976,9 @@ public class ExplorerJDBCDAL implements AutoCloseable {
             for (int i = 1; i <= ids.length; i++) {
                 statement.setString(p++, ids[i-1]);
             }
-            statement.setString(p++, chartName);
+            for (int i = 1; i <= chartnames.length; i++) {
+                statement.setString(p++, chartnames[i - 1]);
+            }
             statement.setString(p++, dateFrom);
             statement.setString(p++, dateTo);
 
@@ -1653,33 +1993,33 @@ public class ExplorerJDBCDAL implements AutoCloseable {
             if (projectType==7) { // STP
                 sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` r "+
                         "where r.`grouping` in ("+
-                        "select distinct practice_ods_code from dashboards.population_denominators "+
+                        "select distinct practice_ods_code from dashboards.organisation_breakdown "+
                         "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+")) "+
                         "and stp in ("+params+")) "+
                         noResults+
-                        " AND name = ? "+
+                        " AND name in ("+chartParams+") "+
                         " group by series_name order by series_name";
 
             }
             else if (projectType==6) { // CCG
                 sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` r "+
                         "where r.`grouping` in ("+
-                        "select distinct practice_ods_code from dashboards.population_denominators "+
+                        "select distinct practice_ods_code from dashboards.organisation_breakdown "+
                         "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+")) "+
                         "and ccg in ("+params+")) "+
                         noResults+
-                        " AND name = ? "+
+                        " AND name in ("+chartParams+") "+
                         " group by series_name order by series_name";
 
             }
             if (projectType==5) { // Practice
                 sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` r "+
                         "where r.`grouping` in ("+
-                        "select distinct practice_ods_code from dashboards.population_denominators "+
+                        "select distinct practice_ods_code from dashboards.organisation_breakdown "+
                         "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+")) "+
                         "and practice in ("+params+")) "+
                         noResults+
-                        " AND name = ? "+
+                        " AND name in ("+chartParams+") "+
                         "group by series_name order by series_name";
 
             }
@@ -1698,7 +2038,9 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 for (int i = 1; i <= ids.length; i++) {
                     statement.setString(p++, ids[i-1]);
                 }
-                statement.setString(p++, chartName);
+                for (int i = 1; i <= chartnames.length; i++) {
+                    statement.setString(p++, chartnames[i - 1]);
+                }
 
                 try (ResultSet resultSet = statement.executeQuery()) {
                     chartItem.setSeries(getSeriesFromResultSet(resultSet));
@@ -1711,7 +2053,19 @@ public class ExplorerJDBCDAL implements AutoCloseable {
 
     public Chart getDashboardSingle(String query, String chartName, String grouping) throws Exception {
 
+        saveAuditLog("View dashboard","0","0","View dashboard "+query+ " "+chartName);
+
+        String chartnames[] = chartName.split(",");
+
         StringBuilder builder = new StringBuilder();
+
+        for( int i = 0 ; i < chartnames.length; i++ ) {
+            builder.append("?,");
+        }
+
+        String chartParams = builder.deleteCharAt( builder.length() -1 ).toString();
+
+        builder = new StringBuilder();
         for( int i = 0 ; i < validOrgs.size(); i++ ) {
             builder.append("?,");
         }
@@ -1748,33 +2102,33 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         if (projectType==7) { // STP
             sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` r "+
                     "where r.`grouping` in ("+
-                    "select distinct practice_ods_code from dashboards.population_denominators "+
+                    "select distinct practice_ods_code from dashboards.organisation_breakdown "+
                     "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+")) "+
                     "and stp in ("+params+")) "+
                     noResults+
-                    " AND name = ? "+
+                    " AND name in ("+chartParams+") "+
                     " group by series_name order by series_name";
 
         }
         else if (projectType==6) { // CCG
             sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` r "+
                     "where r.`grouping` in ("+
-                    "select distinct practice_ods_code from dashboards.population_denominators "+
+                    "select distinct practice_ods_code from dashboards.organisation_breakdown "+
                     "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+")) "+
                     "and ccg in ("+params+")) "+
                     noResults+
-                    " AND name = ? "+
+                    " AND name in ("+chartParams+") "+
                     " group by series_name order by series_name";
 
         }
         if (projectType==5) { // Practice
             sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_" + queryId + "` r "+
                     "where r.`grouping` in ("+
-                    "select distinct practice_ods_code from dashboards.population_denominators "+
+                    "select distinct practice_ods_code from dashboards.organisation_breakdown "+
                     "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+")) "+
                     "and practice in ("+params+")) "+
                     noResults+
-                    " AND name = ? "+
+                    " AND name in ("+chartParams+") "+
                     "group by series_name order by series_name";
 
         }
@@ -1794,7 +2148,9 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 statement.setString(p++, ids[i-1]);
             }
 
-            statement.setString(p++, chartName);
+            for (int i = 1; i <= chartnames.length; i++) {
+                statement.setString(p++, chartnames[i - 1]);
+            }
 
             try (ResultSet resultSet = statement.executeQuery()) {
                 chartItem.setSeries(getSeriesFromResultSet(resultSet));
@@ -1805,6 +2161,9 @@ public class ExplorerJDBCDAL implements AutoCloseable {
     }
 
     public ChartResult getDashboardTrend(String chartName, String dateFrom, String dateTo, String weekly) throws Exception {
+
+        saveAuditLog("View dashboard trend","0","0","View dashboard trend "+chartName);
+
         List<String> charts = Arrays.asList(chartName.split("\\s*,\\s*"));
 
         ChartResult result = new ChartResult();
@@ -1814,26 +2173,35 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         Chart chartItem = null;
 
         for (String chart_name : charts) {
+
+            String chartDisplayName = chart_name.replaceAll("~"," - ");
+
+            String odsCode = chart_name.split("~")[0];
+            odsCode = odsCode.split("\\(")[1];
+            odsCode = odsCode.replaceAll("\\)","");
+            String registry = chart_name.split("~")[1];
+
             chartItem = new Chart();
-            chartItem.setName(chart_name);
+            chartItem.setName(chartDisplayName);
 
             if (weekly.equals("1")) {
                 sql = "SELECT FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) AS series_name, " +
                         "SUM(series_value) AS series_value " +
                         "from dashboards.`dashboard_results_0` r "+
-                        "where name = ? " +
+                        "where ods_code = ? and name = ? " +
                         "and series_name between ? and ? "+
                         " GROUP BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7)) " +
                         "ORDER BY FROM_DAYS(TO_DAYS(series_name) -MOD(TO_DAYS(series_name) -1, 7))";
             } else {
                 sql = "SELECT series_name,sum(series_value) as series_value from dashboards.`dashboard_results_0` r "+
-                        "where name = ? " +
+                        "where ods_code = ? and name = ? " +
                         "and series_name between ? and ? group by series_name order by series_name";
             }
 
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
                 int p = 1;
-                statement.setString(p++, chart_name);
+                statement.setString(p++, odsCode);
+                statement.setString(p++, registry);
                 statement.setString(p++, dateFrom);
                 statement.setString(p++, dateTo);
                 try (ResultSet resultSet = statement.executeQuery()) {
@@ -1865,7 +2233,7 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         return series;
     }
 
-    public ChartResult getDashboardRegistries(String organisations, String registries) throws Exception {
+    public ChartResult getDashboardRegistries(String organisations, String registries, Boolean percentage) throws Exception {
         String ccg = "";
 
         StringBuilder builder = new StringBuilder();
@@ -1904,28 +2272,52 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 if (projectType==7) // STP
                     noResults = " and 0=1 ";
 
-                sql = "SELECT r.registry as series_name,sum(r.registry_size) as series_value FROM dashboards.registries r " +
-                        "where r.ods_code in (" +
-                        "select distinct practice_ods_code from dashboards.population_denominators " +
-                        "WHERE (stp_ods_code in (" + paramsValidOrgs + ") or ccg_ods_code in (" + paramsValidOrgs + ") or practice_ods_code in (" + paramsValidOrgs + "))) " +
-                        noResults+
-                        " AND r.ccg = ? and registry in (" + params + ")" +
-                        " GROUP BY r.ccg, r.registry";
+                if (percentage) {
+                    sql = "SELECT r.registry as series_name,(sum(r.registry_size)/sum(r.list_size))*100 as series_value FROM dashboards.registries r " +
+                            "where r.ods_code in (" +
+                            "select distinct practice_ods_code from dashboards.organisation_breakdown " +
+                            "WHERE (stp_ods_code in (" + paramsValidOrgs + ") or ccg_ods_code in (" + paramsValidOrgs + ") or practice_ods_code in (" + paramsValidOrgs + "))) " +
+                            noResults+
+                            " AND r.ccg = ? and registry in (" + params + ")" +
+                            " GROUP BY r.ccg, r.registry";
+                } else {
+                    sql = "SELECT r.registry as series_name,sum(r.registry_size) as series_value FROM dashboards.registries r " +
+                            "where r.ods_code in (" +
+                            "select distinct practice_ods_code from dashboards.organisation_breakdown " +
+                            "WHERE (stp_ods_code in (" + paramsValidOrgs + ") or ccg_ods_code in (" + paramsValidOrgs + ") or practice_ods_code in (" + paramsValidOrgs + "))) " +
+                            noResults+
+                            " AND r.ccg = ? and registry in (" + params + ")" +
+                            " GROUP BY r.ccg, r.registry";
+                }
+
             }
             else {
-                
+
                 String noResults = "";
 
                 if (projectType==6||projectType==7) // CCG/STP
                     noResults = " and 0=1 ";
 
-                sql = "SELECT r.registry as series_name,r.registry_size as series_value FROM dashboards.registries r " +
-                        "where r.ods_code in (" +
-                        "select distinct practice_ods_code from dashboards.population_denominators " +
-                        "WHERE (stp_ods_code in (" + paramsValidOrgs + ") or ccg_ods_code in (" + paramsValidOrgs + ") or practice_ods_code in (" + paramsValidOrgs + "))) " +
-                        noResults+
-                        " AND r.ods_code = ? and registry in (" + params + ")" +
-                        " order by r.registry_size desc";
+                if (percentage) {
+                    sql = "SELECT r.registry as series_name,(r.registry_size/sum(r.list_size))*100 as series_value FROM dashboards.registries r " +
+                            "where r.ods_code in (" +
+                            "select distinct practice_ods_code from dashboards.organisation_breakdown " +
+                            "WHERE (stp_ods_code in (" + paramsValidOrgs + ") or ccg_ods_code in (" + paramsValidOrgs + ") or practice_ods_code in (" + paramsValidOrgs + "))) " +
+                            noResults+
+                            " AND r.ods_code = ? and registry in (" + params + ")" +
+                            " order by r.registry_size desc";
+                } else
+                {
+                    sql = "SELECT r.registry as series_name,r.registry_size as series_value FROM dashboards.registries r " +
+                            "where r.ods_code in (" +
+                            "select distinct practice_ods_code from dashboards.organisation_breakdown " +
+                            "WHERE (stp_ods_code in (" + paramsValidOrgs + ") or ccg_ods_code in (" + paramsValidOrgs + ") or practice_ods_code in (" + paramsValidOrgs + "))) " +
+                            noResults+
+                            " AND r.ods_code = ? and registry in (" + params + ")" +
+                            " order by r.registry_size desc";
+                }
+
+
             }
 
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -1956,12 +2348,29 @@ public class ExplorerJDBCDAL implements AutoCloseable {
 
         result.setResults(chart);
 
+        String dataViewed = "Query results - graphical comparison";
+
+        if (!organisations.equals("") && !registries.equals("")) {
+            dataViewed += " - " + organisations + " counts";
+            dataViewed += " for " + registries + " query";
+        }
+
+        saveAuditLog("Results viewed","0","0",dataViewed);
+
         return result;
     }
 
 
-    public PatientResult getPatientResult(Integer page, Integer size, String name, String queryId, String parentQueryId, String met) throws Exception {
+    public PatientResult getPatientResult(Integer page, Integer size, String name, String queryId, String parentQueryId, String met, String odsCode) throws Exception {
+
+        saveAuditLog("View patient list",queryId,"0","ODS_CODE "+odsCode);
+
         PatientResult result = new PatientResult();
+
+        if (parentQueryId.equals("undefined")) {
+            met = "1";
+            parentQueryId = queryId;
+        }
 
         String sql = "";
 
@@ -1995,13 +2404,18 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                     "join organization o on o.id = p.organization_id " +
                     "join concept con on con.dbid = e.registration_type_concept_id " +
                     "where o.ods_code in "+
-                    "(select distinct practice_ods_code from dashboards.population_denominators "+
+                    "(select distinct practice_ods_code from dashboards.organisation_breakdown "+
                     "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
+                    "AND o.ods_code = ? "+
                     noResults+
                     " and p.id in "+
                     "(SELECT patient_id FROM dashboards.person_dataset " +
                     "where query_id = ? and patient_id "+metInclude+
                     "(SELECT patient_id FROM dashboards.person_dataset where query_id = ?)) "+
+                    "and e.date_registered = "+
+                    "(select max(ec.date_registered) from episode_of_care ec "+
+                    "join dashboards.person_dataset pd on pd.patient_id = ec.patient_id "+
+                    "where query_id = ? and ec.patient_id = e.patient_id) "+
                     "LIMIT ?,?";
 
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -2016,8 +2430,10 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 for (int i = 1; i <= validOrgs.size(); i++) {
                     statement.setString(p++, validOrgs.get(i-1));
                 }
+                statement.setString(p++, odsCode);
                 statement.setString(p++, parentQueryId);
                 statement.setString(p++, queryId);
+                statement.setString(p++, parentQueryId);
                 statement.setInt(p++, page * 10);
                 statement.setInt(p++, size);
                 try (ResultSet resultSet = statement.executeQuery()) {
@@ -2034,13 +2450,18 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                     "join organization o on o.id = p.organization_id " +
                     "join concept con on con.dbid = e.registration_type_concept_id " +
                     "where o.ods_code in "+
-                    "(select distinct practice_ods_code from dashboards.population_denominators "+
+                    "(select distinct practice_ods_code from dashboards.organisation_breakdown "+
                     "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
+                    "AND o.ods_code = ? "+
                     noResults+
                     " and p.id in "+
                     "(SELECT patient_id FROM dashboards.person_dataset " +
                     "where query_id = ? and patient_id "+metInclude+
-                    "(SELECT patient_id FROM dashboards.person_dataset where query_id = ?)) ";
+                    "(SELECT patient_id FROM dashboards.person_dataset where query_id = ?)) "+
+                    "and e.date_registered = "+
+                    "(select max(ec.date_registered) from episode_of_care ec "+
+                    "join dashboards.person_dataset pd on pd.patient_id = ec.patient_id "+
+                    "where query_id = ? and ec.patient_id = e.patient_id) ";
 
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
                 int p = 1;
@@ -2054,8 +2475,10 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 for (int i = 1; i <= validOrgs.size(); i++) {
                     statement.setString(p++, validOrgs.get(i-1));
                 }
+                statement.setString(p++, odsCode);
                 statement.setString(p++, parentQueryId);
                 statement.setString(p++, queryId);
+                statement.setString(p++, parentQueryId);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     resultSet.next();
                     result.setLength(resultSet.getInt(1));
@@ -2075,13 +2498,18 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                     "join organization o on o.id = p.organization_id " +
                     "join concept con on con.dbid = e.registration_type_concept_id " +
                     "where o.ods_code in "+
-                    "(select distinct practice_ods_code from dashboards.population_denominators "+
+                    "(select distinct practice_ods_code from dashboards.organisation_breakdown "+
                     "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
+                    "AND o.ods_code = ? "+
                     noResults+
                     " and p.id in "+
                     "(SELECT patient_id FROM dashboards.person_dataset " +
                     "where query_id = ? and patient_id "+metInclude+
                     "(SELECT patient_id FROM dashboards.person_dataset where query_id = ?)) "+
+                    "and e.date_registered = "+
+                    "(select max(ec.date_registered) from episode_of_care ec "+
+                    "join dashboards.person_dataset pd on pd.patient_id = ec.patient_id "+
+                    "where query_id = ? and ec.patient_id = e.patient_id) "+
                     "and p.last_name like ? LIMIT ?,?";
 
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -2096,8 +2524,10 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 for (int i = 1; i <= validOrgs.size(); i++) {
                     statement.setString(p++, validOrgs.get(i-1));
                 }
+                statement.setString(p++, odsCode);
                 statement.setString(p++, parentQueryId);
                 statement.setString(p++, queryId);
+                statement.setString(p++, parentQueryId);
                 statement.setString(p++, names[0]+"%");
                 statement.setInt(p++, page * 10);
                 statement.setInt(p++, size);
@@ -2115,13 +2545,18 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                     "join organization o on o.id = p.organization_id " +
                     "join concept con on con.dbid = e.registration_type_concept_id " +
                     "where o.ods_code in "+
-                    "(select distinct practice_ods_code from dashboards.population_denominators "+
+                    "(select distinct practice_ods_code from dashboards.organisation_breakdown "+
                     "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
+                    "AND o.ods_code = ? "+
                     noResults+
                     " and p.id in "+
                     "(SELECT patient_id FROM dashboards.person_dataset " +
                     "where query_id = ? and patient_id "+metInclude+
                     "(SELECT patient_id FROM dashboards.person_dataset where query_id = ?)) "+
+                    "and e.date_registered = "+
+                    "(select max(ec.date_registered) from episode_of_care ec "+
+                    "join dashboards.person_dataset pd on pd.patient_id = ec.patient_id "+
+                    "where query_id = ? and ec.patient_id = e.patient_id) "+
                     "and p.last_name like ?";
 
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -2136,8 +2571,10 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 for (int i = 1; i <= validOrgs.size(); i++) {
                     statement.setString(p++, validOrgs.get(i-1));
                 }
+                statement.setString(p++, odsCode);
                 statement.setString(p++, parentQueryId);
                 statement.setString(p++, queryId);
+                statement.setString(p++, parentQueryId);
                 statement.setString(p++, names[0]+"%");
                 try (ResultSet resultSet = statement.executeQuery()) {
                     resultSet.next();
@@ -2158,13 +2595,18 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                     "join organization o on o.id = p.organization_id " +
                     "join concept con on con.dbid = e.registration_type_concept_id " +
                     "where o.ods_code in "+
-                    "(select distinct practice_ods_code from dashboards.population_denominators "+
+                    "(select distinct practice_ods_code from dashboards.organisation_breakdown "+
                     "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
+                    "AND o.ods_code = ? "+
                     noResults+
                     " and p.id in "+
                     "(SELECT patient_id FROM dashboards.person_dataset " +
                     "where query_id = ? and patient_id "+metInclude+
                     "(SELECT patient_id FROM dashboards.person_dataset where query_id = ?)) "+
+                    "and e.date_registered = "+
+                    "(select max(ec.date_registered) from episode_of_care ec "+
+                    "join dashboards.person_dataset pd on pd.patient_id = ec.patient_id "+
+                    "where query_id = ? and ec.patient_id = e.patient_id) "+
                     "and (p.first_names like ? and p.last_name like ?) LIMIT ?,?";
 
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -2179,8 +2621,10 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 for (int i = 1; i <= validOrgs.size(); i++) {
                     statement.setString(p++, validOrgs.get(i-1));
                 }
+                statement.setString(p++, odsCode);
                 statement.setString(p++, parentQueryId);
                 statement.setString(p++, queryId);
+                statement.setString(p++, parentQueryId);
                 statement.setString(p++, names[0]+"%");
                 statement.setString(p++, names[1]+"%");
                 statement.setInt(p++, page * 10);
@@ -2199,13 +2643,18 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                     "join organization o on o.id = p.organization_id " +
                     "join concept con on con.dbid = e.registration_type_concept_id " +
                     "where o.ods_code in "+
-                    "(select distinct practice_ods_code from dashboards.population_denominators "+
+                    "(select distinct practice_ods_code from dashboards.organisation_breakdown "+
                     "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
+                    "AND o.ods_code = ? "+
                     noResults+
                     " and p.id in "+
                     "(SELECT patient_id FROM dashboards.person_dataset " +
                     "where query_id = ? and patient_id "+metInclude+
                     "(SELECT patient_id FROM dashboards.person_dataset where query_id = ?)) "+
+                    "and e.date_registered = "+
+                    "(select max(ec.date_registered) from episode_of_care ec "+
+                    "join dashboards.person_dataset pd on pd.patient_id = ec.patient_id "+
+                    "where query_id = ? and ec.patient_id = e.patient_id) "+
                     "and (p.first_names like ? and p.last_name like ?)";
 
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -2220,8 +2669,10 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 for (int i = 1; i <= validOrgs.size(); i++) {
                     statement.setString(p++, validOrgs.get(i-1));
                 }
+                statement.setString(p++, odsCode);
                 statement.setString(p++, parentQueryId);
                 statement.setString(p++, queryId);
+                statement.setString(p++, parentQueryId);
                 statement.setString(p++, names[0]+"%");
                 statement.setString(p++, names[1]+"%");
                 try (ResultSet resultSet = statement.executeQuery()) {
@@ -2291,6 +2742,21 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 result.setResults(getRegistriesList(resultSet));
             }
         }
+
+        String dataViewed = "Query results - column view";
+
+        if (ccg.equals(""))
+            dataViewed += " - CCG counts";
+        else
+            dataViewed += " - "+ccg+" counts";
+
+        if (registry.equals(""))
+            dataViewed += " for all queries";
+        else
+            dataViewed += " for "+registry+" query";
+
+
+        saveAuditLog("Results viewed","0","0",dataViewed);
 
         return result;
     }
@@ -2482,6 +2948,8 @@ public class ExplorerJDBCDAL implements AutoCloseable {
             }
         }
 
+        saveAuditLog("View maps",queryId,"0",query);
+
         ArrayList<String> ids = new ArrayList<String>();
         HashMap<String, List<MapLayer>> layers = new HashMap();
 
@@ -2534,7 +3002,7 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                         "AND covid.lsoa_code = map.area_code " +
                         "AND covid.covid_date = ? " +
                         "and org.ods_code in "+
-                        "(select distinct practice_ods_code from dashboards.population_denominators "+
+                        "(select distinct practice_ods_code from dashboards.organisation_breakdown "+
                         "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
                         noResults+
                         " GROUP BY covid.lsoa_code " +
@@ -2557,7 +3025,7 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                         "AND covid.covid_date = ? " +
                         "AND corona_status = 'Confirmed Covid 19' "+
                         "and org.ods_code in "+
-                        "(select distinct practice_ods_code from dashboards.population_denominators "+
+                        "(select distinct practice_ods_code from dashboards.organisation_breakdown "+
                         "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
                         noResults+
                         " GROUP BY covid.lsoa_code " +
@@ -2579,7 +3047,7 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                         "AND covid.lsoa_code = map.area_code " +
                         "AND covid.covid_date = ? " +
                         "and org.ods_code in "+
-                        "(select distinct practice_ods_code from dashboards.population_denominators "+
+                        "(select distinct practice_ods_code from dashboards.organisation_breakdown "+
                         "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
                         noResults+
                         " GROUP BY covid.lsoa_code " +
@@ -2603,7 +3071,7 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                     "AND  REGS.lsoa_code = PERSON.`LSOA code` " +
                     "AND MAP.area_code = PERSON.`LSOA code` " +
                     "and org.ods_code in "+
-                    "(select distinct practice_ods_code from dashboards.population_denominators "+
+                    "(select distinct practice_ods_code from dashboards.organisation_breakdown "+
                     "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
                     noResults+
                     " GROUP BY PERSON.`LSOA code` " +
@@ -2700,6 +3168,8 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 }
             }
         }
+
+        saveAuditLog("View maps",queryId,"0",query);
 
         ArrayList<String> ids = new ArrayList<String>();
         HashMap<String, List<MapLayer>> layers = new HashMap();
@@ -2879,6 +3349,7 @@ public class ExplorerJDBCDAL implements AutoCloseable {
     public TableData getTableData(String queryName, String outputType, String searchData, Integer pageNumber,
                              Integer pageSize, String orderColumn, boolean descending)  throws Exception {
 
+
         TableData data = new TableData();
 
         String sql = "select * from dashboards.query_library where name = ? ";
@@ -3056,7 +3527,7 @@ public class ExplorerJDBCDAL implements AutoCloseable {
             sql = "select " + fields + " from dashboards." + tableName + " t, patient pat, organization org "+
                     "WHERE pat.id = t.`Patient ID` and org.id = pat.organization_id "+
                     "and org.ods_code in "+
-                    "(select distinct practice_ods_code from dashboards.population_denominators "+
+                    "(select distinct practice_ods_code from dashboards.organisation_breakdown "+
                     "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
                     noResults+
                     " order by `" + orderColumn + "` " + order +
@@ -3065,7 +3536,7 @@ public class ExplorerJDBCDAL implements AutoCloseable {
             sql = "select " + fields + " from dashboards." + tableName + " t, patient pat, organization org "+
                     "WHERE pat.id = t.`Patient ID` and org.id = pat.organization_id  "+
                     "and org.ods_code in "+
-                    "(select distinct practice_ods_code from dashboards.population_denominators "+
+                    "(select distinct practice_ods_code from dashboards.organisation_breakdown "+
                     "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
                     noResults+
                     like +
@@ -3101,6 +3572,9 @@ public class ExplorerJDBCDAL implements AutoCloseable {
             }
         }
         data.getRows().addAll(tableRows);
+
+        saveAuditLog("View tables",queryId,"0",outputType);
+
         return data;
     }
 
@@ -3244,21 +3718,21 @@ public class ExplorerJDBCDAL implements AutoCloseable {
 
         String noResults = "";
 
-        if (projectType==7) { // STP - no access allowed
+        if (projectType==7) { // STP
             sql = "SELECT distinct d.stp as `grouping` " +
                     "FROM dashboards.`dashboard_results_" + queryId + "` r " +
-                    "join dashboards.population_denominators d on d.practice_ods_code = r.`grouping` "+
+                    "join dashboards.organisation_breakdown d on d.practice_ods_code = r.`grouping` "+
                     "where r.`grouping` in (" +
-                    "select distinct practice_ods_code from dashboards.population_denominators " +
+                    "select distinct practice_ods_code from dashboards.organisation_breakdown " +
                     "WHERE (stp_ods_code in (" + paramsValidOrgs + ") or ccg_ods_code in (" + paramsValidOrgs + ") or practice_ods_code in (" + paramsValidOrgs + "))) " +
                     noResults +
                     " order by `grouping`";
         } else if (projectType==6) { // CCG
             sql = "SELECT distinct d.ccg as `grouping` " +
                     "FROM dashboards.`dashboard_results_" + queryId + "` r "+
-                    "join dashboards.population_denominators d on d.practice_ods_code = r.`grouping` "+
+                    "join dashboards.organisation_breakdown d on d.practice_ods_code = r.`grouping` "+
                     "where r.`grouping` in ("+
-                    "select distinct practice_ods_code from dashboards.population_denominators "+
+                    "select distinct practice_ods_code from dashboards.organisation_breakdown "+
                     "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
                     noResults+
                     " order by `grouping`";
@@ -3266,9 +3740,9 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         } else if (projectType==5) { // Practice
             sql = "SELECT distinct d.practice as `grouping` " +
                     "FROM dashboards.`dashboard_results_" + queryId + "` r "+
-                    "join dashboards.population_denominators d on d.practice_ods_code = r.`grouping` "+
+                    "join dashboards.organisation_breakdown d on d.practice_ods_code = r.`grouping` "+
                     "where r.`grouping` in ("+
-                    "select distinct practice_ods_code from dashboards.population_denominators "+
+                    "select distinct practice_ods_code from dashboards.organisation_breakdown "+
                     "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
                     noResults+
                     " order by `grouping`";
@@ -3423,7 +3897,7 @@ public class ExplorerJDBCDAL implements AutoCloseable {
 
         sql = "select distinct r.registry,r.query from dashboards.registries r "+
                 "where r.ods_code in ("+
-                "select distinct practice_ods_code from dashboards.population_denominators "+
+                "select distinct practice_ods_code from dashboards.organisation_breakdown "+
                 "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "
                 +noResults;
 
@@ -3474,6 +3948,9 @@ public class ExplorerJDBCDAL implements AutoCloseable {
     }
 
     public PopulationResult getPopulation() throws Exception {
+
+        saveAuditLog("View populations","0","0","Counts");
+
         PopulationResult result = new PopulationResult();
 
         String sql = "";
@@ -3559,7 +4036,7 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         String params = builder.deleteCharAt( builder.length() -1 ).toString();
 
         String sql = "SELECT stp,ccg,pcn,concat(practice,' | ', practice_ods_code) as practice " +
-                "FROM dashboards.population_denominators " +
+                "FROM dashboards.organisation_breakdown " +
                 "WHERE (stp_ods_code in ("+params+") or ccg_ods_code in ("+params+") or practice_ods_code in ("+params+")) "+
                 "group by stp,ccg,pcn,practice,practice_ods_code "+
                 "order by stp,ccg,pcn,practice,practice_ods_code";
@@ -3656,11 +4133,11 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         if (projectType==6||projectType==7) // CCG/STP - access denied
             noResults = " and 0=1 ";
 
-        sql = "SELECT r.ccg, r.practice_name, r.registry, r.list_size, r.registry_size, r.target_percentage,ql.id as query_id,ql2.id as parent_query_id from dashboards.registries r "+
+        sql = "SELECT r.ccg, r.practice_name, r.ods_code, r.registry, r.list_size, r.registry_size, r.target_percentage,ql.id as query_id,ql2.id as parent_query_id, r.updated, ql2.registry_name as parent_query from dashboards.registries r "+
                 "left join dashboards.query_library ql on ql.name = r.query "+
                 "left join dashboards.query_library ql2 on ql2.name = ql.denominator_query "+
                 "where r.ods_code in ("+
-                "select distinct practice_ods_code from dashboards.population_denominators "+
+                "select distinct practice_ods_code from dashboards.organisation_breakdown "+
                 "WHERE (stp_ods_code in ("+paramsValidOrgs+") or ccg_ods_code in ("+paramsValidOrgs+") or practice_ods_code in ("+paramsValidOrgs+"))) "+
                  noResults+
                 " order by r.ccg, r.practice_name, r.registry, r.list_size desc, r.registry_size desc";
@@ -3691,6 +4168,10 @@ public class ExplorerJDBCDAL implements AutoCloseable {
             }
         }
 
+        String dataViewed = "Query results - list view - all counts for authorised organisations";
+
+        saveAuditLog("Results viewed","0","0",dataViewed);
+
         return result;
     }
 
@@ -3709,12 +4190,15 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         registryLists
                 .setCcg(resultSet.getString("ccg"))
                 .setPracticeName(resultSet.getString("practice_name"))
+                .setOdsCode(resultSet.getString("ods_code"))
                 .setRegistry(resultSet.getString("registry"))
                 .setListSize(resultSet.getString("list_size"))
                 .setRegistrySize(resultSet.getString("registry_size"))
                 .setTarget(resultSet.getString("target_percentage"))
                 .setQueryId(resultSet.getString("query_id"))
-                .setParentQueryId(resultSet.getString("parent_query_id"));
+                .setParentQueryId(resultSet.getString("parent_query_id"))
+                .setUpdated(resultSet.getString("updated"))
+                .setParentQuery(resultSet.getString("parent_query"));
         return registryLists;
     }
 
@@ -3731,7 +4215,7 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         String sql = "";
         String sqlCount = "";
 
-        sql = "SELECT q.id,type,registry_name,next_run_date,status,timesubmit,timefinish,timeexecute, IF(e.query_id IS NULL ,'N','Y') AS error "+
+        sql = "SELECT q.id,type,registry_name,next_run_date,status,timesubmit,timefinish,timeexecute,IF(e.query_id IS NULL ,'N','Y') AS error,process_id,kill_process,q.user_name  "+
                 "FROM dashboards.queue q "+
                 "join dashboards.query_library ql on ql.id = q.query_id "+
                 "LEFT JOIN (SELECT DISTINCT e1.query_id, DATE_FORMAT(e1.error_date,'%Y-%m-%d') "+
@@ -3761,6 +4245,7 @@ public class ExplorerJDBCDAL implements AutoCloseable {
     }
 
     private List<QueryQueue> getQueryQueueList(ResultSet resultSet) throws SQLException {
+        
         List<QueryQueue> result = new ArrayList<>();
         while (resultSet.next()) {
             result.add(getQueryQueue(resultSet));
@@ -3781,17 +4266,40 @@ public class ExplorerJDBCDAL implements AutoCloseable {
                 .setTimeFinish(resultSet.getString("timefinish"))
                 .setTimeExecute(resultSet.getString("timeexecute"))
                 .setId(resultSet.getString("id"))
-                .setError(resultSet.getString("error"));
+                .setError(resultSet.getString("error"))
+                .setProcessId(resultSet.getString("process_id"))
+                .setKillProcess(resultSet.getString("kill_process"))
+                .setUserName(resultSet.getString("user_name"));
         return queryqueue;
     }
 
-    public void resetQueue(String id) throws Exception {
+    public void rerunQuery(String id) throws Exception {
         String ids[] = id.split(",");
         StringBuilder builder = new StringBuilder();
         for( int i = 0 ; i < ids.length; i++ ) {
             builder.append("?,");
         }
-        String sql = "UPDATE dashboards.queue SET status = 'N' WHERE id in ("+builder.deleteCharAt( builder.length() -1 ).toString()+")";
+        String sql = "UPDATE dashboards.queue SET status = 'N', user_name = ?, next_run_date = now() WHERE id in ("+builder.deleteCharAt( builder.length() -1 ).toString()+")";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            int p = 1;
+            stmt.setString(p++, userName);
+            for (int i = 1; i <= ids.length; i++) {
+                stmt.setInt(p++, Integer.parseInt(ids[i-1]));
+            }
+            stmt.executeUpdate();
+            connection.commit();
+        } catch (Exception ex) {
+            connection.rollback();
+        }
+    }
+
+    public void stopQuery(String id) throws Exception {
+        String ids[] = id.split(",");
+        StringBuilder builder = new StringBuilder();
+        for( int i = 0 ; i < ids.length; i++ ) {
+            builder.append("?,");
+        }
+        String sql = "UPDATE dashboards.queue SET kill_process = 'Y' WHERE id in ("+builder.deleteCharAt( builder.length() -1 ).toString()+")";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             for (int i = 1; i <= ids.length; i++) {
                 stmt.setInt(i, Integer.parseInt(ids[i-1]));
@@ -3801,5 +4309,111 @@ public class ExplorerJDBCDAL implements AutoCloseable {
         } catch (Exception ex) {
             connection.rollback();
         }
+    }
+
+    public void saveAuditLog(String auditType, String queryId, String recordsReturned, String dataViewed) throws Exception {
+
+        String sql = "select name,query from dashboards.query_library where id = ? ";
+        String queryName = "";
+        String queryJson = "";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, queryId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    queryName = resultSet.getString("name");
+                    queryJson = resultSet.getString("query");
+                }
+            }
+        }
+
+        String roleLevel = "";
+        if (projectType == 5)
+            roleLevel = "Practice";
+        else if (projectType == 6)
+            roleLevel = "CCG";
+        else if (projectType == 7)
+            roleLevel = "STP";
+
+        String pidAllowed = "No";
+        if (patientIdentifiable)
+            pidAllowed = "Yes";
+
+        sql = "INSERT INTO dashboards.audit_log (user_name,role_name,authorised_organisations,role_level,pid_allowed,audit_type,audit_date,query_name,query_json,records_returned,data_viewed) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, userName);
+            stmt.setString(2, roleName);
+            stmt.setString(3, validOrgs.toString());
+            stmt.setString(4, roleLevel);
+            stmt.setString(5, pidAllowed);
+            stmt.setString(6, auditType);
+            stmt.setTimestamp(7, new java.sql.Timestamp(new java.util.Date().getTime()));
+            stmt.setString(8, queryName);
+            stmt.setString(9, queryJson);
+            stmt.setString(10, recordsReturned);
+            stmt.setString(11, dataViewed);
+            stmt.executeUpdate();
+            connection.commit();
+        } catch (Exception ex) {
+            connection.rollback();
+        }
+    }
+
+    public AuditLogResult getAuditLog(String selectedUserString) throws Exception {
+        AuditLogResult result = new AuditLogResult();
+        String sql = "";
+        String sqlCount = "";
+
+        sql = "SELECT user_name, role_name, authorised_organisations, role_level, pid_allowed, audit_type, audit_date, query_name, query_json, records_returned, data_viewed " +
+                "FROM dashboards.audit_log " +
+                "WHERE user_name = ? order by audit_date desc";
+
+        sqlCount = "SELECT 9999";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, selectedUserString);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                result.setResults(getAuditLogList(resultSet));
+            }
+        }
+
+        try (PreparedStatement statement = connection.prepareStatement(sqlCount)) {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                resultSet.next();
+                result.setLength(resultSet.getInt(1));
+            }
+        }
+
+        if (!selectedUserString.equals(""))
+            saveAuditLog("View audit log","0","0",selectedUserString);
+
+        return result;
+    }
+
+    private List<AuditLog> getAuditLogList(ResultSet resultSet) throws SQLException {
+        List<AuditLog> result = new ArrayList<>();
+        while (resultSet.next()) {
+            result.add(getAuditLog(resultSet));
+        }
+
+        return result;
+    }
+
+    public static AuditLog getAuditLog(ResultSet resultSet) throws SQLException {
+        AuditLog auditlog = new AuditLog();
+
+        auditlog
+                .setUser(resultSet.getString("user_name"))
+                .setRoleName(resultSet.getString("role_name"))
+                .setOrganisation(resultSet.getString("authorised_organisations"))
+                .setRoleLevel(resultSet.getString("role_level"))
+                .setPid(resultSet.getString("pid_allowed"))
+                .setAuditType(resultSet.getString("audit_type"))
+                .setAuditDate(resultSet.getTimestamp("audit_date"))
+                .setQueryName(resultSet.getString("query_name"))
+                .setQueryJson(resultSet.getString("query_json"))
+                .setRecords(resultSet.getString("records_returned"))
+                .setData(resultSet.getString("data_viewed"));
+        return auditlog;
     }
 }
